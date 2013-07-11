@@ -1,0 +1,13 @@
+<div class="row-fluid">
+	<div class="span8">
+		{paginationTop}
+		{properties}
+		{paginationBottom}
+	</div>
+	<div class="span4">
+		<div class="casasync-filter">
+			<h2>__(Advanced search)</h2>
+			{filterform}
+		</div>
+	</div>
+</div>

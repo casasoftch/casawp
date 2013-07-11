@@ -1,0 +1,15 @@
+<div class="archive-property-gallery-item">
+	<article {ids} {classes}>
+		<a href="{permalink}" class="archive-property-gallery-thumbnail">
+			<div class="{!if_thumbnail}empty{!end_if_thumbnail}">
+				{if_thumbnail}{thumbnail}{end_if_thumbnail}
+				{!if_thumbnail}<img src="http://placehold.it/600x300">{!end_if_thumbnail}
+			</div>
+			<div class="archive-property-description archive-property-gallery-caption">
+				<h2 class="entry-title">{locality} ({country})</h2>
+				<p>{title}</p>
+			</div>
+		</a>
+		
+	</article>
+</div>
