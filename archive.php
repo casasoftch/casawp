@@ -228,7 +228,7 @@
 						$cur_basis = array();
 					}
 					
-					$salestype .= "<label><input name='casasync_salestype' type='radio' group='salestype' " . (in_array($term->slug, $cur_basis) ? 'CHECKED' : '') . " value='" . $term->slug . "' /> " . $term->name . "</label>";
+					$salestype .= "<label><input name='casasync_salestype' type='radio' group='salestype' " . (in_array($term->slug, $cur_basis) ? 'CHECKED' : '') . " value='" . $term->slug . "' /> " . __(ucfirst($term->name),'casasync') . "</label>";
 				}
 				if ($i > 1) {
 					echo $salestype . '<hr class="soften" />';

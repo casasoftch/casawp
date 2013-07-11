@@ -60,7 +60,7 @@
 	            case 'Rent price': $translated_text = 'Mietpreis';break;
 	            case 'Sales price': $translated_text = 'Kaufpreis';break;
 	            case 'Additional costs': $translated_text = 'Nebenkosten';break;
-	            case 'Object ID': $translated_text = 'Objekt ID';break;
+	            case 'Object ID': $translated_text = 'Objekt-ID';break;
 	            case 'Floor(s)': $translated_text = 'Stockwerk(e)';break;
 	            case 'Features': $translated_text = 'Eigenschaften';break;
 
@@ -97,8 +97,8 @@
 				case 'Back to the list': 						$translated_text = 'Zurück zur Übersicht';break;
 
 
-				case 'Please fill out all the fields':  $translated_text = 'Bitte alle Felder ausfüllen';break;
-				case 'Send':   							$translated_text = 'Versenden';break;
+				case 'Please fill out all the fields':  $translated_text = 'Bitte alle Felder ausfüllen.';break;
+				case 'Send':   							$translated_text = 'Senden';break;
 				case 'Contact directly':   				$translated_text = 'Direkt kontaktieren';break;
 
 				case 'Provider':   						$translated_text = 'Anbieter';break;
@@ -176,6 +176,10 @@
 		        case 'Plot':				$translated_text =  'Grundstück';break;
 		        case 'Secondary rooms':		$translated_text =  'Wohnnebenräume';break;
 		        case 'Garden':				$translated_text =  'Garten';break;
+
+		        case 'Description':				$translated_text =  'Beschreibung';break;
+		        case 'Reference':				$translated_text =  'Referenz';break;
+		        case 'Distances':				$translated_text =  'Distanzen';break;
 			
 			
 	        }

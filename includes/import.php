@@ -28,64 +28,12 @@ function casasync_category_getLabel($term_slug, $lang){
     
 }
 
-//list of alowed category slugs
-function casasync_category_getFullSlugsArray(){
-    return array(
-        'house',
-        'apartment',
 
-        'Haus',
-        'Wohnung',
-        'Gewerbe/Industrie',
-        'Grundstück',
-
-        'Landwirtschaft',
-        'Wohnung',
-        'Gastronomie',
-        'Haus',
-        'Gewerbe/Industrie',
-        'Parkplatz',
-        'Grundstück',
-        'Wohnnebenräume',
-        'Garten',
-
-        'Agriculture',
-        'Apartment',
-        'Gastronomy',
-        'House',
-        'Industrial Objects',
-        'Parking space',
-        'Plot',
-        'Secondary rooms',
-        'Garden',
-
-        'Agriculture',
-        'Appartement',
-        'Gastronomie',
-        'Maison',
-        'Commerce/Industrie',
-        'Place de parc',
-        'Terrain',
-        'Pièces annexes',
-        'Jardin',
-        
-        'Agricola',
-        'Appartamenti',
-        'Gastronomia',
-        'Case',
-        'Industria/Commercio',
-        'Posteggio esterno',
-        'Terreno',
-        'Locali di Servizio',
-        'Giardino'
-    );
-}
 
 
 function casasync_category_setTerm($term_slug, $lang){
     //$wp_term = get_term_by('slug', $term_slug, 'casasync_category');
     
-    if ( in_array($term_slug, casasync_category_getFullSlugsArray()) ) {
 
         $label = casasync_category_getLabel($term_slug, $lang);
 
@@ -104,9 +52,6 @@ function casasync_category_setTerm($term_slug, $lang){
                 );
                 return $id;
         }
-    } else {
-        return false;
-    }
 
 }
 
@@ -219,26 +164,24 @@ function casasync_import(){
 
         //D. read xml and save the property
         $xml = simplexml_load_file($processing_file, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $software = $xml['id'];
         
-
 
         //depricated!!! **********************************************************
         //update admin options
         if (get_option('casasync_sellerfallback_update') == 1) {
 
-            if ($xml->organization && $xml->organization->address) {
-                if ($xml->organization->address->addressCountry) {update_option("casasync_sellerfallback_address_country", $xml->organization->address->addressCountry->__toString() );}
-                if ($xml->organization->address->addressLocality) {update_option("casasync_sellerfallback_address_locality", $xml->organization->address->addressLocality->__toString() );}
-                if ($xml->organization->address->addressRegion) {update_option("casasync_sellerfallback_address_region", $xml->organization->address->addressRegion->__toString() );}
-                if ($xml->organization->address->postalCode) {update_option("casasync_sellerfallback_address_postalcode", $xml->organization->address->postalCode->__toString() );}
-                if ($xml->organization->address->postOfficeBoxNumber) {/*update_option("casasync_sellerfallback_address_pobox", $xml->organization->address->postOfficeBoxNumber->__toString() );*/}
-                if ($xml->organization->address->streetAddress) {update_option("casasync_sellerfallback_address_street", $xml->organization->address->streetAddress->__toString() );}
+            if ($xml->provider->organization && $xml->provider->organization->address) {
+                if ($xml->provider->organization->address->country) {update_option("casasync_sellerfallback_address_country", $xml->provider->organization->address->country->__toString() );}
+                if ($xml->provider->organization->address->locality) {update_option("casasync_sellerfallback_address_locality", $xml->provider->organization->address->locality->__toString() );}
+                if ($xml->provider->organization->address->region) {update_option("casasync_sellerfallback_address_region", $xml->provider->organization->address->region->__toString() );}
+                if ($xml->provider->organization->address->postalCode) {update_option("casasync_sellerfallback_address_postalcode", $xml->provider->organization->address->postalCode->__toString() );}
+                if ($xml->provider->organization->address->postOfficeBoxNumber) {/*update_option("casasync_sellerfallback_address_pobox", $xml->provider->organization->address->postOfficeBoxNumber->__toString() );*/}
+                if ($xml->provider->organization->address->street) {update_option("casasync_sellerfallback_address_street", $xml->provider->organization->address->street->__toString() );}
             }
-            if ($xml->organization) {
-                if ($xml->organization->legalName) {update_option("casasync_sellerfallback_legalname", $xml->organization->legalName->__toString() );}
+            if ($xml->provider->organization) {
+                if ($xml->provider->organization->legalName) {update_option("casasync_sellerfallback_legalname", $xml->provider->organization->legalName->__toString() );}
                 $general = false;
-                foreach ($xml->organization->email as $email) {
+                foreach ($xml->provider->organization->email as $email) {
                     if ($email['type']) {
                         switch ($email['type']->__toString()) {
                             case 'rem':
@@ -260,11 +203,11 @@ function casasync_import(){
                         }
                     }
                 }
-                if ($xml->organization->email) {update_option("casasync_sellerfallback_email", $xml->organization->email->__toString() );}
-                if ($xml->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->organization->faxNumber->__toString() );}
-                if ($xml->organization->telephone) {
+                if ($xml->provider->organization->email) {update_option("casasync_sellerfallback_email", $xml->provider->organization->email->__toString() );}
+                if ($xml->provider->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->provider->organization->faxNumber->__toString() );}
+                if ($xml->provider->organization->telephone) {
                     $central = false;
-                    foreach ($xml->organization->telephone as $phone) {
+                    foreach ($xml->provider->organization->telephone as $phone) {
                         if ($phone['type']) {
                             switch ($phone['type']->__toString()) {
                                 case 'direct':
@@ -291,13 +234,13 @@ function casasync_import(){
                     }
                 }
             } 
-            if ($xml->organization) {
-                if ($xml->organization->legalName) {update_option("casasync_sellerfallback_legalname", $xml->organization->legalName->__toString() );}
-                if ($xml->organization->email) {update_option("casasync_sellerfallback_email", $xml->organization->email->__toString() );}
-                if ($xml->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->organization->faxNumber->__toString() );}
-                if ($xml->organization->telephone) {
+            if ($xml->provider->organization) {
+                if ($xml->provider->organization->legalName) {update_option("casasync_sellerfallback_legalname", $xml->provider->organization->legalName->__toString() );}
+                if ($xml->provider->organization->email) {update_option("casasync_sellerfallback_email", $xml->provider->organization->email->__toString() );}
+                if ($xml->provider->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->provider->organization->faxNumber->__toString() );}
+                if ($xml->provider->organization->telephone) {
                     $central = false;
-                    foreach ($xml->organization->telephone as $phone) {
+                    foreach ($xml->provider->organization->telephone as $phone) {
                         if ($phone['type']) {
                             switch ($phone['type']->__toString()) {
                                 case 'direct':
@@ -325,6 +268,7 @@ function casasync_import(){
                 }
             }
         }
+
         if (get_option('casasync_feedback_update') == 1) {
             if ($xml->technicalFeedback) {
                 if ($xml->technicalFeedback->givenName) {update_option("casasync_feedback_given_name", $xml->technicalFeedback->givenName->__toString() );}
@@ -345,15 +289,17 @@ function casasync_import(){
             //requirenments
             if (
                 !$property['id'] 
+                || !$property->provider
+                || !$property->provider['id']
                 || !isset($property->offer)
             ) {
                 echo "required data missing!!!";
                 continue;
             }
-            if (isset($property->offer['providerID']) ) {
-                $exporter = $property->offer['providerID'];
-            } elseif(isset($property->offer->organization->legalName) && $property->offer->organization->legalName) {
-                $exporter = urlencode(str_replace(' ', '-', strtolower($property->offer->organization->legalName)));
+            if (isset($property->provider['id']) ) {
+                $exporter = $property->provider['id'];
+            } elseif(isset($property->provider->organization->legalName) && $property->provider->organization->legalName) {
+                $exporter = urlencode(str_replace(' ', '-', strtolower($property->provider->organization->legalName)));
             } else {
                 $exporter = 'cs';
             }
@@ -379,7 +325,7 @@ function casasync_import(){
             $wp_property = false;
             $wp_post_custom = false;
             
-            $casasync_id = $property->offer['providerId'] . '_' . $property['id'] . $property->offer['lang'];
+            $casasync_id = $property->provider['id'] . '_' . $property['id'] . $property->offer['lang'];
             $wp_category_terms = array(); //all
             $wp_category_terms_to_keep = array(); //non casasync in property
             $wp_casasync_category_terms = array(); //casasync in property
@@ -574,8 +520,8 @@ function casasync_import(){
             $the_post['post_excerpt']           = $property->offer->excerpt->__toString();
             $the_post['post_content']           = $the_description;
             $the_post['post_title']             = $property->offer->name->__toString();
-            $the_post['post_date']              = date('Y-m-d H:i:s', strtotime(($property->offer->software->creation->__toString() ? $property->offer->software->creation->__toString() : $property->offer->software->lastUpdate->__toString() ) ));
-            $the_post['post_modified']          = date('Y-m-d H:i:s', strtotime($property->offer->software->lastUpdate->__toString()));
+            $the_post['post_date']              = date('Y-m-d H:i:s', strtotime(($property->software->creation->__toString() ? $property->software->creation->__toString() : $property->software->lastUpdate->__toString() ) ));
+            $the_post['post_modified']          = date('Y-m-d H:i:s', strtotime($property->software->lastUpdate->__toString()));
 
             if(
                 $property->excerpt->__toString()                                            != ($wp_property ? $wp_property->post_excerpt : '')
@@ -604,6 +550,10 @@ function casasync_import(){
             $casasync_property_geo_latitude     = (int) ($property->geo ? $property->geo->latitude->__toString() : '');
             $casasync_property_geo_longitude    = (int) ($property->geo ? $property->geo->longitude->__toString() : '');
 
+            $casasync_start = ($property->offer->start ? $property->offer->start->__toString() : '');
+            $casasync_referenceId = ($property->referenceId ? $property->referenceId->__toString() : '');
+
+
 
             $offer_type = '';
             $price_currency = '';
@@ -623,9 +573,38 @@ function casasync_import(){
             $availability = 'available';
             $availability_label = 'Available';
 
+
             $extraPrice = array();
 
             if ($property->offer) {
+
+                //urls
+                $the_urls = array();
+                if ($property->offer->url) {
+                    foreach ($property->offer->url as $url) {
+                        $href = $url->__toString();
+                        $label = (isset($url['label']) && $url['label'] ? $url['label'] : false);
+                        $title = (isset($url['title']) && $url['title'] ? $url['title'] : false);
+                        $rank =  (isset($url['rank'])  && (int) $url['rank'] ? (int) $url['rank'] : false);
+                        if ($rank ) {
+                            $the_urls[$rank] = array(
+                                'href' => $href,
+                                'label' => ($label ? $label : $href),
+                                'title' => ($title ? $title : $href)
+                            );
+                        } else {
+                            $the_urls[] = array(
+                                'href' => $href,
+                                'label' => ($label ? $label : $href),
+                                'title' => ($title ? $title : $href)
+                            );
+                        }
+                    }
+                    ksort($the_urls);
+                    $the_urls = array_values($the_urls);
+                }
+                $the_urls = json_encode($the_urls);
+
                 $offer_type = $property->offer->type;
                 $price_currency = $property->offer->priceCurrency;
                 if (!in_array($property->offer->priceCurrency, array('CHF', 'EUR', 'USD', 'GBP'))) {
@@ -927,6 +906,11 @@ function casasync_import(){
                 || (float) $casasync_property_geo_latitude  != (float) (isset($wp_post_custom['casasync_property_geo_latitude']) ? $wp_post_custom['casasync_property_geo_latitude'][0] : 0)
                 || (float) $casasync_property_geo_longitude != (float) (isset($wp_post_custom['casasync_property_geo_longitude']) ? $wp_post_custom['casasync_property_geo_longitude'][0] : 0)
 
+                || (string) $the_urls   != (string) (isset($wp_post_custom['casasync_urls']) ? $wp_post_custom['casasync_urls'][0] : 0)
+
+                || (string) $casasync_start                      != (string) (isset($wp_post_custom['casasync_start']) ? $wp_post_custom['casasync_start'][0] : 0)
+                || (string) $casasync_referenceId                != (string) (isset($wp_post_custom['casasync_referenceId']) ? $wp_post_custom['casasync_referenceId'][0] : 0)
+
                 || (string) $availability !=                  (string) (isset($wp_post_custom['availability']) ? $wp_post_custom['availability'][0] : '')
                 || (string) $availability_label !=            (string) (isset($wp_post_custom['availability_label']) ? $wp_post_custom['availability_label'][0] : '')
 
@@ -989,7 +973,13 @@ function casasync_import(){
                 
                 $the_post_custom['casasync_property_geo_latitude']          = (float) $casasync_property_geo_latitude;
                 $the_post_custom['casasync_property_geo_longitude']         = (float) $casasync_property_geo_longitude;
-            
+                
+                $the_post_custom['casasync_urls']                           = (string) $the_urls;
+                
+
+                $the_post_custom['casasync_start']                          = (string) $casasync_start;
+                $the_post_custom['casasync_referenceId']                    = (string) $casasync_referenceId;
+
                 $the_post_custom['availability']                            = (string) $availability;
                 $the_post_custom['availability_label']                      = (string) $availability_label;
 
@@ -1040,7 +1030,8 @@ function casasync_import(){
                 $the_post_custom['seller_inquiry_person_phone_mobile']              = (string) $seller_inquiry_person_phone_mobile;
                 $the_post_custom['seller_inquiry_person_phone_gender']              = (string) $seller_inquiry_person_phone_gender;
             }
-                
+
+
     
             //set numericValues
             $the_numvals = array();
@@ -1224,18 +1215,12 @@ function casasync_import(){
                 $wp_category_terms_to_keep = array();
                 $wp_casasync_category_terms_slugs = array();
                 foreach ($wp_category_terms as $term) {
-                    if ( !in_array($term->slug, casasync_category_getFullSlugsArray()) ) {
-                        $wp_category_terms_to_keep[] = $term->term_id;
-                    } else {
                         $wp_casasync_category_terms_slugs[] = $term->slug;
-                    }
                 }
                 if ($property->category) {
                     $le_cats = array();
                     foreach ($property->category as $category) {
-                        if ( in_array($category->__toString(), casasync_category_getFullSlugsArray()) ) {
                             $le_cats[] = $category->__toString();
-                        }
                     }
                     $the_post_category_term_slugs = $le_cats;
                 }
@@ -1260,7 +1245,7 @@ function casasync_import(){
                 $category_terms = get_terms( array('casasync_category'), array('hide_empty'    => false));
                 foreach ($category_terms as $term) {
                     foreach ($the_post_category_term_slugs as $xml_slug) {
-                        if ( $term->slug == $xml_slug && in_array($xml_slug, casasync_category_getFullSlugsArray())) {
+                        if ( $term->slug == $xml_slug) {
                             $terms_to_add[] = $term->term_id;
                         } 
                     }

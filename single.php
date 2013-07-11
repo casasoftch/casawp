@@ -55,6 +55,10 @@
 				$customer_id = $casa_id_arr[0];
 				$property_id = $casa_id_arr[1];
 
+				$reference_id = get_post_meta( get_the_ID(), 'casasync_referenceId', $single = true );
+
+				$start = get_post_meta( get_the_ID(), 'casasync_start', $single = true );
+
 				$categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
 			      $categories_names = array();
 			      foreach ($categories as $category) {
@@ -188,6 +192,8 @@
 					}
 				}
 
+				$urls = array();
+				$urls = json_decode(get_post_meta( get_the_ID(), 'casasync_urls', $single = true ), true);
 				
 
 
@@ -447,7 +453,7 @@
 	            		<li class="active">
 	            			<a href="#text_basics" data-toggle="tab"><small><?php echo __("Base data", 'casasync') ?></small></a>
 	            		</li>
-	            	<?php foreach ($content_parts as $i => $part): ?>
+	            	<?php /* ?><?php foreach ($content_parts as $i => $part): ?>
 	            		<li>
 	            			<?php if (substr_count($part, '<h2>')): ?>
 	            				<?php $title = getTextBetweenTags($part, 'h2'); ?>
@@ -457,6 +463,12 @@
 	            			<a href="#text_<?php echo $i+1; ?>" data-toggle="tab">&nbsp;&#9998;&nbsp;<small><?php echo $title; ?></small></a>
 	            		</li>
 	            	<?php $i++; endforeach ?>
+	            	<?php */ ?>
+	            	<?php if ($content): ?>
+	            		<li>
+	            			<a href="#text_description" data-toggle="tab">&nbsp;&#9998;&nbsp;<small><?php echo __('Description', 'casasync') ?></small></a>
+	            		</li>
+	            	<?php endif ?>
 	            		<li>
 	            			<a href="#text_numbers" data-toggle="tab"><i class="icon icon-file-alt"></i> <small><?php echo __("Specifications", 'casasync') ?></small></a>
 	            		</li>
@@ -537,11 +549,17 @@
 		                	</div>
 		                <?php endif ?>
 	            	</div>
-	            	<?php foreach ($content_parts as $i => $part): ?>
+	            	<?php /*foreach ($content_parts as $i => $part): ?>
 	            		<div class="tab-pane fade" id="text_<?php echo $i+1; ?>">
 	            			<?php echo $part; ?>
 	            		</div>
-	            	<?php $i++; endforeach ?>
+	            	<?php $i++; endforeach */?>
+	            		<?php if ($content): ?>
+	            			<div class="tab-pane fade" id="text_description">
+	            				<h2><?php echo __('Description', 'casasync') ?></h2>
+	            				<?php echo $content; ?>
+	            			</div>
+	            		<?php endif ?>
 	            		<div class="tab-pane fade" id="text_numbers">
 	            				<h3><!-- <i class="icon icon-tags"></i>  --><?php echo __('Offer','casasync'); ?></h3>
 		            			<table class="table">
@@ -573,52 +591,81 @@
 
 		            				</td></tr>
 		            				<?php endif ?>
+		            				<?php if ($start): ?>
+			                			<tr><td width="25%"><?php echo __('Availability starts','casasync'); ?></td><td width="75%"><?php echo date(get_option('date_format'), strtotime($start)); ?></td></tr>
+			                 		<?php endif ?>
+
 		            				
 		            			</table>
-							<?php if ($address || $the_floors_arr || $features || $numvals || $property_id): ?>
+							<?php if ($address || $the_floors_arr || $numvals || $property_id || $reference_id): ?>
 		            			<h3><!-- <i class="icon icon-building"></i>  --><?php echo __('Property','casasync'); ?></h3>
 		            			<table class="table">
-		            				<tr><td width="25%"><?php echo __('Object ID','casasync') ?></td><td width="75%"><?php echo $property_id ?></td></tr>
+		            				
+		            				<?php if ($reference_id): ?>
+		            					<tr><td width="25%"><?php echo __('Reference','casasync') ?></td><td width="75%"><?php echo $reference_id ?></td></tr>
+		            				<?php elseif ($property_id): ?>	
+		            					<tr><td width="25%"><?php echo __('Object ID','casasync') ?></td><td width="75%"><?php echo $property_id ?></td></tr>
+		            				<?php endif ?>
+		            				
 		            				<tr><td width="25%"><?php echo __('Address','casasync') ?></td><td width="75%"><?php echo $address ?></td></tr>
 		            				<?php if ($the_floors_arr): ?>
 		            					<tr><td width="25%"><?php echo __('Floor(s)','casasync') ?></td><td width="75%"><?php 
 		            						echo "<ul><li>" . implode("</li><li>", $the_floors_arr) . "</li></ul>";
 		            					?></td></tr>	
 		            				<?php endif ?>
-		            				<?php if ($features): ?>
-		            					<tr><td width="25%"><?php echo __('Features','casasync'); ?></td><td width="75%">
-		            						<ul>
-		            							<?php foreach ($features as $feature){
-		            								switch ($feature['key']) {
-		            									case 'wheel-chair-access':
-		            										echo "<li>" . __('Wheelchair accessible', 'casasync') . ($feature['value'] ? ': ' . $feature['value'] . ' Eingänge' : '') . '</li>';
-		            										break;
-		            									case 'animals-alowed':
-		            										echo "<li>" . ($feature['value'] ? $feature['value'] . ' ' : '') . __('Pets allowed', 'casasync') . '</li>';
-		            										break;
-		            									default:
-		            										echo "<li>" . ($feature['value'] ? $feature['value'] . ' ' : '') . ' ' . casasync_convert_featureKeyToLabel($feature['key']) . '</li>';
-		            										break;
-		            								}
-		            							} ?>
-		            						</ul>
-		            					</td></tr>
-		            				<?php endif ?>
+		            				
 		            				<?php if ($numvals): ?>
+		            					<?php $store = ''; ?>
 		            					<?php foreach ($numvals as $numval): ?>
-		            						<tr>
-											<td width="25%"><?php echo $numval['title'] ?></td>
-											<td width="75%"><?php echo $numval['value'] ?><?php echo (in_array($numval['key'], array('surface_living', 'surface_property')) ? '<sup>2</sup>' : '' ) ?></td>
-										</tr>
+		            						<?php if (in_array($numval['key'], array(
+		            							'number_of_apartments',
+		            							'number_of_floors',
+		            							'floor',
+		            							'number_of_rooms',
+		            							'number_of_bathrooms',
+		            							'room_height'
+		            						))): ?>
+		            							<tr>
+		            								<td width="25%"><?php echo __($numval['title'], 'casasync') ?></td>
+													<td width="75%"><?php echo $numval['value'] ?><?php echo (in_array($numval['key'], array('surface_living', 'surface_property')) ? '<sup>2</sup>' : '' ) ?></td>
+												</tr>
+		            						<?php else: ?>
+		            							<?php $store .= '
+		            								<tr>
+		            									<td width="25%">' . __($numval['title'], 'casasync')  . '</td>
+														<td width="75%">' . $numval['value'] .  (in_array($numval['key'], array('surface_living', 'surface_property')) ? '<sup>2</sup>' : '' ) .'</td>
+													</tr>
+		            							'; ?>
+		            						<?php endif ?>
 		            					<?php endforeach ?>
+		            					<?php //echo '<tr><td colspan="2"></td></tr>' ?>
+		            					<?php echo $store; ?>
 		            				<?php endif ?>
 		            			</table>
 		            		<?php endif ?>
+		            		<?php if ($features): ?>
+		            			<h3><?php echo __('Features','casasync'); ?></h3>
+		            				<div class="casasync-features">
+            							<?php foreach ($features as $feature){
+            								switch ($feature['key']) {
+            									case 'wheel-chair-access':
+            										echo "<span class='label'><i class='icon icon-ok'></i> " . __('Wheelchair accessible', 'casasync') . ($feature['value'] ? ': ' . $feature['value'] . ' Eingänge' : '') . '</span>';
+            										break;
+            									case 'animals-alowed':
+            										echo "<span class='label'>" . ($feature['value'] ? $feature['value'] . ' ' : '') . __('Pets allowed', 'casasync') . '</span>';
+            										break;
+            									default:
+            										echo "<span class='label'><i class='icon icon-ok'></i> " . ($feature['value'] ? $feature['value'] . ' ' : '') . ' ' . casasync_convert_featureKeyToLabel($feature['key']) . '</span>';
+            										break;
+            								}
+            							} ?>
+            						</div>
+            				<?php endif ?>
+            				<div class="row-fluid">
 	            			<?php if ($distances): ?>
-		            			<h3><i class="icon icon-globe"></i> <?php echo __('Surroundings','casasync'); ?></h3>
-		            			<table class="table">
-		            			<?php if ($distances): ?>
-		            				<tr><td width="25%"><?php echo __('Distances:', 'casasync'); ?></td><td width="75%">
+	            				<div class="span6">
+		            				<h3><?php echo __('Distances','casasync'); ?></h3>
+			            			<?php if ($distances): ?>
 		            					<ul class="unstyled">
 		            					<?php if ($distances): ?>
 		            						<?php foreach ($distances as $key => $value): ?>
@@ -629,12 +676,24 @@
 		            						<?php endforeach ?>
 		            					<?php endif ?>
 		            					</ul>
-
-		            				</td></tr>
-		            			<?php endif ?>
+			            			<?php endif ?>
+		            			</div>
 		            				
-		            			</table>
 	            			<?php endif ?>
+
+	            			<?php if ($urls): ?>
+	            				<div class="span6">
+	            					<h3><?php echo __('Links', 'casasync') ?></h3>
+	            					<ul class="unstyled">
+		            					<?php foreach ($urls as $key => $url): ?>
+		            						<li>
+		            							<a href="<?php echo $url['href'] ?>" title="<?php echo $url['title'] ?>" target="blank"><?php echo $url['label'] ?></a>
+		            						</li>
+		            					<?php endforeach ?>
+		            				</ul>
+	            				</div>
+	            			<?php endif ?>
+	            			</div>
 	            		</div>
 	            		<div class="tab-pane fade" id="text_documents">
 	            			<?php if ($plans): ?>
