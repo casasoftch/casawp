@@ -35,7 +35,7 @@ function casasync_category_setTerm($term_slug, $lang){
     //$wp_term = get_term_by('slug', $term_slug, 'casasync_category');
     
 
-        $label = casasync_category_getLabel($term_slug, $lang);
+        $label = $term_slug;
 
         $existing_term_id = term_exists( $label, 'casasync_category');
         if ($existing_term_id) {

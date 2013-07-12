@@ -192,7 +192,7 @@
 			<?php ob_start(); ?>
 				<?php 
              		foreach ($categories as $category) {
-             			echo '<span class="label label-info">' . $category->name . '</span> ';
+             			echo '<span class="label label-info">' . casasync_convert_categoryKeyToLabel($category->name) . '</span> ';
              		}
              	?>
              	<?php 

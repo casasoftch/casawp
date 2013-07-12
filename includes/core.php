@@ -373,6 +373,21 @@ function casasync_convert_numvalKeyToLabel($key){
         case 'number_of_floors': return __('Number of floors' ,'casasync');break;
     }
 }
+
+function casasync_convert_categoryKeyToLabel($key){
+    switch ($key) {
+        case 'agriculture': return __('Agriculture' ,'casasync');break;
+        case 'apartment':   return __('Apartment' ,'casasync');break;
+        case 'gastronomy': return __('Gastronomy' ,'casasync');break;
+        case 'house': return __('House' ,'casasync');break;
+        case 'industrial': return __('House' ,'Industrial Objects');break;
+        case 'parking': return __('Parking space' ,'casasync');break;
+        case 'plot': return __('Grundstück' ,'casasync');break;
+        case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
+        case 'garden': return __('Garden' ,'casasync');break;
+        default: return $key; break;
+    }
+}
 function casasync_get_allDistanceKeys(){
     return array(
         'distance_public_transport',

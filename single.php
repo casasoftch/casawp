@@ -62,7 +62,7 @@
 				$categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
 			      $categories_names = array();
 			      foreach ($categories as $category) {
-			      	$categories_names[] = __($category->name,'casasync');
+			      	$categories_names[] = casasync_convert_categoryKeyToLabel($category->name);
 			      } 
 
 			     $floors = get_post_meta( get_the_ID(), 'casasync_floors', $single = true ); 
@@ -604,7 +604,7 @@
 		            				<?php if ($reference_id): ?>
 		            					<tr><td width="25%"><?php echo __('Reference','casasync') ?></td><td width="75%"><?php echo $reference_id ?></td></tr>
 		            				<?php elseif ($property_id): ?>	
-		            					<tr><td width="25%"><?php echo __('Object ID','casasync') ?></td><td width="75%"><?php echo $property_id ?></td></tr>
+		            					<!-- <tr><td width="25%"><?php echo __('Object ID','casasync') ?></td><td width="75%"><?php echo $property_id ?></td></tr> -->
 		            				<?php endif ?>
 		            				
 		            				<tr><td width="25%"><?php echo __('Address','casasync') ?></td><td width="75%"><?php echo $address ?></td></tr>

@@ -81,7 +81,7 @@
 			<?php 
 				$terms = get_terms('casasync_category');
 				foreach ($terms as $term) {
-					echo "<option value='" . $term->slug . "' " . (in_array($term->slug, $categories) ? 'SELECTED' : '') . ">" . __($term->name, 'casasync') . ' (' . $term->count . ')' . "</option>";
+					echo "<option value='" . $term->slug . "' " . (in_array($term->slug, $categories) ? 'SELECTED' : '') . ">" . casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')' . "</option>";
 				}
 			 ?>
 			</select>
@@ -249,7 +249,7 @@
 			<?php 
 				$terms = get_terms('casasync_category');
 				foreach ($terms as $term) {
-					echo "<option value='" . $term->slug . "' " . (in_array($term->slug, $categories) ? 'SELECTED' : '') . ">" . __($term->name, 'casasync') . ' (' . $term->count . ')' . "</option>";
+					echo "<option value='" . $term->slug . "' " . (in_array($term->slug, $categories) ? 'SELECTED' : '') . ">" . casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')' . "</option>";
 				}
 			 ?>
 			</select>
