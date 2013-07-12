@@ -556,7 +556,7 @@
 	            	<?php $i++; endforeach */?>
 	            		<?php if ($content): ?>
 	            			<div class="tab-pane fade" id="text_description">
-	            				<h2><?php echo __('Description', 'casasync') ?></h2>
+	            				<!-- <h2><?php echo __('Description', 'casasync') ?></h2> -->
 	            				<?php echo $content; ?>
 	            			</div>
 	            		<?php endif ?>
