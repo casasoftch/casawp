@@ -10,3 +10,8 @@ Moved it to WordPress
 
 2.1
 ===
+
+2.1.2
+===
+* Fixed some translational mishaps
+* grossPrice should now work

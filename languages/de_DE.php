@@ -56,6 +56,7 @@
 	            case 'Floor:': $translated_text = 'Etage:';break;
 	            case 'Floor': $translated_text = 'Etage';break;
 	            case 'Rent price:': $translated_text = 'Mietpreis:';break;
+	            case 'Rent price': $translated_text = 'Mietpreis';break;
 	            case 'Sales price:': $translated_text = 'Kaufpreis:';break;
 	            case 'Rent price': $translated_text = 'Mietpreis';break;
 	            case 'Sales price': $translated_text = 'Kaufpreis';break;

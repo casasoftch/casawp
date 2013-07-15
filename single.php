@@ -148,11 +148,11 @@
 	                        	       ($propertysegment != 'full' ? '/ ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '');
 	                $net_formated_timesegment = ($timesegment != 'infinite' ? '/ ' . $timesegment_labels[(string) $timesegment] : '');
             	}
-            	$gross = get_post_meta( get_the_ID(), 'grossPrice', $single = true ); 
+            	$gross = get_post_meta( get_the_ID(), 'grossprice', $single = true ); 
             	$gross_formated = false;
             	if ($gross) {
-            		$propertysegment = get_post_meta( get_the_ID(), $key = 'grossPrice_propertysegment', $single = true );
-	                $timesegment = get_post_meta( get_the_ID(), $key = 'grossPrice_timesegment', $single = true );
+            		$propertysegment = get_post_meta( get_the_ID(), $key = 'grossprice_propertysegment', $single = true );
+	                $timesegment = get_post_meta( get_the_ID(), $key = 'grossprice_timesegment', $single = true );
 	                if (!in_array($timesegment, array('m','w','d','y','h','infinite'))) {
 	                    $timesegment = 'infinite';
 	                }
