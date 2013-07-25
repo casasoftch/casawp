@@ -205,9 +205,9 @@ function casasync_import(){
                 }
                 if ($xml->provider->organization->email) {update_option("casasync_sellerfallback_email", $xml->provider->organization->email->__toString() );}
                 if ($xml->provider->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->provider->organization->faxNumber->__toString() );}
-                if ($xml->provider->organization->telephone) {
+                if ($xml->provider->organization->phone) {
                     $central = false;
-                    foreach ($xml->provider->organization->telephone as $phone) {
+                    foreach ($xml->provider->organization->phone as $phone) {
                         if ($phone['type']) {
                             switch ($phone['type']->__toString()) {
                                 case 'direct':
@@ -238,9 +238,9 @@ function casasync_import(){
                 if ($xml->provider->organization->legalName) {update_option("casasync_sellerfallback_legalname", $xml->provider->organization->legalName->__toString() );}
                 if ($xml->provider->organization->email) {update_option("casasync_sellerfallback_email", $xml->provider->organization->email->__toString() );}
                 if ($xml->provider->organization->faxNumber) {update_option("casasync_sellerfallback_fax", $xml->provider->organization->faxNumber->__toString() );}
-                if ($xml->provider->organization->telephone) {
+                if ($xml->provider->organization->phone) {
                     $central = false;
-                    foreach ($xml->provider->organization->telephone as $phone) {
+                    foreach ($xml->provider->organization->phone as $phone) {
                         if ($phone['type']) {
                             switch ($phone['type']->__toString()) {
                                 case 'direct':
@@ -274,7 +274,7 @@ function casasync_import(){
                 if ($xml->technicalFeedback->givenName) {update_option("casasync_feedback_given_name", $xml->technicalFeedback->givenName->__toString() );}
                 if ($xml->technicalFeedback->familyName) {update_option("casasync_feedback_family_name", $xml->technicalFeedback->familyName->__toString() );}
                 if ($xml->technicalFeedback->email) {update_option("casasync_feedback_email", $xml->technicalFeedback->email->__toString() );}
-                if ($xml->technicalFeedback->telephone) {update_option("casasync_feedback_telephone", $xml->technicalFeedback->telephone->__toString() );}
+                if ($xml->technicalFeedback->phone) {update_option("casasync_feedback_telephone", $xml->technicalFeedback->phone->__toString() );}
                 if ($xml->technicalFeedback->gender) {update_option("casasync_feedback_gender", $xml->technicalFeedback->gender->__toString() );}
             }
         }
@@ -780,7 +780,7 @@ function casasync_import(){
                 $seller_org_legalname = $property->offer->seller->organization->legalName->__toString();
                 $seller_org_email = $property->offer->seller->organization->email->__toString();
                 $seller_org_fax = $property->offer->seller->organization->faxNumber->__toString();
-                if ($property->offer->seller->organization->telephone) {
+                if ($property->offer->seller->organization->phone) {
                     $central = false;
                     foreach ($property->offer->seller->organization->organization as $phone) {
                         if ($phone['type']) {
@@ -820,9 +820,9 @@ function casasync_import(){
                         $seller_person_familyname = $person->familyName->__toString();
                         $seller_person_email = $person->email->__toString();
                         $seller_person_fax = $person->faxNumber->__toString();
-                        if ($person->telephone) {
+                        if ($person->phone) {
                             $central = false;
-                            foreach ($person->telephone as $phone) {
+                            foreach ($person->phone as $phone) {
                                 if ($phone['type']) {
                                     switch ($phone['type']->__toString()) {
                                         case 'direct':
@@ -855,9 +855,9 @@ function casasync_import(){
                         $seller_inquiry_person_familyname = $person->familyName->__toString();
                         $seller_inquiry_person_email = $person->email->__toString();
                         $seller_inquiry_person_fax = $person->faxNumber->__toString();
-                        if ($person->telephone) {
+                        if ($person->phone) {
                             $central = false;
-                            foreach ($person->telephone as $phone) {
+                            foreach ($person->phone as $phone) {
                                 if ($phone['type']) {
                                     switch ($phone['type']->__toString()) {
                                         case 'direct':

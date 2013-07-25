@@ -15,3 +15,8 @@ Moved it to WordPress
 ===
 * Fixed some translational mishaps
 * grossPrice should now work
+
+2.1.2
+===
+* Fixed tiny slash error
+* Re-Commited translation files

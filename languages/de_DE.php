@@ -173,10 +173,12 @@
 		        case 'Gastronomy':			$translated_text =  'Gastronomie';break;
 		        case 'House':				$translated_text =  'Haus';break;
 		        case 'Industrial Objects':	$translated_text =  'Gewerbe/Industrie';break;
+		        case 'Industrial':			$translated_text =  'Gewerbe/Industrie';break;
 		        case 'Parking space':		$translated_text =  'Parkplatz';break;
 		        case 'Plot':				$translated_text =  'Grundstück';break;
 		        case 'Secondary rooms':		$translated_text =  'Wohnnebenräume';break;
 		        case 'Garden':				$translated_text =  'Garten';break;
+		        case 'Commercial':			$translated_text =  'Gewerbe';break;
 
 		        case 'Description':				$translated_text =  'Beschreibung';break;
 		        case 'Reference':				$translated_text =  'Referenz';break;

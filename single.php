@@ -161,8 +161,8 @@
 	                }
 	                $gross_formated = ($price_currency ? $price_currency . ' ' : '') . 
 	                        		   number_format(round($gross), 0, '', '\'') . '.&#8211;' .
-	                        	       ($propertysegment != 'full' ? '/ ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '');
-	                $gross_formated_timesegment = ($timesegment != 'infinite' ? ' ' . $timesegment_labels[(string) $timesegment] : '');
+	                        	       ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '');
+	                $gross_formated_timesegment = ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '');
             	}
 
 				$extra_costs_json =  get_post_meta( get_the_ID(), 'extraPrice', $single = true ); 
