@@ -84,6 +84,7 @@
 		        case 'Shopping':               	$translated_text =  'Einkaufen';break;
 		        case 'Kindergarten':       		$translated_text =  'Kindergarten';break;
 		        case 'Rail connection':         $translated_text =  'Bahnanschluss';break;
+		        case 'Motorway':        	 	$translated_text =  'Autobahnanschluss';break;
 		        case 'Primary school':          $translated_text =  'Primarschule';break;
 		        case 'Secondary school':        $translated_text =  'Oberstufe';break;
 

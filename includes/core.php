@@ -403,7 +403,7 @@ function casasync_convert_distanceKeyToLabel($key){
         case 'distance_public_transport':   return __('Public transportation' ,'casasync');break;
         case 'distance_shop':               return __('Shopping' ,'casasync');break;
         case 'distance_kindergarten':       return __('Kindergarten' ,'casasync');break;
-        case 'distance_motorway':           return __('Rail connection' ,'casasync');break;
+        case 'distance_motorway':           return __('Motorway' ,'casasync');break;
         case 'distance_school1':            return __('Primary school' ,'casasync');break;
         case 'distance_school2':            return __('Secondary school' ,'casasync');break;
     }
