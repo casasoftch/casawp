@@ -570,8 +570,8 @@ function casasync_import(){
             $netPrice_propertysegment = '';
             $netPrice = 0;
 
-            $availability = 'available';
-            $availability_label = 'Available';
+            $availability = '';
+            $availability_label = '';
 
 
             $extraPrice = array();
@@ -610,17 +610,15 @@ function casasync_import(){
                 if (!in_array($property->offer->priceCurrency, array('CHF', 'EUR', 'USD', 'GBP'))) {
                     $price_currency = '';
                 }
+
+
                 if ($property->offer->availability) {
-                    if ($property->offer->availability->__toString() == 'reserved') {
-                        $availability = 'reserved';
-                        if (!$property->offer->availability['title']->__toString()) {
-                            $availability_label = 'Reserved';
-                        }
+                    $availability = $property->offer->availability->__toString();
+                    if ($property->offer->availability['title']) {
+                        $availability_label = $property->offer->availability['title']->__toString();
                     }
                 }
-                if ($property->offer->availability['title']) {
-                    $availability_label = $property->offer->availability['title']->__toString();
-                }
+                
 
                 if ($property->offer->price) {
                     $price_timesegment = $property->offer->price['timesegment'];

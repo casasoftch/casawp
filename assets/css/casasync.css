@@ -226,3 +226,41 @@ hr.property-separator {
 .archive-property-gallery-item:hover .archive-property-gallery-caption{
 	bottom:0px;
 }
+
+
+
+/* {availabilitylabel} */
+.archive-property-thumbnail{
+	position: relative;
+}
+
+.availability-label{
+	position: absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	height: 36px;
+	line-height: 36px;
+	background-color: black;
+	background-color: rgba(0,0,0,0.7);
+	color:white;
+	text-align: center;
+	z-index: 2;
+}
+
+.availability-label-reference, .availability-label-planned{
+	background-color: rgba(0,0,50,0.7);
+}
+
+.availability-label-available{
+	background-color: rgba(0,50,0,0.7);
+}
+
+.availability-label-reserved{
+	background-color: rgba(50,0,0,0.7);
+}
+
+.availability-label-available{
+	display: none;
+}
+

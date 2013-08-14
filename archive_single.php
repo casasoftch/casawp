@@ -79,8 +79,35 @@
  	} else {
  		$the_basis = 'buy';
  	}
-
  ?>
+
+ 	<?php 
+ 		$availability = get_post_meta( get_the_ID(), 'availability', $single = true );
+		$availability_label = get_post_meta( get_the_ID(), 'availability_label', $single = true );
+		if (!$availability_label) {
+			switch ($availability) {
+				case 'available':
+					$availability_label = 'Verfügbar';
+					break;
+				case 'reserved':
+					$availability_label = 'Reserved';
+					break;
+				case 'planned':
+					$availability_label = 'In Planung';
+					break;
+				case 'under-construction':
+					$availability_label = 'Im Bau';
+					break;
+				case 'reference':
+					$availability_label = 'Referenz';
+					break;
+				
+				default:
+					$availability_label = false;
+					break;
+			}
+		}
+	 ?>
 
 
 
@@ -95,11 +122,7 @@
 			<?php $the_classes = 'class="' . implode(' ', $classes) . '' . $basis_slugs_str . '"'; ?>
 
 <?php /******************* {permalink}  *************/ ?>
-			<?php if ($the_basis == 'reference') {
-				$the_permalink = false;
-			} else {
-				$the_permalink = get_permalink();
-			}; ?>
+			<?php $the_permalink = get_permalink(); ?>
 
 <?php /******************* {thumbnail}  *************/ ?>
 			<?php $the_thumbnail = false; ?>
@@ -107,6 +130,15 @@
 			<?php if ( $thumbnail ) { ?>
 				<?php $the_thumbnail = $thumbnail; ?>		
 			<?php } ?>
+
+<?php /******************* {availabilitylabel}  *************/ ?>
+	<?php 
+		$the_availabilitylabel = false;
+		if ($availability_label):
+			$the_availabilitylabel = '<div class="availability-label availability-label-' . $availability . '">' . $availability_label . '</div>';
+	 	endif;
+	 ?>
+
 
 <?php /******************* {datatable}  *************/ ?>
 			<?php ob_start(); ?>
@@ -222,8 +254,7 @@
 				<?php if ($count): ?>
 					<span class="label"><i class="icon-flag icon-white"></i> <?php echo $count ?></span> 
 				<?php endif ?>
-				<?php $availability = get_post_meta( get_the_ID(), 'availability', $single = true ); ?>
-				<?php $availability_label = get_post_meta( get_the_ID(), 'availability_label', $single = true ); ?>
+				
 				<?php if ($availability && $availability_label && $availability == 'reserved'): ?>
 					<span class="label label-important"><i class="icon-warning-sign icon-white"></i> <?php echo $availability_label  ?></span>
 				<?php endif ?>
@@ -272,8 +303,17 @@
 			$template = casasync_template_set_if($template, 'thumbnail', $the_thumbnail);
 			$template = casasync_template_set_if_not($template, 'thumbnail', $the_thumbnail);
 
+			$template = casasync_template_set_if($template, 'availabilitylabel', $the_availabilitylabel);
+			$template = casasync_template_set_if_not($template, 'availabilitylabel', $the_availabilitylabel);
+
 			$template = casasync_template_set_if($template, 'permalink', $the_permalink);
 			$template = casasync_template_set_if_not($template, 'permalink', $the_permalink);
+
+			$template = casasync_template_set_if_not($template, 'planned', ($the_basis == 'planned' ? true : false));
+			$template = casasync_template_set_if($template, 'planned', ($the_basis == 'planned' ? false : true));
+
+			$template = casasync_template_set_if_not($template, 'reference', ($the_basis == 'reference' ? true : false));
+			$template = casasync_template_set_if($template, 'reference', ($the_basis == 'reference' ? false : true));
 
 			$template = str_replace('{permalink}', $the_permalink, $template);
 
