@@ -3,6 +3,48 @@ var $ = jQuery.noConflict();
 
 $(document).ready(function($) {
 
+    //google maps
+    if ($('.casasync-map').length && google) {
+        $('.casasync-map').each(function(){
+            var $mapwraper = $(this);
+            if ($mapwraper.data('address')) {
+                geocoder = new google.maps.Geocoder();
+                geocoder.geocode( { 'address': $mapwraper.data('address')}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var map;
+                        function initialize() {
+                            var mapOptions = {
+                              zoom: 12,
+                              center: results[0].geometry.location,
+                              mapTypeId: google.maps.MapTypeId.ROADMAP
+                            };
+                            $mapwraper.show();
+                            map = new google.maps.Map(document.getElementById('map-canvas'),
+                              mapOptions);
+
+
+                            map.fitBounds(results[0].geometry.bounds);
+
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                position: results[0].geometry.location
+                            });
+                        }
+
+                        google.maps.event.addDomListener(window, 'load', initialize);
+
+                        //$('#map-canvas').animate({'height' : '400px'}, 500);
+                    }
+                });
+            };
+        });
+
+        
+    };
+
+
+
+
 
     var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
     if (!isMobile) {

@@ -569,13 +569,24 @@
 			                </div>
 		                </div>
 		                <?php if ($address): ?>
-		                	<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace('<br>', '+', $address )) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', '+', $address )) . "&amp;t=m&amp;z=14&amp;output=embed" ?>
+		                	<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace('<br>', ', ', $address )) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $address )) . "&amp;t=m&amp;z=14&amp;output=embed" ?>
 		                	<div class="hidden-phone">
-		                		<iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="<?php echo $map_url ?>"></iframe><br /><small><a href="<?php echo $map_url ?>" class="casasync-fancybox" data-fancybox-type="iframe"><?php echo __('View lager version', 'casasync') ?></a></small>		                
+		                		<div class="casasync-map" style="display:none" data-address="<?php echo str_replace('<br>', ', ', $address) ?>">
+		                			<div id="map-canvas" style="width:100%; height:400px;" ></div>
+		                			<br /><small><a href="<?php echo $map_url ?>" class="casasync-fancybox" data-fancybox-type="iframe"><?php echo __('View lager version', 'casasync') ?></a></small>
+		                		</div>
 		                	</div>
 		                	<div class="visible-phone">
 		                		<a class="btn btn-success btn-block" href="<?php echo $map_url ?>"><i class="icon icon-map-marker"></i> Auf Google Maps anzeigen</a>
 		                	</div>
+		                	<?php //wp_localize_script( 'casasync_script', 'map_vars', array('address' => $address) ); ?>
+		                	<?php //$map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace('<br>', '+', $address )) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', '+', $address )) . "&amp;t=m&amp;z=14&amp;output=embed" ?>
+		                	<!-- <div class="hidden-phone">
+		                		<iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="<?php echo $map_url ?>"></iframe><br /><small><a href="<?php echo $map_url ?>" class="casasync-fancybox" data-fancybox-type="iframe"><?php echo __('View lager version', 'casasync') ?></a></small>		                
+		                	</div>
+		                	<div class="visible-phone">
+		                		<a class="btn btn-success btn-block" href="<?php echo $map_url ?>"><i class="icon icon-map-marker"></i> Auf Google Maps anzeigen</a>
+		                	</div> -->
 		                <?php endif ?>
 	            	</div>
 	            	<?php /*foreach ($content_parts as $i => $part): ?>

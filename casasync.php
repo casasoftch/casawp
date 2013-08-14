@@ -408,6 +408,14 @@ if (get_option( 'casasync_load_scripts', 1 )) {
 }
 
 
+function casasync_load_google_maps_script(){
+  wp_enqueue_script(
+    'google_maps_v3',
+    'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'
+  );
+}
+add_action( 'wp_enqueue_scripts', 'casasync_load_google_maps_script' );
+
 function load_jquery() {
 
     // only use this method is we're not in wp-admin

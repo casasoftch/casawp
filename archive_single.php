@@ -126,7 +126,7 @@
 
 <?php /******************* {thumbnail}  *************/ ?>
 			<?php $the_thumbnail = false; ?>
-			<?php $thumbnail = get_the_post_thumbnail(get_the_ID(), 'full'); ?>
+			<?php $thumbnail = get_the_post_thumbnail(get_the_ID(), 'casasync_archive'); ?>
 			<?php if ( $thumbnail ) { ?>
 				<?php $the_thumbnail = $thumbnail; ?>		
 			<?php } ?>

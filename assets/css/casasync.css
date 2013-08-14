@@ -173,6 +173,13 @@ hr.property-separator {
 .casasync-featured .archive-property-content{
 	padding:10px;
 }
+
+
+/* GOOGLE MAPS API */
+.casasync-map img{
+	max-width: inherit;
+}
+
 /* MULTI SELECT PLUGIN */
 .dropdown-menu .multiselect-group{
 	font-weight: bold;
