@@ -22,7 +22,7 @@ Moved it to WordPress
 * Re-Commited translation files
 
 
-2.1.3
+2.1.3 (not deployed)
 ===
 * new: {availabilitylabel}
 * new: Availability import 'planned', 'reserved', 'reference', 'under-construction' etc
@@ -30,3 +30,9 @@ Moved it to WordPress
 * new: {if_reference}, {!if_reference}
 * bug: False translations "Bahnhof -> Autobahn"
 * bug: Genereral stability improvements
+
+To do
+===
+* new: google Maps Api instead of iframe
+* new: Twitter Bootstrap 3 as option
+* bug: (Commercial, House) have been discovered as untranslated
