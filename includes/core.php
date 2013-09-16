@@ -380,12 +380,12 @@ function casasync_convert_categoryKeyToLabel($key){
         case 'apartment':   return __('Apartment' ,'casasync');break;
         case 'gastronomy': return __('Gastronomy' ,'casasync');break;
         case 'house': return __('House' ,'casasync');break;
-        case 'industrial': return __('House' ,'Industrial Objects');break;
+        case 'industrial': return __('Industrial' ,'casasync');break;
         case 'parking': return __('Parking space' ,'casasync');break;
         case 'plot': return __('Grundstück' ,'casasync');break;
         case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
         case 'garden': return __('Garden' ,'casasync');break;
-        default: return $key; break;
+        case 'commercial': return __('Commercial' ,'casasync');break;
     }
 }
 function casasync_get_allDistanceKeys(){

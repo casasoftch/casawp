@@ -179,7 +179,7 @@
 		        case 'Plot':				$translated_text =  'Grundstück';break;
 		        case 'Secondary rooms':		$translated_text =  'Wohnnebenräume';break;
 		        case 'Garden':				$translated_text =  'Garten';break;
-		        case 'Commercial':			$translated_text =  'Gewerbe';break;
+		        case 'Commercial':			$translated_text =  'Büro';break;
 
 		        case 'Description':				$translated_text =  'Beschreibung';break;
 		        case 'Reference':				$translated_text =  'Referenz';break;
