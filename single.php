@@ -271,6 +271,11 @@
 				}
 			}
 
+			$has_remcat = false;
+			if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
+				$has_remcat = true;	
+			}
+			
 
 
 		 	$own_seller = false;
@@ -785,7 +790,7 @@
 
 <?php /******************* {cta}  *************/  ?>
 				<?php $the_cta = false; ?>
-				<?php if ($emails): ?>
+				<?php if ($emails || $has_remcat): ?>
 					<?php ob_start();?>
 			    		<a href="#casasyncPropertyContactForm" id="casasyncKontactAnchor"><i class="icon icon-envelope"></i> <?php echo __('Directly contact the provider now', 'casasync') ?></a>	
 					<?php $the_cta = ob_get_contents();ob_end_clean();?>
@@ -818,7 +823,7 @@
 
 <?php /******************* {contactform}  *************/ ?>
 				<?php $the_contactform = false; ?>
-				<?php if ($emails) {?>
+				<?php if ($emails || $has_remcat) {?>
 					<?php ob_start(); ?>
 						<?php echo do_shortcode( '[casasync_contact recipients="' . implode(';', $emails) . '" post_id="' . get_the_ID() . '"]' );?>
 					<?php $the_contactform = ob_get_contents();ob_end_clean(); ?>
@@ -842,25 +847,25 @@
 					  			<?php endif; ?>
 					  			
 					  			<?php if ($sellerphone_mobile): ?>
-					  				<p>
+					  				<p class="cs-phone-mobile">
 						  				<span class="label"><?php echo __('Mobile', 'casasync') ?></span>
 						  				<span class="value break-word"><i class="icon icon-mobile-phone"></i> <?php echo $sellerphone_mobile ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerphone_direct): ?>
-					  				<p>
+					  				<p class="cs-phone-direct">
 						  				<span class="label"><?php echo __('Phone direct', 'casasync') ?></span>
 						  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $sellerphone_direct ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerphone_central): ?>
-					  				<p>
+					  				<p class="cs-phone-central">
 						  				<span class="label"><?php echo __('Phone', 'casasync') ?></span>
 						  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $sellerphone_central ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerfax): ?>
-					  				<p>
+					  				<p class="cs-phone-fax">
 						  				<span class="label"><?php echo __('Fax', 'casasync') ?></span>
 						  				<span class="value break-word"><?php echo $sellerfax ?></span>
 						  			</p>
@@ -898,25 +903,25 @@
 					  			</p>
 			  				<?php endif; ?>
 				  			<?php if ($salesperson_phone_mobile): ?>
-				  				<p>
+				  				<p class="cs-phone-mobile">
 					  				<span class="label"><?php echo __('Mobile', 'casasync') ?></span>
 					  				<span class="value break-word"><i class="icon icon-mobile-phone"></i> <?php echo $salesperson_phone_mobile ?></span>
 					  			</p>
 					  		<?php endif; ?>
 				  			<?php if ($salesperson_phone_direct): ?>
-				  				<p>
+				  				<p class="cs-phone-direct">
 					  				<span class="label"><?php echo __('Phone direct', 'casasync') ?></span>
 					  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $salesperson_phone_direct ?></span>
 					  			</p>
 				  			<?php endif; ?>
 				  			<?php if ($salesperson_phone_central): ?>
-				  				<p>
+				  				<p class="cs-phone-central">
 					  				<span class="label"><?php echo __('Phone', 'casasync') ?></span>
 					  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $salesperson_phone_central ?></span>
 					  			</p>
 				  			<?php endif; ?>
 				  			<?php if ($salesperson_fax): ?>
-				  				<p>
+				  				<p class="cs-phone-fax">
 					  				<span class="label"><?php echo __('Fax', 'casasync') ?></span>
 					  				<span class="value break-word"><?php echo $salesperson_fax ?></span>
 					  			</p>

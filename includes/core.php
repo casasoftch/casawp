@@ -604,9 +604,9 @@ function contact_fn( $atts ) {
         'phone'   => __('Phone', 'casasync'), //'Telefon',
         'email'   => 'E-Mail SPAM!',
         'company'   => __('Company', 'casasync'), //'Firma',
-        'addr1'   => __('Street', 'casasync'), //'Strasse',
-        'zip'   => __('ZIP', 'casasync'), //'PLZ',
-        'city'   => __('City', 'casasync'), //'Stadt',
+        'street'   => __('Street', 'casasync'), //'Strasse',
+        'postal_code'   => __('ZIP', 'casasync'), //'PLZ',
+        'locality'   => __('Locality', 'casasync'), //'Stadt',
         'state'   => __('Kanton', 'casasync'), //'Kanton',
         'subject'   => __('Subject', 'casasync'), //'Betreff',
         'message'   => __('Message', 'casasync'), //'Nachricht',
@@ -622,7 +622,10 @@ function contact_fn( $atts ) {
             'firstname',
             'lastname',
             'emailreal',
-            'subject'
+            'subject',
+            'street',
+            'postal_code',
+            'locality'
         );
         $companyname = get_bloginfo( 'name' );
         $companyAddress = '{STREET}
@@ -661,8 +664,16 @@ function contact_fn( $atts ) {
             $customer_id = $casa_id_arr[0];
             $property_id = $casa_id_arr[1];
 
+            
             //REM
             if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
+                $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
+                if ($categories) {
+                    $type = casasync_convert_categoryKeyToLabel($categories[0]->name); 
+                } else {
+                    $type = '';
+                }
+
                 $remCat = array(
                     0  => $_SERVER['SERVER_NAME'],
                     1  => get_post_meta( $post_id, 'seller_org_legalname', true ),
@@ -675,19 +686,19 @@ function contact_fn( $atts ) {
                     8  => get_permalink($post_id),
                     9  => get_post_meta($post_id, 'casasync_property_address_streetaddress', true),
                     10 => get_post_meta($post_id, 'casasync_property_address_locality', true),
-                    11 => 'TYPE',
+                    11 => $type,
                     12 => 'DE', //LANG
                     13 => '', //anrede
                     14 => (isset($_POST['firstname']) ? $_POST['firstname'] : ''),
                     15 => (isset($_POST['lastname']) ? $_POST['lastname'] : ''),
                     16 => (isset($_POST['company']) ? $_POST['company'] : ''),
-                    17 => (isset($_POST['addr1']) ? $_POST['addr1'] : ''),
-                    18 => (isset($_POST['zip']) ? $_POST['zip'] : ''),
-                    19 => (isset($_POST['city']) ? $_POST['city'] : ''),
+                    17 => (isset($_POST['street']) ? $_POST['street'] : ''),
+                    18 => (isset($_POST['postal_code']) ? $_POST['postal_code'] : ''),
+                    19 => (isset($_POST['locality']) ? $_POST['locality'] : ''),
                     20 => (isset($_POST['phone']) ? $_POST['phone'] : ''),
                     21 => (isset($_POST['mobile']) ? $_POST['mobile'] : ''),
                     22 => (isset($_POST['fax']) ? $_POST['fax'] : ''),
-                    23 => (isset($_POST['email']) ? $_POST['email'] : ''),
+                    23 => (isset($_POST['emailreal']) ? $_POST['emailreal'] : ''),
                     24 => (isset($_POST['message']) ? $_POST['message'] : ''),
                     25 => '',
                     26 => ''
@@ -782,10 +793,18 @@ function contact_fn( $atts ) {
             }*/
 
             foreach ($recipientses as $recipient2) {
-                if (wp_mail($recipient2[1], 'Neue Anfrage', $template, $header)) {
-                    return '<p class="alert alert-success">Vielen Dank!</p>';
+                if (isset($recipient2[1])) {
+                    if (wp_mail($recipient2[1], 'Neue Anfrage', $template, $header)) {
+                        return '<p class="alert alert-success">Vielen Dank!</p>';
+                    } else {
+                        return '<p class="alert alert-error">Fehler!</p>';
+                    }
                 } else {
-                    return '<p class="alert alert-error">Fehler!</p>';
+                    if (isset($remCat)) {
+                        return '<p class="alert alert-success">Vielen Dank!</p>';
+                    } else {
+                        return '<p class="alert alert-error">Fehler!</p>';
+                    }
                 }
             }
         }
@@ -817,23 +836,37 @@ function contact_fn( $atts ) {
                     </div>
                     <div class="span7">
                         <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
-                        <input name="lastname" class="span12" type="text" id="lastname" />
+                        <input name="lastname" class="span12" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
                     </div>
                 </div>
                 <div class="row-fluid">
                 </div>
                 <div class="row-fluid">
                     <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                    <input name="emailreal" class="span12" type="text" id="emailreal" />
+                    <input name="emailreal" class="span12" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
+                </div>
+                <div class="row-fluid">
+                    <label for="street"><?php echo __('Street', 'casasync') ?></label>
+                    <input name="street" class="span12" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
+                </div>
+                <div class="row-fluid">
+                    <div class="span4">
+                        <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
+                        <input name="postal_code" class="span12" value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
+                    </div>
+                    <div class="span8">
+                        <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
+                        <input name="locality" class="span12" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
+                    </div>
                 </div>
                 <div class="row-fluid">
                     <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
-                    <input name="phone" class="span12" type="text" id="tel" />
+                    <input name="phone" class="span12" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="tel" />
                 </div>
                 <div class="row-fluid">
                     <div class="span12">
                         <label for="message"><?php echo __('Message', 'casasync') ?></label>
-                        <textarea name="message" class="span12" id="message"></textarea>
+                        <textarea name="message" class="span12" id="message"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
                     </div>
                 </div>
                 <div class="row-fluid">

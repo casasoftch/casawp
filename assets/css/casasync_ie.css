@@ -1,0 +1,44 @@
+.casasync-carousel-left,
+.casasync-carousel-right{
+	/*background-color: rgba(0,0,0,0.8);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#50000000,endColorstr=#50000000); 
+    zoom: 1;
+}
+
+.archive-property-gallery-caption{
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#70000000,endColorstr=#70000000); 
+    zoom: 1;
+}
+
+
+.availability-label{
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#70000000,endColorstr=#70000000); 
+    zoom: 1;
+}
+
+.availability-label-reference, .availability-label-planned{
+	/*background-color: rgba(0,0,50,0.7);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#70000050,endColorstr=#70000050); 
+    zoom: 1;
+}
+
+.availability-label-available{
+	/*background-color: rgba(0,50,5,0.7);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#70005000,endColorstr=#70005000); 
+    zoom: 1;
+}
+
+.availability-label-reserved{
+	/*background-color: rgba(50,0,5,0.7);*/
+	background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#70500000,endColorstr=#70500000); 
+    zoom: 1;
+}
+

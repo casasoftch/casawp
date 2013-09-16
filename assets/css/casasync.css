@@ -58,7 +58,8 @@
 	left: 0px;
 	right: 90%;
 	background-color: black;
-	background-color: rgba(0,0,0,0.8);
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
 	color:white;
 	font-weight: bold;
 	font-size: 30px;
@@ -226,7 +227,8 @@ hr.property-separator {
 	right:0px;
 	padding:10px;
 	background-color: black;
-	background-color: rgba(0,0,0,0.7);
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
 	color:white;
 	bottom:-150px;
 }
@@ -249,22 +251,26 @@ hr.property-separator {
 	height: 36px;
 	line-height: 36px;
 	background-color: black;
-	background-color: rgba(0,0,0,0.7);
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
 	color:white;
 	text-align: center;
 	z-index: 2;
 }
 
 .availability-label-reference, .availability-label-planned{
-	background-color: rgba(0,0,50,0.7);
+	/*background-color: rgba(0,0,50,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYDDaDAABIQDnWqVFZgAAAABJRU5ErkJggg==) repeat;
 }
 
 .availability-label-available{
-	background-color: rgba(0,50,0,0.7);
+	/*background-color: rgba(0,50,0,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkMGLYDAABUwDn/x5dvAAAAABJRU5ErkJggg==) repeat;
 }
 
 .availability-label-reserved{
 	background-color: rgba(50,0,0,0.7);
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2M0YmDYDAABhQDn0Y/8+wAAAABJRU5ErkJggg==)
 }
 
 .availability-label-available{
