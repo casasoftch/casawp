@@ -13,7 +13,7 @@ Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makle
 
 == Description ==
 
-Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
+Synchronisieren Sie Ihre Immobilien Objekte mit CasaSync, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaSync importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
 
 == Installation ==
 
