@@ -127,9 +127,19 @@
 							echo "</optgroup>";
 						} else {
 							//must be another country?
-							echo "<optgroup label='" . countrycode_to_countryname($term->name)  . "''><option class='lvl2' value='" . $term2->slug . "' " . (in_array($term2->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term2->name . ' (' . $term2->count . ')' . "</option></optgroup>";
+							$otherCountry[$term->name][] = $term2;
 						}
 					}
+
+					//list all other countries in seperate optgroup
+					foreach ( $otherCountry as $countryCode => $country ) {
+						echo "<optgroup label='" . countrycode_to_countryname($countryCode)  . "''>";
+						foreach ( $country as $location ) {
+							echo "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";		
+						}
+						echo "</optgroup>";
+					}	
+
 					if (!$terms_lvl1_has_children) {
 						$no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . ' (' . $term->count . ')' . "</option>";
 					}
