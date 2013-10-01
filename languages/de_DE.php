@@ -29,6 +29,7 @@
 	            case 'Page forward &rarr;':$translated_text = 'nächste Seite &rarr;';break;
 
 	            case 'Switzerland': $translated_text = 'Schweiz';break;
+	            case 'Italy': $translated_text = 'Italien';break;
 	            case 'France': $translated_text = 'Frankreich';break;
 	            case 'monthly': $translated_text = 'monatlich';break;
 	            case 'weekly': $translated_text = 'wöchentlich';break;
