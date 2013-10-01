@@ -184,7 +184,12 @@
 		        case 'Description':				$translated_text =  'Beschreibung';break;
 		        case 'Reference':				$translated_text =  'Referenz';break;
 		        case 'Distances':				$translated_text =  'Distanzen';break;
-			
+
+		        case 'Available':				$translated_text =  'Verfügbar';break;
+		        case 'Reserved':				$translated_text =  'Reserviert';break;
+		        case 'Planned':					$translated_text =  'In Planung';break;
+		        case 'Under construction':		$translated_text =  'Im Bau';break;
+
 			
 	        }
 

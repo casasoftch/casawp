@@ -3,6 +3,7 @@
 	<div class="row-fluid">
 		{if_thumbnail}
 			<div class="span5 archive-property-thumbnail">
+			      {if_availabilitylabel}<div class="availability-outerlabel">{availabilitylabel}</div>{end_if_availabilitylabel}
 				{if_permalink}
 					<a href="{permalink}" class="thumbnail">
 						{thumbnail}

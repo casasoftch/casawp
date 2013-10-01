@@ -87,19 +87,19 @@
 		if (!$availability_label) {
 			switch ($availability) {
 				case 'available':
-					$availability_label = 'Verfügbar';
+					$availability_label = __('Available', 'casasync');
 					break;
 				case 'reserved':
-					$availability_label = 'Reserved';
+					$availability_label = __('Reserved', 'casasync');
 					break;
 				case 'planned':
-					$availability_label = 'In Planung';
+					$availability_label = __('Planned', 'casasync');
 					break;
 				case 'under-construction':
-					$availability_label = 'Im Bau';
+					$availability_label = __('Unser construction', 'casasync');
 					break;
 				case 'reference':
-					$availability_label = 'Referenz';
+					$availability_label = __('Reference', 'casasync');
 					break;
 				
 				default:

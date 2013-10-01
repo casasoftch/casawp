@@ -171,7 +171,10 @@
 		        case 'Secondary rooms':			$translated_text =  'Locali di Servizio';break;
 		        case 'Garden':					$translated_text =  'Giardino';break;
 
-
+		        case 'Available':				$translated_text =  'Available';break;
+		        case 'Reserved':				$translated_text =  'Reserved';break;
+		        case 'Planned':					$translated_text =  'Planned';break;
+		        case 'Under construction':		$translated_text =  'Under construction';break;
 
 			
 	        }
