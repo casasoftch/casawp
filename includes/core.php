@@ -681,7 +681,7 @@ function contact_fn( $atts ) {
                     3  => get_post_meta( $post_id, 'seller_org_address_postalcode', true ),
                     4  => get_post_meta( $post_id, 'seller_org_address_locality', true ),
                     5  => get_post_meta( $post_id, 'seller_person_givenname', true ) . ' ' . get_post_meta( $post_id, 'seller_person_familyname', true ),
-                    6  => filter_input(INPUT_POST, 'emailreal', FILTER_VALIDATE_EMAIL),
+                    6  => get_option('casasync_remCat_email', ''),
                     7  => $property_id,
                     8  => get_permalink($post_id),
                     9  => get_post_meta($post_id, 'casasync_property_address_streetaddress', true),
@@ -698,7 +698,7 @@ function contact_fn( $atts ) {
                     20 => (isset($_POST['phone']) ? $_POST['phone'] : ''),
                     21 => (isset($_POST['mobile']) ? $_POST['mobile'] : ''),
                     22 => (isset($_POST['fax']) ? $_POST['fax'] : ''),
-                    23 => (isset($_POST['emailreal']) ? $_POST['emailreal'] : ''),
+                    23 => filter_input(INPUT_POST, 'emailreal', FILTER_VALIDATE_EMAIL),
                     24 => (isset($_POST['message']) ? $_POST['message'] : ''),
                     25 => '',
                     26 => ''
