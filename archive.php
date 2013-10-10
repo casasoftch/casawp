@@ -140,6 +140,8 @@
 						echo "</optgroup>";
 					}	
 
+					unset($otherCountry);
+
 					if (!$terms_lvl1_has_children) {
 						$no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . ' (' . $term->count . ')' . "</option>";
 					}
