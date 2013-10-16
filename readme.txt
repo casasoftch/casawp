@@ -27,6 +27,10 @@ Well, yes it is!
 
 == Changelog ==
 
+= 2.1.4 = 
+
+* bug: fixes
+
 = 2.1.3 = 
 
 * new: {availabilitylabel}
