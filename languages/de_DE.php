@@ -116,9 +116,9 @@
 				case 'Search':   						$translated_text = 'Suchen';break;
 				case 'Details':   						$translated_text = 'Details';break;
 
-				case 'and':   						$translated_text = 'und';break;
+				case 'and':   							$translated_text = 'und';break;
 
-				case 'I am interested concerning this property. Please contact me.':   				$translated_text = 'Ich%20interessiere%20mich%20f%C3%BCr%20dieses%20Objekt.%20Bitte%20nehmen%20Sie%20Kontakt%20mit%20mir%20auf.';break;
+				case 'I am interested concerning this property. Please contact me.':   				$translated_text = 'Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir auf.';break;
 
 				
 

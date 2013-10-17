@@ -574,7 +574,7 @@
 			                </div>
 		                </div>
 		                <?php if ($address): ?>
-		                	<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace('<br>', ', ', $address )) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $address )) . "&amp;t=m&amp;z=14&amp;output=embed" ?>
+		                	<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $address ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $address )) . "&amp;t=m&amp;z=14&amp;output=embed" ?>
 		                	<div class="hidden-phone">
 		                		<div class="casasync-map" style="display:none" data-address="<?php echo str_replace('<br>', ', ', $address) ?>">
 		                			<div id="map-canvas" style="width:100%; height:400px;" ></div>
@@ -841,7 +841,7 @@
 					  				<p>
 						  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 						  				<?php $objektlink = get_permalink(); ?>
-						  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . get_the_title() . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
+						  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(get_the_title()) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
 						  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $selleremail ?></a></span>
 						  			</p>
 					  			<?php endif; ?>
@@ -898,7 +898,7 @@
 		  						<p>
 					  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 					  				<?php $objektlink = get_permalink(); ?>
-					  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . get_the_title() . '&body=Ich%20interessiere%20mich%20f%C3%BCr%20dieses%20Objekt.%20Bitte%20nehmen%20Sie%20Kontakt%20mit%20mir%20auf.' . '%0A%0ALink: ' . $objektlink;?>
+					  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(get_the_title()) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
 					  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $salesperson_email ?></a></span>
 					  			</p>
 			  				<?php endif; ?>
