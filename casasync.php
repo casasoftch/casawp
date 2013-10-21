@@ -452,7 +452,7 @@ if (get_option( 'casasync_load_fancybox', 1 )) {
 }
 
 function casasync_load_stylesheet(){
-  wp_register_style( 'casasync-style', CASASYNC_PLUGIN_URL . 'assets/css/casasync.css' );
+  wp_register_style( 'casasync-style', CASASYNC_PLUGIN_URL . 'assets/css/casasync.css?v=2' );
   wp_register_style( 'casasync-style-ie', CASASYNC_PLUGIN_URL . 'assets/css/casasync_ie.css' );
   $GLOBALS['wp_styles']->add_data( 'casasync-style-ie', 'conditional', 'IE' );
   wp_enqueue_style( 'casasync-style' );
