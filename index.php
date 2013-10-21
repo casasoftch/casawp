@@ -6,7 +6,7 @@
 Plugin Name: CasaSync
 Plugin URI: http://immobilien-plugin.ch
 Description: Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
-Version: 2.1.4
+Version: 2.1.5
 Author: Casasoft AG
 Author URI: http://casasoft.ch
 License: GPL2

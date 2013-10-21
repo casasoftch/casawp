@@ -841,7 +841,7 @@
 					  				<p>
 						  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 						  				<?php $objektlink = get_permalink(); ?>
-						  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(get_the_title()) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
+						  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
 						  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $selleremail ?></a></span>
 						  			</p>
 					  			<?php endif; ?>
@@ -898,7 +898,7 @@
 		  						<p>
 					  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 					  				<?php $objektlink = get_permalink(); ?>
-					  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(get_the_title()) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
+					  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
 					  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $salesperson_email ?></a></span>
 					  			</p>
 			  				<?php endif; ?>

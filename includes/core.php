@@ -828,7 +828,7 @@ function contact_fn( $atts ) {
         echo $table;
     ?>
         <form class="form casasync-property-contact-form" id="casasyncPropertyContactForm" method="POST" action="">
-            <input type="hidden" name="email" value="" />
+            <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
                 <div class="row-fluid">
                     <div class="span5">
                         <label for="firstname"><?php echo __('First name', 'casasync') ?></label>

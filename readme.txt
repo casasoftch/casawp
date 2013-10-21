@@ -27,6 +27,9 @@ Well, yes it is!
 
 == Changelog ==
 
+= 2.1.5 = 
+* bug: emaillink fix
+
 = 2.1.4 = 
 
 * bug: fixes
