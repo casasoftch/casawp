@@ -386,6 +386,7 @@ function casasync_convert_categoryKeyToLabel($key){
         case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
         case 'garden': return __('Garden' ,'casasync');break;
         case 'commercial': return __('Commercial' ,'casasync');break;
+        default: return $key; break;
     }
 }
 function casasync_get_allDistanceKeys(){
