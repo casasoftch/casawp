@@ -655,9 +655,10 @@ function contact_fn( $atts ) {
             }
         }
         //spam
-        if ($_POST['email']) {
+        if ($_POST['email'] || strpos($_POST['message'], 'http://')) {
             $validation = false;
         }
+
         if ($validation) {
 
             $casa_id = get_post_meta( $post_id, 'casasync_id', $single = true );
