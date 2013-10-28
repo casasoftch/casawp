@@ -27,6 +27,15 @@ Well, yes it is!
 
 == Changelog ==
 
+= 2.2.0 (future) = 
+* feature: Twitter bootsrap v3
+
+= 2.1.7 (future) = 
+* feature: selecte2 integration
+
+= 2.1.6 = 
+* bug: Street number import and display
+
 = 2.1.5 = 
 * bug: emaillink fix
 
