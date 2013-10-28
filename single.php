@@ -40,13 +40,14 @@
 			
 
 				$address_street = get_post_meta( get_the_ID(), 'casasync_property_address_streetaddress', $single = true );
+				$address_streetnumber = get_post_meta( get_the_ID(), 'casasync_property_address_streetnumber', $single = true );
 				$address_postalcode = get_post_meta( get_the_ID(), 'casasync_property_address_postalcode', $single = true );
 				$address_region = get_post_meta( get_the_ID(), 'casasync_property_address_region', $single = true );
 				$address_locality = get_post_meta( get_the_ID(), 'casasync_property_address_locality', $single = true );
 				$address_country = get_post_meta( get_the_ID(), 'casasync_property_address_country', $single = true );
 				$address_country_name = countrycode_to_countryname($address_country);
 
-				$address  = ($address_street ? $address_street . '<br>' : '');
+				$address  = ($address_street ? $address_street . ' ' . $address_streetnumber . '<br>' : '');
 				$address .= ($address_postalcode ?  $address_postalcode . ' ': '') . ($address_locality ? $address_locality : '') . ($address_postalcode || $address_locality ? '<br>' : '');
 				$address .= ($address_country_name ? $address_country_name : '');
 

@@ -546,6 +546,7 @@ function casasync_import(){
             $casasync_property_address_region               = ($property->address ? $property->address->region->__toString() : '');
             $casasync_property_address_postalcode           = ($property->address ? $property->address->postalCode->__toString() : '');
             $casasync_property_address_streetaddress        = ($property->address ? $property->address->street->__toString() : '');
+            $casasync_property_address_streetnumber        = ($property->address ? $property->address->streetNumber->__toString() : '');
             
             $casasync_property_geo_latitude     = (int) ($property->geo ? $property->geo->latitude->__toString() : '');
             $casasync_property_geo_longitude    = (int) ($property->geo ? $property->geo->longitude->__toString() : '');
@@ -900,7 +901,9 @@ function casasync_import(){
                 || (string) $casasync_property_address_region               != (string) (isset($wp_post_custom['casasync_property_address_region']) ? $wp_post_custom['casasync_property_address_region'][0] : '')
                 || (string) $casasync_property_address_postalcode           != (string) (isset($wp_post_custom['casasync_property_address_postalcode']) ? $wp_post_custom['casasync_property_address_postalcode'][0] : '')
                 || (string) $casasync_property_address_streetaddress        != (string) (isset($wp_post_custom['casasync_property_address_streetaddress']) ? $wp_post_custom['casasync_property_address_streetaddress'][0] : '')
-            
+                || (string) $casasync_property_address_streetnumber         != (string) (isset($wp_post_custom['casasync_property_address_streetnumber']) ? $wp_post_custom['casasync_property_address_streetnumber'][0] : '')
+
+
                 || (float) $casasync_property_geo_latitude  != (float) (isset($wp_post_custom['casasync_property_geo_latitude']) ? $wp_post_custom['casasync_property_geo_latitude'][0] : 0)
                 || (float) $casasync_property_geo_longitude != (float) (isset($wp_post_custom['casasync_property_geo_longitude']) ? $wp_post_custom['casasync_property_geo_longitude'][0] : 0)
 
@@ -968,6 +971,7 @@ function casasync_import(){
                 $the_post_custom['casasync_property_address_region']                = (string) $casasync_property_address_region                ;
                 $the_post_custom['casasync_property_address_postalcode']            = (string) $casasync_property_address_postalcode            ;
                 $the_post_custom['casasync_property_address_streetaddress']         = (string) $casasync_property_address_streetaddress         ;
+                $the_post_custom['casasync_property_address_streetnumber']          = (string) $casasync_property_address_streetnumber         ;
                 
                 $the_post_custom['casasync_property_geo_latitude']          = (float) $casasync_property_geo_latitude;
                 $the_post_custom['casasync_property_geo_longitude']         = (float) $casasync_property_geo_longitude;
