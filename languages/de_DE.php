@@ -51,14 +51,16 @@
                 case 'Plans & Documents':   $translated_text = 'Pläne & Dokumente';break;
                 case 'Address':             $translated_text = 'Adresse';break;
                 case 'Rooms:':              $translated_text = 'Zimmer:';break;
+                case 'Rooms':               $translated_text = 'Zimmer';break;
                 case 'Living space:':       $translated_text = 'Wohnfläche:';break;
+                case 'Living space':        $translated_text = 'Wohnfläche';break;
                 case 'Floor:':              $translated_text = 'Etage:';break;
+                case 'Floor':               $translated_text = 'Etage';break;
                 case 'Rent price:':         $translated_text = 'Mietpreis:';break;
+                case 'Rent price':          $translated_text = 'Mietpreis';break;
                 case 'Sales price:':        $translated_text = 'Kaufpreis:';break;
-                case 'Additional costs':    $translated_text = 'Nebenkosten';break;
-                case 'Object ID':           $translated_text = 'Objekt-ID';break;
-                case 'Floor(s)':            $translated_text = 'Stockwerk(e)';break;
-                case 'Features':            $translated_text = 'Eigenschaften';break;
+                case 'Rent price':          $translated_text = 'Mietpreis';break;
+                case 'Sales price':         $translated_text = 'Kaufpreis';break;
 
 
                 case 'Mobile':       $translated_text = 'Mobile';break;
