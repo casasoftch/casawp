@@ -420,7 +420,7 @@ function casasync_convert_categoryKeyToLabel($key){
         case 'terrace-flat':   return __('Terrace flat' ,'casasync');break;
         case 'bachelor-flat':  return __('Bachelor flat' ,'casasync');break;
         case 'loft':           return __('Loft' ,'casasync');break;
-        case 'Attic':          return __('Attic' ,'casasync');break;
+        case 'attic':          return __('Attic' ,'casasync');break;
 
         case 'alottment-garden': return __('Alottment garden' ,'casasync');break;
 
