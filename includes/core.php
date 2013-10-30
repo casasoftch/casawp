@@ -360,7 +360,16 @@ function casasync_get_allNumvalKeys(){
         'year_renovated',
         'year_built',
         'number_of_rooms',
-        'number_of_floors'
+        'number_of_floors',
+        'floor', /* New.. */
+        'number_of_apartments',
+        'surface_usable',
+        'volume',
+        'ceiling_height',
+        'hall_height',
+        'maximal_floor_loading',
+        'carrying_capacity_crane',
+        'carrying_capacity_elevator'
     );
 }
 function casasync_convert_numvalKeyToLabel($key){
@@ -371,21 +380,141 @@ function casasync_convert_numvalKeyToLabel($key){
         case 'year_built':       return __('Year of construction' ,'casasync');break;
         case 'number_of_rooms':  return __('Number of rooms' ,'casasync');break;
         case 'number_of_floors': return __('Number of floors' ,'casasync');break;
+
+        /* New */
+        case 'floor':                      return __('Floor' ,'casasync');break;
+        case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
+        case 'surface_usable':             return __('Surface usable' ,'casasync');break;
+        case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
+        case 'hall_height':                return __('Hall height' ,'casasync');break;
+        case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casasync');break;
+        case 'carrying_capacity_crane':    return __('Carrying capacity crane' ,'casasync');break;
+        case 'carrying_capacity_elevator': return __('Carrying capacity elevator' ,'casasync');break;
     }
 }
 
 function casasync_convert_categoryKeyToLabel($key){
     switch ($key) {
-        case 'agriculture': return __('Agriculture' ,'casasync');break;
-        case 'apartment':   return __('Apartment' ,'casasync');break;
-        case 'gastronomy': return __('Gastronomy' ,'casasync');break;
-        case 'house': return __('House' ,'casasync');break;
-        case 'industrial': return __('Industrial' ,'casasync');break;
-        case 'parking': return __('Parking space' ,'casasync');break;
-        case 'plot': return __('Grundstück' ,'casasync');break;
+        case 'agriculture':     return __('Agriculture' ,'casasync');break;
+        case 'apartment':       return __('Apartment' ,'casasync');break;
+        case 'gastronomy':      return __('Gastronomy' ,'casasync');break;
+        case 'house':           return __('House' ,'casasync');break;
+        case 'industrial':      return __('Industrial' ,'casasync');break;
+        case 'parking':         return __('Parking space' ,'casasync');break;
+        case 'plot':            return __('Grundstück' ,'casasync');break;
         case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
-        case 'garden': return __('Garden' ,'casasync');break;
-        case 'commercial': return __('Commercial' ,'casasync');break;
+        case 'garden':          return __('Garden' ,'casasync');break;
+        case 'commercial':      return __('Commercial' ,'casasync');break;
+
+        /* New */
+        case 'agricultural-installation': return __('Agricultural installation' ,'casasync');break;
+        case 'mountain-farm':             return __('Mountain farm' ,'casasync');break;
+        case 'farm':                      return __('Farm' ,'casasync');break;
+
+        case 'duplex':         return __('Duplex' ,'casasync');break;
+        case 'attic-flat':     return __('Attic flat' ,'casasync');break;
+        case 'roof-flat':      return __('Roof flat' ,'casasync');break;
+        case 'studio':         return __('Studio' ,'casasync');break;
+        case 'single-Room':    return __('Single Room' ,'casasync');break;
+        case 'furnished-flat': return __('Furnished flat' ,'casasync');break;
+        case 'terrace-flat':   return __('Terrace flat' ,'casasync');break;
+        case 'bachelor-flat':  return __('Bachelor flat' ,'casasync');break;
+        case 'loft':           return __('Loft' ,'casasync');break;
+        case 'Attic':          return __('Attic' ,'casasync');break;
+
+        case 'alottment-garden': return __('Alottment garden' ,'casasync');break;
+
+        case 'hotel':                   return __('Hotel' ,'casasync');break;
+        case 'restaurant':              return __('Restaurant' ,'casasync');break;
+        case 'coffeehouse':             return __('Coffeehouse' ,'casasync');break;
+        case 'bar':                     return __('Bar' ,'casasync');break;
+        case 'club-disco':              return __('Club / Disco' ,'casasync');break;
+        case 'casino':                  return __('Casino' ,'casasync');break;
+        case 'movie-theater':           return __('Movie / theater' ,'casasync');break;
+        case 'squash-badminton':        return __('Squash / Badminton' ,'casasync');break;
+        case 'indoor-tennis-courts':    return __('Indoor tennis courts' ,'casasync');break;
+        case 'tennis-court':            return __('Tennis court' ,'casasync');break;
+        case 'sports-hall':             return __('Sports hall' ,'casasync');break;
+        case 'campground-tent-camping': return __('Campground / Tent camping' ,'casasync');break;
+        case 'outdoor-swimming-pool':   return __('Outdoor swimming pool' ,'casasync');break;
+        case 'indoor-swimmingpool':     return __('Indoor swimmingpool' ,'casasync');break;
+        case 'golf-course':             return __('Golf course' ,'casasync');break;
+        case 'motel':                   return __('Motel' ,'casasync');break;
+        case 'pub':                     return __('Pub' ,'casasync');break;
+
+        case 'single-house':             return __('Single house' ,'casasync');break;
+        case 'row-house':                return __('Row house' ,'casasync');break;
+        case 'bifamiliar-house':         return __('Bifamiliar house' ,'casasync');break;
+        case 'terrace-house':            return __('Terrace house' ,'casasync');break;
+        case 'villa':                    return __('Villa' ,'casasync');break;
+        case 'farm-house':               return __('Farm house' ,'casasync');break;
+        case 'multiple-dwelling':        return __('Multiple dwelling' ,'casasync');break;
+        case 'cave-house-earthen-house': return __('Cave house / earthen house' ,'casasync');break;
+        case 'castle':                   return __('Castle' ,'casasync');break;
+        case 'granny-flat':              return __('Granny flat' ,'casasync');break;
+        case 'chalet':                   return __('Chalet' ,'casasync');break;
+        case 'rustic-house':             return __('Rustic house' ,'casasync');break;
+
+        case 'office':                     return __('Office' ,'casasync');break;
+        case 'shop':                       return __('Shop' ,'casasync');break;
+        case 'advertising-area':           return __('Advertising area' ,'casasync');break;
+        case 'storage-room':               return __('Storage room' ,'casasync');break;
+        case 'practice':                   return __('Practice' ,'casasync');break;
+        case 'kiosk':                      return __('Kiosk' ,'casasync');break;
+        case 'gardening':                  return __('Gardening' ,'casasync');break;
+        case 'fuel-station':               return __('Fuel station' ,'casasync');break;
+        case 'garage':                     return __('Garage' ,'casasync');break;
+        case 'chalet':                     return __('Chalet' ,'casasync');break;
+        case 'cheese-factory':             return __('Cheese factory' ,'casasync');break;
+        case 'butcher':                    return __('Butcher' ,'casasync');break;
+        case 'bakery':                     return __('Bakery' ,'casasync');break;
+        case 'hairdresser':                return __('Hairdresser' ,'casasync');break;
+        case 'shopping-centre':            return __('Shopping centre' ,'casasync');break;
+        case 'factory':                    return __('Factory' ,'casasync');break;
+        case 'industrial-object':          return __('Industrial object' ,'casasync');break;
+        case 'arcade':                     return __('Arcade' ,'casasync');break;
+        case 'atelier':                    return __('Atelier' ,'casasync');break;
+        case 'living-commercial-building': return __('Living / commercial building' ,'casasync');break;
+        case 'library'                     return __('Library' ,'casasync');break;
+        case 'hospital':                   return __('Hospital' ,'casasync');break;
+        case 'laboratory':                 return __('Laboratory' ,'casasync');break;
+        case 'mini-golf-course':           return __('Mini-golf course' ,'casasync');break;
+        case 'nursing-home':               return __('Nursing home' ,'casasync');break;
+        case 'riding-hall':                return __('Riding hall' ,'casasync');break;
+        case 'sanatorium':                 return __('Sanatorium' ,'casasync');break;
+        case 'workshop':                   return __('Workshop' ,'casasync');break;
+        case 'party-room':                 return __('Party room' ,'casasync');break;
+        case 'sauna':                      return __('Sauna' ,'casasync');break;
+        case 'solarium':                   return __('Solarium' ,'casasync');break;
+        case 'carpentry-shop':             return __('Carpentry shop' ,'casasync');break;
+        case 'old-age-home':               return __('Old-age home' ,'casasync');break;
+        case 'department-store':           return __('Department store' ,'casasync');break;
+        case 'home':                       return __('Home' ,'casasync');break;
+        case 'display-window':             return __('Display window' ,'casasync');break;
+        case 'parking-garage':             return __('Parking garage' ,'casasync');break;
+        case 'parking-surface':            return __('Parking surface' ,'casasync');break;
+
+        case 'open-slot':                  return __('Open slot' ,'casasync');break;
+        case 'covered-slot':               return __('Covered slot' ,'casasync');break;
+        case 'single-garage':              return __('Single garage' ,'casasync');break;
+        case 'double-garage':              return __('Double garage' ,'casasync');break;
+        case 'underground-slot':           return __('Underground slot' ,'casasync');break;
+        case 'boat-dry-dock':              return __('Boat dry dock' ,'casasync');break;
+        case 'boat-landing-stage':         return __('Boat landing stage' ,'casasync');break;
+        case 'covered-parking-place-bike': return __('Covered parking place bike' ,'casasync');break;
+        case 'outdoor-parking-place-bike': return __('Outdoor parking place bike' ,'casasync');break;
+        case 'horse-box':                  return __('Horse box' ,'casasync');break;
+        case 'boat-mooring':               return __('Boat mooring' ,'casasync');break;
+
+        case 'building-land':     return __('Building land' ,'casasync');break;
+        case 'agricultural-land': return __('Agricultural land' ,'casasync');break;
+        case 'commercial-land':   return __('Commercial land' ,'casasync');break;
+        case 'industrial-land':   return __('Industrial land' ,'casasync');break;
+
+        case 'hobby-room':         return __('Hobby room' ,'casasync');break;
+        case 'cellar-compartment': return __('Cellar compartment' ,'casasync');break;
+        case 'attic-compartment':  return __('Attic compartment' ,'casasync');break;
+
         default: return $key; break;
     }
 }
@@ -460,28 +589,28 @@ function casasync_convert_featureKeyToLabel($key, $value = false){
             }
             break;
 
-        case 'prop_fireplace':   return __('Fireplace' ,'casasync');break;
+        case 'prop_fireplace':          return __('Fireplace' ,'casasync');break;
         case 'wheelchair_accessible':   return __('wheelchair accessible' ,'casasync');break;
-        case 'ramp':   return __('Ramp' ,'casasync');break;
-        case 'lifting_platform':   return __('lifting platform' ,'casasync');break;
-        case 'railway_terminal':   return __('Railway terminal' ,'casasync');break;
-        case 'water_supply':   return __('Water Supply' ,'casasync');break;
-        case 'sewage_supply':   return __('Sewage supply' ,'casasync');break;
-        case 'power_supply':   return __('Power Supply' ,'casasync');break;
-        case 'gas_supply':   return __('Gas supply' ,'casasync');break;
-        case 'corner_house':   return __('Corner house' ,'casasync');break;
-        case 'middle_house':   return __('Middle house' ,'casasync');break;
-        case 'gardenhouse':   return __('Gardenhouse' ,'casasync');break;
-        case 'raised_ground_floor':   return __('Raised ground floor' ,'casasync');break;
-        case 'new_building':   return __('New building' ,'casasync');break;
-        case 'old_building':   return __('Old building' ,'casasync');break;
-        case 'under_roof':   return __('Under roof' ,'casasync');break;
-        case 'swimmingpool':   return __('Swimmingpool' ,'casasync');break;
-        case 'minergie_general':   return __('Minergie general' ,'casasync');break;
-        case 'minergie_certified':   return __('Minergie certified' ,'casasync');break;
-        case 'under_building_laws':   return __('Under building laws' ,'casasync');break;
-        case 'building_land_connected':   return __('Building land connected' ,'casasync');break;
-        case 'flat_sharing_community':   return __('Flat sharing community' ,'casasync');break;
+        case 'ramp':                    return __('Ramp' ,'casasync');break;
+        case 'lifting_platform':        return __('lifting platform' ,'casasync');break;
+        case 'railway_terminal':        return __('Railway terminal' ,'casasync');break;
+        case 'water_supply':            return __('Water Supply' ,'casasync');break;
+        case 'sewage_supply':           return __('Sewage supply' ,'casasync');break;
+        case 'power_supply':            return __('Power Supply' ,'casasync');break;
+        case 'gas_supply':              return __('Gas supply' ,'casasync');break;
+        case 'corner_house':            return __('Corner house' ,'casasync');break;
+        case 'middle_house':            return __('Middle house' ,'casasync');break;
+        case 'gardenhouse':             return __('Gardenhouse' ,'casasync');break;
+        case 'raised_ground_floor':     return __('Raised ground floor' ,'casasync');break;
+        case 'new_building':            return __('New building' ,'casasync');break;
+        case 'old_building':            return __('Old building' ,'casasync');break;
+        case 'under_roof':              return __('Under roof' ,'casasync');break;
+        case 'swimmingpool':            return __('Swimmingpool' ,'casasync');break;
+        case 'minergie_general':        return __('Minergie general' ,'casasync');break;
+        case 'minergie_certified':      return __('Minergie certified' ,'casasync');break;
+        case 'under_building_laws':     return __('Under building laws' ,'casasync');break;
+        case 'building_land_connected': return __('Building land connected' ,'casasync');break;
+        case 'flat_sharing_community':  return __('Flat sharing community' ,'casasync');break;
 
         default : return $key . ($value ? ': ' . $value : ''); break;
     }
