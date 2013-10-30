@@ -132,14 +132,15 @@
 					}
 
 					//list all other countries in seperate optgroup
-					foreach ( $otherCountry as $countryCode => $country ) {
-						echo "<optgroup label='" . countrycode_to_countryname($countryCode)  . "''>";
-						foreach ( $country as $location ) {
-							echo "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";		
+					if (isset($otherCountry)) {
+						foreach ( $otherCountry as $countryCode => $country ) {
+							echo "<optgroup label='" . countrycode_to_countryname($countryCode)  . "''>";
+							foreach ( $country as $location ) {
+								echo "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";		
+							}
+							echo "</optgroup>";
 						}
-						echo "</optgroup>";
 					}	
-
 					unset($otherCountry);
 
 					if (!$terms_lvl1_has_children) {
