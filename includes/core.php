@@ -475,7 +475,7 @@ function casasync_convert_categoryKeyToLabel($key){
         case 'arcade':                     return __('Arcade' ,'casasync');break;
         case 'atelier':                    return __('Atelier' ,'casasync');break;
         case 'living-commercial-building': return __('Living / commercial building' ,'casasync');break;
-        case 'library'                     return __('Library' ,'casasync');break;
+        case 'library':                    return __('Library' ,'casasync');break;
         case 'hospital':                   return __('Hospital' ,'casasync');break;
         case 'laboratory':                 return __('Laboratory' ,'casasync');break;
         case 'mini-golf-course':           return __('Mini-golf course' ,'casasync');break;
