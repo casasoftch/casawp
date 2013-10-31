@@ -356,14 +356,14 @@ function country_arrays()
 function casasync_get_allNumvalKeys(){
     return array(
         'surface_living',
+        'surface_usable',
         'surface_property',
         'year_renovated',
         'year_built',
         'number_of_rooms',
         'number_of_floors',
-        'floor', /* New.. */
+        'floor',
         'number_of_apartments',
-        'surface_usable',
         'volume',
         'ceiling_height',
         'hall_height',
@@ -385,6 +385,7 @@ function casasync_convert_numvalKeyToLabel($key){
         case 'floor':                      return __('Floor' ,'casasync');break;
         case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
         case 'surface_usable':             return __('Surface usable' ,'casasync');break;
+        case 'volume':                     return __('Volume' ,'casasync');break;
         case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
         case 'hall_height':                return __('Hall height' ,'casasync');break;
         case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casasync');break;

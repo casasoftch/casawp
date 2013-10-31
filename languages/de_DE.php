@@ -61,6 +61,10 @@
                 case 'Sales price:':        $translated_text = 'Kaufpreis:';break;
                 case 'Rent price':          $translated_text = 'Mietpreis';break;
                 case 'Sales price':         $translated_text = 'Kaufpreis';break;
+                case 'Additional costs':    $translated_text = 'Nebenkosten';break;
+                case 'Object ID':           $translated_text = 'Objekt-ID';break;
+                case 'Floor(s)':            $translated_text = 'Stockwerk(e)';break;
+                case 'Features':            $translated_text = 'Eigenschaften';break;
 
 
                 case 'Mobile':       $translated_text = 'Mobile';break;
@@ -70,6 +74,7 @@
                 case 'Offer':        $translated_text = 'Angebot';break;
                 case 'Property':     $translated_text = 'Objekt';break;
                 case 'Surroundings': $translated_text = 'Umfeld';break;
+                case 'Distances':    $translated_text = 'Distanzen';break;
                 case 'Distances:':   $translated_text = 'Distanzen:';break;
                 case 'Plans':        $translated_text = 'Pläne';break;
                 case 'Documents':    $translated_text = 'Dokumente';break;
@@ -83,8 +88,8 @@
                 case 'Primary school':        $translated_text = 'Primarschule';break;
                 case 'Secondary school':      $translated_text = 'Oberstufe';break;
 
-                case 'Property space':        $translated_text = 'Grundstückfläche';break;
-                case 'Year of renovation':    $translated_text = 'Renovationsjahr';break;
+                case 'Property space':        $translated_text = 'Grundstücksfläche';break;
+                case 'Year of renovation':    $translated_text = 'Letzte Renovation';break;
                 case 'Year of construction':  $translated_text = 'Baujahr';break;
                 case 'Number of rooms':       $translated_text = 'Anzahl Zimmer';break;
                 case 'Number of floors':      $translated_text = 'Anzahl Etagen';break;
@@ -288,6 +293,17 @@
                 case 'Hobby room':         $translated_text = 'Hobbyraum';break;
                 case 'Cellar compartment': $translated_text = 'Kellerabteil';break;
                 case 'Attic compartment':  $translated_text = 'Estrichabteil';break;
+
+                case 'Floor':                       $translated_text = 'Etage';break;
+                case 'Number of apartments':        $translated_text = 'Anzahl Wohnungen';break;
+                case 'Surface usable':              $translated_text = 'Nutzfläche';break;
+                case 'Ceiling height':              $translated_text = 'Raumhöhe';break;
+                case 'Hall height':                 $translated_text = 'Hallenhöhe';break;
+                case 'Maximal floor loading':       $translated_text = 'Max. Bodenbelastung';break;
+                case 'Carrying capacity crane':     $translated_text = 'Max. Gewicht Kran';break;
+                case 'Carrying capacity elevator':  $translated_text = 'Max. Gewicht Warenlift';break;
+                case 'Volume':                      $translated_text = 'Kubatur';break;
+
 
             }
 

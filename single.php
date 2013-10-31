@@ -669,23 +669,35 @@
 		            							'floor',
 		            							'number_of_rooms',
 		            							'number_of_bathrooms',
-		            							'room_height'
+		            							'room_height',
 		            						))): ?>
 		            							<tr>
 		            								<td width="25%"><?php echo __($numval['title'], 'casasync') ?></td>
-													<td width="75%"><?php echo $numval['value'] ?><?php echo (in_array($numval['key'], array('surface_living', 'surface_property')) ? '<sup>2</sup>' : '' ) ?></td>
+													<td width="75%"><?php echo $numval['value'] ?></td>
 												</tr>
-		            						<?php else: ?>
-		            							<?php $store .= '
+											<?php elseif (in_array($numval['key'], array(
+		            							'surface_usable',
+		            							'surface_living',
+		            							'surface_property'
+		            						))): ?>
+		            							<?php $store1 .= '
 		            								<tr>
 		            									<td width="25%">' . __($numval['title'], 'casasync')  . '</td>
-														<td width="75%">' . $numval['value'] .  (in_array($numval['key'], array('surface_living', 'surface_property')) ? '<sup>2</sup>' : '' ) .'</td>
+														<td width="75%">' . $numval['value'] . '<sup>2</sup>' .'</td>
+													</tr>
+		            							'; ?>
+		            						<?php else: ?>
+		            							<?php $store2 .= '
+		            								<tr>
+		            									<td width="25%">' . __($numval['title'], 'casasync')  . '</td>
+														<td width="75%">' . $numval['value'] .  (in_array($numval['key'], array('volume')) ? '<sup>3</sup>' : '' ) .'</td>
 													</tr>
 		            							'; ?>
 		            						<?php endif ?>
 		            					<?php endforeach ?>
 		            					<?php //echo '<tr><td colspan="2"></td></tr>' ?>
-		            					<?php echo $store; ?>
+		            					<?php echo $store1; ?>
+		            					<?php echo $store2; ?>
 		            				<?php endif ?>
 		            			</table>
 		            		<?php endif ?>
