@@ -612,17 +612,17 @@
 
 			            			<?php if (!$gross || !$net): ?>
 				                 		<?php if ($price_formated): ?>
-				                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? 'Rent price' : __('Sales price', 'casasync')) ?></td><td width="75%"><?php echo $price_formated ?> <?php echo $price_formated_timesegment ?></td></tr>
+				                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? __('Rent price', 'casasync') : __('Sales price', 'casasync')) ?></td><td width="75%"><?php echo $price_formated ?> <?php echo $price_formated_timesegment ?></td></tr>
 				                 		<?php endif ?>
 				                 	<?php endif ?>
 				                 	<?php if ($gross_formated): ?>
-			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? 'Rent price' : __('Sales price', 'casasync')) ?> (brutto)</td><td width="75%"><?php echo $gross_formated ?> <?php echo $gross_formated_timesegment ?></td></tr>
+			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? __('Rent price', 'casasync') : __('Sales price', 'casasync')) ?> (brutto)</td><td width="75%"><?php echo $gross_formated ?> <?php echo $gross_formated_timesegment ?></td></tr>
 			                 		<?php endif ?>
 			                 		<?php if ($net_formated): ?>
-			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? 'Rent price' : __('Sales price', 'casasync')) ?> (netto)</td><td width="75%"><?php echo $net_formated ?> <?php echo $net_formated_timesegment ?></td></tr>
+			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? __('Rent price', 'casasync') : __('Sales price', 'casasync')) ?> (netto)</td><td width="75%"><?php echo $net_formated ?> <?php echo $net_formated_timesegment ?></td></tr>
 			                 		<?php endif ?>
 			                 		<?php if (!$gross && !$net && !$price): ?>
-			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? 'Rent price' : __('Sales price', 'casasync')) ?></td><td width="75%">Auf Anfrage</td></tr>
+			                			<tr><td width="25%"><?php echo ($the_basis == 'rent' ? __('Rent price', 'casasync') : __('Sales price', 'casasync')) ?></td><td width="75%">Auf Anfrage</td></tr>
 			                 		<?php endif ?>
 		            				<?php if ($extra_costs_arr): ?>
 		            					<tr><td><?php echo __('Additional costs','casasync') ?></td><td>

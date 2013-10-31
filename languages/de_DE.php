@@ -59,7 +59,6 @@
                 case 'Rent price:':         $translated_text = 'Mietpreis:';break;
                 case 'Rent price':          $translated_text = 'Mietpreis';break;
                 case 'Sales price:':        $translated_text = 'Kaufpreis:';break;
-                case 'Rent price':          $translated_text = 'Mietpreis';break;
                 case 'Sales price':         $translated_text = 'Kaufpreis';break;
                 case 'Additional costs':    $translated_text = 'Nebenkosten';break;
                 case 'Object ID':           $translated_text = 'Objekt-ID';break;
