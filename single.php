@@ -661,7 +661,11 @@
 		            				<?php endif ?>
 		            				
 		            				<?php if ($numvals): ?>
-		            					<?php $store = ''; ?>
+		            					<?php 
+		            						$store1 = '';
+		            						$store2 = '';
+		            						$matches = '';
+		            					?>
 		            					<?php foreach ($numvals as $numval): ?>
 		            						<?php if (in_array($numval['key'], array(
 		            							'number_of_apartments',
@@ -669,7 +673,7 @@
 		            							'floor',
 		            							'number_of_rooms',
 		            							'number_of_bathrooms',
-		            							'room_height',
+		            							'room_height'
 		            						))): ?>
 		            							<tr>
 		            								<td width="25%"><?php echo __($numval['title'], 'casasync') ?></td>
@@ -680,10 +684,12 @@
 		            							'surface_living',
 		            							'surface_property'
 		            						))): ?>
-		            							<?php $store1 .= '
+		            							<?php
+		            								$matches = preg_split('#(?<=\d)(?=[a-z])#i', $numval['value']); // split digits and letters for number_format()
+		            								$store1 .= '
 		            								<tr>
 		            									<td width="25%">' . __($numval['title'], 'casasync')  . '</td>
-														<td width="75%">' . $numval['value'] . '<sup>2</sup>' .'</td>
+														<td width="75%">' . number_format($matches[0], 0, '.', "'") . $matches[1] . '<sup>2</sup>' .'</td>
 													</tr>
 		            							'; ?>
 		            						<?php else: ?>

@@ -302,6 +302,7 @@
                 case 'Carrying capacity crane':     $translated_text = 'Max. Gewicht Kran';break;
                 case 'Carrying capacity elevator':  $translated_text = 'Max. Gewicht Warenlift';break;
                 case 'Volume':                      $translated_text = 'Kubatur';break;
+                case 'wheelchair accessible':       $translated_text = 'Rollstuhlgängig';break;
 
 
             }
