@@ -965,13 +965,13 @@ function casasync_import(){
                 $changed = true;
                 $the_post_custom['casasync_visitInformation']               = (string) $casasync_visitInformation;
 
-                $the_post_custom['casasync_property_url']               = (string) $casasync_property_url;
-                $the_post_custom['casasync_property_address_country']               = (string) $casasync_property_address_country               ;
-                $the_post_custom['casasync_property_address_locality']              = (string) $casasync_property_address_locality              ;
-                $the_post_custom['casasync_property_address_region']                = (string) $casasync_property_address_region                ;
-                $the_post_custom['casasync_property_address_postalcode']            = (string) $casasync_property_address_postalcode            ;
-                $the_post_custom['casasync_property_address_streetaddress']         = (string) $casasync_property_address_streetaddress         ;
-                $the_post_custom['casasync_property_address_streetnumber']          = (string) $casasync_property_address_streetnumber         ;
+                $the_post_custom['casasync_property_url']                   = (string) $casasync_property_url;
+                $the_post_custom['casasync_property_address_country']       = (string) $casasync_property_address_country;
+                $the_post_custom['casasync_property_address_locality']      = (string) $casasync_property_address_locality;
+                $the_post_custom['casasync_property_address_region']        = (string) $casasync_property_address_region;
+                $the_post_custom['casasync_property_address_postalcode']    = (string) $casasync_property_address_postalcode;
+                $the_post_custom['casasync_property_address_streetaddress'] = (string) $casasync_property_address_streetaddress;
+                $the_post_custom['casasync_property_address_streetnumber']  = (string) $casasync_property_address_streetnumber;
                 
                 $the_post_custom['casasync_property_geo_latitude']          = (float) $casasync_property_geo_latitude;
                 $the_post_custom['casasync_property_geo_longitude']         = (float) $casasync_property_geo_longitude;
@@ -1086,14 +1086,14 @@ function casasync_import(){
                             break;
                         //simple value with si
                         case 'surface_living':
-                        case 'surface_property': /* ? */
-                        case 'surface_usable': /* ? */
-                        case 'volume': /* ? */
-                        case 'ceiling_height': /* ? */
-                        case 'hall_height': /* ? */
-                        case 'maximal_floor_loading': /* ? */
-                        case 'carrying_capacity_crane': /* ? */
-                        case 'carrying_capacity_elevator': /* ? */
+                        case 'surface_property':
+                        case 'surface_usable':
+                        case 'volume':
+                        case 'ceiling_height':
+                        case 'hall_height':
+                        case 'maximal_floor_loading':
+                        case 'carrying_capacity_crane':
+                        case 'carrying_capacity_elevator':
                             $the_value = '';
                             foreach ($numval as $key2 => $value) {
                                 $the_value = $value['from']['value'] . $value['from']['si']; 
