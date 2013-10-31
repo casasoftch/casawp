@@ -1086,7 +1086,14 @@ function casasync_import(){
                             break;
                         //simple value with si
                         case 'surface_living':
-                        case 'surface_space':
+                        case 'surface_property': /* ? */
+                        case 'surface_usable': /* ? */
+                        case 'volume': /* ? */
+                        case 'ceiling_height': /* ? */
+                        case 'hall_height': /* ? */
+                        case 'maximal_floor_loading': /* ? */
+                        case 'carrying_capacity_crane': /* ? */
+                        case 'carrying_capacity_elevator': /* ? */
                             $the_value = '';
                             foreach ($numval as $key2 => $value) {
                                 $the_value = $value['from']['value'] . $value['from']['si']; 
@@ -1104,6 +1111,7 @@ function casasync_import(){
                             break;
                         //float
                         case 'number_of_rooms':
+                        case 'number_of_apartments':
                         case 'number_of_floors':
                             $the_value = '';
                             foreach ($numval as $key2 => $value) {

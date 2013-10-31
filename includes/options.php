@@ -82,8 +82,10 @@ if(isset($_POST['casasync_submit']))  {
 									$qs = '?';
 								}
 								$qs .= 'do_import=true';
+
+								$qs2 = $qs . '&froce_all_properties=true&force_last_import=true';
 							?>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $qs  ?>">Manuel importieren</a>
+							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $qs  ?>">manueller Import</a> ∙ <a href="<?php echo $qs2  ?>">erzwungener Import</a>
 						</label></p>
 
 					</fieldset>
@@ -378,7 +380,7 @@ if(isset($_POST['casasync_submit']))  {
 							<br><code><abbr title="class='post-###'">{classes}</abbr></code>
 							<br><code><abbr title="Titel von dem Objekt">{title}</abbr></code>
 							<br><code><abbr title="Gallerieansicht von allen Fotos">{gallery}</abbr></code>
-							<br><code><abbr title="Tab-Fenster mit Grunddaten, Beschreibungen, Datenblätter, Pläne usw.">{content}</abbr></code>
+							<br><code><abbr title="Tab-Fenster mit Grunddaten, Beschreingen, Datenblätter, Pläne usw.">{content}</abbr></code>
 							<br><code><abbr title="'Call to Action' Links wie 'Jetzt kontaktieren'">{if_cta}{cta}{end_if_cta}</abbr></code>
 							<br><code><abbr title="Falls ein Verkäufer angegeben ist diese hier darstellen">{if_seller}{seller}{end_if_seller}</abbr></code>
 							<br><code><abbr title="">{if_share}{share}{end_if_share}</abbr></code>
