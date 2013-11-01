@@ -2,15 +2,15 @@
 
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {
-	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-	exit;
+    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+    exit;
 }
 
 
 //include_once dirname( __FILE__ ) . '/widget.php';
 
 if ( is_admin() ) {
-	require_once CASASYNC_PLUGIN_DIR . 'admin.php';
+    require_once CASASYNC_PLUGIN_DIR . 'admin.php';
 }
 
 
@@ -25,10 +25,10 @@ function wpse_71157_parse_query( $wp_query )
 
 //upload dir
 function casasync_upload_dir($upload) {
-	$upload['subdir']	= '/casasync' . $upload['subdir'];
-	$upload['path']		= $upload['basedir'] . $upload['subdir'];
-	$upload['url']		= $upload['baseurl'] . $upload['subdir'];
-	return $upload;
+    $upload['subdir']   = '/casasync' . $upload['subdir'];
+    $upload['path']     = $upload['basedir'] . $upload['subdir'];
+    $upload['url']      = $upload['baseurl'] . $upload['subdir'];
+    return $upload;
 }
 
 add_filter('upload_dir', 'casasync_upload_dir');
@@ -52,172 +52,153 @@ function casasync_init() {
     require_once( $locale_file );
   }
 
+  if(is_admin()) {
+      require_once(CASASYNC_PLUGIN_DIR.'includes/admin.php');
+  }
+
+  require_once(CASASYNC_PLUGIN_DIR.'includes/import.php');
+  require_once(CASASYNC_PLUGIN_DIR.'includes/core.php');
+  require_once(CASASYNC_PLUGIN_DIR.'includes/shortcodes.php');
 
 
-	$some_option = get_option('some_option');
+  //make sure casasync upload dir is present
+  if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync')) {
+      mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync');
+  }
 
-	if(is_admin()) {
-        require_once(CASASYNC_PLUGIN_DIR.'includes/admin.php');
-	}
+  //register post type
+  $labels = array(
+    'name'               => __( 'Properties','casasync' ),
+    'singular_name'      => __( 'Property','casasync' ),
+    'add_new'            => __( 'Add New','casasync' ),
+    'add_new_item'       => __( 'Property','casasync' ),
+    'edit_item'          => __( 'Edit Property','casasync' ),
+    'new_item'           => __( 'New Property','casasync' ),
+    'all_items'          => __( 'All Properties','casasync' ),
+    'view_item'          => __( 'View Property','casasync' ),
+    'search_items'       => __( 'Search Properties','casasync' ),
+    'not_found'          => __( 'No properties found','casasync' ),
+    'not_found_in_trash' => __( 'No properties found in Trash','casasync' ),
+    'parent_item_colon'  => __( '','casasync' ),
+    'menu_name'          => __( 'Properties','casasync' )
+  );
+  $args = array(
+    'labels'             => $labels,
+    'public'             => true,
+    'publicly_queryable' => true,
+    'show_ui'            => true,
+    'show_in_menu'       => true,
+    'query_var'          => true,
+    'rewrite'            => array( 'slug' => 'property' ),
+    'capability_type'    => 'post',
+    'has_archive'        => true,
+    'hierarchical'       => false,
+    'menu_position'      => null,
+    'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
+    'menu_icon'          => CASASYNC_PLUGIN_URL . 'assets/img/building.png'
+  );
+  register_post_type( 'casasync_property', $args );
 
-    require_once(CASASYNC_PLUGIN_DIR.'includes/import.php');
-    require_once(CASASYNC_PLUGIN_DIR.'includes/core.php');
-    require_once(CASASYNC_PLUGIN_DIR.'includes/shortcodes.php');
+  $labels = array(
+    'name'              => __( 'Property Categories', 'casasync' ),
+    'singular_name'     => __( 'Property Category', 'casasync' ),
+    'search_items'      => __( 'Search Property Categories','casasync' ),
+    'all_items'         => __( 'All Property Categories','casasync' ),
+    'parent_item'       => __( 'Parent Property Category','casasync' ),
+    'parent_item_colon' => __( 'Parent Property Category:','casasync' ),
+    'edit_item'         => __( 'Edit Property Category','casasync' ),
+    'update_item'       => __( 'Update Property Category','casasync' ),
+    'add_new_item'      => __( 'Add New Property Category','casasync' ),
+    'new_item_name'     => __( 'New Property Category Name','casasync' ),
+    'menu_name'         => __( 'Property Category','casasync' )
+  );
+  $args = array(
+    'hierarchical'      => true,
+    'labels'            => $labels,
+    'show_ui'           => true,
+    'show_admin_column' => true,
+    'query_var'         => true,
+    'rewrite'           => array( 'slug' => 'property-category' )
+  );
+  register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
+  $labels = array(
+    'name'              => __( 'Property Locations', 'casasync' ),
+    'singular_name'     => __( 'Property Location', 'casasync' ),
+    'search_items'      => __( 'Search Property Locations','casasync' ),
+    'all_items'         => __( 'All Property Locations','casasync' ),
+    'parent_item'       => __( 'Parent Property Location','casasync' ),
+    'parent_item_colon' => __( 'Parent Property Location:','casasync' ),
+    'edit_item'         => __( 'Edit Property Location','casasync' ),
+    'update_item'       => __( 'Update Property Location','casasync' ),
+    'add_new_item'      => __( 'Add New Property Location','casasync' ),
+    'new_item_name'     => __( 'New Property Location Name','casasync' ),
+    'menu_name'         => __( 'Property Location','casasync' )
+  );
+  $args = array(
+    'hierarchical'      => true,
+    'labels'            => $labels,
+    'show_ui'           => true,
+    'show_admin_column' => true,
+    'query_var'         => true,
+    'rewrite'           => array( 'slug' => 'property-location' )
+  );
+  register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
 
-	//make sure casasync upload dir is present
-	if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync')) {
-		mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync');
-	}
+  $labels = array(
+    'name'              => __( 'Property Salestypes', 'casasync' ),
+    'singular_name'     => __( 'Property Salestype', 'casasync' ),
+    'search_items'      => __( 'Search Property Salestypes','casasync' ),
+    'all_items'         => __( 'All Property Salestypes','casasync' ),
+    'parent_item'       => __( 'Parent Property Salestype','casasync' ),
+    'parent_item_colon' => __( 'Parent Property Salestype:','casasync' ),
+    'edit_item'         => __( 'Edit Property Salestype','casasync' ),
+    'update_item'       => __( 'Update Property Salestype','casasync' ),
+    'add_new_item'      => __( 'Add New Property Salestype','casasync' ),
+    'new_item_name'     => __( 'New Property Salestype Name','casasync' ),
+    'menu_name'         => __( 'Property Salestype','casasync' )
+  );
+  $args = array(
+    'hierarchical'      => false,
+    'labels'            => $labels,
+    'show_ui'           => true,
+    'show_admin_column' => true,
+    'query_var'         => true,
+    'rewrite'           => array( 'slug' => 'property-salesstype' )
+  );
+  register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
 
-	//register post type
-	$labels = array(
-    	'name' => 'Properties',
-    	'singular_name' => 'Property',
-    	'add_new' => 'Add New',
-    	'add_new_item' => 'Add New Property',
-    	'edit_item' => 'Edit Property',
-    	'new_item' => 'New Property',
-    	'all_items' => 'All Properties',
-    	'view_item' => 'View Property',
-    	'search_items' => 'Search Properties',
-    	'not_found' =>  'No properties found',
-    	'not_found_in_trash' => 'No properties found in Trash',
-    	'parent_item_colon' => '',
-    	'menu_name' => 'Properties'
-  	);
-	$args = array(
-		'labels' => $labels,
-    	'public' => true,
-    	'publicly_queryable' => true,
-    	'show_ui' => true,
-    	'show_in_menu' => true,
-    	'query_var' => true,
-    	'rewrite' => array( 'slug' => 'property' ),
-    	'capability_type' => 'post',
-    	'has_archive' => true,
-    	'hierarchical' => false,
-    	'menu_position' => null,
-   		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-      'menu_icon' => CASASYNC_PLUGIN_URL . 'assets/img/building.png'
-	);
-	register_post_type( 'casasync_property', $args );
+  //prefill statuses
 
+  //category for attachments
+  $labels = array(
+    'name'              => __( 'Casasync Types', 'casasync' ),
+    'singular_name'     => __( 'Casasync Type', 'casasync' ),
+    'search_items'      => __( 'Search Casasync Types', 'casasync' ),
+    'all_items'         => __( 'All Casasync Types','casasync' ),
+    'parent_item'       => __( 'Parent Casasync Type','casasync' ),
+    'parent_item_colon' => __( 'Parent Casasync Type:','casasync' ),
+    'edit_item'         => __( 'Edit Casasync Type','casasync' ),
+    'update_item'       => __( 'Update Casasync Type','casasync' ),
+    'add_new_item'      => __( 'Add New Casasync Type','casasync' ),
+    'new_item_name'     => __( 'New Casasync Type Name','casasync' ),
+    'menu_name'         => __( 'Casasync Type','casasync' )
+  );
 
-
-	$labels = array(
-    	'name'                => _x( 'Property Categories', 'taxonomy general name' ),
-    	'singular_name'       => _x( 'Property Category', 'taxonomy singular name' ),
-    	'search_items'        => __( 'Search Property Categories' ),
-    	'all_items'           => __( 'All Property Categories' ),
-    	'parent_item'         => __( 'Parent Property Category' ),
-    	'parent_item_colon'   => __( 'Parent Property Category:' ),
-    	'edit_item'           => __( 'Edit Property Category' ),
-    	'update_item'         => __( 'Update Property Category' ),
-    	'add_new_item'        => __( 'Add New Property Category' ),
-    	'new_item_name'       => __( 'New Property Category Name' ),
-    	'menu_name'           => __( 'Property Category' )
-  	);
-
-  	$args = array(
-  		'hierarchical'        => true,
-  		'labels'              => $labels,
-  		'show_ui'             => true,
-  		'show_admin_column'   => true,
-  		'query_var'           => true,
-  		'rewrite'             => array( 'slug' => 'property-category' )
-  	);
-
-  	register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
-
-
-
-  	$labels = array(
-    	'name'                => _x( 'Property Locations', 'taxonomy general name' ),
-    	'singular_name'       => _x( 'Property Location', 'taxonomy singular name' ),
-    	'search_items'        => __( 'Search Property Locations' ),
-    	'all_items'           => __( 'All Property Locations' ),
-    	'parent_item'         => __( 'Parent Property Location' ),
-    	'parent_item_colon'   => __( 'Parent Property Location:' ),
-    	'edit_item'           => __( 'Edit Property Location' ),
-    	'update_item'         => __( 'Update Property Location' ),
-    	'add_new_item'        => __( 'Add New Property Location' ),
-    	'new_item_name'       => __( 'New Property Location Name' ),
-    	'menu_name'           => __( 'Property Location' )
-  	);
-
-  	$args = array(
-  		'hierarchical'        => true,
-  		'labels'              => $labels,
-  		'show_ui'             => true,
-  		'show_admin_column'   => true,
-  		'query_var'           => true,
-  		'rewrite'             => array( 'slug' => 'property-location' )
-  	);
-
-  	register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
-
-
-  	$labels = array(
-    	'name'                => _x( 'Property Salestypes', 'taxonomy general name' ),
-    	'singular_name'       => _x( 'Property Salestype', 'taxonomy singular name' ),
-    	'search_items'        => __( 'Search Property Salestypes' ),
-    	'all_items'           => __( 'All Property Salestypes' ),
-    	'parent_item'         => __( 'Parent Property Salestype' ),
-    	'parent_item_colon'   => __( 'Parent Property Salestype:' ),
-    	'edit_item'           => __( 'Edit Property Salestype' ),
-    	'update_item'         => __( 'Update Property Salestype' ),
-    	'add_new_item'        => __( 'Add New Property Salestype' ),
-    	'new_item_name'       => __( 'New Property Salestype Name' ),
-    	'menu_name'           => __( 'Property Salestype' )
-  	);
-
-  	$args = array(
-  		'hierarchical'        => false,
-  		'labels'              => $labels,
-  		'show_ui'             => true,
-  		'show_admin_column'   => true,
-  		'query_var'           => true,
-  		'rewrite'             => array( 'slug' => 'property-salesstype' )
-  	);
-
-  	register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
-
-
-    //prefill statuses
-
-
-
-
-  	//category for attachments
-  	$labels = array(
-    	'name'                => _x( 'Casasync Types', 'taxonomy general name' ),
-    	'singular_name'       => _x( 'Casasync Type', 'taxonomy singular name' ),
-    	'search_items'        => __( 'Search Casasync Types' ),
-    	'all_items'           => __( 'All Casasync Types' ),
-    	'parent_item'         => __( 'Parent Casasync Type' ),
-    	'parent_item_colon'   => __( 'Parent Casasync Type:' ),
-    	'edit_item'           => __( 'Edit Casasync Type' ),
-    	'update_item'         => __( 'Update Casasync Type' ),
-    	'add_new_item'        => __( 'Add New Casasync Type' ),
-    	'new_item_name'       => __( 'New Casasync Type Name' ),
-    	'menu_name'           => __( 'Casasync Type' )
-  	);
-
-  	$args = array(
-  		'hierarchical'        => true,
-  		'labels'              => $labels,
-  		'show_ui'             => true,
-  		'show_admin_column'   => true,
-  		'query_var'           => true,
-  		'rewrite'             => array( 'slug' => 'property-atachment-type' )
-  	);
-  	register_taxonomy( 'casasync_attachment_type', array(), $args );
-  	register_taxonomy_for_object_type('casasync_attachment_type', 'attachment');
-   	add_post_type_support('attachment', 'casasync_attachment_type');
-	$id1 = wp_insert_term('Image', 'casasync_attachment_type', array('slug' => 'image'));
-	$id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
-	$id2 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
+  $args = array(
+    'hierarchical'      => true,
+    'labels'            => $labels,
+    'show_ui'           => true,
+    'show_admin_column' => true,
+    'query_var'         => true,
+    'rewrite'           => array( 'slug' => 'property-atachment-type' )
+  );
+  register_taxonomy( 'casasync_attachment_type', array(), $args );
+  register_taxonomy_for_object_type('casasync_attachment_type', 'attachment');
+  add_post_type_support('attachment', 'casasync_attachment_type');
+  $id1 = wp_insert_term('Image', 'casasync_attachment_type', array('slug' => 'image'));
+  $id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
+  $id2 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
 
   if (get_option( 'casasync_live_import') == 1 || (isset($_GET['do_import']) && !isset($_POST['casasync_submit']) ) ) {
     casasync_import();
@@ -254,19 +235,19 @@ $textids = array(
 $fields = array();
 foreach ($textids as $id => $label) {
   $fields[] = array(
-      'name' => $label,
-      'desc' => '',
-      'id' => $id,
-      'type' => 'text',
-      'default' => ''
+    'name' => $label,
+    'desc' => '',
+    'id' => $id,
+    'type' => 'text',
+    'default' => ''
   );
 }
 $meta_box['casasync_property'] = array(
-    'id' => 'property-meta-details',
-    'title' => 'Property Details',
-    'context' => 'normal',
-    'priority' => 'high',
-    'fields' => $fields
+  'id' => 'property-meta-details',
+  'title' => 'Property Details',
+  'context' => 'normal',
+  'priority' => 'high',
+  'fields' => $fields
 
 );
 
@@ -274,11 +255,10 @@ add_action('admin_menu', 'plib_add_box');
 
 //Add meta boxes to post types
 function plib_add_box() {
-    global $meta_box;
-
-    foreach($meta_box as $post_type => $value) {
-        add_meta_box($value['id'], $value['title'], 'plib_format_box', $post_type, $value['context'], $value['priority']);
-    }
+  global $meta_box;
+  foreach($meta_box as $post_type => $value) {
+    add_meta_box($value['id'], $value['title'], 'plib_format_box', $post_type, $value['context'], $value['priority']);
+  }
 }
 
 //Format meta boxes
@@ -287,40 +267,38 @@ function plib_format_box() {
 
   // Use nonce for verification
   echo '<input type="hidden" name="plib_meta_box_nonce" value="', wp_create_nonce(basename(__FILE__)), '" />';
-
   echo '<table class="form-table">';
-
   foreach ($meta_box[$post->post_type]['fields'] as $field) {
-      // get current post meta data
-      $meta = get_post_meta($post->ID, $field['id'], true);
+    // get current post meta data
+    $meta = get_post_meta($post->ID, $field['id'], true);
 
-      echo '<tr>'.
-              '<th style="width:20%"><label for="'. $field['id'] .'">'. $field['name']. '</label></th>'.
-              '<td>';
-      switch ($field['type']) {
-          case 'text':
-              echo '<input type="text" name="'. $field['id']. '" id="'. $field['id'] .'" value="'. ($meta ? $meta : $field['default']) . '" size="30" style="width:97%" />'. '<br />'. $field['desc'];
-              break;
-          case 'textarea':
-              echo '<textarea name="'. $field['id']. '" id="'. $field['id']. '" cols="60" rows="4" style="width:97%">'. ($meta ? $meta : $field['default']) . '</textarea>'. '<br />'. $field['desc'];
-              break;
-          case 'select':
-              echo '<select name="'. $field['id'] . '" id="'. $field['id'] . '">';
-              foreach ($field['options'] as $option) {
-                  echo '<option '. ( $meta == $option ? ' selected="selected"' : '' ) . '>'. $option . '</option>';
-              }
-              echo '</select>';
-              break;
-          case 'radio':
-              foreach ($field['options'] as $option) {
-                  echo '<input type="radio" name="' . $field['id'] . '" value="' . $option['value'] . '"' . ( $meta == $option['value'] ? ' checked="checked"' : '' ) . ' />' . $option['name'];
-              }
-              break;
-          case 'checkbox':
-              echo '<input type="checkbox" name="' . $field['id'] . '" id="' . $field['id'] . '"' . ( $meta ? ' checked="checked"' : '' ) . ' />';
-              break;
-      }
-      echo     '<td>'.'</tr>';
+    echo '<tr>'.
+      '<th style="width:20%"><label for="'. $field['id'] .'">'. $field['name']. '</label></th>'.
+      '<td>';
+    switch ($field['type']) {
+      case 'text':
+        echo '<input type="text" name="'. $field['id']. '" id="'. $field['id'] .'" value="'. ($meta ? $meta : $field['default']) . '" size="30" style="width:97%" />'. '<br />'. $field['desc'];
+        break;
+      case 'textarea':
+        echo '<textarea name="'. $field['id']. '" id="'. $field['id']. '" cols="60" rows="4" style="width:97%">'. ($meta ? $meta : $field['default']) . '</textarea>'. '<br />'. $field['desc'];
+        break;
+      case 'select':
+        echo '<select name="'. $field['id'] . '" id="'. $field['id'] . '">';
+        foreach ($field['options'] as $option) {
+          echo '<option '. ( $meta == $option ? ' selected="selected"' : '' ) . '>'. $option . '</option>';
+        }
+        echo '</select>';
+        break;
+      case 'radio':
+        foreach ($field['options'] as $option) {
+          echo '<input type="radio" name="' . $field['id'] . '" value="' . $option['value'] . '"' . ( $meta == $option['value'] ? ' checked="checked"' : '' ) . ' />' . $option['name'];
+        }
+        break;
+      case 'checkbox':
+        echo '<input type="checkbox" name="' . $field['id'] . '" id="' . $field['id'] . '"' . ( $meta ? ' checked="checked"' : '' ) . ' />';
+        break;
+    }
+    echo '<td>'.'</tr>';
   }
 
   echo '</table>';
@@ -368,9 +346,9 @@ add_action('save_post', 'plib_save_data');*/
 
 
 function casasync_load_bootstrap() {
-	wp_enqueue_script(
-		'bootstrap',
-		CASASYNC_PLUGIN_URL .'assets/js/bootstrap.min.js'	);
+    wp_enqueue_script(
+        'bootstrap',
+        CASASYNC_PLUGIN_URL .'assets/js/bootstrap.min.js'   );
 
 }
 if (get_option( 'casasync_load_bootstrap', 1 )) {
@@ -388,20 +366,20 @@ if (get_option( 'casasync_load_bootstrap_css', 1 )) {
   add_action( 'wp_enqueue_scripts', 'casasync_load_bootstrap_css' );
 }
 function casasync_load_bootstrap_multiselect() {
-	wp_enqueue_script(
-		'bootstrap_multiselect',
+    wp_enqueue_script(
+        'bootstrap_multiselect',
     CASASYNC_PLUGIN_URL . 'assets/js/bootstrap-multiselect.js'
-	);
+    );
 }
 if (get_option( 'casasync_load_multiselector', 1 )) {
   add_action( 'wp_enqueue_scripts', 'casasync_load_bootstrap_multiselect' );
 }
 
 function casasync_load_script() {
-	wp_enqueue_script(
-		'casasync_script',
+    wp_enqueue_script(
+        'casasync_script',
     CASASYNC_PLUGIN_URL . 'assets/js/script.js'
-	);
+    );
 }
 if (get_option( 'casasync_load_scripts', 1 )) {
   add_action( 'wp_enqueue_scripts', 'casasync_load_script' );
@@ -475,24 +453,24 @@ if (get_option( 'casasync_load_fontawesome', 1 )) {
  * Adding our custom fields to the $form_fields array
  */
 function casasync_image_attachment_fields_to_edit($form_fields, $post) {
-	$form_fields["origin"] = array(
-		"label" => __("Custom Text Field"),
-		"input" => "text", // this is default if "input" is omitted
-		"value" => get_post_meta($post->ID, "_custom1", true)
-	);
-	$form_fields["origin"]["label"] = __("Original filename");
-	$form_fields["origin"]["input"] = "text";
-	$form_fields["origin"]["value"] = get_post_meta($post->ID, "_origin", true);
+    $form_fields["origin"] = array(
+        "label" => __("Custom Text Field"),
+        "input" => "text", // this is default if "input" is omitted
+        "value" => get_post_meta($post->ID, "_custom1", true)
+    );
+    $form_fields["origin"]["label"] = __("Original filename");
+    $form_fields["origin"]["input"] = "text";
+    $form_fields["origin"]["value"] = get_post_meta($post->ID, "_origin", true);
 
-	return $form_fields;
+    return $form_fields;
 }
 add_filter("attachment_fields_to_edit", "casasync_image_attachment_fields_to_edit", null, 2);
 
 function casasync_image_attachment_fields_to_save($post, $attachment) {
-	if( isset($attachment['origin']) ){
-		update_post_meta($post['ID'], '_origin', $attachment['origin']);
-	}
-	return $post;
+    if( isset($attachment['origin']) ){
+        update_post_meta($post['ID'], '_origin', $attachment['origin']);
+    }
+    return $post;
 }
 add_filter("attachment_fields_to_save", "casasync_image_attachment_fields_to_save", null, 2);
 
@@ -500,13 +478,13 @@ add_filter("attachment_fields_to_save", "casasync_image_attachment_fields_to_sav
 //category archive loop settings
 function customize_casasync_category($query){
   if ($query->is_main_query()) {
-  	if (
+    if (
         (is_tax('casasync_salestype'))
         || (is_tax('casasync_category'))
         || (is_tax('casasync_location'))
         || (is_post_type_archive( 'casasync_property' ))
       ) {
-  		$query->set('posts_per_page', '20');
+        $query->set('posts_per_page', '20');
       $query->set('orderby', 'date');
 
       $taxquery_new = array();
@@ -572,7 +550,7 @@ function customize_casasync_category($query){
         $query->set('tax_query', $taxquery_new);
       }
 
-  	}
+    }
   }
 }
 add_action('pre_get_posts', 'customize_casasync_category');
@@ -589,12 +567,12 @@ function include_template_function( $template_path ) {
             }
     }
     if (
-    		is_tax( 'casasync_salestype' )
-    	||	is_tax( 'casasync_category' )
-    	||	is_tax( 'casasync_location' )
+            is_tax( 'casasync_salestype' )
+        ||  is_tax( 'casasync_category' )
+        ||  is_tax( 'casasync_location' )
       ||  (is_post_type_archive( 'casasync_property' ))
     ) {
-    	if ( $theme_file = locate_template( array( 'taxonomy-casasync_salestype.php' ) ) ) {
+        if ( $theme_file = locate_template( array( 'taxonomy-casasync_salestype.php' ) ) ) {
             $template_path = $theme_file;
         } else {
             $template_path = CASASYNC_PLUGIN_DIR. '/archive.php';
@@ -608,13 +586,13 @@ add_filter( 'template_include', 'include_template_function', 1 );
 
 
 if ( function_exists( 'add_theme_support' ) ) {
-	add_theme_support( 'post-thumbnails' );
+    add_theme_support( 'post-thumbnails' );
         set_post_thumbnail_size( 150, 150 ); // default Post Thumbnail dimensions
 }
 
 if ( function_exists( 'add_image_size' ) ) {
-	add_image_size( 'category-thumb', 300, 9999 );
-	add_image_size( 'casasync-thumb', 220, 180, true );
+    add_image_size( 'category-thumb', 300, 9999 );
+    add_image_size( 'casasync-thumb', 220, 180, true );
   add_image_size( 'casasync_archive', get_option('casasync_archive_thumb_w', '500'), get_option('casasync_archive_thumb_h', '250'), true );
 }
 
@@ -629,7 +607,7 @@ register_deactivation_hook(__FILE__, 'casasync_deactivation');
 
 function casasync_activation() {
 
-	//actions to perform once on plugin activation go here
+    //actions to perform once on plugin activation go here
 
 
     //register uninstaller
@@ -638,7 +616,7 @@ function casasync_activation() {
 
 function casasync_deactivation() {
 
-	// actions to perform once on plugin deactivation go here
+    // actions to perform once on plugin deactivation go here
 
 }
 
