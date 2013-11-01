@@ -861,26 +861,26 @@
 						  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 						  				<?php $objektlink = get_permalink(); ?>
 						  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
-						  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $selleremail ?></a></span>
+						  				<span class="value break-word"><a href="<?php echo $mailto ?>"><?php echo $selleremail ?></a></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			
 					  			<?php if ($sellerphone_mobile): ?>
 					  				<p class="cs-phone-mobile">
 						  				<span class="label"><?php echo __('Mobile', 'casasync') ?></span>
-						  				<span class="value break-word"><i class="icon icon-mobile-phone"></i> <?php echo $sellerphone_mobile ?></span>
+						  				<span class="value break-word"><?php echo $sellerphone_mobile ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerphone_direct): ?>
 					  				<p class="cs-phone-direct">
 						  				<span class="label"><?php echo __('Phone direct', 'casasync') ?></span>
-						  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $sellerphone_direct ?></span>
+						  				<span class="value break-word"><?php echo $sellerphone_direct ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerphone_central): ?>
 					  				<p class="cs-phone-central">
 						  				<span class="label"><?php echo __('Phone', 'casasync') ?></span>
-						  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $sellerphone_central ?></span>
+						  				<span class="value break-word"><?php echo $sellerphone_central ?></span>
 						  			</p>
 					  			<?php endif; ?>
 					  			<?php if ($sellerfax): ?>
@@ -918,25 +918,25 @@
 					  				<span class="label"><?php echo __('Email', 'casasync') ?></span>
 					  				<?php $objektlink = get_permalink(); ?>
 					  				<?php $mailto = 'mailto:' . $salesperson_email . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20' . rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;?>
-					  				<span class="value break-word"><a href="<?php echo $mailto ?>"><i class="icon icon-envelope"></i> <?php echo $salesperson_email ?></a></span>
+					  				<span class="value break-word"><a href="<?php echo $mailto ?>"><?php echo $salesperson_email ?></a></span>
 					  			</p>
 			  				<?php endif; ?>
 				  			<?php if ($salesperson_phone_mobile): ?>
 				  				<p class="cs-phone-mobile">
 					  				<span class="label"><?php echo __('Mobile', 'casasync') ?></span>
-					  				<span class="value break-word"><i class="icon icon-mobile-phone"></i> <?php echo $salesperson_phone_mobile ?></span>
+					  				<span class="value break-word"><?php echo $salesperson_phone_mobile ?></span>
 					  			</p>
 					  		<?php endif; ?>
 				  			<?php if ($salesperson_phone_direct): ?>
 				  				<p class="cs-phone-direct">
 					  				<span class="label"><?php echo __('Phone direct', 'casasync') ?></span>
-					  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $salesperson_phone_direct ?></span>
+					  				<span class="value break-word"><?php echo $salesperson_phone_direct ?></span>
 					  			</p>
 				  			<?php endif; ?>
 				  			<?php if ($salesperson_phone_central): ?>
 				  				<p class="cs-phone-central">
 					  				<span class="label"><?php echo __('Phone', 'casasync') ?></span>
-					  				<span class="value break-word"><i class="icon icon-phone"></i> <?php echo $salesperson_phone_central ?></span>
+					  				<span class="value break-word"><?php echo $salesperson_phone_central ?></span>
 					  			</p>
 				  			<?php endif; ?>
 				  			<?php if ($salesperson_fax): ?>
