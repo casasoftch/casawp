@@ -71,7 +71,7 @@ function casasync_init() {
     'name'               => __( 'Properties','casasync' ),
     'singular_name'      => __( 'Property','casasync' ),
     'add_new'            => __( 'Add New','casasync' ),
-    'add_new_item'       => __( 'Property','casasync' ),
+    'add_new_item'       => __( 'Add New Property','casasync' ),
     'edit_item'          => __( 'Edit Property','casasync' ),
     'new_item'           => __( 'New Property','casasync' ),
     'all_items'          => __( 'All Properties','casasync' ),
@@ -79,7 +79,6 @@ function casasync_init() {
     'search_items'       => __( 'Search Properties','casasync' ),
     'not_found'          => __( 'No properties found','casasync' ),
     'not_found_in_trash' => __( 'No properties found in Trash','casasync' ),
-    'parent_item_colon'  => __( '','casasync' ),
     'menu_name'          => __( 'Properties','casasync' )
   );
   $args = array(
@@ -100,17 +99,17 @@ function casasync_init() {
   register_post_type( 'casasync_property', $args );
 
   $labels = array(
-    'name'              => __( 'Property Categories', 'casasync' ),
-    'singular_name'     => __( 'Property Category', 'casasync' ),
-    'search_items'      => __( 'Search Property Categories','casasync' ),
-    'all_items'         => __( 'All Property Categories','casasync' ),
-    'parent_item'       => __( 'Parent Property Category','casasync' ),
-    'parent_item_colon' => __( 'Parent Property Category:','casasync' ),
-    'edit_item'         => __( 'Edit Property Category','casasync' ),
-    'update_item'       => __( 'Update Property Category','casasync' ),
-    'add_new_item'      => __( 'Add New Property Category','casasync' ),
-    'new_item_name'     => __( 'New Property Category Name','casasync' ),
-    'menu_name'         => __( 'Property Category','casasync' )
+    'name'              => __( 'Categories', 'casasync' ), // __x()
+    'singular_name'     => __( 'Category', 'casasync' ), // __x()
+    'search_items'      => __( 'Search Categories','casasync' ),
+    'all_items'         => __( 'All Categories','casasync' ),
+    'parent_item'       => __( 'Parent Category','casasync' ),
+    'parent_item_colon' => __( 'Parent Category:','casasync' ),
+    'edit_item'         => __( 'Edit Category','casasync' ),
+    'update_item'       => __( 'Update Category','casasync' ),
+    'add_new_item'      => __( 'Add New Category','casasync' ),
+    'new_item_name'     => __( 'New Category Name','casasync' ),
+    'menu_name'         => __( 'Categories','casasync' )
   );
   $args = array(
     'hierarchical'      => true,
@@ -123,17 +122,17 @@ function casasync_init() {
   register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
   $labels = array(
-    'name'              => __( 'Property Locations', 'casasync' ),
-    'singular_name'     => __( 'Property Location', 'casasync' ),
-    'search_items'      => __( 'Search Property Locations','casasync' ),
-    'all_items'         => __( 'All Property Locations','casasync' ),
-    'parent_item'       => __( 'Parent Property Location','casasync' ),
-    'parent_item_colon' => __( 'Parent Property Location:','casasync' ),
-    'edit_item'         => __( 'Edit Property Location','casasync' ),
-    'update_item'       => __( 'Update Property Location','casasync' ),
-    'add_new_item'      => __( 'Add New Property Location','casasync' ),
-    'new_item_name'     => __( 'New Property Location Name','casasync' ),
-    'menu_name'         => __( 'Property Location','casasync' )
+    'name'              => __( 'Locations', 'casasync' ),
+    'singular_name'     => __( 'Location', 'casasync' ),
+    'search_items'      => __( 'Search Locations','casasync' ),
+    'all_items'         => __( 'All Locations','casasync' ),
+    'parent_item'       => __( 'Parent Location','casasync' ),
+    'parent_item_colon' => __( 'Parent Location:','casasync' ),
+    'edit_item'         => __( 'Edit Location','casasync' ),
+    'update_item'       => __( 'Update Location','casasync' ),
+    'add_new_item'      => __( 'Add New Location','casasync' ),
+    'new_item_name'     => __( 'New Location Name','casasync' ),
+    'menu_name'         => __( 'Locations','casasync' )
   );
   $args = array(
     'hierarchical'      => true,
@@ -146,17 +145,18 @@ function casasync_init() {
   register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
 
   $labels = array(
-    'name'              => __( 'Property Salestypes', 'casasync' ),
-    'singular_name'     => __( 'Property Salestype', 'casasync' ),
-    'search_items'      => __( 'Search Property Salestypes','casasync' ),
-    'all_items'         => __( 'All Property Salestypes','casasync' ),
-    'parent_item'       => __( 'Parent Property Salestype','casasync' ),
-    'parent_item_colon' => __( 'Parent Property Salestype:','casasync' ),
-    'edit_item'         => __( 'Edit Property Salestype','casasync' ),
-    'update_item'       => __( 'Update Property Salestype','casasync' ),
-    'add_new_item'      => __( 'Add New Property Salestype','casasync' ),
-    'new_item_name'     => __( 'New Property Salestype Name','casasync' ),
-    'menu_name'         => __( 'Property Salestype','casasync' )
+    'name'                       => __( 'Salestypes', 'casasync' ),
+    'singular_name'              => __( 'Salestype', 'casasync' ),
+    'search_items'               => __( 'Search Salestypes','casasync' ),
+    'all_items'                  => __( 'All Salestypes','casasync' ),
+    'parent_item'                => __( 'Parent Salestype','casasync' ),
+    'parent_item_colon'          => __( 'Parent Salestype:','casasync' ),
+    'separate_items_with_commas' => __( 'Separate Salestypes with commas', 'casasync' ),
+    'edit_item'                  => __( 'Edit Salestype','casasync' ),
+    'update_item'                => __( 'Update Salestype','casasync' ),
+    'add_new_item'               => __( 'Add New Salestype','casasync' ),
+    'new_item_name'              => __( 'New Salestype Name','casasync' ),
+    'menu_name'                  => __( 'Salestypes','casasync' )
   );
   $args = array(
     'hierarchical'      => false,

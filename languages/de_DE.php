@@ -5,6 +5,53 @@
         if ( $domain == 'casasync') {
 
             switch ( $text ) {
+                case 'Properties':                   $translated_text = 'Immobilien';break;
+                case 'Property':                     $translated_text = 'Immobilie';break;
+                case 'Add New':                      $translated_text = 'Erstellen';break;
+                case 'Add New Property':             $translated_text = 'Neue Immobilie erstellen';break;
+                case 'Edit Property':                $translated_text = 'Immobilie bearbeiten';break;
+                case 'New Property':                 $translated_text = 'Neue Immobilie';break;
+                case 'All Properties':               $translated_text = 'Alle Immobilien';break;
+                case 'View Property':                $translated_text = 'Immobilie ansehen';break;
+                case 'Search Properties':            $translated_text = 'Immobilien durchsuchen';break;
+                case 'No properties found':          $translated_text = 'Keine Immobilien gefunden';break;
+                case 'No properties found in Trash': $translated_text = 'Keine Immobilien im Papierkorb gefunden';break;
+
+                case 'Categories':                   $translated_text = 'Kategorien';break;
+                case 'Category':                     $translated_text = 'Kategorie';break;
+                case 'Search Categories':            $translated_text = 'Kategorien durchsuchen';break;
+                case 'All Categories':               $translated_text = 'Alle Kategorien';break;
+                case 'Parent Category':              $translated_text = 'Übergeordnete Kategorien';break;
+                case 'Parent Category:':             $translated_text = 'Übergeordnete Kategorien:';break;
+                case 'Edit Category':                $translated_text = 'Kategorie bearbeiten';break;
+                case 'Update Category':              $translated_text = 'Aktualisiere Kategorie';break;
+                case 'Add New Category':             $translated_text = 'Neue Kategorie erstellen';break;
+                case 'New Category Name':            $translated_text = 'Neuer Kategorienamen';break;
+
+                case 'Locations':                    $translated_text = 'Orte';break;
+                case 'Location':                     $translated_text = 'Ort';break;
+                case 'Search Locations':             $translated_text = 'Orte durchsuchen';break;
+                case 'All Locations':                $translated_text = 'Alle Orte';break;
+                case 'Parent Location':              $translated_text = 'Übergeordneter Ort';break;
+                case 'Parent Location:':             $translated_text = 'Übergeordneter Ort:';break;
+                case 'Edit Location':                $translated_text = 'Ort bearbeiten';break;
+                case 'Update Location':              $translated_text = 'Ort aktualisieren';break;
+                case 'Add New Location':             $translated_text = 'Neuer Ort erstellen';break;
+                case 'New Location Name':            $translated_text = 'Neuer Ortsnamen';break;
+
+                case 'Salestypes':                      $translated_text = 'Vermarktungsarten';break;
+                case 'Salestype':                       $translated_text = 'Vermarktungsart';break;
+                case 'Search Salestypes':               $translated_text = 'Vermarktungsarten durchsuchen';break;
+                case 'All Salestypes':                  $translated_text = 'Alle Vermarktungsarten';break;
+                case 'Parent Salestype':                $translated_text = 'Übergeordnete Vermarktungsart';break;
+                case 'Parent Salestype:':               $translated_text = 'Übergeordnete Vermarktungsart:';break;
+                case 'Edit Salestype':                  $translated_text = 'Vermarktungsart bearbeiten';break;
+                case 'Update Salestype':                $translated_text = 'Vermarktungsart aktualisieren';break;
+                case 'Add New Salestype':               $translated_text = 'Neue Vermarktungsart erstellen';break;
+                case 'New Salestype Name':              $translated_text = 'Neuer Vermarktungsart Namen';break;
+                case 'Separate Salestypes with commas': $translated_text = 'Trenne Vermarktungsarten durch Kommas';break;
+
+
                 case 'Buy':  $translated_text = 'Kaufen';break;
                 case 'Rent': $translated_text = 'Mieten';break;
 
@@ -71,7 +118,6 @@
                 case 'Fax':          $translated_text = 'Fax';break;
 
                 case 'Offer':        $translated_text = 'Angebot';break;
-                case 'Property':     $translated_text = 'Objekt';break;
                 case 'Surroundings': $translated_text = 'Umfeld';break;
                 case 'Distances':    $translated_text = 'Distanzen';break;
                 case 'Distances:':   $translated_text = 'Distanzen:';break;
@@ -310,4 +356,3 @@
         }
 
         return $translated_text;
-    }
