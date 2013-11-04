@@ -356,3 +356,4 @@
         }
 
         return $translated_text;
+    }
