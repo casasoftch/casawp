@@ -1,6 +1,7 @@
 
-jQuery.noConflict();
-jQuery(document).ready(function($) {
+var $ = jQuery.noConflict();
+
+$(document).ready(function($) {
 
     //google maps
     if ($('.casasync-map').length && google) {
@@ -12,32 +13,22 @@ jQuery(document).ready(function($) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         var map;
                         function initialize() {
-                            if (results[0]) {
-                                var location = results[0].geometry.location;
-                                var bounds = results[0].geometry.bounds;
-                            } else {
-                                var location = null;
-                                var bounds = null;
-                            }
                             var mapOptions = {
                               zoom: 12,
-                              mapTypeId: google.maps.MapTypeId.ROADMAP,
-                              center: location
+                              center: results[0].geometry.location,
+                              mapTypeId: google.maps.MapTypeId.ROADMAP
                             };
-
                             $mapwraper.show();
                             map = new google.maps.Map(document.getElementById('map-canvas'),
                               mapOptions);
 
-                            if (bounds) {
-                                map.fitBounds(bounds);
-                            }
+
+                            map.fitBounds(results[0].geometry.bounds);
 
                             var marker = new google.maps.Marker({
                                 map: map,
-                                position: location
+                                position: results[0].geometry.location
                             });
-
                         }
 
                         google.maps.event.addDomListener(window, 'load', initialize);
@@ -144,13 +135,6 @@ jQuery(document).ready(function($) {
 
     });
 
-    if ($.fancybox) {
-        $('.casasync-fancybox').fancybox();
-    };
-
-    //basic boxes eq height
-    $('.casasync-basic-box').equalHeightColumns({
-        speed : 500
-    });
+    $('.casasync-fancybox').fancybox();
 
 });

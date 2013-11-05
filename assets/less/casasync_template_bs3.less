@@ -1,0 +1,109 @@
+@import "bootstrap3/bootstrap.less";
+@import "fontawesome4/font-awesome.less";
+
+.casasync-archive,
+.casasync-single{
+	.make-row();	
+}
+.casasync-archive-content,
+.casasync-single-content{
+	.make-lg-column(8);
+}
+.casasync-archive-aside,
+.casasync-single-aside{
+  	.make-lg-column(4);
+}
+
+
+.casasync-archive{
+	.casasync-property{
+		margin-bottom:10px;
+		.make-row();
+	}
+	.casasync-gallery{
+		.make-lg-column(4);
+	}	
+	.casasync-missing-gallery{
+		height:150px;
+		text-align: center;
+		background-color: #eee;
+		line-height: 150px;
+	}
+	.casasync-text{
+		.make-lg-column(8);
+	}
+}
+
+.casasync-tabable-nav{
+	.nav;
+	.nav-tabs;
+	.nav-justified; 
+	margin-left:0px; //wp templates
+}
+.entry-content{
+	.casasync-tabable-nav {
+		margin-bottom:0px; //wp templates
+	}
+}
+
+.casasync-tabable-content{
+	background-color: white;
+	border:1px solid #DDD;
+	border-top:0px;
+	padding:10px;
+	.tab-content;
+	> .casasync-tabable-pane {
+    	display: none;
+    	.tab-pane;
+		//.fade;
+	}
+	> .active {
+		display: block;
+	}
+}
+
+.casasync-basic-boxes{
+	.make-row();
+	margin-bottom: 10px;
+	.casasync-basic-box{
+		.make-lg-column(4);
+		> div{
+			.well;
+			overflow: hidden;
+			min-height: 100%;
+		}
+		h4{
+			margin:0px 0px;//wp templates
+			margin-bottom: 5px;
+		}
+	}
+}
+
+.casasync-single-paginate{
+	padding-bottom:10px;
+	.casasync-single-back{
+		.btn;
+		.btn-block;
+		.btn-info;
+	}
+}
+
+.casasync-contactform-form{
+	margin-top:10px;
+	.form-control{
+		.input-sm;
+	}
+	.casasync-contactform-row{
+		.make-row();
+	}
+	.casasync-contactform-send{
+		.btn;
+		.btn-primary;
+		.btn-block;
+	}
+}
+
+#theApsoluteRealEmailField{
+	display: none!important;
+}
+
