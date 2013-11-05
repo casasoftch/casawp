@@ -1,4 +1,5 @@
 <?php
+namespace CasaSync;
 /**
  * @package CasaSync
  */
@@ -24,7 +25,8 @@ include(CASASYNC_PLUGIN_DIR . 'classes/Casasync.php');
 include(CASASYNC_PLUGIN_DIR . 'classes/Single.php');
 include(CASASYNC_PLUGIN_DIR . 'classes/Archive.php');
 
-
-
-$casaSync = new CasaSync\CasaSync();
+$casaSync = new CasaSync();
+if (is_admin()) {
+	//$casaSyncAdmin = new Admin();
+}
 ?>

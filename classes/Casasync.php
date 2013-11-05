@@ -1,6 +1,5 @@
 <?php
 namespace CasaSync;
-use CasaSync\Single;
 
 class CasaSync {  
     public $textids = false;
@@ -41,6 +40,8 @@ class CasaSync {
       }
       $this->setMetaBoxes();
       $this->setTranslation();
+
+      
     }  
 
     function casasync_activation() {
