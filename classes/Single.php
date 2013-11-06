@@ -430,6 +430,8 @@
       }
       $content .= '</table>';
 
+      //echo $this->getAllNumvals();
+
       /*<div class="tab-pane fade" id="text_numbers">
                       <h3><!-- <i class="icon icon-tags"></i>  --><?php echo __('Offer','casasync'); ?></h3>
                       <table class="table">
@@ -792,6 +794,17 @@
           return $distances;
           break;
       }
+    }
+
+    public function getAllNumvals($sort) {
+      $return = array();
+      print_r($this->numval);
+      foreach ($this->numvals as $numval) {
+        if (array_search($sort, $numval)) {
+
+        }
+      }
+      return 'test';
     }
 
     public function casasync_distance_to_array($distance){
