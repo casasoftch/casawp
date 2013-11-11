@@ -3,7 +3,7 @@
 
 .casasync-archive,
 .casasync-single{
-	.make-row();	
+	.make-row();
 }
 .casasync-archive-content,
 .casasync-single-content{
@@ -16,6 +16,12 @@
 
 
 .casasync-archive{
+	.casasync-nav{
+		.casasync-nav-next,
+		.casasync-nav-previous{
+			.make-lg-column(6);
+		}
+	}
 	.casasync-property{
 		margin-bottom:10px;
 		.make-row();
@@ -24,13 +30,28 @@
 		.make-lg-column(4);
 	}	
 	.casasync-missing-gallery{
-		height:150px;
+		height: 150px;
 		text-align: center;
 		background-color: #eee;
 		line-height: 150px;
 	}
 	.casasync-text{
-		.make-lg-column(8);
+		.make-lg-column(7);
+	}
+	.casasync-thumbnail-wrapper{
+		.make-lg-column(5)
+	}
+	.casasync-thumbnail{
+		.thumbnail;
+	}
+	.casasync-pagination{
+		.pagination;
+	}
+}
+
+.casasync-single{
+	.carousel{
+
 	}
 }
 
@@ -44,6 +65,21 @@
 	.casasync-tabable-nav {
 		margin-bottom:0px; //wp templates
 	}
+	.casasync-slider-thumbnails{
+		.hidden-sm;
+		ul {
+			.make-row();
+			li {
+				.make-lg-column(3);
+				.thumbnail;
+			}
+		}
+	}
+	.single-property-container{
+		.casasyncContact{
+			.well;
+		}
+	}
 }
 
 .casasync-tabable-content{
@@ -51,6 +87,7 @@
 	border:1px solid #DDD;
 	border-top:0px;
 	padding:10px;
+	margin-bottom: 20px;
 	.tab-content;
 	> .casasync-tabable-pane {
     	display: none;
@@ -66,7 +103,23 @@
 	.make-row();
 	margin-bottom: 10px;
 	.casasync-basic-box{
-		.make-lg-column(4);
+		.make-lg-column(6);
+		> div{
+			.well;
+			overflow: hidden;
+			min-height: 100%;
+		}
+		h4{
+			margin:0px 0px;//wp templates
+			margin-bottom: 5px;
+		}
+	}
+}
+.casasync-basic-boxes.price-box{
+	.make-row();
+	margin-bottom: 10px;
+	.casasync-price-box{
+		.make-lg-column(12);
 		> div{
 			.well;
 			overflow: hidden;
@@ -105,5 +158,17 @@
 
 #theApsoluteRealEmailField{
 	display: none!important;
+}
+
+.casasync-label{
+	.label;
+	.label-default;
+}
+.casasync-unstyled{
+	.list-unstyled;
+}
+
+#casasync-nav-above .casasync-nav-previous {
+	text-align: right;
 }
 

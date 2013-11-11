@@ -2,6 +2,7 @@
 namespace CasaSync;
 
 class Admin {
+
     public function __construct(){ 
     	register_activation_hook(CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_install'));
     	register_deactivation_hook( CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_remove' ));
@@ -62,6 +63,6 @@ class Admin {
 	}
 
 	public function casasync_add_options_page() {
-		include(CASASYNC_PLUGIN_DIR.'includes/options.php');
+		include(CASASYNC_PLUGIN_DIR.'options.php');
 	}
 }

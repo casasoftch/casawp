@@ -5,7 +5,7 @@ class CasaSync {
     public $textids = false;
     public $fields = false;
     public $meta_box = false;
-
+    public $admin = false;
     public function __construct(){  
       if ( !function_exists( 'add_action' ) ) {
         echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
@@ -90,7 +90,8 @@ class CasaSync {
             || (is_tax('casasync_location'))
             || (is_post_type_archive( 'casasync_property' ))
           ) {
-          $query->set('posts_per_page', '20');
+          $posts_per_page = get_option('posts_per_page', 10);
+          $query->set('posts_per_page', $posts_per_page);
           $query->set('orderby', 'date');
 
           $taxquery_new = array();
@@ -226,13 +227,10 @@ class CasaSync {
         wp_enqueue_style( 'fancybox' );
       //};
 
-        
-
       wp_enqueue_script(
         'google_maps_v3',
         'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'
       );
-
 
       if (get_option( 'casasync_load_scripts', 1 )) {
         wp_enqueue_script(
@@ -258,11 +256,6 @@ class CasaSync {
         );
       }
       
-      
-      
-
-      
-
       if (get_option( 'casasync_load_stylesheet', 1 )) {
         wp_register_style( 'casasync-style', CASASYNC_PLUGIN_URL . 'assets/css/casasync.css?v=2' );
         wp_register_style( 'casasync-style-ie', CASASYNC_PLUGIN_URL . 'assets/css/casasync_ie.css' );
@@ -347,142 +340,133 @@ class CasaSync {
     }
 
     public function setPostTypes(){
-
       //register post type
       $labels = array(
-          'name' => 'Properties',
-          'singular_name' => 'Property',
-          'add_new' => 'Add New',
-          'add_new_item' => 'Add New Property',
-          'edit_item' => 'Edit Property',
-          'new_item' => 'New Property',
-          'all_items' => 'All Properties',
-          'view_item' => 'View Property',
-          'search_items' => 'Search Properties',
-          'not_found' =>  'No properties found',
+          'name'               => 'Properties',
+          'singular_name'      => 'Property',
+          'add_new'            => 'Add New',
+          'add_new_item'       => 'Add New Property',
+          'edit_item'          => 'Edit Property',
+          'new_item'           => 'New Property',
+          'all_items'          => 'All Properties',
+          'view_item'          => 'View Property',
+          'search_items'       => 'Search Properties',
+          'not_found'          =>  'No properties found',
           'not_found_in_trash' => 'No properties found in Trash',
-          'parent_item_colon' => '',
-          'menu_name' => 'Properties'
+          'parent_item_colon'  => '',
+          'menu_name'          => 'Properties'
         );
       $args = array(
-        'labels' => $labels,
-          'public' => true,
+        'labels'               => $labels,
+          'public'             => true,
           'publicly_queryable' => true,
-          'show_ui' => true,
-          'show_in_menu' => true,
-          'query_var' => true,
-          'rewrite' => array( 'slug' => 'property' ),
-          'capability_type' => 'post',
-          'has_archive' => true,
-          'hierarchical' => false,
-          'menu_position' => null,
-          'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-          'menu_icon' => CASASYNC_PLUGIN_URL . 'assets/img/building.png'
+          'show_ui'            => true,
+          'show_in_menu'       => true,
+          'query_var'          => true,
+          'rewrite'            => array( 'slug' => 'property' ),
+          'capability_type'    => 'post',
+          'has_archive'        => true,
+          'hierarchical'       => false,
+          'menu_position'      => null,
+          'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
+          'menu_icon'          => CASASYNC_PLUGIN_URL . 'assets/img/building.png'
       );
       register_post_type( 'casasync_property', $args );
 
-
-
       $labels = array(
-          'name'                => _x( 'Property Categories', 'taxonomy general name' ),
-          'singular_name'       => _x( 'Property Category', 'taxonomy singular name' ),
-          'search_items'        => __( 'Search Property Categories' ),
-          'all_items'           => __( 'All Property Categories' ),
-          'parent_item'         => __( 'Parent Property Category' ),
-          'parent_item_colon'   => __( 'Parent Property Category:' ),
-          'edit_item'           => __( 'Edit Property Category' ),
-          'update_item'         => __( 'Update Property Category' ),
-          'add_new_item'        => __( 'Add New Property Category' ),
-          'new_item_name'       => __( 'New Property Category Name' ),
-          'menu_name'           => __( 'Property Category' )
+          'name'              => _x( 'Property Categories', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Property Category', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Property Categories' ),
+          'all_items'         => __( 'All Property Categories' ),
+          'parent_item'       => __( 'Parent Property Category' ),
+          'parent_item_colon' => __( 'Parent Property Category:' ),
+          'edit_item'         => __( 'Edit Property Category' ),
+          'update_item'       => __( 'Update Property Category' ),
+          'add_new_item'      => __( 'Add New Property Category' ),
+          'new_item_name'     => __( 'New Property Category Name' ),
+          'menu_name'         => __( 'Property Category' )
         );
-
         $args = array(
-          'hierarchical'        => true,
-          'labels'              => $labels,
-          'show_ui'             => true,
-          'show_admin_column'   => true,
-          'query_var'           => true,
-          'rewrite'             => array( 'slug' => 'property-category' )
+          'hierarchical'      => true,
+          'labels'            => $labels,
+          'show_ui'           => true,
+          'show_admin_column' => true,
+          'query_var'         => true,
+          'rewrite'           => array( 'slug' => 'property-category' )
         );
 
         register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
-
-
         $labels = array(
-          'name'                => _x( 'Property Locations', 'taxonomy general name' ),
-          'singular_name'       => _x( 'Property Location', 'taxonomy singular name' ),
-          'search_items'        => __( 'Search Property Locations' ),
-          'all_items'           => __( 'All Property Locations' ),
-          'parent_item'         => __( 'Parent Property Location' ),
-          'parent_item_colon'   => __( 'Parent Property Location:' ),
-          'edit_item'           => __( 'Edit Property Location' ),
-          'update_item'         => __( 'Update Property Location' ),
-          'add_new_item'        => __( 'Add New Property Location' ),
-          'new_item_name'       => __( 'New Property Location Name' ),
-          'menu_name'           => __( 'Property Location' )
+          'name'              => _x( 'Property Locations', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Property Location', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Property Locations' ),
+          'all_items'         => __( 'All Property Locations' ),
+          'parent_item'       => __( 'Parent Property Location' ),
+          'parent_item_colon' => __( 'Parent Property Location:' ),
+          'edit_item'         => __( 'Edit Property Location' ),
+          'update_item'       => __( 'Update Property Location' ),
+          'add_new_item'      => __( 'Add New Property Location' ),
+          'new_item_name'     => __( 'New Property Location Name' ),
+          'menu_name'         => __( 'Property Location' )
         );
-
         $args = array(
-          'hierarchical'        => true,
-          'labels'              => $labels,
-          'show_ui'             => true,
-          'show_admin_column'   => true,
-          'query_var'           => true,
-          'rewrite'             => array( 'slug' => 'property-location' )
+          'hierarchical'      => true,
+          'labels'            => $labels,
+          'show_ui'           => true,
+          'show_admin_column' => true,
+          'query_var'         => true,
+          'rewrite'           => array( 'slug' => 'property-location' )
         );
 
         register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
 
 
         $labels = array(
-          'name'                => _x( 'Property Salestypes', 'taxonomy general name' ),
-          'singular_name'       => _x( 'Property Salestype', 'taxonomy singular name' ),
-          'search_items'        => __( 'Search Property Salestypes' ),
-          'all_items'           => __( 'All Property Salestypes' ),
-          'parent_item'         => __( 'Parent Property Salestype' ),
-          'parent_item_colon'   => __( 'Parent Property Salestype:' ),
-          'edit_item'           => __( 'Edit Property Salestype' ),
-          'update_item'         => __( 'Update Property Salestype' ),
-          'add_new_item'        => __( 'Add New Property Salestype' ),
-          'new_item_name'       => __( 'New Property Salestype Name' ),
-          'menu_name'           => __( 'Property Salestype' )
+          'name'              => _x( 'Property Salestypes', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Property Salestype', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Property Salestypes' ),
+          'all_items'         => __( 'All Property Salestypes' ),
+          'parent_item'       => __( 'Parent Property Salestype' ),
+          'parent_item_colon' => __( 'Parent Property Salestype:' ),
+          'edit_item'         => __( 'Edit Property Salestype' ),
+          'update_item'       => __( 'Update Property Salestype' ),
+          'add_new_item'      => __( 'Add New Property Salestype' ),
+          'new_item_name'     => __( 'New Property Salestype Name' ),
+          'menu_name'         => __( 'Property Salestype' )
         );
-
         $args = array(
-          'hierarchical'        => false,
-          'labels'              => $labels,
-          'show_ui'             => true,
-          'show_admin_column'   => true,
-          'query_var'           => true,
-          'rewrite'             => array( 'slug' => 'property-salesstype' )
+          'hierarchical'      => false,
+          'labels'            => $labels,
+          'show_ui'           => true,
+          'show_admin_column' => true,
+          'query_var'         => true,
+          'rewrite'           => array( 'slug' => 'property-salesstype' )
         );
 
         register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
 
         //category for attachments
         $labels = array(
-          'name'                => _x( 'Casasync Types', 'taxonomy general name' ),
-          'singular_name'       => _x( 'Casasync Type', 'taxonomy singular name' ),
-          'search_items'        => __( 'Search Casasync Types' ),
-          'all_items'           => __( 'All Casasync Types' ),
-          'parent_item'         => __( 'Parent Casasync Type' ),
-          'parent_item_colon'   => __( 'Parent Casasync Type:' ),
-          'edit_item'           => __( 'Edit Casasync Type' ),
-          'update_item'         => __( 'Update Casasync Type' ),
-          'add_new_item'        => __( 'Add New Casasync Type' ),
-          'new_item_name'       => __( 'New Casasync Type Name' ),
-          'menu_name'           => __( 'Casasync Type' )
+          'name'              => _x( 'Casasync Types', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Casasync Type', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Casasync Types' ),
+          'all_items'         => __( 'All Casasync Types' ),
+          'parent_item'       => __( 'Parent Casasync Type' ),
+          'parent_item_colon' => __( 'Parent Casasync Type:' ),
+          'edit_item'         => __( 'Edit Casasync Type' ),
+          'update_item'       => __( 'Update Casasync Type' ),
+          'add_new_item'      => __( 'Add New Casasync Type' ),
+          'new_item_name'     => __( 'New Casasync Type Name' ),
+          'menu_name'         => __( 'Casasync Type' )
         );
-
         $args = array(
-          'hierarchical'        => true,
-          'labels'              => $labels,
-          'show_ui'             => true,
-          'show_admin_column'   => true,
-          'query_var'           => true,
-          'rewrite'             => array( 'slug' => 'property-atachment-type' )
+          'hierarchical'      => true,
+          'labels'            => $labels,
+          'show_ui'           => true,
+          'show_admin_column' => true,
+          'query_var'         => true,
+          'rewrite'           => array( 'slug' => 'property-atachment-type' )
         );
         register_taxonomy( 'casasync_attachment_type', array(), $args );
         register_taxonomy_for_object_type('casasync_attachment_type', 'attachment');
@@ -522,20 +506,20 @@ class CasaSync {
 
       //labels and whitelist
       $fieldlabels = array(
-          'firstname' => __('First name', 'casasync'), //'Vorname',
-          'lastname'  => __('Last name', 'casasync'), //'Nachname',
-          'emailreal' => __('Email', 'casasync'), //'E-Mail',
-          'salutation'   => __('Salutation', 'casasync'), //'Anrede',
-          'title'   => __('Title', 'casasync'), //'Titel',
-          'phone'   => __('Phone', 'casasync'), //'Telefon',
-          'email'   => 'E-Mail SPAM!',
-          'company'   => __('Company', 'casasync'), //'Firma',
-          'street'   => __('Street', 'casasync'), //'Strasse',
-          'postal_code'   => __('ZIP', 'casasync'), //'PLZ',
-          'locality'   => __('Locality', 'casasync'), //'Stadt',
-          'state'   => __('Kanton', 'casasync'), //'Kanton',
-          'subject'   => __('Subject', 'casasync'), //'Betreff',
-          'message'   => __('Message', 'casasync'), //'Nachricht',
+          'firstname'   => __('First name', 'casasync'), //'Vorname',
+          'lastname'    => __('Last name', 'casasync'), //'Nachname',
+          'emailreal'   => __('Email', 'casasync'), //'E-Mail',
+          'salutation'  => __('Salutation', 'casasync'), //'Anrede',
+          'title'       => __('Title', 'casasync'), //'Titel',
+          'phone'       => __('Phone', 'casasync'), //'Telefon',
+          'email'       => 'E-Mail SPAM!',
+          'company'     => __('Company', 'casasync'), //'Firma',
+          'street'      => __('Street', 'casasync'), //'Strasse',
+          'postal_code' => __('ZIP', 'casasync'), //'PLZ',
+          'locality'    => __('Locality', 'casasync'), //'Stadt',
+          'state'       => __('Kanton', 'casasync'), //'Kanton',
+          'subject'     => __('Subject', 'casasync'), //'Betreff',
+          'message'     => __('Message', 'casasync'), //'Nachricht',
           'recipient'   => __('Recipient', 'casasync'), //'Rezipient',
       );
 
@@ -545,47 +529,46 @@ class CasaSync {
       if (!empty($_POST)) {
           $validation = true;
           $required = array(
-              'firstname',
-              'lastname',
-              'emailreal',
-              'subject',
-              'street',
-              'postal_code',
-              'locality'
+            'firstname',
+            'lastname',
+            'emailreal',
+            'subject',
+            'street',
+            'postal_code',
+            'locality'
           );
           $companyname = get_bloginfo( 'name' );
           $companyAddress = '{STREET}
-                  <br />
-                  CH-{ZIP} {CITY}
-                  <br />
-                  Tel. {PHONE}
-                  <br />
-                  Fax {FAX}';
+            <br />
+            CH-{ZIP} {CITY}
+            <br />
+            Tel. {PHONE}
+            <br />
+            Fax {FAX}';
 
           //not alowed fields!!!
           foreach($_POST as $key => $value){
-              if (!array_key_exists($key, $fieldlabels)) {
-                  $errors[] = '<b>Form ERROR!</b>: please contact the administrator. Ilegal Field has been posted[' . $key . ']'; //ausfüllen
-                  $validation = false;
-              }
+            if (!array_key_exists($key, $fieldlabels)) {
+                $errors[] = '<b>Form ERROR!</b>: please contact the administrator. Ilegal Field has been posted[' . $key . ']'; //ausfüllen
+                $validation = false;
+            }
           }
 
           //required
           foreach ($required as $name) {
-              if (array_key_exists($name, $_POST)) {
-                  if (!$_POST[$name]) {
-                      $errors[] = '<b>' . $fieldlabels[$name] . '</b>: ' . __('Required', 'casasync'); //ausfüllen
-                      $validation = false;
-                  }
-              }
+            if (array_key_exists($name, $_POST)) {
+                if (!$_POST[$name]) {
+                  $errors[] = '<b>' . $fieldlabels[$name] . '</b>: ' . __('Required', 'casasync'); //ausfüllen
+                  $validation = false;
+                }
+            }
           }
           //spam
           if ($_POST['email'] || strpos($_POST['message'], 'http://')) {
-              $validation = false;
+            $validation = false;
           }
 
           if ($validation) {
-
               $casa_id = get_post_meta( $post_id, 'casasync_id', $single = true );
               $casa_id_arr = explode('_', $casa_id);
               $customer_id = $casa_id_arr[0];
@@ -754,7 +737,7 @@ class CasaSync {
           }
           echo $table;
       ?>
-          <form class="casasync-contactform-form" method="POST" action="">
+          <form id="casasyncPropertyContactForm" class="casasync-contactform-form" method="POST" action="">
               <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
               <div class="casasync-contactform-row">
                   <div class="col-md-5">
@@ -769,14 +752,6 @@ class CasaSync {
                       <input name="lastname" class="form-control" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
                     </div>
                   </div>
-              </div>
-              <div class="casasync-contactform-row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                    <input name="emailreal" class="form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
-                  </div>
-                </div>
               </div>
               <div class="casasync-contactform-row">
                 <div class="col-md-12">
@@ -809,6 +784,14 @@ class CasaSync {
                 </div>
               </div>
               <div class="casasync-contactform-row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
+                    <input name="emailreal" class="form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
+                  </div>
+                </div>
+              </div>
+              <div class="casasync-contactform-row">
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="message"><?php echo __('Message', 'casasync') ?></label>
@@ -818,12 +801,13 @@ class CasaSync {
               </div>
               <div class="casasync-contactform-row">
                 <div class="form-group">
-                  <div class="col-md-7"><br>
+                  <div class="col-md-7">
                       <p class="form-control-static text-muted small"><?php echo __('Please fill out all the fields', 'casasync') ?></p>
                   </div>
-                  <div class="col-md-5"><br>
+                  <div class="col-md-5">
                       <input type="submit" class="casasync-contactform-send" value="<?php echo __('Send', 'casasync') ?>" />
                   </div>
+                  <div class="clearBoth"></div>
                 </div>
               </div>
           </form>

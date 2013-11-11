@@ -8,19 +8,24 @@
 	<?php else: ?>	
 		<div class="casasync-archive entry-content">
 			<div class="casasync-archive-content">
-				<?php echo $archive->getPaginationTop() ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 					<?php $single = new CasaSync\Single($post);?>
 					<?php if ($template->setTemplate('archive_single', $single)): ?>
 						<?php echo $template->render(); ?>
 					<?php else: ?>	
 						<div class="casasync-property">
-							<div class="casasync-gallery"><?php echo ($single->getGallery('small') ? $single->getGallery('small') : '<div class="casasync-missing-gallery">No image</div>'); ?></div>
-							<div class="casasync-text"><h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3></div>
+							<div class="casasync-thumbnail-wrapper">
+								<?php echo $single->getAvailability(); ?>
+								<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">No image</div>'); ?>
+							</div>
+							<div class="casasync-text">
+								<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
+								<?php echo $single->getQuickInfosTable(); ?>
+							</div>
 						</div>
 					<?php endif ?>
 				<?php endwhile; ?>
-				<?php echo $archive->getPaginationBottom() ?>
+				<?php echo $archive->getPagination() ?>
 			</div>
 			<aside class="casasync-archive-aside">
 				<?php echo $archive->getFilterForm(); ?>

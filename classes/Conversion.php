@@ -268,33 +268,41 @@
         return $country_arr;
     }
 
-    function casasync_convert_numvalKeyToLabel($key){
+    public function casasync_convert_numvalKeyToLabel($key){
         switch ($key) {
-            case 'surface_living':   return __('Living space' ,'casasync');break;
-            case 'surface_property': return __('Property space' ,'casasync');break;
-            case 'year_renovated':   return __('Year of renovation' ,'casasync');break;
-            case 'year_built':       return __('Year of construction' ,'casasync');break;
-            case 'number_of_rooms':  return __('Number of rooms' ,'casasync');break;
-            case 'number_of_floors': return __('Number of floors' ,'casasync');break;
+            case 'surface_living':             return __('Living space' ,'casasync');break;
+            case 'surface_property':           return __('Property space' ,'casasync');break;
+            case 'year_renovated':             return __('Year of renovation' ,'casasync');break;
+            case 'year_built':                 return __('Year of construction' ,'casasync');break;
+            case 'number_of_rooms':            return __('Number of rooms' ,'casasync');break;
+            case 'number_of_floors':           return __('Number of floors' ,'casasync');break;
+            case 'floor':                      return __('Floor' ,'casasync');break;
+            case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
+            case 'surface_usable':             return __('Surface usable' ,'casasync');break;
+            case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
+            case 'hall_height':                return __('Hall height' ,'casasync');break;
+            case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casasync');break;
+            case 'carrying_capacity_crane':    return __('Carrying capacity crane' ,'casasync');break;
+            case 'carrying_capacity_elevator': return __('Carrying capacity elevator' ,'casasync');break;
         }
     }
 
     public function casasync_convert_categoryKeyToLabel($key){
         switch ($key) {
-            case 'agriculture': return __('Agriculture' ,'casasync');break;
-            case 'apartment':   return __('Apartment' ,'casasync');break;
-            case 'gastronomy': return __('Gastronomy' ,'casasync');break;
-            case 'house': return __('House' ,'casasync');break;
-            case 'industrial': return __('Industrial' ,'casasync');break;
-            case 'parking': return __('Parking space' ,'casasync');break;
-            case 'plot': return __('Grundstück' ,'casasync');break;
+            case 'agriculture':     return __('Agriculture' ,'casasync');break;
+            case 'apartment':       return __('Apartment' ,'casasync');break;
+            case 'gastronomy':      return __('Gastronomy' ,'casasync');break;
+            case 'house':           return __('House' ,'casasync');break;
+            case 'industrial':      return __('Industrial' ,'casasync');break;
+            case 'parking':         return __('Parking space' ,'casasync');break;
+            case 'plot':            return __('Grundstück' ,'casasync');break;
             case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
-            case 'garden': return __('Garden' ,'casasync');break;
-            case 'commercial': return __('Commercial' ,'casasync');break;
-            default: return $key; break;
+            case 'garden':          return __('Garden' ,'casasync');break;
+            case 'commercial':      return __('Commercial' ,'casasync');break;
+            default:                return $key; break;
         }
     }
-    function casasync_get_allDistanceKeys(){
+    public function casasync_get_allDistanceKeys(){
         return array(
             'distance_public_transport',
             'distance_shop',
@@ -304,7 +312,7 @@
             'distance_school2'
         );
     }
-    function casasync_convert_distanceKeyToLabel($key){
+    public function casasync_convert_distanceKeyToLabel($key){
         switch ($key) {
             case 'distance_public_transport':   return __('Public transportation' ,'casasync');break;
             case 'distance_shop':               return __('Shopping' ,'casasync');break;
@@ -315,7 +323,7 @@
         }
     }
 
-    function casasync_convert_featureKeyToLabel($key, $value = false){
+    public function casasync_convert_featureKeyToLabel($key, $value = false){
         switch ($key) {
             case 'prop_child-friendly':   return __('Child friendly' ,'casasync');break;
             case 'prop_garage':
@@ -365,42 +373,51 @@
                 }
                 break;
 
-            case 'prop_fireplace':   return __('Fireplace' ,'casasync');break;
+            case 'prop_fireplace':          return __('Fireplace' ,'casasync');break;
             case 'wheelchair_accessible':   return __('wheelchair accessible' ,'casasync');break;
-            case 'ramp':   return __('Ramp' ,'casasync');break;
-            case 'lifting_platform':   return __('lifting platform' ,'casasync');break;
-            case 'railway_terminal':   return __('Railway terminal' ,'casasync');break;
-            case 'water_supply':   return __('Water Supply' ,'casasync');break;
-            case 'sewage_supply':   return __('Sewage supply' ,'casasync');break;
-            case 'power_supply':   return __('Power Supply' ,'casasync');break;
-            case 'gas_supply':   return __('Gas supply' ,'casasync');break;
-            case 'corner_house':   return __('Corner house' ,'casasync');break;
-            case 'middle_house':   return __('Middle house' ,'casasync');break;
-            case 'gardenhouse':   return __('Gardenhouse' ,'casasync');break;
-            case 'raised_ground_floor':   return __('Raised ground floor' ,'casasync');break;
-            case 'new_building':   return __('New building' ,'casasync');break;
-            case 'old_building':   return __('Old building' ,'casasync');break;
-            case 'under_roof':   return __('Under roof' ,'casasync');break;
-            case 'swimmingpool':   return __('Swimmingpool' ,'casasync');break;
-            case 'minergie_general':   return __('Minergie general' ,'casasync');break;
-            case 'minergie_certified':   return __('Minergie certified' ,'casasync');break;
-            case 'under_building_laws':   return __('Under building laws' ,'casasync');break;
-            case 'building_land_connected':   return __('Building land connected' ,'casasync');break;
-            case 'flat_sharing_community':   return __('Flat sharing community' ,'casasync');break;
+            case 'ramp':                    return __('Ramp' ,'casasync');break;
+            case 'lifting_platform':        return __('lifting platform' ,'casasync');break;
+            case 'railway_terminal':        return __('Railway terminal' ,'casasync');break;
+            case 'water_supply':            return __('Water Supply' ,'casasync');break;
+            case 'sewage_supply':           return __('Sewage supply' ,'casasync');break;
+            case 'power_supply':            return __('Power Supply' ,'casasync');break;
+            case 'gas_supply':              return __('Gas supply' ,'casasync');break;
+            case 'corner_house':            return __('Corner house' ,'casasync');break;
+            case 'middle_house':            return __('Middle house' ,'casasync');break;
+            case 'gardenhouse':             return __('Gardenhouse' ,'casasync');break;
+            case 'raised_ground_floor':     return __('Raised ground floor' ,'casasync');break;
+            case 'new_building':            return __('New building' ,'casasync');break;
+            case 'old_building':            return __('Old building' ,'casasync');break;
+            case 'under_roof':              return __('Under roof' ,'casasync');break;
+            case 'swimmingpool':            return __('Swimmingpool' ,'casasync');break;
+            case 'minergie_general':        return __('Minergie general' ,'casasync');break;
+            case 'minergie_certified':      return __('Minergie certified' ,'casasync');break;
+            case 'under_building_laws':     return __('Under building laws' ,'casasync');break;
+            case 'building_land_connected': return __('Building land connected' ,'casasync');break;
+            case 'flat_sharing_community':  return __('Flat sharing community' ,'casasync');break;
 
             default : return $key . ($value ? ': ' . $value : ''); break;
         }
     }
 
-    function casasync_get_allNumvalKeys(){
+    public function casasync_get_allNumvalKeys(){
       return array(
-          'surface_living',
-          'surface_property',
-          'year_renovated',
-          'year_built',
-          'number_of_rooms',
-          'number_of_floors'
+        'surface_living',
+        'surface_usable',
+        'surface_property',
+        'year_renovated',
+        'year_built',
+        'number_of_rooms',
+        'number_of_floors',
+        'floor',
+        'number_of_apartments',
+        'volume',
+        'ceiling_height',
+        'hall_height',
+        'maximal_floor_loading',
+        'carrying_capacity_crane',
+        'carrying_capacity_elevator'
       );
-  }
+    }
 
   }  

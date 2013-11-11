@@ -27,6 +27,7 @@ include(CASASYNC_PLUGIN_DIR . 'classes/Archive.php');
 
 $casaSync = new CasaSync();
 if (is_admin()) {
-	//$casaSyncAdmin = new Admin();
+	include(CASASYNC_PLUGIN_DIR . 'classes/Admin.php');
+	$casaSyncAdmin = new Admin();
 }
 ?>
