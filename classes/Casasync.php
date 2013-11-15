@@ -21,7 +21,7 @@ class CasaSync {
       add_shortcode('casasync_contact', array($this,'contact_shortcode'));
       add_action('init', array($this, 'setPostTypes'));
       add_action('admin_menu', array($this, 'setMetaBoxes'));
-      add_action('template_redirect', array($this, 'load_jquery'));
+      //add_action('template_redirect', array($this, 'load_jquery'));
       add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
       add_filter("attachment_fields_to_edit", array($this, "casasync_image_attachment_fields_to_edit"), null, 2);
       add_filter("attachment_fields_to_save", array($this, "casasync_image_attachment_fields_to_save"), null, 2);
@@ -35,7 +35,7 @@ class CasaSync {
       }
       if ( function_exists( 'add_image_size' ) ) {
         add_image_size( 'category-thumb', 300, 9999 );
-        add_image_size( 'casasync-thumb', 220, 180, true );
+        add_image_size( 'casasync-thumb', 506, 360, true );
         add_image_size( 'casasync_archive', get_option('casasync_archive_thumb_w', '500'), get_option('casasync_archive_thumb_h', '250'), true );
       }
       $this->setMetaBoxes();
@@ -183,11 +183,17 @@ class CasaSync {
 
     public function load_jquery() {
       //if (!is_admin() && get_option( 'casasync_load_jquery', 0 ) ) {
-          wp_enqueue_script('jquery');
+          //wp_enqueue_script('jquery');
       //}
     }
 
     function registerScriptsAndStyles(){
+
+      if( !is_admin() ) {
+        //wp_deregister_script('jquery');
+        //wp_register_script('jquery', ("http://code.jquery.com/jquery-latest.min.js"), false, 'latest', false);
+        //wp_enqueue_script('jquery');
+      }
       
       switch (get_option( 'casasync_template', 0 )) {
         default:
@@ -199,7 +205,8 @@ class CasaSync {
       if (get_option( 'casasync_load_scripts', 1 )) {
         wp_enqueue_script(
           'casasync_bootstrap_transition',
-          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js'
+          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
+          array( 'jquery' )
         );
         wp_enqueue_script(
           'casasync_bootstrap_tab',
@@ -221,7 +228,7 @@ class CasaSync {
         wp_enqueue_script(
           'fancybox',
           CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.js',
-          array( 'bootstrap' )
+          array( 'jquery' )
         );
         wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'assets/css/jquery.fancybox.css' );
         wp_enqueue_style( 'fancybox' );
@@ -238,6 +245,15 @@ class CasaSync {
           CASASYNC_PLUGIN_URL . 'assets/js/script.js'
         );
       }
+
+      // chosen
+      wp_enqueue_script(
+          'chosen',
+          CASASYNC_PLUGIN_URL . 'assets/js/chosen.jquery.min.js',
+          array( 'jquery' )
+        );
+      wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
+      wp_enqueue_style( 'chosen-css' );
 
 
 
@@ -351,7 +367,7 @@ class CasaSync {
           'all_items'          => 'All Properties',
           'view_item'          => 'View Property',
           'search_items'       => 'Search Properties',
-          'not_found'          =>  'No properties found',
+          'not_found'          => 'No properties found',
           'not_found_in_trash' => 'No properties found in Trash',
           'parent_item_colon'  => '',
           'menu_name'          => 'Properties'
@@ -374,17 +390,17 @@ class CasaSync {
       register_post_type( 'casasync_property', $args );
 
       $labels = array(
-          'name'              => _x( 'Property Categories', 'taxonomy general name' ),
-          'singular_name'     => _x( 'Property Category', 'taxonomy singular name' ),
-          'search_items'      => __( 'Search Property Categories' ),
-          'all_items'         => __( 'All Property Categories' ),
-          'parent_item'       => __( 'Parent Property Category' ),
-          'parent_item_colon' => __( 'Parent Property Category:' ),
-          'edit_item'         => __( 'Edit Property Category' ),
-          'update_item'       => __( 'Update Property Category' ),
-          'add_new_item'      => __( 'Add New Property Category' ),
-          'new_item_name'     => __( 'New Property Category Name' ),
-          'menu_name'         => __( 'Property Category' )
+          'name'              => _x( 'Categories', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Category', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Categories' ),
+          'all_items'         => __( 'All Categories' ),
+          'parent_item'       => __( 'Parent Category' ),
+          'parent_item_colon' => __( 'Parent Category:' ),
+          'edit_item'         => __( 'Edit Category' ),
+          'update_item'       => __( 'Update Category' ),
+          'add_new_item'      => __( 'Add New Category' ),
+          'new_item_name'     => __( 'New Category Name' ),
+          'menu_name'         => __( 'Category' )
         );
         $args = array(
           'hierarchical'      => true,
@@ -398,17 +414,17 @@ class CasaSync {
         register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
         $labels = array(
-          'name'              => _x( 'Property Locations', 'taxonomy general name' ),
-          'singular_name'     => _x( 'Property Location', 'taxonomy singular name' ),
-          'search_items'      => __( 'Search Property Locations' ),
-          'all_items'         => __( 'All Property Locations' ),
-          'parent_item'       => __( 'Parent Property Location' ),
-          'parent_item_colon' => __( 'Parent Property Location:' ),
-          'edit_item'         => __( 'Edit Property Location' ),
-          'update_item'       => __( 'Update Property Location' ),
-          'add_new_item'      => __( 'Add New Property Location' ),
-          'new_item_name'     => __( 'New Property Location Name' ),
-          'menu_name'         => __( 'Property Location' )
+          'name'              => _x( 'Locations', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Location', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Locations' ),
+          'all_items'         => __( 'All Locations' ),
+          'parent_item'       => __( 'Parent Location' ),
+          'parent_item_colon' => __( 'Parent Location:' ),
+          'edit_item'         => __( 'Edit Location' ),
+          'update_item'       => __( 'Update Location' ),
+          'add_new_item'      => __( 'Add New Location' ),
+          'new_item_name'     => __( 'New Location Name' ),
+          'menu_name'         => __( 'Location' )
         );
         $args = array(
           'hierarchical'      => true,
@@ -423,16 +439,16 @@ class CasaSync {
 
 
         $labels = array(
-          'name'              => _x( 'Property Salestypes', 'taxonomy general name' ),
-          'singular_name'     => _x( 'Property Salestype', 'taxonomy singular name' ),
-          'search_items'      => __( 'Search Property Salestypes' ),
-          'all_items'         => __( 'All Property Salestypes' ),
-          'parent_item'       => __( 'Parent Property Salestype' ),
-          'parent_item_colon' => __( 'Parent Property Salestype:' ),
-          'edit_item'         => __( 'Edit Property Salestype' ),
-          'update_item'       => __( 'Update Property Salestype' ),
-          'add_new_item'      => __( 'Add New Property Salestype' ),
-          'new_item_name'     => __( 'New Property Salestype Name' ),
+          'name'              => _x( 'Salestypes', 'taxonomy general name' ),
+          'singular_name'     => _x( 'Property', 'taxonomy singular name' ),
+          'search_items'      => __( 'Search Salestypes' ),
+          'all_items'         => __( 'All Salestypes' ),
+          'parent_item'       => __( 'Parent Salestype' ),
+          'parent_item_colon' => __( 'Parent Salestype:' ),
+          'edit_item'         => __( 'Edit Salestype' ),
+          'update_item'       => __( 'Update Salestype' ),
+          'add_new_item'      => __( 'Add New Salestype' ),
+          'new_item_name'     => __( 'New Salestype Name' ),
           'menu_name'         => __( 'Property Salestype' )
         );
         $args = array(
@@ -765,7 +781,7 @@ class CasaSync {
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
-                      <input name="postal_code" class="form-control" value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
+                      <input name="postal_code" class="form-control"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
                     </div>
                   </div>
                   <div class="col-md-8">
@@ -779,7 +795,7 @@ class CasaSync {
                 <div class="col-md-12">
                   <div class="form-group">
                     <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
-                    <input name="phone" class="form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="tel" />
+                    <input name="phone" class="form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
                   </div>
                 </div>
               </div>
@@ -795,7 +811,7 @@ class CasaSync {
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="message"><?php echo __('Message', 'casasync') ?></label>
-                      <textarea name="message" class="form-control" id="message"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
+                      <textarea name="message" class="form-control" id="message" rows="3"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
                     </div>
                   </div>
               </div>
@@ -867,6 +883,4 @@ class CasaSync {
       echo '</table>';
 
     }
-
-
 }  

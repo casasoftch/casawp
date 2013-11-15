@@ -137,6 +137,7 @@
                 case 'Year of renovation':    $translated_text = 'Letzte Renovation';break;
                 case 'Year of construction':  $translated_text = 'Baujahr';break;
                 case 'Number of rooms':       $translated_text = 'Anzahl Zimmer';break;
+                case 'Number of rooms:':      $translated_text = 'Anzahl Zimmer:';break;
                 case 'Number of floors':      $translated_text = 'Anzahl Etagen';break;
                 
                 case 'Directly contact the provider now': $translated_text = 'Jetzt Anbieter direkt kontaktieren';break;
@@ -148,12 +149,14 @@
                 case 'Contact directly':               $translated_text = 'Direkt kontaktieren';break;
 
                 case 'Provider':           $translated_text = 'Anbieter';break;
+                case 'Seller':             $translated_text = 'Verkäufer';break;
                 case 'Contact person':     $translated_text = 'Kontaktperson';break;
                 case 'Share':              $translated_text = 'Empfehlen';break;
                 case 'View lager version': $translated_text = 'Grössere Ansicht anzeigen';break;
 
                 case 'Choose category': $translated_text = 'Kategorie wählen';break;
                 case 'Choose locality': $translated_text = 'Ort wählen';break;
+                case 'Choose offer':    $translated_text = 'Angebot wählen';break;
 
                 case 'Advanced search': $translated_text = 'Erweiterte Suche';break;
                 case 'Search':          $translated_text = 'Suchen';break;
@@ -349,6 +352,22 @@
                 case 'Carrying capacity elevator':  $translated_text = 'Max. Gewicht Warenlift';break;
                 case 'Volume':                      $translated_text = 'Kubatur';break;
                 case 'wheelchair accessible':       $translated_text = 'Rollstuhlgängig';break;
+
+                case 'Previous':            $translated_text = 'Zurück';break;
+                case 'To list':             $translated_text = 'Zur Liste';break;
+                case 'available':           $translated_text = 'Verfügbar';break;
+                case 'reserved':            $translated_text = 'Reserved';break;
+                case 'planned':             $translated_text = 'In Planung';break;
+                case 'under-construction':  $translated_text = 'Im Bau';break;
+                case 'reference':           $translated_text = 'Referenz';break;
+                case 'No image':            $translated_text = 'Kein Bild';break;
+                case 'No results':          $translated_text = 'Keine Suchergebnisse';break;
+                case 'per':                 $translated_text = 'pro';break;
+                case '(net)':               $translated_text = '(Netto)';break;
+                case '(gross)':             $translated_text = '(Brutto)';break;
+                case 'By Request':          $translated_text = 'Auf Anfrage';break;
+                case 'Gross price':         $translated_text = 'Bruttomiete';break;
+                case 'Net price':           $translated_text = 'Nettomiete';break;
 
 
             }

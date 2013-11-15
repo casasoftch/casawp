@@ -277,6 +277,7 @@
             case 'number_of_rooms':            return __('Number of rooms' ,'casasync');break;
             case 'number_of_floors':           return __('Number of floors' ,'casasync');break;
             case 'floor':                      return __('Floor' ,'casasync');break;
+            case 'volume':                     return __('Volume' ,'casasync');break;
             case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
             case 'surface_usable':             return __('Surface usable' ,'casasync');break;
             case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
@@ -420,4 +421,59 @@
       );
     }
 
+    public function casasync_numStringToArray($string){
+      $si = false;
+      if (!$string) {
+        return false;
+      }
+      if (strlen($string) == 1) {
+        if (!is_numeric($string[0])) {
+           $string = false;
+        }
+      } elseif (strlen($string) == 2) { // 23 or m2 or km or 1m
+        $first  = $string[strlen($string)-2];
+        $second = $string[strlen($string)-1];
+
+        //avoid float dots to be considered as SI
+        $first  = ($first == '.' ? 0 : $first);
+        $second = ($first == '.' ? 0 : $first);
+
+        if ( !is_numeric($string[0]) ) { //m2 or km
+          $string = false;
+        } elseif (is_numeric($first) && !is_numeric($second)) { // 1m
+          $string = substr($string, 0, -1);
+          $si = $second;
+        }
+      } elseif (strlen($string) > 2) { //123 or 1m2 or 1km or 12m
+        $first  = $string[strlen($string)-3];
+        $second = $string[strlen($string)-2];
+        $third  = $string[strlen($string)-1];
+
+        //avoid float dots to be considered as SI
+        $first  = ($first == '.' ? 0 : $first);
+        $second = ($second == '.' ? 0 : $second);
+        $third  = ($third == '.' ? 0 : $third);
+
+        if (is_numeric($first)  && !is_numeric($second) && is_numeric($third)) { //(...)1m2
+          $string = substr($string, 0, -2);
+          $si = $second;
+        } elseif (is_numeric($first)  && !is_numeric($second) && !is_numeric($third)) { //(...)1km
+          $string = substr($string, 0, -2);
+          $si = $second . $third;
+        } elseif (is_numeric($first)  && is_numeric($second) && !is_numeric($third)) { //(...)12m
+          $string = substr($string, 0, -1);
+          $si = $third;
+        } elseif ( // (...)1km2
+            strlen($string) > 3 &&
+            is_numeric($first) &&
+            !is_numeric($second) &&
+            is_numeric($third) &&
+            is_numeric($string[strlen($string)-4])
+          ) {
+            $string = substr($string, 0, -3);
+            $si = $first . $second;
+        }
+      }
+      return array('value' => (FLOAT) $string, 'si' => $si);
+    }
   }  

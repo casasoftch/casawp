@@ -29,11 +29,9 @@
           }
           $return .= $next_page;
           $return .= '</ul>';
-
+          return $return;
         }
-
       }
-      return $return;
     }
 
     public function getCategoryOptions(){
@@ -48,14 +46,14 @@
         $terms = get_terms('casasync_category');
         foreach ($terms as $term) {
             $options[$term->slug]['value'] = $term->slug; 
-            $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
+            //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
+            $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
             $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
         }
         return $options;
     }
     public function getLocationsOptions() {
         global $wp_query;
-
         if (isset($wp_query->query_vars['casasync_location'])) {
             $locations = explode(',', $wp_query->query_vars['casasync_location']);
         } else {
@@ -85,7 +83,8 @@
                 $terms_lvl2_has_children = false;
                 foreach ($terms_lvl3 as $term3) {
                     $terms_lvl2_has_children = true;
-                    $store .= "<option class='lvl3' value='" . $term3->slug . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term3->name . ' (' . $term3->count . ')' . "</option>";
+                    //$store .= "<option class='lvl3' value='" . $term3->slug . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term3->name . ' (' . $term3->count . ')' . "</option>";
+                    $store .= "<option class='lvl3' value='" . $term3->slug . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term3->name . "</option>";
                 }
                 if ($terms_lvl2_has_children) {
                     $return .= "<optgroup label='" . $term2->name . "'>";
@@ -102,7 +101,8 @@
                 foreach ( $otherCountry as $countryCode => $country ) {
                     $return .= "<optgroup label='" . $this->conversion->countrycode_to_countryname($countryCode)  . "''>";
                     foreach ( $country as $location ) {
-                        $return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";      
+                        //$return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";      
+                        $return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . "</option>";      
                     }
                     $return .= "</optgroup>";
                 }
@@ -110,7 +110,9 @@
             unset($otherCountry);
 
             if (!$terms_lvl1_has_children) {
-                $no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . ' (' . $term->count . ')' . "</option>";
+                //$no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . ' (' . $term->count . ')' . "</option>";
+                $no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . "</option>";
+
             }
         }
         if ($no_child_lvl1) {
@@ -144,42 +146,68 @@
         if (count($terms) > 1) {
             foreach ($terms as $term) {
                 $options[$term->slug]['value'] = $term->slug; 
-                $options[$term->slug]['label'] = __(ucfirst($term->name)) . ' (' . $term->count . ')';
+                //$options[$term->slug]['label'] = __(ucfirst($term->name)) . ' (' . $term->count . ')';
+                $options[$term->slug]['label'] = __(ucfirst($term->name), 'casasync');
                 $options[$term->slug]['checked'] = (in_array($term->slug, $salestypes) ? 'SELECTED' : '');
             }
         }
         return $options;
     }
 
-    public function getFilterForm(){
+    public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = 'Erweiterte Suche'){
         global $wp_query;
-        $return = '<form action="' .  get_post_type_archive_link( 'casasync_property' ) . '" class="casasync-filterform">';
+        $size = ($size == 'large') ? ('large') : ('small');
+        $return =  '<div class="' . $wrapper_class . ' ' . $size . '">';
+        $return .=  '<h3>' . $title . '</h3>';
+        $return .= '<form action="' .  get_post_type_archive_link( 'casasync_property' ) . '" class="casasync-filterform">';
         //if permalinks are off
         if ( get_option('permalink_structure') == '' ) {
             $return .= '<input type="hidden" name="post_type" value="casasync_property" />';
         }
 
-        $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect" data-empty="' . __('Choose category','casasync') . '">';
+        $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose offer','casasync') . '">';
+        $salestype_options = $this->getSalestypeOptions();
+        foreach ($salestype_options as $option) {
+            $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+        }
+        $return .= '</select>';
+
+        $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose category','casasync') . '">';
         $cat_options = $this->getCategoryOptions();
         foreach ($cat_options as $option) {
             $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
         }
         $return .= '</select>';
         
-        $return .= '<select name="casasync_location_s[]" multiple class="casasync_multiselect" data-empty="' . __('Choose locality','casasync') . '">';
+        $return .= '<select name="casasync_location_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose locality','casasync') . '">';
         $return .= $this->getLocationsOptions();
-        $return .= '</select>';
-
-        $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect" data-empty="Angebot wählen">';
-        $salestype_options = $this->getSalestypeOptions();
-        foreach ($salestype_options as $option) {
-            $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
-        }
         $return .= '</select>';
                 
         $return .= '<input class="casasync-filterform-button" type="submit" value="' . __('Search','casasync') . '" />';
         $return .= '</form>';
+        $return .= '<div class="clearfix"></div>';
+        $return .= '</div>';
 
         return $return;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

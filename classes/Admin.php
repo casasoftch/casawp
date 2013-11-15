@@ -59,6 +59,7 @@ class Admin {
 	}
 
 	public function casasync_menu() {
+		//add_options_page('CasaSync', 'CasaSync', 'administrator', 'casasync', array( $this, 'settings_page' ) );
 		add_menu_page('CasaSync options page', 'CasaSync', 'administrator', CASASYNC_PLUGIN_DIR,  array($this,'casasync_add_options_page'), CASASYNC_PLUGIN_URL . 'assets/img/building.png');
 	}
 

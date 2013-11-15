@@ -15,14 +15,15 @@
 					<?php else: ?>	
 						<div class="casasync-property">
 							<div class="casasync-thumbnail-wrapper">
-								<?php echo $single->getAvailability(); ?>
-								<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">No image</div>'); ?>
+								<?php //echo $single->getAvailability(); ?>
+								<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
 							</div>
 							<div class="casasync-text">
 								<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
 								<?php echo $single->getQuickInfosTable(); ?>
 							</div>
 						</div>
+						<hr class="soften">
 					<?php endif ?>
 				<?php endwhile; ?>
 				<?php echo $archive->getPagination() ?>

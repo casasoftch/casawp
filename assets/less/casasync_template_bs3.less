@@ -16,6 +16,25 @@
 
 
 .casasync-archive{
+	.casasync-filterform-wrap{
+		.chosen-container{
+			margin-bottom: 10px;
+		}
+		.chosen-container-multi .chosen-choices li.search-field input[type="text"]{
+			height:auto;
+		}
+	}
+	.casasync-filterform-wrap.large{
+		.well;
+		.casasync-filterform-button{
+			.btn;
+			.btn-primary;
+			.pull-right;
+		}
+	}
+	.casasync-filterform-wrap.small{
+
+	}
 	.casasync-nav{
 		.casasync-nav-next,
 		.casasync-nav-previous{
@@ -25,6 +44,23 @@
 	.casasync-property{
 		margin-bottom:10px;
 		.make-row();
+		.availability-label{
+			position: absolute;
+			top:0px;
+			left:0px;
+			right:0px;
+			height: 36px;
+			line-height: 36px;
+			background-color: black;
+			background-color: rgba(0,0,0,0.7);
+			background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
+			color:white;
+			text-align: center;
+			z-index: 2
+		}
+		.availability-label.availability-label-available {
+			display: none;
+		}
 	}
 	.casasync-gallery{
 		.make-lg-column(4);
@@ -37,6 +73,9 @@
 	}
 	.casasync-text{
 		.make-lg-column(7);
+		.table{
+
+		}
 	}
 	.casasync-thumbnail-wrapper{
 		.make-lg-column(5)
@@ -50,28 +89,121 @@
 }
 
 .casasync-single{
-	.carousel{
+	.casasync-carousel{
+		.carousel;
+		border-radius: 5px;
+		overflow: hidden;
+		background-color: #eee;
+		.carousel-indicators{
+			bottom:0px;
+		}
+		.casasync-carousel-inner{
+			.carousel-inner;
+			img.carousel-image{
+				max-width: auto;
+				max-height: 425px;
+				width:auto;
+				margin: 0 auto;
 
+				text-align: center;
+				text-decoration: none;
+				vertical-align: middle;
+			}
+			.casasync-carousel-caption{
+				.carousel-caption;
+				left:0;
+				right:0;
+				bottom:0;
+				padding-bottom: 40px;
+				background: #333333;
+				background: rgba(0, 0, 0, 0.75);
+				p{
+					margin-bottom: 0;
+				}
+			}
+		}
+		.casasync-carousel-control{
+			.carousel-control;
+			outline: 0;
+			opacity: 0;
+			width:10%;
+			position: absolute;
+			top: 35%;
+			bottom: 35%;
+			left: 0px;
+			right: 90%;
+			background-color: black;
+			background-color: rgba(0,0,0,0.7);
+			span{
+				margin-top:-5px;
+			}
+		}
+		.casasync-carousel-control.left span{
+			margin-left: -10px;
+		}
+		.casasync-carousel-control.right span{
+			margin-right: -10px;
+		}
 	}
-}
-
-.casasync-tabable-nav{
-	.nav;
-	.nav-tabs;
-	.nav-justified; 
-	margin-left:0px; //wp templates
-}
-.entry-content{
-	.casasync-tabable-nav {
+	.casasync-carousel:hover{
+		.casasync-carousel-control{
+			opacity: 0.5;
+		}
+		.casasync-carousel-control:hover{
+			opacity: 1;
+		}
+	}
+	.casasync-contactform-form{
+		margin-top:10px;
+		input.form-control{
+			.input-sm;
+		}
+		.casasync-contactform-row{
+			.make-row();
+		}
+		.casasync-contactform-send{
+			.btn;
+			.btn-primary;
+			.btn-block;
+		}
+	}
+	.casasync-tabable-nav{
+		.nav;
+		.nav-tabs;
+		.nav-justified; 
+		margin-left:0px; //wp templates
 		margin-bottom:0px; //wp templates
 	}
-	.casasync-slider-thumbnails{
-		.hidden-sm;
-		ul {
-			.make-row();
-			li {
-				.make-lg-column(3);
-				.thumbnail;
+	.casasync-tabable-content{
+		background-color: white;
+		border:1px solid #DDD;
+		border-top:0px;
+		padding:10px;
+		margin-bottom: 20px;
+		.tab-content;
+		> .casasync-tabable-pane {
+	    	display: none;
+	    	.tab-pane;
+			//.fade;
+		}
+		> .active {
+			display: block;
+		}
+	}
+	.casasync-basic-boxes{
+		.make-row();
+		margin-bottom: 10px;
+		.casasync-basic-box{
+			.make-lg-column(4);
+			> div{
+				.well;
+				overflow: hidden;
+				min-height: 100%;
+				//font-size: 13px;
+			}
+			h4{
+				margin:0px 0px;//wp templates
+				margin-bottom: 5px;
 			}
 		}
 	}
@@ -82,79 +214,32 @@
 	}
 }
 
-.casasync-tabable-content{
-	background-color: white;
-	border:1px solid #DDD;
-	border-top:0px;
-	padding:10px;
-	margin-bottom: 20px;
-	.tab-content;
-	> .casasync-tabable-pane {
-    	display: none;
-    	.tab-pane;
-		//.fade;
-	}
-	> .active {
-		display: block;
-	}
-}
-
-.casasync-basic-boxes{
-	.make-row();
-	margin-bottom: 10px;
-	.casasync-basic-box{
-		.make-lg-column(6);
-		> div{
-			.well;
-			overflow: hidden;
-			min-height: 100%;
-		}
-		h4{
-			margin:0px 0px;//wp templates
-			margin-bottom: 5px;
-		}
-	}
-}
-.casasync-basic-boxes.price-box{
-	.make-row();
-	margin-bottom: 10px;
-	.casasync-price-box{
-		.make-lg-column(12);
-		> div{
-			.well;
-			overflow: hidden;
-			min-height: 100%;
-		}
-		h4{
-			margin:0px 0px;//wp templates
-			margin-bottom: 5px;
+.entry-content{
+	.casasync-slider-thumbnails{
+		.hidden-sm;
+		ul {
+			.make-row();
+			li {
+				.make-lg-column(3);
+				.thumbnail;
+			}
 		}
 	}
 }
 
-.casasync-single-paginate{
+
+/*.casasync-single-paginate{
 	padding-bottom:10px;
 	.casasync-single-back{
 		.btn;
 		.btn-block;
 		.btn-info;
 	}
-}
-
-.casasync-contactform-form{
-	margin-top:10px;
-	.form-control{
-		.input-sm;
-	}
-	.casasync-contactform-row{
-		.make-row();
-	}
-	.casasync-contactform-send{
-		.btn;
-		.btn-primary;
-		.btn-block;
-	}
-}
+}*/
+/*.casasync-highlight {
+	.alert;
+	.alert-info;
+}*/
 
 #theApsoluteRealEmailField{
 	display: none!important;
@@ -168,7 +253,4 @@
 	.list-unstyled;
 }
 
-#casasync-nav-above .casasync-nav-previous {
-	text-align: right;
-}
 

@@ -24,7 +24,6 @@ jQuery(document).ready(function($) {
                               mapTypeId: google.maps.MapTypeId.ROADMAP,
                               center: location
                             };
-
                             $mapwraper.show();
                             map = new google.maps.Map(document.getElementById('map-canvas'),
                               mapOptions);
@@ -37,7 +36,6 @@ jQuery(document).ready(function($) {
                                 map: map,
                                 position: location
                             });
-
                         }
 
                         google.maps.event.addDomListener(window, 'load', initialize);
@@ -89,14 +87,14 @@ jQuery(document).ready(function($) {
     };
     
 
-    $('#casasyncCarousel').carousel({
+    /*$('#casasyncCarousel').carousel({
         interval: false
-    });
+    });*/
  
-    $('#carousel-text').html($('#slide-content-0').html());
+    /*$('#carousel-text').html($('#slide-content-0').html());*/
 
     //Handles the carousel thumbnails
-    $('[id^=carousel-selector-]').click( function(event){
+    /*$('[id^=carousel-selector-]').click( function(event){
     		event.preventDefault();
             
             var id_selector = $(this).attr("id");
@@ -108,34 +106,34 @@ jQuery(document).ready(function($) {
             $('#slider-thumbs .thumbnail-pane li').removeClass('active');
             $(this).parent().addClass('active');
 
-    });
+    });*/
 
 
     // When the carousel slides, auto update the text
-    $('#casasyncCarousel').on('slid', function (e) {
+    /*$('#casasyncCarousel').on('slid', function (e) {
             var id = $('.item.active').data('slide-number');
             $('#carousel-text').html($('#slide-content-'+id).html());
 
             $('#slider-thumbs .thumbnail-pane li').removeClass('active');
             $('#carousel-selector-'+id).parent().addClass('active');
 
-    });
+    });*/
 
-    function scrollToAnchor(id){
+    /*function scrollToAnchor(id){
         var destinationTag = $('#'+id);
         $('html,body').animate({scrollTop: destinationTag.offset().top},'slow');
-    }
+    }*/
 
 
-    $('#casasyncKontactAnchor').click(function(event){
+    $('#casasyncContactAnchor').click(function(event){
         event.preventDefault();
 
         $('html, body').animate({
             scrollTop: $( $.attr(this, 'href') ).parent().offset().top - 100
         }, 500);
 
-        $('.casasync-property-contact-form').parent().addClass('casasync-highlight');
-        $('.casasync-property-contact-form').delay(500).find(' input[name="firstname"]').focus();
+        $('.casasync-contactform-form').parent().addClass('casasync-highlight');
+        $('.casasync-contactform-form').delay(500).find(' input[name="firstname"]').focus();
 
         //scrollToAnchor($(this).attr('href').split('#')[1]);
 
@@ -144,9 +142,17 @@ jQuery(document).ready(function($) {
 
     });
 
-    if ($.fancybox) {
-        $('.casasync-fancybox').fancybox();
-    };
+    //console.log('test1');
+    $('.casasync-fancybox').fancybox();
+    //console.log('test2');
+
+    var config = {
+      '.chosen-select' : {width:"100%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+
 
     //basic boxes eq height
     $('.casasync-basic-box').equalHeightColumns({

@@ -24,10 +24,14 @@ include(CASASYNC_PLUGIN_DIR . 'classes/Templateable.php');
 include(CASASYNC_PLUGIN_DIR . 'classes/Casasync.php');
 include(CASASYNC_PLUGIN_DIR . 'classes/Single.php');
 include(CASASYNC_PLUGIN_DIR . 'classes/Archive.php');
+include(CASASYNC_PLUGIN_DIR . 'classes/Import.php');
 
 $casaSync = new CasaSync();
 if (is_admin()) {
 	include(CASASYNC_PLUGIN_DIR . 'classes/Admin.php');
 	$casaSyncAdmin = new Admin();
+}
+if (get_option('casasync_live_import')) {
+	$import = new Import();
 }
 ?>

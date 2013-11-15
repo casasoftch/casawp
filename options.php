@@ -75,17 +75,11 @@ if(isset($_POST['casasync_submit']))  {
 						<?php $text = 'Änderungen automatisch bei jedem Aufruff überprüffen und updaten.'; ?>
 						<p><label>
 							<?php
-								$qs = $_SERVER['QUERY_STRING'];
-								if ($qs) {
-									$qs = '?' . $qs . '&';
-								} else {
-									$qs = '?';
-								}
-								$qs .= 'do_import=true';
-
-								$qs2 = $qs . '&froce_all_properties=true&force_last_import=true';
+								$url = get_admin_url('', 'admin.php?page=casasync');
+								$manually = $url . '&do_import=true';
+								$forced = $manually . '&froce_all_properties=true&force_last_import=true';
 							?>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $qs  ?>">manueller Import</a> ∙ <a href="<?php echo $qs2  ?>">erzwungener Import</a>
+							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $manually  ?>">manueller Import</a> ∙ <a href="<?php echo $forced  ?>">erzwungener Import</a>
 						</label></p>
 
 					</fieldset>
