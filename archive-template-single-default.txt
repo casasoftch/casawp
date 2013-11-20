@@ -1,0 +1,43 @@
+{if_permalink}
+<article {ids} {classes}>
+	<div class="row-fluid">
+		{if_thumbnail}
+			<div class="span5 archive-property-thumbnail">
+			      {if_availabilitylabel}<div class="availability-outerlabel">{availabilitylabel}</div>{end_if_availabilitylabel}
+				{if_permalink}
+					<a href="{permalink}" class="thumbnail">
+						{thumbnail}
+					</a>
+				{end_if_permalink}
+				{!if_permalink}
+					<div class="thumbnail">
+						{thumbnail}
+					</div>
+				{!end_if_permalink}
+			</div>
+		{end_if_thumbnail}
+		<div class="{if_thumbnail}span7{end_if_thumbnail} {!if_thumbnail}span12{!end_if_thumbnail} archive-property-content">
+			<h2 class="entry-title">
+				{if_permalink}
+					<a href="{permalink}" title="{title}" rel="bookmark">{title}</a>
+				{end_if_permalink}
+				{!if_permalink}
+					{title}
+				{!end_if_permalink}
+			</h2>
+			<div class="entry-meta">
+				{datatable}
+			</div>
+			{if_permalink}
+				<div class="entry-summary"><a href="{permalink}" class="btn btn-primary pull-right">__(Details) <i class="icon icon-arrow-right icon-white"></i></a></div>
+			{end_if_permalink}
+		</div>
+	</div>
+	<div class="row-fluid">
+		<p class="entry-utility span12">
+			{quicktags}
+		</p>
+	</div>
+</article>
+<hr class="soften" />
+{end_if_permalink}

@@ -189,12 +189,6 @@ class CasaSync {
 
     function registerScriptsAndStyles(){
 
-      if( !is_admin() ) {
-        //wp_deregister_script('jquery');
-        //wp_register_script('jquery', ("http://code.jquery.com/jquery-latest.min.js"), false, 'latest', false);
-        //wp_enqueue_script('jquery');
-      }
-      
       switch (get_option( 'casasync_template', 0 )) {
         default:
           wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs3.css' );
@@ -217,44 +211,37 @@ class CasaSync {
           CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js'
         );
 
-      }
-
-      wp_enqueue_script(
+        wp_enqueue_script(
           'casasync_jquery_eqheight',
           CASASYNC_PLUGIN_URL . 'assets/js/jquery.equal-height-columns.js'
         );
 
-      //if (get_option( 'casasync_load_fancybox', 1 )) {
-        wp_enqueue_script(
+         wp_enqueue_script(
           'fancybox',
           CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.js',
           array( 'jquery' )
         );
         wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'assets/css/jquery.fancybox.css' );
         wp_enqueue_style( 'fancybox' );
-      //};
 
-      wp_enqueue_script(
-        'google_maps_v3',
-        'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'
-      );
+        wp_enqueue_script(
+          'google_maps_v3',
+          'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'
+        );
 
-      if (get_option( 'casasync_load_scripts', 1 )) {
+        wp_enqueue_script(
+          'chosen',
+          CASASYNC_PLUGIN_URL . 'assets/js/chosen.jquery.min.js',
+          array( 'jquery' )
+        );
+        wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
+        wp_enqueue_style( 'chosen-css' );
+
         wp_enqueue_script(
           'casasync_script',
           CASASYNC_PLUGIN_URL . 'assets/js/script.js'
         );
       }
-
-      // chosen
-      wp_enqueue_script(
-          'chosen',
-          CASASYNC_PLUGIN_URL . 'assets/js/chosen.jquery.min.js',
-          array( 'jquery' )
-        );
-      wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
-      wp_enqueue_style( 'chosen-css' );
-
 
 
       /*
