@@ -131,9 +131,9 @@
             } else {
                 $cur_basis = array();
             }
-            if (in_array($term->slug, $cur_basis)) {
-                $return .= '<input type="hidden" name="casasync_salestype_s[]" value="'.$term->slug.'" /> ';
-            }
+            //if (in_array($term->slug, $cur_basis)) {
+            //    $return .= '<input type="hidden" name="casasync_salestype_s[]" value="'.$term->slug.'" /> ';
+            //}
         }
         $salestypes = array();
         foreach ($wp_query->tax_query->queries as $tax_query) {
