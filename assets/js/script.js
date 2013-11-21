@@ -142,9 +142,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    //console.log('test1');
     $('.casasync-fancybox').fancybox();
-    //console.log('test2');
 
     var config = {
       '.chosen-select' : {width:"100%"}

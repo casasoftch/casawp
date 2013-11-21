@@ -828,7 +828,7 @@
       }
     }
 
-    public function getPrice($type = false, $format = 'num'){
+    public function getPrice($type = 'auto', $format = 'num', $byrequest = true){
       $timesegment_labels = array(
         'm' => __('month', 'casasync'),
         'w' => __('week', 'casasync'),
@@ -853,8 +853,23 @@
             $price = $this->prices['gross'];
           }
           break;
+        case 'auto':
         default:
-        $return = '';
+          if ($this->main_basis == 'buy') {
+            if ($this->prices['sales']) {
+              $price = $this->prices['sales'];
+            }
+          }
+          if ($this->main_basis == 'rent') {
+            if ($this->prices['gross'] || $this->prices['net']) {
+              if ($this->prices['gross']) {
+                $price = $this->prices['gross'];
+              }
+              if ($this->prices['net']) {
+                $price = $this->prices['net'];
+              }
+            }
+          }
           break;
       }
       switch ($format) {
@@ -867,16 +882,18 @@
           $return = $this->price_currency . ' ';
         case 'formated':
         case 'full':
-          $return .= number_format(
-                      round($price['num']), 
-                      0, 
-                      '', 
-                      '\''
-                    ) . '.–';
+          if(array_key_exists('num', $price) && $price['num'] != NULL) {
+            $return .= number_format(
+                        round($price['num']), 
+                        0, 
+                        '', 
+                        '\''
+                      ) . '.–';
+          }
         case 'full':
-          $return .= ($price['propertysegment'] != 'full') ? (' / ' . substr($price['propertysegment'], 0, -1) . '<sup>2</sup>') : ('');
-          $sep = (isset($price['propertysegment']) && $price['propertysegment'] != 'full') ? (__('per', 'casasync')) : ('/');
-          $return .= ($price['timesegment'] != 'infinite') ? (' ' . $sep . ' ' . str_replace($price['timesegment'], $timesegment_labels[$price['timesegment']], $price['timesegment'])) : ('');
+            $return .= (array_key_exists('propertysegment', $price) && $price['propertysegment'] != NULL && $price['propertysegment'] != 'full') ? (' / ' . substr($price['propertysegment'], 0, -1) . '<sup>2</sup>') : ('');
+            $sep     = (array_key_exists('propertysegment', $price) && $price['propertysegment'] != NULL && $price['propertysegment'] != 'full') ? (__('per', 'casasync')) : ('/');
+            $return .= (array_key_exists('timesegment', $price)     && $price['timesegment']     != NULL && $price['timesegment'] != 'infinite') ? (' ' . $sep . ' ' . str_replace($price['timesegment'], $timesegment_labels[$price['timesegment']], $price['timesegment'])) : ('');
       }
       return $return;
     }
