@@ -58,9 +58,9 @@ class CasaSync {
 
     public function include_template_function( $template_path ) {
       if ( get_post_type() == 'casasync_property' && is_single()) {
-        // checks if the file exists in the theme first,
-        // otherwise serve the file from the plugin
-        if ( $theme_file = locate_template( array( 'single-casasync_property.php' ) ) ) {
+        if ($_GET && isset($_GET['ajax'])) {
+          $template_path = CASASYNC_PLUGIN_DIR . '/ajax/prevnext.php';
+        } else if ( $theme_file = locate_template( array( 'casasync-single.php' ) ) ) {
             $template_path = $theme_file;
         } else {
             $template_path = CASASYNC_PLUGIN_DIR . '/single.php';
@@ -72,10 +72,10 @@ class CasaSync {
         ||  is_tax( 'casasync_location' )
         ||  (is_post_type_archive( 'casasync_property' ))
       ) {
-        if ( $theme_file = locate_template( array( 'taxonomy-casasync_salestype.php' ) ) ) {
-              $template_path = $theme_file;
+        if ( $theme_file = locate_template( array( 'casasync-archive.php' ) ) ) {
+            $template_path = $theme_file;
           } else {
-              $template_path = CASASYNC_PLUGIN_DIR . '/archive.php';
+            $template_path = CASASYNC_PLUGIN_DIR . '/archive.php';
           }
       }
 
@@ -236,6 +236,12 @@ class CasaSync {
         );
         wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
         wp_enqueue_style( 'chosen-css' );
+
+        wp_enqueue_script(
+          'jstorage',
+          CASASYNC_PLUGIN_URL . 'assets/js/jstorage.js',
+          array( 'jquery' )
+        );
 
         wp_enqueue_script(
           'casasync_script',

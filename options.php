@@ -77,7 +77,7 @@ if(isset($_POST['casasync_submit']))  {
 							<?php
 								$url = get_admin_url('', 'admin.php?page=casasync');
 								$manually = $url . '&do_import=true';
-								$forced = $manually . '&froce_all_properties=true&force_last_import=true';
+								$forced = $manually . '&force_all_properties=true&force_last_import=true';
 							?>
 							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $manually  ?>">manueller Import</a> ∙ <a href="<?php echo $forced  ?>">erzwungener Import</a>
 						</label></p>
@@ -365,7 +365,7 @@ if(isset($_POST['casasync_submit']))  {
 	</table>
 
 	<?php $name = 'casasync_single_template'; ?>
-	<h3><label for="<?php echo $name; ?>">Vorlage von Objekt-Einzelansicht</h3></label>
+	<!-- <h3><label for="<?php echo $name; ?>">Vorlage von Objekt-Einzelansicht</h3></label>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -385,10 +385,10 @@ if(isset($_POST['casasync_submit']))  {
 				<span class="description">Wenn das Feld leer ist werden die Standarteinstellungen wieder hergestellt</span><textarea name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" class="large-text code" rows="30" cols="50"><?php echo (get_option($name) ? stripslashes(get_option($name)) : file_get_contents(CASASYNC_PLUGIN_DIR . '/single-template-default.txt')); ?></textarea><span class="description"></span></td>
 			</tr>
 		</tbody>
-	</table>
+	</table> -->
 
 	<?php $name = 'casasync_archive_template'; ?>
-	<h3><label for="<?php echo $name; ?>">Vorlage für Objekt-Übersicht</h3></label>
+	<!-- <h3><label for="<?php echo $name; ?>">Vorlage für Objekt-Übersicht</h3></label>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -405,8 +405,8 @@ if(isset($_POST['casasync_submit']))  {
 				<span class="description">Wenn das Feld leer ist werden die Standarteinstellungen wieder hergestellt</span><textarea name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" class="large-text code" rows="15" cols="50"><?php echo (get_option($name) ? stripslashes(get_option($name)) : file_get_contents(CASASYNC_PLUGIN_DIR . '/archive-template-default.txt')); ?></textarea><span class="description"></span></td>
 			</tr>
 		</tbody>
-	</table>
-
+	</table> -->
+	<?php /* ?>
 	<h3><label for="<?php echo $name; ?>">Vorlage für {properties}</h3></label>
 	<table class="form-table">
 		<tbody>
@@ -453,7 +453,7 @@ if(isset($_POST['casasync_submit']))  {
 			</td>
 		</tbody>
 	</table>
-
+	<?php */ ?>
 
 
 

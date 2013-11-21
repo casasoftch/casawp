@@ -45,8 +45,6 @@ jQuery(document).ready(function($) {
                 });
             };
         });
-
-        
     };
 
 
@@ -82,7 +80,6 @@ jQuery(document).ready(function($) {
                   }
                 }
             });
-
         });
     };
     
@@ -153,8 +150,41 @@ jQuery(document).ready(function($) {
 
 
     //basic boxes eq height
-    $('.casasync-basic-box').equalHeightColumns({
-        speed : 500
-    });
+    if($('.casasync-basic-box').length){
+        $('.casasync-basic-box').equalHeightColumns({
+            speed : 500
+        });
+    }
+    
+
+    //archive jstorage persistance
+    if (window.casasyncParams) {
+        $.jStorage.set('casasyncParams', window.casasyncParams);
+    }
+    var casasyncParams = $.jStorage.get('casasyncParams', false);
+    if (casasyncParams && $('.casasync-single-pagination').length) {
+        $('.casasync-single-archivelink').prop('href', casasyncParams.archive_link);
+
+        $.ajax({
+            type: 'GET',
+            url: '',
+            data: {
+                'ajax' : 'prevnext',
+                'p' : casasyncParams.p,
+                'query' : casasyncParams,
+                'post_type' : 'casasync_property'
+            },
+            success: function (json) {
+                console.log(jQuery.parseJSON(json).nextlink);
+                if (jQuery.parseJSON(json).nextlink !== 'no') {
+                    $('.casasync-single-next').prop('href', jQuery.parseJSON(json).nextlink);    
+                }
+                if (jQuery.parseJSON(json).prevlink !== 'no') {
+                    $('.casasync-single-prev').prop('href', jQuery.parseJSON(json).prevlink);
+                }
+            }
+        });
+    };
+
 
 });

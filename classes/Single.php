@@ -65,6 +65,103 @@
       $this->setProperty($post);
     }  
 
+    public function getPrevNext($query){
+      global $wpdb;
+
+      $w_categories = array();
+      foreach ($query['categories'] as $slug => $options) {
+        if ($options['checked']) {
+          $w_categories[] = $options['value'];
+        }
+      }
+
+      $w_locations = array();
+      foreach ($query['locations'] as $slug => $options) {
+        if ($options['checked']) {
+          $w_locations[] = $options['value'];
+        }
+      }
+
+      $w_salestypes = array();
+      foreach ($query['salestypes'] as $slug => $options) {
+        if ($options['checked']) {
+          $w_salestypes[] = $options['value'];
+        }
+      }
+
+
+
+
+
+      $taxquery_new = array();
+      if ($w_categories) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_category',
+               'terms' => $w_categories,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
+      if ($w_locations) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_location',
+               'terms' => $w_locations,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
+      if ($w_salestypes) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_salestype',
+               'terms' => $w_salestypes,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
+
+
+
+      $posts_per_page = get_option('posts_per_page', 10);
+      $args = array(
+        'post_type' => 'casasync_property',
+        'posts_per_page' => $posts_per_page,
+        'tax_query' => $taxquery_new
+      );
+      $the_query = new \WP_Query( $args );
+
+      $prev = false;
+      $next = false;
+      while( $the_query->have_posts() ) {
+        $the_query->next_post();
+        if ($the_query->post->post_name == $this->property->post_name) {
+          $next_post = $the_query->next_post();
+          if ($next_post) {
+              $next = $next_post;
+              break;
+          }
+        }
+        $prev = $the_query->post;
+      }
+     
+
+      $prevnext = array(
+        'nextlink' => ($prev ? '/property/'.$prev->post_name.'/' : 'no'), 
+        'prevlink' => ($next ? '/property/'.$next->post_name.'/' : 'no')
+      );
+      return $prevnext;
+
+    }
+
+
     public function setProperty($post){
       $this->property = $post;
 
@@ -589,10 +686,10 @@
     }
 
     public function getPagination(){
-      $return = '<div class="btn-group btn-group-justified">'
-        .'<a href="" class="btn btn-default" role="button"><i class="fa fa-arrow-left"></i> ' . __('Previous','casasync') . '</a>'
-        .'<a href="" class="btn btn-default" role="button">' . __('To list','casasync') . '</a>'
-        .'<a href="" class="btn btn-default" role="button">' . __('Next','casasync') . ' <i class="fa fa-arrow-right"></i></a>'
+      $return = '<div class="btn-group btn-group-justified casasync-single-pagination">'
+        .'<a href="" class="btn btn-default casasync-single-next" role="button"><i class="fa fa-arrow-left"></i> ' . __('Previous','casasync') . '</a>'
+        .'<a href="" class="btn btn-default casasync-single-archivelink" role="button">' . __('To list','casasync') . '</a>'
+        .'<a href="" class="btn btn-default casasync-single-prev" role="button">' . __('Next','casasync') . ' <i class="fa fa-arrow-right"></i></a>'
       .'</div>';
       return $return;
     }

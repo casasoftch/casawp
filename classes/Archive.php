@@ -6,7 +6,58 @@
 
     public function __construct(){ 
       $this->conversion = new Conversion;
+      add_action( 'wp_enqueue_scripts', array($this, 'setArchiveJsVars') );
     }  
+
+    public function setArchiveJsVars(){
+        $script_params = array(
+           'categories' => $this->getCategoryOptions(),
+           'locations' => $this->getLocationsOptions(),
+           'salestypes' => $this->getSalestypeOptions(),
+           'archive_link' => $this->getArchiveLink()
+       );
+       wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
+    }
+
+    public function getArchiveLink(){
+        $casasync_category_s = array();
+        if ($this->getCategoryOptions()) {
+            foreach ($this->getCategoryOptions() as $slug => $options) {
+                if ($options['checked']) {
+                    $casasync_category_s[] = $options['value'];
+                }
+            }
+        }
+        $casasync_salestype_s = array();
+        if ($this->getSalestypeOptions()) {
+            foreach ($this->getSalestypeOptions() as $slug => $options) {
+                if ($options['checked']) {
+                    $casasync_salestype_s[] = $options['value'];
+                }
+            }
+        }
+        $casasync_location_s = array();
+        if ($this->getLocationsOptions()) {
+            foreach ($this->getLocationsOptions() as $slug => $options) {
+                if ($options['checked']) {
+                    $casasync_location_s[] = $options['value'];
+                }
+            }
+        }
+
+        $query = array(
+            'casasync_location_s' => $casasync_location_s,
+            'casasync_salestype_s' => $casasync_salestype_s,
+            'casasync_category_s' => $casasync_category_s,
+        );
+
+        if ( get_option('permalink_structure') == '' ) {
+            return '?'. http_build_query(array_merge($query, array("post_type" => "casasync_property")));
+        } else {
+            return '/property/?'. http_build_query($query);
+        }
+        
+    }
 
     public function getPagination(){
       global $wp_query;
@@ -52,7 +103,25 @@
         }
         return $options;
     }
-    public function getLocationsOptions() {
+    public function getLocationsOptions(){
+        global $wp_query;
+        $categories = array();
+        foreach ($wp_query->tax_query->queries as $tax_query) {
+            if ($tax_query['taxonomy'] == 'casasync_location') {
+                $categories = $tax_query['terms'];
+            }
+        }
+        $options = array();
+        $terms = get_terms('casasync_location');
+        foreach ($terms as $term) {
+            $options[$term->slug]['value'] = $term->slug; 
+            //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
+            $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
+            $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+        }
+        return $options;
+    }
+    public function getLocationsOptionsHyr() {
         global $wp_query;
         if (isset($wp_query->query_vars['casasync_location'])) {
             $locations = explode(',', $wp_query->query_vars['casasync_location']);
@@ -180,7 +249,7 @@
         $return .= '</select>';
         
         $return .= '<select name="casasync_location_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose locality','casasync') . '">';
-        $return .= $this->getLocationsOptions();
+        $return .= $this->getLocationsOptionsHyr();
         $return .= '</select>';
                 
         $return .= '<input class="casasync-filterform-button" type="submit" value="' . __('Search','casasync') . '" />';
