@@ -177,6 +177,22 @@ if(isset($_POST['casasync_submit']))  {
 					</fieldset>
 				</td>
 			</tr>
+			<?php $name = 'casasync_before_content'; ?>
+			<?php $text = 'Vor dem Inhalt (html)'; ?>
+			<tr>
+				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+				<td><textarea placeholder="<div id='content'>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> <span class="description"></span></td>
+			</tr>
+			<?php $name = 'casasync_after_content'; ?>
+			<?php $text = 'Nach dem Inhalt (html)'; ?>
+			<tr>
+				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+				<td><textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> <span class="description"></span></td>
+			</tr>
+
+
+
+
 		</tbody>
 	</table>
 
@@ -482,9 +498,9 @@ if(isset($_POST['casasync_submit']))  {
 
 						<?php $name = 'casasync_load_bootstrap_css'; ?>
 						<?php $text = 'casasync_load_bootstrap_css'; ?>
-						<p><label>
+						<!-- <p><label>
 							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
+						</label></p> -->
 
 						<?php $name = 'casasync_load_multiselector'; ?>
 						<?php $text = 'casasync_load_multiselector'; ?>
@@ -506,9 +522,9 @@ if(isset($_POST['casasync_submit']))  {
 
 						<?php $name = 'casasync_load_stylesheet'; ?>
 						<?php $text = 'casasync_load_stylesheet'; ?>
-						<p><label>
+						<!-- <p><label>
 							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
+						</label></p> -->
 
 						<?php $name = 'casasync_load_fontawesome'; ?>
 						<?php $text = 'casasync_load_fontawesome'; ?>

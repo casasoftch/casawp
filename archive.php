@@ -2,7 +2,7 @@
 <?php $archive = new CasaSync\Archive(); ?>
 
 <?php get_header(); ?>
-	<?php echo get_option('casasync_before_content'); ?>
+	<?php echo stripslashes(get_option('casasync_before_content')); ?>
 	<?php if ($template->setTemplate('archive', $archive)): ?>
 		<?php echo $template->render(); ?>
 	<?php else: ?>	
@@ -34,5 +34,5 @@
 		</div>
 	<?php endif; ?>
 	<?php wp_reset_query(); ?>
-	<?php echo get_option('casasync_after_content'); ?>
+	<?php echo stripslashes(get_option('casasync_after_content')); ?>
 <?php get_footer(); ?>

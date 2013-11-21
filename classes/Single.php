@@ -66,33 +66,12 @@
     }  
 
     public function getPrevNext($query){
-      global $wpdb;
-
       $w_categories = array();
       foreach ($query['categories'] as $slug => $options) {
         if ($options['checked']) {
           $w_categories[] = $options['value'];
         }
       }
-
-      $w_locations = array();
-      foreach ($query['locations'] as $slug => $options) {
-        if ($options['checked']) {
-          $w_locations[] = $options['value'];
-        }
-      }
-
-      $w_salestypes = array();
-      foreach ($query['salestypes'] as $slug => $options) {
-        if ($options['checked']) {
-          $w_salestypes[] = $options['value'];
-        }
-      }
-
-
-
-
-
       $taxquery_new = array();
       if ($w_categories) {
         $taxquery_new[] =
@@ -105,6 +84,13 @@
            )
         ;
       }
+
+      $w_locations = array();
+      foreach ($query['locations'] as $slug => $options) {
+        if ($options['checked']) {
+          $w_locations[] = $options['value'];
+        }
+      }
       if ($w_locations) {
         $taxquery_new[] =
            array(
@@ -115,6 +101,13 @@
                'operator'=> 'IN'
            )
         ;
+      }
+
+      $w_salestypes = array();
+      foreach ($query['salestypes'] as $slug => $options) {
+        if ($options['checked']) {
+          $w_salestypes[] = $options['value'];
+        }
       }
       if ($w_salestypes) {
         $taxquery_new[] =
@@ -143,15 +136,16 @@
       while( $the_query->have_posts() ) {
         $the_query->next_post();
         if ($the_query->post->post_name == $this->property->post_name) {
-          $next_post = $the_query->next_post();
-          if ($next_post) {
-              $next = $next_post;
-              break;
+          if ($the_query->current_post + 1 < $the_query->post_count ) {
+            $next_post = $the_query->next_post();
+            $next = $next_post;
+            break;
           }
         }
-        $prev = $the_query->post;
+        if ($the_query->post_count-1 != $the_query->current_post) { //because nextpost will fail at the end :-)
+          $prev = $the_query->post;
+        }
       }
-     
 
       $prevnext = array(
         'nextlink' => ($prev ? '/property/'.$prev->post_name.'/' : 'no'), 
@@ -686,7 +680,7 @@
     }
 
     public function getPagination(){
-      $return = '<div class="btn-group btn-group-justified casasync-single-pagination">'
+      $return = '<div class="btn-group btn-group-justified casasync-single-pagination hidden">'
         .'<a href="" class="btn btn-default casasync-single-next" role="button"><i class="fa fa-arrow-left"></i> ' . __('Previous','casasync') . '</a>'
         .'<a href="" class="btn btn-default casasync-single-archivelink" role="button">' . __('To list','casasync') . '</a>'
         .'<a href="" class="btn btn-default casasync-single-prev" role="button">' . __('Next','casasync') . ' <i class="fa fa-arrow-right"></i></a>'
