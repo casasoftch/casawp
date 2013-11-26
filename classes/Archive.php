@@ -54,9 +54,9 @@
         if ( get_option('permalink_structure') == '' ) {
             return '?'. http_build_query(array_merge($query, array("post_type" => "casasync_property")));
         } else {
-            return '/property/?'. http_build_query($query);
+            $post_type = get_post_type_object('casasync_property');
+            return '/'.$post_type->rewrite['slug'].'/?'. http_build_query($query);
         }
-        
     }
 
     public function getPagination(){

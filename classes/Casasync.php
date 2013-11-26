@@ -369,7 +369,7 @@ class CasaSync {
         'show_ui'            => true,
         'show_in_menu'       => true,
         'query_var'          => true,
-        'rewrite'            => array( 'slug' => 'property' ),
+        'rewrite'            => array( 'slug' => 'immobilien' ),
         'capability_type'    => 'post',
         'has_archive'        => true,
         'hierarchical'       => false,
@@ -398,12 +398,12 @@ class CasaSync {
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'property-category' )
+        'rewrite'           => array( 'slug' => 'immobilien-kategorie' )
       );
       register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
       $labels = array(
-        'name'              => __( 'Proeprty locations', 'casasync' ),
+        'name'              => __( 'Property locations', 'casasync' ),
         'singular_name'     => __( 'Location', 'casasync' ),
         'search_items'      => __( 'Search Locations', 'casasync'),
         'all_items'         => __( 'All Locations', 'casasync'),
@@ -421,7 +421,7 @@ class CasaSync {
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'property-location' )
+        'rewrite'           => array( 'slug' => 'immobilien-ortschaft' )
       );
       register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
 
@@ -447,7 +447,7 @@ class CasaSync {
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'property-salesstype' )
+        'rewrite'           => array( 'slug' => 'immobilien-vermarktungsart' )
       );
       register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
 
@@ -470,7 +470,7 @@ class CasaSync {
         'show_ui'           => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'property-atachment-type' )
+        'rewrite'           => array( 'slug' => 'immobilien-anhangstyp' )
       );
       register_taxonomy( 'casasync_attachment_type', array(), $args );
       register_taxonomy_for_object_type('casasync_attachment_type', 'attachment');
@@ -478,8 +478,6 @@ class CasaSync {
       $id1 = wp_insert_term('Image', 'casasync_attachment_type', array('slug' => 'image'));
       $id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
       $id3 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
-
-     
     }
 
     public function contact_shortcode($atts){

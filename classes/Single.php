@@ -147,9 +147,15 @@
         }
       }
 
+      if ( get_option('permalink_structure') == '' ) {
+        $post_type_slug = 'casasync_property';
+      } else {
+        $post_type = get_post_type_object('casasync_property');
+        $post_type_slug = $post_type->rewrite['slug'];
+      }
       $prevnext = array(
-        'nextlink' => ($prev ? '/property/'.$prev->post_name.'/' : 'no'), 
-        'prevlink' => ($next ? '/property/'.$next->post_name.'/' : 'no')
+        'nextlink' => ($prev ? '/'.$post_type_slug.'/'.$prev->post_name.'/' : 'no'), 
+        'prevlink' => ($next ? '/'.$post_type_slug.'/'.$next->post_name.'/' : 'no')
       );
       return $prevnext;
 
