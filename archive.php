@@ -7,6 +7,9 @@
 		<?php echo $template->render(); ?>
 	<?php else: ?>	
 		<div class="casasync-archive entry-content">
+			<aside class="casasync-archive-aside">
+				<?php echo $archive->getFilterForm(); ?>
+			</aside>
 			<div class="casasync-archive-content">
 				<?php while ( have_posts() ) : the_post(); ?>
 					<?php $single = new CasaSync\Single($post);?>
@@ -28,9 +31,6 @@
 				<?php endwhile; ?>
 				<?php echo $archive->getPagination() ?>
 			</div>
-			<aside class="casasync-archive-aside">
-				<?php echo $archive->getFilterForm(); ?>
-			</aside>
 		</div>
 	<?php endif; ?>
 	<?php wp_reset_query(); ?>

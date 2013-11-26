@@ -56,6 +56,9 @@
 			.table{
 				margin-bottom: 0;
 			}
+			h3{
+				margin-top:0;
+			}
 		}
 	}
 	.casasync-property{
@@ -137,7 +140,6 @@
 				left:0;
 				right:0;
 				bottom:0;
-				padding-bottom: 40px;
 				background: #333333;
 				background: rgba(0, 0, 0, 0.75);
 				p{
@@ -235,11 +237,18 @@
 	.single-property-container{
 		.casasyncContact{
 			.well;
+			.hidden-xs;
 		}
 	}
-	/*.casasync-single-pagination{
+	.casasync-single-pagination{
 		.hidden-xs;
-	}*/
+	}
+	.casasync-single-pagination-top .casasync-single-pagination{
+		.visible-xs;
+		.hidden-sm;
+		.hidden-md;
+		.hidden-lg;
+	}
 }
 
 .entry-content{
@@ -266,5 +275,13 @@
 }
 .casasync-unstyled{
 	.list-unstyled;
+}
+.table{
+	.width-25{
+		width: 25%;
+	}
+	.width-75{
+		width: 75%;
+	}
 }
 

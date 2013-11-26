@@ -15,7 +15,6 @@ if(isset($_POST['casasync_submit']))  {
 		'casasync_sellerfallback_show',
 		'casasync_sellerfallback_update',
 		'casasync_seller_show',
-		'casasync_seller_email_block',
 		'casasync_feedback_update',
 		'casasync_feedback_creations',
 		'casasync_feedback_edits',
@@ -92,12 +91,6 @@ if(isset($_POST['casasync_submit']))  {
 						<legend class="screen-reader-text"><span>Objektseite</span></legend>
 						<?php $name = 'casasync_seller_show'; ?>
 						<?php $text = 'Verkäufer bei den Objekten anzeigen (Anbieter informationen)'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-
-						<?php $name = 'casasync_seller_email_block'; ?>
-						<?php $text = 'Verkäufer E-Mails von den Objekten <strong>blockieren</strong>. (Anfrageformular)'; ?>
 						<p><label>
 							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 						</label></p>

@@ -8,6 +8,9 @@
 			<?php echo $template->render(); ?>
 		<?php else: ?>	
 			<div class="casasync-single">
+				<nav class="casasync-single-pagination-top">
+					<?php echo $single->getPagination(); ?>
+				</nav>
 				<div class="casasync-single-content">
 					<header class="entry-header">
 						<h1 class="entry-title"><?php echo $single->getTitle(); ?></h1>

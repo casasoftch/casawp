@@ -285,41 +285,6 @@
       $this->content = get_the_content(); 
       $this->content_parts = explode('<hr class="property-separator" />', $this->content);
 
-      /*$own_seller_email = false;
-      $emails = array();
-      if (!get_option('casasync_seller_email_block')) {
-        $email = get_post_meta( get_the_ID(), 'seller_inquiry_person_email', true );
-        if ($email) {
-          $firstname = get_post_meta( get_the_ID(), 'seller_inquiry_person_givenname', true );
-          $lastname = get_post_meta( get_the_ID(), 'seller_inquiry_person_familyname', true );
-          $gender    = get_post_meta( get_the_ID(), 'seller_inquiry_person_gender', true);
-          if ($gender == 'F') {
-            $honorific = 'Frau';
-          } elseif ($gender == 'M') {
-            $honorific = 'Herr';
-          } else {
-            $honorific = false;
-          }
-          $name = ($honorific ? $honorific . ' ' : '') . ($firstname ? $firstname . ' ' : '') . $lastname;
-          $emails[] = ($name ? $name : 'Kontaktperson') . ':' . $email;
-          $own_seller_email = true;
-        }
-      }
-      if (get_option('casasync_sellerfallback_email_use') != 'never') {
-        if (($own_seller_email == false && get_option('casasync_sellerfallback_email_use') == 'fallback') || (get_option('casasync_sellerfallback_email_use') == 'always')) {
-          $email = get_option('casasync_sellerfallback_email');
-          if ($email) {
-            $name = get_option('casasync_sellerfallback_legalname');
-            $emails[] = ($name ? $name : 'Hauptanbieter') . ':' . $email;
-          }
-        }
-      }
-
-      $has_remcat = false;
-      if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
-        $has_remcat = true; 
-      }*/
-
       if (get_option('casasync_seller_show') == 1) {
         $this->seller['fallback']   = true;
         $this->seller['country']    = get_post_meta( get_the_ID(), 'seller_org_address_country', $single = true );
@@ -410,19 +375,19 @@
       }
     }
 
-    public function getGallery($size = 'large'){
+    public function getGallery(){
 
       if ($this->attachments) {
         $return = '<div id="slider_'.get_the_ID().'" class="casasync-carousel slide" data-ride="carousel" data-interval="false">';
           
           //indicators
-          $return .= '<ol class="carousel-indicators">';
+          /*$return .= '<ol class="carousel-indicators">';
           $i = 0;
           foreach ($this->attachments as $attachment) {
             $return .= '<li data-target="#slider_'.get_the_ID().'" data-slide-to="'.$i.'" class="'.($i==0?'active':'').'"></li>';  
             $i++;
           }
-          $return .= '</ol>';
+          $return .= '</ol>';*/
 
           //Wrapper for slides
           $return .= '<div class="casasync-carousel-inner">';
@@ -431,8 +396,8 @@
               $return .= '<div class="item '.($i==0?'active':'').'">';
                 $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
                 $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
-                $return .= '<a href="' . $img_url[0] . '" class="casasync-fancybox" rel="group">' . $img . '</a>';
-                if ($size == 'large') {
+                $return .= '<a href="' . $img_url[0] . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+                if ($attachment->post_excerpt) {
                   $return .= '<div class="casasync-carousel-caption">';
                     $return .= '<p>' . $attachment->post_excerpt . '</p>';
                   $return .= '</div>';
@@ -528,8 +493,8 @@
       $content .= '<table class="table">';
       if ($this->main_basis == 'buy') {
         $content .= '<tr>'
-          .'<td width="25%">' . __('Sales price', 'casasync') . '</td>'
-        .'<td width="75%">';
+          .'<td class="width-25">' . __('Sales price', 'casasync') . '</td>'
+        .'<td class="width-75">';
         $content .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('By Request', 'casasync');
         $content .= '</td>'
         .'</tr>';
@@ -538,24 +503,24 @@
         if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
           if ($this->getPrice('gross')) {
             $content .= '<tr>'
-              .'<td width="25%">' . __('Gross price','casasync') . '</td>'
-            .'<td width="75%">';
+              .'<td class="width-25">' . __('Gross price','casasync') . '</td>'
+            .'<td class="width-75">';
             $content .= $this->getPrice('gross', 'full');
             $content .= '</td>'
             .'</tr>';
           }
           if ($this->getPrice('net')) {
             $content .= '<tr>'
-              .'<td width="25%">' . __('Net price','casasync') . '</td>'
-            .'<td width="75%">';
+              .'<td class="width-25">' . __('Net price','casasync') . '</td>'
+            .'<td class="width-75">';
             $content .= $this->getPrice('net', 'full');
             $content .= '</td>'
             .'</tr>';
           }
         } else {
           $content .= '<tr>'
-              .'<td width="25%">' . __('Rent price','casasync') . '</td>'
-            .'<td width="75%">';
+              .'<td class="width-25">' . __('Rent price','casasync') . '</td>'
+            .'<td class="width-75">';
             $content .=  __('By Request', 'casasync');
             $content .= '</td>'
             .'</tr>';
@@ -563,8 +528,8 @@
       }
       if ($this->getExtraCosts('Nebenkosten')) {
         $content .= '<tr>
-          <td width="25%"> ' . __('Additional costs', 'casasync') . '</td>'
-          .'<td width="75%">' . $this->getExtraCosts('Nebenkosten') . '</td>'
+          <td class="width-25"> ' . __('Additional costs', 'casasync') . '</td>'
+          .'<td class="width-75">' . $this->getExtraCosts('Nebenkosten') . '</td>'
         .'</tr>';
       }
       $content .= '</table>';
@@ -576,15 +541,15 @@
         $reference_or_property_id = ($this->reference_id) ? ($this->reference_id) : ($this->property_id);
         if($reference_or_property_id) {
           $content .= '<tr>
-            <td width="25%">' . __('Reference','casasync') .'</td>'
-            .'<td width="75%">' . $reference_or_property_id . '</td>'
+            <td class="width-25">' . __('Reference','casasync') .'</td>'
+            .'<td class="width-75">' . $reference_or_property_id . '</td>'
           .'</tr>';
         }
 
         if($this->getAddress('property')) {
           $content .= '<tr>
-            <td width="25%">' . __('Address','casasync') . '</td>'
-            .'<td width="75%">' . $this->getAddress('property') . '</td>'
+            <td class="width-25">' . __('Address','casasync') . '</td>'
+            .'<td class="width-75">' . $this->getAddress('property') . '</td>'
           .'</tr>';
         }
 
@@ -592,8 +557,8 @@
 
         foreach ($all_numvals as $numval) {
           $content .= '<tr>
-            <td width="25%">' . __($numval['title'], 'casasync') . '</td>'
-            .'<td width="75%">' . $this->getNumval($numval["key"]) . '</td>'
+            <td class="width-25">' . __($numval['title'], 'casasync') . '</td>'
+            .'<td class="width-75">' . $this->getNumval($numval["key"]) . '</td>'
           .'</tr>';
         }
         $content .= '</table>';
@@ -788,47 +753,47 @@
           . $this->seller['phone_mobile']
         ) {
           return true;
-        } else {
-          return false;
         }
     }
 
     public function getSeller() {
-      $return  = '<h3><i class="fa fa-briefcase"></i> ' . __('Provider' , 'casasync') . '</h3><address>';
-      $return .= ($this->seller['legalname'] != '') ? ('<strong>' . $this->seller['legalname'] . '</strong><br>') : ('');
-      $return .= $this->getAddress('seller');
+      if($this->hasSeller()) {
+        $return  = '<h3><i class="fa fa-briefcase"></i> ' . __('Provider' , 'casasync') . '</h3><address>';
+        $return .= ($this->seller['legalname'] != '') ? ('<strong>' . $this->seller['legalname'] . '</strong><br>') : ('');
+        $return .= $this->getAddress('seller');
 
-      $return .= '<div class="casasync-seller-infos">';
-      if($this->seller['email'] != '') {
-        $objektlink = get_permalink();
-        $mailto = 'mailto:' . $this->seller['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
-          .rawurlencode(html_entity_decode(get_the_title())) . '?body='
-        .rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;
-        $return .= '<p><span class="casasync-label">' . __('E-Mail', 'casasync') . '</span> ';
-        $return .= '<span class="value break-word"> <a href="' . $mailto . '">' . $this->seller['email'] . '</a></span>';
+        $return .= '<div class="casasync-seller-infos">';
+        if($this->seller['email'] != '') {
+          $objektlink = get_permalink();
+          $mailto = 'mailto:' . $this->seller['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
+            .rawurlencode(html_entity_decode(get_the_title())) . '?body='
+          .rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;
+          $return .= '<p><span class="casasync-label">' . __('E-Mail', 'casasync') . '</span> ';
+          $return .= '<span class="value break-word"> <a href="' . $mailto . '">' . $this->seller['email'] . '</a></span>';
+        }
+        if($this->seller['phone_mobile'] != '') {
+          $return .= '<p class="casasync-phone-mobile">'
+            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
+        }
+        if($this->seller['phone_direct'] != '') {
+          $return .= '<p class="casasync-phone-direct">'
+            .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_direct'] . '</span></p>';
+        }
+        if($this->seller['phone_central'] != '') {
+          $return .= '<p class="casasync-phone-central">'
+            .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
+        }
+        if($this->seller['fax'] != '') {
+          $return .= '<p class="casasync-phone-fax">'
+            .'<span class="casasync-label">' . __('Fax', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['fax'] . '</span></p>';
+        }
+        $return .= '</div></address>';
+        return $return;
       }
-      if($this->seller['phone_mobile'] != '') {
-        $return .= '<p class="casasync-phone-mobile">'
-          .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
-      }
-      if($this->seller['phone_direct'] != '') {
-        $return .= '<p class="casasync-phone-direct">'
-          .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->seller['phone_direct'] . '</span></p>';
-      }
-      if($this->seller['phone_central'] != '') {
-        $return .= '<p class="casasync-phone-central">'
-          .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
-      }
-      if($this->seller['fax'] != '') {
-        $return .= '<p class="casasync-phone-fax">'
-          .'<span class="casasync-label">' . __('Fax', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->seller['fax'] . '</span></p>';
-      }
-    $return .= '</div></address>';
-    return $return;
     }
 
     public function getSellerName() {
@@ -837,44 +802,60 @@
       }
     }
 
+    public function hasSalesPerson(){
+      if (
+          $this->salesperson['givenname']
+          . $this->salesperson['familyname']
+          . $this->salesperson['email']
+          . $this->salesperson['fax']
+          . $this->salesperson['phone_direct']
+          . $this->salesperson['phone_central']
+          . $this->salesperson['phone_mobile']
+        ) {
+        return true;
+      }
+    }
+
     public function getSalesPerson() {
-      $return = '<h3><i class="fa fa-user"></i> ' . __('Contact person' , 'casasync') . '</h3><address>';
-      if ($this->salesperson['givenname'] != '' && $this->salesperson['familyname'] != '') {
-        $return .= '<p>' . $this->salesperson['givenname'] . ' ' . $this->salesperson['familyname'];
+      if ($this->hasSalesPerson()) {
+        $return = '<h3><i class="fa fa-user"></i> ' . __('Contact person' , 'casasync') . '</h3><address>';
+        if ($this->salesperson['givenname'] != '' && $this->salesperson['familyname'] != '') {
+          $return .= '<p>' . $this->salesperson['givenname'] . ' ' . $this->salesperson['familyname'];
+        }
+        if ($this->salesperson['function'] != '') {
+          $return .= '<br><i>' . $this->salesperson['function'] . '</i></p>';
+        }
+        if ($this->salesperson['email'] != '') {
+          $objektlink = get_permalink();
+          $mailto = 'mailto:' . $this->salesperson['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
+            .rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync'))
+          .'%0A%0ALink: ' . $objektlink;
+          $return .= '<p><span class="casasync-label">' . __('Email', 'casasync') . '</span>'
+          .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->salesperson['email'] . '</a></span></p>';
+        }
+        if($this->salesperson['phone_mobile'] != '') {
+          $return .= '<p class="casasync-phone-mobile">'
+            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['phone_mobile'] . '</span></p>';
+        }
+       if($this->salesperson['phone_direct'] != '') {
+          $return .= '<p class="casasync-phone-direct">'
+            .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['phone_direct'] . '</span></p>';
+        }
+        if($this->salesperson['phone_central'] != '') {
+          $return .= '<p class="casasync-phone-central">'
+            .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['phone_central'] . '</span></p>';
+        }
+        if($this->salesperson['fax'] != '') {
+          $return .= '<p class="casasync-phone-fax">'
+            .'<span class="casasync-label">' . __('Fax', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['fax'] . '</span></p>';
+        }
+        $return .= '</address>';
+        return $return;
       }
-      if ($this->salesperson['function'] != '') {
-        $return .= '<br><i>' . $this->salesperson['function'] . '</i></p>';
-      }
-      if ($this->salesperson['email'] != '') {
-        $objektlink = get_permalink();
-        $mailto = 'mailto:' . $this->salesperson['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
-          .rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync'))
-        .'%0A%0ALink: ' . $objektlink;
-        $return .= '<p><span class="casasync-label">' . __('Email', 'casasync') . '</span>'
-        .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->salesperson['email'] . '</a></span></p>';
-      }
-      if($this->salesperson['phone_mobile'] != '') {
-        $return .= '<p class="casasync-phone-mobile">'
-          .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->salesperson['phone_mobile'] . '</span></p>';
-      }
-     if($this->salesperson['phone_direct'] != '') {
-        $return .= '<p class="casasync-phone-direct">'
-          .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->salesperson['phone_direct'] . '</span></p>';
-      }
-      if($this->salesperson['phone_central'] != '') {
-        $return .= '<p class="casasync-phone-central">'
-          .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->salesperson['phone_central'] . '</span></p>';
-      }
-      if($this->salesperson['fax'] != '') {
-        $return .= '<p class="casasync-phone-fax">'
-          .'<span class="casasync-label">' . __('Fax', 'casasync')  . '</span>'
-        .'<span class="value break-word"> ' . $this->salesperson['fax'] . '</span></p>';
-      }
-      $return .= '</address>';
-      return $return;
     }
 
     public function getSalesPersonName() {
@@ -899,11 +880,11 @@
 
     public function getAllShareWidgets() {
       $return = false;
-      $headline = '<h3><i class="fa fa-share-square"></i> ' . __('Share', 'casasync') . '</h3>';
       if (get_option( 'casasync_share_facebook', false )) {
-        $return = '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div>';
+        $return = '<h3><i class="fa fa-share-square"></i> ' . __('Share', 'casasync') . '</h3>';
+        $return .= '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div>';
       }
-      return $headline . $return;
+      return $return;
     }
 
     public function getFacebookShareScript() {
@@ -1092,6 +1073,7 @@
           $html .= '<li><strong>' . $value['title'] . ': </strong>';
           $html .= '<span>' . $value['value'] . '</span></li>';
         }
+        $html .= '</ul>';
       }
       return $html;
     }

@@ -7514,6 +7514,9 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
 .casasync-archive .casasync-archive-content .casasync-text .table {
   margin-bottom: 0;
 }
+.casasync-archive .casasync-archive-content .casasync-text h3 {
+  margin-top: 0;
+}
 .casasync-archive .casasync-property {
   margin-bottom: 10px;
   margin-left: -10px;
@@ -7707,11 +7710,6 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
   border-color: #dddddd;
   cursor: not-allowed;
 }
-.casasync-single {
-  /*.casasync-single-pagination{
-		.hidden-xs;
-	}*/
-}
 .casasync-single .casasync-carousel {
   position: relative;
   border-radius: 5px;
@@ -7792,7 +7790,6 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
   left: 0;
   right: 0;
   bottom: 0;
-  padding-bottom: 40px;
   background: #333333;
   background: rgba(0, 0, 0, 0.75);
 }
@@ -8248,10 +8245,204 @@ fieldset[disabled] .casasync-single .casasync-contactform-form .casasync-contact
   border-radius: 4px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  display: block !important;
 }
 .casasync-single .single-property-container .casasyncContact blockquote {
   border-color: #ddd;
   border-color: rgba(0, 0, 0, 0.15);
+}
+tr.casasync-single .single-property-container .casasyncContact {
+  display: table-row !important;
+}
+th.casasync-single .single-property-container .casasyncContact,
+td.casasync-single .single-property-container .casasyncContact {
+  display: table-cell !important;
+}
+@media (max-width: 767px) {
+  .casasync-single .single-property-container .casasyncContact,
+  tr.casasync-single .single-property-container .casasyncContact,
+  th.casasync-single .single-property-container .casasyncContact,
+  td.casasync-single .single-property-container .casasyncContact {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .casasync-single .single-property-container .casasyncContact.hidden-sm,
+  tr.casasync-single .single-property-container .casasyncContact.hidden-sm,
+  th.casasync-single .single-property-container .casasyncContact.hidden-sm,
+  td.casasync-single .single-property-container .casasyncContact.hidden-sm {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .casasync-single .single-property-container .casasyncContact.hidden-md,
+  tr.casasync-single .single-property-container .casasyncContact.hidden-md,
+  th.casasync-single .single-property-container .casasyncContact.hidden-md,
+  td.casasync-single .single-property-container .casasyncContact.hidden-md {
+    display: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  .casasync-single .single-property-container .casasyncContact.hidden-lg,
+  tr.casasync-single .single-property-container .casasyncContact.hidden-lg,
+  th.casasync-single .single-property-container .casasyncContact.hidden-lg,
+  td.casasync-single .single-property-container .casasyncContact.hidden-lg {
+    display: none !important;
+  }
+}
+.casasync-single .casasync-single-pagination {
+  display: block !important;
+}
+tr.casasync-single .casasync-single-pagination {
+  display: table-row !important;
+}
+th.casasync-single .casasync-single-pagination,
+td.casasync-single .casasync-single-pagination {
+  display: table-cell !important;
+}
+@media (max-width: 767px) {
+  .casasync-single .casasync-single-pagination,
+  tr.casasync-single .casasync-single-pagination,
+  th.casasync-single .casasync-single-pagination,
+  td.casasync-single .casasync-single-pagination {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .casasync-single .casasync-single-pagination.hidden-sm,
+  tr.casasync-single .casasync-single-pagination.hidden-sm,
+  th.casasync-single .casasync-single-pagination.hidden-sm,
+  td.casasync-single .casasync-single-pagination.hidden-sm {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .casasync-single .casasync-single-pagination.hidden-md,
+  tr.casasync-single .casasync-single-pagination.hidden-md,
+  th.casasync-single .casasync-single-pagination.hidden-md,
+  td.casasync-single .casasync-single-pagination.hidden-md {
+    display: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  .casasync-single .casasync-single-pagination.hidden-lg,
+  tr.casasync-single .casasync-single-pagination.hidden-lg,
+  th.casasync-single .casasync-single-pagination.hidden-lg,
+  td.casasync-single .casasync-single-pagination.hidden-lg {
+    display: none !important;
+  }
+}
+.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+  display: block !important;
+}
+.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+  display: none !important;
+}
+@media (max-width: 767px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: block !important;
+  }
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: table-row !important;
+  }
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: table-cell !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-sm {
+    display: block !important;
+  }
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-sm {
+    display: table-row !important;
+  }
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-sm,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-sm {
+    display: table-cell !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-md {
+    display: block !important;
+  }
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-md {
+    display: table-row !important;
+  }
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-md,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-md {
+    display: table-cell !important;
+  }
+}
+@media (min-width: 1200px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-lg {
+    display: block !important;
+  }
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-lg {
+    display: table-row !important;
+  }
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-lg,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.visible-lg {
+    display: table-cell !important;
+  }
+}
+tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+  display: table-row !important;
+}
+th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+  display: table-cell !important;
+}
+@media (max-width: 767px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-xs,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-xs,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-xs,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-xs {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-md,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-md,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-md,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-md {
+    display: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-lg,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-lg,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-lg,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination.hidden-lg {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  .casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  tr.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  th.casasync-single .casasync-single-pagination-top .casasync-single-pagination,
+  td.casasync-single .casasync-single-pagination-top .casasync-single-pagination {
+    display: none !important;
+  }
 }
 .entry-content .casasync-slider-thumbnails {
   display: block !important;
@@ -8382,4 +8573,10 @@ td.entry-content .casasync-slider-thumbnails {
 .casasync-unstyled {
   padding-left: 0;
   list-style: none;
+}
+.table .width-25 {
+  width: 25%;
+}
+.table .width-75 {
+  width: 75%;
 }

@@ -17,7 +17,7 @@
                 case 'No properties found':          $translated_text = 'Keine Immobilien gefunden';break;
                 case 'No properties found in Trash': $translated_text = 'Keine Immobilien im Papierkorb gefunden';break;
 
-                case 'Categories':                   $translated_text = 'Kategorien';break;
+                case 'Property categories':          $translated_text = 'Immobilien Kategorien';break;
                 case 'Category':                     $translated_text = 'Kategorie';break;
                 case 'Search Categories':            $translated_text = 'Kategorien durchsuchen';break;
                 case 'All Categories':               $translated_text = 'Alle Kategorien';break;
@@ -28,28 +28,44 @@
                 case 'Add New Category':             $translated_text = 'Neue Kategorie erstellen';break;
                 case 'New Category Name':            $translated_text = 'Neuer Kategorienamen';break;
 
-                case 'Locations':                    $translated_text = 'Orte';break;
-                case 'Location':                     $translated_text = 'Ort';break;
-                case 'Search Locations':             $translated_text = 'Orte durchsuchen';break;
-                case 'All Locations':                $translated_text = 'Alle Orte';break;
-                case 'Parent Location':              $translated_text = 'Übergeordneter Ort';break;
-                case 'Parent Location:':             $translated_text = 'Übergeordneter Ort:';break;
-                case 'Edit Location':                $translated_text = 'Ort bearbeiten';break;
-                case 'Update Location':              $translated_text = 'Ort aktualisieren';break;
-                case 'Add New Location':             $translated_text = 'Neuer Ort erstellen';break;
-                case 'New Location Name':            $translated_text = 'Neuer Ortsnamen';break;
+                case 'Property locations':           $translated_text = 'Immobilien Ortschaften';break;
+                case 'Location':                     $translated_text = 'Ortschaft';break;
+                case 'Search Locations':             $translated_text = 'Orteschaften durchsuchen';break;
+                case 'All Locations':                $translated_text = 'Alle Ortschaften';break;
+                case 'Parent Location':              $translated_text = 'Übergeordnete Ortschaft';break;
+                case 'Parent Location:':             $translated_text = 'Übergeordnete Ortschaft:';break;
+                case 'Edit Location':                $translated_text = 'Ortschaft bearbeiten';break;
+                case 'Update Location':              $translated_text = 'Ortschaft aktualisieren';break;
+                case 'Add New Location':             $translated_text = 'Neue Ortschaft erstellen';break;
+                case 'New Location Name':            $translated_text = 'Neue Ortschafts-Namen';break;
 
-                case 'Salestypes':                      $translated_text = 'Vermarktungsarten';break;
-                case 'Salestype':                       $translated_text = 'Vermarktungsart';break;
-                case 'Search Salestypes':               $translated_text = 'Vermarktungsarten durchsuchen';break;
-                case 'All Salestypes':                  $translated_text = 'Alle Vermarktungsarten';break;
-                case 'Parent Salestype':                $translated_text = 'Übergeordnete Vermarktungsart';break;
-                case 'Parent Salestype:':               $translated_text = 'Übergeordnete Vermarktungsart:';break;
-                case 'Edit Salestype':                  $translated_text = 'Vermarktungsart bearbeiten';break;
-                case 'Update Salestype':                $translated_text = 'Vermarktungsart aktualisieren';break;
-                case 'Add New Salestype':               $translated_text = 'Neue Vermarktungsart erstellen';break;
-                case 'New Salestype Name':              $translated_text = 'Neuer Vermarktungsart Namen';break;
-                case 'Separate Salestypes with commas': $translated_text = 'Trenne Vermarktungsarten durch Kommas';break;
+                case 'Property salestypes':                  $translated_text = 'Immobilien Vermarktungsarten';break;
+                case 'Salestype':                            $translated_text = 'Vermarktungsart';break;
+                case 'Search Salestypes':                    $translated_text = 'Vermarktungsarten durchsuchen';break;
+                case 'All Salestypes':                       $translated_text = 'Alle Vermarktungsarten';break;
+                case 'Parent Salestype':                     $translated_text = 'Übergeordnete Vermarktungsart';break;
+                case 'Parent Salestype:':                    $translated_text = 'Übergeordnete Vermarktungsart:';break;
+                case 'Edit Salestype':                       $translated_text = 'Vermarktungsart bearbeiten';break;
+                case 'Update Salestype':                     $translated_text = 'Vermarktungsart aktualisieren';break;
+                case 'Add New Salestype':                    $translated_text = 'Neue Vermarktungsart erstellen';break;
+                case 'New Salestype Name':                   $translated_text = 'Neuer Vermarktungsart-Namen';break;
+                case 'Separate salestypes with commas':      $translated_text = 'Trenne Vermarktungsarten durch Kommas';break;
+                case 'Add or remove salestypes':             $translated_text = 'Vermarktungsarten hinzufügen oder entfernen';break;
+                case 'Choose from the most used salestypes': $translated_text = 'Wähle von den meistbenutzten Vermarktungsarten';break;
+                case 'No Salestypes found.':                 $translated_text = 'Keine Vermarktungsarten gefunden';break;
+                case 'Popular Salestypes':                   $translated_text = 'Populäre Vermarktungsarten';break;
+
+                case 'Property Attachment Types': $translated_text = 'Immobilien Anhangsart';break;
+                case 'Search Attachment Types':   $translated_text = 'Suche Anhangsarten';break;
+                case 'All Attachment Types':      $translated_text = 'Alle Anhangsarten';break;
+                case 'Parent Attachment Type':    $translated_text = 'Übergeordnete Anhangsart';break;
+                case 'Parent Attachment Type:':   $translated_text = 'Übergeordnete Anhangsart:';break;
+                case 'Edit Attachment Type':      $translated_text = 'Anhangsart bearbeiten';break;
+                case 'Update Attachment Type':    $translated_text = 'Anhangsart aktualisieren';break;
+                case 'Add New Attachment Type':   $translated_text = 'Neue Anhangsarten erstellen';break;
+                case 'New Attachment Type Name':  $translated_text = 'Neueer Anhangsart-Namen';break;
+                case 'Attachment Type':           $translated_text = 'Immobilien Anhangsart';break;
+
 
 
                 case 'Buy':  $translated_text = 'Kaufen';break;
@@ -354,6 +370,7 @@
                 case 'wheelchair accessible':       $translated_text = 'Rollstuhlgängig';break;
 
                 case 'Previous':            $translated_text = 'Zurück';break;
+                case 'Next':                $translated_text = 'Weiter';break;
                 case 'To list':             $translated_text = 'Zur Liste';break;
                 case 'available':           $translated_text = 'Verfügbar';break;
                 case 'reserved':            $translated_text = 'Reserved';break;
