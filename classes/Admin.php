@@ -51,6 +51,38 @@ class Admin {
 		add_option("casasync_single_template", file_get_contents(CASASYNC_PLUGIN_DIR . '/single-template-default.php'));
 		add_option("casasync_archive_template", file_get_contents(CASASYNC_PLUGIN_DIR . '/archive-template-default.php'));
 
+
+		// NEW
+
+		// general
+		add_option('casasync_live_import', '1');
+		get_option('casasync_sellerfallback_email_use', 'fallback');
+
+		// appearance
+		add_option('casasync_load_css', 'bootstrapv3');
+		add_option('casasync_load_bootstrap_scripts', '1');
+		add_option('casasync_load_fancybox', '1');
+		add_option('casasync_load_chosen', '1');
+		add_option('casasync_load_googlemaps', '1');
+
+		//single view
+		//add_option('casasync_seller_show', '1');
+		add_option('casasync_share_facebook', '1');
+		add_option('casasync_share_googleplus', '1');
+		add_option('casasync_share_twitter', '1');
+		add_option('casasync_use_captcha', '1');
+		add_option('casasync_single_show_number_of_rooms', '1');
+		add_option('casasync_single_show_surface_usable', '1');
+		add_option('casasync_single_show_surface_living', '1');
+		add_option('casasync_single_show_surface_property', '1');
+
+		//archive view
+		add_option('casasync_archive_show_location', '1');
+		add_option('casasync_archive_show_number_of_rooms', '1');
+		add_option('casasync_archive_show_surface_usable', '1');
+		add_option('casasync_archive_show_surface_living', '1');
+		add_option('casasync_archive_show_surface_property', '1');
+		add_option('casasync_archive_show_price', '1');
 	}
 
 	public function casasync_remove() {
@@ -59,8 +91,14 @@ class Admin {
 	}
 
 	public function casasync_menu() {
-		//add_options_page('CasaSync', 'CasaSync', 'administrator', 'casasync', array( $this, 'settings_page' ) );
-		add_menu_page('CasaSync options page', 'CasaSync', 'administrator', 'casasync',  array($this,'casasync_add_options_page'), CASASYNC_PLUGIN_URL . 'assets/img/building.png');
+		add_menu_page(
+			'CasaSync options page',
+			'CasaSync',
+			'administrator',
+			'casasync',
+			array($this,'casasync_add_options_page'),
+			CASASYNC_PLUGIN_URL . 'assets/img/building.png'
+		);
 	}
 
 	public function casasync_add_options_page() {

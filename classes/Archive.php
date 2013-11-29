@@ -11,9 +11,9 @@
 
     public function setArchiveJsVars(){
         $script_params = array(
-           'categories' => $this->getCategoryOptions(),
-           'locations' => $this->getLocationsOptions(),
-           'salestypes' => $this->getSalestypeOptions(),
+           'categories'   => $this->getCategoryOptions(),
+           'locations'    => $this->getLocationsOptions(),
+           'salestypes'   => $this->getSalestypeOptions(),
            'archive_link' => $this->getArchiveLink()
        );
        wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
@@ -73,7 +73,7 @@
           while ($i < $total_pages) {
             $i++;
             if ($current_page == $i) {
-              $return .= '<li><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
+              $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
             } else {
               $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
             }
@@ -260,23 +260,3 @@
         return $return;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

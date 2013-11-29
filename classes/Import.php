@@ -805,7 +805,7 @@ class Import {
                 foreach ($numval as $key2 => $value) {
                   $the_value .= ($key2 != 0 ? '+' : '') . '[' . $value['from']['value'] . ']'; 
                 }
-                $casasync_floors = $the_value;
+                $xml_numval[$key] = $the_value;
                 break;
               //simple value with si
               case 'surface_living':
@@ -1048,7 +1048,6 @@ class Import {
             $terms_to_add_real[] = $lvl3_locality_id;
           }
 
-          echo "<script>console.log('" . json_encode($terms_to_add_real, true) . "');</script>";
           wp_set_post_terms( $the_id, $terms_to_add_real, 'casasync_location' );
           delete_option("casasync_location_children");
           wp_cache_flush();

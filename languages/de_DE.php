@@ -70,6 +70,7 @@
 
                 case 'Buy':  $translated_text = 'Kaufen';break;
                 case 'Rent': $translated_text = 'Mieten';break;
+                case 'rent': $translated_text = 'Miete';break;
 
                 case 'First name':          $translated_text = 'Vorname';break;
                 case 'Last name':           $translated_text = 'Nachname';break;
@@ -89,7 +90,7 @@
                 case 'Required':            $translated_text = 'Erforderlich';break;
                 case '&larr; Page back':    $translated_text = '&larr; Seite zurück';break;
                 case 'Page forward &rarr;': $translated_text = 'nächste Seite &rarr;';break;
-                case 'Please consider the following errors and try sending it again': $translated_text = 'Bitte beachten Sie folgene Fehler und probieren Sie es erneut';break;
+                case 'Please consider the following errors and try sending it again': $translated_text = 'Folgende Fehler sind aufgetreten. Bitte überprüfen Sie die Eingabefelder.';break;
 
                 case 'Switzerland':         $translated_text = 'Schweiz';break;
                 case 'Italy':               $translated_text = 'Italien';break;
@@ -123,6 +124,7 @@
                 case 'Rent price':          $translated_text = 'Mietpreis';break;
                 case 'Sales price:':        $translated_text = 'Kaufpreis:';break;
                 case 'Sales price':         $translated_text = 'Kaufpreis';break;
+                case 'Price':               $translated_text = 'Preis';break;
                 case 'Additional costs':    $translated_text = 'Nebenkosten';break;
                 case 'Object ID':           $translated_text = 'Objekt-ID';break;
                 case 'Floor(s)':            $translated_text = 'Stockwerk(e)';break;
@@ -150,11 +152,15 @@
                 case 'Secondary school':      $translated_text = 'Oberstufe';break;
 
                 case 'Property space':        $translated_text = 'Grundstücksfläche';break;
+                case 'Property space:':       $translated_text = 'Grundstücksfläche:';break;
                 case 'Year of renovation':    $translated_text = 'Letzte Renovation';break;
+                case 'Year of renovation:':   $translated_text = 'Letzte Renovation:';break;
                 case 'Year of construction':  $translated_text = 'Baujahr';break;
+                case 'Year of construction:': $translated_text = 'Baujahr:';break;
                 case 'Number of rooms':       $translated_text = 'Anzahl Zimmer';break;
                 case 'Number of rooms:':      $translated_text = 'Anzahl Zimmer:';break;
                 case 'Number of floors':      $translated_text = 'Anzahl Etagen';break;
+                case 'Number of floors:':     $translated_text = 'Anzahl Etagen:';break;
                 
                 case 'Directly contact the provider now': $translated_text = 'Jetzt Anbieter direkt kontaktieren';break;
                 case 'Back to the list':                  $translated_text = 'Zurück zur Übersicht';break;
@@ -361,6 +367,7 @@
                 case 'Floor':                       $translated_text = 'Etage';break;
                 case 'Number of apartments':        $translated_text = 'Anzahl Wohnungen';break;
                 case 'Surface usable':              $translated_text = 'Nutzfläche';break;
+                case 'Surface usable:':             $translated_text = 'Nutzfläche:';break;
                 case 'Ceiling height':              $translated_text = 'Raumhöhe';break;
                 case 'Hall height':                 $translated_text = 'Hallenhöhe';break;
                 case 'Maximal floor loading':       $translated_text = 'Max. Bodenbelastung';break;

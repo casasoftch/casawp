@@ -2,43 +2,10 @@
 jQuery.noConflict();
 jQuery(document).ready(function($) {
 
-    
-
-
-
-
-    var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
-    if (!isMobile) {
-        $('.multiselect').each(function(){
-            var that = $(this);
-            that.multiselect({
-                buttonClass: 'btn',
-                buttonWidth: 'auto',
-                buttonContainer: '<div class="multiselect-item btn-group" />',
-                maxHeight: false,
-                buttonText: function(options) {
-                  if (options.length == 0) {
-                    if (that.data('empty')) {
-                        return that.data('empty')+' <b class="caret"></b>';
-                    } else {
-                        return 'Bitte auswählen <b class="caret"></b>';
-                    }
-                  }
-                  else if (options.length > 2) {
-                    return options.length + ' ausgewählt  <b class="caret"></b>';
-                  }
-                  else {
-                    var selected = '';
-                    options.each(function() {
-                      selected += $(this).text() + ', ';
-                    });
-                    return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
-                  }
-                }
-            });
-        });
-    };
-    
+    //archive jstorage persistance
+    if (window.casasyncParams) {
+        $.jStorage.set('casasyncParams', window.casasyncParams);
+    }
 
     /*$('#casasyncCarousel').carousel({
         interval: false
@@ -89,34 +56,30 @@ jQuery(document).ready(function($) {
         $('.casasync-contactform-form').delay(500).find(' input[name="firstname"]').focus();
 
         //scrollToAnchor($(this).attr('href').split('#')[1]);
-
-        
         return false;
-
     });
 
-    $('.casasync-fancybox').fancybox();
-
-    var config = {
-      '.chosen-select' : {width:"100%"}
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
+    if (window.casasyncOptionParams && window.casasyncOptionParams.fancybox == 1) {
+        if($('.casasync-fancybox').length){
+            $('.casasync-fancybox').fancybox();
+        }
     }
 
+    if (window.casasyncOptionParams && window.casasyncOptionParams.chosen == 1) {
+        var config = {
+          '.chosen-select' : {width:"100%"}
+        }
+        for (var selector in config) {
+          $(selector).chosen(config[selector]);
+        }
+    }
 
-    //basic boxes eq height
-    if($('.casasync-basic-box').length){
+    if ($('.casasync-basic-box').length){
         $('.casasync-basic-box').equalHeightColumns({
             speed : 500
         });
     }
-    
 
-    //archive jstorage persistance
-    if (window.casasyncParams) {
-        $.jStorage.set('casasyncParams', window.casasyncParams);
-    }
     var casasyncParams = $.jStorage.get('casasyncParams', false);
     if (casasyncParams && $('.casasync-single-pagination').length) {
         $('.casasync-single-archivelink').prop('href', casasyncParams.archive_link);
@@ -147,48 +110,47 @@ jQuery(document).ready(function($) {
     };
 
     //google maps
-    if ($('.casasync-map').length && google) {
-        $('.casasync-map').each(function(){
-            var $mapwraper = $(this);
-            if ($mapwraper.data('address')) {
-                geocoder = new google.maps.Geocoder();
-                geocoder.geocode( { 'address': $mapwraper.data('address')}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        var map;
-                        function initialize() {
-                            if (results[0]) {
-                                var location = results[0].geometry.location;
-                                var bounds = results[0].geometry.bounds;
-                            } else {
-                                var location = null;
-                                var bounds = null;
-                            }
-                            var mapOptions = {
-                              zoom: 12,
-                              mapTypeId: google.maps.MapTypeId.ROADMAP,
-                              center: location
-                            };
-                            $mapwraper.show();
-                            map = new google.maps.Map(document.getElementById('map-canvas'),
-                              mapOptions);
+    if (window.casasyncOptionParams && window.casasyncOptionParams.google_maps == 1) {
+        if ($('.casasync-map').length && google) {
+            $('.casasync-map').each(function(){
+                var $mapwraper = $(this);
+                if ($mapwraper.data('address')) {
+                    geocoder = new google.maps.Geocoder();
+                    geocoder.geocode( { 'address': $mapwraper.data('address')}, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            var map;
+                            function initialize() {
+                                if (results[0]) {
+                                    var location = results[0].geometry.location;
+                                    var bounds = results[0].geometry.bounds;
+                                } else {
+                                    var location = null;
+                                    var bounds = null;
+                                }
+                                var mapOptions = {
+                                  zoom: 12,
+                                  mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                  center: location
+                                };
+                                $mapwraper.show();
+                                map = new google.maps.Map(document.getElementById('map-canvas'),
+                                  mapOptions);
 
-                            if (bounds) {
-                                map.fitBounds(bounds);
+                                if (bounds) {
+                                    map.fitBounds(bounds);
+                                }
+                                var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: location
+                                });
                             }
-
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                position: location
-                            });
+                            google.maps.event.addDomListener(window, 'load', initialize);
+                            //$('#map-canvas').animate({'height' : '400px'}, 500);
                         }
-
-                        google.maps.event.addDomListener(window, 'load', initialize);
-
-                        //$('#map-canvas').animate({'height' : '400px'}, 500);
-                    }
-                });
-            };
-        });
-    };
+                    });
+                };
+            });
+        }
+    }
 
 });

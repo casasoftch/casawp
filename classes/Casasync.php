@@ -6,7 +6,10 @@ class CasaSync {
     public $fields = false;
     public $meta_box = false;
     public $admin = false;
+    public $conversion = null;
+
     public function __construct(){  
+      $this->conversion = new Conversion;
       if ( !function_exists( 'add_action' ) ) {
         echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
         exit;
@@ -21,14 +24,15 @@ class CasaSync {
       add_shortcode('casasync_contact', array($this,'contact_shortcode'));
       add_action('init', array($this, 'setPostTypes'));
       add_action('admin_menu', array($this, 'setMetaBoxes'));
-      //add_action('template_redirect', array($this, 'load_jquery'));
       add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
+      add_action( 'wp_enqueue_scripts', array($this, 'setOptionJsVars') );
       add_filter("attachment_fields_to_edit", array($this, "casasync_image_attachment_fields_to_edit"), null, 2);
       add_filter("attachment_fields_to_save", array($this, "casasync_image_attachment_fields_to_save"), null, 2);
       add_action('pre_get_posts', array($this, 'customize_casasync_category'));
       add_filter( 'template_include', array($this, 'include_template_function'), 1 );
       register_activation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casasync_activation'));
       register_deactivation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casasync_deactivation'));
+
       if ( function_exists( 'add_theme_support' ) ) {
         add_theme_support( 'post-thumbnails' );
         set_post_thumbnail_size( 150, 150 ); // default Post Thumbnail dimensions
@@ -42,6 +46,17 @@ class CasaSync {
 
       
     }  
+
+
+    public function setOptionJsVars(){
+        $script_params = array(
+           'google_maps' => get_option('casasync_load_googlemaps', 0),
+           'fancybox'    => get_option('casasync_load_fancybox', 0),
+           'chosen'      => get_option('casasync_load_chosen', 0)
+       );
+       wp_localize_script( 'casasync_script', 'casasyncOptionParams', $script_params );
+    }
+
 
     function casasync_activation() {
       register_uninstall_hook(__FILE__, array($this, 'casasync_uninstall'));
@@ -180,22 +195,22 @@ class CasaSync {
       return $post;
     }
 
-    public function load_jquery() {
-      //if (!is_admin() && get_option( 'casasync_load_jquery', 0 ) ) {
-          //wp_enqueue_script('jquery');
-      //}
-    }
-
     function registerScriptsAndStyles(){
-
-      switch (get_option( 'casasync_template', 0 )) {
-        default:
+      switch (get_option('casasync_load_css', 'bootstrapv3')) {
+        case 'bootstrapv2':
+          // Bootstrap 2
+          break;
+        case 'bootstrapv3':
           wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs3.css' );
-            wp_enqueue_style( 'casasync-css' );
+          wp_enqueue_style( 'casasync-css' );
+          break;
+        case 'none':
+        default:
           break;
       }
-      
-      if (get_option( 'casasync_load_scripts', 1 )) {
+
+      if (get_option( 'casasync_load_bootstrap_scripts', 1 )) {
+        // Add Bootstrap v2 
         wp_enqueue_script(
           'casasync_bootstrap_transition',
           CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
@@ -203,81 +218,70 @@ class CasaSync {
         );
         wp_enqueue_script(
           'casasync_bootstrap_tab',
-          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js'
+          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
+          array( 'jquery' )
         );
         wp_enqueue_script(
           'casasync_bootstrap_carousel',
-          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js'
-        );
-
-        wp_enqueue_script(
-          'casasync_jquery_eqheight',
-          CASASYNC_PLUGIN_URL . 'assets/js/jquery.equal-height-columns.js'
-        );
-
-         wp_enqueue_script(
-          'fancybox',
-          CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.js',
+          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
           array( 'jquery' )
         );
-        wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'assets/css/jquery.fancybox.css' );
-        wp_enqueue_style( 'fancybox' );
+      }
 
+      wp_enqueue_script(
+        'casasync_script',
+        CASASYNC_PLUGIN_URL . 'assets/js/script.js',
+        array( 'jquery' ),
+        false,
+        true
+      );
+      wp_enqueue_script(
+        'jstorage',
+        CASASYNC_PLUGIN_URL . 'assets/js/jstorage.js',
+        array( 'jquery' )
+      );
+      if(is_singular('casasync_property')) {
         wp_enqueue_script(
-          'google_maps_v3',
-          'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'
+          'casasync_jquery_eqheight',
+          CASASYNC_PLUGIN_URL . 'assets/js/jquery.equal-height-columns.js',
+          array( 'jquery' ),
+          false,
+          true
         );
 
+        if (get_option( 'casasync_load_fancybox', 1 )) {
+          wp_enqueue_script(
+            'fancybox',
+            CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.js',
+            array( 'jquery' ),
+            false,
+            true
+          );
+          wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'assets/css/jquery.fancybox.css' );
+          wp_enqueue_style( 'fancybox' );
+        }
+      }
+
+      if (get_option( 'casasync_load_chosen', 1 )) {
         wp_enqueue_script(
           'chosen',
           CASASYNC_PLUGIN_URL . 'assets/js/chosen.jquery.min.js',
-          array( 'jquery' )
+          array( 'jquery' ),
+          false,
+          true
         );
         wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
         wp_enqueue_style( 'chosen-css' );
-
+      }
+      if (get_option( 'casasync_load_googlemaps', 1 ) && is_singular('casasync_property')) {
         wp_enqueue_script(
-          'jstorage',
-          CASASYNC_PLUGIN_URL . 'assets/js/jstorage.js',
-          array( 'jquery' )
-        );
-
-        wp_enqueue_script(
-          'casasync_script',
-          CASASYNC_PLUGIN_URL . 'assets/js/script.js'
+          'google_maps_v3',
+          'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false',
+          array(),
+          false,
+          true
         );
       }
-
-
-      /*
-      if (get_option( 'casasync_load_bootstrap_css', 1 )) {
-        wp_register_style( 'twitter-bootstrap', CASASYNC_PLUGIN_URL . 'assets/css/bootstrap.min.css' );
-        wp_enqueue_style( 'twitter-bootstrap' );
-
-        wp_register_style( 'twitter-bootstrap', CASASYNC_PLUGIN_URL . 'assets/css/bootstrap-responsive.min.css' );
-        wp_enqueue_style( 'twitter-bootstrap' );
-      }
-      if (get_option( 'casasync_load_multiselector', 1 )) {
-        wp_enqueue_script(
-          'bootstrap_multiselect',
-          CASASYNC_PLUGIN_URL . 'assets/js/bootstrap-multiselect.js'
-        );
-      }
-      
-      if (get_option( 'casasync_load_stylesheet', 1 )) {
-        wp_register_style( 'casasync-style', CASASYNC_PLUGIN_URL . 'assets/css/casasync.css?v=2' );
-        wp_register_style( 'casasync-style-ie', CASASYNC_PLUGIN_URL . 'assets/css/casasync_ie.css' );
-        $GLOBALS['wp_styles']->add_data( 'casasync-style-ie', 'conditional', 'IE' );
-        wp_enqueue_style( 'casasync-style' );
-        //wp_enqueue_style( 'casasync-style-ie' );
-      }
-
-      if (get_option( 'casasync_load_fontawesome', 1 )) {
-        wp_register_style( 'casasync-fontawesome', CASASYNC_PLUGIN_URL . 'assets/css/font-awesome.min.css' );
-        wp_enqueue_style( 'casasync-fontawesome' );
-      }
-*/
-
     }
 
     function setTranslation(){
@@ -482,30 +486,26 @@ class CasaSync {
 
     public function contact_shortcode($atts){
       extract( shortcode_atts( array(
-        'recipients' => 'Jens Stalder:js@casasoft.ch',
+        'recipients' => 'Steven Imhof:si@casasoft.ch',
         'ccs' => '',
         'post_id' => false
       ), $atts ) );
+
       $errors = array();
       $table = '';
       $validation = false;
 
-
-
       $rec_ar1 = explode(';', $recipients);
+
       $recipientses = array();
       foreach ($rec_ar1 as $key => $value) {
           $recipientses[] = explode(':', trim(str_replace('<br />', '', $value)));
       }
-
       $cc_ar1 = explode(';', $ccs);
       $ccs_arr = array();
       foreach ($cc_ar1 as $key => $value) {
           $ccs_arr[] = explode(':', trim(str_replace('<br />', '', $value)));
       }
-
-
-
       //labels and whitelist
       $fieldlabels = array(
           'firstname'   => __('First name', 'casasync'), //'Vorname',
@@ -525,19 +525,17 @@ class CasaSync {
           'recipient'   => __('Recipient', 'casasync'), //'Rezipient',
       );
 
-
-
-
       if (!empty($_POST)) {
           $validation = true;
           $required = array(
             'firstname',
             'lastname',
-            'emailreal',
-            'subject',
             'street',
             'postal_code',
-            'locality'
+            'locality',
+            'emailreal',
+            'subject',
+            'message'
           );
           $companyname = get_bloginfo( 'name' );
           $companyAddress = '{STREET}
@@ -569,7 +567,6 @@ class CasaSync {
           if ($_POST['email'] || strpos($_POST['message'], 'http://')) {
             $validation = false;
           }
-
           if ($validation) {
               $casa_id = get_post_meta( $post_id, 'casasync_id', $single = true );
               $casa_id_arr = explode('_', $casa_id);
@@ -581,7 +578,7 @@ class CasaSync {
               if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
                   $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
                   if ($categories) {
-                      $type = casasync_convert_categoryKeyToLabel($categories[0]->name); 
+                      $type = $this->conversion->casasync_convert_categoryKeyToLabel($categories[0]->name); 
                   } else {
                       $type = '';
                   }
@@ -624,7 +621,8 @@ class CasaSync {
                   $header .= "MIME-Version: 1.0\r\n";
                   $header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
 
-                  wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
+                  echo 'RemCat: '; print_r(get_option('casasync_remCat_email', false)); echo "'<br>";
+                  //wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
               }
 
               $template = file_get_contents(CASASYNC_PLUGIN_DIR . 'email_templates/message_de.html');
@@ -644,7 +642,7 @@ class CasaSync {
               foreach($_POST as $key => $value){
                   if (array_key_exists($key, $fieldlabels)) {
                       if ($key != 'email') {
-                          $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($value) . '</td></tr>';
+                        $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($value) . '</td></tr>';
                       }
                   }
               }
@@ -703,21 +701,38 @@ class CasaSync {
 
                   $headers .= "Cc: " . $the_cc . "\r\n";
               }*/
-
-              foreach ($recipientses as $recipient2) {
-                  if (isset($recipient2[1])) {
-                      if (wp_mail($recipient2[1], 'Neue Anfrage', $template, $header)) {
-                          return '<p class="alert alert-success">Vielen Dank!</p>';
-                      } else {
-                          return '<p class="alert alert-danger">Fehler!</p>';
-                      }
-                  } else {
-                      if (isset($remCat)) {
-                          return '<p class="alert alert-success">Vielen Dank!</p>';
-                      } else {
-                          return '<p class="alert alert-danger">Fehler!</p>';
-                      }
+              
+              $can_send_via_mail = false;
+              switch (get_option('casasync_sellerfallback_email_use')) {
+                case 'fallback':
+                  if(get_option('casasync_remCat', false) == false XOR get_option('casasync_remCat_email', false) == false) {
+                    $can_send_via_mail = true;
                   }
+                  break;
+                case 'always':
+                  $can_send_via_mail = true;
+                  break;
+                case 'never':
+                default:
+                  break;
+              }
+
+              if($can_send_via_mail == true) {
+                foreach ($recipientses as $recipient2) {
+                    if (isset($recipient2[0])) {
+                        if (wp_mail($recipient2[0], 'Neue Anfrage', $template, $header)) {
+                            return '<p class="alert alert-success">Vielen Dank!</p>';
+                        } else {
+                            return '<p class="alert alert-danger">Fehler!</p>';
+                        }
+                    }
+                }
+              } else {
+                if (isset($remCat)) {
+                    return '<p class="alert alert-success">Vielen Dank!</p>';
+                } else {
+                    return '<p class="alert alert-danger">Fehler!</p>';
+                }
               }
           }
 
@@ -739,7 +754,7 @@ class CasaSync {
           }
           echo $table;
       ?>
-          <form id="casasyncPropertyContactForm" class="casasync-contactform-form" method="POST" action="">
+          <form id="casasyncPropertyContactForm" class="casasync-contactform-form" method="POST" action="<?php echo get_permalink(); ?>">
               <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
               <div class="casasync-contactform-row">
                   <div class="col-md-5">

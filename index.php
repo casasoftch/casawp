@@ -31,7 +31,7 @@ if (is_admin()) {
 	include(CASASYNC_PLUGIN_DIR . 'classes/Admin.php');
 	$casaSyncAdmin = new Admin();
 }
-if (get_option('casasync_live_import')) {
+if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
 	$import = new Import();
 }
 ?>

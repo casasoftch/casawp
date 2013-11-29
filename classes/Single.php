@@ -34,30 +34,33 @@
     public $availability = false;
     public $availability_label = '';
     public $seller = array(
-      'fallback' => false,
-      'country' => '',
-      'locality' => '',
-      'region' => '',
-      'postalcode' => '',
-      'street' => '',
-      'legalname' => '',
-      'email' => '',
-      'fax' => '',
-      'phone_direct' => '',
+      'fallback'      => false,
+      'country'       => '',
+      'locality'      => '',
+      'region'        => '',
+      'postalcode'    => '',
+      'street'        => '',
+      'legalname'     => '',
+      'email'         => '',
+      'fax'           => '',
+      'phone_direct'  => '',
       'phone_central' => '',
-      'phone_mobile' => '',
+      'phone_mobile'  => '',
     );
     public $salesperson = array(
-      'function' => '',
-      'givenname' => '',
-      'familyname' => '',
-      'email' => '',
-      'fax' => '',
-      'phone_direct' => '',
+      'function'      => '',
+      'givenname'     => '',
+      'familyname'    => '',
+      'email'         => '',
+      'fax'           => '',
+      'phone_direct'  => '',
       'phone_central' => '',
-      'phone_mobile' => '',
-      'gender' => '',
-      'honorific' => false,
+      'phone_mobile'  => '',
+      'gender'        => '',
+      'honorific'     => false,
+    );
+    public $seller_inquiry = array(
+      'email' => ''
     );
 
     public function __construct($post){ 
@@ -203,8 +206,8 @@
 
       $this->casa_id = get_post_meta( get_the_ID(), 'casasync_id', $single = true );
       $casa_id_arr = explode('_', $this->casa_id);
-      $this->customer_id = $casa_id_arr[0];
-      $this->property_id = $casa_id_arr[1];
+      $this->customer_id = (!empty($casa_id_arr[0])) ? $casa_id_arr[0] : null;
+      $this->property_id =(!empty($casa_id_arr[1])) ? $casa_id_arr[1] : null;
 
       $this->reference_id = get_post_meta( get_the_ID(), 'casasync_referenceId', $single = true );
 
@@ -216,7 +219,7 @@
         $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->name);
       } 
 
-      $floors = get_post_meta( get_the_ID(), 'casasync_floors', $single = true ); 
+      $floors = get_post_meta( get_the_ID(), 'floor', $single = true ); 
       if ($floors) {
         $floors_quirk = trim($floors,"[");   
         $floors_quirk = trim($floors_quirk,"]");
@@ -247,17 +250,17 @@
 
       $this->price_currency = get_post_meta( get_the_ID(), 'price_currency', $single = true );
 
-      $sales['num'] = get_post_meta( get_the_ID(), 'price', $single = true );
+      $sales['num']             = get_post_meta( get_the_ID(), 'price', $single = true );
       $sales['propertysegment'] = get_post_meta( get_the_ID(), 'price_propertysegment', $single = true );
-      $sales['timesegment'] = get_post_meta( get_the_ID(), 'price_timesegment', $single = true );
+      $sales['timesegment']     = get_post_meta( get_the_ID(), 'price_timesegment', $single = true );
 
-      $net['num'] = get_post_meta( get_the_ID(), 'grossprice', $single = true );
-      $net['propertysegment'] = get_post_meta( get_the_ID(), 'grossprice_propertysegment', $single = true );
-      $net['timesegment'] = get_post_meta( get_the_ID(), 'grossprice_timesegment', $single = true );
+      $gross['num']             = get_post_meta( get_the_ID(), 'grossprice', $single = true );
+      $gross['propertysegment'] = get_post_meta( get_the_ID(), 'grossprice_propertysegment', $single = true );
+      $gross['timesegment']     = get_post_meta( get_the_ID(), 'grossprice_timesegment', $single = true );
 
-      $gross['num'] = get_post_meta( get_the_ID(), 'netPrice', $single = true );
-      $gross['propertysegment'] = get_post_meta( get_the_ID(), 'netPrice_propertysegment', $single = true );
-      $gross['timesegment'] = get_post_meta( get_the_ID(), 'netPrice_timesegment', $single = true );
+      $net['num']             = get_post_meta( get_the_ID(), 'netPrice', $single = true );
+      $net['propertysegment'] = get_post_meta( get_the_ID(), 'netPrice_propertysegment', $single = true );
+      $net['timesegment']     = get_post_meta( get_the_ID(), 'netPrice_timesegment', $single = true );
 
       $extra_costs_json =  get_post_meta( get_the_ID(), 'extraPrice', $single = true ); 
       $extra_costs_arr = array();
@@ -291,87 +294,70 @@
       $this->content = get_the_content(); 
       $this->content_parts = explode('<hr class="property-separator" />', $this->content);
 
-      if (get_option('casasync_seller_show') == 1) {
-        $this->seller['fallback']   = true;
-        $this->seller['country']    = get_post_meta( get_the_ID(), 'seller_org_address_country', $single = true );
-        $this->seller['locality']   = get_post_meta( get_the_ID(), 'seller_org_address_locality', $single = true );
-        $this->seller['region']     = get_post_meta( get_the_ID(), 'seller_org_address_region', $single = true );
-        $this->seller['postalcode'] = get_post_meta( get_the_ID(), 'seller_org_address_postalcode', $single = true );
-        $this->seller['street']     = get_post_meta( get_the_ID(), 'seller_org_address_streetaddress', $single = true );
+      $this->seller['fallback']      = true;
+      $this->seller['country']       = get_post_meta( get_the_ID(), 'seller_org_address_country', $single = true );
+      $this->seller['locality']      = get_post_meta( get_the_ID(), 'seller_org_address_locality', $single = true );
+      $this->seller['region']        = get_post_meta( get_the_ID(), 'seller_org_address_region', $single = true );
+      $this->seller['postalcode']    = get_post_meta( get_the_ID(), 'seller_org_address_postalcode', $single = true );
+      $this->seller['street']        = get_post_meta( get_the_ID(), 'seller_org_address_streetaddress', $single = true );
+      $this->seller['legalname']     = get_post_meta( get_the_ID(), 'seller_org_legalname', $single = true );
+      $this->seller['email']         = get_post_meta( get_the_ID(), 'seller_org_email', $single = true );
+      $this->seller['fax']           = get_post_meta( get_the_ID(), 'seller_org_fax', $single = true );
+      $this->seller['phone_direct']  = get_post_meta( get_the_ID(), 'seller_org_phone_direct', $single = true );
+      $this->seller['phone_central'] = get_post_meta( get_the_ID(), 'seller_org_phone_central', $single = true );
+      $this->seller['phone_mobile']  = get_post_meta( get_the_ID(), 'seller_org_phone_mobile', $single = true );
 
-        //$seller_address  = ($seller_address_street ? $seller_address_street . '<br>' : '');
-        //$seller_address .= ($seller_address_postalcode ?  $seller_address_postalcode . ' ': '') . ($seller_address_locality ? $seller_address_locality : '') . ($seller_address_postalcode || $seller_address_locality ? '<br>' : '');
-        //$seller_address .= countrycode_to_countryname($seller_address_country); 
-
-        $this->seller['legalname']     = get_post_meta( get_the_ID(), 'seller_org_legalname', $single = true );
-        $this->seller['email']         = get_post_meta( get_the_ID(), 'seller_org_email', $single = true );
-        $this->seller['fax']           = get_post_meta( get_the_ID(), 'seller_org_fax', $single = true );
-        $this->seller['phone_direct']  = get_post_meta( get_the_ID(), 'seller_org_phone_direct', $single = true );
-        $this->seller['phone_central'] = get_post_meta( get_the_ID(), 'seller_org_phone_central', $single = true );
-        $this->seller['phone_mobile']  = get_post_meta( get_the_ID(), 'seller_org_phone_mobile', $single = true );
-        
-        /*if (
-          $seller_address 
-          . $sellerlegalname
-          . $selleremail
-          . $sellerfax
-          . $sellerphone_direct
-          . $sellerphone_central 
-          . $sellerphone_mobile
-        ) {
-          $own_seller = true;
-          $has_seller = true;
-        }*/
-
-      }
-      if (get_option('casasync_sellerfallback_show') == 1) {
+      if (get_option('casasync_sellerfallback_show_organization') == 1) {
         if (!$this->hasSeller()) {
-          $this->seller['country']    = get_option('casasync_sellerfallback_address_country');
-          $this->seller['locality']   = get_option('casasync_sellerfallback_address_locality');
-          $this->seller['region']     = get_option('casasync_sellerfallback_address_region');
-          $this->seller['postalcode'] = get_option('casasync_sellerfallback_address_postalcode');
-          $this->seller['street']     = get_option('casasync_sellerfallback_address_street');
-
-          //$seller_address  = ($seller_address_street ? $seller_address_street . '<br>' : '');
-          //$seller_address .= ($seller_address_postalcode ?  $seller_address_postalcode . ' ': '') . ($seller_address_locality ? $seller_address_locality : '') . ($seller_address_postalcode || $seller_address_locality ? '<br>' : '');
-          //$seller_address .= countrycode_to_countryname($seller_address_country); 
-
+          $this->seller['country']       = get_option('casasync_sellerfallback_address_country');
+          $this->seller['locality']      = get_option('casasync_sellerfallback_address_locality');
+          $this->seller['region']        = get_option('casasync_sellerfallback_address_region');
+          $this->seller['postalcode']    = get_option('casasync_sellerfallback_address_postalcode');
+          $this->seller['street']        = get_option('casasync_sellerfallback_address_street');
           $this->seller['legalname']     = get_option('casasync_sellerfallback_legalname');
           $this->seller['email']         = get_option('casasync_sellerfallback_email');
           $this->seller['fax']           = get_option('casasync_sellerfallback_fax');
           $this->seller['phone_direct']  = get_option('casasync_sellerfallback_phone_direct');
           $this->seller['phone_central'] = get_option('casasync_sellerfallback_phone_central');
           $this->seller['phone_mobile']  = get_option('casasync_sellerfallback_phone_mobile');
-
-          /*if (
-            $seller_address 
-            . $sellerlegalname
-            . $selleremail
-            . $sellerfax
-            . $sellerphone_direct
-            . $sellerphone_central 
-            . $sellerphone_mobile
-          ) {
-            $own_seller = false;
-            $has_seller = true;
-          }*/
         }
       }
       
+      $this->salesperson['function']      = get_post_meta(get_the_ID(), 'seller_person_function', true);
+      $this->salesperson['givenname']     = get_post_meta(get_the_ID(), 'seller_person_givenname', true);
+      $this->salesperson['familyname']    = get_post_meta(get_the_ID(), 'seller_person_familyname', true);
+      $this->salesperson['email']         = get_post_meta(get_the_ID(), 'seller_person_email', true);
+      $this->salesperson['fax']           = get_post_meta(get_the_ID(), 'seller_person_fax', true);
+      $this->salesperson['phone_direct']  = get_post_meta(get_the_ID(), 'seller_person_phone_direct', true);
+      $this->salesperson['phone_central'] = get_post_meta(get_the_ID(), 'seller_person_phone_central', true);
+      $this->salesperson['phone_mobile']  = get_post_meta(get_the_ID(), 'seller_person_phone_mobile', true);
+      $this->salesperson['gender']        = get_post_meta(get_the_ID(), 'seller_person_gender', true);
 
-      $this->salesperson['function']        = get_post_meta( get_the_ID(), 'seller_person_function', true);
-      $this->salesperson['givenname']       = get_post_meta( get_the_ID(), 'seller_person_givenname', true);
-      $this->salesperson['familyname']      = get_post_meta( get_the_ID(), 'seller_person_familyname', true);
-      $this->salesperson['email']           = get_post_meta( get_the_ID(), 'seller_person_email', true);
-      $this->salesperson['fax']             = get_post_meta( get_the_ID(), 'seller_person_fax', true);
-      $this->salesperson['phone_direct']    = get_post_meta( get_the_ID(), 'seller_person_phone_direct', true);
-      $this->salesperson['phone_central']   = get_post_meta( get_the_ID(), 'seller_person_phone_central', true);
-      $this->salesperson['phone_mobile']    = get_post_meta( get_the_ID(), 'seller_person_phone_mobile', true);
-      $this->salesperson['gender']          = get_post_meta( get_the_ID(), 'seller_person_phone_gender', true);
+      if (get_option('casasync_sellerfallback_show_person_view') == 1) {
+        if (!$this->hasSalesPerson()) {
+          $this->salesperson['function']      = get_option('casasync_salesperson_fallback_function');
+          $this->salesperson['givenname']     = get_option('casasync_salesperson_fallback_givenname');
+          $this->salesperson['familyname']    = get_option('casasync_salesperson_fallback_familyname');
+          $this->salesperson['email']         = get_option('casasync_salesperson_fallback_email');
+          $this->salesperson['fax']           = get_option('casasync_salesperson_fallback_fax');
+          $this->salesperson['phone_direct']  = get_option('casasync_salesperson_fallback_phone_direct');
+          $this->salesperson['phone_central'] = get_option('casasync_salesperson_fallback_phone_central');
+          $this->salesperson['phone_mobile']  = get_option('casasync_salesperson_fallback_phone_mobile');
+          $this->salesperson['gender']        = get_option('casasync_salesperson_fallback_gender');
+        }
+      }
       if ($this->salesperson['gender'] == 'F') {
         $this->salesperson['honorific'] = 'Frau';
       } elseif ($this->salesperson['gender'] == 'M') {
         $this->salesperson['honorific'] = 'Herr';
+      }
+
+      $this->seller_inquiry['email'] = get_post_meta(get_the_ID(), 'seller_inquiry_person_email', true);
+
+      if(!$this->seller_inquiry['email']) {
+        if(get_option('casasync_inquiryfallback_use_email', false)) {
+          $this->seller_inquiry['email'] = get_option('casasync_inquiryfallback_person_email', true);
+        }
       }
 
       $this->availability = get_post_meta( get_the_ID(), 'availability', $single = true );
@@ -402,7 +388,11 @@
               $return .= '<div class="item '.($i==0?'active':'').'">';
                 $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
                 $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
-                $return .= '<a href="' . $img_url[0] . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+                if (get_option('casasync_load_fancybox', false)) {
+                  $return .= '<a href="' . $img_url[0] . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+                } else {
+                  $return .= $img;
+                }
                 if ($attachment->post_excerpt) {
                   $return .= '<div class="casasync-carousel-caption">';
                     $return .= '<p>' . $attachment->post_excerpt . '</p>';
@@ -445,22 +435,100 @@
     }
 
     public function getTitle(){
-      return get_the_title();
+      $title = get_the_title();
+      $new_title = str_replace('m2', 'm<sup>2</sup>', $title);
+      return $new_title;
     }
 
 
     public function getBasicBoxes(){
       $content = '<div class="casasync-basic-box"><div>';
         $content .= '<h4>'.implode(', ', $this->categories_names).'</h4>';
-        if ($this->getNumval('number_of_rooms')){
-          $content .= __('Number of rooms:', 'casasync') . ' ' . $this->getNumval('number_of_rooms') . '<br>';
+
+        $presentable_numvals = array(
+          'casasync_single_show_number_of_rooms',
+          'casasync_single_show_surface_usable',
+          'casasync_single_show_surface_living',
+          'casasync_single_show_surface_property',
+          'casasync_single_show_floor',
+          'casasync_single_show_number_of_floors',
+          'casasync_single_show_year_built',
+          'casasync_single_show_year_renovated',
+        );
+
+        $numvals_to_display = array();
+        $i = 1000;
+        foreach ($presentable_numvals as $value) {
+          if(get_option($value, false)) {
+            $numval_order = get_option($value.'_order', false);
+            if($numval_order) {
+              $numvals_to_display[$numval_order] = $value;
+            } else {
+              $numvals_to_display[$i] = $value;
+              $i++;
+            }
+          }
         }
-        if ($this->floors && !isset($this->floors[0])){
-          $content .= __("Floor:", 'casasync');
-          $content .= $this->floors[0];
-        }
-        if ($this->getNumval('surface_living')){
-          $content .= __("Living space:", 'casasync') . ' ' . $this->getNumval('surface_living');
+        ksort($numvals_to_display);
+
+        if(!empty($numvals_to_display)) {
+          $break = false;
+          foreach ($numvals_to_display as $value) {
+            $br = ($break == true) ? ('<br>') : ('');
+            switch ($value) {
+              case 'casasync_single_show_number_of_rooms':
+                if ($this->getNumval('number_of_rooms')){
+                  $content .= $br;
+                  $content .= __('Number of rooms:', 'casasync') . ' ' . $this->getNumval('number_of_rooms');
+                }
+                break;
+              case 'casasync_single_show_surface_usable':
+                if ($this->getNumval('surface_usable')){
+                  $content .= $br;
+                  $content .= __('Surface usable:', 'casasync') . ' ' . $this->getNumval('surface_usable');
+                }
+                break;
+              case 'casasync_single_show_surface_living':
+                if ($this->getNumval('surface_living')){
+                  $content .= $br;
+                  $content .= __('Living space:', 'casasync') . ' ' . $this->getNumval('surface_living');
+                }
+                break;
+              case 'casasync_single_show_surface_property':
+                if ($this->getNumval('surface_property')){
+                  $content .= $br;
+                  $content .= __('Property space:', 'casasync') . ' ' . $this->getNumval('surface_property');
+                }
+                break;
+              case 'casasync_single_show_floor':
+                if ($this->floors){
+                  $content .= $br;
+                  $content .= __('Floor:', 'casasync') . ' ' . $this->floors[0];
+                }
+                break;
+              case 'casasync_single_show_number_of_floors':
+                if ($this->getNumval('number_of_floors')){
+                  $content .= $br;
+                  $content .= __('Number of floors:', 'casasync') . ' ' . $this->getNumval('number_of_floors');
+                }
+                break;
+              case 'casasync_single_show_year_built':
+                if ($this->getNumval('year_built')){
+                  $content .= $br;
+                  $content .= __('Year of construction:', 'casasync') . ' ' . $this->getNumval('year_built');
+                }
+                break;
+              case 'casasync_single_show_year_renovated':
+                if ($this->getNumval('year_renovated')){
+                  $content .= $br;
+                  $content .= __('Year of renovation:', 'casasync') . ' ' . $this->getNumval('year_renovated');
+                }
+                break;
+              default:
+                break;
+            }
+            $break = true;
+          }
         }
       $content .= '</div></div>';
       $content .= '<div class="casasync-basic-box"><div>';
@@ -470,8 +538,10 @@
         };
       $content .= '</div></div>';
       $content .= '<div class="casasync-basic-box"><div>';
-        $content .= '<h4>' . implode(', ', $this->basises) . '</h4>';
+      $price_title = ($this->main_basis == 'rent') ? (__('rent', 'casasync')) : (__('Price', 'casasync'));
+        $content .= '<h4>' . $price_title . '</h4>';
         if ($this->main_basis == 'buy') {
+          $content .= 'Kaufpreis:<br>';
           if ($this->getPrice('sales')) {
             $content .= $this->getPrice('sales', 'full');
           } else {
@@ -481,14 +551,19 @@
         if ($this->main_basis == 'rent') {
           if ($this->getPrice('gross') || $this->getPrice('net')) {
             if ($this->getPrice('gross')) {
-              $content .= $this->getPrice('gross', 'full') . ' ' . __('(gross)', 'casasync') . '<br>';
+              $content .= 'Bruttomiete:<br>';
+              $content .= $this->getPrice('gross', 'full') . '<br>';
             }
             if ($this->getPrice('net')) {
-              $content .= $this->getPrice('net', 'full') . ' ' . __('(net)', 'casasync') . '<br>';
+              $content .= 'Nettomiete:<br>';
+              $content .= $this->getPrice('net', 'full') . '<br>';
             }
           } else {
             $content .= __('By Request', 'casasync');
           }
+        }
+        if ($this->getExtraCosts('Nebenkosten')) {
+          $content .= __('Additional costs', 'casasync') . ':<br> ' . $this->getExtraCosts('Nebenkosten');
         }
       $content .= '</div></div>';
       return $content;
@@ -540,8 +615,7 @@
       }
       $content .= '</table>';
 
-      /****/
-      if ($this->numvals || $this->getAddress() || $this->reference_id || $this->property_id) {
+      if ($this->numvals || $this->getAddress('property') || $this->reference_id || $this->property_id) {
         $content .= '<h3>' . __('Property','casasync') . '</h3>';
         $content .= '<table class="table">';
         $reference_or_property_id = ($this->reference_id) ? ($this->reference_id) : ($this->property_id);
@@ -587,61 +661,161 @@
     }
 
     public function getQuickInfosTable() {
+      $presentable_values = array(
+        'casasync_archive_show_street_and_number',
+        'casasync_archive_show_location',
+        'casasync_archive_show_number_of_rooms',
+        'casasync_archive_show_surface_usable',
+        'casasync_archive_show_surface_living',
+        'casasync_archive_show_surface_property',
+        'casasync_archive_show_floor',
+        'casasync_archive_show_number_of_floors',
+        'casasync_archive_show_year_built',
+        'casasync_archive_show_year_renovated',
+        'casasync_archive_show_price'
+      );
+
+      $value_to_display = array();
+      $i = 1000;
+      foreach ($presentable_values as $value) {
+        if(get_option($value, false)) {
+          $value_order = get_option($value.'_order', false);
+          if($value_order) {
+            $value_to_display[$value_order] = $value;
+          } else {
+            $value_to_display[$i] = $value;
+            $i++;
+          }
+        }
+      }
+      ksort($value_to_display);
+
       $return = NULL;
-      if ($this->getAddress('property')){
+      if ($value_to_display) {
         $return .= '<table class="table">';
         $return .= '<tbody>';
-        if ($this->getAddress('property')){
-          $return .= '<tr>'
-            .'<th>' . __('Locality', 'casasync') . '</th>'
-            .'<td>' . $this->getAddress('property', true) . '</td>'
-          .'</tr>';
-        }
-        if ($this->getNumval('number_of_rooms')) {
-          $return .= '<tr>'
-            .'<th>' . __('Number of rooms', 'casasync') . '</th>'
-            .'<td>' . $this->getNumval('number_of_rooms') . '</td>'
-          .'</tr>';
-        }
-        if ($this->getNumval('surface_living')) {
-          $return .= '<tr>'
-            .'<th>' . __('Living space', 'casasync') . '</th>'
-            .'<td>' . $this->getNumval('surface_living') . '</td>'
-          .'</tr>';
-        }
-        if ($this->main_basis == 'buy') {
-          $return .= '<tr>'
-            .'<th>' . __('Sales price','casasync') . '</th>'
-          .'<td>';
-          $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('By Request', 'casasync');
-          $return .= '</td>'
-          .'</tr>';
-        }
-        if ($this->main_basis == 'rent') {
-          if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
-            if ($this->getPrice('gross')) {
-              $return .= '<tr>'
-                .'<th>' . __('Gross price','casasync') . '</th>'
-              .'<td>';
-              $return .= $this->getPrice('gross', 'full');
-              $return .= '</td>'
-              .'</tr>';
-            }
-            if ($this->getPrice('net')) {
-              $return .= '<tr>'
-                .'<th>' . __('Net price','casasync') . '</th>'
-              .'<td>';
-              $return .= $this->getPrice('net', 'full');
-              $return .= '</td>'
-              .'</tr>';
-            }
-          } else {
-            $return .= '<tr>'
-                .'<th>' . __('Rent price','casasync') . '</th>'
-              .'<td>';
-              $return .=  __('By Request', 'casasync');
-              $return .= '</td>'
-              .'</tr>';
+
+        foreach ($value_to_display as $value) {
+          switch ($value) {
+            case 'casasync_archive_show_street_and_number':
+              if($this->address_street){
+                  $return .= '<tr>'
+                  .'<th>' . __('Street', 'casasync') . '</th>'
+                  .'<td>' . $this->address_street . ' ' . $this->address_streetnumber . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_location':
+              if ($this->getAddress('property')){
+                $return .= '<tr>'
+                  .'<th>' . __('Locality', 'casasync') . '</th>'
+                  .'<td>' . $this->getAddress('property', true) . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_number_of_rooms':
+              if ($this->getNumval('number_of_rooms')){
+                $return .= '<tr>'
+                  .'<th>' .  __('Number of rooms', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('number_of_rooms') . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_surface_usable':
+              if ($this->getNumval('surface_usable')){
+                $return .= '<tr>'
+                  .'<th>' .  __('Surface usable', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('surface_usable') . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_surface_living':
+              if ($this->getNumval('surface_living')){
+                $return .= '<tr>'
+                  .'<th>' . __('Living space', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('surface_living', true) . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_surface_property':
+              if ($this->getNumval('surface_property')){
+                $return .= '<tr>'
+                  .'<th>' . __('Property space', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('surface_property', true) . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_floor':
+              if ($this->floors){
+                $return .= '<tr>'
+                  .'<th>' . __('Floor', 'casasync') . '</th>'
+                  .'<td>' . $this->floors[0] . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_number_of_floors':
+             if ($this->getNumval('number_of_floors')){
+                $return .= '<tr>'
+                  .'<th>' . __('Number of floors', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('number_of_floors', true) . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_year_built':
+              if ($this->getNumval('year_built')){
+                    $return .= '<tr>'
+                  .'<th>' . __('Year of construction', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('year_built', true) . '</td>'
+                .'</tr>';
+                }
+              break;
+            case 'casasync_archive_show_year_renovated':
+              if ($this->getNumval('year_renovated')){
+                $return .= '<tr>'
+                  .'<th>' . __('Year of renovation', 'casasync') . '</th>'
+                  .'<td>' . $this->getNumval('year_renovated', true) . '</td>'
+                .'</tr>';
+              }
+              break;
+            case 'casasync_archive_show_price':
+              if ($this->main_basis == 'buy') {
+                $return .= '<tr>'
+                  .'<th>' . __('Sales price','casasync') . '</th>'
+                .'<td>';
+                $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('By Request', 'casasync');
+                $return .= '</td>'
+                .'</tr>';
+              }
+              if ($this->main_basis == 'rent') {
+                if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
+                  if ($this->getPrice('gross')) {
+                    $return .= '<tr>'
+                      .'<th>' . __('Gross price','casasync') . '</th>'
+                    .'<td>';
+                    $return .= $this->getPrice('gross', 'full');
+                    $return .= '</td>'
+                    .'</tr>';
+                  }
+                  if ($this->getPrice('net')) {
+                    $return .= '<tr>'
+                      .'<th>' . __('Net price','casasync') . '</th>'
+                    .'<td>';
+                    $return .= $this->getPrice('net', 'full');
+                    $return .= '</td>'
+                    .'</tr>';
+                  }
+                } else {
+                  $return .= '<tr>'
+                      .'<th>' . __('Rent price','casasync') . '</th>'
+                    .'<td>';
+                    $return .=  __('By Request', 'casasync');
+                    $return .= '</td>'
+                    .'</tr>';
+                }
+              }
+              break;
+            default:
+              break;
           }
         }
         $return .= '</tbody>';
@@ -652,25 +826,56 @@
 
     public function getPagination(){
       $return = '<div class="btn-group btn-group-justified casasync-single-pagination hidden">'
-        .'<a href="" class="btn btn-default casasync-single-next" role="button"><i class="fa fa-arrow-left"></i> ' . __('Previous','casasync') . '</a>'
+        .'<a href="" class="btn btn-default casasync-single-next" role="button"><i class="fa fa-arrow-left"></i><span> ' . __('Previous','casasync') . '</span></a>'
         .'<a href="" class="btn btn-default casasync-single-archivelink" role="button">' . __('To list','casasync') . '</a>'
-        .'<a href="" class="btn btn-default casasync-single-prev" role="button">' . __('Next','casasync') . ' <i class="fa fa-arrow-right"></i></a>'
+        .'<a href="" class="btn btn-default casasync-single-prev" role="button"><span>' . __('Next','casasync') . ' </span><i class="fa fa-arrow-right"></i></a>'
       .'</div>';
       return $return;
     }
 
     public function getEmails(){
       $emails = array();
-      if ($this->seller['email']) {
-        $emails[] = (isset($this->seller['firstname']) ? $this->seller['firstname'] : null ) . ' '
+      if ($this->seller_inquiry['email']) {
+        /*$emails[] = (isset($this->seller['firstname']) ? $this->seller['firstname'] : null ) . ' '
           . (isset($this->seller['lastname']) ? $this->seller['lastname'] : null) .':'
-        . (isset($this->seller['email']) ? $this->seller['email'] : null);
+        . (isset($this->seller['email']) ? $this->seller['email'] : null);*/
+        $emails[] = (isset($this->seller_inquiry['email']) ? $this->seller_inquiry['email'] : null);
       }
       return $emails;
     }
 
+    public function getEmailsForInquiry() {
+      $return = false;
+
+      if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
+        $return = true;
+      }
+
+      switch (get_option('casasync_sellerfallback_email_use')) {
+        case 'fallback':
+          if(get_option('casasync_remCat', false) == false XOR get_option('casasync_remCat_email', false) == false) {
+            if($this->seller_inquiry['email']) {
+              $return = true;
+            }
+          }
+          break;
+        case 'always':
+          if($this->seller_inquiry['email']) {
+            $return = true;
+          }
+          break;
+        case 'never':
+        default:
+          break;
+      }
+
+      return $return;
+    }
+
     public function getContactform(){
-      return do_shortcode( '[casasync_contact recipients="' . implode(';', $this->getEmails()) . '" post_id="' . get_the_ID() . '"]' );
+      if($this->getEmailsForInquiry() == true) {
+        return do_shortcode( '[casasync_contact recipients="' . implode(';', $this->getEmails()) . '" post_id="' . get_the_ID() . '"]' );
+      }
     }
 
     public function getTabable(){
@@ -721,8 +926,8 @@
           $address .= ($this->address_postalcode ?  $this->address_postalcode . ' ': '') . ($this->address_locality ? $this->address_locality : '') . ($this->address_postalcode || $this->address_locality ? '<br>' : '');
           $address .= ($this->address_country_name ? $this->address_country_name : '');
         } else {
-          $address  = ($this->address_postalcode ? $this->address_postalcode . ' ' : '') . ($this->address_locality ? $this->address_locality : '') . ', ';
-          $address .= ($this->address_region ? $this->address_region : '') . ' ' . ($this->address_country ? '(' . $this->address_country . ')' : '');
+          $address  = ($this->address_postalcode ? $this->address_postalcode . ' ' : '') . ($this->address_locality ? $this->address_locality : '');
+          $address .= ($this->address_country ? ' (' . $this->address_country . ')' : '');
         }
           return $address;
         default:
@@ -741,11 +946,13 @@
     }
 
     public function contactSellerByMailBox() {
-      $html = '<div class="single-property-container">'
-        .'<p class="casasyncContact"><i class="fa fa-envelope"></i> '
-        .'<a href="#casasyncPropertyContactForm" id="casasyncContactAnchor">Jetzt Anbieter direkt kontaktieren</a>'
-      .'</p></div>';
-      return $html;
+      if($this->getEmailsForInquiry() == true) {
+        $html = '<div class="single-property-container">'
+          .'<p class="casasyncContact"><i class="fa fa-envelope"></i> '
+          .'<a href="#casasyncPropertyContactForm" id="casasyncContactAnchor">Jetzt Anbieter direkt kontaktieren</a>'
+        .'</p></div>';
+        return $html;
+      }
     }
 
     public function hasSeller(){
@@ -771,26 +978,26 @@
         $return .= '<div class="casasync-seller-infos">';
         if($this->seller['email'] != '') {
           $objektlink = get_permalink();
-          $mailto = 'mailto:' . $this->seller['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
-            .rawurlencode(html_entity_decode(get_the_title())) . '?body='
-          .rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink: ' . $objektlink;
+          $id_number = ($this->reference_id) ? ($this->reference_id) : ($this->casa_id);
+          $mailto = 'mailto:' . $this->seller['email'] . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number .'&amp;body='
+          .rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync')) . '%0A%0ALink%20' . $objektlink;
           $return .= '<p><span class="casasync-label">' . __('E-Mail', 'casasync') . '</span> ';
           $return .= '<span class="value break-word"> <a href="' . $mailto . '">' . $this->seller['email'] . '</a></span>';
         }
-        if($this->seller['phone_mobile'] != '') {
-          $return .= '<p class="casasync-phone-mobile">'
-            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
-          .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
+        if($this->seller['phone_central'] != '') {
+          $return .= '<p class="casasync-phone-central">'
+            .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
         }
         if($this->seller['phone_direct'] != '') {
           $return .= '<p class="casasync-phone-direct">'
             .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->seller['phone_direct'] . '</span></p>';
         }
-        if($this->seller['phone_central'] != '') {
-          $return .= '<p class="casasync-phone-central">'
-            .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
-          .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
+        if($this->seller['phone_mobile'] != '') {
+          $return .= '<p class="casasync-phone-mobile">'
+            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
         }
         if($this->seller['fax'] != '') {
           $return .= '<p class="casasync-phone-fax">'
@@ -826,33 +1033,34 @@
       if ($this->hasSalesPerson()) {
         $return = '<h3><i class="fa fa-user"></i> ' . __('Contact person' , 'casasync') . '</h3><address>';
         if ($this->salesperson['givenname'] != '' && $this->salesperson['familyname'] != '') {
-          $return .= '<p>' . $this->salesperson['givenname'] . ' ' . $this->salesperson['familyname'];
+          $return .= '<p><strong>' . $this->salesperson['givenname'] . ' ' . $this->salesperson['familyname'] . '</strong>';
         }
         if ($this->salesperson['function'] != '') {
           $return .= '<br><i>' . $this->salesperson['function'] . '</i></p>';
         }
         if ($this->salesperson['email'] != '') {
           $objektlink = get_permalink();
-          $mailto = 'mailto:' . $this->salesperson['email'] . '?subject=Ich%20habe%20eine%20Frage%20bez%C3%BCglich%20dem%20Objekt%3A%20'
-            .rawurlencode(html_entity_decode(get_the_title())) . '&body='. rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync'))
-          .'%0A%0ALink: ' . $objektlink;
+          $id_number = ($this->reference_id) ? ($this->reference_id) : ($this->casa_id);
+          $mailto = 'mailto:' . $this->salesperson['email'] . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
+            . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync'))
+          .'%0A%0ALink:%20' . $objektlink;
           $return .= '<p><span class="casasync-label">' . __('Email', 'casasync') . '</span>'
           .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->salesperson['email'] . '</a></span></p>';
-        }
-        if($this->salesperson['phone_mobile'] != '') {
-          $return .= '<p class="casasync-phone-mobile">'
-            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
-          .'<span class="value break-word"> ' . $this->salesperson['phone_mobile'] . '</span></p>';
-        }
-       if($this->salesperson['phone_direct'] != '') {
-          $return .= '<p class="casasync-phone-direct">'
-            .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
-          .'<span class="value break-word"> ' . $this->salesperson['phone_direct'] . '</span></p>';
         }
         if($this->salesperson['phone_central'] != '') {
           $return .= '<p class="casasync-phone-central">'
             .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->salesperson['phone_central'] . '</span></p>';
+        }
+        if($this->salesperson['phone_direct'] != '') {
+          $return .= '<p class="casasync-phone-direct">'
+            .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['phone_direct'] . '</span></p>';
+        }
+        if($this->salesperson['phone_mobile'] != '') {
+          $return .= '<p class="casasync-phone-mobile">'
+            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->salesperson['phone_mobile'] . '</span></p>';
         }
         if($this->salesperson['fax'] != '') {
           $return .= '<p class="casasync-phone-fax">'
@@ -888,22 +1096,50 @@
       $return = false;
       if (get_option( 'casasync_share_facebook', false )) {
         $return = '<h3><i class="fa fa-share-square"></i> ' . __('Share', 'casasync') . '</h3>';
-        $return .= '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div>';
+        $return .= '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div><br>';
       }
+
+      if(get_option( 'casasync_share_googleplus', false )) {
+        $return .= '<div class="g-plusone" data-size="medium"></div><br>';
+      }
+
+      if(get_option( 'casasync_share_twitter', false )) {
+        $return .= '<a href="https://twitter.com/share" class="twitter-share-button" data-lang="de">Twittern</a><br>';
+      }
+      add_action('wp_footer', array($this, 'getShareWidgetsScripts'), 30);
       return $return;
     }
 
-    public function getFacebookShareScript() {
+    public function getShareWidgetsScripts() {
+      $return = null;
       if (get_option( 'casasync_share_facebook', false )) {
-        $return = '<div id="fb-root"></div><script>(function(d, s, id) {'
+        $return .= '<div id="fb-root"></div><script>(function(d, s, id) {'
           .'var js, fjs = d.getElementsByTagName(s)[0];'
           .'if (d.getElementById(id)) return;'
           .'js = d.createElement(s); js.id = id;'
           .'js.src = "//connect.facebook.net/' . str_replace('-','_',get_bloginfo('language')) . '/all.js#xfbml=1";'
           .'fjs.parentNode.insertBefore(js, fjs);'
         ."}(document, 'script', 'facebook-jssdk'));</script>";
-        return $return;
       }
+      if(get_option( 'casasync_share_googleplus', false )) {
+         $return .= '<script type="text/javascript">'
+          .'(function() {'
+          ."var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;"
+          ."po.src = 'https://apis.google.com/js/platform.js';"
+          ."var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);"
+          ."})();"
+        .'</script>';
+      }
+      if(get_option( 'casasync_share_twitter', false )) {
+        $return .= '<script type="text/javascript">'
+          .'!function(d,s,id){'
+          .'var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)'
+          ."?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);"
+          ."js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}"
+          ."(document, 'script', 'twitter-wjs');"
+        ."</script>";
+      }
+      return print_r($return);
     }
 
     public function getPrice($type = 'auto', $format = 'num', $byrequest = true){
@@ -990,8 +1226,8 @@
 
     public function getNumval($name){
       switch ($name) {
-        case 'rooms':
         case 'floor':
+        case 'number_of_floors':
         case 'number_of_rooms':
           return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value']) : false);
           break;
@@ -1029,7 +1265,6 @@
           $return[$h_key] = $numval;
         }
       }
-      ksort($return);
       return $return;
     }
 
