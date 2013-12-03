@@ -704,7 +704,7 @@ class CasaSync {
               $can_send_via_mail = false;
               switch (get_option('casasync_sellerfallback_email_use')) {
                 case 'fallback':
-                  if(get_option('casasync_remCat', false) == false XOR get_option('casasync_remCat_email', false) == false) {
+                  if(get_option('casasync_remCat', '0') == '0' OR !(get_option('casasync_remCat_email', false))) {
                     $can_send_via_mail = true;
                   }
                   break;
