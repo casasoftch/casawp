@@ -621,8 +621,7 @@ class CasaSync {
                   $header .= "MIME-Version: 1.0\r\n";
                   $header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
 
-                  echo 'RemCat: '; print_r(get_option('casasync_remCat_email', false)); echo "'<br>";
-                  //wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
+                  wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
               }
 
               $template = file_get_contents(CASASYNC_PLUGIN_DIR . 'email_templates/message_de.html');
