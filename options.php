@@ -31,12 +31,13 @@
 			        'casasync_single_show_floor',
 			        'casasync_single_show_number_of_floors',
 			        'casasync_single_show_year_built',
-			        'casasync_single_show_year_renovated'
+			        'casasync_single_show_year_renovated',
 				);
 				break;
 			case 'archiveview':
 				$checkbox_traps = array(
 					'casasync_archive_show_street_and_number',
+					'casasync_archive_show_zip',
 					'casasync_archive_show_location',
 					'casasync_archive_show_number_of_rooms',
 			        'casasync_archive_show_surface_usable',
@@ -65,27 +66,6 @@
 				break;
 		}
 
-		//checkbox traps (busters)
-		/*$checkbox_traps = array(
-			'casasync_sellerfallback_show',
-			'casasync_sellerfallback_update',
-			'casasync_seller_show',
-			'casasync_feedback_update',
-			'casasync_feedback_creations',
-			'casasync_feedback_edits',
-			'casasync_feedback_inquiries',
-			'casasync_live_import',
-			'casasync_load_bootstrap',
-			'casasync_load_bootstrap_css',
-			'casasync_load_multiselector',
-			'casasync_load_scripts',
-			'casasync_load_fancybox',
-			'casasync_load_stylesheet',
-			'casasync_load_fontawesome',
-			'casasync_load_jquery',
-			'casasync_share_facebook',
-			'casasync_remCat'
-		);*/
 		foreach ($checkbox_traps as $trap) {
 			if (!isset($_POST[$trap])) {
 				update_option( $trap, '0' );
@@ -97,7 +77,6 @@
 
 	if (isset($_GET['do_import']) && !isset($_POST['casasync_submit'])) {
 		if (get_option( 'casasync_live_import') == 0) {
-			//casasync_import(); //is being done by plubg when that get param exists
 			?> <div class="updated"><p><strong><?php _e('Daten wurden importiert..', 'casasync' ); ?></strong></p></div> <?php
 		}
 	}
@@ -329,6 +308,38 @@
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
+						<h3>Karte</h3>
+						<?php echo $table_start; ?>
+							<?php $name = 'casasync_single_use_zoomlevel'; ?>
+							<?php $text = 'Zoomstufe'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td>
+									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+										<option <?php echo (get_option($name)  == '0' ? 'selected="selected"' : ''); ?> value="0">0</option>
+										<option <?php echo (get_option($name)  == '1' ? 'selected="selected"' : ''); ?> value="1">1</option>
+										<option <?php echo (get_option($name)  == '2' ? 'selected="selected"' : ''); ?> value="2">2</option>
+										<option <?php echo (get_option($name)  == '3' ? 'selected="selected"' : ''); ?> value="3">3</option>
+										<option <?php echo (get_option($name)  == '4' ? 'selected="selected"' : ''); ?> value="4">4</option>
+										<option <?php echo (get_option($name)  == '5' ? 'selected="selected"' : ''); ?> value="5">5</option>
+										<option <?php echo (get_option($name)  == '6' ? 'selected="selected"' : ''); ?> value="6">6</option>
+										<option <?php echo (get_option($name)  == '7' ? 'selected="selected"' : ''); ?> value="7">7</option>
+										<option <?php echo (get_option($name)  == '8' ? 'selected="selected"' : ''); ?> value="8">8</option>
+										<option <?php echo (get_option($name)  == '9' ? 'selected="selected"' : ''); ?> value="9">9</option>
+										<option <?php echo (get_option($name) == '10' ? 'selected="selected"' : ''); ?> value="10">10</option>
+										<option <?php echo (get_option($name) == '11' ? 'selected="selected"' : ''); ?> value="11">11</option>
+										<option <?php echo (get_option($name) == '12' ? 'selected="selected"' : ''); ?> value="12">12</option>
+										<option <?php echo (get_option($name) == '13' ? 'selected="selected"' : ''); ?> value="13">13</option>
+										<option <?php echo (get_option($name) == '14' ? 'selected="selected"' : ''); ?> value="14">14</option>
+										<option <?php echo (get_option($name) == '15' ? 'selected="selected"' : ''); ?> value="15">15</option>
+										<option <?php echo (get_option($name) == '16' ? 'selected="selected"' : ''); ?> value="16">16</option>
+										<option <?php echo (get_option($name) == '17' ? 'selected="selected"' : ''); ?> value="17">17</option>
+										<option <?php echo (get_option($name) == '18' ? 'selected="selected"' : ''); ?> value="18">18</option>
+										<option <?php echo (get_option($name) == '19' ? 'selected="selected"' : ''); ?> value="19">19</option>
+									</select>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
 					<?php
 					break;
 				case 'archiveview':
@@ -348,6 +359,12 @@
 										<?php $name = 'casasync_archive_show_street_and_number_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
+										<?php $name = 'casasync_archive_show_zip'; ?>
+										<?php $text = 'PLZ'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casasync_archive_show_location'; ?>

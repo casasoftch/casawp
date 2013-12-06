@@ -50,9 +50,10 @@ class CasaSync {
 
     public function setOptionJsVars(){
         $script_params = array(
-           'google_maps' => get_option('casasync_load_googlemaps', 0),
-           'fancybox'    => get_option('casasync_load_fancybox', 0),
-           'chosen'      => get_option('casasync_load_chosen', 0)
+           'google_maps'           => get_option('casasync_load_googlemaps', 0),
+           'google_maps_zoomlevel' => get_option('casasync_single_use_zoomlevel', 12),
+           'fancybox'              => get_option('casasync_load_fancybox', 0),
+           'chosen'                => get_option('casasync_load_chosen', 0)
        );
        wp_localize_script( 'casasync_script', 'casasyncOptionParams', $script_params );
     }
@@ -704,7 +705,7 @@ class CasaSync {
               $can_send_via_mail = false;
               switch (get_option('casasync_sellerfallback_email_use')) {
                 case 'fallback':
-                  if(get_option('casasync_remCat', '0') == '0' OR !(get_option('casasync_remCat_email', false))) {
+                  if(get_option('casasync_remCat', false) == false XOR get_option('casasync_remCat_email', false) == false) {
                     $can_send_via_mail = true;
                   }
                   break;

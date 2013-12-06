@@ -926,7 +926,15 @@
           $address .= ($this->address_postalcode ?  $this->address_postalcode . ' ': '') . ($this->address_locality ? $this->address_locality : '') . ($this->address_postalcode || $this->address_locality ? '<br>' : '');
           $address .= ($this->address_country_name ? $this->address_country_name : '');
         } else {
-          $address  = ($this->address_postalcode ? $this->address_postalcode . ' ' : '') . ($this->address_locality ? $this->address_locality : '');
+          $address = '';
+          if(is_post_type_archive('casasync_property')) {
+            if(get_option('casasync_archive_show_zip', '0') != '0') {
+              $address .= ($this->address_postalcode ? $this->address_postalcode . ' ' : '');
+            }
+          } else {
+            $address .= ($this->address_postalcode ? $this->address_postalcode . ' ' : '');
+          }
+          $address .= ($this->address_locality ? $this->address_locality : '');
           $address .= ($this->address_country ? ' (' . $this->address_country . ')' : '');
         }
           return $address;
@@ -938,7 +946,7 @@
     public function getMap() {
       $return = NULL;
       if ($this->getAddress('property')){ 
-          $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $this->getAddress('property') ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $this->getAddress('property') )) . "&amp;t=m&amp;z=14&amp;output=embed";
+          $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $this->getAddress('property') ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $this->getAddress('property') )) . "&amp;t=m&amp;z=12&amp;output=embed";
           $return = '<div class="hidden-xs"><div class="casasync-map" style="display:none" data-address="'. str_replace('<br>', ', ', $this->getAddress('property')) . '"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '" class="casasync-fancybox" data-fancybox-type="iframe">' . __('View lager version', 'casasync') . '</a></small></div></div>';
           $return .= '<div class="visible-xs"><a class="btn btn-default btn-block" href="' . $map_url . '"><i class="icon icon-map-marker"></i> Auf Google Maps anzeigen</a></div>';
         }

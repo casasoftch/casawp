@@ -128,7 +128,7 @@ jQuery(document).ready(function($) {
                                     var bounds = null;
                                 }
                                 var mapOptions = {
-                                  zoom: 12,
+                                  zoom: parseInt(window.casasyncOptionParams.google_maps_zoomlevel),
                                   mapTypeId: google.maps.MapTypeId.ROADMAP,
                                   center: location
                                 };
