@@ -10,26 +10,34 @@
 			<aside class="casasync-archive-aside">
 				<?php echo $archive->getFilterForm(); ?>
 			</aside>
-			<div class="casasync-archive-content">
-				<?php while ( have_posts() ) : the_post(); ?>
-					<?php $single = new CasaSync\Single($post);?>
-					<?php if ($template->setTemplate('archive_single', $single)): ?>
-						<?php echo $template->render(); ?>
-					<?php else: ?>	
-						<div class="casasync-property">
-							<div class="casasync-thumbnail-wrapper">
-								<?php //echo $single->getAvailability(); ?>
-								<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+			<?php if ( have_posts() ): ?>
+				<div class="casasync-archive-content">
+					<?php while ( have_posts() ) : the_post(); ?>
+						<?php $single = new CasaSync\Single($post);?>
+						<?php if ($template->setTemplate('archive_single', $single)): ?>
+							<?php echo $template->render(); ?>
+						<?php else: ?>	
+							<div class="casasync-property">
+								<div class="casasync-thumbnail-wrapper">
+									<?php //echo $single->getAvailability(); ?>
+									<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+								</div>
+								<div class="casasync-text">
+									<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
+									<?php echo $single->getQuickInfosTable(); ?>
+								</div>
 							</div>
-							<div class="casasync-text">
-								<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
-								<?php echo $single->getQuickInfosTable(); ?>
-							</div>
-						</div>
-						<hr class="soften">
-					<?php endif ?>
-				<?php endwhile; ?>
-				<?php echo $archive->getPagination() ?>
+							<hr class="soften">
+						<?php endif ?>
+					<?php endwhile; ?>
+					<?php echo $archive->getPagination() ?>
+				</div>
+			<?php else: ?>
+				<div class="casasync-archive-content casasync-no-posts-found">
+					<h1 class="entry-title"><?php _e( 'Nothing Found', 'casasync' ); ?></h1>
+					<p><?php _e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'casasync' ); ?></p>
+				</div>
+			<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>

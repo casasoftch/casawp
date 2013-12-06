@@ -393,6 +393,8 @@
                 case 'Gross price':         $translated_text = 'Bruttomiete';break;
                 case 'Net price':           $translated_text = 'Nettomiete';break;
 
+                case 'Nothing Found': $translated_text = 'Nichts gefunden';break;
+                case 'Sorry, but nothing matched your search terms. Please try again with some different keywords.': $translated_text = 'Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte versuchen Sie es mit anderen Suchbegriffen.';break;
 
             }
 
