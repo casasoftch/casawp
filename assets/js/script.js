@@ -61,7 +61,11 @@ jQuery(document).ready(function($) {
 
     if (window.casasyncOptionParams && window.casasyncOptionParams.fancybox == 1) {
         if($('.casasync-fancybox').length){
-            $('.casasync-fancybox').fancybox();
+            $('.casasync-fancybox').fancybox({
+                helpers     : {
+                    title   : { type : 'inside' },
+                }
+            });
         }
     }
 

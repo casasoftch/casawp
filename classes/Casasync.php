@@ -253,7 +253,7 @@ class CasaSync {
         if (get_option( 'casasync_load_fancybox', 1 )) {
           wp_enqueue_script(
             'fancybox',
-            CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.js',
+            CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.pack.js',
             array( 'jquery' ),
             false,
             true

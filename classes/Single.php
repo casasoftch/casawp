@@ -389,7 +389,7 @@
                 $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
                 $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
                 if (get_option('casasync_load_fancybox', false)) {
-                  $return .= '<a href="' . $img_url[0] . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+                  $return .= '<a href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
                 } else {
                   $return .= $img;
                 }
