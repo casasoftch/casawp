@@ -23,7 +23,6 @@
 					'casasync_share_facebook',
 					'casasync_share_googleplus',
 					'casasync_share_twitter',
-					'casasync_use_captcha',
 					'casasync_single_show_number_of_rooms',
 			        'casasync_single_show_surface_usable',
 			        'casasync_single_show_surface_living',
@@ -32,6 +31,7 @@
 			        'casasync_single_show_number_of_floors',
 			        'casasync_single_show_year_built',
 			        'casasync_single_show_year_renovated',
+			        'casasync_single_show_carousel_indicators',
 				);
 				break;
 			case 'archiveview':
@@ -47,7 +47,8 @@
 			        'casasync_archive_show_number_of_floors',
 			        'casasync_archive_show_year_built',
 			        'casasync_archive_show_year_renovated',
-			        'casasync_archive_show_price'
+			        'casasync_archive_show_price',
+			        'casasync_archive_show_excerpt'
 				);
 				break;
 			case 'general':
@@ -201,22 +202,6 @@
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
-						<h3>Kontakt Formular</h3>
-						<?php echo $table_start; ?>
-							<tr valign="top">
-								<th scope="row">Massnahme gegen Spam</th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Massnahme gegen Spam</span></legend>
-										<?php $name = 'casasync_use_captcha'; ?>
-										<?php $text = 'Captcha verwenden'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" disabled <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-						<?php echo $table_end; ?>
 						<h3>Dynamische Felder</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
@@ -337,6 +322,22 @@
 										<option <?php echo (get_option($name) == '18' ? 'selected="selected"' : ''); ?> value="18">18</option>
 										<option <?php echo (get_option($name) == '19' ? 'selected="selected"' : ''); ?> value="19">19</option>
 									</select>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<h3>Galerie</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Galerienavigation</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Galerienavigation</span></legend>
+										<?php $name = 'casasync_single_show_carousel_indicators'; ?>
+										<?php $text = 'Navigation mit Kreisen'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+									</fieldset>
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
@@ -467,6 +468,15 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
+										<?php $name = 'casasync_archive_show_excerpt'; ?>
+										<?php $text = 'Auszug'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casasync_archive_show_excerpt_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
 									</fieldset>
 								</td>
 							</tr>

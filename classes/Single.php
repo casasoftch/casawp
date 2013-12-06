@@ -372,36 +372,40 @@
       if ($this->attachments) {
         $return = '<div id="slider_'.get_the_ID().'" class="casasync-carousel slide" data-ride="carousel" data-interval="false">';
           
-          //indicators
-          /*$return .= '<ol class="carousel-indicators">';
+        //indicators
+        $indicators = get_option('casasync_single_show_carousel_indicators' , '0');
+        if($indicators != 0) {
+          $return .= '<ol class="carousel-indicators">';
           $i = 0;
           foreach ($this->attachments as $attachment) {
             $return .= '<li data-target="#slider_'.get_the_ID().'" data-slide-to="'.$i.'" class="'.($i==0?'active':'').'"></li>';  
             $i++;
           }
-          $return .= '</ol>';*/
+          $return .= '</ol>';
+        }
 
-          //Wrapper for slides
-          $return .= '<div class="casasync-carousel-inner">';
-            $i = 0;
-            foreach ($this->attachments as $attachment) {
-              $return .= '<div class="item '.($i==0?'active':'').'">';
-                $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
-                $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
-                if (get_option('casasync_load_fancybox', false)) {
-                  $return .= '<a href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
-                } else {
-                  $return .= $img;
-                }
-                if ($attachment->post_excerpt) {
-                  $return .= '<div class="casasync-carousel-caption">';
-                    $return .= '<p>' . $attachment->post_excerpt . '</p>';
-                  $return .= '</div>';
-                }
-                
-              $return .= '</div>';
-              $i++;
-            }
+        //Wrapper for slides
+        $return .= '<div class="casasync-carousel-inner">';
+          $i = 0;
+          foreach ($this->attachments as $attachment) {
+            $return .= '<div class="item '.($i==0?'active':'').'">';
+              $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
+              $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
+              if (get_option('casasync_load_fancybox', false)) {
+                $return .= '<a href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+              } else {
+                $return .= $img;
+              }
+              if ($attachment->post_excerpt) {
+                $class = ($indicators != '0') ? ('hasIndicators') : (null);
+                $return .= '<div class="casasync-carousel-caption '.$class.'">';
+                  $return .= '<p>' . $attachment->post_excerpt . '</p>';
+                $return .= '</div>';
+              }
+              
+            $return .= '</div>';
+            $i++;
+          }
           $return .= '</div>';
 
           //controlls
@@ -440,6 +444,12 @@
       return $new_title;
     }
 
+    public function getExcerpt(){
+      global $post;
+      $excerpt = $post->post_excerpt;
+      $new_excerpt = str_replace('m2', 'm<sup>2</sup>', $excerpt);
+      return $new_excerpt;
+    }
 
     public function getBasicBoxes(){
       $content = '<div class="casasync-basic-box"><div>';
@@ -672,7 +682,8 @@
         'casasync_archive_show_number_of_floors',
         'casasync_archive_show_year_built',
         'casasync_archive_show_year_renovated',
-        'casasync_archive_show_price'
+        'casasync_archive_show_price',
+        'casasync_archive_show_excerpt'
       );
 
       $value_to_display = array();
@@ -813,6 +824,9 @@
                     .'</tr>';
                 }
               }
+              break;
+              case 'casasync_archive_show_excerpt':
+              $return .= '<tr><td colspan="2">' . $this->getExcerpt() . '</td></tr>';
               break;
             default:
               break;
