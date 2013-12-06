@@ -7841,6 +7841,9 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
 .casasync-single .casasync-carousel .casasync-carousel-inner .casasync-carousel-caption p {
   margin-bottom: 0;
 }
+.casasync-single .casasync-carousel .casasync-carousel-inner .casasync-carousel-caption.hasIndicators {
+  padding-bottom: 40px;
+}
 .casasync-single .casasync-carousel .casasync-carousel-control {
   top: 0;
   left: 0;
