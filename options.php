@@ -32,6 +32,7 @@
 			        'casasync_single_show_year_built',
 			        'casasync_single_show_year_renovated',
 			        'casasync_single_show_carousel_indicators',
+			        'casasync_single_show_availability'
 				);
 				break;
 			case 'archiveview':
@@ -48,7 +49,8 @@
 			        'casasync_archive_show_year_built',
 			        'casasync_archive_show_year_renovated',
 			        'casasync_archive_show_price',
-			        'casasync_archive_show_excerpt'
+			        'casasync_archive_show_excerpt',
+			        'casasync_archive_show_availability'
 				);
 				break;
 			case 'general':
@@ -92,7 +94,7 @@
 		$tabs = array(
 			'general'     => 'Generell',
 			'appearance'  => 'Design',
-			'singleview'  => 'Einzelnansicht',
+			'singleview'  => 'Einzelansicht',
 			'archiveview' => 'Archivansicht'
 		); 
 	    echo screen_icon('options-general');
@@ -289,6 +291,15 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
+										<?php $name = 'casasync_single_show_availability'; ?>
+										<?php $text = 'Verfügbarkeit'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casasync_single_show_availability_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
 									</fieldset>
 								</td>
 							</tr>
@@ -454,6 +465,16 @@
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<?php $name = 'casasync_archive_show_year_renovated_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
+										<?php $name = 'casasync_archive_show_availability'; ?>
+										<?php $text = 'Verfügbarkeit'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casasync_archive_show_availability_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>

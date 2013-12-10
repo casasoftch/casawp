@@ -36,6 +36,7 @@ class Admin {
 		add_option('casasync_archive_show_surface_property', '1');
 		add_option('casasync_archive_show_year_built', '1');
 		add_option('casasync_archive_show_price', '1');
+		add_option('casasync_archive_show_availability', '1');
 	}
 
 	public function casasync_remove() {

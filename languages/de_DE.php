@@ -249,6 +249,7 @@
                 case 'Reference':          $translated_text = 'Referenz';break;
 
                 case 'Available':          $translated_text = 'Verfügbar';break;
+                case 'Available:':         $translated_text = 'Verfügbar:';break;
                 case 'Reserved':           $translated_text = 'Reserviert';break;
                 case 'Planned':            $translated_text = 'In Planung';break;
                 case 'Under construction': $translated_text = 'Im Bau';break;
@@ -389,9 +390,13 @@
                 case 'per':                 $translated_text = 'pro';break;
                 case '(net)':               $translated_text = '(Netto)';break;
                 case '(gross)':             $translated_text = '(Brutto)';break;
-                case 'By Request':          $translated_text = 'Auf Anfrage';break;
+                case 'On Request':          $translated_text = 'Auf Anfrage';break;
+                case 'By Agreement':        $translated_text = 'Nach Vereinbarung';break;
+                case 'Immediate':           $translated_text = 'Sofort';break;
                 case 'Gross price':         $translated_text = 'Bruttomiete';break;
+                case 'Gross price:':        $translated_text = 'Bruttomiete:';break;
                 case 'Net price':           $translated_text = 'Nettomiete';break;
+                case 'Net price:':          $translated_text = 'Nettomiete:';break;
 
                 case 'Nothing Found': $translated_text = 'Nichts gefunden';break;
                 case 'Sorry, but nothing matched your search terms. Please try again with some different keywords.': $translated_text = 'Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte versuchen Sie es mit anderen Suchbegriffen.';break;

@@ -144,12 +144,7 @@ class Import {
       $new_location = array();
       foreach ($xml->property as $property) {
         //requirenments
-        if (
-          !$property['id'] 
-          || !$property->provider
-          || !$property->provider['id']
-          || !isset($property->offer)
-        ) {
+        if (!$property['id'] || !$property->provider || !$property->provider['id'] || !isset($property->offer)) {
           echo "required data missing!!!";
           continue;
         }

@@ -33,6 +33,7 @@
     public $urls = array();
     public $availability = false;
     public $availability_label = '';
+    public $start = false;
     public $seller = array(
       'fallback'      => false,
       'country'       => '',
@@ -211,7 +212,7 @@
 
       $this->reference_id = get_post_meta( get_the_ID(), 'casasync_referenceId', $single = true );
 
-      $start = get_post_meta( get_the_ID(), 'casasync_start', $single = true );
+      $this->start = get_post_meta( get_the_ID(), 'casasync_start', $single = true );
 
       $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
       $this->categories_names = array();
@@ -362,9 +363,23 @@
 
       $this->availability = get_post_meta( get_the_ID(), 'availability', $single = true );
       $this->availability_label = get_post_meta( get_the_ID(), 'availability_label', $single = true );
-      if ($this->availability && !$this->availability_label) {
-        $this->availability_label = __($this->availability, 'casasync');
+    }
+
+    public function getAvailabilityLabel(){
+      $return = false;
+      if($this->start) {
+        $current_datetime = strtotime(date('c'));
+        $property_datetime = strtotime($this->start);
+        if ($property_datetime > $current_datetime && $this->start != false) {
+          $return = date_i18n(get_option('date_format') ,strtotime($this->start) + 3600);
+        } else {
+          $return = $this->conversion->casasync_convert_availabilityKeyToLabel('immediately');
+        }
       }
+      if($this->availability_label != '') {
+        $return = $this->conversion->casasync_convert_availabilityKeyToLabel($this->availability_label);
+      }
+      return $return;
     }
 
     public function getGallery(){
@@ -464,6 +479,7 @@
           'casasync_single_show_number_of_floors',
           'casasync_single_show_year_built',
           'casasync_single_show_year_renovated',
+          'casasync_single_show_availability'
         );
 
         $numvals_to_display = array();
@@ -534,6 +550,12 @@
                   $content .= __('Year of renovation:', 'casasync') . ' ' . $this->getNumval('year_renovated');
                 }
                 break;
+              case 'casasync_single_show_availability':
+                if ($this->getAvailabilityLabel()) {
+                  $content .= $br;
+                  $content .= __('Available:','casasync') . ' ' . $br . $this->getAvailabilityLabel();
+                }
+              break;
               default:
                 break;
             }
@@ -551,25 +573,25 @@
       $price_title = ($this->main_basis == 'rent') ? (__('rent', 'casasync')) : (__('Price', 'casasync'));
         $content .= '<h4>' . $price_title . '</h4>';
         if ($this->main_basis == 'buy') {
-          $content .= 'Kaufpreis:<br>';
+          $content .= __('Sales price:', 'casasync') . '<br>';
           if ($this->getPrice('sales')) {
             $content .= $this->getPrice('sales', 'full');
           } else {
-            $content .= __('By Request', 'casasync');
+            $content .= __('On Request', 'casasync');
           }
         }
         if ($this->main_basis == 'rent') {
           if ($this->getPrice('gross') || $this->getPrice('net')) {
             if ($this->getPrice('gross')) {
-              $content .= 'Bruttomiete:<br>';
+              $content .= __('Gross price:', 'casasync') . '<br>';
               $content .= $this->getPrice('gross', 'full') . '<br>';
             }
             if ($this->getPrice('net')) {
-              $content .= 'Nettomiete:<br>';
+              $content .= __('Net price:', 'casasync') . '<br>';
               $content .= $this->getPrice('net', 'full') . '<br>';
             }
           } else {
-            $content .= __('By Request', 'casasync');
+            $content .= __('On Request', 'casasync');
           }
         }
         if ($this->getExtraCosts('Nebenkosten')) {
@@ -586,7 +608,7 @@
         $content .= '<tr>'
           .'<td class="width-25">' . __('Sales price', 'casasync') . '</td>'
         .'<td class="width-75">';
-        $content .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('By Request', 'casasync');
+        $content .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync');
         $content .= '</td>'
         .'</tr>';
       }
@@ -612,7 +634,7 @@
           $content .= '<tr>'
               .'<td class="width-25">' . __('Rent price','casasync') . '</td>'
             .'<td class="width-75">';
-            $content .=  __('By Request', 'casasync');
+            $content .=  __('On Request', 'casasync');
             $content .= '</td>'
             .'</tr>';
         }
@@ -683,7 +705,8 @@
         'casasync_archive_show_year_built',
         'casasync_archive_show_year_renovated',
         'casasync_archive_show_price',
-        'casasync_archive_show_excerpt'
+        'casasync_archive_show_excerpt',
+        'casasync_archive_show_availability'
       );
 
       $value_to_display = array();
@@ -793,7 +816,7 @@
                 $return .= '<tr>'
                   .'<th>' . __('Sales price','casasync') . '</th>'
                 .'<td>';
-                $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('By Request', 'casasync');
+                $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync');
                 $return .= '</td>'
                 .'</tr>';
               }
@@ -819,14 +842,26 @@
                   $return .= '<tr>'
                       .'<th>' . __('Rent price','casasync') . '</th>'
                     .'<td>';
-                    $return .=  __('By Request', 'casasync');
+                    $return .=  __('On Request', 'casasync');
                     $return .= '</td>'
                     .'</tr>';
                 }
               }
               break;
               case 'casasync_archive_show_excerpt':
-              $return .= '<tr><td colspan="2">' . $this->getExcerpt() . '</td></tr>';
+                if($this->getExcerpt()) {
+                  $return .= '<tr><td colspan="2">' . $this->getExcerpt() . '</td></tr>';
+                }
+              break;
+              case 'casasync_archive_show_availability':
+                if ($this->getAvailabilityLabel()) {
+                  $return .= '<tr>'
+                    .'<th>' . __('Available','casasync') . '</th>'
+                  .'<td>';
+                  $return .= $this->getAvailabilityLabel();
+                  $return .= '</td>'
+                  .'</tr>';
+                }
               break;
             default:
               break;
@@ -1319,9 +1354,8 @@
     public function getAvailability() {
       $return = NULL;
       if (isset($this->availability)) {
-        $the_availability_label = ($this->availability_label != '') ? ($this->availability_label) :($this->availability);
         $return .= '<div class="availability-outerlabel">';
-        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . $the_availability_label . '</div>';
+        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($this->availability, 'casasync') . '</div>';
         $return .= '</div>';
       }
       return $return;

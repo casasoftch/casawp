@@ -313,6 +313,7 @@
             'distance_school2'
         );
     }
+
     public function casasync_convert_distanceKeyToLabel($key){
         switch ($key) {
             case 'distance_public_transport':   return __('Public transportation' ,'casasync');break;
@@ -321,6 +322,13 @@
             case 'distance_motorway':           return __('Motorway' ,'casasync');break;
             case 'distance_school1':            return __('Primary school' ,'casasync');break;
             case 'distance_school2':            return __('Secondary school' ,'casasync');break;
+        }
+    }
+    public function casasync_convert_availabilityKeyToLabel($key){
+        switch ($key) {
+            case 'on-request':   return __('On Request' ,'casasync');break;
+            case 'by-agreement': return __('By Agreement' ,'casasync');break;
+            case 'immediately':  return __('Immediate' ,'casasync');break;
         }
     }
 
