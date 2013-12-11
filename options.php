@@ -130,7 +130,7 @@
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrapv2" disabled <?php echo (get_option($name) == 'bootstrapv2' ? 'checked="checked"' : ''); ?>> Bootstrap Version 2
+											<input name="<?php echo $name ?>" type="radio" value="bootstrapv2" <?php echo (get_option($name) == 'bootstrapv2' ? 'checked="checked"' : ''); ?>> Bootstrap Version 2
 										</label>
 										<br>
 										<label>

@@ -183,7 +183,8 @@ class CasaSync {
     function registerScriptsAndStyles(){
         switch (get_option('casasync_load_css', 'bootstrapv3')) {
             case 'bootstrapv2':
-                // Bootstrap 2
+                wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs2.css' );
+                wp_enqueue_style( 'casasync-css' );
                 break;
             case 'bootstrapv3':
                 wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs3.css' );
@@ -194,23 +195,38 @@ class CasaSync {
                 break;
         }
 
-        if (get_option( 'casasync_load_bootstrap_scripts', 1 )) {
+        if (get_option( 'casasync_load_bootstrap_scripts', 'none' )) {
+            switch (get_option('casasync_load_css', 'bootstrapv3')) {
+                case 'bootstrapv2':
+                    wp_enqueue_script(
+                        'casasync_bootstrap2',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap.min.js',
+                        array( 'jquery' )
+                    );
+                    break;
+                case 'bootstrapv3':
+                    wp_enqueue_script(
+                        'casasync_bootstrap3_transition',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
+                        array( 'jquery' )
+                    );
+                    wp_enqueue_script(
+                        'casasync_bootstrap3_tab',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
+                        array( 'jquery' )
+                    );
+                    wp_enqueue_script(
+                        'casasync_bootstrap3_carousel',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
+                        array( 'jquery' )
+                    );
+                    break;
+                case 'none':
+                default:
+                    # code...
+                    break;
+            }
             // Add Bootstrap v2 
-            wp_enqueue_script(
-                'casasync_bootstrap_transition',
-                CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
-                array( 'jquery' )
-            );
-            wp_enqueue_script(
-                'casasync_bootstrap_tab',
-                CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
-                array( 'jquery' )
-            );
-            wp_enqueue_script(
-                'casasync_bootstrap_carousel',
-                CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
-                array( 'jquery' )
-            );
         }
 
         wp_enqueue_script(
