@@ -1,24 +1,33 @@
 @import "bootstrap2/bootstrap.less";
 @import "fontawesome4/font-awesome.less";
 
+
+
+
+
+
+
+
+
+.casasync-row{
+	.makeFluidRow();
+}
+
 .casasync-archive,
 .casasync-single{
-	.makeRow();
+	.makeFluidRow();
 }
 .casasync-archive-content,
 .casasync-single-content{
-	.makeColumn(8);
+	.makeFluidCol(8);
 }
 .casasync-archive-aside,
 .casasync-single-aside{
-  	.makeColumn(4);
+  	.makeFluidCol(4);
 }
 
 
 .casasync-archive{
-	.casasync-archive-aside {
-		.pull-right;
-	}
 	.casasync-filterform-wrap{
 		.chosen-container{
 			margin-bottom: 10px;
@@ -41,11 +50,10 @@
 	.casasync-nav{
 		.casasync-nav-next,
 		.casasync-nav-previous{
-			.makeColumn(6);
+			.makeFluidCol(6);
 		}
 	}
 	.casasync-archive-content{
-		.pull-left;
 		.casasync-text{
 			.table{
 				margin-bottom: 0;
@@ -56,7 +64,7 @@
 		}
 	}
 	.casasync-property{
-		.makeRow();
+		.makeFluidRow();
 		.availability-label{
 			position: absolute;
 			top:0px;
@@ -76,7 +84,7 @@
 		}
 	}
 	.casasync-gallery{
-		.makeColumn(4);
+		.makeFluidCol(4);
 	}	
 	.casasync-missing-gallery{
 		height: 150px;
@@ -85,13 +93,13 @@
 		line-height: 150px;
 	}
 	.casasync-text{
-		.makeColumn(7);
+		.makeFluidCol(7);
 		.table{
 
 		}
 	}
 	.casasync-thumbnail-wrapper{
-		.makeColumn(5);
+		.makeFluidCol(5);
 	}
 	.casasync-thumbnail{
 		.thumbnail;
@@ -102,77 +110,116 @@
 }
 
 .casasync-single{
-	.casasync-carousel{
-		.carousel;
-		border-radius: 5px;
-		overflow: hidden;
-		background-color: #eee;
-		.carousel-indicators{
-			bottom:0px;
-		}
-		.casasync-carousel-inner{
-			.carousel-inner;
-			img.carousel-image{
-				max-width: auto;
-				max-height: 425px;
-				width:auto;
-				margin: 0 auto;
-				text-align: center;
-				text-decoration: none;
-				vertical-align: middle;
-			}
-			.casasync-carousel-caption{
-				.carousel-caption;
-				left:0;
-				right:0;
-				bottom:0;
-				background: #333333;
-				background: rgba(0, 0, 0, 0.75);
-				p{
-					margin-bottom: 0;
-				}
-			}
-			.casasync-carousel-caption.hasIndicators {
-				padding-bottom: 40px;
-			}
-		}
-		.casasync-carousel-control{
-			.carousel-control;
-			outline: 0;
-			opacity: 0;
-			width:10%;
-			position: absolute;
-			top: 35%;
-			bottom: 35%;
-			left: 0px;
-			right: 90%;
-			background-color: black;
-			background-color: rgba(0,0,0,0.7);
-			span{
-				margin-top:-5px;
-			}
-		}
-		.casasync-carousel-control.left span{
-			margin-left: -10px;
-		}
-		.casasync-carousel-control.right span{
-			margin-right: -10px;
-		}
-	}
-	.casasync-carousel:hover{
-		.casasync-carousel-control{
-			opacity: 0.5;
-		}
-		.casasync-carousel-control:hover{
-			opacity: 1;
-		}
-	}
+	
+
+
+
+
+
+
+
+
+
+
+
+	.casasync-carousel-left,
+.casasync-carousel-right{
+	width:10%;
+	position: absolute;
+	top: 30%;
+	bottom: 30%;
+	left: 0px;
+	right: 90%;
+	background-color: black;
+	/*background-color: rgba(0,0,0,0.7);*/
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
+	color:white;
+	font-weight: bold;
+	font-size: 30px;
+	text-align: center;
+	opacity: 0;
+	border-radius: 0 3px 3px 0;
+}
+.casasync-carousel-right{
+	left: 90%;
+	right:0px;
+	border-radius: 3px 0 0 3px;
+}
+.casasync-carousel-left i,
+.casasync-carousel-right i{
+	display: block;
+	position: absolute;
+	top: 43%;
+	left:0px;
+	right:0px;
+}
+#casasyncCarousel:hover .casasync-carousel-left,
+#casasyncCarousel:hover .casasync-carousel-right{
+	opacity: 0.5;
+}
+#casasyncCarousel .casasync-carousel-left:hover,
+#casasyncCarousel .casasync-carousel-right:hover {
+	opacity: 1;
+	color:white;
+}
+#casasyncCarousel .item img{
+	max-width: auto;
+	max-height: 425px;
+	width:auto;
+	margin: 0 auto;
+}
+#slider .carousel-caption {
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	padding: 0px;
+}
+#slider .carousel-caption p {
+	padding: 15px;
+}
+.casasync-slider-currentimage{
+	background-color:#eee;
+	text-align: center;
+	border-radius: 5px;
+	overflow: hidden;
+}
+#theApsoluteRealEmailField{
+	display: none!important;
+}
+.casasync-slider-currentimage{
+	position:relative
+}
+.casasync-slider-currentimage .carousel{
+	margin-bottom:0px;
+}
+#slide-content{
+	display: none;
+}
+.casasync-slider-thumbnails .thumbnail-pane{
+	margin:1em 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	.casasync-contactform-form{
-		input.form-control{
+		.casasync-form-control{
 			.input-small;
-		}
-		.casasync-contactform-row{
-			.makeRow();
 		}
 		.casasync-contactform-send{
 			.btn;
@@ -181,11 +228,7 @@
 		}
 	}
 	.casasync-tabable-nav{
-		.nav;
-		.nav-tabs;
-		//.nav-justified; 
-		margin-left:0px; //wp templates
-		margin-bottom:0px; //wp templates
+		margin-bottom: 0px;
 	}
 	.casasync-tabable-content{
 		background-color: white;
@@ -206,15 +249,15 @@
 		}
 	}
 	.casasync-basic-boxes{
-		.makeRow();
+		.makeFluidRow();
 		.casasync-basic-box{
-			.makeColumn(4);
+			.makeFluidCol(4);
 			margin-bottom: 10px;
 			> div{
 				.well;
 				margin-bottom: 0;
 				overflow: hidden;
-				min-height: 100%;
+				//min-height: 100%;
 				//font-size: 13px;
 			}
 			h4{
@@ -247,9 +290,9 @@
 	.casasync-slider-thumbnails{
 		.hidden-tablet();
 		ul {
-			.makeRow();
+			.makeFluidRow();
 			li {
-				.makeColumn(3);
+				.makeFluidCol(3);
 				.thumbnail;
 			}
 		}
@@ -276,3 +319,88 @@
 	}
 }
 
+
+
+.casasync-form-group {
+	.control-group;
+}
+.casasync-form-control{
+	//.form-control;
+}
+.casasync-text-muted{
+	.muted;
+	}
+.casasync-small{
+	font-size: 80%;
+}
+
+/* Grid */
+
+.casasync-col-md-4 {
+	.makeFluidCol(4);
+}
+.casasync-col-md-5 {
+	.makeFluidCol(5);
+}
+.casasync-col-md-7 {
+	.makeFluidCol(7);
+}
+.casasync-col-md-8 {
+	.makeFluidCol(8);
+}
+.casasync-col-md-12 {
+	.makeFluidCol(12);
+}
+
+
+
+.casasync-btn-justified {
+	display: inline-block;
+	width: 100%;
+	float: left;
+}
+
+.casasync-btn-justified .btn{
+	display: table-cell !important;
+	float: none;
+	width: 1%;
+}
+.casasync-hidden-xs{
+	.hidden-phone;
+}
+.casasync-visible-xs{
+	.visible-phone;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 767px) {
+  // Make all grid-sized elements block level again
+  [class*="span"],
+  .casasync-archive-content,
+  .casasync-archive-aside,
+  .casasync-single-content,
+  .casasync-single-aside,
+  .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+  .row-fluid [class*="span"] {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    .box-sizing(border-box);
+  }
+  .span12,
+  .row-fluid .span12 {
+    width: 100%;
+    .box-sizing(border-box);
+  }
+  .row-fluid [class*="offset"]:first-child {
+    margin-left: 0;
+  }
+
+}

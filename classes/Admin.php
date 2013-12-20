@@ -7,11 +7,11 @@ class Admin {
     	register_activation_hook(CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_install'));
     	register_deactivation_hook( CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_remove' ));
     	add_action( 'admin_menu', array($this,'casasync_menu') );
+    	add_action( 'admin_enqueue_scripts', array($this,'registerAdminScriptsAndStyles' ));
     }
     public function casasync_install() {
 		// general
 		add_option('casasync_live_import', '1');
-		get_option('casasync_sellerfallback_email_use', 'fallback');
 		// appearance
 		add_option('casasync_load_css', 'bootstrapv3');
 		add_option('casasync_load_bootstrap_scripts', '1');
@@ -37,6 +37,13 @@ class Admin {
 		add_option('casasync_archive_show_year_built', '1');
 		add_option('casasync_archive_show_price', '1');
 		add_option('casasync_archive_show_availability', '1');
+		add_option('casasync_archive_show_thumbnail_size_w', '506');
+		add_option('casasync_archive_show_thumbnail_size_h', '360');
+		add_option('casasync_archive_show_thumbnail_size_crop', '1');
+		//contactform
+		add_option('casasync_request_per_mail', '1');
+		add_option('casasync_request_per_remcat', '0');
+		add_option('casasync_request_per_mail_fallback', '0');
 	}
 
 	public function casasync_remove() {
@@ -58,4 +65,19 @@ class Admin {
 	public function casasync_add_options_page() {
 		include(CASASYNC_PLUGIN_DIR.'options.php');
 	}
+
+	public function registerAdminScriptsAndStyles() {
+		wp_register_style( 'casasync-admin-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync-admin.css' );
+        wp_enqueue_style( 'casasync-admin-css' );
+
+        wp_enqueue_script(
+            'casasync_admin_scipts',
+            CASASYNC_PLUGIN_URL . 'assets/js/admin-scripts.js',
+            array( 'jquery' ),
+            false,
+            true
+        );
+	}
+
+
 }

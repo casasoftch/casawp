@@ -41,8 +41,13 @@ class CasaSync {
             set_post_thumbnail_size( 150, 150 ); // default Post Thumbnail dimensions
         }
         if ( function_exists( 'add_image_size' ) ) {
-            add_image_size( 'category-thumb', 300, 9999 );
-            add_image_size( 'casasync-thumb', 506, 360, true );
+            //add_image_size( 'category-thumb', 300, 9999 );
+            add_image_size(
+                'casasync-thumb',
+                get_option('casasync_archive_show_thumbnail_size_w', 506),
+                get_option('casasync_archive_show_thumbnail_size_h', 360),
+                get_option('casasync_archive_show_thumbnail_size_crop', true)
+            );
         }
         $this->setMetaBoxes();
         $this->setTranslation();
@@ -54,7 +59,9 @@ class CasaSync {
            'google_maps'           => get_option('casasync_load_googlemaps', 0),
            'google_maps_zoomlevel' => get_option('casasync_single_use_zoomlevel', 12),
            'fancybox'              => get_option('casasync_load_fancybox', 0),
-           'chosen'                => get_option('casasync_load_chosen', 0)
+           'chosen'                => get_option('casasync_load_chosen', 0),
+           'load_css'              => get_option('casasync_load_css', 'bootstrapv3'),
+           'load_bootstrap_js'     => get_option('casasync_load_bootstrap_scripts')
         );
         wp_localize_script( 'casasync_script', 'casasyncOptionParams', $script_params );
     }
@@ -486,13 +493,16 @@ class CasaSync {
     public function contact_shortcode($atts){
         extract( shortcode_atts( array(
             'recipients' => 'Steven Imhof:si@casasoft.ch',
-            'ccs' => '',
-            'post_id' => false
+            'remcat'     => false,
+            'ccs'        => '',
+            'post_id'    => false
         ), $atts ) );
 
-        $errors = array();
         $table = '';
         $validation = false;
+        $errors = false;
+        $remcat_sended = false;
+        $email_sended = false;
 
         $rec_ar1 = explode(';', $recipients);
         $recipientses = array();
@@ -572,7 +582,7 @@ class CasaSync {
                 $property_id = $casa_id_arr[1];
 
                 //REM
-                if (get_option('casasync_remCat', false ) && get_option('casasync_remCat_email', false )) {
+                if ($remcat != '') {
                     $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
                     if ($categories) {
                         $type = $this->conversion->casasync_convert_categoryKeyToLabel($categories[0]->name); 
@@ -616,8 +626,10 @@ class CasaSync {
                     $header  = "From: \"\" <remcat@casasync.ch>\r\n";
                     $header .= "MIME-Version: 1.0\r\n";
                     $header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-    
+                    
+
                     wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
+                    $remcat_sended = true;
                 }
     
                 $template = file_get_contents(CASASYNC_PLUGIN_DIR . 'email_templates/message_de.html');
@@ -686,48 +698,17 @@ class CasaSync {
                 $header .= "MIME-Version: 1.0\r\n";
                 $header .= "Content-Type: text/html; charset=UTF-8\r\n";
     
-                // :CC
-                /*$the_ccs = array();
-                if (isset($css_arr) && $css_arr) {
-                    foreach ($ccs_arr as $cc) {
-                        $the_ccs[] = $cc[1];
-                    }
-                    $the_cc = implode(', ', $the_ccs);
-    
-                    $headers .= "Cc: " . $the_cc . "\r\n";
-                }*/
-                
-                $can_send_via_mail = false;
-                switch (get_option('casasync_sellerfallback_email_use')) {
-                    case 'fallback':
-                        if(get_option('casasync_remCat', false) == false XOR get_option('casasync_remCat_email', false) == false) {
-                            $can_send_via_mail = true;
+                foreach ($recipientses as $recipient2) {
+                    if (isset($recipient2[0])) {
+                        if (wp_mail($recipient2[0], 'Neue Anfrage', $template, $header)) {
+                            $email_sended = true;
                         }
-                      break;
-                    case 'always':
-                        $can_send_via_mail = true;
-                        break;
-                    case 'never':
-                    default:
-                        break;
+                    }
                 }
-    
-                if($can_send_via_mail == true) {
-                    foreach ($recipientses as $recipient2) {
-                        if (isset($recipient2[0])) {
-                            if (wp_mail($recipient2[0], 'Neue Anfrage', $template, $header)) {
-                                return '<p class="alert alert-success">Vielen Dank!</p>';
-                            } else {
-                                return '<p class="alert alert-danger">Fehler!</p>';
-                            }
-                        }
-                    }
+                if($remcat_sended === true or $email_sended === true) {
+                    echo '<p class="alert alert-success">Vielen Dank!</p>';
                 } else {
-                    if (isset($remCat)) {
-                        return '<p class="alert alert-success">Vielen Dank!</p>';
-                    } else {
-                        return '<p class="alert alert-danger">Fehler!</p>';
-                    }
+                    echo '<p class="alert alert-danger">Fehler!</p>';
                 }
             }
 
@@ -740,7 +721,7 @@ class CasaSync {
             ob_start();
             if ($errors) {
                 echo '<div class="alert alert-danger">';
-                echo "<strong>" . __('Please consider the following errors and try sending it again', 'casasync')  . "</strong>"; //Bitte beachten Sie folgendes und versuchen Sie es erneut
+                echo "<strong>" . __('Please consider the following errors and try sending it again', 'casasync')  . "</strong>";
                 echo "<ul>";
                 echo "<li>".implode('</li><li>', $errors) . '</li>';
                 echo '</ul>';
@@ -748,74 +729,131 @@ class CasaSync {
             }
             echo $table;
         ?>
+
+        <?php
+            // Bootstrap 2 Form Layout
+            if (get_option('casasync_load_css') == 'bootstrapv2'):
+        ?>
+            <form class="form casasync-property-contact-form" id="casasyncPropertyContactForm" method="POST" action="">
+                <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
+                <div class="row-fluid">
+                    <div class="span5">
+                        <label for="firstname"><?php echo __('First name', 'casasync') ?></label>
+                        <input name="firstname" class="span12" value="<?php echo (isset($_POST['firstname']) ? $_POST['firstname'] : '') ?>" type="text" id="firstname" />
+                    </div>
+                    <div class="span7">
+                        <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
+                        <input name="lastname" class="span12" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
+                    </div>
+                </div>
+                <div class="row-fluid">
+                </div>
+                <div class="row-fluid">
+                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
+                    <input name="emailreal" class="span12" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
+                </div>
+                <div class="row-fluid">
+                    <label for="street"><?php echo __('Street', 'casasync') ?></label>
+                    <input name="street" class="span12" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
+                </div>
+                <div class="row-fluid">
+                    <div class="span4">
+                        <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
+                        <input name="postal_code" class="span12" value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
+                    </div>
+                    <div class="span8">
+                        <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
+                        <input name="locality" class="span12" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
+                    <input name="phone" class="span12" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <label for="message"><?php echo __('Message', 'casasync') ?></label>
+                        <textarea name="message" class="span12" id="message"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span7"><br>
+                        <small><?php echo __('Please fill out all the fields', 'casasync') ?></small>
+                    </div>
+                    <div class="span5"><br>
+                        <input type="submit" class="btn btn-primary pull-right" value="<?php echo __('Send', 'casasync') ?>" />
+                    </div>
+                </div>
+            </form>
+        <?php else: ?>
             <form id="casasyncPropertyContactForm" class="casasync-contactform-form" method="POST" action="<?php echo get_permalink(); ?>">
                 <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
-                <div class="casasync-contactform-row">
-                    <div class="col-md-5">
-                        <div class="form-group">
+                <div class="casasync-row">
+                    <div class="casasync-col-md-5">
+                        <div class="casasync-form-group">
                             <label for="firstname"><?php echo __('First name', 'casasync') ?></label>
-                            <input name="firstname" class="form-control" value="<?php echo (isset($_POST['firstname']) ? $_POST['firstname'] : '') ?>" type="text" id="firstname" />
+                            <input name="firstname" class="casasync-form-control" value="<?php echo (isset($_POST['firstname']) ? $_POST['firstname'] : '') ?>" type="text" id="firstname" />
                         </div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="form-group">
+                    <div class="casasync-col-md-7">
+                        <div class="casasync-form-group">
                             <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
-                            <input name="lastname" class="form-control" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
+                            <input name="lastname" class="casasync-form-control" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
                         </div>
                     </div>
                 </div>
-                <div class="casasync-contactform-row">
-                    <div class="col-md-12">
+                <div class="casasync-row">
+                    <div class="casasync-col-md-12">
+                        <div class="casasync-form-group">
+                            <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
+                            <input name="emailreal" class="casasync-form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="casasync-row">
+                    <div class="casasync-col-md-12">
                         <div class="form-group">
                             <label for="street"><?php echo __('Street', 'casasync') ?></label>
-                            <input name="street" class="form-control" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
+                            <input name="street" class="casasync-form-control" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
                         </div>
                     </div>
                 </div>
-                <div class="casasync-contactform-row">
-                    <div class="col-md-4">
-                        <div class="form-group">
+                <div class="casasync-row">
+                    <div class="casasync-col-md-4">
+                        <div class="casasync-form-group">
                             <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
-                            <input name="postal_code" class="form-control"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
+                            <input name="postal_code" class="casasync-form-control"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="casasync-col-md-8">
                         <div class="form-group">
                             <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
-                            <input name="locality" class="form-control" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
+                            <input name="locality" class="casasync-form-control" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
                         </div>
                     </div>
                 </div>
-                <div class="casasync-contactform-row">
-                    <div class="col-md-12">
-                        <div class="form-group">
+                <div class="casasync-row">
+                    <div class="casasync-col-md-12">
+                        <div class="casasync-form-group">
                             <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
-                            <input name="phone" class="form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
+                            <input name="phone" class="casasync-form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
                         </div>
                     </div>
                 </div>
-                <div class="casasync-contactform-row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                            <input name="emailreal" class="form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-contactform-row">
-                    <div class="col-md-12">
-                        <div class="form-group">
+                <div class="casasync-row">
+                    <div class="casasync-col-md-12">
+                        <div class="casasync-form-group">
                             <label for="message"><?php echo __('Message', 'casasync') ?></label>
-                            <textarea name="message" class="form-control" id="message" rows="3"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
+                            <textarea name="message" class="casasync-form-control" id="message" rows="3"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="casasync-contactform-row">
-                    <div class="form-group">
-                        <div class="col-md-7">
-                            <p class="form-control-static text-muted small"><?php echo __('Please fill out all the fields', 'casasync') ?></p>
+                <div class="casasync-row">
+                    <div class="casasync-form-group">
+                        <div class="casasync-col-md-7">
+                            <p class="casasync-form-control-static casasync-text-muted casasync-small"><?php echo __('Please fill out all the fields', 'casasync') ?></p>
                         </div>
-                        <div class="col-md-5">
+                        <div class="casasync-col-md-5">
                             <input type="submit" class="casasync-contactform-send" value="<?php echo __('Send', 'casasync') ?>" />
                         </div>
                         <div class="clearBoth"></div>
@@ -823,6 +861,7 @@ class CasaSync {
                 </div>
             </form>
 
+        <?php endif; ?>
         <?php
             $form = ob_get_contents();
             ob_end_clean();

@@ -79,9 +79,12 @@ jQuery(document).ready(function($) {
     }
 
     if ($('.casasync-basic-box').length){
-        $('.casasync-basic-box').equalHeightColumns({
-            speed : 500
-        });
+        if (window.casasyncOptionParams && window.casasyncOptionParams.load_css == 'bootstrapv3') {
+            var selector = '.casasync-basic-box';
+            $(selector).equalHeightColumns({
+                speed : 500
+            });
+        }
     }
 
     var casasyncParams = $.jStorage.get('casasyncParams', false);
@@ -157,4 +160,10 @@ jQuery(document).ready(function($) {
         }
     }
 
+    if ((window.casasyncOptionParams && window.casasyncOptionParams.load_css == 'bootstrapv2') && (window.casasyncOptionParams && window.casasyncOptionParams.load_bootstrap_js == 1)) {
+        // Bootstrap 2 Scripts
+        $('#casasyncCarousel').carousel({
+            interval: false
+        });
+    }
 });

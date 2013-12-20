@@ -6,7 +6,6 @@
 			}
 		}
 
-/*** ADD default plugin installation ***/
 		$current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 		switch ($current) {
 			case 'appearance':
@@ -32,7 +31,9 @@
 			        'casasync_single_show_year_built',
 			        'casasync_single_show_year_renovated',
 			        'casasync_single_show_carousel_indicators',
-			        'casasync_single_show_availability'
+			        'casasync_single_show_availability',
+			        'casasync_sellerfallback_show_organization',
+					'casasync_sellerfallback_show_person_view',
 				);
 				break;
 			case 'archiveview':
@@ -50,7 +51,14 @@
 			        'casasync_archive_show_year_renovated',
 			        'casasync_archive_show_price',
 			        'casasync_archive_show_excerpt',
-			        'casasync_archive_show_availability'
+			        'casasync_archive_show_availability',
+			        'casasync_archive_show_thumbnail_size_crop'
+				);
+				break;
+			case 'contactform':
+				$checkbox_traps = array(
+					'casasync_show_email_organisation',
+					'casasync_show_email_person_view'
 				);
 				break;
 			case 'general':
@@ -61,12 +69,17 @@
 					'casasync_remCat',
 					'casasync_remCat_email',
 					'casasync_before_content',
-					'casasync_after_content',
-					'casasync_sellerfallback_show_organization',
-					'casasync_sellerfallback_show_person_view',
-					'casasync_inquiryfallback_use_email'
+					'casasync_after_content'
 				);
 				break;
+		}
+
+		//reset
+		if(get_option('casasync_request_per_remcat') == false) {
+			update_option('casasync_remCat_email', '');
+		}
+		if(get_option('casasync_request_per_mail_fallback') == false) {
+			update_option('casasync_request_per_mail_fallback_value', '');
 		}
 
 		foreach ($checkbox_traps as $trap) {
@@ -95,7 +108,8 @@
 			'general'     => 'Generell',
 			'appearance'  => 'Design',
 			'singleview'  => 'Einzelansicht',
-			'archiveview' => 'Archivansicht'
+			'archiveview' => 'Archivansicht',
+			'contactform' => 'Kontaktformular'
 		); 
 	    echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
@@ -120,7 +134,7 @@
 						<?php echo $table_start; ?>
 							<tr valign="top">
 								<th scope="row">Stylesheet</th>
-								<td id="front-static-pages">
+								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Stylesheet</span></legend>
 										<?php $name = 'casasync_load_css'; ?>
@@ -142,7 +156,7 @@
 							</tr>
 							<tr valign="top">
 								<th scope="row">Scripts</th>
-								<td id="front-static-pages">
+								<td class="front-static-pages">
 									<fieldset>
 										<?php $name = 'casasync_load_bootstrap_scripts'; ?>
 										<?php $text = 'Bootstrap'; ?>
@@ -180,7 +194,7 @@
 						<?php echo $table_start; ?>
 							<tr valign="top">
 								<th scope="row">Folgende Social Media Plattformen anzeigen</th>
-								<td id="front-static-pages">
+								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Folgende Social Media Plattformen anzeigen</span></legend>
 										<?php $name = 'casasync_share_facebook'; ?>
@@ -352,10 +366,186 @@
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
+						<?php echo $table_start; ?>
+						<h3>Standard Daten</h3>
+						<p>Nachfolgend können Sie Standardwerte für die Firma, Kontaktperson und Kontaktemail definieren.</p>
+						<?php echo $table_start; ?>
+							<?php $name = 'casasync_inquiryfallback_person_email'; ?>
+							<?php $text = 'E-Mail Adresse für Anfragen'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><b><?php echo $text ?></b></label></th>
+								<td>
+									<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
+									<br><span class="description">Diese E-Mail Adresse wird beim Kontaktformular verwendet.</span>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scrope="row"><b>Organisation</b></th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Organisation</span></legend>
+										<?php $name = 'casasync_sellerfallback_show_organization'; ?>
+										<?php $text = 'Organisation anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_legalname'; ?>
+							<?php $text = 'Organisation Name'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_address_street'; ?>
+							<?php $text = 'Strasse'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_address_postalcode'; ?>
+							<?php $text = 'PLZ'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_address_locality'; ?>
+							<?php $text = 'Ort'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_address_region'; ?>
+							<?php $text = 'Kanton'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_address_country'; ?>
+							<?php $text = 'Land'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td>
+									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+										<option <?php echo (get_option($name) == '' ? 'selected="selected"' : ''); ?> value="">-</option>
+										<option <?php echo (get_option($name) == 'CH' ? 'selected="selected"' : ''); ?> value="CH">Schweiz</option>
+										<option <?php echo (get_option($name) == 'DE' ? 'selected="selected"' : ''); ?> value="DE">Deutschland</option>
+										<option <?php echo (get_option($name) == 'FR' ? 'selected="selected"' : ''); ?> value="FR">Frankreich</option>
+										<option <?php echo (get_option($name) == 'AT' ? 'selected="selected"' : ''); ?> value="AT">Österreich</option>
+										<option <?php echo (get_option($name) == 'FL' ? 'selected="selected"' : ''); ?> value="FL">Fürstenthum Liechtenstein</option>
+									</select>
+								</td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_email'; ?>
+							<?php $text = 'E-Mail Adresse'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_phone_central'; ?>
+							<?php $text = 'Telefon Geschäft'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_sellerfallback_fax'; ?>
+							<?php $text = 'Fax'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+						<?php echo $table_end; ?>
+						<?php echo $table_start; ?>
+							<tr>
+								<td></td>
+							</tr>
+							<tr valign="top">
+								<th scrope="row"><b>Kontaktperson</b></th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Kontaktperson</span></legend>
+										<?php $name = 'casasync_sellerfallback_show_person_view'; ?>
+										<?php $text = 'Kontaktperson anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_gender'; ?>
+							<?php $text = 'Geschlecht'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td>
+									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+										<option <?php echo (get_option($name) == 'F' ? 'selected="selected"' : ''); ?> value="F">Frau</option>
+										<option <?php echo (get_option($name) == 'M' ? 'selected="selected"' : ''); ?> value="M">Herr</option>
+									</select>
+								</td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_givenname'; ?>
+							<?php $text = 'Vorname'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_familyname'; ?>
+							<?php $text = 'Nachname'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_function'; ?>
+							<?php $text = 'Funktion'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_email'; ?>
+							<?php $text = 'E-Mail Adresse'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_phone_direct'; ?>
+							<?php $text = 'Direktwahl'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+							<?php $name = 'casasync_salesperson_fallback_phone_mobile'; ?>
+							<?php $text = 'Mobile'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+							</tr>
+						<?php echo $table_end; ?>
 					<?php
 					break;
 				case 'archiveview':
 					?>
+					<?php echo $table_start; ?>
+						<tr valign="top">
+							<th scope="row">Bildgrösse</th>
+							<td>
+								<?php $name = 'casasync_archive_show_thumbnail_size_w'; ?>
+								<?php $text = 'Breite'; ?>
+								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
+								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
+								<?php $name = 'casasync_archive_show_thumbnail_size_h'; ?>
+								<?php $text = 'Höhe'; ?>
+								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
+								<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text"><br>
+								<?php $name = 'casasync_archive_show_thumbnail_size_crop'; ?>
+								<?php $text = 'Beschneide das Miniaturbild auf die exakte Größe (Miniaturbilder sind normalerweise proportional)'; ?>
+								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="checkbox" value="1" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?>>
+								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
+							</td>
+						</tr>
+					<?php echo $table_start; ?>
 					<h3>Dynamische Felder</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
@@ -504,6 +694,107 @@
 						<?php echo $table_end; ?>
 						<?php
 					break;
+				case 'contactform':
+				default:
+					?>
+						<?php /******* Kontaktformular *******/ ?>
+						<h3>Email</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Anfrage an Kontakt-E-Mail Adresse vom Objekt senden?</th>
+								<td class="front-static-pages contactform-tab">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Anfrage an Kontakt-E-Mail Adresse vom Objekt senden?</span></legend>
+										<input name="casasync_request_per_mail_value" type="text" value="Vom Objekt definiert" class="regular-text" readonly="readonly" disabled="disabled"> 
+										<?php $name = 'casasync_request_per_mail'; ?>
+										<?php $text = 'Ja'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<?php $text = 'Nein'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Anfrage an REMCat E-Mail Adresse senden?</th>
+								<td class="front-static-pages contactform-tab">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Anfrage an REMCat E-Mail Adresse senden?</span></legend>
+										<?php $name = 'casasync_remCat_email'; ?>
+											<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
+										<?php $name = 'casasync_request_per_remcat'; ?>
+										<?php $text = 'Ja'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<?php $text = 'Nein'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Weitere Empfänger festlegen</th>
+								<td class="front-static-pages contactform-tab">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Weitere Empfänger festlegen</span></legend>
+										<?php $name = 'casasync_request_per_mail_fallback_value'; ?>
+											<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
+										<?php $name = 'casasync_request_per_mail_fallback'; ?>
+										<?php $text = 'Immer'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="always" <?php echo (get_option($name) == 'always' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<?php $text = 'Nein'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<?php $text = 'Fallback'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="radio" value="fallback" <?php echo (get_option($name) == 'fallback' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+
+										</label>
+										<br>
+										<p><span class="description">Falls Fallback ausgewählt ist, wird nur eine E-Mail gesendet, falls die Kontakt-E-Mail Adresse im Objekt nicht hinterlegt ist.</span><p>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<h3>Adressblock</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">E-Mail des Anbieters anzeigen</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>E-Mail des Anbieters anzeigen</span></legend>
+										<?php $name = 'casasync_show_email_organisation'; ?>
+										<?php $text = 'Ja'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">E-Mail der Kontaktperson anzeigen</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>E-Mail der Kontaktperson anzeigen</span></legend>
+										<?php $name = 'casasync_show_email_person_view'; ?>
+										<?php $text = 'Ja'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<?php
+					break;
 				case 'general':
 				default:
 					?>
@@ -511,7 +802,7 @@
 						<?php echo $table_start; ?>
 							<tr valign="top">
 								<th scope="row">Synchronisation mit Exporter/Marklersoftware</th>
-								<td id="front-static-pages">
+								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
 										<?php $name = 'casasync_live_import'; ?>
@@ -528,48 +819,8 @@
 								</td>
 							</tr>
 							<tr valign="top">
-								<th scope="row">RemCat ist eine Tranfertechnology die Anfragen per E-Mail mittels standart versendet</th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>RemCat ist eine Tranfertechnology die Anfragen per E-Mail mittels standart versendet</span></legend>
-										<?php $name = 'casasync_remCat'; ?>
-										<?php $text = 'RemCat aktivieren'; ?>
-										<p><label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label></p>
-
-										<?php $name = 'casasync_remCat_email'; ?>
-										<?php $text = 'RemCat Email Adresse'; ?>
-										<p>
-											<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span>
-										</p>
-									</fieldset>
-								</td>
-							</tr>
-							<tr valign="top">
-								<?php $name = 'casasync_sellerfallback_email_use'; ?>
-								<?php $text = 'Wann sollen Anfragen an die Kontakt E-Mail Adresse versendet werden?'; ?>
-								<th scope="row"><?php echo $text ?></th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span><?php echo $text ?></span></legend>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="never" <?php echo (get_option($name) == 'never' ? 'checked="checked"' : ''); ?>> Niemals
-										</label>
-										<br>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="fallback" <?php echo (get_option($name) == 'fallback' ? 'checked="checked"' : ''); ?>> Falls keine RemCat Adresse angegeben wurde
-										</label>
-										<br>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="always" <?php echo (get_option($name) == 'always' ? 'checked="checked"' : ''); ?>> Immer
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-							<tr valign="top">
 								<th scrope="row">HTML einfügen</th>
-								<td id="front-static-pages">
+								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Vor dem Plugin</span></legend>
 										<?php $name = 'casasync_before_content'; ?>
@@ -591,431 +842,9 @@
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
-						<h3>Standard Anbieter</h3>
-						<p>Nachfolgend können Sie Standardwerte für die Firma, Kontaktperson und Kontaktemail definieren.</p>
-						<?php echo $table_start; ?>
-							<tr valign="top">
-								<th scrope="row"><b>Organisation</b></th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Organisation</span></legend>
-										<?php $name = 'casasync_sellerfallback_show_organization'; ?>
-										<?php $text = 'Organisation anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_legalname'; ?>
-							<?php $text = 'Organisation Name'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_address_street'; ?>
-							<?php $text = 'Strasse'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_address_postalcode'; ?>
-							<?php $text = 'PLZ'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_address_locality'; ?>
-							<?php $text = 'Ort'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_address_region'; ?>
-							<?php $text = 'Kanton'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_address_country'; ?>
-							<?php $text = 'Land'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td>
-									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-										<option <?php echo (get_option($name) == '' ? 'selected="selected"' : ''); ?> value="">-</option>
-										<option <?php echo (get_option($name) == 'CH' ? 'selected="selected"' : ''); ?> value="CH">Schweiz</option>
-										<option <?php echo (get_option($name) == 'DE' ? 'selected="selected"' : ''); ?> value="DE">Deutschland</option>
-										<option <?php echo (get_option($name) == 'FR' ? 'selected="selected"' : ''); ?> value="FR">Frankreich</option>
-										<option <?php echo (get_option($name) == 'AT' ? 'selected="selected"' : ''); ?> value="AT">Österreich</option>
-										<option <?php echo (get_option($name) == 'FL' ? 'selected="selected"' : ''); ?> value="FL">Fürstenthum Liechtenstein</option>
-									</select>
-								</td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_email'; ?>
-							<?php $text = 'E-Mail Adresse'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_phone_central'; ?>
-							<?php $text = 'Telefon Geschäft'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_phone_direct'; ?>
-							<?php $text = 'Direktwahl'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_phone_mobile'; ?>
-							<?php $text = 'Mobile'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_sellerfallback_fax'; ?>
-							<?php $text = 'Fax'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-						<?php echo $table_end; ?>
-						<?php echo $table_start; ?>
-							<tr>
-								<td></td>
-							</tr>
-							<tr valign="top">
-								<th scrope="row"><b>Kontaktperson</b></th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Kontaktperson</span></legend>
-										<?php $name = 'casasync_sellerfallback_show_person_view'; ?>
-										<?php $text = 'Kontaktperson anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_gender'; ?>
-							<?php $text = 'Geschlecht'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td>
-									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-										<option <?php echo (get_option($name) == 'F' ? 'selected="selected"' : ''); ?> value="F">Frau</option>
-										<option <?php echo (get_option($name) == 'M' ? 'selected="selected"' : ''); ?> value="M">Herr</option>
-									</select>
-								</td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_givenname'; ?>
-							<?php $text = 'Vorname'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_familyname'; ?>
-							<?php $text = 'Nachname'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_function'; ?>
-							<?php $text = 'Funktion'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_email'; ?>
-							<?php $text = 'E-Mail Adresse'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_phone_central'; ?>
-							<?php $text = 'Telefon Geschäft'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_phone_direct'; ?>
-							<?php $text = 'Direktwahl'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_phone_mobile'; ?>
-							<?php $text = 'Mobile'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-							<?php $name = 'casasync_salesperson_fallback_fax'; ?>
-							<?php $text = 'Fax'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-							</tr>
-						<?php echo $table_end; ?>
-						<?php echo $table_start; ?>
-							<tr>
-								<td></td>
-							</tr>
-							<tr valign="top">
-								<th scrope="row"><b>Kontakt E-Mail Adresse</b></th>
-								<td id="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Kontakt E-Mail Adresse</span></legend>
-										<?php $name = 'casasync_inquiryfallback_use_email'; ?>
-										<?php $text = 'Kontakt E-Mail Adresse verwenden, wenn beim Objekt keine vorhanden ist.'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-							<?php $name = 'casasync_inquiryfallback_person_email'; ?>
-							<?php $text = 'E-Mail Adresse'; ?>
-							<tr>
-								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td>
-									<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
-									<br><span class="description">Diese E-Mail Adresse wird beim Kontaktformular verwendet.</span>
-								</td>
-							</tr>
-						<?php echo $table_end; ?>
 					<?php
 					break;
 			}
 		?>
 		<p class="submit"><input type="submit" name="casasync_submit" id="submit" class="button button-primary" value="Änderungen übernehmen"></p>
 	</form>
-<hr>
-
-<div class="wrap" style="display: none;">
-    <?php screen_icon('options-general'); ?>
-    <h2>CasaSync Optionen</h2>
-
-	<form action="" method="post" id="options_form" name="options_form">
-
-	<h3>Generell</h3>
-	<table class="form-table">
-		<tbody>
-			
-			<tr valign="top">
-				<th scope="row">Verkäufer/Anbieter</th>
-				<td id="front-static-pages">
-					<fieldset>
-						<legend class="screen-reader-text"><span>Verkäufer/Anbieter</span></legend>
-						<?php $name = 'casasync_sellerfallback_show'; ?>
-						<?php $text = 'Verkäufer/Anbieter (untere angeben) anzeigen wenn beim Objekt kein Verkäufer vorhanden ist'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-
-						<?php $name = 'casasync_sellerfallback_update'; ?>
-						<?php $text = 'Verkäufer/Anbieter mit dem Exporter/Maklersoftware synchronisieren'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-					</fieldset>
-				</td>
-			</tr>
-
-		</tbody>
-	</table>
-
-
-	<h3>Verkäufer/Anbieter Adresse</h3>
-	<table class="form-table">
-		<tbody>
-
-
-
-			<?php $name = 'casasync_sellerfallback_address_street'; ?>
-			<?php $text = 'Strasse'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-
-			<?php $name = 'casasync_sellerfallback_address_postalcode'; ?>
-			<?php $text = 'PLZ'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_address_locality'; ?>
-			<?php $text = 'Ort'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_address_region'; ?>
-			<?php $text = 'Kanton'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-
-			<?php $name = 'casasync_sellerfallback_address_country'; ?>
-			<?php $text = 'Land'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td>
-					<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-						<option <?php echo (get_option($name) == '' ? 'selected="selected"' : ''); ?> value="">-</option>
-						<option <?php echo (get_option($name) == 'CH' ? 'selected="selected"' : ''); ?> value="CH">Schweiz</option>
-						<option <?php echo (get_option($name) == 'DE' ? 'selected="selected"' : ''); ?> value="DE">Deutschland</option>
-						<option <?php echo (get_option($name) == 'FR' ? 'selected="selected"' : ''); ?> value="FR">Frankreich</option>
-						<option <?php echo (get_option($name) == 'AT' ? 'selected="selected"' : ''); ?> value="AT">Österreich</option>
-						<option <?php echo (get_option($name) == 'FL' ? 'selected="selected"' : ''); ?> value="FL">Fürstenthum Liechtenstein</option>
-					</select>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-
-	<h3>Verkäufer/Anbieter Angaben</h3>
-	<table class="form-table">
-		<tbody>
-
-
-			<?php $name = 'casasync_sellerfallback_legalname'; ?>
-			<?php $text = 'Firma Name'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_email'; ?>
-			<?php $text = '<strong>E-Mail Adresse</strong>'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_fax'; ?>
-			<?php $text = 'Fax'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_phone_direct'; ?>
-			<?php $text = 'Direktwahl'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_phone_central'; ?>
-			<?php $text = 'Firma Telefon'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_sellerfallback_phone_mobile'; ?>
-			<?php $text = 'Mobile'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-		</tbody>
-	</table>
-
-
-	<h3>Technische Feedback Adresse</h3>
-	<table class="form-table">
-		<tbody>
-			<tr valign="top">
-				<th scope="row">Optionen</th>
-				<td id="front-static-pages">
-					<fieldset>
-						<legend class="screen-reader-text"><span>Optionen</span></legend>
-						<?php $name = 'casasync_feedback_update'; ?>
-						<?php $text = 'Mit dem Exporter/Maklersoftware synchronisieren'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-
-						<?php $name = 'casasync_feedback_creations'; ?>
-						<?php $text = '<strong>Erstellungs-Rückmeldungen</strong> aktivieren'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-
-						<?php $name = 'casasync_feedback_edits'; ?>
-						<?php $text = '<strong>Berabeitungs-Rückmeldungen</strong> aktivieren'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-
-						<?php $name = 'casasync_feedback_inquiries'; ?>
-						<?php $text = 'Kopie von allen Anfragen hierehin versenden'; ?>
-						<p><label>
-							<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-						</label></p>
-					</fieldset>
-				</td>
-			</tr>
-
-			<?php $name = 'casasync_feedback_gender'; ?>
-			<?php $text = 'Titel'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td>
-					<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-						<option <?php echo (get_option($name) == 'M' ? 'selected="selected"' : ''); ?> value="M">Herr</option>
-						<option <?php echo (get_option($name) == 'F' ? 'selected="selected"' : ''); ?> value="F">Frau</option>
-					</select>
-				</td>
-			</tr>
-
-			<?php $name = 'casasync_feedback_given_name'; ?>
-			<?php $text = 'Vorname'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_feedback_family_name'; ?>
-			<?php $text = 'Nachname'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_feedback_email'; ?>
-			<?php $text = '<strong>E-Mail Adresse</strong>'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-			<?php $name = 'casasync_feedback_telephone'; ?>
-			<?php $text = 'Telefon'; ?>
-			<tr>
-				<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-				<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
-			</tr>
-
-		</tbody>
-	</table>
-
-
-	<p class="submit"><input type="submit" name="casasync_submit" id="submit" class="button button-primary" value="Änderungen übernehmen"></p>
-
-
-	</form>
-
-</div>

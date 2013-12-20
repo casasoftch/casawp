@@ -559,6 +559,21 @@
 
 // Make a Grid
 // Use .makeRow and .makeColumn to assign semantic layouts grid system behavior
+.makeFluidRow(){
+    width: 100%;
+    .clearfix();
+}
+
+.makeFluidCol(@span:1,@offset:0){
+    float: left;
+    #grid > .fluid .span(@span);
+    #grid > .fluid .offset(@offset);
+    &:first-child {
+        margin-left: 0;
+        .offsetFirstChild(@offset);
+    }
+}
+
 .makeRow() {
   margin-left: @gridGutterWidth * -1;
   .clearfix();
