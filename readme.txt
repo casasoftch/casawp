@@ -27,6 +27,13 @@ Well, yes it is!
 
 == Changelog ==
 
+= 3.0.1 = 
+* bug: pref next links in single fixed for multisite installation and stability
+* bug: Archive pagination now behaves like it should in bs2 and bs3
+* bug: Changed fonts directory to font without the s and unified the css to target the same one
+* bug: fixed ajax requests sent by single pagination with large amounts of locations/properties
+
+
 = 3.0.0 = 
 * new: Vollständige Überarbeitung des Plugins. Bitte beachten!
 * new: Twitter Bootstrap 3 Support (Mit BS2)

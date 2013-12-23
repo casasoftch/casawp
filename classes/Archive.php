@@ -12,7 +12,7 @@
     public function setArchiveJsVars(){
         $script_params = array(
            'categories'   => $this->getCategoryOptions(),
-           'locations'    => $this->getLocationsOptions(),
+           'locations'    => $this->getLocationsOptions(false),
            'salestypes'   => $this->getSalestypeOptions(),
            'archive_link' => $this->getArchiveLink()
        );
@@ -51,36 +51,78 @@
             'casasync_category_s' => $casasync_category_s,
         );
 
+
+        $link = get_post_type_archive_link('casasync_property');
         if ( get_option('permalink_structure') == '' ) {
-            return '?'. http_build_query(array_merge($query, array("post_type" => "casasync_property")));
+            return $link . '?'. http_build_query(array_merge($query, array("post_type" => "casasync_property")));
         } else {
             $post_type = get_post_type_object('casasync_property');
-            return '/'.$post_type->rewrite['slug'].'/?'. http_build_query($query);
+            return $link . '?'. http_build_query($query);
         }
     }
 
     public function getPagination(){
-      global $wp_query;
+        global $wp_query;
+
+        if ( $GLOBALS['wp_query']->max_num_pages < 2 ) {
+            return;
+        }
+
+        $paged        = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+        $pagenum_link = html_entity_decode( get_pagenum_link() );
+        $query_args   = array();
+        $url_parts    = explode( '?', $pagenum_link );
+
+        if ( isset( $url_parts[1] ) ) {
+            wp_parse_str( $url_parts[1], $query_args );
+        }
+
+        $pagenum_link = remove_query_arg( array_keys( $query_args ), $pagenum_link );
+        $pagenum_link = trailingslashit( $pagenum_link ) . '%_%';
+
+        $format  = $GLOBALS['wp_rewrite']->using_index_permalinks() && ! strpos( $pagenum_link, 'index.php' ) ? 'index.php/' : '';
+        $format .= $GLOBALS['wp_rewrite']->using_permalinks() ? user_trailingslashit( 'page/%#%', 'paged' ) : '?paged=%#%';
+
+        // Set up paginated links.
+        $links = paginate_links( array(
+            'base'     => $pagenum_link,
+            'format'   => $format,
+            'total'    => $GLOBALS['wp_query']->max_num_pages,
+            'current'  => $paged,
+            'mid_size' => 1,
+            'add_args' => array_map( 'urlencode', $query_args ),
+            'prev_text' => '&laquo;',
+            'next_text' => '&raquo;',
+            'type' => 'list'
+        ) );
+
+        if ( $links ) {
+            return '<div class="casasync-pagination ' . (get_option('casasync_load_css', 'bootstrapv3') == 'bootstrapv2' ? 'pagination' : '') . '">' . $links . '</div>';
+        }
+
+
+
       $total_pages = $wp_query->max_num_pages;
       if ($total_pages > 1) {
         $current_page = max(1, get_query_var('paged'));
         if($current_page) {
-          $prev_page = '<li class="disabled"><span>&laquo;</span></li>';
-          $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
-          $i = 0;
-          $return = '<ul class="casasync-pagination">';
-          $return .= $prev_page;
-          while ($i < $total_pages) {
-            $i++;
-            if ($current_page == $i) {
-              $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
-            } else {
-              $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+            //TODO: prev/next These dont work yet!
+            $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
+            $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
+            $i = 0;
+            $return = '<ul class="casasync-pagination">';
+            $return .= $prev_page;
+            while ($i < $total_pages) {
+                $i++;
+                if ($current_page == $i) {
+                    $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
+                } else {
+                    $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+              }
             }
-          }
-          $return .= $next_page;
-          $return .= '</ul>';
-          return $return;
+            $return .= $next_page;
+            $return .= '</ul>';
+            return $return;
         }
       }
     }
@@ -103,7 +145,7 @@
         }
         return $options;
     }
-    public function getLocationsOptions(){
+    public function getLocationsOptions($return_unchecked = true){
         global $wp_query;
         $categories = array();
         foreach ($wp_query->tax_query->queries as $tax_query) {
@@ -114,10 +156,11 @@
         $options = array();
         $terms = get_terms('casasync_location');
         foreach ($terms as $term) {
-            $options[$term->slug]['value'] = $term->slug; 
-            //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
-            $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
-            $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+            if (in_array($term->slug, $categories) || $return_unchecked ) {
+                $options[$term->slug]['value'] = $term->slug; 
+                $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
+                $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+            }
         }
         return $options;
     }

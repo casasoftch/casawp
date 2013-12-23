@@ -91,23 +91,24 @@
       }
 
       $w_locations = array();
-      foreach ($query['locations'] as $slug => $options) {
-        if ($options['checked']) {
-          $w_locations[] = $options['value'];
+      if (isset($query['locations'])) {
+        foreach ($query['locations'] as $slug => $options) {
+          if ($options['checked']) {
+            $w_locations[] = $options['value'];
+          }
+        }
+        if ($w_locations) {
+          $taxquery_new[] =
+             array(
+                 'taxonomy' => 'casasync_location',
+                 'terms' => $w_locations,
+                 'include_children' => 1,
+                 'field' => 'slug',
+                 'operator'=> 'IN'
+             )
+          ;
         }
       }
-      if ($w_locations) {
-        $taxquery_new[] =
-           array(
-               'taxonomy' => 'casasync_location',
-               'terms' => $w_locations,
-               'include_children' => 1,
-               'field' => 'slug',
-               'operator'=> 'IN'
-           )
-        ;
-      }
-
       $w_salestypes = array();
       foreach ($query['salestypes'] as $slug => $options) {
         if ($options['checked']) {
@@ -159,8 +160,8 @@
         $post_type_slug = $post_type->rewrite['slug'];
       }
       $prevnext = array(
-        'nextlink' => ($prev ? '/'.$post_type_slug.'/'.$prev->post_name.'/' : 'no'), 
-        'prevlink' => ($next ? '/'.$post_type_slug.'/'.$next->post_name.'/' : 'no')
+        'nextlink' => ($prev ? get_permalink($prev->ID) : 'no'), 
+        'prevlink' => ($next ? get_permalink($next->ID) : 'no')
       );
       return $prevnext;
 
