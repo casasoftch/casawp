@@ -7970,6 +7970,11 @@ a.badge:focus {
 .casasync-archive .casasync-pagination {
   margin: 20px 0;
 }
+.casasync-archive .casasync-pagination .current {
+  background-color: #f5f5f5;
+  color: #999999;
+  cursor: default;
+}
 .sr-only {
   display: none;
 }

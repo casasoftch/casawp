@@ -93,7 +93,8 @@
             'add_args' => array_map( 'urlencode', $query_args ),
             'prev_text' => '&laquo;',
             'next_text' => '&raquo;',
-            'type' => 'list'
+            'type' => 'list',
+            'add_args' => false, //TODO: add filter arguments
         ) );
 
         if ( $links ) {

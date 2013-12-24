@@ -7758,6 +7758,15 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
   border-color: #dddddd;
   cursor: not-allowed;
 }
+.casasync-archive .casasync-pagination ul .current,
+.casasync-archive .casasync-pagination ul .current:hover,
+.casasync-archive .casasync-pagination ul .current:focus {
+  z-index: 2;
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #428bca;
+  cursor: default;
+}
 .casasync-single .casasync-carousel {
   position: relative;
   border-radius: 5px;
