@@ -86,14 +86,14 @@ class CasaSync {
             } elseif ( $theme_file = locate_template( array( 'casasync-single.php' ) ) ) {
                 $template_path = $theme_file;
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . '/single.php';
+                $template_path = CASASYNC_PLUGIN_DIR . '/casasync-single.php';
             }
         }
         if (is_tax('casasync_salestype') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
             if ( $theme_file = locate_template(array('casasync-archive.php'))) {
                 $template_path = $theme_file;
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . '/archive.php';
+                $template_path = CASASYNC_PLUGIN_DIR . '/casasync-archive.php';
             }
         }
         return $template_path;
