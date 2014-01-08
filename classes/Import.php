@@ -914,7 +914,7 @@ class Import {
           }
           //set post custom fields
           foreach ($the_post_custom as $key => $value) {
-            if ($value) {
+            if ($value != "") {
               update_post_meta($the_id, $key, $value);
             } else {
               delete_post_meta($the_id, $key, $value);

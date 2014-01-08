@@ -431,7 +431,7 @@
 
     public function casasync_numStringToArray($string){
       $si = false;
-      if (!$string) {
+      if ($string == '') {
         return false;
       }
       if (strlen($string) == 1) {

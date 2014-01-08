@@ -225,22 +225,17 @@
       } 
 
       $floors = get_post_meta( get_the_ID(), 'floor', $single = true ); 
-      if ($floors) {
-        $floors_quirk = trim($floors,"[");   
-        $floors_quirk = trim($floors_quirk,"]");
-        $floors_arr = explode(']+[', $floors_quirk);
-        $largest_val = 0;
-        $largest_key = 0;
-        foreach ($floors_arr as $key => $value) {
-          if ((int)$value > $largest_val ) {
-            $largest_val = (int)$value;
-            $largest_key = $key;
-          }
-          $this->floors[] = $value . '. Stock' . ($value == '0' ? ' (EG)' : '');
+      if($floors != "") {
+        if($floors == '0') {
+          $floor_type = ' (EG)';
+          $this->floors[] = 'EG';
+        } elseif(strpos($floors, '-') === false) {
+          $floor_type = '. OG';
+        } else {
+          $floors = str_replace('-', '', $floors);
+          $floor_type = '. UG';
         }
-        if (isset($this->floors[$largest_key])) {
-          $this->floors[$largest_key] = $floors_arr[$largest_key] . '. Stock (OG)';
-        }
+        $this->floors[] = $floors . $floor_type;
       }
       
       $basis = wp_get_post_terms( get_the_ID(), 'casasync_salestype'); 
