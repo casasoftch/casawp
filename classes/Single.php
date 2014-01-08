@@ -110,9 +110,11 @@
         }
       }
       $w_salestypes = array();
-      foreach ($query['salestypes'] as $slug => $options) {
-        if ($options['checked']) {
-          $w_salestypes[] = $options['value'];
+      if (array_key_exists('salestypes', $query)) {
+        foreach ($query['salestypes'] as $slug => $options) {
+          if ($options['checked']) {
+            $w_salestypes[] = $options['value'];
+          }
         }
       }
       if ($w_salestypes) {
