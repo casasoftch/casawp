@@ -1120,11 +1120,11 @@
             .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
         }
-        if($this->seller['phone_mobile'] != '') {
+        /*if($this->seller['phone_mobile'] != '') {
           $return .= '<p class="casasync-phone-mobile">'
             .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
-        }
+        }*/
         if($this->seller['fax'] != '') {
           $return .= '<p class="casasync-phone-fax">'
             .'<span class="casasync-label">' . __('Fax', 'casasync')  . '</span>'
