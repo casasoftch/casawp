@@ -529,7 +529,7 @@ class Import {
           $seller_org_fax = $property->offer->seller->organization->faxNumber->__toString();
           if ($property->offer->seller->organization->phone) {
             $central = false;
-            foreach ($property->offer->seller->organization->organization as $phone) {
+            foreach ($property->offer->seller->organization->phone as $phone) {
               if ($phone['type']) {
                 switch ($phone['type']->__toString()) {
                   case 'direct':
