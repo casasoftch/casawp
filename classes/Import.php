@@ -795,12 +795,12 @@ class Import {
           if (in_array($key, $all_numval_keys)) {            
             switch ($key) {
               //multiple simple values
-              case 'floor':
-                $the_value = '';
+              case 'multiple':
+                /*$the_value = '';
                 foreach ($numval as $key2 => $value) {
                   $the_value .= ($key2 != 0 ? '+' : '') . '[' . $value['from']['value'] . ']'; 
                 }
-                $xml_numval[$key] = $the_value;
+                $xml_numval[$key] = $the_value;*/
                 break;
               //simple value with si
               case 'surface_living':
@@ -819,6 +819,7 @@ class Import {
                 $xml_numval[$key] = $the_value;
                 break;
               //INT
+              case 'floor':
               case 'year_built':
               case 'year_renovated':
                 $the_value = '';
