@@ -227,10 +227,10 @@
       $floors = get_post_meta( get_the_ID(), 'floor', $single = true ); 
       if($floors != "") {
         if($floors == '0') {
-          $floor_type = ' (EG)';
-          $this->floors[] = 'EG';
+          $floor_type = '';
+          $this->floors[] = __('Ground', 'casasync');
         } elseif(strpos($floors, '-') === false) {
-          $floor_type = '. OG';
+          $floor_type = '. ' . __('Floor', 'casasync');
         } else {
           $floors = str_replace('-', '', $floors);
           $floor_type = '. UG';
