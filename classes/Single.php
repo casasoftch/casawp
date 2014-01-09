@@ -325,9 +325,9 @@
       $this->salesperson['givenname']     = get_post_meta(get_the_ID(), 'seller_person_givenname', true);
       $this->salesperson['familyname']    = get_post_meta(get_the_ID(), 'seller_person_familyname', true);
       $this->salesperson['email']         = get_post_meta(get_the_ID(), 'seller_person_email', true);
-      $this->salesperson['fax']           = get_post_meta(get_the_ID(), 'seller_person_fax', true);
+      //$this->salesperson['fax']           = get_post_meta(get_the_ID(), 'seller_person_fax', true);
       $this->salesperson['phone_direct']  = get_post_meta(get_the_ID(), 'seller_person_phone_direct', true);
-      $this->salesperson['phone_central'] = get_post_meta(get_the_ID(), 'seller_person_phone_central', true);
+      //$this->salesperson['phone_central'] = get_post_meta(get_the_ID(), 'seller_person_phone_central', true);
       $this->salesperson['phone_mobile']  = get_post_meta(get_the_ID(), 'seller_person_phone_mobile', true);
       $this->salesperson['gender']        = get_post_meta(get_the_ID(), 'seller_person_gender', true);
 
@@ -337,7 +337,7 @@
           $this->salesperson['givenname']     = get_option('casasync_salesperson_fallback_givenname');
           $this->salesperson['familyname']    = get_option('casasync_salesperson_fallback_familyname');
           $this->salesperson['email']         = get_option('casasync_salesperson_fallback_email');
-          $this->salesperson['phone_direct']  = get_option('casasync_salesperson_fallback_phone_direct');
+          //$this->salesperson['phone_direct']  = get_option('casasync_salesperson_fallback_phone_direct');
           $this->salesperson['phone_mobile']  = get_option('casasync_salesperson_fallback_phone_mobile');
           $this->salesperson['gender']        = get_option('casasync_salesperson_fallback_gender');
         }
@@ -1090,8 +1090,9 @@
           $this->getAddress('seller')
           . $this->seller['legalname']
           . $this->seller['email']
-          . $this->seller['fax']
           . $this->seller['phone_central']
+          . $this->seller['phone_mobile']
+          . $this->seller['fax']
         ) {
           return true;
         }
@@ -1118,6 +1119,11 @@
           $return .= '<p class="casasync-phone-central">'
             .'<span class="casasync-label">' . __('Phone', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->seller['phone_central'] . '</span></p>';
+        }
+        if($this->seller['phone_mobile'] != '') {
+          $return .= '<p class="casasync-phone-mobile">'
+            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
+          .'<span class="value break-word"> ' . $this->seller['phone_mobile'] . '</span></p>';
         }
         if($this->seller['fax'] != '') {
           $return .= '<p class="casasync-phone-fax">'
