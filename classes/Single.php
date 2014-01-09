@@ -523,68 +523,66 @@
         ksort($numvals_to_display);
 
         if(!empty($numvals_to_display)) {
-          $break = false;
           foreach ($numvals_to_display as $value) {
-            $br = ($break == true) ? ('<br>') : ('');
+            $br = '<br>';
             switch ($value) {
               case 'casasync_single_show_number_of_rooms':
                 if ($this->getNumval('number_of_rooms')){
-                  $content .= $br;
                   $content .= __('Number of rooms:', 'casasync') . ' ' . $this->getNumval('number_of_rooms');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_surface_usable':
                 if ($this->getNumval('surface_usable')){
-                  $content .= $br;
                   $content .= __('Surface usable:', 'casasync') . ' ' . $this->getNumval('surface_usable');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_surface_living':
                 if ($this->getNumval('surface_living')){
-                  $content .= $br;
                   $content .= __('Living space:', 'casasync') . ' ' . $this->getNumval('surface_living');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_surface_property':
                 if ($this->getNumval('surface_property')){
-                  $content .= $br;
                   $content .= __('Property space:', 'casasync') . ' ' . $this->getNumval('surface_property');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_floor':
                 if ($this->floors){
-                  $content .= $br;
                   $content .= __('Floor:', 'casasync') . ' ' . $this->floors[0];
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_number_of_floors':
                 if ($this->getNumval('number_of_floors')){
-                  $content .= $br;
                   $content .= __('Number of floors:', 'casasync') . ' ' . $this->getNumval('number_of_floors');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_year_built':
                 if ($this->getNumval('year_built')){
-                  $content .= $br;
                   $content .= __('Year of construction:', 'casasync') . ' ' . $this->getNumval('year_built');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_year_renovated':
                 if ($this->getNumval('year_renovated')){
-                  $content .= $br;
                   $content .= __('Year of renovation:', 'casasync') . ' ' . $this->getNumval('year_renovated');
+                  $content .= $br;
                 }
                 break;
               case 'casasync_single_show_availability':
                 if ($this->getAvailabilityLabel()) {
-                  $content .= $br;
                   $content .= __('Available:','casasync') . ' ' . $br . $this->getAvailabilityLabel();
+                  $content .= $br;
                 }
               break;
               default:
                 break;
             }
-            $break = true;
           }
         }
       $content .= '</div></div>';
