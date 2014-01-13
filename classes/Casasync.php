@@ -289,6 +289,7 @@ class CasaSync {
                 true
             );
         }
+
     }
 
     function setTranslation(){

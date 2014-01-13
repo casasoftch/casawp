@@ -7,44 +7,6 @@ jQuery(document).ready(function($) {
         $.jStorage.set('casasyncParams', window.casasyncParams);
     }
 
-    /*$('#casasyncCarousel').carousel({
-        interval: false
-    });*/
- 
-    /*$('#carousel-text').html($('#slide-content-0').html());*/
-
-    //Handles the carousel thumbnails
-    /*$('[id^=carousel-selector-]').click( function(event){
-    		event.preventDefault();
-            
-            var id_selector = $(this).attr("id");
-            var id = id_selector.substr(id_selector.length -1);
-            var id = parseInt(id);
-            $('#casasyncCarousel').carousel(id);
-
-
-            $('#slider-thumbs .thumbnail-pane li').removeClass('active');
-            $(this).parent().addClass('active');
-
-    });*/
-
-
-    // When the carousel slides, auto update the text
-    /*$('#casasyncCarousel').on('slid', function (e) {
-            var id = $('.item.active').data('slide-number');
-            $('#carousel-text').html($('#slide-content-'+id).html());
-
-            $('#slider-thumbs .thumbnail-pane li').removeClass('active');
-            $('#carousel-selector-'+id).parent().addClass('active');
-
-    });*/
-
-    /*function scrollToAnchor(id){
-        var destinationTag = $('#'+id);
-        $('html,body').animate({scrollTop: destinationTag.offset().top},'slow');
-    }*/
-
-
     $('#casasyncContactAnchor').click(function(event){
         event.preventDefault();
 

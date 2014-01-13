@@ -6,8 +6,9 @@
 
     public function __construct(){ 
       $this->conversion = new Conversion;
-      add_action( 'wp_enqueue_scripts', array($this, 'setArchiveJsVars') );
-    }  
+      $this->setArchiveJsVars();
+      //add_action( 'wp_enqueue_scripts', array($this, 'setArchiveJsVars') );
+    }
 
     public function setArchiveJsVars(){
         $script_params = array(
@@ -16,6 +17,7 @@
            'salestypes'   => $this->getSalestypeOptions(),
            'archive_link' => $this->getArchiveLink()
        );
+
        wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
     }
 
