@@ -104,7 +104,28 @@ class CasaSync {
             if (is_tax('casasync_salestype') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
                 $posts_per_page = get_option('posts_per_page', 10);
                 $query->set('posts_per_page', $posts_per_page);
-                $query->set('orderby', 'date');
+                $query->set('order', get_option('casasync_archive_order', 'DESC'));
+
+                switch (get_option('casasync_archive_orderby', 'date')) {
+                    case 'title':
+                        $query->set('orderby', 'title');
+                        break;
+                    case 'location':
+                        $query->set('meta_key', 'casasync_property_address_locality');
+                        $query->set('orderby', 'meta_value');
+                        break;
+                    case 'price':
+                        $query->set('meta_key', 'priceForOrder');
+                        $query->set('orderby', 'meta_value');
+                        break;
+                    case 'date':
+                    default:
+                        $query->set('orderby', 'date');
+                        break;
+                }
+                //echo '<pre>';
+                //echo print_r($query);
+                //echo '</pre>';
 
                 $taxquery_new = array();
 
@@ -141,7 +162,6 @@ class CasaSync {
                     );
                 }
 
-                /* Filter einbauen */
                 if ((isset($_GET['casasync_salestype_s']) && is_array($_GET['casasync_salestype_s']) )) {
                     $salestypes = $_GET['casasync_salestype_s'];
                 } elseif (isset($_GET['casasync_salestype_s'])) {

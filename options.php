@@ -529,6 +529,29 @@
 					?>
 					<?php echo $table_start; ?>
 						<tr valign="top">
+							<th scope="row">Sortierung</th>
+							<td>
+
+
+								<?php $name = 'casasync_archive_orderby'; ?>
+								<?php $text = 'Sortierung'; ?>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<option <?php echo (get_option($name)  == 'date' ? 'selected="selected"' : ''); ?> value="date">Datum</option>
+									<option <?php echo (get_option($name)  == 'title' ? 'selected="selected"' : ''); ?> value="title">Titel</option>
+									<option <?php echo (get_option($name)  == 'price' ? 'selected="selected"' : ''); ?> value="price">Preis</option>
+									<option <?php echo (get_option($name)  == 'location' ? 'selected="selected"' : ''); ?> value="location">Ort</option>
+								</select>
+								<?php $name = 'casasync_archive_order'; ?>
+								<?php $text = 'Sortierung'; ?>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<option <?php echo (get_option($name)  == 'DESC' ? 'selected="selected"' : ''); ?> value="DESC">Absteigend</option>
+									<option <?php echo (get_option($name)  == 'ASC' ? 'selected="selected"' : ''); ?> value="ASC">Aufsteigend</option>
+								</select>
+							</td>
+						</tr>
+					<?php echo $table_end; ?>
+					<?php echo $table_start; ?>
+						<tr valign="top">
 							<th scope="row">Bildgrösse</th>
 							<td>
 								<?php $name = 'casasync_archive_show_thumbnail_size_w'; ?>
@@ -545,7 +568,7 @@
 								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
 							</td>
 						</tr>
-					<?php echo $table_start; ?>
+					<?php echo $table_end; ?>
 					<h3>Dynamische Felder</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
