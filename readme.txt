@@ -27,6 +27,15 @@ Well, yes it is!
 
 == Changelog ==
 
+= 3.0.2 = 
+* warning: single and archive tempalte files were renamed
+* bug: fixed displaying of floors and organization number
+* bug: changed structur of basic boxes, no empty lines
+* bug: fixed pagination
+* new: google maps can now switched off per zoom = 0
+* new: added new contactfield for country
+* new: added option for sorting archive. able to sort by date, time, price, location
+
 = 3.0.1 = 
 * bug: pref next links in single fixed for multisite installation and stability
 * bug: Archive pagination now behaves like it should in bs2 and bs3
