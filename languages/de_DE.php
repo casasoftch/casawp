@@ -400,6 +400,7 @@
 
                 case 'Floor':               $translated_text = 'OG';break;
                 case 'Ground':              $translated_text = 'EG';break;
+                case 'Country':             $translated_text = 'Land';break;
 
                 case 'Nothing Found': $translated_text = 'Nichts gefunden';break;
                 case 'Sorry, but nothing matched your search terms. Please try again with some different keywords.': $translated_text = 'Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte versuchen Sie es mit anderen Suchbegriffen.';break;

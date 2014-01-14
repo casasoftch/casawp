@@ -528,6 +528,7 @@ class CasaSync {
             'street'      => __('Street', 'casasync'), //'Strasse',
             'postal_code' => __('ZIP', 'casasync'), //'PLZ',
             'locality'    => __('Locality', 'casasync'), //'Stadt',
+            'country'     => __('Country', 'casasync'), // Land
             'state'       => __('Kanton', 'casasync'), //'Kanton',
             'subject'     => __('Subject', 'casasync'), //'Betreff',
             'message'     => __('Message', 'casasync'), //'Nachricht',
@@ -542,6 +543,7 @@ class CasaSync {
                 'street',
                 'postal_code',
                 'locality',
+                'country',
                 'emailreal',
                 'subject',
                 'message'
@@ -609,7 +611,7 @@ class CasaSync {
                         15 => (isset($_POST['lastname']) ? $_POST['lastname'] : ''),
                         16 => (isset($_POST['company']) ? $_POST['company'] : ''),
                         17 => (isset($_POST['street']) ? $_POST['street'] : ''),
-                        18 => (isset($_POST['postal_code']) ? $_POST['postal_code'] : ''),
+                        18 => (isset($_POST['country']) ? $_POST['country'] . '-' : '') . (isset($_POST['postal_code']) ? $_POST['postal_code'] : ''),
                         19 => (isset($_POST['locality']) ? $_POST['locality'] : ''),
                         20 => (isset($_POST['phone']) ? $_POST['phone'] : ''),
                         21 => (isset($_POST['mobile']) ? $_POST['mobile'] : ''),
@@ -768,6 +770,21 @@ class CasaSync {
                     </div>
                 </div>
                 <div class="row-fluid">
+                    <div class="span12">
+                        <label for="country"><?php echo __('Country', 'casasync') ?></label>
+                        <select name="country" class="span12" style="margin-bottom:10px;">
+                            <?php
+                                foreach($this->conversion->country_arrays() AS $code => $country)
+                                {
+                                    (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
+                                    $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
+                                    echo '<option value="' . $code . '" ' . $selected . '>' . $country . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="row-fluid">
                     <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
                     <input name="phone" class="span12" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
                 </div>
@@ -830,6 +847,23 @@ class CasaSync {
                         <div class="form-group">
                             <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
                             <input name="locality" class="casasync-form-control" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
+                        </div>
+                    </div>
+                </div>
+                <div class="casasync-row">
+                    <div class="casasync-col-md-12">
+                        <div class="casasync-form-group">
+                            <label for="country"><?php echo __('Country', 'casasync') ?></label>
+                            <select name="country" class="casasync-form-control">
+                                <?php
+                                    foreach($this->conversion->country_arrays() AS $code => $country)
+                                    {
+                                        (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
+                                        $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
+                                        echo '<option value="' . $code . '" ' . $selected . '>' . $country . '</option>';
+                                    }
+                                ?>
+                            </select>
                         </div>
                     </div>
                 </div>
