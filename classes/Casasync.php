@@ -772,10 +772,6 @@ class CasaSync {
                 <div class="row-fluid">
                 </div>
                 <div class="row-fluid">
-                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                    <input name="emailreal" class="span12" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
-                </div>
-                <div class="row-fluid">
                     <label for="street"><?php echo __('Street', 'casasync') ?></label>
                     <input name="street" class="span12" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
                 </div>
@@ -808,6 +804,10 @@ class CasaSync {
                     <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
                     <input name="phone" class="span12" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
                 </div>
+                 <div class="row-fluid">
+                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
+                    <input name="emailreal" class="span12" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
+                </div>
                 <div class="row-fluid">
                     <div class="span12">
                         <label for="message"><?php echo __('Message', 'casasync') ?></label>
@@ -837,14 +837,6 @@ class CasaSync {
                         <div class="casasync-form-group">
                             <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
                             <input name="lastname" class="casasync-form-control" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="casasync-form-group">
-                            <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                            <input name="emailreal" class="casasync-form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
                         </div>
                     </div>
                 </div>
@@ -892,6 +884,14 @@ class CasaSync {
                         <div class="casasync-form-group">
                             <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
                             <input name="phone" class="casasync-form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
+                        </div>
+                    </div>
+                </div>
+                 <div class="casasync-row">
+                    <div class="casasync-col-md-12">
+                        <div class="casasync-form-group">
+                            <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
+                            <input name="emailreal" class="casasync-form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
                         </div>
                     </div>
                 </div>
