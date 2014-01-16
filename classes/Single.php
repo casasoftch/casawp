@@ -705,6 +705,14 @@
         $content .= $this->getAllFeatures();
         $content .= '</div>';
       }
+
+      //if ($this->features){
+        $content .= '<div class="casasync-documents">';
+        $content .= '<h3>' . __('Documents','casasync') . '</h3>';
+        $content .= $this->getAllDocuments();
+        $content .= '</div>';
+      //}
+
       if ($this->getAllDistances()) {
         $content .= '<div class="casasync_distances">';
         $content .= '<h3>' . __('Distances','casasync') . '</h3>';
@@ -966,29 +974,6 @@
         );
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function getTabable(){
       $class = (get_option('casasync_load_css') == 'bootstrapv2') ? (' nav nav-tabs') : (null); // hack for bs2
@@ -1397,6 +1382,27 @@
       }
       return $html;
     }
+
+    public function getAllDocuments() {
+      $html = null;
+      $args = array(
+        'post_parent' => get_the_ID(),
+        'post_type' => 'attachment',
+      );
+      $attachments = get_children( $args );
+      if($attachments) {
+        $html .= '<ul class="casasync-unstyled">';
+        foreach ( (array) $attachments as $attachment_id => $attachment ) {
+          if(strpos($attachment->post_mime_type, 'image') === false ) {
+            $url = wp_get_attachment_url( $attachment_id );
+            $html .= '<li><a href="' . $url . '" title="' . $attachment->post_title . '" target="_blank" >' . $attachment->post_title . '</a></li>';
+          }
+        }
+        $html .= '</ul>';
+      }
+      return $html;
+    }
+
 
     public function getFeaturedImage() {
       $return = NULL;
