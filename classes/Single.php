@@ -706,12 +706,12 @@
         $content .= '</div>';
       }
 
-      //if ($this->features){
+      if ($this->getAllDocuments()){
         $content .= '<div class="casasync-documents">';
         $content .= '<h3>' . __('Documents','casasync') . '</h3>';
         $content .= $this->getAllDocuments();
         $content .= '</div>';
-      //}
+      }
 
       if ($this->getAllDistances()) {
         $content .= '<div class="casasync_distances">';
@@ -1384,7 +1384,8 @@
     }
 
     public function getAllDocuments() {
-      $html = null;
+      $html = false;
+      $count = 0;
       $args = array(
         'post_parent' => get_the_ID(),
         'post_type' => 'attachment',
@@ -1394,13 +1395,16 @@
         $html .= '<ul class="casasync-unstyled">';
         foreach ( (array) $attachments as $attachment_id => $attachment ) {
           if(strpos($attachment->post_mime_type, 'image') === false ) {
+            $count++;
             $url = wp_get_attachment_url( $attachment_id );
             $html .= '<li><a href="' . $url . '" title="' . $attachment->post_title . '" target="_blank" >' . $attachment->post_title . '</a></li>';
           }
         }
         $html .= '</ul>';
       }
-      return $html;
+      if($count > 0) {
+        return $html;
+      }
     }
 
 
