@@ -135,8 +135,25 @@
       $args = array(
         'post_type' => 'casasync_property',
         'posts_per_page' => $posts_per_page,
-        'tax_query' => $taxquery_new
+        'tax_query' => $taxquery_new, 
       );
+      switch (get_option('casasync_archive_orderby', 'date')) {
+        case 'title':
+            $args['orderby'] = 'title';
+            break;
+        case 'location':
+            $args['meta_key'] = 'casasync_property_address_locality';
+            $args['orderby'] = 'meta_value';
+            break;
+        case 'price':
+            $args['orderby'] = 'price';
+            break;
+        case 'date':
+        default:
+            $args['orderby'] = 'date';
+            break;
+      }
+      $args['order'] = get_option('casasync_archive_order', 'DESC');
       $the_query = new \WP_Query( $args );
 
       $prev = false;

@@ -15,13 +15,15 @@
            'categories'   => $this->getCategoryOptions(),
            'locations'    => $this->getLocationsOptions(false),
            'salestypes'   => $this->getSalestypeOptions(),
-           'archive_link' => $this->getArchiveLink()
+           'archive_link' => $this->getArchiveLink(),
+           'order'        => $this->getOrder(),
+           'orderby'      => $this->getOrderby()
        );
 
         wp_enqueue_script(
             'casasync_script',
             CASASYNC_PLUGIN_URL . 'assets/js/script.js',
-            array( 'jquery', 'jstorage' ),
+            array( 'jquery'),
             false,
             true
         );
@@ -135,6 +137,14 @@
             return $return;
         }
       }
+    }
+
+    public function getOrder(){
+        return get_option("casasync_archive_order");
+    }
+
+    public function getOrderby(){
+        return get_option("casasync_archive_orderby");
     }
 
     public function getCategoryOptions(){

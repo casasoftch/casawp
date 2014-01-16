@@ -123,9 +123,9 @@ class CasaSync {
                         $query->set('orderby', 'date');
                         break;
                 }
-                //echo '<pre>';
-                //echo print_r($query);
-                //echo '</pre>';
+
+                //$query->set('orderby', 'date');
+                //$query->set('order', 'ASC');
 
                 $taxquery_new = array();
 
