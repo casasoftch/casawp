@@ -140,7 +140,7 @@
                 case 'Distances':    $translated_text = 'Distanzen';break;
                 case 'Distances:':   $translated_text = 'Distanzen:';break;
                 case 'Plans':        $translated_text = 'Pläne';break;
-                case 'Document':    $translated_text = 'Dokument';break;
+                case 'Document':     $translated_text = 'Dokument';break;
                 case 'Documents':    $translated_text = 'Dokumente';break;
 
 

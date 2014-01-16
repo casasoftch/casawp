@@ -1396,7 +1396,7 @@
         foreach ( (array) $attachments as $attachment_id => $attachment ) {
           if(strpos($attachment->post_mime_type, 'image') === false ) {
             $url = wp_get_attachment_url( $attachment_id );
-            $title = (is_numeric($attachment->post_title)) ? ('Document #' . $count) : ($attachment->post_title);
+            $title = (is_numeric($attachment->post_title)) ? (__('Document', 'casasync') . ' ' . $count) : ($attachment->post_title);
             $html .= '<li><a href="' . $url . '" title="' . $title . '" target="_blank" >' . $title . '</a></li>';
             $count++;
           }
