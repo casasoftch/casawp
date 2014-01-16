@@ -454,9 +454,9 @@ class Import {
           $tmp_price      = $price;
           $tmp_grossPrice = $grossPrice;
           $tmp_netPrice   = $netPrice;
-          $tmp_price = ($tmp_price == 0) ? (9999999999) : ('');
-          $tmp_grossPrice = ($tmp_grossPrice == 0) ? (9999999999) : ('');
-          $tmp_netPrice = ($tmp_netPrice == 0) ? (9999999999) : ('');
+          $tmp_price = ($tmp_price === 0) ? (9999999999) : ($tmp_price);
+          $tmp_grossPrice = ($tmp_grossPrice === 0) ? (9999999999) : ($tmp_grossPrice);
+          $tmp_netPrice = ($tmp_netPrice === 0) ? (9999999999) : ($tmp_netPrice);
 
           $priceForOrder = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
