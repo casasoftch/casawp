@@ -18,6 +18,14 @@
            'archive_link' => $this->getArchiveLink()
        );
 
+        wp_enqueue_script(
+            'casasync_script',
+            CASASYNC_PLUGIN_URL . 'assets/js/script.js',
+            array( 'jquery', 'jstorage' ),
+            false,
+            true
+        );
+
        wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
     }
 
@@ -92,11 +100,10 @@
             'total'    => $GLOBALS['wp_query']->max_num_pages,
             'current'  => $paged,
             'mid_size' => 1,
-            'add_args' => array_map( 'urlencode', $query_args ),
+            'add_args' => $query_args,
             'prev_text' => '&laquo;',
             'next_text' => '&raquo;',
             'type' => 'list',
-            'add_args' => false, //TODO: add filter arguments
         ) );
 
         if ( $links ) {

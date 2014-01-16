@@ -30,6 +30,7 @@ Well, yes it is!
 = 3.0.3 = 
 * bug: changed position of email field in contact form
 * new: documents can now be displayed
+* bug: pagination fixed
 
 = 3.0.2 = 
 * warning: single and archive tempalte files were renamed
