@@ -672,7 +672,13 @@ class CasaSync {
                 foreach($_POST as $key => $value){
                     if (array_key_exists($key, $fieldlabels)) {
                         if ($key != 'email') {
-                            $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($value) . '</td></tr>';
+                            if($key != 'country') {
+                                $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($value) . '</td></tr>';
+                            } else {
+                                $countries = $this->conversion->country_arrays();
+                                $country_name = (isset($countries[$value])) ? ($countries[$value]) : ($value);
+                                $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($country_name) . '</td></tr>';
+                            }
                         }
                     }
                 }
