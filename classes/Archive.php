@@ -233,8 +233,8 @@
                 foreach ( $otherCountry as $countryCode => $country ) {
                     $return .= "<optgroup label='" . $this->conversion->countrycode_to_countryname($countryCode)  . "''>";
                     foreach ( $country as $location ) {
-                        //$return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";      
-                        $return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . "</option>";      
+                        //$return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . ' . $location->name . ' (' . $location->count . ')' . "</option>";      
+                        $return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . ' . $location->name . "</option>";      
                     }
                     $return .= "</optgroup>";
                 }
