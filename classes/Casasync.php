@@ -794,7 +794,7 @@ class CasaSync {
                 <div class="row-fluid">
                     <div class="span12">
                         <label for="country"><?php echo __('Country', 'casasync') ?></label>
-                        <select name="country" class="span12" style="margin-bottom:10px;">
+                        <select name="country" id="country" class="span12" style="margin-bottom:10px;">
                             <?php
                                 foreach($this->conversion->country_arrays() AS $code => $country)
                                 {
@@ -872,7 +872,7 @@ class CasaSync {
                     <div class="casasync-col-md-12">
                         <div class="casasync-form-group">
                             <label for="country"><?php echo __('Country', 'casasync') ?></label>
-                            <select name="country" class="casasync-form-control">
+                            <select name="country" id="country" class="casasync-form-control">
                                 <?php
                                     foreach($this->conversion->country_arrays() AS $code => $country)
                                     {
