@@ -42,11 +42,16 @@ class CasaSync {
         }
         if ( function_exists( 'add_image_size' ) ) {
             //add_image_size( 'category-thumb', 300, 9999 );
+            $standard_thumbnail_width = '506';
+            $standard_thumbnail_height = '360';
+            $thumb_size_w    = get_option('casasync_archive_show_thumbnail_size_w', 506) != '' ? get_option('casasync_archive_show_thumbnail_size_w') : $standard_thumbnail_width;
+            $thumb_size_h    = get_option('casasync_archive_show_thumbnail_size_h', 360) != '' ? get_option('casasync_archive_show_thumbnail_size_h') : $standard_thumbnail_height;
+            $thumb_size_crop = get_option('casasync_archive_show_thumbnail_size_crop', 506) == false ? 'true' : 'false';
             add_image_size(
                 'casasync-thumb',
-                get_option('casasync_archive_show_thumbnail_size_w', 506),
-                get_option('casasync_archive_show_thumbnail_size_h', 360),
-                get_option('casasync_archive_show_thumbnail_size_crop', true)
+                $thumb_size_w,
+                $thumb_size_h,
+                $thumb_size_crop
             );
         }
         $this->setMetaBoxes();
