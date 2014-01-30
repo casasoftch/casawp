@@ -128,4 +128,10 @@ jQuery(document).ready(function($) {
             interval: false
         });
     }
+
+    // remove attr multiple (safari bug)
+    var userAgent = window.navigator.userAgent;
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+        jQuery('.casasync_multiselect').removeAttr('multiple');
+    }
 });
