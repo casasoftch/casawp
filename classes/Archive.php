@@ -275,13 +275,11 @@
         }
         $terms = get_terms('casasync_salestype');
         $options = array();
-        if (count($terms) > 1) {
-            foreach ($terms as $term) {
-                $options[$term->slug]['value'] = $term->slug; 
-                //$options[$term->slug]['label'] = __(ucfirst($term->name)) . ' (' . $term->count . ')';
-                $options[$term->slug]['label'] = __(ucfirst($term->name), 'casasync');
-                $options[$term->slug]['checked'] = (in_array($term->slug, $salestypes) ? 'SELECTED' : '');
-            }
+        foreach ($terms as $term) {
+            $options[$term->slug]['value'] = $term->slug; 
+            //$options[$term->slug]['label'] = __(ucfirst($term->name)) . ' (' . $term->count . ')';
+            $options[$term->slug]['label'] = __(ucfirst($term->name), 'casasync');
+            $options[$term->slug]['checked'] = (in_array($term->slug, $salestypes) ? 'SELECTED' : '');
         }
         return $options;
     }
@@ -297,12 +295,14 @@
             $return .= '<input type="hidden" name="post_type" value="casasync_property" />';
         }
 
-        $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose offer','casasync') . '">';
         $salestype_options = $this->getSalestypeOptions();
-        foreach ($salestype_options as $option) {
-            $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+        if(count($salestype_options) > 1) {
+            $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose offer','casasync') . '">';
+            foreach ($salestype_options as $option) {
+                $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+            }
+            $return .= '</select>';
         }
-        $return .= '</select>';
 
         $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose category','casasync') . '">';
         $cat_options = $this->getCategoryOptions();

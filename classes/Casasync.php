@@ -233,24 +233,28 @@ class CasaSync {
                     wp_enqueue_script(
                         'casasync_bootstrap2',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap.min.js',
-                        array( 'jquery' )
+                        array( 'jquery' ),
+                        true
                     );
                     break;
                 case 'bootstrapv3':
                     wp_enqueue_script(
                         'casasync_bootstrap3_transition',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
-                        array( 'jquery' )
+                        array( 'jquery' ),
+                        true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_tab',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
-                        array( 'jquery' )
+                        array( 'jquery' ),
+                        true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_carousel',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
-                        array( 'jquery' )
+                        array( 'jquery' ),
+                        true
                     );
                     break;
                 case 'none':
@@ -261,13 +265,6 @@ class CasaSync {
             // Add Bootstrap v2 
         }
 
-        wp_enqueue_script(
-            'casasync_script',
-            CASASYNC_PLUGIN_URL . 'assets/js/script.js',
-            array( 'jquery' ),
-            false,
-            true
-        );
         wp_enqueue_script(
             'jstorage',
             CASASYNC_PLUGIN_URL . 'assets/js/jstorage.js',
@@ -314,6 +311,13 @@ class CasaSync {
                 true
             );
         }
+        wp_enqueue_script(
+            'casasync_script',
+            CASASYNC_PLUGIN_URL . 'assets/js/script.js',
+            array( 'jquery' ),
+            false,
+            true
+        );
 
     }
 
