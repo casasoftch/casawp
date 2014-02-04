@@ -234,6 +234,7 @@ class CasaSync {
                         'casasync_bootstrap2',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap.min.js',
                         array( 'jquery' ),
+                        false,
                         true
                     );
                     break;
@@ -242,18 +243,21 @@ class CasaSync {
                         'casasync_bootstrap3_transition',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
                         array( 'jquery' ),
+                        false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_tab',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
                         array( 'jquery' ),
+                        false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_carousel',
                         CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
                         array( 'jquery' ),
+                        false,
                         true
                     );
                     break;
