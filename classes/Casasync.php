@@ -809,7 +809,9 @@ class CasaSync {
                         <label for="country"><?php echo __('Country', 'casasync') ?></label>
                         <select name="country" id="country" class="span12" style="margin-bottom:10px;">
                             <?php
-                                foreach($this->conversion->country_arrays() AS $code => $country)
+                                $arr_countries = $this->conversion->country_arrays();
+                                asort($arr_countries);
+                                foreach($arr_countries AS $code => $country)
                                 {
                                     (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
                                     $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
@@ -887,7 +889,9 @@ class CasaSync {
                             <label for="country"><?php echo __('Country', 'casasync') ?></label>
                             <select name="country" id="country" class="casasync-form-control">
                                 <?php
-                                    foreach($this->conversion->country_arrays() AS $code => $country)
+                                    $arr_countries = $this->conversion->country_arrays();
+                                    asort($arr_countries);
+                                    foreach($arr_countries AS $code => $country)
                                     {
                                         (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
                                         $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
