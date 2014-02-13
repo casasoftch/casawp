@@ -810,8 +810,19 @@ class CasaSync {
                         <select name="country" id="country" class="span12" style="margin-bottom:10px;">
                             <?php
                                 $arr_countries = $this->conversion->country_arrays();
-                                asort($arr_countries);
-                                foreach($arr_countries AS $code => $country)
+                                $arr_search   = array("Ä","ä","Ö","ö","Ü","ü");
+                                $arr_replace  = array("Azze","azze","Ozze","ozze","Uzze","uzze");
+                                $arr_modified = array();
+                                foreach($arr_countries as $key => $val) {
+                                    $arr_modified[$key] = str_replace($arr_search, $arr_replace, $val);
+                                }
+                                asort($arr_modified);
+                                $arr_ordered_countries = array();
+                                foreach($arr_modified as $key => $val) {
+                                    $arr_ordered_countries[$key] = str_replace($arr_replace, $arr_search, $val);
+                                }
+                                
+                                foreach($arr_ordered_countries AS $code => $country)
                                 {
                                     (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
                                     $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
@@ -890,8 +901,19 @@ class CasaSync {
                             <select name="country" id="country" class="casasync-form-control">
                                 <?php
                                     $arr_countries = $this->conversion->country_arrays();
-                                    asort($arr_countries);
-                                    foreach($arr_countries AS $code => $country)
+                                    $arr_search   = array("Ä","ä","Ö","ö","Ü","ü");
+                                    $arr_replace  = array("Azze","azze","Ozze","ozze","Uzze","uzze");
+                                    $arr_modified = array();
+                                    foreach($arr_countries as $key => $val) {
+                                        $arr_modified[$key] = str_replace($arr_search, $arr_replace, $val);
+                                    }
+                                    asort($arr_modified);
+                                    $arr_ordered_countries = array();
+                                    foreach($arr_modified as $key => $val) {
+                                        $arr_ordered_countries[$key] = str_replace($arr_replace, $arr_search, $val);
+                                    }
+                                    
+                                    foreach($arr_ordered_countries AS $code => $country)
                                     {
                                         (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
                                         $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
