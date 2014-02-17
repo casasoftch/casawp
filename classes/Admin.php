@@ -3,13 +3,12 @@ namespace CasaSync;
 
 class Admin {
 
-    public function __construct(){ 
-    	register_activation_hook(CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_install'));
-    	register_deactivation_hook( CASASYNC_PLUGIN_DIR . '/classes/', array($this,'casasync_remove' ));
-    	add_action( 'admin_menu', array($this,'casasync_menu') );
-    	add_action( 'admin_enqueue_scripts', array($this,'registerAdminScriptsAndStyles' ));
-    }
-    public function casasync_install() {
+	public function __construct(){ 
+		add_action( 'admin_menu', array($this,'casasync_menu') );
+		add_action( 'admin_enqueue_scripts', array($this,'registerAdminScriptsAndStyles' ));
+	}
+	
+	public function casasync_install() {
 		// general
 		add_option('casasync_live_import', '1');
 		// appearance
@@ -44,6 +43,14 @@ class Admin {
 		add_option('casasync_request_per_mail', '1');
 		add_option('casasync_request_per_remcat', '0');
 		add_option('casasync_request_per_mail_fallback', '0');
+		add_option('casasync_form_firstname_required', '1');
+		add_option('casasync_form_lastname_required', '1');
+		add_option('casasync_form_street_required', '1');
+		add_option('casasync_form_postalcode_required', '1');
+		add_option('casasync_form_locality_required', '1');
+		add_option('casasync_form_phone_required', '1');
+		add_option('casasync_form_email_required', '1');
+		add_option('casasync_form_message_required', '1');
 	}
 
 	public function casasync_remove() {

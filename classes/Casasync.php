@@ -570,17 +570,17 @@ class CasaSync {
 
         if (!empty($_POST)) {
             $validation = true;
-            $required = array(
-                'firstname',
-                'lastname',
-                'street',
-                'postal_code',
-                'locality',
-                'country',
-                'emailreal',
-                'subject',
-                'message'
-            );    
+
+            $required = array();
+            $required[] = get_option('casasync_form_firstname_required',  false) ? 'firstname'   : null;
+            $required[] = get_option('casasync_form_lastname_required',   false) ? 'lastname'    : null;
+            $required[] = get_option('casasync_form_street_required',     false) ? 'street'      : null;
+            $required[] = get_option('casasync_form_postalcode_required', false) ? 'postal_code' : null;
+            $required[] = get_option('casasync_form_locality_required',   false) ? 'locality'    : null;
+            $required[] = get_option('casasync_form_phone_required',      false) ? 'phone'       : null;
+            $required[] = get_option('casasync_form_email_required',      false) ? 'emailreal'   : null;
+            $required[] = get_option('casasync_form_message_required',    false) ? 'message'     : null;
+
             $companyname = get_bloginfo( 'name' );
             $companyAddress = '{STREET}
                 <br />

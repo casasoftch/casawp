@@ -58,7 +58,15 @@
 			case 'contactform':
 				$checkbox_traps = array(
 					'casasync_show_email_organisation',
-					'casasync_show_email_person_view'
+					'casasync_show_email_person_view',
+					'casasync_form_firstname_required',
+					'casasync_form_lastname_required',
+					'casasync_form_street_required',
+					'casasync_form_postalcode_required',
+					'casasync_form_locality_required',
+					'casasync_form_phone_required',
+					'casasync_form_email_required',
+					'casasync_form_message_required'
 				);
 				break;
 			case 'general':
@@ -161,25 +169,25 @@
 										<?php $name = 'casasync_load_bootstrap_scripts'; ?>
 										<?php $text = 'Bootstrap'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casasync_load_fancybox'; ?>
 										<?php $text = 'Fancybox'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casasync_load_chosen'; ?>
 										<?php $text = 'Chosen'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casasync_load_googlemaps'; ?>
 										<?php $text = 'Google Maps'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name, 1 ) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 									</fieldset>
 								</td>
@@ -809,6 +817,71 @@
 										<legend class="screen-reader-text"><span>E-Mail der Kontaktperson anzeigen</span></legend>
 										<?php $name = 'casasync_show_email_person_view'; ?>
 										<?php $text = 'Ja'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<h3>Formular Pflichtfelder</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Formular Pflichtfelder</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Vorname</span></legend>
+										<?php $name = 'casasync_form_firstname_required'; ?>
+										<?php $text = 'Vorname'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>Nachname</span></legend>
+										<?php $name = 'casasync_form_lastname_required'; ?>
+										<?php $text = 'Nachname'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>Strasse</span></legend>
+										<?php $name = 'casasync_form_street_required'; ?>
+										<?php $text = 'Strasse'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>PLZ</span></legend>
+										<?php $name = 'casasync_form_postalcode_required'; ?>
+										<?php $text = 'PLZ'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>Ort</span></legend>
+										<?php $name = 'casasync_form_locality_required'; ?>
+										<?php $text = 'Ort'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>Telefon</span></legend>
+										<?php $name = 'casasync_form_phone_required'; ?>
+										<?php $text = 'Telefon'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>E-Mail</span></legend>
+										<?php $name = 'casasync_form_email_required'; ?>
+										<?php $text = 'E-Mail'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+										<br>
+										<legend class="screen-reader-text"><span>Nachricht</span></legend>
+										<?php $name = 'casasync_form_message_required'; ?>
+										<?php $text = 'Nachricht'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>

@@ -1219,5 +1219,6 @@ class Import {
       copy ( $processing_file , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/done/' . date('Y_m_d_H_i_s') . '_completed.xml');
       //rename ( $file , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/data_i_' . date('Y_m_d_H_i_s') . '.xml');
     }
+    flush_rewrite_rules();
   }
 }
