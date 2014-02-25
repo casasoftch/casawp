@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-02-25 10:05+0100\n"
+"POT-Creation-Date: 2014-02-25 14:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -38,19 +38,31 @@ msgstr "Einstellungen CONFIRMED .."
 msgid "Daten wurden importiert.."
 msgstr "Daten wurden importiert .."
 
-#: .././classes/Archive.php:300
+#: .././classes/Archive.php:282
+msgid "Buy"
+msgstr "Acheter"
+
+#: .././classes/Archive.php:284
+msgid "Rent"
+msgstr "Louer"
+
+#: .././classes/Archive.php:297
+msgid "Advanced Search"
+msgstr "Recherche avancée"
+
+#: .././classes/Archive.php:310
 msgid "Choose offer"
 msgstr "Choisissez offre"
 
-#: .././classes/Archive.php:307
+#: .././classes/Archive.php:317
 msgid "Choose category"
 msgstr "Choisir une catégorie"
 
-#: .././classes/Archive.php:314
+#: .././classes/Archive.php:324
 msgid "Choose locality"
 msgstr "Choisissez localité"
 
-#: .././classes/Archive.php:318
+#: .././classes/Archive.php:328
 msgid "Search"
 msgstr "Recherche"
 
@@ -352,30 +364,29 @@ msgid "Required"
 msgstr "Requis"
 
 #: .././classes/Casasync.php:733
-#, fuzzy
 msgid "Show property ..."
-msgstr "Nouvelle propriété"
+msgstr "Montrez la propriété ..."
 
 #: .././classes/Casasync.php:749
 msgid "Inquiry for a property online"
-msgstr ""
+msgstr "Demande pour une propriété en ligne"
 
 #: .././classes/Casasync.php:750
 msgid "New inquiry"
-msgstr ""
+msgstr "nouvelle requête"
 
 #: .././classes/Casasync.php:751
 #, php-format
 msgid "A new inquiry from %s has been sent"
-msgstr ""
+msgstr "Une nouvelle enquête de %s a été envoyé"
 
 #: .././classes/Casasync.php:790
 msgid "Thank you!"
-msgstr ""
+msgstr "Merci!"
 
 #: .././classes/Casasync.php:792
 msgid "Error!"
-msgstr ""
+msgstr "Erreur!"
 
 #: .././classes/Casasync.php:805
 msgid "Please consider the following errors and try sending it again"
@@ -1828,6 +1839,10 @@ msgstr "Caractéristiques "
 #: .././classes/Single.php:1065
 msgid "View lager version"
 msgstr "Voir la version blonde"
+
+#: .././classes/Single.php:1083
+msgid "Contact provider directly"
+msgstr "Contactez le prestataire directement"
 
 #: .././classes/Single.php:1104
 msgid "Provider"

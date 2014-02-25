@@ -34,7 +34,6 @@ Well, yes it is!
 * new: WPML support
 * new: converted translations to po files
 * new: automatically translated ru,fr,it,ja^^
-* todo: DE version needs to be completely transferred to po/mo
 
 = 3.0.2 = 
 * warning: single and archive tempalte files were renamed

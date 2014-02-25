@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-02-25 10:06+0100\n"
+"POT-Creation-Date: 2014-02-25 14:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -38,19 +38,31 @@ msgstr "Einstellungen tempo CONFIRMED .."
 msgid "Daten wurden importiert.."
 msgstr "Daten wurden importiert .."
 
-#: .././classes/Archive.php:300
+#: .././classes/Archive.php:282
+msgid "Buy"
+msgstr "Acquistare"
+
+#: .././classes/Archive.php:284
+msgid "Rent"
+msgstr "Affittare"
+
+#: .././classes/Archive.php:297
+msgid "Advanced Search"
+msgstr "Erweiterte Suche"
+
+#: .././classes/Archive.php:310
 msgid "Choose offer"
 msgstr "Scegli l'offerta"
 
-#: .././classes/Archive.php:307
+#: .././classes/Archive.php:317
 msgid "Choose category"
 msgstr "Scegli la categoria"
 
-#: .././classes/Archive.php:314
+#: .././classes/Archive.php:324
 msgid "Choose locality"
 msgstr "Scegli la località"
 
-#: .././classes/Archive.php:318
+#: .././classes/Archive.php:328
 msgid "Search"
 msgstr "Cerca"
 
@@ -1826,6 +1838,10 @@ msgstr "Specifiche tecniche"
 #: .././classes/Single.php:1065
 msgid "View lager version"
 msgstr "Versione View lager"
+
+#: .././classes/Single.php:1083
+msgid "Contact provider directly"
+msgstr ""
 
 #: .././classes/Single.php:1104
 msgid "Provider"

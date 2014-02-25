@@ -1,10 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-02-25 10:14+0100\n"
+"POT-Creation-Date: 2014-02-25 14:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,19 +39,31 @@ msgstr ""
 msgid "Daten wurden importiert.."
 msgstr ""
 
-#: .././classes/Archive.php:300
+#: .././classes/Archive.php:282
+msgid "Buy"
+msgstr "Kaufen"
+
+#: .././classes/Archive.php:284
+msgid "Rent"
+msgstr "Mieten"
+
+#: .././classes/Archive.php:297
+msgid "Advanced Search"
+msgstr "Erweiterte Suche"
+
+#: .././classes/Archive.php:310
 msgid "Choose offer"
 msgstr "Angebot wählen"
 
-#: .././classes/Archive.php:307
+#: .././classes/Archive.php:317
 msgid "Choose category"
 msgstr "Kategorie wählen"
 
-#: .././classes/Archive.php:314
+#: .././classes/Archive.php:324
 msgid "Choose locality"
 msgstr "Ort wählen"
 
-#: .././classes/Archive.php:318
+#: .././classes/Archive.php:328
 msgid "Search"
 msgstr "Suchen"
 
@@ -328,7 +341,7 @@ msgstr "Ort"
 #: .././classes/Casasync.php:596 .././classes/Casasync.php:848
 #: .././classes/Casasync.php:939
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: .././classes/Casasync.php:597
 msgid "Kanton"
@@ -391,7 +404,7 @@ msgstr "Senden"
 
 #: .././classes/Conversion.php:20
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #: .././classes/Conversion.php:21
 msgid "United Arab Emirates"
@@ -399,39 +412,39 @@ msgstr "Vereinigte Arabische Emirate"
 
 #: .././classes/Conversion.php:22
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afghanistan"
 
 #: .././classes/Conversion.php:23
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua und Barbuda"
 
 #: .././classes/Conversion.php:24
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: .././classes/Conversion.php:25
 msgid "Albania"
-msgstr ""
+msgstr "Albanien"
 
 #: .././classes/Conversion.php:26
 msgid "Armenia"
-msgstr ""
+msgstr "Armenien"
 
 #: .././classes/Conversion.php:27
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Niederländische Antillen"
 
 #: .././classes/Conversion.php:28
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: .././classes/Conversion.php:29
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktis"
 
 #: .././classes/Conversion.php:30
 msgid "Argentina"
-msgstr ""
+msgstr "Argentinien"
 
 #: .././classes/Conversion.php:31
 msgid "American Samoa"
@@ -439,63 +452,63 @@ msgstr ""
 
 #: .././classes/Conversion.php:32
 msgid "Austria"
-msgstr ""
+msgstr "Österreich"
 
 #: .././classes/Conversion.php:33
 msgid "Australia"
-msgstr ""
+msgstr "Australien"
 
 #: .././classes/Conversion.php:34
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: .././classes/Conversion.php:35
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Aserbaidschan"
 
 #: .././classes/Conversion.php:36
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "Bosnien und Herzegowina"
 
 #: .././classes/Conversion.php:37
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: .././classes/Conversion.php:38
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesch"
 
 #: .././classes/Conversion.php:39
 msgid "Belgium"
-msgstr ""
+msgstr "Belgien"
 
 #: .././classes/Conversion.php:40
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: .././classes/Conversion.php:41
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgarien"
 
 #: .././classes/Conversion.php:42
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrain"
 
 #: .././classes/Conversion.php:43
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: .././classes/Conversion.php:44
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: .././classes/Conversion.php:45
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #: .././classes/Conversion.php:46
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei"
 
 #: .././classes/Conversion.php:47
 msgid "Bolivia"
@@ -503,179 +516,179 @@ msgstr ""
 
 #: .././classes/Conversion.php:48
 msgid "Brazil"
-msgstr ""
+msgstr "Brasilien"
 
 #: .././classes/Conversion.php:49
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: .././classes/Conversion.php:50
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #: .././classes/Conversion.php:51
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Bouvetinsel"
 
 #: .././classes/Conversion.php:52
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: .././classes/Conversion.php:53
 msgid "Belarus"
-msgstr ""
+msgstr "Weißrussland"
 
 #: .././classes/Conversion.php:54
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: .././classes/Conversion.php:55
 msgid "Canada"
-msgstr ""
+msgstr "Kanada"
 
 #: .././classes/Conversion.php:56
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Kokosinseln"
 
 #: .././classes/Conversion.php:57
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "Kongo, Demokratische Republik"
 
 #: .././classes/Conversion.php:58
 msgid "Central African Republic"
-msgstr ""
+msgstr "Zentralafrikanische Republik"
 
 #: .././classes/Conversion.php:59
 msgid "Congo"
-msgstr ""
+msgstr "Kongo, Republik"
 
 #: .././classes/Conversion.php:60
 msgid "Switzerland"
-msgstr ""
+msgstr "Schweiz"
 
 #: .././classes/Conversion.php:61
 msgid "Cote D'Ivoire"
-msgstr ""
+msgstr "Cote d'Ivoire"
 
 #: .././classes/Conversion.php:62
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cookinseln"
 
 #: .././classes/Conversion.php:63
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: .././classes/Conversion.php:64
 msgid "Cameroon"
-msgstr ""
+msgstr "Kamerun"
 
 #: .././classes/Conversion.php:65
 msgid "China"
-msgstr ""
+msgstr "China, Volksrepublik"
 
 #: .././classes/Conversion.php:66
 msgid "Colombia"
-msgstr ""
+msgstr "Kolumbien"
 
 #: .././classes/Conversion.php:67
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #: .././classes/Conversion.php:68
 msgid "Cuba"
-msgstr ""
+msgstr "Kuba"
 
 #: .././classes/Conversion.php:69
 msgid "Cape Verde"
-msgstr ""
+msgstr "Kap Verde, Republik"
 
 #: .././classes/Conversion.php:70
 msgid "Christmas Island"
-msgstr ""
+msgstr "Weihnachtsinsel"
 
 #: .././classes/Conversion.php:71
 msgid "Cyprus"
-msgstr ""
+msgstr "Zypern, Republik"
 
 #: .././classes/Conversion.php:72
 msgid "Czech Republic"
-msgstr ""
+msgstr "Tschechische Republik"
 
 #: .././classes/Conversion.php:73
 msgid "Germany"
-msgstr ""
+msgstr "Deutschland"
 
 #: .././classes/Conversion.php:74
 msgid "Djibouti"
-msgstr ""
+msgstr "Dschibuti"
 
 #: .././classes/Conversion.php:75
 msgid "Denmark"
-msgstr ""
+msgstr "Dänemark"
 
 #: .././classes/Conversion.php:76
 msgid "Dominica"
-msgstr ""
+msgstr "Dominica"
 
 #: .././classes/Conversion.php:77
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikanische Republik"
 
 #: .././classes/Conversion.php:78
 msgid "Algeria"
-msgstr ""
+msgstr "Algerien"
 
 #: .././classes/Conversion.php:79
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #: .././classes/Conversion.php:80
 msgid "Estonia"
-msgstr ""
+msgstr "Estland"
 
 #: .././classes/Conversion.php:81
 msgid "Egypt"
-msgstr ""
+msgstr "Ägypten"
 
 #: .././classes/Conversion.php:82
 msgid "Western Sahara"
-msgstr ""
+msgstr "Westsahara"
 
 #: .././classes/Conversion.php:83
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #: .././classes/Conversion.php:84
 msgid "Spain"
-msgstr ""
+msgstr "Spanien"
 
 #: .././classes/Conversion.php:85
 msgid "Ethiopia"
-msgstr ""
+msgstr "Äthiopien"
 
 #: .././classes/Conversion.php:86
 msgid "Finland"
-msgstr ""
+msgstr "Finnland"
 
 #: .././classes/Conversion.php:87
 msgid "Fiji"
-msgstr ""
+msgstr "Fidschi"
 
 #: .././classes/Conversion.php:88
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falklandinseln"
 
 #: .././classes/Conversion.php:89
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Mikronesien, Föderierte Staaten von"
 
 #: .././classes/Conversion.php:90
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Färöer"
 
 #: .././classes/Conversion.php:91
 msgid "France"
-msgstr ""
+msgstr "Frankreich"
 
 #: .././classes/Conversion.php:92
 msgid "France, Metropolitan"
@@ -683,163 +696,163 @@ msgstr ""
 
 #: .././classes/Conversion.php:93
 msgid "Gabon"
-msgstr ""
+msgstr "Gabun"
 
 #: .././classes/Conversion.php:94
 msgid "United Kingdom"
-msgstr ""
+msgstr "Vereinigtes Königreich von Großbritannien und Nordirland"
 
 #: .././classes/Conversion.php:95
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #: .././classes/Conversion.php:96
 msgid "Georgia"
-msgstr ""
+msgstr "Georgien"
 
 #: .././classes/Conversion.php:97
 msgid "French Guiana"
-msgstr ""
+msgstr "Französisch-Guayana"
 
 #: .././classes/Conversion.php:98
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana, Republik"
 
 #: .././classes/Conversion.php:99
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibraltar"
 
 #: .././classes/Conversion.php:100
 msgid "Greenland"
-msgstr ""
+msgstr "Grönland"
 
 #: .././classes/Conversion.php:101
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #: .././classes/Conversion.php:102
 msgid "Guinea"
-msgstr ""
+msgstr "Guinea, Republik"
 
 #: .././classes/Conversion.php:103
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadeloupe"
 
 #: .././classes/Conversion.php:104
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Äquatorialguinea, Republik"
 
 #: .././classes/Conversion.php:105
 msgid "Greece"
-msgstr ""
+msgstr "Griechenland"
 
 #: .././classes/Conversion.php:106
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Südgeorgien und die Südlichen Sandwichinseln"
 
 #: .././classes/Conversion.php:107
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #: .././classes/Conversion.php:108
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #: .././classes/Conversion.php:109
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinea-Bissau, Republik"
 
 #: .././classes/Conversion.php:110
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #: .././classes/Conversion.php:111
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hongkong"
 
 #: .././classes/Conversion.php:112
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Heard und McDonaldinseln"
 
 #: .././classes/Conversion.php:113
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #: .././classes/Conversion.php:114
 msgid "Croatia"
-msgstr ""
+msgstr "Kroatien"
 
 #: .././classes/Conversion.php:115
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #: .././classes/Conversion.php:116
 msgid "Hungary"
-msgstr ""
+msgstr "Ungarn"
 
 #: .././classes/Conversion.php:117
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesien"
 
 #: .././classes/Conversion.php:118
 msgid "Ireland"
-msgstr ""
+msgstr "Irland, Republik"
 
 #: .././classes/Conversion.php:119
 msgid "Israel"
-msgstr ""
+msgstr "Israel"
 
 #: .././classes/Conversion.php:120
 msgid "India"
-msgstr ""
+msgstr "Indien"
 
 #: .././classes/Conversion.php:121
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Britisches Territorium im Indischen Ozean"
 
 #: .././classes/Conversion.php:122
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #: .././classes/Conversion.php:123
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Iran"
 
 #: .././classes/Conversion.php:124
 msgid "Iceland"
-msgstr ""
+msgstr "Island"
 
 #: .././classes/Conversion.php:125
 msgid "Italy"
-msgstr ""
+msgstr "Italien"
 
 #: .././classes/Conversion.php:126
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaika"
 
 #: .././classes/Conversion.php:127
 msgid "Jordan"
-msgstr ""
+msgstr "Jordanien"
 
 #: .././classes/Conversion.php:128
 msgid "Japan"
-msgstr ""
+msgstr "Japan"
 
 #: .././classes/Conversion.php:129
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #: .././classes/Conversion.php:130
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgisistan"
 
 #: .././classes/Conversion.php:131
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodscha"
 
 #: .././classes/Conversion.php:132
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #: .././classes/Conversion.php:133
 msgid "Comoros"
@@ -847,67 +860,67 @@ msgstr ""
 
 #: .././classes/Conversion.php:134
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "St. Kitts und Nevis"
 
 #: .././classes/Conversion.php:135
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "Korea, Demokratische Volkrepublik"
 
 #: .././classes/Conversion.php:136
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "Korea, Republik"
 
 #: .././classes/Conversion.php:137
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuwait"
 
 #: .././classes/Conversion.php:138
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Kaimaninseln"
 
 #: .././classes/Conversion.php:139
 msgid "Kazakstan"
-msgstr ""
+msgstr "Kasachstan"
 
 #: .././classes/Conversion.php:140
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laos"
 
 #: .././classes/Conversion.php:141
 msgid "Lebanon"
-msgstr ""
+msgstr "Libanon"
 
 #: .././classes/Conversion.php:142
 msgid "Saint Lucia"
-msgstr ""
+msgstr "St. Lucia"
 
 #: .././classes/Conversion.php:143
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein, Fürstentum"
 
 #: .././classes/Conversion.php:144
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #: .././classes/Conversion.php:145
 msgid "Liberia"
-msgstr ""
+msgstr "Liberia, Republik"
 
 #: .././classes/Conversion.php:146
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesotho"
 
 #: .././classes/Conversion.php:147
 msgid "Lithuania"
-msgstr ""
+msgstr "Litauen"
 
 #: .././classes/Conversion.php:148
 msgid "Luxembourg"
-msgstr ""
+msgstr "Luxemburg"
 
 #: .././classes/Conversion.php:149
 msgid "Latvia"
-msgstr ""
+msgstr "Lettland"
 
 #: .././classes/Conversion.php:150
 msgid "Libyan Arab Jamahiriya"
@@ -915,23 +928,23 @@ msgstr ""
 
 #: .././classes/Conversion.php:151
 msgid "Morocco"
-msgstr ""
+msgstr "Marokko"
 
 #: .././classes/Conversion.php:152
 msgid "Monaco"
-msgstr ""
+msgstr "Monaco"
 
 #: .././classes/Conversion.php:153
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "Moldawien"
 
 #: .././classes/Conversion.php:154
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar, Republik"
 
 #: .././classes/Conversion.php:155
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Marshallinseln"
 
 #: .././classes/Conversion.php:156
 msgid "Macedonia"
@@ -939,155 +952,155 @@ msgstr ""
 
 #: .././classes/Conversion.php:157
 msgid "Mali"
-msgstr ""
+msgstr "Mali, Republik"
 
 #: .././classes/Conversion.php:158
 msgid "Myanmar"
-msgstr ""
+msgstr "Myanmar"
 
 #: .././classes/Conversion.php:159
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolei"
 
 #: .././classes/Conversion.php:160
 msgid "Macau"
-msgstr ""
+msgstr "Macao"
 
 #: .././classes/Conversion.php:161
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Nördliche Marianen"
 
 #: .././classes/Conversion.php:162
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #: .././classes/Conversion.php:163
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauretanien"
 
 #: .././classes/Conversion.php:164
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #: .././classes/Conversion.php:165
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: .././classes/Conversion.php:166
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius, Republik"
 
 #: .././classes/Conversion.php:167
 msgid "Maldives"
-msgstr ""
+msgstr "Malediven"
 
 #: .././classes/Conversion.php:168
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi, Republik"
 
 #: .././classes/Conversion.php:169
 msgid "Mexico"
-msgstr ""
+msgstr "MexikoMalawi, Republik"
 
 #: .././classes/Conversion.php:170
 msgid "Malaysia"
-msgstr ""
+msgstr "Mexiko"
 
 #: .././classes/Conversion.php:171
 msgid "Mozambique"
-msgstr ""
+msgstr "Mosambik"
 
 #: .././classes/Conversion.php:172
 msgid "Namibia"
-msgstr ""
+msgstr "Namibia, Republik"
 
 #: .././classes/Conversion.php:173
 msgid "New Caledonia"
-msgstr ""
+msgstr "Neukaledonien"
 
 #: .././classes/Conversion.php:174
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #: .././classes/Conversion.php:175
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolkinsel"
 
 #: .././classes/Conversion.php:176
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: .././classes/Conversion.php:177
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nicaragua"
 
 #: .././classes/Conversion.php:178
 msgid "Netherlands"
-msgstr ""
+msgstr "Niederlande"
 
 #: .././classes/Conversion.php:179
 msgid "Norway"
-msgstr ""
+msgstr "Norwegen"
 
 #: .././classes/Conversion.php:180
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: .././classes/Conversion.php:181
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: .././classes/Conversion.php:182
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #: .././classes/Conversion.php:183
 msgid "New Zealand"
-msgstr ""
+msgstr "Neuseeland"
 
 #: .././classes/Conversion.php:184
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #: .././classes/Conversion.php:185
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #: .././classes/Conversion.php:186
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #: .././classes/Conversion.php:187
 msgid "French Polynesia"
-msgstr ""
+msgstr "Französisch-Polynesien"
 
 #: .././classes/Conversion.php:188
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua-Neuguinea"
 
 #: .././classes/Conversion.php:189
 msgid "Philippines"
-msgstr ""
+msgstr "Philippinen"
 
 #: .././classes/Conversion.php:190
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: .././classes/Conversion.php:191
 msgid "Poland"
-msgstr ""
+msgstr "Polen"
 
 #: .././classes/Conversion.php:192
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "St. Pierre und Miquelon"
 
 #: .././classes/Conversion.php:193
 msgid "Pitcairn Islands"
-msgstr ""
+msgstr "Pitcairninseln"
 
 #: .././classes/Conversion.php:194
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Puerto Rico"
 
 #: .././classes/Conversion.php:195
 msgid "Palestinian Territory"
@@ -1095,183 +1108,183 @@ msgstr ""
 
 #: .././classes/Conversion.php:196
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #: .././classes/Conversion.php:197
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #: .././classes/Conversion.php:198
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #: .././classes/Conversion.php:199
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #: .././classes/Conversion.php:200
 msgid "Reunion"
-msgstr ""
+msgstr "Réunion"
 
 #: .././classes/Conversion.php:201
 msgid "Romania"
-msgstr ""
+msgstr "Rumänien"
 
 #: .././classes/Conversion.php:202
 msgid "Russian Federation"
-msgstr ""
+msgstr "Russische Föderation"
 
 #: .././classes/Conversion.php:203
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda, Republik"
 
 #: .././classes/Conversion.php:204
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Saudi-Arabien, Königreich"
 
 #: .././classes/Conversion.php:205
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Salomonen"
 
 #: .././classes/Conversion.php:206
 msgid "Seychelles"
-msgstr ""
+msgstr "Seychellen, Republik der"
 
 #: .././classes/Conversion.php:207
 msgid "Sudan"
-msgstr ""
+msgstr "Sudan"
 
 #: .././classes/Conversion.php:208
 msgid "Sweden"
-msgstr ""
+msgstr "Schweden"
 
 #: .././classes/Conversion.php:209
 msgid "Singapore"
-msgstr ""
+msgstr "Singapur"
 
 #: .././classes/Conversion.php:210
 msgid "Saint Helena"
-msgstr ""
+msgstr "Die Kronkolonie St. Helen"
 
 #: .././classes/Conversion.php:211
 msgid "Slovenia"
-msgstr ""
+msgstr "Slowenien"
 
 #: .././classes/Conversion.php:212
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Svalbard und Jan Mayen"
 
 #: .././classes/Conversion.php:213
 msgid "Slovakia"
-msgstr ""
+msgstr "Slowakei"
 
 #: .././classes/Conversion.php:214
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone, Republik"
 
 #: .././classes/Conversion.php:215
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #: .././classes/Conversion.php:216
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: .././classes/Conversion.php:217
 msgid "Somalia"
-msgstr ""
+msgstr "Somalia, Demokratische Republik"
 
 #: .././classes/Conversion.php:218
 msgid "Suriname"
-msgstr ""
+msgstr "Suriname"
 
 #: .././classes/Conversion.php:219
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "São Tomé und Príncipe"
 
 #: .././classes/Conversion.php:220
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #: .././classes/Conversion.php:221
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Syrien"
 
 #: .././classes/Conversion.php:222
 msgid "Swaziland"
-msgstr ""
+msgstr "Swasiland"
 
 #: .././classes/Conversion.php:223
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks- und Caicosinseln"
 
 #: .././classes/Conversion.php:224
 msgid "Chad"
-msgstr ""
+msgstr "Tschad, Republik"
 
 #: .././classes/Conversion.php:225
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Französische Süd- und Antarktisgebiete"
 
 #: .././classes/Conversion.php:226
 msgid "Togo"
-msgstr ""
+msgstr "Togo, Republik"
 
 #: .././classes/Conversion.php:227
 msgid "Thailand"
-msgstr ""
+msgstr "Thailand"
 
 #: .././classes/Conversion.php:228
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadschikistan"
 
 #: .././classes/Conversion.php:229
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #: .././classes/Conversion.php:230
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #: .././classes/Conversion.php:231
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunesien"
 
 #: .././classes/Conversion.php:232
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: .././classes/Conversion.php:233
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Timor-Leste, Demokratische Republik"
 
 #: .././classes/Conversion.php:234
 msgid "Turkey"
-msgstr ""
+msgstr "Türkei"
 
 #: .././classes/Conversion.php:235
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad und Tobago"
 
 #: .././classes/Conversion.php:236
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #: .././classes/Conversion.php:237
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 #: .././classes/Conversion.php:238
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tansania, Vereinigte Republik"
 
 #: .././classes/Conversion.php:239
 msgid "Ukraine"
-msgstr ""
+msgstr "Ukraine"
 
 #: .././classes/Conversion.php:240
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda, Republik"
 
 #: .././classes/Conversion.php:241
 msgid "United States Minor Outlying Islands"
@@ -1279,59 +1292,59 @@ msgstr ""
 
 #: .././classes/Conversion.php:242
 msgid "United States"
-msgstr ""
+msgstr "Vereinigte Staaten von Amerika"
 
 #: .././classes/Conversion.php:243
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #: .././classes/Conversion.php:244
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Usbekistan"
 
 #: .././classes/Conversion.php:245
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikanstadt"
 
 #: .././classes/Conversion.php:246
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "St. Vincent und die Grenadinen (GB)"
 
 #: .././classes/Conversion.php:247
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #: .././classes/Conversion.php:248
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Britische Jungferninseln"
 
 #: .././classes/Conversion.php:249
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Amerikanische Jungferninseln"
 
 #: .././classes/Conversion.php:250
 msgid "Vietnam"
-msgstr ""
+msgstr "Vietnam"
 
 #: .././classes/Conversion.php:251
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #: .././classes/Conversion.php:252
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis und Futuna"
 
 #: .././classes/Conversion.php:253
 msgid "Samoa"
-msgstr ""
+msgstr "Amerikanisch-Samoa"
 
 #: .././classes/Conversion.php:254
 msgid "Yemen"
-msgstr ""
+msgstr "Jemen"
 
 #: .././classes/Conversion.php:255
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #: .././classes/Conversion.php:256
 msgid "Serbia"
@@ -1339,19 +1352,19 @@ msgstr ""
 
 #: .././classes/Conversion.php:257
 msgid "South Africa"
-msgstr ""
+msgstr "Südafrika, Republik"
 
 #: .././classes/Conversion.php:258
 msgid "Zambia"
-msgstr ""
+msgstr "Sambia, Republik"
 
 #: .././classes/Conversion.php:259
 msgid "Montenegro"
-msgstr ""
+msgstr "Serbien und Montenegro"
 
 #: .././classes/Conversion.php:260
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Simbabwe, Republik"
 
 #: .././classes/Conversion.php:261
 msgid "Aland Islands"
@@ -1359,15 +1372,15 @@ msgstr ""
 
 #: .././classes/Conversion.php:262
 msgid "Guernsey"
-msgstr ""
+msgstr "Guernsey, Vogtei"
 
 #: .././classes/Conversion.php:263
 msgid "Isle of Man"
-msgstr ""
+msgstr "Insel Man"
 
 #: .././classes/Conversion.php:264
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #: .././classes/Conversion.php:265
 msgid "Saint Barthelemy"
@@ -1379,187 +1392,187 @@ msgstr ""
 
 #: .././classes/Conversion.php:273 .././classes/Single.php:816
 msgid "Living space"
-msgstr ""
+msgstr "Wohnfläche"
 
 #: .././classes/Conversion.php:274 .././classes/Single.php:824
 msgid "Property space"
-msgstr ""
+msgstr "Grundstücksfläche"
 
 #: .././classes/Conversion.php:275 .././classes/Single.php:856
 msgid "Year of renovation"
-msgstr ""
+msgstr "Letzte Renovation"
 
 #: .././classes/Conversion.php:276 .././classes/Single.php:848
 msgid "Year of construction"
-msgstr ""
+msgstr "Baujahr"
 
 #: .././classes/Conversion.php:277 .././classes/Single.php:800
 msgid "Number of rooms"
-msgstr ""
+msgstr "Anzahl Zimmer"
 
 #: .././classes/Conversion.php:278 .././classes/Single.php:840
 msgid "Number of floors"
-msgstr ""
+msgstr "Anzahl Etagen"
 
 #: .././classes/Conversion.php:279 .././classes/Single.php:250
 #: .././classes/Single.php:832
 msgid "Floor"
-msgstr ""
+msgstr "Etage"
 
 #: .././classes/Conversion.php:280
 msgid "Volume"
-msgstr ""
+msgstr "Kubatur"
 
 #: .././classes/Conversion.php:281
 msgid "Number of apartments"
-msgstr ""
+msgstr "Anzahl Wohnungen"
 
 #: .././classes/Conversion.php:282 .././classes/Single.php:808
 msgid "Surface usable"
-msgstr ""
+msgstr "Nutzfläche"
 
 #: .././classes/Conversion.php:283
 msgid "Ceiling height"
-msgstr ""
+msgstr "Raumhöhe"
 
 #: .././classes/Conversion.php:284
 msgid "Hall height"
-msgstr ""
+msgstr "Hallenhöhe"
 
 #: .././classes/Conversion.php:285
 msgid "Maximal floor loading"
-msgstr ""
+msgstr "Max. Bodenbelastung"
 
 #: .././classes/Conversion.php:286
 msgid "Carrying capacity crane"
-msgstr ""
+msgstr "Max. Gewicht Kran"
 
 #: .././classes/Conversion.php:287
 msgid "Carrying capacity elevator"
-msgstr ""
+msgstr "Max. Gewicht Warenlift"
 
 #: .././classes/Conversion.php:293
 msgid "Agriculture"
-msgstr ""
+msgstr "Landwirtschaft"
 
 #: .././classes/Conversion.php:294
 msgid "Apartment"
-msgstr ""
+msgstr "Wohnung"
 
 #: .././classes/Conversion.php:295
 msgid "Gastronomy"
-msgstr ""
+msgstr "Gastronomie"
 
 #: .././classes/Conversion.php:296
 msgid "House"
-msgstr ""
+msgstr "Haus"
 
 #: .././classes/Conversion.php:297
 msgid "Industrial"
-msgstr ""
+msgstr "Gewerbe/Industrie"
 
 #: .././classes/Conversion.php:298 .././classes/Conversion.php:358
 msgid "Parking space"
-msgstr ""
+msgstr "Parkplatz"
 
 #: .././classes/Conversion.php:299
 msgid "Plot"
-msgstr ""
+msgstr "Grundstück"
 
 #: .././classes/Conversion.php:300
 msgid "Secondary rooms"
-msgstr ""
+msgstr "Wohnnebenräume"
 
 #: .././classes/Conversion.php:301
 msgid "Garden"
-msgstr ""
+msgstr "Garten"
 
 #: .././classes/Conversion.php:302
 msgid "Commercial"
-msgstr ""
+msgstr "Büro"
 
 #: .././classes/Conversion.php:319
 msgid "Public transportation"
-msgstr ""
+msgstr "Öffentlicher Verkehr"
 
 #: .././classes/Conversion.php:320
 msgid "Shopping"
-msgstr ""
+msgstr "Shoppingcenter"
 
 #: .././classes/Conversion.php:321
 msgid "Kindergarten"
-msgstr ""
+msgstr "Kindergarten"
 
 #: .././classes/Conversion.php:322
 msgid "Motorway"
-msgstr ""
+msgstr "Autobahnanschluss"
 
 #: .././classes/Conversion.php:323
 msgid "Primary school"
-msgstr ""
+msgstr "Primarschule"
 
 #: .././classes/Conversion.php:324
 msgid "Secondary school"
-msgstr ""
+msgstr "Oberstufe"
 
 #: .././classes/Conversion.php:329 .././classes/Single.php:619
 #: .././classes/Single.php:633 .././classes/Single.php:650
 #: .././classes/Single.php:676 .././classes/Single.php:866
 #: .././classes/Single.php:892
 msgid "On Request"
-msgstr ""
+msgstr "Auf Anfrage"
 
 #: .././classes/Conversion.php:330
 msgid "By Agreement"
-msgstr ""
+msgstr "Nach Vereinbarung"
 
 #: .././classes/Conversion.php:331
 msgid "Immediate"
-msgstr ""
+msgstr "Sofort"
 
 #: .././classes/Conversion.php:337
 msgid "Child friendly"
-msgstr ""
+msgstr "Kinderfreundlich"
 
 #: .././classes/Conversion.php:340
 #, php-format
 msgid "%d garages"
-msgstr ""
+msgstr "%d Garagen"
 
 #: .././classes/Conversion.php:342
 msgid "Garage"
-msgstr ""
+msgstr "Autogarage"
 
 #: .././classes/Conversion.php:347
 #, php-format
 msgid "%dx balconies"
-msgstr ""
+msgstr "%dx Balkone"
 
 #: .././classes/Conversion.php:349
 msgid "Balcony"
-msgstr ""
+msgstr "Balkon"
 
 #: .././classes/Conversion.php:352
 msgid "Vista"
-msgstr ""
+msgstr "Aussicht"
 
 #: .././classes/Conversion.php:353
 msgid "Cable TV"
-msgstr ""
+msgstr "Kabelfernsehen"
 
 #: .././classes/Conversion.php:356
 #, php-format
 msgid "%d Parking spaces"
-msgstr ""
+msgstr "'%d Parkplätze"
 
 #: .././classes/Conversion.php:363
 #, php-format
 msgid "%d Pets allowed"
-msgstr ""
+msgstr "%d Haustiere erlaubt"
 
 #: .././classes/Conversion.php:365
 msgid "Pets allowed"
-msgstr ""
+msgstr "Haustiere erlaubt"
 
 #: .././classes/Conversion.php:368
 msgid "ISDN Anschluss"
@@ -1568,20 +1581,20 @@ msgstr ""
 #: .././classes/Conversion.php:372
 #, php-format
 msgid "%d Restrooms"
-msgstr ""
+msgstr "%d Toiletten"
 
 #: .././classes/Conversion.php:374
 msgid "Restrooms"
-msgstr ""
+msgstr "Toiletten"
 
 #: .././classes/Conversion.php:379
 #, php-format
 msgid "%d elevators"
-msgstr ""
+msgstr "%d Lifte / Aufzüge"
 
 #: .././classes/Conversion.php:381
 msgid "Elevator"
-msgstr ""
+msgstr "Lift / Aufzug"
 
 #: .././classes/Conversion.php:385
 msgid "Fireplace"

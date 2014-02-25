@@ -278,14 +278,24 @@
         foreach ($terms as $term) {
             $options[$term->slug]['value'] = $term->slug; 
             //$options[$term->slug]['label'] = __(ucfirst($term->name)) . ' (' . $term->count . ')';
-            $options[$term->slug]['label'] = __(ucfirst($term->name), 'casasync');
+            if ($term->slug == 'buy') {
+                $options[$term->slug]['label'] = __('Buy', 'casasync');
+            } elseif ($term->slug == 'rent') {
+                $options[$term->slug]['label'] = __('Rent', 'casasync');
+            } else {
+                $options[$term->slug]['label'] = ucfirst($term->name);
+            }
+
             $options[$term->slug]['checked'] = (in_array($term->slug, $salestypes) ? 'SELECTED' : '');
         }
         return $options;
     }
 
-    public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = 'Erweiterte Suche'){
+    public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = false){ //'Erweiterte Suche'
         global $wp_query;
+        if (!$title) {
+            $title = __('Advanced Search', 'casasync');
+        }
         $size = ($size == 'large') ? ('large') : ('small');
         $return =  '<div class="' . $wrapper_class . ' ' . $size . '">';
         $return .=  '<h3>' . $title . '</h3>';
