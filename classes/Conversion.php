@@ -296,7 +296,7 @@
             case 'house':           return __('House' ,'casasync');break;
             case 'industrial':      return __('Industrial' ,'casasync');break;
             case 'parking':         return __('Parking space' ,'casasync');break;
-            case 'plot':            return __('Grundstück' ,'casasync');break;
+            case 'plot':            return __('Plot' ,'casasync');break;
             case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
             case 'garden':          return __('Garden' ,'casasync');break;
             case 'commercial':      return __('Commercial' ,'casasync');break;

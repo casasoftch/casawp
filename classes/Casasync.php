@@ -55,7 +55,23 @@ class CasaSync {
             );
         }
         $this->setMetaBoxes();
-        $this->setTranslation();
+
+        //add_action( 'load_textdomain', array($this, 'setTranslation'));
+        add_filter( 'page_template', array($this, 'casasync_page_template' ));
+
+        add_action('plugins_loaded', array($this, 'setTranslation'));
+    }
+
+
+
+
+    
+    function casasync_page_template( $page_template ){
+        global $post;
+        if ( is_page( 'casasync-archive' ) ) {
+            $page_template = dirname( __FILE__ ) . '/casasync-archive.php';
+        }
+        return $page_template;
     }
 
 
@@ -167,14 +183,15 @@ class CasaSync {
                     );
                 }
 
+                $salestypes = array();
                 if ((isset($_GET['casasync_salestype_s']) && is_array($_GET['casasync_salestype_s']) )) {
                     $salestypes = $_GET['casasync_salestype_s'];
                 } elseif (isset($_GET['casasync_salestype_s'])) {
                     $salestypes = array($_GET['casasync_salestype_s']);
                 } elseif(is_tax('casasync_salestype')) {
-                    $salestypes = array('rent','buy', 'reference');
+                    //$salestypes = array('rent','buy', 'reference');
                 } else {
-                    $salestypes = array('rent','buy');
+                    //$salestypes = array('rent','buy');
                 }
                 if ($salestypes) {
                     $taxquery_new[] = array(
@@ -325,13 +342,24 @@ class CasaSync {
 
     }
 
-    function setTranslation(){
+    public function setTranslation(){
         $locale = get_locale();
+
+        switch (substr($locale, 0, 2)) {
+            case 'de': $locale = 'de_DE'; break;
+            case 'en': $locale = 'en_US'; break;
+            case 'it': $locale = 'it_CH'; break;
+            case 'fr': $locale = 'fr_CH'; break;
+            default: $locale = 'de_DE'; break;
+        }
+
+
         //$locale_file = get_template_directory_uri() . "/includes/languages/$locale.php";
-        $locale_file = CASASYNC_PLUGIN_DIR . "languages/$locale.php";
+       /* $locale_file = CASASYNC_PLUGIN_DIR . "languages/$locale.php";
         if ( is_readable( $locale_file ) ) {
             require_once( $locale_file );
-        }
+        }*/
+        load_plugin_textdomain('casasync', false, '/casasync/languages/' );
     }
 
     function setUploadDir($upload) {
@@ -391,6 +419,7 @@ class CasaSync {
         }
     }
 
+
     public function setPostTypes(){
         $labels = array(
             'name'               => __('Properties', 'casasync'),
@@ -419,7 +448,8 @@ class CasaSync {
             'hierarchical'       => false,
             'menu_position'      => null,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-            'menu_icon'          => CASASYNC_PLUGIN_URL . 'assets/img/building.png'
+            'menu_icon'          => CASASYNC_PLUGIN_URL . 'assets/img/building.png',
+            'show_in_nav_menus'  => true
         );
         register_post_type( 'casasync_property', $args );
 
@@ -523,6 +553,8 @@ class CasaSync {
         $id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
         $id3 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
     }
+
+
 
     public function contact_shortcode($atts){
         extract( shortcode_atts( array(
@@ -698,7 +730,7 @@ class CasaSync {
                 if ($post_id) {
                     $message .= '<tr></td colspan="2">&nbsp;</td></tr>';
                     $message .= '<tr>';
-                    $message .= '<td colspan="2" class="property"><a href="' . get_permalink($post_id) . '" style="text-decoration: none; color: #969696; font-weight: bold; font-family: Helvetica, Arial, sans-serif;">Objekt anzeigen ...</a></td>';
+                    $message .= '<td colspan="2" class="property"><a href="' . get_permalink($post_id) . '" style="text-decoration: none; color: #969696; font-weight: bold; font-family: Helvetica, Arial, sans-serif;">' . __('Show property ...') .'</a></td>';//Objekt anzeigen ...
                     $message .= '</tr>';
                 }
                 $message.='</table>';
@@ -712,7 +744,14 @@ class CasaSync {
                 $template = str_replace('{:src_social_2:}', '#', $template);
                 $template = str_replace('{:src_social_3:}', '#', $template);
                 $template = str_replace('{:sender_title:}', get_the_title( $post_id ), $template);
-    
+
+                //strings
+                $template = str_replace('{:html_title:}', __('Inquiry for a property online', 'casasync'), $template); //'Anfrage für ein Objekt online'
+                $template = str_replace('{:title:}', __('New inquiry', 'casasync'), $template); //'Neue Anfrage'
+                $p_msg = sprintf(__('A new inquiry from %s has been sent', 'casasync'), '<a style="color:#99CCFF" href="http://' . $_SERVER['SERVER_NAME'] . '">http://' . $_SERVER['SERVER_NAME'] . '</a>');
+                $template = str_replace('{:primary_message:}', $p_msg, $template);
+
+
                 if ($message) {
                     $template = str_replace('{:message:}', $message, $template);
                 }
@@ -748,9 +787,9 @@ class CasaSync {
                     }
                 }
                 if($remcat_sended === true or $email_sended === true) {
-                    echo '<p class="alert alert-success">Vielen Dank!</p>';
+                    echo '<p class="alert alert-success">' . __('Thank you!', 'casasync') . '</p>'; //Vielen Dank!
                 } else {
-                    echo '<p class="alert alert-danger">Fehler!</p>';
+                    echo '<p class="alert alert-danger">' . __('Error!', 'casasync') . '</p>'; //Fehler!
                 }
             }
 

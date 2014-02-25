@@ -1,0 +1,1878 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2014-02-25 10:14+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jens Stalder <js@casasoft.ch>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ../.\n"
+
+#: .././casasync-archive.php:31
+msgid "No image"
+msgstr "Kein Bild"
+
+#: .././casasync-archive.php:46
+msgid "Nothing Found"
+msgstr "Nichts gefunden"
+
+#: .././casasync-archive.php:47
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+"Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte "
+"versuchen Sie es mit anderen Suchbegriffen."
+
+#: .././options.php:98
+msgid "Einstellungen gespeichert.."
+msgstr ""
+
+#: .././options.php:104
+msgid "Daten wurden importiert.."
+msgstr ""
+
+#: .././classes/Archive.php:300
+msgid "Choose offer"
+msgstr "Angebot wählen"
+
+#: .././classes/Archive.php:307
+msgid "Choose category"
+msgstr "Kategorie wählen"
+
+#: .././classes/Archive.php:314
+msgid "Choose locality"
+msgstr "Ort wählen"
+
+#: .././classes/Archive.php:318
+msgid "Search"
+msgstr "Suchen"
+
+#: .././classes/Casasync.php:215
+msgid "Custom Text Field"
+msgstr ""
+
+#: .././classes/Casasync.php:219
+msgid "Original filename"
+msgstr ""
+
+#: .././classes/Casasync.php:425 .././classes/Casasync.php:436
+msgid "Properties"
+msgstr "Immobilien"
+
+#: .././classes/Casasync.php:426 .././classes/Single.php:690
+msgid "Property"
+msgstr "Immobilie"
+
+#: .././classes/Casasync.php:427
+msgid "Add New"
+msgstr "Erstellen"
+
+#: .././classes/Casasync.php:428
+msgid "Add New Property"
+msgstr "Neue Immobilie erstellen"
+
+#: .././classes/Casasync.php:429
+msgid "Edit Property"
+msgstr "Immobilie bearbeiten"
+
+#: .././classes/Casasync.php:430
+msgid "New Property"
+msgstr "Neue Immobilie"
+
+#: .././classes/Casasync.php:431
+msgid "All Properties"
+msgstr "Alle Immobilien"
+
+#: .././classes/Casasync.php:432
+msgid "View Property"
+msgstr "Immobilie ansehen"
+
+#: .././classes/Casasync.php:433
+msgid "Search Properties"
+msgstr "Immobilien durchsuchen"
+
+#: .././classes/Casasync.php:434
+msgid "No properties found"
+msgstr "Keine Immobilien gefunden"
+
+#: .././classes/Casasync.php:435
+msgid "No properties found in Trash"
+msgstr "Keine Immobilien im Papierkorb gefunden"
+
+#: .././classes/Casasync.php:457
+msgid "Property categories"
+msgstr "Immobilien Kategorien"
+
+#: .././classes/Casasync.php:458 .././classes/Casasync.php:467
+msgid "Category"
+msgstr "Kategorie"
+
+#: .././classes/Casasync.php:459
+msgid "Search Categories"
+msgstr "Kategorien durchsuchen"
+
+#: .././classes/Casasync.php:460
+msgid "All Categories"
+msgstr "Alle Kategorien"
+
+#: .././classes/Casasync.php:461
+msgid "Parent Category"
+msgstr "Übergeordnete Kategorien"
+
+#: .././classes/Casasync.php:462
+msgid "Parent Category:"
+msgstr "Übergeordnete Kategorien:"
+
+#: .././classes/Casasync.php:463
+msgid "Edit Category"
+msgstr "Kategorie bearbeiten"
+
+#: .././classes/Casasync.php:464
+msgid "Update Category"
+msgstr "Aktualisiere Kategorie"
+
+#: .././classes/Casasync.php:465
+msgid "Add New Category"
+msgstr "Neue Kategorie erstellen"
+
+#: .././classes/Casasync.php:466
+msgid "New Category Name"
+msgstr "Neuer Kategorienamen"
+
+#: .././classes/Casasync.php:480
+msgid "Property locations"
+msgstr "Immobilien Ortschaften"
+
+#: .././classes/Casasync.php:481 .././classes/Casasync.php:490
+msgid "Location"
+msgstr "Ortschaft"
+
+#: .././classes/Casasync.php:482
+msgid "Search Locations"
+msgstr "Orteschaften durchsuchen"
+
+#: .././classes/Casasync.php:483
+msgid "All Locations"
+msgstr "Alle Ortschaften"
+
+#: .././classes/Casasync.php:484
+msgid "Parent Location"
+msgstr "Übergeordnete Ortschaft"
+
+#: .././classes/Casasync.php:485
+msgid "Parent Location:"
+msgstr "Übergeordnete Ortschaft:"
+
+#: .././classes/Casasync.php:486
+msgid "Edit Location"
+msgstr "Ortschaft bearbeiten"
+
+#: .././classes/Casasync.php:487
+msgid "Update Location"
+msgstr "Ortschaft aktualisieren"
+
+#: .././classes/Casasync.php:488
+msgid "Add New Location"
+msgstr "Neue Ortschaft erstellen"
+
+#: .././classes/Casasync.php:489
+msgid "New Location Name"
+msgstr "Neue Ortschafts-Namen"
+
+#: .././classes/Casasync.php:503
+msgid "Property salestypes"
+msgstr "Immobilien Vermarktungsarten"
+
+#: .././classes/Casasync.php:504 .././classes/Casasync.php:516
+msgid "Salestype"
+msgstr "Vermarktungsart"
+
+#: .././classes/Casasync.php:505
+msgid "Search Salestypes"
+msgstr "Vermarktungsarten durchsuchen"
+
+#: .././classes/Casasync.php:506
+msgid "Popular Salestypes"
+msgstr ""
+
+#: .././classes/Casasync.php:507
+msgid "All Salestypes"
+msgstr "Alle Vermarktungsarten"
+
+#: .././classes/Casasync.php:508
+msgid "Edit Salestype"
+msgstr "Vermarktungsart bearbeiten"
+
+#: .././classes/Casasync.php:509
+msgid "Update Salestype"
+msgstr "Vermarktungsart aktualisieren"
+
+#: .././classes/Casasync.php:510
+msgid "Add New Salestype"
+msgstr "Neue Vermarktungsart erstellen"
+
+#: .././classes/Casasync.php:511
+msgid "New Salestype Name"
+msgstr "Neuer Vermarktungsart-Namen"
+
+#: .././classes/Casasync.php:512
+msgid "Separate salestypes with commas"
+msgstr "Trenne Vermarktungsarten durch Kommas"
+
+#: .././classes/Casasync.php:513
+msgid "Add or remove salestypes"
+msgstr "Vermarktungsarten hinzufügen oder entfernen"
+
+#: .././classes/Casasync.php:514
+msgid "Choose from the most used salestypes"
+msgstr "Wähle von den meistbenutzten Vermarktungsarten"
+
+#: .././classes/Casasync.php:515
+msgid "No Salestypes found."
+msgstr "Keine Vermarktungsarten gefunden"
+
+#: .././classes/Casasync.php:529
+msgid "Property Attachment Types"
+msgstr "Immobilien Anhangsart"
+
+#: .././classes/Casasync.php:530 .././classes/Casasync.php:539
+msgid "Attachment Type"
+msgstr "Immobilien Anhangsart"
+
+#: .././classes/Casasync.php:531
+msgid "Search Attachment Types"
+msgstr "Suche Anhangsarten"
+
+#: .././classes/Casasync.php:532
+msgid "All Attachment Types"
+msgstr "Alle Anhangsarten"
+
+#: .././classes/Casasync.php:533
+msgid "Parent Attachment Type"
+msgstr "Übergeordnete Anhangsart"
+
+#: .././classes/Casasync.php:534
+msgid "Parent Attachment Type:"
+msgstr "Übergeordnete Anhangsart:"
+
+#: .././classes/Casasync.php:535
+msgid "Edit Attachment Type"
+msgstr "Anhangsart bearbeiten"
+
+#: .././classes/Casasync.php:536
+msgid "Update Attachment Type"
+msgstr "Anhangsart aktualisieren"
+
+#: .././classes/Casasync.php:537
+msgid "Add New Attachment Type"
+msgstr "Neue Anhangsarten erstellen"
+
+#: .././classes/Casasync.php:538
+msgid "New Attachment Type Name"
+msgstr "Neuer Anhangsart-Namen"
+
+#: .././classes/Casasync.php:585 .././classes/Casasync.php:822
+#: .././classes/Casasync.php:903
+msgid "First name"
+msgstr "Vorname"
+
+#: .././classes/Casasync.php:586 .././classes/Casasync.php:826
+#: .././classes/Casasync.php:909
+msgid "Last name"
+msgstr "Nachname"
+
+#: .././classes/Casasync.php:587 .././classes/Casasync.php:879
+#: .././classes/Casasync.php:977 .././classes/Single.php:1173
+msgid "Email"
+msgstr "E-Mail"
+
+#: .././classes/Casasync.php:588
+msgid "Salutation"
+msgstr "Anrede"
+
+#: .././classes/Casasync.php:589
+msgid "Title"
+msgstr "Titel"
+
+#: .././classes/Casasync.php:590 .././classes/Casasync.php:875
+#: .././classes/Casasync.php:969 .././classes/Single.php:1121
+msgid "Phone"
+msgstr "Telefon"
+
+#: .././classes/Casasync.php:592
+msgid "Company"
+msgstr "Firma"
+
+#: .././classes/Casasync.php:593 .././classes/Casasync.php:833
+#: .././classes/Casasync.php:917 .././classes/Single.php:784
+msgid "Street"
+msgstr "Strasse"
+
+#: .././classes/Casasync.php:594 .././classes/Casasync.php:838
+#: .././classes/Casasync.php:925
+msgid "ZIP"
+msgstr "PLZ"
+
+#: .././classes/Casasync.php:595 .././classes/Casasync.php:842
+#: .././classes/Casasync.php:931 .././classes/Single.php:792
+msgid "Locality"
+msgstr "Ort"
+
+#: .././classes/Casasync.php:596 .././classes/Casasync.php:848
+#: .././classes/Casasync.php:939
+msgid "Country"
+msgstr ""
+
+#: .././classes/Casasync.php:597
+msgid "Kanton"
+msgstr "Kanton"
+
+#: .././classes/Casasync.php:598
+msgid "Subject"
+msgstr "Betreff"
+
+#: .././classes/Casasync.php:599 .././classes/Casasync.php:884
+#: .././classes/Casasync.php:985
+msgid "Message"
+msgstr "Nachricht"
+
+#: .././classes/Casasync.php:600
+msgid "Recipient"
+msgstr "Rezipient"
+
+#: .././classes/Casasync.php:637
+msgid "Required"
+msgstr "Erforderlich"
+
+#: .././classes/Casasync.php:733
+msgid "Show property ..."
+msgstr "Objekt anzeigen ..."
+
+#: .././classes/Casasync.php:749
+msgid "Inquiry for a property online"
+msgstr "Anfrage für ein Objekt online"
+
+#: .././classes/Casasync.php:750
+msgid "New inquiry"
+msgstr "Neue Anfrage"
+
+#: .././classes/Casasync.php:751
+#, php-format
+msgid "A new inquiry from %s has been sent"
+msgstr "Auf %s wurde eine neue Anfrage versendet"
+
+#: .././classes/Casasync.php:790
+msgid "Thank you!"
+msgstr "Vielen Dank!"
+
+#: .././classes/Casasync.php:792
+msgid "Error!"
+msgstr "Fehler!"
+
+#: .././classes/Casasync.php:805
+msgid "Please consider the following errors and try sending it again"
+msgstr ""
+"Folgende Fehler sind aufgetreten. Bitte überprüfen Sie die Eingabefelder."
+
+#: .././classes/Casasync.php:890 .././classes/Casasync.php:993
+msgid "Please fill out all the fields"
+msgstr "Bitte alle Felder ausfüllen."
+
+#: .././classes/Casasync.php:893 .././classes/Casasync.php:996
+msgid "Send"
+msgstr "Senden"
+
+#: .././classes/Conversion.php:20
+msgid "Andorra"
+msgstr ""
+
+#: .././classes/Conversion.php:21
+msgid "United Arab Emirates"
+msgstr "Vereinigte Arabische Emirate"
+
+#: .././classes/Conversion.php:22
+msgid "Afghanistan"
+msgstr ""
+
+#: .././classes/Conversion.php:23
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: .././classes/Conversion.php:24
+msgid "Anguilla"
+msgstr ""
+
+#: .././classes/Conversion.php:25
+msgid "Albania"
+msgstr ""
+
+#: .././classes/Conversion.php:26
+msgid "Armenia"
+msgstr ""
+
+#: .././classes/Conversion.php:27
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: .././classes/Conversion.php:28
+msgid "Angola"
+msgstr ""
+
+#: .././classes/Conversion.php:29
+msgid "Antarctica"
+msgstr ""
+
+#: .././classes/Conversion.php:30
+msgid "Argentina"
+msgstr ""
+
+#: .././classes/Conversion.php:31
+msgid "American Samoa"
+msgstr ""
+
+#: .././classes/Conversion.php:32
+msgid "Austria"
+msgstr ""
+
+#: .././classes/Conversion.php:33
+msgid "Australia"
+msgstr ""
+
+#: .././classes/Conversion.php:34
+msgid "Aruba"
+msgstr ""
+
+#: .././classes/Conversion.php:35
+msgid "Azerbaijan"
+msgstr ""
+
+#: .././classes/Conversion.php:36
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: .././classes/Conversion.php:37
+msgid "Barbados"
+msgstr ""
+
+#: .././classes/Conversion.php:38
+msgid "Bangladesh"
+msgstr ""
+
+#: .././classes/Conversion.php:39
+msgid "Belgium"
+msgstr ""
+
+#: .././classes/Conversion.php:40
+msgid "Burkina Faso"
+msgstr ""
+
+#: .././classes/Conversion.php:41
+msgid "Bulgaria"
+msgstr ""
+
+#: .././classes/Conversion.php:42
+msgid "Bahrain"
+msgstr ""
+
+#: .././classes/Conversion.php:43
+msgid "Burundi"
+msgstr ""
+
+#: .././classes/Conversion.php:44
+msgid "Benin"
+msgstr ""
+
+#: .././classes/Conversion.php:45
+msgid "Bermuda"
+msgstr ""
+
+#: .././classes/Conversion.php:46
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: .././classes/Conversion.php:47
+msgid "Bolivia"
+msgstr ""
+
+#: .././classes/Conversion.php:48
+msgid "Brazil"
+msgstr ""
+
+#: .././classes/Conversion.php:49
+msgid "Bahamas"
+msgstr ""
+
+#: .././classes/Conversion.php:50
+msgid "Bhutan"
+msgstr ""
+
+#: .././classes/Conversion.php:51
+msgid "Bouvet Island"
+msgstr ""
+
+#: .././classes/Conversion.php:52
+msgid "Botswana"
+msgstr ""
+
+#: .././classes/Conversion.php:53
+msgid "Belarus"
+msgstr ""
+
+#: .././classes/Conversion.php:54
+msgid "Belize"
+msgstr ""
+
+#: .././classes/Conversion.php:55
+msgid "Canada"
+msgstr ""
+
+#: .././classes/Conversion.php:56
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:57
+msgid "Congo, The Democratic Republic of the"
+msgstr ""
+
+#: .././classes/Conversion.php:58
+msgid "Central African Republic"
+msgstr ""
+
+#: .././classes/Conversion.php:59
+msgid "Congo"
+msgstr ""
+
+#: .././classes/Conversion.php:60
+msgid "Switzerland"
+msgstr ""
+
+#: .././classes/Conversion.php:61
+msgid "Cote D'Ivoire"
+msgstr ""
+
+#: .././classes/Conversion.php:62
+msgid "Cook Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:63
+msgid "Chile"
+msgstr ""
+
+#: .././classes/Conversion.php:64
+msgid "Cameroon"
+msgstr ""
+
+#: .././classes/Conversion.php:65
+msgid "China"
+msgstr ""
+
+#: .././classes/Conversion.php:66
+msgid "Colombia"
+msgstr ""
+
+#: .././classes/Conversion.php:67
+msgid "Costa Rica"
+msgstr ""
+
+#: .././classes/Conversion.php:68
+msgid "Cuba"
+msgstr ""
+
+#: .././classes/Conversion.php:69
+msgid "Cape Verde"
+msgstr ""
+
+#: .././classes/Conversion.php:70
+msgid "Christmas Island"
+msgstr ""
+
+#: .././classes/Conversion.php:71
+msgid "Cyprus"
+msgstr ""
+
+#: .././classes/Conversion.php:72
+msgid "Czech Republic"
+msgstr ""
+
+#: .././classes/Conversion.php:73
+msgid "Germany"
+msgstr ""
+
+#: .././classes/Conversion.php:74
+msgid "Djibouti"
+msgstr ""
+
+#: .././classes/Conversion.php:75
+msgid "Denmark"
+msgstr ""
+
+#: .././classes/Conversion.php:76
+msgid "Dominica"
+msgstr ""
+
+#: .././classes/Conversion.php:77
+msgid "Dominican Republic"
+msgstr ""
+
+#: .././classes/Conversion.php:78
+msgid "Algeria"
+msgstr ""
+
+#: .././classes/Conversion.php:79
+msgid "Ecuador"
+msgstr ""
+
+#: .././classes/Conversion.php:80
+msgid "Estonia"
+msgstr ""
+
+#: .././classes/Conversion.php:81
+msgid "Egypt"
+msgstr ""
+
+#: .././classes/Conversion.php:82
+msgid "Western Sahara"
+msgstr ""
+
+#: .././classes/Conversion.php:83
+msgid "Eritrea"
+msgstr ""
+
+#: .././classes/Conversion.php:84
+msgid "Spain"
+msgstr ""
+
+#: .././classes/Conversion.php:85
+msgid "Ethiopia"
+msgstr ""
+
+#: .././classes/Conversion.php:86
+msgid "Finland"
+msgstr ""
+
+#: .././classes/Conversion.php:87
+msgid "Fiji"
+msgstr ""
+
+#: .././classes/Conversion.php:88
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+#: .././classes/Conversion.php:89
+msgid "Micronesia, Federated States of"
+msgstr ""
+
+#: .././classes/Conversion.php:90
+msgid "Faroe Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:91
+msgid "France"
+msgstr ""
+
+#: .././classes/Conversion.php:92
+msgid "France, Metropolitan"
+msgstr ""
+
+#: .././classes/Conversion.php:93
+msgid "Gabon"
+msgstr ""
+
+#: .././classes/Conversion.php:94
+msgid "United Kingdom"
+msgstr ""
+
+#: .././classes/Conversion.php:95
+msgid "Grenada"
+msgstr ""
+
+#: .././classes/Conversion.php:96
+msgid "Georgia"
+msgstr ""
+
+#: .././classes/Conversion.php:97
+msgid "French Guiana"
+msgstr ""
+
+#: .././classes/Conversion.php:98
+msgid "Ghana"
+msgstr ""
+
+#: .././classes/Conversion.php:99
+msgid "Gibraltar"
+msgstr ""
+
+#: .././classes/Conversion.php:100
+msgid "Greenland"
+msgstr ""
+
+#: .././classes/Conversion.php:101
+msgid "Gambia"
+msgstr ""
+
+#: .././classes/Conversion.php:102
+msgid "Guinea"
+msgstr ""
+
+#: .././classes/Conversion.php:103
+msgid "Guadeloupe"
+msgstr ""
+
+#: .././classes/Conversion.php:104
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: .././classes/Conversion.php:105
+msgid "Greece"
+msgstr ""
+
+#: .././classes/Conversion.php:106
+msgid "South Georgia and the South Sandwich Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:107
+msgid "Guatemala"
+msgstr ""
+
+#: .././classes/Conversion.php:108
+msgid "Guam"
+msgstr ""
+
+#: .././classes/Conversion.php:109
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: .././classes/Conversion.php:110
+msgid "Guyana"
+msgstr ""
+
+#: .././classes/Conversion.php:111
+msgid "Hong Kong"
+msgstr ""
+
+#: .././classes/Conversion.php:112
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:113
+msgid "Honduras"
+msgstr ""
+
+#: .././classes/Conversion.php:114
+msgid "Croatia"
+msgstr ""
+
+#: .././classes/Conversion.php:115
+msgid "Haiti"
+msgstr ""
+
+#: .././classes/Conversion.php:116
+msgid "Hungary"
+msgstr ""
+
+#: .././classes/Conversion.php:117
+msgid "Indonesia"
+msgstr ""
+
+#: .././classes/Conversion.php:118
+msgid "Ireland"
+msgstr ""
+
+#: .././classes/Conversion.php:119
+msgid "Israel"
+msgstr ""
+
+#: .././classes/Conversion.php:120
+msgid "India"
+msgstr ""
+
+#: .././classes/Conversion.php:121
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: .././classes/Conversion.php:122
+msgid "Iraq"
+msgstr ""
+
+#: .././classes/Conversion.php:123
+msgid "Iran, Islamic Republic of"
+msgstr ""
+
+#: .././classes/Conversion.php:124
+msgid "Iceland"
+msgstr ""
+
+#: .././classes/Conversion.php:125
+msgid "Italy"
+msgstr ""
+
+#: .././classes/Conversion.php:126
+msgid "Jamaica"
+msgstr ""
+
+#: .././classes/Conversion.php:127
+msgid "Jordan"
+msgstr ""
+
+#: .././classes/Conversion.php:128
+msgid "Japan"
+msgstr ""
+
+#: .././classes/Conversion.php:129
+msgid "Kenya"
+msgstr ""
+
+#: .././classes/Conversion.php:130
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: .././classes/Conversion.php:131
+msgid "Cambodia"
+msgstr ""
+
+#: .././classes/Conversion.php:132
+msgid "Kiribati"
+msgstr ""
+
+#: .././classes/Conversion.php:133
+msgid "Comoros"
+msgstr ""
+
+#: .././classes/Conversion.php:134
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: .././classes/Conversion.php:135
+msgid "Korea, Democratic People's Republic of"
+msgstr ""
+
+#: .././classes/Conversion.php:136
+msgid "Korea, Republic of"
+msgstr ""
+
+#: .././classes/Conversion.php:137
+msgid "Kuwait"
+msgstr ""
+
+#: .././classes/Conversion.php:138
+msgid "Cayman Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:139
+msgid "Kazakstan"
+msgstr ""
+
+#: .././classes/Conversion.php:140
+msgid "Lao People's Democratic Republic"
+msgstr ""
+
+#: .././classes/Conversion.php:141
+msgid "Lebanon"
+msgstr ""
+
+#: .././classes/Conversion.php:142
+msgid "Saint Lucia"
+msgstr ""
+
+#: .././classes/Conversion.php:143
+msgid "Liechtenstein"
+msgstr ""
+
+#: .././classes/Conversion.php:144
+msgid "Sri Lanka"
+msgstr ""
+
+#: .././classes/Conversion.php:145
+msgid "Liberia"
+msgstr ""
+
+#: .././classes/Conversion.php:146
+msgid "Lesotho"
+msgstr ""
+
+#: .././classes/Conversion.php:147
+msgid "Lithuania"
+msgstr ""
+
+#: .././classes/Conversion.php:148
+msgid "Luxembourg"
+msgstr ""
+
+#: .././classes/Conversion.php:149
+msgid "Latvia"
+msgstr ""
+
+#: .././classes/Conversion.php:150
+msgid "Libyan Arab Jamahiriya"
+msgstr ""
+
+#: .././classes/Conversion.php:151
+msgid "Morocco"
+msgstr ""
+
+#: .././classes/Conversion.php:152
+msgid "Monaco"
+msgstr ""
+
+#: .././classes/Conversion.php:153
+msgid "Moldova, Republic of"
+msgstr ""
+
+#: .././classes/Conversion.php:154
+msgid "Madagascar"
+msgstr ""
+
+#: .././classes/Conversion.php:155
+msgid "Marshall Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:156
+msgid "Macedonia"
+msgstr ""
+
+#: .././classes/Conversion.php:157
+msgid "Mali"
+msgstr ""
+
+#: .././classes/Conversion.php:158
+msgid "Myanmar"
+msgstr ""
+
+#: .././classes/Conversion.php:159
+msgid "Mongolia"
+msgstr ""
+
+#: .././classes/Conversion.php:160
+msgid "Macau"
+msgstr ""
+
+#: .././classes/Conversion.php:161
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:162
+msgid "Martinique"
+msgstr ""
+
+#: .././classes/Conversion.php:163
+msgid "Mauritania"
+msgstr ""
+
+#: .././classes/Conversion.php:164
+msgid "Montserrat"
+msgstr ""
+
+#: .././classes/Conversion.php:165
+msgid "Malta"
+msgstr ""
+
+#: .././classes/Conversion.php:166
+msgid "Mauritius"
+msgstr ""
+
+#: .././classes/Conversion.php:167
+msgid "Maldives"
+msgstr ""
+
+#: .././classes/Conversion.php:168
+msgid "Malawi"
+msgstr ""
+
+#: .././classes/Conversion.php:169
+msgid "Mexico"
+msgstr ""
+
+#: .././classes/Conversion.php:170
+msgid "Malaysia"
+msgstr ""
+
+#: .././classes/Conversion.php:171
+msgid "Mozambique"
+msgstr ""
+
+#: .././classes/Conversion.php:172
+msgid "Namibia"
+msgstr ""
+
+#: .././classes/Conversion.php:173
+msgid "New Caledonia"
+msgstr ""
+
+#: .././classes/Conversion.php:174
+msgid "Niger"
+msgstr ""
+
+#: .././classes/Conversion.php:175
+msgid "Norfolk Island"
+msgstr ""
+
+#: .././classes/Conversion.php:176
+msgid "Nigeria"
+msgstr ""
+
+#: .././classes/Conversion.php:177
+msgid "Nicaragua"
+msgstr ""
+
+#: .././classes/Conversion.php:178
+msgid "Netherlands"
+msgstr ""
+
+#: .././classes/Conversion.php:179
+msgid "Norway"
+msgstr ""
+
+#: .././classes/Conversion.php:180
+msgid "Nepal"
+msgstr ""
+
+#: .././classes/Conversion.php:181
+msgid "Nauru"
+msgstr ""
+
+#: .././classes/Conversion.php:182
+msgid "Niue"
+msgstr ""
+
+#: .././classes/Conversion.php:183
+msgid "New Zealand"
+msgstr ""
+
+#: .././classes/Conversion.php:184
+msgid "Oman"
+msgstr ""
+
+#: .././classes/Conversion.php:185
+msgid "Panama"
+msgstr ""
+
+#: .././classes/Conversion.php:186
+msgid "Peru"
+msgstr ""
+
+#: .././classes/Conversion.php:187
+msgid "French Polynesia"
+msgstr ""
+
+#: .././classes/Conversion.php:188
+msgid "Papua New Guinea"
+msgstr ""
+
+#: .././classes/Conversion.php:189
+msgid "Philippines"
+msgstr ""
+
+#: .././classes/Conversion.php:190
+msgid "Pakistan"
+msgstr ""
+
+#: .././classes/Conversion.php:191
+msgid "Poland"
+msgstr ""
+
+#: .././classes/Conversion.php:192
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: .././classes/Conversion.php:193
+msgid "Pitcairn Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:194
+msgid "Puerto Rico"
+msgstr ""
+
+#: .././classes/Conversion.php:195
+msgid "Palestinian Territory"
+msgstr ""
+
+#: .././classes/Conversion.php:196
+msgid "Portugal"
+msgstr ""
+
+#: .././classes/Conversion.php:197
+msgid "Palau"
+msgstr ""
+
+#: .././classes/Conversion.php:198
+msgid "Paraguay"
+msgstr ""
+
+#: .././classes/Conversion.php:199
+msgid "Qatar"
+msgstr ""
+
+#: .././classes/Conversion.php:200
+msgid "Reunion"
+msgstr ""
+
+#: .././classes/Conversion.php:201
+msgid "Romania"
+msgstr ""
+
+#: .././classes/Conversion.php:202
+msgid "Russian Federation"
+msgstr ""
+
+#: .././classes/Conversion.php:203
+msgid "Rwanda"
+msgstr ""
+
+#: .././classes/Conversion.php:204
+msgid "Saudi Arabia"
+msgstr ""
+
+#: .././classes/Conversion.php:205
+msgid "Solomon Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:206
+msgid "Seychelles"
+msgstr ""
+
+#: .././classes/Conversion.php:207
+msgid "Sudan"
+msgstr ""
+
+#: .././classes/Conversion.php:208
+msgid "Sweden"
+msgstr ""
+
+#: .././classes/Conversion.php:209
+msgid "Singapore"
+msgstr ""
+
+#: .././classes/Conversion.php:210
+msgid "Saint Helena"
+msgstr ""
+
+#: .././classes/Conversion.php:211
+msgid "Slovenia"
+msgstr ""
+
+#: .././classes/Conversion.php:212
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: .././classes/Conversion.php:213
+msgid "Slovakia"
+msgstr ""
+
+#: .././classes/Conversion.php:214
+msgid "Sierra Leone"
+msgstr ""
+
+#: .././classes/Conversion.php:215
+msgid "San Marino"
+msgstr ""
+
+#: .././classes/Conversion.php:216
+msgid "Senegal"
+msgstr ""
+
+#: .././classes/Conversion.php:217
+msgid "Somalia"
+msgstr ""
+
+#: .././classes/Conversion.php:218
+msgid "Suriname"
+msgstr ""
+
+#: .././classes/Conversion.php:219
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: .././classes/Conversion.php:220
+msgid "El Salvador"
+msgstr ""
+
+#: .././classes/Conversion.php:221
+msgid "Syrian Arab Republic"
+msgstr ""
+
+#: .././classes/Conversion.php:222
+msgid "Swaziland"
+msgstr ""
+
+#: .././classes/Conversion.php:223
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:224
+msgid "Chad"
+msgstr ""
+
+#: .././classes/Conversion.php:225
+msgid "French Southern Territories"
+msgstr ""
+
+#: .././classes/Conversion.php:226
+msgid "Togo"
+msgstr ""
+
+#: .././classes/Conversion.php:227
+msgid "Thailand"
+msgstr ""
+
+#: .././classes/Conversion.php:228
+msgid "Tajikistan"
+msgstr ""
+
+#: .././classes/Conversion.php:229
+msgid "Tokelau"
+msgstr ""
+
+#: .././classes/Conversion.php:230
+msgid "Turkmenistan"
+msgstr ""
+
+#: .././classes/Conversion.php:231
+msgid "Tunisia"
+msgstr ""
+
+#: .././classes/Conversion.php:232
+msgid "Tonga"
+msgstr ""
+
+#: .././classes/Conversion.php:233
+msgid "Timor-Leste"
+msgstr ""
+
+#: .././classes/Conversion.php:234
+msgid "Turkey"
+msgstr ""
+
+#: .././classes/Conversion.php:235
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: .././classes/Conversion.php:236
+msgid "Tuvalu"
+msgstr ""
+
+#: .././classes/Conversion.php:237
+msgid "Taiwan"
+msgstr ""
+
+#: .././classes/Conversion.php:238
+msgid "Tanzania, United Republic of"
+msgstr ""
+
+#: .././classes/Conversion.php:239
+msgid "Ukraine"
+msgstr ""
+
+#: .././classes/Conversion.php:240
+msgid "Uganda"
+msgstr ""
+
+#: .././classes/Conversion.php:241
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:242
+msgid "United States"
+msgstr ""
+
+#: .././classes/Conversion.php:243
+msgid "Uruguay"
+msgstr ""
+
+#: .././classes/Conversion.php:244
+msgid "Uzbekistan"
+msgstr ""
+
+#: .././classes/Conversion.php:245
+msgid "Holy See (Vatican City State)"
+msgstr ""
+
+#: .././classes/Conversion.php:246
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: .././classes/Conversion.php:247
+msgid "Venezuela"
+msgstr ""
+
+#: .././classes/Conversion.php:248
+msgid "Virgin Islands, British"
+msgstr ""
+
+#: .././classes/Conversion.php:249
+msgid "Virgin Islands, U.S."
+msgstr ""
+
+#: .././classes/Conversion.php:250
+msgid "Vietnam"
+msgstr ""
+
+#: .././classes/Conversion.php:251
+msgid "Vanuatu"
+msgstr ""
+
+#: .././classes/Conversion.php:252
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: .././classes/Conversion.php:253
+msgid "Samoa"
+msgstr ""
+
+#: .././classes/Conversion.php:254
+msgid "Yemen"
+msgstr ""
+
+#: .././classes/Conversion.php:255
+msgid "Mayotte"
+msgstr ""
+
+#: .././classes/Conversion.php:256
+msgid "Serbia"
+msgstr ""
+
+#: .././classes/Conversion.php:257
+msgid "South Africa"
+msgstr ""
+
+#: .././classes/Conversion.php:258
+msgid "Zambia"
+msgstr ""
+
+#: .././classes/Conversion.php:259
+msgid "Montenegro"
+msgstr ""
+
+#: .././classes/Conversion.php:260
+msgid "Zimbabwe"
+msgstr ""
+
+#: .././classes/Conversion.php:261
+msgid "Aland Islands"
+msgstr ""
+
+#: .././classes/Conversion.php:262
+msgid "Guernsey"
+msgstr ""
+
+#: .././classes/Conversion.php:263
+msgid "Isle of Man"
+msgstr ""
+
+#: .././classes/Conversion.php:264
+msgid "Jersey"
+msgstr ""
+
+#: .././classes/Conversion.php:265
+msgid "Saint Barthelemy"
+msgstr ""
+
+#: .././classes/Conversion.php:266
+msgid "Saint Martin"
+msgstr ""
+
+#: .././classes/Conversion.php:273 .././classes/Single.php:816
+msgid "Living space"
+msgstr ""
+
+#: .././classes/Conversion.php:274 .././classes/Single.php:824
+msgid "Property space"
+msgstr ""
+
+#: .././classes/Conversion.php:275 .././classes/Single.php:856
+msgid "Year of renovation"
+msgstr ""
+
+#: .././classes/Conversion.php:276 .././classes/Single.php:848
+msgid "Year of construction"
+msgstr ""
+
+#: .././classes/Conversion.php:277 .././classes/Single.php:800
+msgid "Number of rooms"
+msgstr ""
+
+#: .././classes/Conversion.php:278 .././classes/Single.php:840
+msgid "Number of floors"
+msgstr ""
+
+#: .././classes/Conversion.php:279 .././classes/Single.php:250
+#: .././classes/Single.php:832
+msgid "Floor"
+msgstr ""
+
+#: .././classes/Conversion.php:280
+msgid "Volume"
+msgstr ""
+
+#: .././classes/Conversion.php:281
+msgid "Number of apartments"
+msgstr ""
+
+#: .././classes/Conversion.php:282 .././classes/Single.php:808
+msgid "Surface usable"
+msgstr ""
+
+#: .././classes/Conversion.php:283
+msgid "Ceiling height"
+msgstr ""
+
+#: .././classes/Conversion.php:284
+msgid "Hall height"
+msgstr ""
+
+#: .././classes/Conversion.php:285
+msgid "Maximal floor loading"
+msgstr ""
+
+#: .././classes/Conversion.php:286
+msgid "Carrying capacity crane"
+msgstr ""
+
+#: .././classes/Conversion.php:287
+msgid "Carrying capacity elevator"
+msgstr ""
+
+#: .././classes/Conversion.php:293
+msgid "Agriculture"
+msgstr ""
+
+#: .././classes/Conversion.php:294
+msgid "Apartment"
+msgstr ""
+
+#: .././classes/Conversion.php:295
+msgid "Gastronomy"
+msgstr ""
+
+#: .././classes/Conversion.php:296
+msgid "House"
+msgstr ""
+
+#: .././classes/Conversion.php:297
+msgid "Industrial"
+msgstr ""
+
+#: .././classes/Conversion.php:298 .././classes/Conversion.php:358
+msgid "Parking space"
+msgstr ""
+
+#: .././classes/Conversion.php:299
+msgid "Plot"
+msgstr ""
+
+#: .././classes/Conversion.php:300
+msgid "Secondary rooms"
+msgstr ""
+
+#: .././classes/Conversion.php:301
+msgid "Garden"
+msgstr ""
+
+#: .././classes/Conversion.php:302
+msgid "Commercial"
+msgstr ""
+
+#: .././classes/Conversion.php:319
+msgid "Public transportation"
+msgstr ""
+
+#: .././classes/Conversion.php:320
+msgid "Shopping"
+msgstr ""
+
+#: .././classes/Conversion.php:321
+msgid "Kindergarten"
+msgstr ""
+
+#: .././classes/Conversion.php:322
+msgid "Motorway"
+msgstr ""
+
+#: .././classes/Conversion.php:323
+msgid "Primary school"
+msgstr ""
+
+#: .././classes/Conversion.php:324
+msgid "Secondary school"
+msgstr ""
+
+#: .././classes/Conversion.php:329 .././classes/Single.php:619
+#: .././classes/Single.php:633 .././classes/Single.php:650
+#: .././classes/Single.php:676 .././classes/Single.php:866
+#: .././classes/Single.php:892
+msgid "On Request"
+msgstr ""
+
+#: .././classes/Conversion.php:330
+msgid "By Agreement"
+msgstr ""
+
+#: .././classes/Conversion.php:331
+msgid "Immediate"
+msgstr ""
+
+#: .././classes/Conversion.php:337
+msgid "Child friendly"
+msgstr ""
+
+#: .././classes/Conversion.php:340
+#, php-format
+msgid "%d garages"
+msgstr ""
+
+#: .././classes/Conversion.php:342
+msgid "Garage"
+msgstr ""
+
+#: .././classes/Conversion.php:347
+#, php-format
+msgid "%dx balconies"
+msgstr ""
+
+#: .././classes/Conversion.php:349
+msgid "Balcony"
+msgstr ""
+
+#: .././classes/Conversion.php:352
+msgid "Vista"
+msgstr ""
+
+#: .././classes/Conversion.php:353
+msgid "Cable TV"
+msgstr ""
+
+#: .././classes/Conversion.php:356
+#, php-format
+msgid "%d Parking spaces"
+msgstr ""
+
+#: .././classes/Conversion.php:363
+#, php-format
+msgid "%d Pets allowed"
+msgstr ""
+
+#: .././classes/Conversion.php:365
+msgid "Pets allowed"
+msgstr ""
+
+#: .././classes/Conversion.php:368
+msgid "ISDN Anschluss"
+msgstr ""
+
+#: .././classes/Conversion.php:372
+#, php-format
+msgid "%d Restrooms"
+msgstr ""
+
+#: .././classes/Conversion.php:374
+msgid "Restrooms"
+msgstr ""
+
+#: .././classes/Conversion.php:379
+#, php-format
+msgid "%d elevators"
+msgstr ""
+
+#: .././classes/Conversion.php:381
+msgid "Elevator"
+msgstr ""
+
+#: .././classes/Conversion.php:385
+msgid "Fireplace"
+msgstr "Cheminée"
+
+#: .././classes/Conversion.php:386
+msgid "wheelchair accessible"
+msgstr "Rollstuhlgängig"
+
+#: .././classes/Conversion.php:387
+msgid "Ramp"
+msgstr "Anfahrrampe"
+
+#: .././classes/Conversion.php:388
+msgid "lifting platform"
+msgstr "Hebebühne"
+
+#: .././classes/Conversion.php:389
+msgid "Railway terminal"
+msgstr "Bahnanschluss"
+
+#: .././classes/Conversion.php:390
+msgid "Water Supply"
+msgstr "Wasseranschluss"
+
+#: .././classes/Conversion.php:391
+msgid "Sewage supply"
+msgstr "Abwasseranschluss"
+
+#: .././classes/Conversion.php:392
+msgid "Power Supply"
+msgstr "Stromanschluss"
+
+#: .././classes/Conversion.php:393
+msgid "Gas supply"
+msgstr "Gasanschluss"
+
+#: .././classes/Conversion.php:394
+msgid "Corner house"
+msgstr "Eckhaus"
+
+#: .././classes/Conversion.php:395
+msgid "Middle house"
+msgstr "Mittelhaus"
+
+#: .././classes/Conversion.php:396
+msgid "Gardenhouse"
+msgstr "Gartenhaus"
+
+#: .././classes/Conversion.php:397
+msgid "Raised ground floor"
+msgstr "Hochparterre"
+
+#: .././classes/Conversion.php:398
+msgid "New building"
+msgstr "Neubau"
+
+#: .././classes/Conversion.php:399
+msgid "Old building"
+msgstr "Altbau"
+
+#: .././classes/Conversion.php:400
+msgid "Under roof"
+msgstr "Gedeckt"
+
+#: .././classes/Conversion.php:401
+msgid "Swimmingpool"
+msgstr "Swimmingpool"
+
+#: .././classes/Conversion.php:402
+msgid "Minergie general"
+msgstr "Minergiebauweise"
+
+#: .././classes/Conversion.php:403
+msgid "Minergie certified"
+msgstr "Minergie zertifiziert"
+
+#: .././classes/Conversion.php:404
+msgid "Under building laws"
+msgstr "Im Baurecht"
+
+#: .././classes/Conversion.php:405
+msgid "Building land connected"
+msgstr "Bauland erschlossen"
+
+#: .././classes/Conversion.php:406
+msgid "Flat sharing community"
+msgstr "In Wohngemeinschaft"
+
+#: .././classes/Import.php:500 .././classes/Single.php:1264
+msgid "month"
+msgstr "Monat"
+
+#: .././classes/Import.php:501 .././classes/Single.php:1265
+msgid "week"
+msgstr "Woche"
+
+#: .././classes/Import.php:502 .././classes/Single.php:1266
+msgid "day"
+msgstr "Tag"
+
+#: .././classes/Import.php:503 .././classes/Single.php:1267
+msgid "year"
+msgstr "Jahr"
+
+#: .././classes/Import.php:504 .././classes/Single.php:1268
+msgid "hour"
+msgstr "Stunde"
+
+#: .././classes/Single.php:248
+msgid "Ground"
+msgstr "EG"
+
+#: .././classes/Single.php:547
+msgid "Number of rooms:"
+msgstr "Anzahl Zimmer:"
+
+#: .././classes/Single.php:553
+msgid "Surface usable:"
+msgstr "Nutzfläche:"
+
+#: .././classes/Single.php:559
+msgid "Living space:"
+msgstr "Wohnfläche:"
+
+#: .././classes/Single.php:565
+msgid "Property space:"
+msgstr "Grundstücksfläche:"
+
+#: .././classes/Single.php:571
+msgid "Floor:"
+msgstr "Etage:"
+
+#: .././classes/Single.php:577
+msgid "Number of floors:"
+msgstr "Anzahl Etagen:"
+
+#: .././classes/Single.php:583
+msgid "Year of construction:"
+msgstr "Baujahr:"
+
+#: .././classes/Single.php:589
+msgid "Year of renovation:"
+msgstr "Letzte Renovation:"
+
+#: .././classes/Single.php:595
+msgid "Available:"
+msgstr "Verfügbar:"
+
+#: .././classes/Single.php:606 .././classes/Single.php:702
+msgid "Address"
+msgstr "Adresse"
+
+#: .././classes/Single.php:612
+msgid "rent"
+msgstr "Miete"
+
+#: .././classes/Single.php:612
+msgid "Price"
+msgstr "Preis"
+
+#: .././classes/Single.php:615
+msgid "Sales price:"
+msgstr "Kaufpreis:"
+
+#: .././classes/Single.php:625
+msgid "Gross price:"
+msgstr "Bruttomiete:"
+
+#: .././classes/Single.php:629
+msgid "Net price:"
+msgstr "Nettomiete:"
+
+#: .././classes/Single.php:637 .././classes/Single.php:683
+msgid "Additional costs"
+msgstr "Nebenkosten"
+
+#: .././classes/Single.php:644
+msgid "Offer"
+msgstr "Angebot"
+
+#: .././classes/Single.php:648 .././classes/Single.php:864
+msgid "Sales price"
+msgstr "Kaufpreis"
+
+#: .././classes/Single.php:658 .././classes/Single.php:874
+msgid "Gross price"
+msgstr "Bruttomiete"
+
+#: .././classes/Single.php:666 .././classes/Single.php:882
+msgid "Net price"
+msgstr "Nettomiete"
+
+#: .././classes/Single.php:674 .././classes/Single.php:890
+msgid "Rent price"
+msgstr "Mietpreis"
+
+#: .././classes/Single.php:695
+msgid "Reference"
+msgstr "Referenz"
+
+#: .././classes/Single.php:720
+msgid "Features"
+msgstr "Eigenschaften"
+
+#: .././classes/Single.php:727
+msgid "Documents"
+msgstr "Dokumente"
+
+#: .././classes/Single.php:734
+msgid "Distances"
+msgstr "Distanzen"
+
+#: .././classes/Single.php:906
+msgid "Available"
+msgstr "Verfügbar"
+
+#: .././classes/Single.php:925
+msgid "Previous"
+msgstr "Zurück"
+
+#: .././classes/Single.php:926
+msgid "To list"
+msgstr "Zur Liste"
+
+#: .././classes/Single.php:927
+msgid "Next"
+msgstr "Weiter"
+
+#: .././classes/Single.php:1002
+msgid "Base data"
+msgstr "Grunddaten"
+
+#: .././classes/Single.php:1011
+msgid "Description"
+msgstr "Beschreibung"
+
+#: .././classes/Single.php:1017
+msgid "Specifications"
+msgstr "Datenblatt"
+
+#: .././classes/Single.php:1065
+msgid "View lager version"
+msgstr "Grössere Ansicht anzeigen"
+
+#: .././classes/Single.php:1083
+msgid "Contact provider directly"
+msgstr "Jetzt Anbieter direkt kontaktieren"
+
+#: .././classes/Single.php:1104
+msgid "Provider"
+msgstr "Anbieter"
+
+#: .././classes/Single.php:1114 .././classes/Single.php:1171
+msgid "I am interested concerning this property. Please contact me."
+msgstr ""
+"Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir "
+"auf."
+
+#: .././classes/Single.php:1115
+msgid "E-Mail"
+msgstr "E-Mail"
+
+#: .././classes/Single.php:1131
+msgid "Fax"
+msgstr "Fax"
+
+#: .././classes/Single.php:1159
+msgid "Contact person"
+msgstr "Kontaktperson"
+
+#: .././classes/Single.php:1179
+msgid "Phone direct"
+msgstr "Telefon direkt"
+
+#: .././classes/Single.php:1184
+msgid "Mobile"
+msgstr "Mobile"
+
+#: .././classes/Single.php:1215
+msgid "Share"
+msgstr "Empfehlen"
+
+#: .././classes/Single.php:1326
+msgid "per"
+msgstr "pro"
+
+#: .././classes/Single.php:1363
+msgid "and"
+msgstr "und"
+
+#: .././classes/Single.php:1415
+msgid "Document"
+msgstr "Dokument"

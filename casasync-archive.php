@@ -1,3 +1,8 @@
+<?php 
+/*
+Template Name: Objekt Archive
+*/
+?>
 <?php $template = new CasaSync\Templateable(); ?>
 <?php $archive = new CasaSync\Archive(); ?>
 

@@ -11,7 +11,7 @@
 	        	case 'First name':$translated_text = 'Nome';break;
 	            case 'Last name':$translated_text = 'Cognome';break;
 	            case 'Email':$translated_text = 'E-Mail';break;
-	            case 'Salutation':$translated_text = 'Anrede';break;
+	            case 'Salutation':$translated_text = 'Saluto';break;
 	            case 'Title':$translated_text = 'Vocazione';break;
 	            case 'Company':$translated_text = 'Ditta';break;
 	            case 'Street':$translated_text = 'Strada';break;
@@ -22,31 +22,31 @@
 	            case 'Subject':$translated_text = 'Concerne';break;
 	            case 'Message':$translated_text = 'Messaggio';break;
 	            case 'Recipient':$translated_text = 'Destinatario';break;
-	            case 'Required':$translated_text = 'Required***';break; //***
-	            case 'Please consider the following errors and try sending it again':$translated_text = 'Please consider the following errors and try sending it again***';break;
-	            case '&larr; Page back':$translated_text = '&larr; Page back***';break;
-	            case 'Page forward &rarr;':$translated_text = 'Page forward &rarr;***';break;
+	            case 'Required':$translated_text = 'Richiesto';break; //***
+	            case 'Please consider the following errors and try sending it again':$translated_text = 'Si prega di considerare i seguenti errori e provare a inviare di nuovo';break;
+	            case '&larr; Page back':$translated_text = '&larr; pagina indietro';break;
+	            case 'Page forward &rarr;':$translated_text = 'pagina avanti &rarr;***';break;
 
 	            case 'Switzerland': $translated_text = 'Svizzera';break;
-	            case 'France': $translated_text = 'France***';break;
-	            case 'monthly': $translated_text = 'condominiali***';break;
-	            case 'weekly': $translated_text = 'weekly***';break;
-	            case 'daily': $translated_text = 'daily***';break;
-	            case 'yearly': $translated_text = 'yearly***';break;
-	            case 'hourly': $translated_text = 'hourly***';break;
-	            case 'month': $translated_text = 'month***';break;
-	            case 'week': $translated_text = 'week***';break;
-	            case 'day': $translated_text = 'day***';break;
-	            case 'year': $translated_text = 'year***';break;
-	            case 'hour': $translated_text = 'hour***';break;
-	            case 'per month': $translated_text = 'per month***';break;
-	            case 'per week': $translated_text = 'per week***';break;
-	            case 'per day': $translated_text = 'per day***';break;
-	            case 'per year': $translated_text = 'per year***';break;
-	            case 'per hour': $translated_text = 'per hour***';break;
-	            case 'Base data': $translated_text = 'Base data***';break;
-	            case 'Specifications': $translated_text = 'Specifications***';break;
-	            case 'Plans & Documents': $translated_text = 'Plans & Documents***';break;
+	            case 'France': $translated_text = 'Francia';break;
+	            case 'monthly': $translated_text = 'mensile';break;
+	            case 'weekly': $translated_text = 'settimanale';break;
+	            case 'daily': $translated_text = 'quotidiano';break;
+	            case 'yearly': $translated_text = 'annuale';break;
+	            case 'hourly': $translated_text = 'ogni ora';break;
+	            case 'month': $translated_text = 'mese';break;
+	            case 'week': $translated_text = 'settimana';break;
+	            case 'day': $translated_text = 'giorno';break;
+	            case 'year': $translated_text = 'anno';break;
+	            case 'hour': $translated_text = 'ora';break;
+	            case 'per month': $translated_text = 'al mese';break;
+	            case 'per week': $translated_text = 'a settimana';break;
+	            case 'per day': $translated_text = 'al giorno';break;
+	            case 'per year': $translated_text = 'all\'anno';break;
+	            case 'per hour': $translated_text = 'all\'ora';break;
+	            case 'Base data': $translated_text = 'Dati di base';break;
+	            case 'Specifications': $translated_text = 'specificazioni';break;
+	            case 'Plans & Documents': $translated_text = 'Piani e Documenti';break;
 	            case 'Address': $translated_text = 'Indirizzo';break;
 	            case 'Rooms:': $translated_text = 'Camere:';break;
 	            case 'Rooms': $translated_text = 'Camere';break;
@@ -69,7 +69,7 @@
 		        case 'Phone':   				$translated_text =  'Telefono';break;
 		        case 'Fax':   					$translated_text =  'Telefax';break;
 
-		        case 'Offer':   				$translated_text =  'Offer***';break;
+		        case 'Offer':   				$translated_text =  'Offrire';break;
 		        case 'Property':   				$translated_text =  'Oggetto';break;
 		        case 'Surroundings':   			$translated_text =  'Surroundings***';break;
 		        case 'Distances:':   			$translated_text =  'Distanze:';break;
@@ -83,40 +83,40 @@
         		case 'Number of rooms':  		$translated_text = 'Numero di camere';break;
         		case 'Number of floors': 		$translated_text = 'Numero di piani';break;
 				
-				case 'Directly contact the provider now': 		$translated_text = 'Directly contact the provider now***';break;
-				case 'Back to the list': 						$translated_text = 'Back to the list***';break;
+				case 'Directly contact the provider now': 		$translated_text = 'Direttamente contattare il fornitore ora';break;
+				case 'Back to the list': 						$translated_text = 'Torna alla lista';break;
 
-				case 'Please fill out all the fields':  $translated_text = 'Please fill out all the fields**';break;
-				case 'Send':   							$translated_text = 'Send***';break;
-				case 'Contact directly':   				$translated_text = 'Contact directly***';break;
+				case 'Please fill out all the fields':  $translated_text = 'Si prega di compilare tutti i campi';break;
+				case 'Send':   							$translated_text = 'inviare';break;
+				case 'Contact directly':   				$translated_text = 'Contattateci direttamente';break;
 
-				case 'Provider':   						$translated_text = 'Provider***';break;
+				case 'Provider':   						$translated_text = 'Provider';break;
 				case 'Contact person':   				$translated_text = 'Persona di contatto';break;
-				case 'Share':   						$translated_text = 'Share***';break;
-				case 'View lager version':   			$translated_text = 'View lager version***';break;
+				case 'Share':   						$translated_text = 'Dividere';break;
+				case 'View lager version':   			$translated_text = 'Visualizza versione più grande';break;
 
 				case 'Choose category':   				$translated_text = 'Scegliere categorie';break;
 				case 'Choose locality':   				$translated_text = 'Scegliere località';break;
 
-				case 'Advanced search':   				$translated_text = 'Advanced search***';break;
+				case 'Advanced search':   				$translated_text = 'Ricerca avanzata';break;
 				case 'Search':   						$translated_text = 'Cercare';break;
 				case 'Details':   						$translated_text = 'Informazioni';break;
 
 				case 'and':   						$translated_text = 'e';break;
 
-				case 'I am interested concerning this property. Please contact me.':   				$translated_text = 'I am interested concerning this property. Please contact me.***';break;
+				case 'I am interested concerning this property. Please contact me.':   				$translated_text = 'Mi interesso riguardo a questo immobile. Si prega di contattare me.';break;
 
 				
 
 
 
-				case 'Wheelchair accessible': $translated_text = 'Rollstuhlzugänglich'; break;
+				case 'Wheelchair accessible': $translated_text = 'Accessibile ai disabili'; break;
 	            case 'Entrances': $translated_text = 'Eingänge';break;
 
-				case 'Child friendly':   		$translated_text =  'Kinderfreundlich';break;
+				case 'Child friendly':   		$translated_text =  'Adatto ai bambini';break;
 				case 'Garage':   				$translated_text =  'Garage';break;
-				case '%d garages':   			$translated_text =  '%d Garagen';break;
-				case 'Balcony':   				$translated_text =  'Balkon';break;
+				case '%d garages':   			$translated_text =  '%d Garage';break;
+				case 'Balcony':   				$translated_text =  'Balcone';break;
 				case '%d balconies':   			$translated_text =  '%dx Balkone';break;
 				case 'ISDN connection':   		$translated_text =  'ISDN Anschluss';break;
             	case 'Vista':   				$translated_text =  'Aussicht';break;
@@ -127,8 +127,8 @@
             	case '%d pets allowed':   		$translated_text =  '%d Haustiere erlaubt';break;
             	case 'Restrooms':   			$translated_text =  'Toiletten';break;
             	case '%d restrooms':   			$translated_text =  '%d Toiletten';break;
-            	case 'Elevator':   				$translated_text =  'Lift / Aufzug';break;
-            	case '%d elevators':   			$translated_text =  '%d Lifte / Aufzüge';break;
+            	case 'Elevator':   				$translated_text =  'Ascensore';break;
+            	case '%d elevators':   			$translated_text =  '%d Ascensore';break;
 
 		        case 'Water Supply':   			$translated_text =  'Wasseranschluss';break;
 		        case 'Power Supply':   			$translated_text =  'Stromanschluss';break;
@@ -153,12 +153,12 @@
 		        case 'Building land connected': $translated_text =  'Bauland erschlossen';break;
 		        case 'Flat sharing community':  $translated_text =  'In Wohngemeinschaft';break;
 
-		        case 'Public transportation':   $translated_text =  'Öffentlicher Verkehr';break;
+		        case 'Public transportation':   $translated_text =  'Trasporto pubblico';break;
 		        case 'Shopping':               	$translated_text =  'Einkaufen';break;
-		        case 'Kindergarten':       		$translated_text =  'Kindergarten';break;
-		        case 'Rail connection':         $translated_text =  'Bahnanschluss';break;
-		        case 'Primary school':          $translated_text =  'Primarschule';break;
-		        case 'Secondary school':        $translated_text =  'Oberstufe';break;
+		        case 'Kindergarten':       		$translated_text =  'Asilo';break;
+		        case 'Rail connection':         $translated_text =  'Collegamento ferroviario';break;
+		        case 'Primary school':          $translated_text =  'scuola elementare';break;
+		        case 'Secondary school':        $translated_text =  'scuola secondaria';break;
 
 				
 				case 'Agriculture':				$translated_text =  'Agricola';break;
@@ -171,10 +171,10 @@
 		        case 'Secondary rooms':			$translated_text =  'Locali di Servizio';break;
 		        case 'Garden':					$translated_text =  'Giardino';break;
 
-		        case 'Available':				$translated_text =  'Available';break;
-		        case 'Reserved':				$translated_text =  'Reserved';break;
-		        case 'Planned':					$translated_text =  'Planned';break;
-		        case 'Under construction':		$translated_text =  'Under construction';break;
+		        case 'Available':				$translated_text =  'Disponibile';break;
+		        case 'Reserved':				$translated_text =  'riservato';break;
+		        case 'Planned':					$translated_text =  'Previsto';break;
+		        case 'Under construction':		$translated_text =  'In costruzione';break;
 
 			
 	        }

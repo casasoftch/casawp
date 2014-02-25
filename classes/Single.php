@@ -193,7 +193,7 @@
       $this->attachments = get_posts( array(
         'post_type'                => 'attachment',
         'posts_per_page'           => -1,
-        'post_parent'              => $post->ID,
+        'post_parent'              => get_the_ID(),
         //'exclude'                => get_post_thumbnail_id(),
         'casasync_attachment_type' => 'image',
         'orderby'                  => 'menu_order',
@@ -203,7 +203,7 @@
       $this->documents = get_posts( array(
         'post_type'                => 'attachment',
         'posts_per_page'           => -1,
-        'post_parent'              => $post->ID,
+        'post_parent'              => get_the_ID(),
         //'exclude'                => get_post_thumbnail_id(),
         'casasync_attachment_type' => 'document',
         'orderby'                  => 'menu_order'
@@ -212,7 +212,7 @@
       $this->plans = get_posts( array(
         'post_type'                => 'attachment',
         'posts_per_page'           => -1,
-        'post_parent'              => $post->ID,
+        'post_parent'              => get_the_ID(),
         //'exclude'                => get_post_thumbnail_id(),
         'casasync_attachment_type' => 'plan'
       ) ); 
@@ -392,7 +392,6 @@
     public function getGallery(){
 
       if ($this->attachments) {
-
 
         if(get_option('casasync_load_css') == 'bootstrapv2') {
           $return = '<div class="casasync-slider-currentimage" id="slider">';
@@ -1081,7 +1080,7 @@
       if ($i > 0) {
         $html = '<div class="single-property-container">'
           .'<p class="casasyncContact"><i class="fa fa-envelope"></i> '
-          .'<a href="#casasyncPropertyContactForm" id="casasyncContactAnchor">Jetzt Anbieter direkt kontaktieren</a>'
+          .'<a href="#casasyncPropertyContactForm" id="casasyncContactAnchor">' . __('Contact provider directly', 'casasync') . '</a>'
         .'</p></div>';
         return $html;
       }

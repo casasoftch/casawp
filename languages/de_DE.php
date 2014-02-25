@@ -5,72 +5,12 @@
         if ( $domain == 'casasync') {
 
             switch ( $text ) {
-                case 'Properties':                   $translated_text = 'Immobilien';break;
-                case 'Property':                     $translated_text = 'Immobilie';break;
-                case 'Add New':                      $translated_text = 'Erstellen';break;
-                case 'Add New Property':             $translated_text = 'Neue Immobilie erstellen';break;
-                case 'Edit Property':                $translated_text = 'Immobilie bearbeiten';break;
-                case 'New Property':                 $translated_text = 'Neue Immobilie';break;
-                case 'All Properties':               $translated_text = 'Alle Immobilien';break;
-                case 'View Property':                $translated_text = 'Immobilie ansehen';break;
-                case 'Search Properties':            $translated_text = 'Immobilien durchsuchen';break;
-                case 'No properties found':          $translated_text = 'Keine Immobilien gefunden';break;
-                case 'No properties found in Trash': $translated_text = 'Keine Immobilien im Papierkorb gefunden';break;
 
-                case 'Property categories':          $translated_text = 'Immobilien Kategorien';break;
-                case 'Category':                     $translated_text = 'Kategorie';break;
-                case 'Search Categories':            $translated_text = 'Kategorien durchsuchen';break;
-                case 'All Categories':               $translated_text = 'Alle Kategorien';break;
-                case 'Parent Category':              $translated_text = 'Übergeordnete Kategorien';break;
-                case 'Parent Category:':             $translated_text = 'Übergeordnete Kategorien:';break;
-                case 'Edit Category':                $translated_text = 'Kategorie bearbeiten';break;
-                case 'Update Category':              $translated_text = 'Aktualisiere Kategorie';break;
-                case 'Add New Category':             $translated_text = 'Neue Kategorie erstellen';break;
-                case 'New Category Name':            $translated_text = 'Neuer Kategorienamen';break;
-
-                case 'Property locations':           $translated_text = 'Immobilien Ortschaften';break;
-                case 'Location':                     $translated_text = 'Ortschaft';break;
-                case 'Search Locations':             $translated_text = 'Orteschaften durchsuchen';break;
-                case 'All Locations':                $translated_text = 'Alle Ortschaften';break;
-                case 'Parent Location':              $translated_text = 'Übergeordnete Ortschaft';break;
-                case 'Parent Location:':             $translated_text = 'Übergeordnete Ortschaft:';break;
-                case 'Edit Location':                $translated_text = 'Ortschaft bearbeiten';break;
-                case 'Update Location':              $translated_text = 'Ortschaft aktualisieren';break;
-                case 'Add New Location':             $translated_text = 'Neue Ortschaft erstellen';break;
-                case 'New Location Name':            $translated_text = 'Neue Ortschafts-Namen';break;
-
-                case 'Property salestypes':                  $translated_text = 'Immobilien Vermarktungsarten';break;
-                case 'Salestype':                            $translated_text = 'Vermarktungsart';break;
-                case 'Search Salestypes':                    $translated_text = 'Vermarktungsarten durchsuchen';break;
-                case 'All Salestypes':                       $translated_text = 'Alle Vermarktungsarten';break;
-                case 'Parent Salestype':                     $translated_text = 'Übergeordnete Vermarktungsart';break;
-                case 'Parent Salestype:':                    $translated_text = 'Übergeordnete Vermarktungsart:';break;
-                case 'Edit Salestype':                       $translated_text = 'Vermarktungsart bearbeiten';break;
-                case 'Update Salestype':                     $translated_text = 'Vermarktungsart aktualisieren';break;
-                case 'Add New Salestype':                    $translated_text = 'Neue Vermarktungsart erstellen';break;
-                case 'New Salestype Name':                   $translated_text = 'Neuer Vermarktungsart-Namen';break;
-                case 'Separate salestypes with commas':      $translated_text = 'Trenne Vermarktungsarten durch Kommas';break;
-                case 'Add or remove salestypes':             $translated_text = 'Vermarktungsarten hinzufügen oder entfernen';break;
-                case 'Choose from the most used salestypes': $translated_text = 'Wähle von den meistbenutzten Vermarktungsarten';break;
-                case 'No Salestypes found.':                 $translated_text = 'Keine Vermarktungsarten gefunden';break;
-                case 'Popular Salestypes':                   $translated_text = 'Populäre Vermarktungsarten';break;
-
-                case 'Property Attachment Types': $translated_text = 'Immobilien Anhangsart';break;
-                case 'Search Attachment Types':   $translated_text = 'Suche Anhangsarten';break;
-                case 'All Attachment Types':      $translated_text = 'Alle Anhangsarten';break;
-                case 'Parent Attachment Type':    $translated_text = 'Übergeordnete Anhangsart';break;
-                case 'Parent Attachment Type:':   $translated_text = 'Übergeordnete Anhangsart:';break;
-                case 'Edit Attachment Type':      $translated_text = 'Anhangsart bearbeiten';break;
-                case 'Update Attachment Type':    $translated_text = 'Anhangsart aktualisieren';break;
-                case 'Add New Attachment Type':   $translated_text = 'Neue Anhangsarten erstellen';break;
-                case 'New Attachment Type Name':  $translated_text = 'Neueer Anhangsart-Namen';break;
-                case 'Attachment Type':           $translated_text = 'Immobilien Anhangsart';break;
-
+               
 
 
                 case 'Buy':  $translated_text = 'Kaufen';break;
                 case 'Rent': $translated_text = 'Mieten';break;
-                case 'rent': $translated_text = 'Miete';break;
 
                 case 'First name':          $translated_text = 'Vorname';break;
                 case 'Last name':           $translated_text = 'Nachname';break;
@@ -82,7 +22,7 @@
                 case 'Street':              $translated_text = 'Strasse';break;
                 case 'ZIP':                 $translated_text = 'PLZ';break;
                 case 'City':                $translated_text = 'Stadt';break;
-                case 'Locality':            $translated_text = 'Ort';break;
+                //case 'Locality':            $translated_text = 'Ort';break;
                 case 'Kanton':              $translated_text = 'Kanton';break;
                 case 'Subject':             $translated_text = 'Betreff';break;
                 case 'Message':             $translated_text = 'Nachricht';break;
@@ -104,44 +44,26 @@
                 case 'week':                $translated_text = 'Woche';break;
                 case 'day':                 $translated_text = 'Tag';break;
                 case 'year':                $translated_text = 'Jahr';break;
-                case 'hour':                $translated_text = 'Stunde';break;
                 case 'per month':           $translated_text = 'pro Monat';break;
                 case 'per week':            $translated_text = 'pro Woche';break;
                 case 'per day':             $translated_text = 'pro Tag';break;
                 case 'per year':            $translated_text = 'pro Jahr';break;
                 case 'per hour':            $translated_text = 'pro Stunde';break;
                 case 'Base data':           $translated_text = 'Grunddaten';break;
-                case 'Specifications':      $translated_text = 'Datenblatt';break;
                 case 'Plans & Documents':   $translated_text = 'Pläne & Dokumente';break;
-                case 'Address':             $translated_text = 'Adresse';break;
                 case 'Rooms:':              $translated_text = 'Zimmer:';break;
                 case 'Rooms':               $translated_text = 'Zimmer';break;
-                case 'Living space:':       $translated_text = 'Wohnfläche:';break;
                 case 'Living space':        $translated_text = 'Wohnfläche';break;
-                case 'Floor:':              $translated_text = 'Etage:';break;
                 case 'Floor':               $translated_text = 'Etage';break;
                 case 'Rent price:':         $translated_text = 'Mietpreis:';break;
-                case 'Rent price':          $translated_text = 'Mietpreis';break;
-                case 'Sales price:':        $translated_text = 'Kaufpreis:';break;
-                case 'Sales price':         $translated_text = 'Kaufpreis';break;
-                case 'Price':               $translated_text = 'Preis';break;
-                case 'Additional costs':    $translated_text = 'Nebenkosten';break;
                 case 'Object ID':           $translated_text = 'Objekt-ID';break;
                 case 'Floor(s)':            $translated_text = 'Stockwerk(e)';break;
-                case 'Features':            $translated_text = 'Eigenschaften';break;
 
 
-                case 'Mobile':       $translated_text = 'Mobile';break;
-                case 'Phone direct': $translated_text = 'Telefon direkt';break;
-                case 'Fax':          $translated_text = 'Fax';break;
 
-                case 'Offer':        $translated_text = 'Angebot';break;
                 case 'Surroundings': $translated_text = 'Umfeld';break;
-                case 'Distances':    $translated_text = 'Distanzen';break;
                 case 'Distances:':   $translated_text = 'Distanzen:';break;
                 case 'Plans':        $translated_text = 'Pläne';break;
-                case 'Document':     $translated_text = 'Dokument';break;
-                case 'Documents':    $translated_text = 'Dokumente';break;
 
 
                 case 'Public transportation': $translated_text = 'Öffentlicher Verkehr';break;
@@ -153,15 +75,10 @@
                 case 'Secondary school':      $translated_text = 'Oberstufe';break;
 
                 case 'Property space':        $translated_text = 'Grundstücksfläche';break;
-                case 'Property space:':       $translated_text = 'Grundstücksfläche:';break;
                 case 'Year of renovation':    $translated_text = 'Letzte Renovation';break;
-                case 'Year of renovation:':   $translated_text = 'Letzte Renovation:';break;
                 case 'Year of construction':  $translated_text = 'Baujahr';break;
-                case 'Year of construction:': $translated_text = 'Baujahr:';break;
                 case 'Number of rooms':       $translated_text = 'Anzahl Zimmer';break;
-                case 'Number of rooms:':      $translated_text = 'Anzahl Zimmer:';break;
                 case 'Number of floors':      $translated_text = 'Anzahl Etagen';break;
-                case 'Number of floors:':     $translated_text = 'Anzahl Etagen:';break;
                 
                 case 'Directly contact the provider now': $translated_text = 'Jetzt Anbieter direkt kontaktieren';break;
                 case 'Back to the list':                  $translated_text = 'Zurück zur Übersicht';break;
@@ -173,9 +90,6 @@
 
                 case 'Provider':           $translated_text = 'Anbieter';break;
                 case 'Seller':             $translated_text = 'Verkäufer';break;
-                case 'Contact person':     $translated_text = 'Kontaktperson';break;
-                case 'Share':              $translated_text = 'Empfehlen';break;
-                case 'View lager version': $translated_text = 'Grössere Ansicht anzeigen';break;
 
                 case 'Choose category': $translated_text = 'Kategorie wählen';break;
                 case 'Choose locality': $translated_text = 'Ort wählen';break;
@@ -187,7 +101,6 @@
 
                 case 'and': $translated_text = 'und';break;
 
-                case 'I am interested concerning this property. Please contact me.': $translated_text = 'Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir auf.';break;
 
 
 
@@ -211,28 +124,6 @@
                 case 'Elevator':                $translated_text = 'Lift / Aufzug';break;
                 case '%d elevators':            $translated_text = '%d Lifte / Aufzüge';break;
 
-                case 'Water Supply':            $translated_text = 'Wasseranschluss';break;
-                case 'Power Supply':            $translated_text = 'Stromanschluss';break;
-                case 'New building':            $translated_text = 'Neubau';break;
-                case 'Fireplace':               $translated_text = 'Cheminée';break;
-                case 'Ramp':                    $translated_text = 'Anfahrrampe';break;
-                case 'lifting platform':        $translated_text = 'Hebebühne';break;
-                case 'Railway terminal':        $translated_text = 'Bahnanschluss';break;
-                case 'Sewage supply':           $translated_text = 'Abwasseranschluss';break;
-                case 'Gas supply':              $translated_text = 'Gasanschluss';break;
-                case 'Corner house':            $translated_text = 'Eckhaus';break;
-                case 'Middle house':            $translated_text = 'Mittelhaus';break;
-                case 'Gardenhouse':             $translated_text = 'Gartenhaus';break;
-                case 'Raised ground floor':     $translated_text = 'Hochparterre';break;
-                case 'Old building':            $translated_text = 'Altbau';break;
-                case 'Under roof':              $translated_text = 'Gedeckt';break;
-                case 'Swimmingpool':            $translated_text = 'Swimmingpool';break;
-                case 'Minergie general':        $translated_text = 'Minergiebauweise';break;
-                case 'Minergie certified':      $translated_text = 'Minergie zertifiziert';break;
-                case 'Under building laws':     $translated_text = 'Im Baurecht';break;
-                case 'Building land connected': $translated_text = 'Bauland erschlossen';break;
-                case 'Flat sharing community':  $translated_text = 'In Wohngemeinschaft';break;
-
 
 
                 case 'Agriculture':        $translated_text = 'Landwirtschaft';break;
@@ -246,10 +137,7 @@
                 case 'Garden':             $translated_text = 'Garten';break;
                 case 'Commercial':         $translated_text = 'Büro';break;
 
-                case 'Description':        $translated_text = 'Beschreibung';break;
-                case 'Reference':          $translated_text = 'Referenz';break;
 
-                case 'Available':          $translated_text = 'Verfügbar';break;
                 case 'Available:':         $translated_text = 'Verfügbar:';break;
                 case 'Reserved':           $translated_text = 'Reserviert';break;
                 case 'Planned':            $translated_text = 'In Planung';break;
@@ -369,18 +257,13 @@
                 case 'Floor':                       $translated_text = 'Etage';break;
                 case 'Number of apartments':        $translated_text = 'Anzahl Wohnungen';break;
                 case 'Surface usable':              $translated_text = 'Nutzfläche';break;
-                case 'Surface usable:':             $translated_text = 'Nutzfläche:';break;
                 case 'Ceiling height':              $translated_text = 'Raumhöhe';break;
                 case 'Hall height':                 $translated_text = 'Hallenhöhe';break;
                 case 'Maximal floor loading':       $translated_text = 'Max. Bodenbelastung';break;
                 case 'Carrying capacity crane':     $translated_text = 'Max. Gewicht Kran';break;
                 case 'Carrying capacity elevator':  $translated_text = 'Max. Gewicht Warenlift';break;
                 case 'Volume':                      $translated_text = 'Kubatur';break;
-                case 'wheelchair accessible':       $translated_text = 'Rollstuhlgängig';break;
 
-                case 'Previous':            $translated_text = 'Zurück';break;
-                case 'Next':                $translated_text = 'Weiter';break;
-                case 'To list':             $translated_text = 'Zur Liste';break;
                 case 'available':           $translated_text = 'Verfügbar';break;
                 case 'reserved':            $translated_text = 'Reserved';break;
                 case 'planned':             $translated_text = 'In Planung';break;
@@ -388,19 +271,13 @@
                 case 'reference':           $translated_text = 'Referenz';break;
                 case 'No image':            $translated_text = 'Kein Bild';break;
                 case 'No results':          $translated_text = 'Keine Suchergebnisse';break;
-                case 'per':                 $translated_text = 'pro';break;
                 case '(net)':               $translated_text = '(Netto)';break;
                 case '(gross)':             $translated_text = '(Brutto)';break;
                 case 'On Request':          $translated_text = 'Auf Anfrage';break;
                 case 'By Agreement':        $translated_text = 'Nach Vereinbarung';break;
                 case 'Immediate':           $translated_text = 'Sofort';break;
-                case 'Gross price':         $translated_text = 'Bruttomiete';break;
-                case 'Gross price:':        $translated_text = 'Bruttomiete:';break;
-                case 'Net price':           $translated_text = 'Nettomiete';break;
-                case 'Net price:':          $translated_text = 'Nettomiete:';break;
 
                 case 'Floor':               $translated_text = 'OG';break;
-                case 'Ground':              $translated_text = 'EG';break;
                 case 'Country':             $translated_text = 'Land';break;
 
                 case 'Nothing Found': $translated_text = 'Nichts gefunden';break;

@@ -1,4 +1,5 @@
 <?php $template = new CasaSync\Templateable();?>
+
 <?php get_header(); ?>
 	<?php while ( have_posts() ) : the_post();?>
 		<?php $single = new CasaSync\Single($post);?>

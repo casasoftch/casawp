@@ -27,6 +27,11 @@ Well, yes it is!
 
 == Changelog ==
 
+= DEV = 
+* new: WPML support
+* new: converted translations to po files
+* new: automatically translated ja,ru,fr,it
+
 = 3.0.3 = 
 * bug: changed position of email field in contact form
 * new: documents can now be displayed
