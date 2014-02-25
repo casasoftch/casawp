@@ -27,15 +27,14 @@ Well, yes it is!
 
 == Changelog ==
 
-= DEV = 
-* new: WPML support
-* new: converted translations to po files
-* new: automatically translated ja,ru,fr,it
-
-= 3.0.3 = 
+= 3.0.3 DEV = 
 * bug: changed position of email field in contact form
 * new: documents can now be displayed
 * bug: pagination fixed
+* new: WPML support
+* new: converted translations to po files
+* new: automatically translated ru,fr,it,ja^^
+* todo: DE version needs to be completely transferred to po/mo
 
 = 3.0.2 = 
 * warning: single and archive tempalte files were renamed
