@@ -279,10 +279,10 @@
       $net['propertysegment'] = get_post_meta( get_the_ID(), 'netPrice_propertysegment', $single = true );
       $net['timesegment']     = get_post_meta( get_the_ID(), 'netPrice_timesegment', $single = true );
 
-      $extra_costs_json =  get_post_meta( get_the_ID(), 'extraPrice', $single = true ); 
+      $extra_costs_json =  get_post_meta( get_the_ID(), 'extraPrice', $single = true );
       $extra_costs_arr = array();
-      if ($extra_costs_json) {
-        $extra_costs_arr = json_decode($extra_costs_json, true);
+      if ($extra_costs_json && $extra_costs_json != '[]') {
+        $extra_costs_arr = $extra_costs_json;
       }
 
       $this->prices = array(
@@ -292,7 +292,7 @@
         'extra_costs' => $extra_costs_arr
       );
 
-      $this->urls = json_decode(get_post_meta( get_the_ID(), 'casasync_urls', $single = true ), true);
+      $this->urls = get_post_meta( get_the_ID(), 'casasync_urls', $single = true );
 
       foreach ($this->conversion->casasync_get_allNumvalKeys() as $numval_key) {
         $numval = get_post_meta( get_the_ID(), $numval_key, $single = true );
@@ -612,7 +612,7 @@
       $price_title = ($this->main_basis == 'rent') ? (__('rent', 'casasync')) : (__('Price', 'casasync'));
         $content .= '<h4>' . $price_title . '</h4>';
         if ($this->main_basis == 'buy') {
-          $content .= __('Sales price:', 'casasync') . '<br>';
+          $content .= __('Sales price:', 'casasync') . ' ';
           if ($this->getPrice('sales')) {
             $content .= $this->getPrice('sales', 'full');
           } else {
@@ -634,7 +634,7 @@
           }
         }
         if ($this->getExtraCosts('Nebenkosten')) {
-          $content .= __('Additional costs', 'casasync') . ':<br> ' . $this->getExtraCosts('Nebenkosten');
+          $content .= '<br>' . __('Additional costs', 'casasync') . ': ' . $this->getExtraCosts('Nebenkosten');
         }
       $content .= '</div></div>';
       return $content;
@@ -1439,7 +1439,7 @@
 
     public function getAvailability() {
       $return = NULL;
-      if (isset($this->availability)) {
+      if (isset($this->availability) && $this->availability) {
         $return .= '<div class="availability-outerlabel">';
         $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($this->availability, 'casasync') . '</div>';
         $return .= '</div>';

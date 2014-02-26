@@ -40,5 +40,6 @@ if (is_admin()) {
 }
 if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
 	$import = new Import();
+	$transcript = $import->getLastTranscript();
 }
 ?>

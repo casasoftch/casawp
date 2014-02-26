@@ -24,7 +24,7 @@ Template Name: Objekt Archive
 							<?php $single = new CasaSync\Single($post);?>
 							<?php if ($template->setTemplate('archive_single', $single)): ?>
 								<?php echo $template->render(); ?>
-							<?php else: ?>	
+							<?php else: ?>
 								<div class="casasync-property">
 									<div class="casasync-thumbnail-wrapper">
 										<?php //echo $single->getAvailability(); ?>
