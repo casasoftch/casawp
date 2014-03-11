@@ -277,6 +277,20 @@ class CasaSync {
                         false,
                         true
                     );
+                    wp_enqueue_script(
+                        'casasync_bootstrap3_tooltip',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tooltip.js',
+                        array( 'jquery' ),
+                        false,
+                        true
+                    );
+                    wp_enqueue_script(
+                        'casasync_bootstrap3_popover',
+                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/popover.js',
+                        array( 'jquery' ),
+                        false,
+                        true
+                    );
                     break;
                 case 'none':
                 default:
