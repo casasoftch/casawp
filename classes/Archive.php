@@ -291,6 +291,20 @@
         return $options;
     }
 
+    public function getStickyProperties(){
+        if (get_option( 'sticky_posts' )) {
+            global $wp_query;
+            $new_query = $wp_query->query_vars;
+            $new_query['post__in'] = get_option( 'sticky_posts' );
+            $new_query['post__not_in'] = array();
+            $the_query = new \WP_Query($new_query);
+            return $the_query;
+        } else {
+            return false;
+        }
+    }
+
+
     public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = false){ //'Erweiterte Suche'
         global $wp_query;
         if (!$title) {

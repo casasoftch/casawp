@@ -7,6 +7,7 @@ class CasaSync {
     public $meta_box = false;
     public $admin = false;
     public $conversion = null;
+    public $show_sticky = true;
 
     public function __construct(){  
         $this->conversion = new Conversion;
@@ -120,13 +121,21 @@ class CasaSync {
         return $template_path;
     }
 
+
     public function customize_casasync_category($query){
+
         if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
+
                 $posts_per_page = get_option('posts_per_page', 10);
                 $query->set('posts_per_page', $posts_per_page);
                 $query->set('order', get_option('casasync_archive_order', 'DESC'));
 
+                $query->set('ignore_sticky_posts',0);
+                if (get_option( 'casasync_hide_sticky_properties_in_main')) {
+                    $query->set('post__not_in', get_option( 'sticky_posts' ));
+                }
+                
                 switch (get_option('casasync_archive_orderby', 'date')) {
                     case 'title':
                         $query->set('orderby', 'title');
@@ -206,6 +215,11 @@ class CasaSync {
                 if ($taxquery_new) {
                     $query->set('tax_query', $taxquery_new);
                 }
+
+                /*echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+                print_r($query);
+                echo "</textarea>";
+*/
             }
         }
     }
