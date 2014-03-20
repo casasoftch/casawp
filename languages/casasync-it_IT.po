@@ -1750,7 +1750,7 @@ msgstr "Indirizzo"
 
 #: .././classes/Single.php:612
 msgid "rent"
-msgstr "affitto"
+msgstr "Affitto"
 
 #: .././classes/Single.php:612
 msgid "Price"
@@ -1774,7 +1774,7 @@ msgstr "Costi aggiuntivi"
 
 #: .././classes/Single.php:644
 msgid "Offer"
-msgstr "offerta"
+msgstr "Offerta"
 
 #: .././classes/Single.php:648 .././classes/Single.php:864
 msgid "Sales price"
