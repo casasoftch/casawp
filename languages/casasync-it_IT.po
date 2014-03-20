@@ -8,10 +8,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.4\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Language: it_IT\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
 #: .././casasync-archive.php:31
@@ -1391,15 +1392,15 @@ msgstr "Saint Martin"
 
 #: .././classes/Conversion.php:273 .././classes/Single.php:816
 msgid "Living space"
-msgstr "Spazio abitabile"
+msgstr "Superficie abitabile"
 
 #: .././classes/Conversion.php:274 .././classes/Single.php:824
 msgid "Property space"
-msgstr "Spazio di proprietà"
+msgstr "Superficie terreno"
 
 #: .././classes/Conversion.php:275 .././classes/Single.php:856
 msgid "Year of renovation"
-msgstr "Data di rinnovo"
+msgstr "Ultimo rinnovamento"
 
 #: .././classes/Conversion.php:276 .././classes/Single.php:848
 msgid "Year of construction"
@@ -1407,11 +1408,11 @@ msgstr "Anno di costruzione"
 
 #: .././classes/Conversion.php:277 .././classes/Single.php:800
 msgid "Number of rooms"
-msgstr "Numero di alloggi"
+msgstr "Numero di camere"
 
 #: .././classes/Conversion.php:278 .././classes/Single.php:840
 msgid "Number of floors"
-msgstr "Numero di piani"
+msgstr "Numero di bagni"
 
 #: .././classes/Conversion.php:279 .././classes/Single.php:250
 #: .././classes/Single.php:832
@@ -1420,7 +1421,7 @@ msgstr "Piano"
 
 #: .././classes/Conversion.php:280
 msgid "Volume"
-msgstr "Volume"
+msgstr "Cubatura"
 
 #: .././classes/Conversion.php:281
 msgid "Number of apartments"
@@ -1428,35 +1429,35 @@ msgstr "Numero di appartamenti"
 
 #: .././classes/Conversion.php:282 .././classes/Single.php:808
 msgid "Surface usable"
-msgstr "Superficie utile"
+msgstr "Superficie utilizzabile"
 
 #: .././classes/Conversion.php:283
 msgid "Ceiling height"
-msgstr "Altezza del soffitto"
+msgstr "Altezza"
 
 #: .././classes/Conversion.php:284
 msgid "Hall height"
-msgstr "Altezza Sala"
+msgstr "Altezza soffitto"
 
 #: .././classes/Conversion.php:285
 msgid "Maximal floor loading"
-msgstr "Maximal piano di carico"
+msgstr "Peso mas. pavimento"
 
 #: .././classes/Conversion.php:286
 msgid "Carrying capacity crane"
-msgstr "Capacità di carico della gru"
+msgstr "Peso mas. gru"
 
 #: .././classes/Conversion.php:287
 msgid "Carrying capacity elevator"
-msgstr "Capacità di carico ascensore"
+msgstr "Peso mas. ascensore merci"
 
 #: .././classes/Conversion.php:293
 msgid "Agriculture"
-msgstr "Agricoltura"
+msgstr "Agricola"
 
 #: .././classes/Conversion.php:294
 msgid "Apartment"
-msgstr "Appartamento"
+msgstr "Appartamenti"
 
 #: .././classes/Conversion.php:295
 msgid "Gastronomy"
@@ -1464,23 +1465,23 @@ msgstr "Gastronomia"
 
 #: .././classes/Conversion.php:296
 msgid "House"
-msgstr "Casa"
+msgstr "Case"
 
 #: .././classes/Conversion.php:297
 msgid "Industrial"
-msgstr "Industriale"
+msgstr "IndustrialeIndustria/Commercio"
 
 #: .././classes/Conversion.php:298 .././classes/Conversion.php:358
 msgid "Parking space"
-msgstr "Parcheggio"
+msgstr "Posteggio esterno"
 
 #: .././classes/Conversion.php:299
 msgid "Plot"
-msgstr "Lotto"
+msgstr "Terreno"
 
 #: .././classes/Conversion.php:300
 msgid "Secondary rooms"
-msgstr "Stanze secondarie"
+msgstr "Locali di Servizio"
 
 #: .././classes/Conversion.php:301
 msgid "Garden"
@@ -1488,11 +1489,11 @@ msgstr "Giardino"
 
 #: .././classes/Conversion.php:302
 msgid "Commercial"
-msgstr "Commerciale"
+msgstr "Ufficio"
 
 #: .././classes/Conversion.php:319
 msgid "Public transportation"
-msgstr "Trasporto pubblico"
+msgstr "Mezzi di trasporto pubblici"
 
 #: .././classes/Conversion.php:320
 msgid "Shopping"
@@ -1508,11 +1509,11 @@ msgstr "Autostrada"
 
 #: .././classes/Conversion.php:323
 msgid "Primary school"
-msgstr "Scuola elementare"
+msgstr "Scuola primaria"
 
 #: .././classes/Conversion.php:324
 msgid "Secondary school"
-msgstr "Scuola secondaria"
+msgstr "Scuole superiori"
 
 #: .././classes/Conversion.php:329 .././classes/Single.php:619
 #: .././classes/Single.php:633 .././classes/Single.php:650
@@ -1523,7 +1524,7 @@ msgstr "Su richiesta"
 
 #: .././classes/Conversion.php:330
 msgid "By Agreement"
-msgstr "Con l'accordo"
+msgstr "su richiesta"
 
 #: .././classes/Conversion.php:331
 msgid "Immediate"
@@ -1557,7 +1558,7 @@ msgstr "Vista"
 
 #: .././classes/Conversion.php:353
 msgid "Cable TV"
-msgstr "TV via Cavo"
+msgstr "TV via cavo"
 
 #: .././classes/Conversion.php:356
 #, php-format
@@ -1575,16 +1576,16 @@ msgstr "Animali domestici ammessi"
 
 #: .././classes/Conversion.php:368
 msgid "ISDN Anschluss"
-msgstr "ISDN Anschluss"
+msgstr "Connessione ISDN"
 
 #: .././classes/Conversion.php:372
 #, php-format
 msgid "%d Restrooms"
-msgstr "%d Igienici"
+msgstr "%d Toilette"
 
 #: .././classes/Conversion.php:374
 msgid "Restrooms"
-msgstr "Servizi Igienici"
+msgstr "Toilette"
 
 #: .././classes/Conversion.php:379
 #, php-format
@@ -1597,7 +1598,7 @@ msgstr "Ascensore"
 
 #: .././classes/Conversion.php:385
 msgid "Fireplace"
-msgstr "Caminetto"
+msgstr "Camino"
 
 #: .././classes/Conversion.php:386
 msgid "wheelchair accessible"
@@ -1605,47 +1606,47 @@ msgstr "accessibile ai disabili"
 
 #: .././classes/Conversion.php:387
 msgid "Ramp"
-msgstr "Ramp"
+msgstr "Rampa"
 
 #: .././classes/Conversion.php:388
 msgid "lifting platform"
-msgstr "piattaforma elevatrice"
+msgstr "Ponte sollevatore"
 
 #: .././classes/Conversion.php:389
 msgid "Railway terminal"
-msgstr "Terminal ferroviario"
+msgstr "Collegamento ferroviario"
 
 #: .././classes/Conversion.php:390
 msgid "Water Supply"
-msgstr "Water Supply"
+msgstr "Allacciamento acqua"
 
 #: .././classes/Conversion.php:391
 msgid "Sewage supply"
-msgstr "Approvvigionamento delle acque reflue"
+msgstr "Allacciamento canalizzazione"
 
 #: .././classes/Conversion.php:392
 msgid "Power Supply"
-msgstr "Alimentazione"
+msgstr "Allacciamento corrente"
 
 #: .././classes/Conversion.php:393
 msgid "Gas supply"
-msgstr "Fornitura di gas"
+msgstr "Allacciamento gas"
 
 #: .././classes/Conversion.php:394
 msgid "Corner house"
-msgstr "Casa d'angolo"
+msgstr "Casa ad angolo"
 
 #: .././classes/Conversion.php:395
 msgid "Middle house"
-msgstr "Casa Middle"
+msgstr "Casa centrale"
 
 #: .././classes/Conversion.php:396
 msgid "Gardenhouse"
-msgstr "Gardenhouse"
+msgstr "Casetta in giardino"
 
 #: .././classes/Conversion.php:397
 msgid "Raised ground floor"
-msgstr "Piano rialzato"
+msgstr "Parterre rialzato"
 
 #: .././classes/Conversion.php:398
 msgid "New building"
@@ -1653,11 +1654,11 @@ msgstr "Nuova costruzione"
 
 #: .././classes/Conversion.php:399
 msgid "Old building"
-msgstr "Vecchio edificio"
+msgstr "Casa d'epoca"
 
 #: .././classes/Conversion.php:400
 msgid "Under roof"
-msgstr "Sotto il tetto"
+msgstr "Parcheggio coperto"
 
 #: .././classes/Conversion.php:401
 msgid "Swimmingpool"
@@ -1665,7 +1666,7 @@ msgstr "Piscina"
 
 #: .././classes/Conversion.php:402
 msgid "Minergie general"
-msgstr "Minergie generale"
+msgstr "Costruzione Minergie"
 
 #: .././classes/Conversion.php:403
 msgid "Minergie certified"
@@ -1673,15 +1674,15 @@ msgstr "Certificato Minergie"
 
 #: .././classes/Conversion.php:404
 msgid "Under building laws"
-msgstr "Secondo le leggi edilizie"
+msgstr "Diritto edilizio"
 
 #: .././classes/Conversion.php:405
 msgid "Building land connected"
-msgstr "Terreno edificabile collegato"
+msgstr "Terreno fabbricabile"
 
 #: .././classes/Conversion.php:406
 msgid "Flat sharing community"
-msgstr "Coabitazione comunità"
+msgstr "In condivisione"
 
 #: .././classes/Import.php:500 .././classes/Single.php:1264
 msgid "month"
@@ -1713,15 +1714,15 @@ msgstr "Numero di camere:"
 
 #: .././classes/Single.php:553
 msgid "Surface usable:"
-msgstr "Superficie utile:"
+msgstr "Superficie utilizzabile:"
 
 #: .././classes/Single.php:559
 msgid "Living space:"
-msgstr "Spazio abitabile:"
+msgstr "Superficie abitabile:"
 
 #: .././classes/Single.php:565
 msgid "Property space:"
-msgstr "Spazio di proprietà:"
+msgstr "Superficie terreno:"
 
 #: .././classes/Single.php:571
 msgid "Floor:"
@@ -1737,11 +1738,11 @@ msgstr "Anno di costruzione:"
 
 #: .././classes/Single.php:589
 msgid "Year of renovation:"
-msgstr "Data di rinnovo:"
+msgstr "Ultimo rinnovamento:"
 
 #: .././classes/Single.php:595
 msgid "Available:"
-msgstr "Disponibili:"
+msgstr "Disponibile da:"
 
 #: .././classes/Single.php:606 .././classes/Single.php:702
 msgid "Address"
@@ -1761,11 +1762,11 @@ msgstr "Prezzo di vendita:"
 
 #: .././classes/Single.php:625
 msgid "Gross price:"
-msgstr "Prezzo lordo:"
+msgstr "Affitto lordo:"
 
 #: .././classes/Single.php:629
 msgid "Net price:"
-msgstr "Prezzo netto:"
+msgstr "Affitto netto:"
 
 #: .././classes/Single.php:637 .././classes/Single.php:683
 msgid "Additional costs"
@@ -1773,7 +1774,7 @@ msgstr "Costi aggiuntivi"
 
 #: .././classes/Single.php:644
 msgid "Offer"
-msgstr "Offer"
+msgstr "offerta"
 
 #: .././classes/Single.php:648 .././classes/Single.php:864
 msgid "Sales price"
@@ -1781,11 +1782,11 @@ msgstr "Prezzo di vendita"
 
 #: .././classes/Single.php:658 .././classes/Single.php:874
 msgid "Gross price"
-msgstr "Prezzo lordo"
+msgstr "Affitto lordo"
 
 #: .././classes/Single.php:666 .././classes/Single.php:882
 msgid "Net price"
-msgstr "Prezzo netto"
+msgstr "Affitto lordo"
 
 #: .././classes/Single.php:674 .././classes/Single.php:890
 msgid "Rent price"
@@ -1845,7 +1846,7 @@ msgstr ""
 
 #: .././classes/Single.php:1104
 msgid "Provider"
-msgstr "Provider"
+msgstr "fornitore"
 
 #: .././classes/Single.php:1114 .././classes/Single.php:1171
 msgid "I am interested concerning this property. Please contact me."
