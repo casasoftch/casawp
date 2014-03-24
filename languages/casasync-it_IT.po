@@ -28,8 +28,8 @@ msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."
 msgstr ""
-"Mi dispiace ma non ho trovato nulla con questa parola chiave. Riprova con "
-"qualcos'altro"
+"Siamo spiacenti, non ci sono riscontri disponibili. Provate ad inserire alti "
+"criteri di ricerca. Grazie."
 
 #: .././options.php:98
 msgid "Einstellungen gespeichert.."
@@ -1501,7 +1501,7 @@ msgstr "Acquisti"
 
 #: .././classes/Conversion.php:321
 msgid "Kindergarten"
-msgstr "Kindergarten"
+msgstr "Asilo"
 
 #: .././classes/Conversion.php:322
 msgid "Motorway"
@@ -1790,11 +1790,11 @@ msgstr "Affitto lordo"
 
 #: .././classes/Single.php:674 .././classes/Single.php:890
 msgid "Rent price"
-msgstr "Prezzo di affitto"
+msgstr "Canone d'affitto"
 
 #: .././classes/Single.php:695
 msgid "Reference"
-msgstr "Riferimenti"
+msgstr "Referenze"
 
 #: .././classes/Single.php:720
 msgid "Features"
@@ -1802,7 +1802,7 @@ msgstr "Caratteristiche"
 
 #: .././classes/Single.php:727
 msgid "Documents"
-msgstr "Documentazione"
+msgstr "Documenti"
 
 #: .././classes/Single.php:734
 msgid "Distances"
@@ -1810,7 +1810,7 @@ msgstr "Distanze"
 
 #: .././classes/Single.php:906
 msgid "Available"
-msgstr "Disponibile"
+msgstr "Disponibile da"
 
 #: .././classes/Single.php:925
 msgid "Previous"
@@ -1818,7 +1818,7 @@ msgstr "Precedente"
 
 #: .././classes/Single.php:926
 msgid "To list"
-msgstr "Per elencare"
+msgstr "Tornare alla lista"
 
 #: .././classes/Single.php:927
 msgid "Next"
@@ -1834,11 +1834,11 @@ msgstr "Descrizione"
 
 #: .././classes/Single.php:1017
 msgid "Specifications"
-msgstr "Specifiche tecniche"
+msgstr "Foglio dei dati"
 
 #: .././classes/Single.php:1065
 msgid "View lager version"
-msgstr "Versione View lager"
+msgstr "Visualizzare immagine grande "
 
 #: .././classes/Single.php:1083
 msgid "Contact provider directly"
@@ -1846,15 +1846,17 @@ msgstr ""
 
 #: .././classes/Single.php:1104
 msgid "Provider"
-msgstr "fornitore"
+msgstr "Offerente"
 
 #: .././classes/Single.php:1114 .././classes/Single.php:1171
 msgid "I am interested concerning this property. Please contact me."
-msgstr "Mi interesso riguardo a questo immobile. Si prega di contattare me."
+msgstr ""
+"Sono interessato a questa offerta. Vi chiedo cortesemente di contattarmi. "
+"Grazie"
 
 #: .././classes/Single.php:1115
 msgid "E-Mail"
-msgstr "E-Mail"
+msgstr "e-Mail"
 
 #: .././classes/Single.php:1131
 msgid "Fax"
@@ -1870,11 +1872,11 @@ msgstr "Telefono diretto"
 
 #: .././classes/Single.php:1184
 msgid "Mobile"
-msgstr "Cellulare"
+msgstr "Telefono mobile"
 
 #: .././classes/Single.php:1215
 msgid "Share"
-msgstr "Condividi"
+msgstr "Consigliare"
 
 #: .././classes/Single.php:1326
 msgid "per"
