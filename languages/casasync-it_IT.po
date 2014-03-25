@@ -294,7 +294,7 @@ msgstr "Nuovo allegato Tipo Nome"
 #: .././classes/Casasync.php:585 .././classes/Casasync.php:822
 #: .././classes/Casasync.php:903
 msgid "First name"
-msgstr "nome"
+msgstr "Nome"
 
 #: .././classes/Casasync.php:586 .././classes/Casasync.php:826
 #: .././classes/Casasync.php:909
@@ -326,7 +326,7 @@ msgstr "Azienda"
 #: .././classes/Casasync.php:593 .././classes/Casasync.php:833
 #: .././classes/Casasync.php:917 .././classes/Single.php:784
 msgid "Street"
-msgstr "Ter"
+msgstr "Indirizzo"
 
 #: .././classes/Casasync.php:594 .././classes/Casasync.php:838
 #: .././classes/Casasync.php:925
@@ -345,7 +345,7 @@ msgstr "Paese"
 
 #: .././classes/Casasync.php:597
 msgid "Kanton"
-msgstr "Kanton"
+msgstr "Cantone"
 
 #: .././classes/Casasync.php:598
 msgid "Subject"
@@ -1770,7 +1770,7 @@ msgstr "Affitto netto:"
 
 #: .././classes/Single.php:637 .././classes/Single.php:683
 msgid "Additional costs"
-msgstr "Costi aggiuntivi"
+msgstr "Spese accessorie"
 
 #: .././classes/Single.php:644
 msgid "Offer"
@@ -1842,7 +1842,7 @@ msgstr "Visualizzare immagine grande "
 
 #: .././classes/Single.php:1083
 msgid "Contact provider directly"
-msgstr ""
+msgstr "Contattare direttamente l'inserzionista"
 
 #: .././classes/Single.php:1104
 msgid "Provider"
