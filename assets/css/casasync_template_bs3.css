@@ -7607,6 +7607,32 @@ fieldset[disabled] .casasync-archive .casasync-filterform-wrap.large .casasync-f
 .casasync-archive .casasync-property .availability-label.availability-label-available {
   display: none;
 }
+.casasync-archive .casasync-property-featured {
+  position: relative;
+}
+.casasync-archive .casasync-property-featured:before {
+  content: "\f005";
+  right: 0px;
+  top: 0px;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  display: block;
+  z-index: 2;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: center;
+  font-family: FontAwesome;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 4px;
+  margin: 0px;
+  border-radius: 5px;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.2);
+}
 .casasync-archive .casasync-gallery {
   position: relative;
   min-height: 1px;
