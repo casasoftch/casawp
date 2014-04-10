@@ -1191,14 +1191,15 @@ class Import {
       }
     }
 
-    //prices
+    //prices 
+    // is_object($new_meta_data['price_timesegment']) should be fixed!!!!!!!!!!!!
     if ($xmloffer->price) {
       $new_meta_data['price_timesegment'] = $xmloffer->price['timesegment'];
-      if (!in_array($new_meta_data['price_timesegment'], array('m','w','d','y','h','infinite'))) {
+      if (!in_array($new_meta_data['price_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['price_timesegment'])) {
         $new_meta_data['price_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
       $new_meta_data['price_propertysegment'] = $xmloffer->price['propertysegment'];
-      if (!in_array($new_meta_data['price_propertysegment'], array('m2','km2','full'))) {
+      if (!in_array($new_meta_data['price_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['price_propertysegment'])) {
         $new_meta_data['price_propertysegment'] = 'full';
       }
       $new_meta_data['price'] = (float) $xmloffer->price->__toString();
@@ -1206,11 +1207,11 @@ class Import {
 
     if ($xmloffer->netPrice) {
       $new_meta_data['netPrice_timesegment'] = $xmloffer->netPrice['timesegment'];
-      if (!in_array($new_meta_data['netPrice_timesegment'], array('m','w','d','y','h','infinite'))) {
+      if (!in_array($new_meta_data['netPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['netPrice_timesegment'])) {
         $new_meta_data['netPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
       $new_meta_data['netPrice_propertysegment'] = $xmloffer->netPrice['propertysegment'];
-      if (!in_array($new_meta_data['netPrice_propertysegment'], array('m2','km2','full'))) {
+      if (!in_array($new_meta_data['netPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['netPrice_propertysegment'])) {
         $new_meta_data['netPrice_propertysegment'] = 'full';
       }
       $new_meta_data['netPrice'] = (float) $xmloffer->netPrice->__toString();
@@ -1218,11 +1219,11 @@ class Import {
 
     if ($xmloffer->grossPrice) {
       $new_meta_data['grossPrice_timesegment'] = $xmloffer->grossPrice['timesegment'];
-      if (!in_array($new_meta_data['grossPrice_timesegment'], array('m','w','d','y','h','infinite'))) {
+      if (!in_array($new_meta_data['grossPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['grossPrice_timesegment'])) {
         $new_meta_data['grossPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
       $new_meta_data['grossPrice_propertysegment'] = $xmloffer->grossPrice['propertysegment'];
-      if (!in_array($new_meta_data['grossPrice_propertysegment'], array('m2','km2','full'))) {
+      if (!in_array($new_meta_data['grossPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['grossPrice_propertysegment'])) {
         $new_meta_data['grossPrice_propertysegment'] = 'full';
       }
       $new_meta_data['grossPrice'] = (float) $xmloffer->grossPrice->__toString();
@@ -1305,7 +1306,6 @@ class Import {
         $newval = (isset($new_meta_data[$key]) ? $new_meta_data[$key] : '');
         $oldval = (isset($old_meta_data[$key]) ? $old_meta_data[$key] : '');
         if (($oldval || $newval) && $oldval != $newval) {
-          //update
           update_post_meta($wp_post->ID, $key, $newval);
           $this->transcript[$casasync_id]['meta_data'][$key]['from'] = $oldval;
           $this->transcript[$casasync_id]['meta_data'][$key]['to'] = $newval;
