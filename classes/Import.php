@@ -1284,9 +1284,9 @@ class Import {
         $the_extraPrice = (float) $extraCost->__toString();
 
         $extraPrice[] = array(
-          'price' => $the_extraPrice;
+          'price' => $the_extraPrice,
           'title' => (string) $extraCost['title'],
-          'timesegment' => $timesegment,
+          'timesegment' => $timesegment->__toString(),
           'propertysegment' => $propertysegment,
           'currency' => $new_meta_data['price_currency'],
           'frequency' => 1
