@@ -1230,6 +1230,43 @@ class Import {
     }
 
     //extraCosts
+    // $extraPrice = array();
+    // if($xmloffer->extraCost){
+    //   foreach ($xmloffer->extraCost as $extraCost) {
+    //     $timesegment     = '';
+    //     $propertysegment = '';
+    //     $timesegment     = $extraCost['timesegment'];
+
+    //     if (!in_array($timesegment, array('m','w','d','y','h','infinite'))) {
+    //       $timesegment = ($offer_type == 'rent' ? 'm' : 'infinite');
+    //     }
+    //     $propertysegment = $extraCost['propertysegment'];
+    //     if (!in_array($propertysegment, array('m2','km2','full'))) {
+    //       $propertysegment = 'full';
+    //     }
+    //     $the_extraPrice = (float) $extraCost->__toString();
+
+    //     $timesegment_labels = array(
+    //       'm' => __('month', 'casasync'),
+    //       'w' => __('week', 'casasync'),
+    //       'd' => __('day', 'casasync'),
+    //       'y' => __('year', 'casasync'),
+    //       'h' => __('hour', 'casasync')
+    //     );
+    //     $extraPrice[] = array(
+    //       'value' =>
+    //         (isset($new_meta_data['price_currency']) && $new_meta_data['price_currency'] ? $new_meta_data['price_currency'] . ' ' : '') .
+    //         number_format(round($the_extraPrice), 0, '', '\'') . '.&#8211;' .
+    //         ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
+    //         ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '')
+    //       ,
+    //       'title' => (string) $extraCost['title']
+    //     );
+    //   }
+    //   $new_meta_data['extraPrice'] = serialize($extraPrice);
+    // }
+
+
     $extraPrice = array();
     if($xmloffer->extraCost){
       foreach ($xmloffer->extraCost as $extraCost) {
@@ -1246,21 +1283,13 @@ class Import {
         }
         $the_extraPrice = (float) $extraCost->__toString();
 
-        $timesegment_labels = array(
-          'm' => __('month', 'casasync'),
-          'w' => __('week', 'casasync'),
-          'd' => __('day', 'casasync'),
-          'y' => __('year', 'casasync'),
-          'h' => __('hour', 'casasync')
-        );
         $extraPrice[] = array(
-          'value' =>
-            (isset($new_meta_data['price_currency']) && $new_meta_data['price_currency'] ? $new_meta_data['price_currency'] . ' ' : '') .
-            number_format(round($the_extraPrice), 0, '', '\'') . '.&#8211;' .
-            ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
-            ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '')
-          ,
-          'title' => (string) $extraCost['title']
+          'price' => $the_extraPrice;
+          'title' => (string) $extraCost['title'],
+          'timesegment' => $timesegment,
+          'propertysegment' => $propertysegment,
+          'currency' => $new_meta_data['price_currency'],
+          'frequency' => 1
         );
       }
       $new_meta_data['extraPrice'] = serialize($extraPrice);
