@@ -326,7 +326,7 @@ msgstr "Azienda"
 #: .././classes/Casasync.php:593 .././classes/Casasync.php:833
 #: .././classes/Casasync.php:917 .././classes/Single.php:784
 msgid "Street"
-msgstr "Ter"
+msgstr "Indirizzo"
 
 #: .././classes/Casasync.php:594 .././classes/Casasync.php:838
 #: .././classes/Casasync.php:925
@@ -1842,7 +1842,7 @@ msgstr "Visualizzare immagine grande "
 
 #: .././classes/Single.php:1083
 msgid "Contact provider directly"
-msgstr "contattre direttamente l'offerente"
+msgstr "contattare direttamente l’offerente"
 
 #: .././classes/Single.php:1104
 msgid "Provider"
