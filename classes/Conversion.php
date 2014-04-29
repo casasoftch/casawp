@@ -288,20 +288,47 @@
         }
     }
 
-    public function casasync_convert_categoryKeyToLabel($key){
-        switch ($key) {
-            case 'agriculture':     return __('Agriculture' ,'casasync');break;
-            case 'apartment':       return __('Apartment' ,'casasync');break;
-            case 'gastronomy':      return __('Gastronomy' ,'casasync');break;
-            case 'house':           return __('House' ,'casasync');break;
-            case 'industrial':      return __('Industrial' ,'casasync');break;
-            case 'parking':         return __('Parking space' ,'casasync');break;
-            case 'plot':            return __('Plot' ,'casasync');break;
-            case 'secondary-rooms': return __('Secondary rooms' ,'casasync');break;
-            case 'garden':          return __('Garden' ,'casasync');break;
-            case 'commercial':      return __('Commercial' ,'casasync');break;
-            default:                return $key; break;
+    public function casasync_convert_categoryKeyToLabel($key, $fallback = ''){
+        $label = false;
+        if (substr($key, 0, 7) == 'custom_' && function_exists('wpml_get_default_language')) {
+            $current_lang = ICL_LANGUAGE_CODE;
+            $translations = get_option('casasync_custom_category_translations');
+            if (!is_array($translations)) {
+              $translations = array();
+            }
+            foreach ($translations as $slug => $strings) {
+                if ($slug == $key) {
+                    foreach ($strings[$current_lang] as $string) {
+                        $label = $string; 
+                        break;           
+                    }
+                }
+            }
+            if (!$label) {
+                $label = $term->name;
+            }
+        } else {
+          switch ($key) {
+              case 'agriculture':     $label = __('Agriculture' ,'casasync');break;
+              case 'apartment':       $label = __('Apartment' ,'casasync');break;
+              case 'gastronomy':      $label = __('Gastronomy' ,'casasync');break;
+              case 'house':           $label = __('House' ,'casasync');break;
+              case 'industrial':      $label = __('Industrial' ,'casasync');break;
+              case 'parking':         $label = __('Parking space' ,'casasync');break;
+              case 'plot':            $label = __('Plot' ,'casasync');break;
+              case 'secondary-rooms': $label = __('Secondary rooms' ,'casasync');break;
+              case 'garden':          $label = __('Garden' ,'casasync');break;
+              case 'commercial':      $label = __('Commercial' ,'casasync');break;
+          }
         }
+
+        if (!$label && $fallback) {
+          return $fallback;
+        } else if (!$label) {
+          return $key;
+        }
+
+        return $label;
     }
     public function casasync_get_allDistanceKeys(){
         return array(

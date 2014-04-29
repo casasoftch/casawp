@@ -160,7 +160,9 @@
         foreach ($terms as $term) {
             $options[$term->slug]['value'] = $term->slug; 
             //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
-            $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
+
+            $label = $this->conversion->casasync_convert_categoryKeyToLabel($term->slug, $term->name);
+            $options[$term->slug]['label'] = $label;
             $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
         }
         return $options;
@@ -178,7 +180,7 @@
         foreach ($terms as $term) {
             if (in_array($term->slug, $categories) || $return_unchecked ) {
                 $options[$term->slug]['value'] = $term->slug; 
-                $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name);
+                $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->slug, $term->name);
                 $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
             }
         }

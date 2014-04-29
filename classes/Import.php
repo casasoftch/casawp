@@ -541,6 +541,10 @@ class Import {
     return $the_features_json;
   }
 
+
+  /*
+    KEYS: custom_category_{$i}
+  */
   public function publisherOptionsXMLtoArray($publisher_options_xml){
     $publisher_options = array();
       foreach ($publisher_options_xml as $settings) {
@@ -942,7 +946,7 @@ class Import {
       $custom_categories = $publisher_options['custom_categories'];
       sort($custom_categories);
       foreach ($custom_categories as $custom_category) {
-        $new_categories[] = $custom_category['slug'];
+        $new_categories[] = 'custom_' . $custom_category['slug'];
       }
     }
 

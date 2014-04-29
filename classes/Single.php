@@ -238,7 +238,7 @@
       $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
       $this->categories_names = array();
       foreach ($categories as $category) {
-        $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->name);
+        $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
       } 
 
       $floors = get_post_meta( get_the_ID(), 'floor', $single = true ); 
