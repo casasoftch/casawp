@@ -1686,7 +1686,7 @@ msgstr "In condivisione"
 
 #: .././classes/Import.php:500 .././classes/Single.php:1264
 msgid "month"
-msgstr "mese"
+msgstr "al mese"
 
 #: .././classes/Import.php:501 .././classes/Single.php:1265
 msgid "week"
