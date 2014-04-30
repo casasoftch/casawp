@@ -961,7 +961,11 @@
 										$i++;
 									}
 								}
-								$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
+								if (function_exists('icl_get_home_url')) {
+									$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
+								} else {
+									$all_languages = array('de' => array('translated_name' => 'Deutsch'));
+								}
 							?>
 
 							<?php if (!empty($custom_categories)) : ?>
