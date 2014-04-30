@@ -1,9 +1,21 @@
 <?php
-	if(isset($_POST['casasync_submit']))  {
+	if(isset($_POST['casasync_submit'])) {
+		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
+			if (substr($key, 0, 7) == 'custom_') {
+				$parts = explode('/', $key);
+				$saved_custom_categories[$parts[0]][$parts[1]] = $value;
+				if (!array_key_exists('show', $saved_custom_categories[$parts[0]])) {
+					$saved_custom_categories[$parts[0]]['show'] = '0';
+				}
+			}
 			if (substr($key, 0, 8) == 'casasync') {
 				update_option( $key, $value );
 			}
+		}
+
+		if (count($saved_custom_categories) > 0) {
+			update_option('casasync_custom_category_translations', $saved_custom_categories);
 		}
 
 		$current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
@@ -38,8 +50,6 @@
 				break;
 			case 'archiveview':
 				$checkbox_traps = array(
-					'casasync_show_sticky_properties',
-					'casasync_hide_sticky_properties_in_main',
 					'casasync_archive_show_street_and_number',
 					'casasync_archive_show_zip',
 					'casasync_archive_show_location',
@@ -562,39 +572,6 @@
 					<?php echo $table_end; ?>
 					<?php echo $table_start; ?>
 						<tr valign="top">
-								<th scope="row">Oben gehaltene Objekte</th>
-								<td class="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span></span></legend>
-										<?php $name = 'casasync_show_sticky_properties'; ?>
-										<?php $text = 'Speziel ausgewiesen'; ?>
-										<p><label>
-											<?php
-												$url = get_admin_url('', 'admin.php?page=casasync');
-												$manually = $url . '&do_import=true';
-												$forced = $manually . '&force_all_properties=true&force_last_import=true';
-											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label></p>
-									</fieldset>
-									<fieldset>
-										<legend class="screen-reader-text"><span></span></legend>
-										<?php $name = 'casasync_hide_sticky_properties_in_main'; ?>
-										<?php $text = 'in der Hauptliste verstecken'; ?>
-										<p><label>
-											<?php
-												$url = get_admin_url('', 'admin.php?page=casasync');
-												$manually = $url . '&do_import=true';
-												$forced = $manually . '&force_all_properties=true&force_last_import=true';
-											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label></p>
-									</fieldset>
-								</td>
-							</tr>
-					<?php echo $table_end; ?>
-					<?php echo $table_start; ?>
-						<tr valign="top">
 							<th scope="row">Bildgrösse</th>
 							<td>
 								<?php $name = 'casasync_archive_show_thumbnail_size_w'; ?>
@@ -972,6 +949,75 @@
 									</fieldset>
 								</td>
 							</tr>
+
+							<?php
+								$all_categories = get_categories(array('taxonomy' => 'casasync_category'));
+								$custom_categories = array();
+								$i=0;
+								foreach ($all_categories as $key => $category) {
+									if ( substr($category->slug, 0, 7) == 'custom_') {
+										$custom_categories[$i]['name'] = $category->name;
+										$custom_categories[$i]['term_id'] = $category->term_id;
+										$i++;
+									}
+								}
+								$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
+							?>
+
+							<?php if (!empty($custom_categories)) : ?>
+								<tr valign="top">
+									<th scrope="row">Eigene Kategorien</th>
+									<td class="front-static-pages">
+										<fieldset>
+											<legend class="screen-reader-text"><span>Eigene Kategorien</span></legend>
+												<table class="form-table">
+													<tbody>
+														<tr>
+															<td><strong>ID</strong></td>
+															<?php
+																foreach ($all_languages as $key => $value) {
+																	echo '<td><strong>' . $value['translated_name'] . '</strong></td>';
+																}
+															?>
+															<td><strong>Auf Website anzeigen</strong></td>
+														</tr>
+														<?php
+															foreach ($custom_categories as $key => $value) {
+																echo '<tr>';
+																echo '<td>' . $value['name'] . '</td>';
+
+																$get_saved_custom_categories = get_option('casasync_custom_category_translations');
+																foreach ($all_languages as $k => $v) {
+																	$name = $value['name'] . '/' . $k;
+
+																	$translated_name = '';
+																	if (is_array($get_saved_custom_categories) && count($get_saved_custom_categories) > 0) {
+																		if (   array_key_exists($value['name'], $get_saved_custom_categories)
+																			&& array_key_exists($k, $get_saved_custom_categories[$value['name']])) {
+																			$translated_name = $get_saved_custom_categories[$value['name']][$k];
+																		}
+																	}
+																	echo '<td><input name="' . $name . '" type="text" value="' . $translated_name . '"></td>';
+																}
+
+																$name = $value['name'] . '/show';
+																$checked = false;
+																if (is_array($get_saved_custom_categories) && count($get_saved_custom_categories) > 0) {
+																	if (   array_key_exists($value['name'], $get_saved_custom_categories)
+																		&& array_key_exists('show', $get_saved_custom_categories[$value['name']]) && $get_saved_custom_categories[$value['name']]['show'] != false) {
+																		$checked = 'checked=checked';
+																	}
+																}
+																echo '<td><input name="' . $name . '" value="1" class="tog" type="checkbox" ' . $checked . '></td>';
+																echo '</tr>';
+															}
+														?>
+													</tbody>
+												</table>
+										</fieldset>
+									</td>
+								</tr>
+							<?php endif; ?>
 						<?php echo $table_end; ?>
 					<?php
 					break;

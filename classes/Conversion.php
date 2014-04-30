@@ -289,20 +289,23 @@
     }
 
     public function casasync_convert_categoryKeyToLabel($key, $fallback = ''){
-        $label = false;
-        if (substr($key, 0, 7) == 'custom_' && function_exists('wpml_get_default_language')) {
+        $label = null;
+
+        if (substr($key, 0, 7) == 'custom_' && function_exists('icl_get_home_url')) {
             $current_lang = ICL_LANGUAGE_CODE;
             $translations = get_option('casasync_custom_category_translations');
             if (!is_array($translations)) {
               $translations = array();
             }
+
             foreach ($translations as $slug => $strings) {
-                if ($slug == $key) {
-                    foreach ($strings[$current_lang] as $string) {
-                        $label = $string; 
-                        break;           
-                    }
+              if ($slug == $key) {
+                if ($strings['show']) {
+                  $label = $strings[$current_lang];
+                } else {
+                  return false;
                 }
+              }
             }
             if (!$label) {
                 $label = $term->name;
@@ -322,14 +325,15 @@
           }
         }
 
-        if (!$label && $fallback) {
+        if (!$label && $fallback != '') {
           return $fallback;
-        } else if (!$label) {
+        } elseif (!$label) {
           return $key;
+        } else {
+          return $label;
         }
-
-        return $label;
     }
+
     public function casasync_get_allDistanceKeys(){
         return array(
             'distance_public_transport',

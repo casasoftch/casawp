@@ -238,7 +238,9 @@
       $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
       $this->categories_names = array();
       foreach ($categories as $category) {
-        $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
+        if ($this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name)) {
+          $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
+        }
       } 
 
       $floors = get_post_meta( get_the_ID(), 'floor', $single = true ); 
@@ -1332,12 +1334,51 @@
     public function getExtraCosts($name) {
       $return = null;
       if(!empty($this->prices['extra_costs'])) {
-        foreach ($this->prices['extra_costs'] as $key => $value) {
-          if ($value['title'] == $name) {
-            $return = $value['value'];
+        foreach ($this->prices['extra_costs'] as $key => $extraCost) {
+
+          $timesegment     = '';
+          $propertysegment = '';
+          $offer_types = get_terms('casasync_salestype');
+
+          foreach ($offer_types as $k => $v) {
+            $offer_type = $v->name = 'rent' ? 'rent' : 'buy';
+          }
+
+          $timesegment = $extraCost['timesegment'];
+          if (!in_array($timesegment, array('m','w','d','y','h','infinite'))) {
+            $timesegment = ($offer_type == 'rent' ? 'm' : 'infinite');
+          }
+
+          $propertysegment = $extraCost['propertysegment'];
+          if (!in_array($propertysegment, array('m2','km2','full'))) {
+            $propertysegment = 'full';
+          }
+
+          $timesegment_labels = array(
+            'm' => __('month', 'casasync'),
+            'w' => __('week', 'casasync'),
+            'd' => __('day', 'casasync'),
+            'y' => __('year', 'casasync'),
+            'h' => __('hour', 'casasync')
+          );
+
+          $extraPrice = array(
+            'value' =>
+              (isset($extraCost['currency']) && $extraCost['currency'] ? $extraCost['currency'] . ' ' : '') .
+              number_format(round($extraCost['price']), 0, '', '\'') . '.&#8211;' .
+              ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
+              ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '')
+            ,
+            'title' => (string) $extraCost['title']
+          );
+
+          $return = false;
+          if ($extraCost['title'] == $name) {
+            $return = $extraPrice['value'];
           }
         }
       }
+
       return $return;
     }
 
