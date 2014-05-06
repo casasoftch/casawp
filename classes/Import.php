@@ -617,102 +617,104 @@ class Import {
     }
     //upload necesary images to wordpress
     $attachmentfilenames_in_xml = array();
-    foreach ($the_casasync_attachments as $the_mediaitem) {
-      //look up wp and see if file is already attached
-      $existing = false;
-      $existing_attachment = array();
-      $attachmentfilenames_in_xml[] = ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url']);
-      foreach ($wp_casasync_attachments as $wp_mediaitem) {
-        $attachment_customfields = get_post_custom($wp_mediaitem->ID);
-        $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-        $alt = '';
-        if ($original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])) {
-          $existing = true;
-          $types = wp_get_post_terms( $wp_mediaitem->ID, 'casasync_attachment_type');
-          if (array_key_exists(0, $types)) {
-            $typeslug = $types[0]->slug;
-            $alt = get_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', true);
-            //build a proper array out of it
-            $existing_attachment = array(
-              'type'    => $typeslug,
-              'alt'     => $alt,
-              'title'   => $wp_mediaitem->post_title,
-              'file'    => $the_mediaitem['file'],
-              'url'     => $the_mediaitem['url'],
-              'caption' => $wp_mediaitem->post_excerpt,
-              'order'   => $wp_mediaitem->menu_order
-            );
-          }
-
-          //have its values changed?
-          if($existing_attachment != $the_mediaitem ){
-            $changed = true;
-            $this->transcript[$casasync_id]['attachments']["updated"] = 1;
-            //update attachment data
-            if ($existing_attachment['caption'] != $the_mediaitem['caption']
-              || $existing_attachment['title'] != $the_mediaitem['title']
-              || $existing_attachment['order'] != $the_mediaitem['order']
-              ) {
-              $att['post_excerpt'] = $the_mediaitem['caption'];
-              $att['post_title']   = preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) );
-              $att['ID']           = $wp_mediaitem->ID;
-              $att['menu_order']   = $the_mediaitem['order'];
-              $insert_id           = wp_update_post( $att);
-            }
-            //update attachment category
-            if ($existing_attachment['type'] != $the_mediaitem['type']) {
-              $term = get_term_by('slug', $the_mediaitem['type'], 'casasync_attachment_type');
-              $term_id = $term->term_id;
-              wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casasync_attachment_type' );
-            }
-            //update attachment alt
-            if ($alt != $the_mediaitem['alt']) {
-              update_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', $the_mediaitem['alt']);
-            }
-          }
-        }
-      }
-
-      if (!$existing) {
-        //insert the new image
-        
-        $new_id = $this->casasyncUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
-        if (is_int($new_id)) {
-          $this->transcript[$casasync_id]['attachments']["created"] = $the_mediaitem['file'];
-        } else {
-          $this->transcript[$casasync_id]['attachments']["failed_to_create"] = $new_id;
-        }
-      }
-
-      //remove all extra attachments
-      /*foreach ($wp_casasync_attachments as $wp_mediaitem2) {
-        $attachment_customfields = get_post_custom($wp_mediaitem2->ID);
-        $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-        if (!in_array($original_filename , $attachmentfilenames_in_xml)) {
-          $this->transcript[$casasync_id]['attachments']["removed"] = 1;
-          wp_delete_attachment( $wp_mediaitem2->ID );
-        }
-      }*/
-
-      //featured image
-      $attachment_image_order = array();
+    if (isset($the_casasync_attachments)) {
       foreach ($the_casasync_attachments as $the_mediaitem) {
-        if ($the_mediaitem['type'] == 'image') {
-          $attachment_image_order[$the_mediaitem['order']] = $the_mediaitem;
+        //look up wp and see if file is already attached
+        $existing = false;
+        $existing_attachment = array();
+        $attachmentfilenames_in_xml[] = ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url']);
+        foreach ($wp_casasync_attachments as $wp_mediaitem) {
+          $attachment_customfields = get_post_custom($wp_mediaitem->ID);
+          $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+          $alt = '';
+          if ($original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])) {
+            $existing = true;
+            $types = wp_get_post_terms( $wp_mediaitem->ID, 'casasync_attachment_type');
+            if (array_key_exists(0, $types)) {
+              $typeslug = $types[0]->slug;
+              $alt = get_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', true);
+              //build a proper array out of it
+              $existing_attachment = array(
+                'type'    => $typeslug,
+                'alt'     => $alt,
+                'title'   => $wp_mediaitem->post_title,
+                'file'    => $the_mediaitem['file'],
+                'url'     => $the_mediaitem['url'],
+                'caption' => $wp_mediaitem->post_excerpt,
+                'order'   => $wp_mediaitem->menu_order
+              );
+            }
+
+            //have its values changed?
+            if($existing_attachment != $the_mediaitem ){
+              $changed = true;
+              $this->transcript[$casasync_id]['attachments']["updated"] = 1;
+              //update attachment data
+              if ($existing_attachment['caption'] != $the_mediaitem['caption']
+                || $existing_attachment['title'] != $the_mediaitem['title']
+                || $existing_attachment['order'] != $the_mediaitem['order']
+                ) {
+                $att['post_excerpt'] = $the_mediaitem['caption'];
+                $att['post_title']   = preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) );
+                $att['ID']           = $wp_mediaitem->ID;
+                $att['menu_order']   = $the_mediaitem['order'];
+                $insert_id           = wp_update_post( $att);
+              }
+              //update attachment category
+              if ($existing_attachment['type'] != $the_mediaitem['type']) {
+                $term = get_term_by('slug', $the_mediaitem['type'], 'casasync_attachment_type');
+                $term_id = $term->term_id;
+                wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casasync_attachment_type' );
+              }
+              //update attachment alt
+              if ($alt != $the_mediaitem['alt']) {
+                update_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', $the_mediaitem['alt']);
+              }
+            }
+          }
         }
-      }
-      if (isset($attachment_image_order) && !empty($attachment_image_order)) {
-        ksort($attachment_image_order);
-        $attachment_image_order = reset($attachment_image_order);
-        if (!empty($attachment_image_order)) {
-          foreach ($wp_casasync_attachments as $wp_mediaitem) {
-            $attachment_customfields = get_post_custom($wp_mediaitem->ID);
-            $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-            if ($original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])) {
-              $cur_thumbnail_id = get_post_thumbnail_id( $wp_post->ID );
-              if ($cur_thumbnail_id != $wp_mediaitem->ID) {
-                set_post_thumbnail( $wp_post->ID, $wp_mediaitem->ID );
-                $this->transcript[$casasync_id]['attachments']["featured_image_set"] = 1;
+
+        if (!$existing) {
+          //insert the new image
+          
+          $new_id = $this->casasyncUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
+          if (is_int($new_id)) {
+            $this->transcript[$casasync_id]['attachments']["created"] = $the_mediaitem['file'];
+          } else {
+            $this->transcript[$casasync_id]['attachments']["failed_to_create"] = $new_id;
+          }
+        }
+
+        //remove all extra attachments
+        /*foreach ($wp_casasync_attachments as $wp_mediaitem2) {
+          $attachment_customfields = get_post_custom($wp_mediaitem2->ID);
+          $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+          if (!in_array($original_filename , $attachmentfilenames_in_xml)) {
+            $this->transcript[$casasync_id]['attachments']["removed"] = 1;
+            wp_delete_attachment( $wp_mediaitem2->ID );
+          }
+        }*/
+
+        //featured image
+        $attachment_image_order = array();
+        foreach ($the_casasync_attachments as $the_mediaitem) {
+          if ($the_mediaitem['type'] == 'image') {
+            $attachment_image_order[$the_mediaitem['order']] = $the_mediaitem;
+          }
+        }
+        if (isset($attachment_image_order) && !empty($attachment_image_order)) {
+          ksort($attachment_image_order);
+          $attachment_image_order = reset($attachment_image_order);
+          if (!empty($attachment_image_order)) {
+            foreach ($wp_casasync_attachments as $wp_mediaitem) {
+              $attachment_customfields = get_post_custom($wp_mediaitem->ID);
+              $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+              if ($original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])) {
+                $cur_thumbnail_id = get_post_thumbnail_id( $wp_post->ID );
+                if ($cur_thumbnail_id != $wp_mediaitem->ID) {
+                  set_post_thumbnail( $wp_post->ID, $wp_mediaitem->ID );
+                  $this->transcript[$casasync_id]['attachments']["featured_image_set"] = 1;
+                }
               }
             }
           }
@@ -1291,7 +1293,7 @@ class Import {
           'price' => $the_extraPrice,
           'title' => (string) $extraCost['title'],
           'timesegment' => $timesegment->__toString(),
-          'propertysegment' => $propertysegment,
+          'propertysegment' => $propertysegment->__toString(),
           'currency' => $new_meta_data['price_currency'],
           'frequency' => 1
         );
@@ -1333,7 +1335,7 @@ class Import {
       foreach ($this->meta_keys as $key) {
         if (in_array($key, array('the_urls', 'extraPrice'))) {
           if (isset($new_meta_data[$key])) {
-            $new_meta_data[$key] = unserialize($new_meta_data[$key]);
+            $new_meta_data[$key] = $new_meta_data[$key];
           }
         }
         $newval = (isset($new_meta_data[$key]) ? $new_meta_data[$key] : '');
