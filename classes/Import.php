@@ -1293,7 +1293,7 @@ class Import {
           'price' => $the_extraPrice,
           'title' => (string) $extraCost['title'],
           'timesegment' => $timesegment->__toString(),
-          'propertysegment' => $propertysegment->__toString(),
+          'propertysegment' => $propertysegment,
           'currency' => $new_meta_data['price_currency'],
           'frequency' => 1
         );
