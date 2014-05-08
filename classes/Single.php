@@ -128,6 +128,25 @@
            )
         ;
       }
+      $w_availabilities = array();
+      if (array_key_exists('availabilities', $query)) {
+        foreach ($query['availabilities'] as $slug => $options) {
+          if ($options['checked']) {
+            $w_availabilities[] = $options['value'];
+          }
+        }
+      }
+      if ($w_availabilities) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_availability',
+               'terms' => $w_availabilities,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
 
 
 
@@ -686,6 +705,14 @@
           .'<td class="width-75">' . $this->getExtraCosts('Nebenkosten') . '</td>'
         .'</tr>';
       }
+   /*   if ($this->availability) {
+        $content .= '<tr>'
+              .'<td class="width-25">' . __('Availability','casasync') . '</td>'
+            .'<td class="width-75">';
+            $content .= $this->availability;
+            $content .= '</td>'
+            .'</tr>';
+      }*/
       $content .= '</table>';
 
       if ($this->numvals || $this->getAddress('property') || $this->reference_id || $this->property_id) {

@@ -912,14 +912,14 @@ class Import {
     if ($wp_lvl2) {
       $new_terms[] = $wp_lvl2->term_id;
     }
-    asort($new_terms);
+    $new_terms = array_values(asort($new_terms));
 
     $old_terms = array();
     $old_terms_obj = wp_get_object_terms($wp_post->ID, 'casasync_location');
     foreach ($old_terms_obj as $old_term) {
       $old_terms[] = $old_term->term_id;
     }
-    asort($old_terms);
+    $new_terms = array_values(asort($old_terms));
 
     if ($new_terms != $old_terms) {
       $this->transcript[$casasync_id]['locations'][]['from'] = $old_terms;

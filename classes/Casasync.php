@@ -111,7 +111,7 @@ class CasaSync {
                 $template_path = CASASYNC_PLUGIN_DIR . '/casasync-single.php';
             }
         }
-        if (is_tax('casasync_salestype') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
+        if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
             if ( $theme_file = locate_template(array('casasync-archive.php'))) {
                 $template_path = $theme_file;
             } else {
@@ -125,7 +125,7 @@ class CasaSync {
     public function customize_casasync_category($query){
 
         if ($query->is_main_query()) {
-            if (is_tax('casasync_salestype') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
+            if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
 
                 $posts_per_page = get_option('posts_per_page', 10);
                 $query->set('posts_per_page', $posts_per_page);
@@ -206,6 +206,26 @@ class CasaSync {
                     $taxquery_new[] = array(
                         'taxonomy' => 'casasync_salestype',
                         'terms' => $salestypes,
+                        'include_children' => 1,
+                        'field' => 'slug',
+                        'operator'=> 'IN'
+                     );
+                }
+
+                $availabilities = array();
+                if ((isset($_GET['casasync_availability_s']) && is_array($_GET['casasync_availability_s']) )) {
+                    $availabilities = $_GET['casasync_availability_s'];
+                } elseif (isset($_GET['casasync_availability_s'])) {
+                    $availabilities = array($_GET['casasync_availability_s']);
+                } elseif(is_tax('casasync_availability')) {
+                    //$availabilities = array('rent','buy', 'reference');
+                } else {
+                    //$availabilities = array('rent','buy');
+                }
+                if ($availabilities) {
+                    $taxquery_new[] = array(
+                        'taxonomy' => 'casasync_availability',
+                        'terms' => $availabilities,
                         'include_children' => 1,
                         'field' => 'slug',
                         'operator'=> 'IN'
