@@ -769,10 +769,59 @@ class Import {
     
   }
 
+
+  public function setOfferAvailability($wp_post, $availability, $casasync_id){
+    $new_term = null;
+    $old_term = null;
+
+    //backward compadable
+    if ($availability == 'available') {
+      $availability = 'active';
+    }
+
+    if (!in_array($availability, array(
+      'active',
+      'taken',
+      'reserved',
+      'reference'
+    ))) {
+      $availability = null;
+    }
+
+    if ($availability) {
+      $new_term = get_term_by('slug', $availability, 'casasync_availability', OBJECT, 'raw' );
+      if (!$new_term) {
+        $options = array(
+          'description' => '',
+          'slug' => $availability
+        );
+        $id = wp_insert_term(
+          $availability,
+          'casasync_availability',
+          $options
+        );
+        $new_term = get_term($id, 'casasync_availability', OBJECT, 'raw');
+
+      }
+    }
+
+    $wp_post_terms = wp_get_object_terms($wp_post->ID, 'casasync_availability');
+    if ($wp_post_terms) {
+      $old_term = $wp_post_terms[0];
+    }
+    
+    if ($old_term != $new_term) {
+      $this->transcript[$casasync_id]['availability']['from'] = ($old_term ? $old_term->name : 'none');
+      $this->transcript[$casasync_id]['availability']['to'] =   ($new_term ? $new_term->name : 'none');
+      wp_set_object_terms( $wp_post->ID, ($new_term ? $new_term->term_id : NULL), 'casasync_availability' );
+    }
+    
+  }
+
   public function setOfferLocalities($wp_post, $xml_address, $casasync_id){
-    $country  = strtoupper(($xml_address->country ? $xml_address->country->__toString() : 'CH'));
-    $region   = ($xml_address->region ? $xml_address->region->__toString() : false);
-    $locality = ($xml_address->locality ? $xml_address->locality->__toString() : false);
+    $country  = strtoupper( $this->simpleXMLget($xml_address->country, 'CH'));
+    $region   = $this->simpleXMLget($xml_address->region, false);
+    $locality = $this->simpleXMLget($xml_address->locality, false);
 
     $country_arr = array($country, 'country_'.strtolower($country));
     $lvl1_arr = false;
@@ -1034,12 +1083,14 @@ class Import {
     flush_rewrite_rules();
   }
 
-  public function simpleXMLget($node){
+  public function simpleXMLget($node, $fallback = false){
     if ($node) {
-      return $node->__toString();
-    } else {
-      return '';
+      $result = $node->__toString();
+      if ($result) {
+        return $result;
+      }
     }
+    return $fallback;
   }
 
 
@@ -1146,9 +1197,9 @@ class Import {
 
     if ($xmloffer->availability) {
       $new_meta_data['availability'] = $this->simpleXMLget($xmloffer->availability);
-      if ($xmloffer->availability['title']) {
+      /*if ($xmloffer->availability['title']) {
         $new_meta_data['availability_label'] = $this->simpleXMLget($xmloffer->availability['title']);
-      }
+      }*/
     }
 
     //prices 
@@ -1188,43 +1239,6 @@ class Import {
       }
       $new_meta_data['grossPrice'] = (float) $xmloffer->grossPrice->__toString();
     }
-
-    //extraCosts
-    // $extraPrice = array();
-    // if($xmloffer->extraCost){
-    //   foreach ($xmloffer->extraCost as $extraCost) {
-    //     $timesegment     = '';
-    //     $propertysegment = '';
-    //     $timesegment     = $extraCost['timesegment'];
-
-    //     if (!in_array($timesegment, array('m','w','d','y','h','infinite'))) {
-    //       $timesegment = ($offer_type == 'rent' ? 'm' : 'infinite');
-    //     }
-    //     $propertysegment = $extraCost['propertysegment'];
-    //     if (!in_array($propertysegment, array('m2','km2','full'))) {
-    //       $propertysegment = 'full';
-    //     }
-    //     $the_extraPrice = (float) $extraCost->__toString();
-
-    //     $timesegment_labels = array(
-    //       'm' => __('month', 'casasync'),
-    //       'w' => __('week', 'casasync'),
-    //       'd' => __('day', 'casasync'),
-    //       'y' => __('year', 'casasync'),
-    //       'h' => __('hour', 'casasync')
-    //     );
-    //     $extraPrice[] = array(
-    //       'value' =>
-    //         (isset($new_meta_data['price_currency']) && $new_meta_data['price_currency'] ? $new_meta_data['price_currency'] . ' ' : '') .
-    //         number_format(round($the_extraPrice), 0, '', '\'') . '.&#8211;' .
-    //         ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
-    //         ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '')
-    //       ,
-    //       'title' => (string) $extraCost['title']
-    //     );
-    //   }
-    //   $new_meta_data['extraPrice'] = serialize($extraPrice);
-    // }
 
 
     $extraPrice = array();
@@ -1313,9 +1327,11 @@ class Import {
     }
 
     $this->setOfferCategories($wp_post, $property->category, $publisher_options, $casasync_id);
-    $this->setOfferSalestype($wp_post, $xmloffer->type->__toString(), $casasync_id);
+    $this->setOfferSalestype($wp_post, $this->simpleXMLget($xmloffer->type, false), $casasync_id);
+    $this->setOfferAvailability($wp_post, $this->simpleXMLget($xmloffer->availability, false), $casasync_id);
     $this->setOfferLocalities($wp_post, $property->address, $casasync_id);
     $this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casasync_id);
+    
 
   }
 }
