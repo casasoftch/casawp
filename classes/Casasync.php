@@ -554,6 +554,32 @@ class CasaSync {
         register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
 
         $labels = array(
+            'name'                       => __( 'Property availability', 'casasync' ),
+            'singular_name'              => __( 'Availability', 'casasync' ),
+            'search_items'               => __( 'Search availabilities', 'casasync' ),
+            'popular_items'              => __( 'Popular Availabilities', 'casasync' ),
+            'all_items'                  => __( 'All Availabilities', 'casasync' ),
+            'edit_item'                  => __( 'Edit Availability', 'casasync' ),
+            'update_item'                => __( 'Update Availability', 'casasync' ),
+            'add_new_item'               => __( 'Add New Availability', 'casasync' ),
+            'new_item_name'              => __( 'New Availability Name', 'casasync' ),
+            'separate_items_with_commas' => __( 'Separate availabilities with commas', 'casasync' ),
+            'add_or_remove_items'        => __( 'Add or remove availabilities', 'casasync' ),
+            'choose_from_most_used'      => __( 'Choose from the most used availabilities', 'casasync' ),
+            'not_found'                  => __( 'No Availabilities found.', 'casasync' ),
+            'menu_name'                  => __( 'Availability', 'casasync' )
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-verfuegbarkeit' )
+        );
+        register_taxonomy( 'casasync_availability', array( 'casasync_property' ), $args );
+
+        $labels = array(
           'name'              => __( 'Property Attachment Types', 'casasync' ),
             'singular_name'     => __( 'Attachment Type', 'casasync' ),
             'search_items'      => __( 'Search Attachment Types', 'casasync' ),
