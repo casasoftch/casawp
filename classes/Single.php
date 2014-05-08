@@ -1333,7 +1333,7 @@
 
     public function getExtraCosts($name) {
       $return = null;
-      if(!empty($this->prices['extra_costs'])) {
+      if(!empty($this->prices['extra_costs']) && is_array($this->prices['extra_costs'])) {
         foreach ($this->prices['extra_costs'] as $key => $extraCost) {
 
           $timesegment     = '';

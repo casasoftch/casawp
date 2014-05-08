@@ -15,10 +15,10 @@
 				</div>
 				<div class="casasync-row">
 					<div class="casasync-single-content">
-						<header class="entry-header">
-							<h1 class="entry-title"><?php echo $single->getTitle(); ?></h1>
+						<header class="casasync-single-header">
+							<h1 class="casasync-single-title"><?php echo $single->getTitle(); ?></h1>
 						</header>
-						<div class="entry-content">
+						<div class="casasync-single-content">
 							<?php echo $single->getGallery(); ?>
 							<br>
 							<?php echo $single->getTabable(); ?>

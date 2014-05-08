@@ -307,9 +307,6 @@
                 }
               }
             }
-            if (!$label) {
-                $label = $term->name;
-            }
         } else {
           switch ($key) {
               case 'agriculture':     $label = __('Agriculture' ,'casasync');break;

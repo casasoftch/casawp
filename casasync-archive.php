@@ -11,7 +11,7 @@ Template Name: Objekt Archive
 	<?php if ($template->setTemplate('archive', $archive)): ?>
 		<?php echo $template->render(); ?>
 	<?php else: ?>	
-		<div class="casasync-archive entry-content">
+		<div class="casasync-archive">
 			<?php if ( have_posts() ): ?>
 				<?php /*<div class="casasync-row">
 					<aside class="casasync-archive-aside">
