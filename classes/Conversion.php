@@ -356,9 +356,16 @@
     }
     public function casasync_convert_availabilityKeyToLabel($key){
         switch ($key) {
+            //old
             case 'on-request':   return __('On Request' ,'casasync');break;
             case 'by-agreement': return __('By Agreement' ,'casasync');break;
             case 'immediately':  return __('Immediate' ,'casasync');break;
+
+            //new
+            case 'active':       return __('Available' ,'casasync');break;
+            case 'reserved':     return __('Reserved' ,'casasync');break;
+            case 'taken':        return __('Has owner' ,'casasync');break;
+            case 'reference':    return __('Reference' ,'casasync');break;
         }
     }
 

@@ -33,6 +33,7 @@
     public $urls = array();
     public $availability = false;
     public $availability_label = '';
+    public $the_availability = ''; //taxonomy
     public $start = false;
     public $seller = array(
       'fallback'      => false,
@@ -128,26 +129,6 @@
            )
         ;
       }
-      $w_availabilities = array();
-      if (array_key_exists('availabilities', $query)) {
-        foreach ($query['availabilities'] as $slug => $options) {
-          if ($options['checked']) {
-            $w_availabilities[] = $options['value'];
-          }
-        }
-      }
-      if ($w_availabilities) {
-        $taxquery_new[] =
-           array(
-               'taxonomy' => 'casasync_availability',
-               'terms' => $w_availabilities,
-               'include_children' => 1,
-               'field' => 'slug',
-               'operator'=> 'IN'
-           )
-        ;
-      }
-
 
 
       $posts_per_page = get_option('posts_per_page', 10);
@@ -255,6 +236,21 @@
       $this->start = get_post_meta( get_the_ID(), 'casasync_start', $single = true );
 
       $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
+      $this->categories_names = array();
+      foreach ($categories as $category) {
+        if ($this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name)) {
+          $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
+        }
+      } 
+
+      $availabilities = wp_get_post_terms( get_the_ID(), 'casasync_availability'); 
+      $availability = false;
+      if ($availabilities) {
+        $availability = $availabilities[0];
+        $this->the_availability = $this->conversion->casasync_convert_availabilityKeyToLabel($availability->slug);
+      }
+
+      
       $this->categories_names = array();
       foreach ($categories as $category) {
         if ($this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name)) {
@@ -705,14 +701,14 @@
           .'<td class="width-75">' . $this->getExtraCosts('Nebenkosten') . '</td>'
         .'</tr>';
       }
-   /*   if ($this->availability) {
+      if ($this->the_availability) {
         $content .= '<tr>'
               .'<td class="width-25">' . __('Availability','casasync') . '</td>'
             .'<td class="width-75">';
-            $content .= $this->availability;
+            $content .= $this->the_availability;
             $content .= '</td>'
             .'</tr>';
-      }*/
+      }
       $content .= '</table>';
 
       if ($this->numvals || $this->getAddress('property') || $this->reference_id || $this->property_id) {
