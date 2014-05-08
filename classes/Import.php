@@ -328,9 +328,9 @@ class Import {
         $this->curtrid = $wp_post->ID;
       }
 
-      //AND element_type = "post_' . $wp_post->post_type . '" 
       $row = $wpdb->get_row( 'SELECT * FROM '.$wpdb->prefix.'icl_translations 
           WHERE element_id = "' .$wp_post->ID. '" 
+          AND element_type = "post_' . $wp_post->post_type . '" 
           
         '
         );
@@ -1194,7 +1194,7 @@ class Import {
         }
       }
       ksort($the_urls);
-      $new_meta_data['the_urls'] = serialize(array_values($the_urls));
+      $new_meta_data['the_urls'] = $the_urls;
     }
 
     $offer_type     = $this->simpleXMLget($xmloffer->type);
@@ -1308,7 +1308,7 @@ class Import {
           'frequency' => 1
         );
       }
-      $new_meta_data['extraPrice'] = serialize($extraPrice);
+      $new_meta_data['extraPrice'] = $extraPrice;
     }
 
 
@@ -1349,7 +1349,7 @@ class Import {
           }
         }
         $newval = (isset($new_meta_data[$key]) ? $new_meta_data[$key] : '');
-        $oldval = (isset($old_meta_data[$key]) ? $old_meta_data[$key] : '');
+        $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
         if (($oldval || $newval) && $oldval != $newval) {
           update_post_meta($wp_post->ID, $key, $newval);
           $this->transcript[$casasync_id]['meta_data'][$key]['from'] = $oldval;

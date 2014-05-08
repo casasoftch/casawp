@@ -307,7 +307,9 @@
                 }
               }
             }
-        } else {
+        }
+
+        if (!$label) {
           switch ($key) {
               case 'agriculture':     $label = __('Agriculture' ,'casasync');break;
               case 'apartment':       $label = __('Apartment' ,'casasync');break;
