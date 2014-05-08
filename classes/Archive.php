@@ -29,7 +29,7 @@
             true
         );
 
-       wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
+        wp_localize_script( 'casasync_script', 'casasyncParams', $script_params );
     }
 
     public function getArchiveLink(){
@@ -190,7 +190,7 @@
         foreach ($terms as $term) {
             if (in_array($term->slug, $categories) || $return_unchecked ) {
                 $options[$term->slug]['value'] = $term->slug; 
-                $options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->slug, $term->name);
+                $options[$term->slug]['label'] = $term->name;
                 $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
             }
         }
@@ -391,7 +391,7 @@
 
         $availability_options = $this->getAvailabilityOptions();
         if(count($availability_options) > 1) {
-            $return .= '<select name="casasync_availability_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose availability','casasync') . '">';
+            $return .= '<select name="casasync_availability_s[]" multiple class="hidden" data-placeholder="' . __('Choose availability','casasync') . '">';
             foreach ($availability_options as $option) {
                 $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
             }

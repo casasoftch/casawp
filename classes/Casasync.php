@@ -212,15 +212,16 @@ class CasaSync {
                      );
                 }
 
+
                 $availabilities = array();
                 if ((isset($_GET['casasync_availability_s']) && is_array($_GET['casasync_availability_s']) )) {
                     $availabilities = $_GET['casasync_availability_s'];
                 } elseif (isset($_GET['casasync_availability_s'])) {
                     $availabilities = array($_GET['casasync_availability_s']);
                 } elseif(is_tax('casasync_availability')) {
-                    //$availabilities = array('rent','buy', 'reference');
                 } else {
-                    //$availabilities = array('rent','buy');
+                    //reference and taken are hidden by default
+                    $availabilities = array('active','reserved');
                 }
                 if ($availabilities) {
                     $taxquery_new[] = array(
