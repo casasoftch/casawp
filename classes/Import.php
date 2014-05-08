@@ -769,171 +769,115 @@ class Import {
     
   }
 
-  public function setOfferLocalities($country, $region, $locality, $wp_post, $casasync_id){
-    //set post locations
-    $lvl1_country     = ($country ? $country : 'CH' );
-    $lvl1_country_id  = false;
-    $lvl2_region      = $region;
-    $lvl2_region_id   = false;
-    $lvl3_locality    = $locality;
-    $lvl3_locality_id = false;
+  public function setOfferLocalities($wp_post, $xml_address, $casasync_id){
+    $country  = strtoupper(($xml_address->country ? $xml_address->country->__toString() : 'CH'));
+    $region   = ($xml_address->region ? $xml_address->region->__toString() : false);
+    $locality = ($xml_address->locality ? $xml_address->locality->__toString() : false);
 
-    //set country
-    $country_term = get_term_by('name', $lvl1_country, 'casasync_location');
-    if ($country_term) {
-      $lvl1_country_id = $country_term->term_id;
+    $country_arr = array($country, 'country_'.strtolower($country));
+    $lvl1_arr = false;
+    $lvl2_arr = false;
+    if ($region) {
+      $lvl1_arr = array($region, 'region_'.sanitize_title_with_dashes($region));
+      if ($locality) {
+        $lvl2_arr = array($locality, 'locality_'.sanitize_title_with_dashes($locality));
+      }
+    } elseif($locality) {
+      $lvl1_arr = array($locality, 'locality_'.sanitize_title_with_dashes($locality));
+      $lvl2_arr = false;
     }
-    if (!$lvl1_country_id) {
-      if (!isset($new_location[$lvl1_country])) {
-        $new_location[$lvl1_country] = array('properties' => array($wp_post->ID));
-      } else {
-        $new_location[$lvl1_country]['properties'][] = $wp_post->ID;
+
+    
+    //make sure country exists
+    $wp_country = false;
+    if ($country_arr) {
+      $wp_country = get_term_by('slug', $country_arr[1], 'casasync_location', OBJECT, 'raw' );
+
+      if (!$wp_country || $wp_country instanceof WP_Error) {
+        $options = array(
+          'description' => '',
+          'slug' => $country_arr[1]
+        );
+        $new_term = wp_insert_term(
+          $country_arr[0],
+          'casasync_location',
+          $options
+        );
+        delete_option("casasync_location_children");
+        $wp_country = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        $this->transcript['new_locations'][] = $country_arr;
+      }
+    }
+    
+    //make sure lvl1 exists
+    $wp_lvl1 = false;
+    if ($lvl1_arr) {
+      $wp_lvl1 = get_term_by('slug', $lvl1_arr[1], 'casasync_location', OBJECT, 'raw' );
+
+      if (!$wp_lvl1 || $wp_lvl1 instanceof WP_Error) {
+
+        $options = array(
+          'description' => '',
+          'slug' => $lvl1_arr[1],
+          'parent'=> ($wp_country ? (int) $wp_country->term_id : 0)
+        );
+        $new_term = wp_insert_term(
+          $lvl1_arr[0],
+          'casasync_location',
+          $options
+        );
+        delete_option("casasync_location_children");
+        $wp_lvl1 = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        $this->transcript['new_locations'][] = $lvl1_arr;
       }
     }
 
-    //set region
-    if ($lvl2_region) {
-
-      $region_term = get_term_by('name', $lvl2_region, 'casasync_location');
-      if ($region_term) {
-         $lvl2_region_id = $region_term->term_id;
-      }
-      if (!$lvl2_region_id) {
-        if ($lvl1_country) {
-          if (!isset($new_location[$lvl1_country])) {
-            $new_location[$lvl1_country][$lvl2_region] = array('properties' => array($wp_post->ID));
-          } else {
-            $new_location[$lvl1_country][$lvl2_region]['properties'][] = $wp_post->ID;
-          }
-        } else {
-          if (!isset($new_location[$lvl2_region])) {
-            $new_location[$lvl2_region] = array('properties' => array($wp_post->ID));
-          } else {
-            $new_location[$lvl2_region]['properties'][] = $wp_post->ID;
-          }
-        }
+    //make sure lvl2 exists
+    $wp_lvl2 = false;
+    if ($lvl2_arr) {
+      $wp_lvl2 = get_term_by('slug', $lvl2_arr[1], 'casasync_location', OBJECT, 'raw' );
+      if (!$wp_lvl2 || $wp_lvl2 instanceof WP_Error) {
+        $options = array(
+          'description' => '',
+          'slug' => $lvl2_arr[1],
+          'parent' => ($wp_lvl1 ? (int) $wp_lvl1->term_id : 0)
+        );
+        $new_term = wp_insert_term(
+          $lvl2_arr[0],
+          'casasync_location',
+          $options
+        );
+        delete_option("casasync_location_children");
+        $wp_lvl2 = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        $this->transcript['new_locations'][] = $lvl2_arr;
       }
     }
 
-    //set city
-    if ($lvl3_locality) {
-      $locality_term = get_term_by('name', $lvl3_locality, 'casasync_location');
-      if ($locality_term) {
-        $lvl3_locality_id = $locality_term->term_id;
-      }
-      if (!$lvl3_locality_id) {
-        if ($lvl1_country && $lvl2_region) {
-          if (!isset($new_location[$lvl1_country][$lvl2_region])) {
-            $new_location[$lvl1_country][$lvl2_region][$lvl3_locality] = array('properties' => array($wp_post->ID));
-          } else {
-            $new_location[$lvl1_country][$lvl2_region][$lvl3_locality]['properties'][] = $wp_post->ID;
-          }
-        } elseif ($lvl2_region) {
-          if (!isset($new_location[$lvl2_region])) {
-            $new_location[$lvl2_region][$lvl3_locality] = array('properties' => array($wp_post->ID));
-          } else {
-            $new_location[$lvl2_region][$lvl3_locality]['properties'][] = $wp_post->ID;
-          }
-        } elseif ($lvl1_country){
-          if (!isset($new_location[$lvl1_country])) {
-            $new_location[$lvl1_country][$lvl3_locality] = array('properties' => array($wp_post->ID));
-          } else {
-            $new_location[$lvl1_country][$lvl3_locality]['properties'][] = $wp_post->ID;
-          }
-        }
-      }
+    $new_terms = array();
+    if ($wp_country) {
+      $new_terms[] = $wp_country->term_id;
     }
+    if ($wp_lvl1) {
+      $new_terms[] = $wp_lvl1->term_id;
+    }
+    if ($wp_lvl2) {
+      $new_terms[] = $wp_lvl2->term_id;
+    }
+    asort($new_terms);
 
-    $terms_to_add_real = array();
-    if ($lvl1_country_id) {
-      $terms_to_add_real[] = $lvl1_country_id;
+    $old_terms = array();
+    $old_terms_obj = wp_get_object_terms($wp_post->ID, 'casasync_location');
+    foreach ($old_terms_obj as $old_term) {
+      $old_terms[] = $old_term->term_id;
     }
-    if ($lvl2_region_id) {
-      $terms_to_add_real[] = $lvl2_region_id;
-    }
-    if ($lvl3_locality_id) {
-      $terms_to_add_real[] = $lvl3_locality_id;
-    }
+    asort($old_terms);
 
-    wp_set_post_terms( $wp_post->ID, $terms_to_add_real, 'casasync_location' );
-    delete_option("casasync_location_children");
-    wp_cache_flush();
-  }
-
-  public function addNewLocalities(){
-    //set new locations
-      if (!empty($new_location)) {
-        foreach ($new_location as $lvl1 => $lvl1_value) {
-          $lvl1_id = false;
-          $lvl2_id = false;
-          $lvl3_id = false;
-          $term = get_term_by('name', $lvl1, 'casasync_location');
-          if ($term) {
-            $lvl1_id = $term->term_id;
-          } else {
-            $lvl1_id = wp_insert_term( $lvl1, 'casasync_location');
-            if (!is_wp_error($lvl1_id)) {
-              $lvl1_id = $lvl1_id['term_id'];
-            } else {
-              $lvl1_id = false;
-            }
-            delete_option("casasync_location_children"); // clear the cache
-          }
-          if ($lvl1_id) {
-            if (isset($lvl1_value['properties'])) {
-              foreach ($lvl1_value['properties'] as $property_id) {
-                wp_set_post_terms( $property_id, $lvl1_id, 'casasync_location', true );
-              }
-            }
-            foreach ($lvl1_value as $lvl2 => $lvl2_value) {
-              if ($lvl2 != 'properties') {
-                $term = get_term_by('name', $lvl2, 'casasync_location');
-                if ($term) {
-                  $lvl2_id = $term->term_id;
-                } else {
-                  $lvl2_id = wp_insert_term( $lvl2, 'casasync_location', $args = array('parent' => (int)$lvl1_id));
-                  if (!$lvl2_id instanceof WP_Error) {
-                    $lvl2_id = $lvl2_id['term_id'];
-                  } else {
-                    $lvl2_id = false;
-                  }
-                  delete_option("casasync_location_children"); // clear the cache
-                }
-                if ($lvl2_id) {
-                  if (isset($lvl2_value['properties'])) {
-                    foreach ($lvl2_value['properties'] as $property_id) {
-                      wp_set_post_terms( $property_id, $lvl2_id, 'casasync_location', true );
-                    }
-                  }
-                  foreach ($lvl2_value as $lvl3 => $lvl3_value) {
-                    if ($lvl3 != 'properties') {
-                      $term = get_term_by('name', $lvl3, 'casasync_location');
-                      if ($term) {
-                        $lvl3_id = $term->term_id;
-                      } else {
-                        $lvl3_id = wp_insert_term( $lvl3, 'casasync_location', $args = array('parent' => (int)$lvl2_id));
-                        if (!$lvl3_id instanceof WP_Error) {
-                          $lvl3_id = $lvl3_id['term_id'];
-                        } else {
-                          $lvl3_id = false;
-                        }
-                        delete_option("casasync_location_children"); // clear the cache
-                      }
-                      if ($lvl3_id) {
-                        if (isset($lvl3_value['properties'])) {
-                          foreach ($lvl3_value['properties'] as $property_id) {
-                            wp_set_post_terms( $property_id, $lvl3_id, 'casasync_location', true );
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+    if ($new_terms != $old_terms) {
+      $this->transcript[$casasync_id]['locations'][]['from'] = $old_terms;
+      $this->transcript[$casasync_id]['locations'][]['to'] = $new_terms;
+      wp_set_object_terms( $wp_post->ID, $new_terms, 'casasync_location' );
+    }
+    
   }
 
   public function setOfferCategories($wp_post, $categories, $publisher_options, $casasync_id){
@@ -1370,7 +1314,7 @@ class Import {
 
     $this->setOfferCategories($wp_post, $property->category, $publisher_options, $casasync_id);
     $this->setOfferSalestype($wp_post, $xmloffer->type->__toString(), $casasync_id);
-    //$this->setOfferLocalities($country, $region, $locality, $wp_post, $casasync_id);
+    $this->setOfferLocalities($wp_post, $property->address, $casasync_id);
     $this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casasync_id);
 
   }
