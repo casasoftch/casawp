@@ -390,7 +390,8 @@
 
     public function getAvailabilityLabel(){
       $return = false;
-      if($this->start) {
+      # old
+      /*if($this->start) {
         $current_datetime = strtotime(date('c'));
         $property_datetime = strtotime($this->start);
         if ($property_datetime > $current_datetime && $this->start != false) {
@@ -402,7 +403,22 @@
       }
       if($this->availability_label != '') {
         $return = $this->conversion->casasync_convert_availabilityKeyToLabel($this->availability_label);
+      }*/
+
+      #new
+      if($this->start) {
+        $current_datetime = strtotime(date('c'));
+        $property_datetime = strtotime($this->start);
+        if ($property_datetime > $current_datetime && $this->start != false) {
+          $datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
+          $return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
+        } else {
+          $return = $this->conversion->casasync_convert_availabilityKeyToLabel('immediately');
+        }
+      } else {
+        $return = __('On Request', 'casasync');
       }
+
       return $return;
     }
 
@@ -931,6 +947,13 @@
                     .'<th>' . __('Available','casasync') . '</th>'
                   .'<td>';
                   $return .= $this->getAvailabilityLabel();
+                  $return .= '</td>'
+                  .'</tr>';
+                } else {
+                  $return .= '<tr>'
+                    .'<th>' . __('Available','casasync') . '</th>'
+                  .'<td>';
+                  $return .= __('On Request', 'casasync');
                   $return .= '</td>'
                   .'</tr>';
                 }
@@ -1504,8 +1527,31 @@
     public function getAvailability() {
       $return = NULL;
       if (isset($this->availability) && $this->availability) {
+        switch ($this->availability) {
+          case 'active':
+            $availability_converted_slug = 'active';
+            break;
+          case 'reference':
+            $availability_converted_slug = 'reference';
+            break;
+          case 'reserved':
+            $availability_converted_slug = 'reserved';
+            break;
+          case 'taken':
+            if ($this->main_basis == 'rent') {
+              $availability_converted_slug = 'rented';
+            } else {
+              $availability_converted_slug = 'sold';
+            }
+            break;
+          default:
+            $availability_converted_slug = $this->availability;
+            break;
+        }
+        $availability_converted_name = $this->conversion->casasync_convert_availabilityKeyToLabel($availability_converted_slug);
+
         $return .= '<div class="availability-outerlabel">';
-        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($this->availability, 'casasync') . '</div>';
+        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($availability_converted_name, 'casasync') . '</div>';
         $return .= '</div>';
       }
       return $return;

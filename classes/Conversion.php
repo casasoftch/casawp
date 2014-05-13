@@ -364,7 +364,8 @@
             //new
             case 'active':       return __('Available' ,'casasync');break;
             case 'reserved':     return __('Reserved' ,'casasync');break;
-            case 'taken':        return __('Has owner' ,'casasync');break;
+            case 'sold':         return __('Sold' ,'casasync');break;
+            case 'rented':       return __('Rented' ,'casasync');break;
             case 'reference':    return __('Reference' ,'casasync');break;
         }
     }
