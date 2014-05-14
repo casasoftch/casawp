@@ -1271,6 +1271,11 @@ class Import {
       $new_meta_data['extraPrice'] = $extraPrice;
     }
 
+    //price for order
+    $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== 0)      ? ($new_meta_data['price'])      :(9999999999);
+    $tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== 0) ? ($new_meta_data['grossPrice']) :(9999999999);
+    $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== 0)   ? ($new_meta_data['netPrice'])   :(9999999999);
+    $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
     //persons
     $persons = $this->personsXMLtoArray($xmloffer->seller);
