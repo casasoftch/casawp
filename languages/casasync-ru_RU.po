@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-02-25 10:06+0100\n"
+"POT-Creation-Date: 2014-05-14 15:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -14,15 +14,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
-#: .././casasync-archive.php:31
+#: .././casasync-archive.php:33 .././casasync-archive.php:53
 msgid "No image"
 msgstr "Нет изображения"
 
-#: .././casasync-archive.php:46
+#: .././casasync-archive.php:68
 msgid "Nothing Found"
 msgstr "Ничего не найдено"
 
-#: .././casasync-archive.php:47
+#: .././casasync-archive.php:69
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."
@@ -30,364 +30,464 @@ msgstr ""
 "Извините, но ничего нет согласно условия поиска. Пожалуйста, попробуйте еще "
 "раз с другим набором ключевых слов."
 
-#: .././options.php:98
+#: .././options.php:110
 msgid "Einstellungen gespeichert.."
 msgstr "Einstellungen gespeichert .."
 
-#: .././options.php:104
+#: .././options.php:116
 msgid "Daten wurden importiert.."
 msgstr "Daten wurden importiert .."
 
-#: .././classes/Archive.php:300
+#: .././classes/Archive.php:294
+msgid "Buy"
+msgstr ""
+
+#: .././classes/Archive.php:296
+msgid "Rent"
+msgstr ""
+
+#: .././classes/Archive.php:328
+msgid "Active"
+msgstr ""
+
+#: .././classes/Archive.php:330 .././classes/Conversion.php:369
+#: .././classes/Single.php:736
+msgid "Reference"
+msgstr "Ссылка на "
+
+#: .././classes/Archive.php:332 .././classes/Conversion.php:366
+msgid "Reserved"
+msgstr ""
+
+#: .././classes/Archive.php:334
+msgid "Taken"
+msgstr ""
+
+#: .././classes/Archive.php:361
+msgid "Advanced Search"
+msgstr ""
+
+#: .././classes/Archive.php:374
 msgid "Choose offer"
 msgstr "Выберите предложение"
 
-#: .././classes/Archive.php:307
+#: .././classes/Archive.php:381
 msgid "Choose category"
 msgstr "Выбрать категорию"
 
-#: .././classes/Archive.php:314
+#: .././classes/Archive.php:388
 msgid "Choose locality"
 msgstr "Выберите населенный пункт"
 
-#: .././classes/Archive.php:318
+#: .././classes/Archive.php:394
+#, fuzzy
+msgid "Choose availability"
+msgstr "Выберите населенный пункт"
+
+#: .././classes/Archive.php:401
 msgid "Search"
 msgstr "Поиск"
 
-#: .././classes/Casasync.php:215
+#: .././classes/Casasync.php:250
 msgid "Custom Text Field"
 msgstr "Пользовательский текст поле"
 
-#: .././classes/Casasync.php:219
+#: .././classes/Casasync.php:254
 msgid "Original filename"
 msgstr "Оригинал файла"
 
-#: .././classes/Casasync.php:425 .././classes/Casasync.php:436
+#: .././classes/Casasync.php:474 .././classes/Casasync.php:485
 msgid "Properties"
 msgstr "Свойства"
 
-#: .././classes/Casasync.php:426 .././classes/Single.php:690
+#: .././classes/Casasync.php:475 .././classes/Single.php:731
 msgid "Property"
 msgstr "Объект соглашения"
 
-#: .././classes/Casasync.php:427
+#: .././classes/Casasync.php:476
 msgid "Add New"
 msgstr "Добавить"
 
-#: .././classes/Casasync.php:428
+#: .././classes/Casasync.php:477
 msgid "Add New Property"
 msgstr "Добавить новое свойство"
 
-#: .././classes/Casasync.php:429
+#: .././classes/Casasync.php:478
 msgid "Edit Property"
 msgstr "Редактировать недвижимости"
 
-#: .././classes/Casasync.php:430
+#: .././classes/Casasync.php:479
 msgid "New Property"
 msgstr "Новое свойство"
 
-#: .././classes/Casasync.php:431
+#: .././classes/Casasync.php:480
 msgid "All Properties"
 msgstr "All Properties"
 
-#: .././classes/Casasync.php:432
+#: .././classes/Casasync.php:481
 msgid "View Property"
 msgstr "Вид собственности"
 
-#: .././classes/Casasync.php:433
+#: .././classes/Casasync.php:482
 msgid "Search Properties"
 msgstr "Поиск недвижимости"
 
-#: .././classes/Casasync.php:434
+#: .././classes/Casasync.php:483
 msgid "No properties found"
 msgstr "Не свойства не найдено"
 
-#: .././classes/Casasync.php:435
+#: .././classes/Casasync.php:484
 msgid "No properties found in Trash"
 msgstr "Не свойства не найдено в Корзину"
 
-#: .././classes/Casasync.php:457
+#: .././classes/Casasync.php:506
 msgid "Property categories"
 msgstr "Категория недвижимости"
 
-#: .././classes/Casasync.php:458 .././classes/Casasync.php:467
+#: .././classes/Casasync.php:507 .././classes/Casasync.php:516
 msgid "Category"
 msgstr "Категория"
 
-#: .././classes/Casasync.php:459
+#: .././classes/Casasync.php:508
 msgid "Search Categories"
 msgstr "Поиск Разделов"
 
-#: .././classes/Casasync.php:460
+#: .././classes/Casasync.php:509
 msgid "All Categories"
 msgstr "Все разделы"
 
-#: .././classes/Casasync.php:461
+#: .././classes/Casasync.php:510
 msgid "Parent Category"
 msgstr "Родительская категория"
 
-#: .././classes/Casasync.php:462
+#: .././classes/Casasync.php:511
 msgid "Parent Category:"
 msgstr "Родительская категория:"
 
-#: .././classes/Casasync.php:463
+#: .././classes/Casasync.php:512
 msgid "Edit Category"
 msgstr "Редактировать Категорию"
 
-#: .././classes/Casasync.php:464
+#: .././classes/Casasync.php:513
 msgid "Update Category"
 msgstr "Обновить Категорию"
 
-#: .././classes/Casasync.php:465
+#: .././classes/Casasync.php:514
 msgid "Add New Category"
 msgstr "Добавить новую категорию"
 
-#: .././classes/Casasync.php:466
+#: .././classes/Casasync.php:515
 msgid "New Category Name"
 msgstr "Имя новой категории"
 
-#: .././classes/Casasync.php:480
+#: .././classes/Casasync.php:529
 msgid "Property locations"
 msgstr "Места собственности"
 
-#: .././classes/Casasync.php:481 .././classes/Casasync.php:490
+#: .././classes/Casasync.php:530 .././classes/Casasync.php:539
 msgid "Location"
 msgstr "Местоположение"
 
-#: .././classes/Casasync.php:482
+#: .././classes/Casasync.php:531
 msgid "Search Locations"
 msgstr "Поиск МЕСТОПОЛОЖЕНИЕ"
 
-#: .././classes/Casasync.php:483
+#: .././classes/Casasync.php:532
 msgid "All Locations"
 msgstr "Все местоположения"
 
-#: .././classes/Casasync.php:484
+#: .././classes/Casasync.php:533
 msgid "Parent Location"
 msgstr "Родитель Расположение"
 
-#: .././classes/Casasync.php:485
+#: .././classes/Casasync.php:534
 msgid "Parent Location:"
 msgstr "Родитель Расположение:"
 
-#: .././classes/Casasync.php:486
+#: .././classes/Casasync.php:535
 msgid "Edit Location"
 msgstr "Отредактировать местоположение"
 
-#: .././classes/Casasync.php:487
+#: .././classes/Casasync.php:536
 msgid "Update Location"
 msgstr "Обновление Расположение"
 
-#: .././classes/Casasync.php:488
+#: .././classes/Casasync.php:537
 msgid "Add New Location"
 msgstr "Добавить новое место"
 
-#: .././classes/Casasync.php:489
+#: .././classes/Casasync.php:538
 msgid "New Location Name"
 msgstr "Новое местоположение Имя"
 
-#: .././classes/Casasync.php:503
+#: .././classes/Casasync.php:552
 msgid "Property salestypes"
 msgstr "Недвижимость salestypes"
 
-#: .././classes/Casasync.php:504 .././classes/Casasync.php:516
+#: .././classes/Casasync.php:553 .././classes/Casasync.php:565
 msgid "Salestype"
 msgstr "Salestype"
 
-#: .././classes/Casasync.php:505
+#: .././classes/Casasync.php:554
 msgid "Search Salestypes"
 msgstr "Поиск Salestypes"
 
-#: .././classes/Casasync.php:506
+#: .././classes/Casasync.php:555
 msgid "Popular Salestypes"
 msgstr "Популярные Salestypes"
 
-#: .././classes/Casasync.php:507
+#: .././classes/Casasync.php:556
 msgid "All Salestypes"
 msgstr "Все Salestypes"
 
-#: .././classes/Casasync.php:508
+#: .././classes/Casasync.php:557
 msgid "Edit Salestype"
 msgstr "Редактировать Salestype"
 
-#: .././classes/Casasync.php:509
+#: .././classes/Casasync.php:558
 msgid "Update Salestype"
 msgstr "Обновление Salestype"
 
-#: .././classes/Casasync.php:510
+#: .././classes/Casasync.php:559
 msgid "Add New Salestype"
 msgstr "Добавить новую Salestype"
 
-#: .././classes/Casasync.php:511
+#: .././classes/Casasync.php:560
 msgid "New Salestype Name"
 msgstr "Новое имя Salestype"
 
-#: .././classes/Casasync.php:512
+#: .././classes/Casasync.php:561
 msgid "Separate salestypes with commas"
 msgstr "Отдельные salestypes запятыми"
 
-#: .././classes/Casasync.php:513
+#: .././classes/Casasync.php:562
 msgid "Add or remove salestypes"
 msgstr "Добавить или удалить salestypes"
 
-#: .././classes/Casasync.php:514
+#: .././classes/Casasync.php:563
 msgid "Choose from the most used salestypes"
 msgstr "Выберите из наиболее часто используемых salestypes"
 
-#: .././classes/Casasync.php:515
+#: .././classes/Casasync.php:564
 msgid "No Salestypes found."
 msgstr "Нет Salestypes не найдено."
 
-#: .././classes/Casasync.php:529
+#: .././classes/Casasync.php:578
+#, fuzzy
+msgid "Property availability"
+msgstr "Недвижимость salestypes"
+
+#: .././classes/Casasync.php:579 .././classes/Casasync.php:591
+#: .././classes/Single.php:722
+#, fuzzy
+msgid "Availability"
+msgstr "Доступно"
+
+#: .././classes/Casasync.php:580
+#, fuzzy
+msgid "Search availabilities"
+msgstr "Поиск Разделов"
+
+#: .././classes/Casasync.php:581
+#, fuzzy
+msgid "Popular Availabilities"
+msgstr "Популярные Salestypes"
+
+#: .././classes/Casasync.php:582
+#, fuzzy
+msgid "All Availabilities"
+msgstr "Доступно"
+
+#: .././classes/Casasync.php:583
+#, fuzzy
+msgid "Edit Availability"
+msgstr "Доступно"
+
+#: .././classes/Casasync.php:584
+#, fuzzy
+msgid "Update Availability"
+msgstr "Обновление Salestype"
+
+#: .././classes/Casasync.php:585
+#, fuzzy
+msgid "Add New Availability"
+msgstr "Добавить новую Salestype"
+
+#: .././classes/Casasync.php:586
+#, fuzzy
+msgid "New Availability Name"
+msgstr "Новое имя Salestype"
+
+#: .././classes/Casasync.php:587
+#, fuzzy
+msgid "Separate availabilities with commas"
+msgstr "Отдельные salestypes запятыми"
+
+#: .././classes/Casasync.php:588
+#, fuzzy
+msgid "Add or remove availabilities"
+msgstr "Добавить или удалить salestypes"
+
+#: .././classes/Casasync.php:589
+#, fuzzy
+msgid "Choose from the most used availabilities"
+msgstr "Выберите из наиболее часто используемых salestypes"
+
+#: .././classes/Casasync.php:590
+#, fuzzy
+msgid "No Availabilities found."
+msgstr "Нет Salestypes не найдено."
+
+#: .././classes/Casasync.php:604
 msgid "Property Attachment Types"
 msgstr "Типы крепления недвижимости"
 
-#: .././classes/Casasync.php:530 .././classes/Casasync.php:539
+#: .././classes/Casasync.php:605 .././classes/Casasync.php:614
 msgid "Attachment Type"
 msgstr "Вложение Тип"
 
-#: .././classes/Casasync.php:531
+#: .././classes/Casasync.php:606
 msgid "Search Attachment Types"
 msgstr "Типы Поиск вложений"
 
-#: .././classes/Casasync.php:532
+#: .././classes/Casasync.php:607
 msgid "All Attachment Types"
 msgstr "Все типы вложений"
 
-#: .././classes/Casasync.php:533
+#: .././classes/Casasync.php:608
 msgid "Parent Attachment Type"
 msgstr "Родитель Приложение Тип"
 
-#: .././classes/Casasync.php:534
+#: .././classes/Casasync.php:609
 msgid "Parent Attachment Type:"
 msgstr "Родитель Приложение Тип:"
 
-#: .././classes/Casasync.php:535
+#: .././classes/Casasync.php:610
 msgid "Edit Attachment Type"
 msgstr "Редактировать Вложений Тип"
 
-#: .././classes/Casasync.php:536
+#: .././classes/Casasync.php:611
 msgid "Update Attachment Type"
 msgstr "Обновление Вложений Тип"
 
-#: .././classes/Casasync.php:537
+#: .././classes/Casasync.php:612
 msgid "Add New Attachment Type"
 msgstr "Добавить крепления типа"
 
-#: .././classes/Casasync.php:538
+#: .././classes/Casasync.php:613
 msgid "New Attachment Type Name"
 msgstr "Новые прикрепления Тип Название"
 
-#: .././classes/Casasync.php:585 .././classes/Casasync.php:822
-#: .././classes/Casasync.php:903
+#: .././classes/Casasync.php:660 .././classes/Casasync.php:897
+#: .././classes/Casasync.php:978
 msgid "First name"
 msgstr "Имя"
 
-#: .././classes/Casasync.php:586 .././classes/Casasync.php:826
-#: .././classes/Casasync.php:909
+#: .././classes/Casasync.php:661 .././classes/Casasync.php:901
+#: .././classes/Casasync.php:984
 msgid "Last name"
 msgstr "Фамилия"
 
-#: .././classes/Casasync.php:587 .././classes/Casasync.php:879
-#: .././classes/Casasync.php:977 .././classes/Single.php:1173
+#: .././classes/Casasync.php:662 .././classes/Casasync.php:954
+#: .././classes/Casasync.php:1052 .././classes/Single.php:1221
 msgid "Email"
 msgstr "E-mail"
 
-#: .././classes/Casasync.php:588
+#: .././classes/Casasync.php:663
 msgid "Salutation"
 msgstr "Приветствие"
 
-#: .././classes/Casasync.php:589
+#: .././classes/Casasync.php:664
 msgid "Title"
 msgstr "Должность"
 
-#: .././classes/Casasync.php:590 .././classes/Casasync.php:875
-#: .././classes/Casasync.php:969 .././classes/Single.php:1121
+#: .././classes/Casasync.php:665 .././classes/Casasync.php:950
+#: .././classes/Casasync.php:1044 .././classes/Single.php:1169
 msgid "Phone"
 msgstr "Телефон"
 
-#: .././classes/Casasync.php:592
+#: .././classes/Casasync.php:667
 msgid "Company"
 msgstr "Компания"
 
-#: .././classes/Casasync.php:593 .././classes/Casasync.php:833
-#: .././classes/Casasync.php:917 .././classes/Single.php:784
+#: .././classes/Casasync.php:668 .././classes/Casasync.php:908
+#: .././classes/Casasync.php:992 .././classes/Single.php:825
 msgid "Street"
 msgstr "Улица"
 
-#: .././classes/Casasync.php:594 .././classes/Casasync.php:838
-#: .././classes/Casasync.php:925
+#: .././classes/Casasync.php:669 .././classes/Casasync.php:913
+#: .././classes/Casasync.php:1000
 msgid "ZIP"
 msgstr "ZIP"
 
-#: .././classes/Casasync.php:595 .././classes/Casasync.php:842
-#: .././classes/Casasync.php:931 .././classes/Single.php:792
+#: .././classes/Casasync.php:670 .././classes/Casasync.php:917
+#: .././classes/Casasync.php:1006 .././classes/Single.php:833
 msgid "Locality"
-msgstr "Местность"
+msgstr "Населенный пункт"
 
-#: .././classes/Casasync.php:596 .././classes/Casasync.php:848
-#: .././classes/Casasync.php:939
+#: .././classes/Casasync.php:671 .././classes/Casasync.php:923
+#: .././classes/Casasync.php:1014
 msgid "Country"
 msgstr "Страна"
 
-#: .././classes/Casasync.php:597
+#: .././classes/Casasync.php:672
 msgid "Kanton"
 msgstr "Кантон"
 
-#: .././classes/Casasync.php:598
+#: .././classes/Casasync.php:673
 msgid "Subject"
 msgstr "Тема"
 
-#: .././classes/Casasync.php:599 .././classes/Casasync.php:884
-#: .././classes/Casasync.php:985
+#: .././classes/Casasync.php:674 .././classes/Casasync.php:959
+#: .././classes/Casasync.php:1060
 msgid "Message"
 msgstr "Сообщение"
 
-#: .././classes/Casasync.php:600
+#: .././classes/Casasync.php:675
 msgid "Recipient"
 msgstr "Сторона-реципиент"
 
-#: .././classes/Casasync.php:637
+#: .././classes/Casasync.php:712
 msgid "Required"
 msgstr "Обязательное поле"
 
-#: .././classes/Casasync.php:733
+#: .././classes/Casasync.php:808
 #, fuzzy
 msgid "Show property ..."
 msgstr "Новое свойство"
 
-#: .././classes/Casasync.php:749
+#: .././classes/Casasync.php:824
 msgid "Inquiry for a property online"
 msgstr ""
 
-#: .././classes/Casasync.php:750
+#: .././classes/Casasync.php:825
 msgid "New inquiry"
 msgstr ""
 
-#: .././classes/Casasync.php:751
+#: .././classes/Casasync.php:826
 #, php-format
 msgid "A new inquiry from %s has been sent"
 msgstr ""
 
-#: .././classes/Casasync.php:790
+#: .././classes/Casasync.php:865
 msgid "Thank you!"
 msgstr ""
 
-#: .././classes/Casasync.php:792
+#: .././classes/Casasync.php:867
 msgid "Error!"
 msgstr ""
 
-#: .././classes/Casasync.php:805
+#: .././classes/Casasync.php:880
 msgid "Please consider the following errors and try sending it again"
 msgstr ""
 "Пожалуйста, обратите внимание на следующие ошибки и попробуйте отправить его "
 "еще раз"
 
-#: .././classes/Casasync.php:890 .././classes/Casasync.php:993
+#: .././classes/Casasync.php:965 .././classes/Casasync.php:1068
 msgid "Please fill out all the fields"
 msgstr "Пожалуйста, заполните все поля"
 
-#: .././classes/Casasync.php:893 .././classes/Casasync.php:996
+#: .././classes/Casasync.php:968 .././classes/Casasync.php:1071
 msgid "Send"
 msgstr "Отправить"
 
@@ -1379,32 +1479,32 @@ msgstr "Сен-Бартельми"
 msgid "Saint Martin"
 msgstr "Сен-Мартен"
 
-#: .././classes/Conversion.php:273 .././classes/Single.php:816
+#: .././classes/Conversion.php:273 .././classes/Single.php:857
 msgid "Living space"
 msgstr "Жилая площадь"
 
-#: .././classes/Conversion.php:274 .././classes/Single.php:824
+#: .././classes/Conversion.php:274 .././classes/Single.php:865
 msgid "Property space"
-msgstr "Пространство недвижимости"
+msgstr "Площадь земельного участка"
 
-#: .././classes/Conversion.php:275 .././classes/Single.php:856
+#: .././classes/Conversion.php:275 .././classes/Single.php:897
 msgid "Year of renovation"
 msgstr "Год последней реконструкции"
 
-#: .././classes/Conversion.php:276 .././classes/Single.php:848
+#: .././classes/Conversion.php:276 .././classes/Single.php:889
 msgid "Year of construction"
 msgstr "Год строительства"
 
-#: .././classes/Conversion.php:277 .././classes/Single.php:800
+#: .././classes/Conversion.php:277 .././classes/Single.php:841
 msgid "Number of rooms"
-msgstr "Количество номеров"
+msgstr "Количество комнат"
 
-#: .././classes/Conversion.php:278 .././classes/Single.php:840
+#: .././classes/Conversion.php:278 .././classes/Single.php:881
 msgid "Number of floors"
 msgstr "Количество этажей "
 
-#: .././classes/Conversion.php:279 .././classes/Single.php:250
-#: .././classes/Single.php:832
+#: .././classes/Conversion.php:279 .././classes/Single.php:267
+#: .././classes/Single.php:873
 msgid "Floor"
 msgstr "Пол"
 
@@ -1416,7 +1516,7 @@ msgstr "Объем"
 msgid "Number of apartments"
 msgstr "Количество апартаментов"
 
-#: .././classes/Conversion.php:282 .././classes/Single.php:808
+#: .././classes/Conversion.php:282 .././classes/Single.php:849
 msgid "Surface usable"
 msgstr "Поверхность полезная"
 
@@ -1440,436 +1540,452 @@ msgstr "Грузоподъемность крана"
 msgid "Carrying capacity elevator"
 msgstr "Грузоподъемность лифта"
 
-#: .././classes/Conversion.php:293
+#: .././classes/Conversion.php:314
 msgid "Agriculture"
 msgstr "Сельское хозяйство"
 
-#: .././classes/Conversion.php:294
+#: .././classes/Conversion.php:315
 msgid "Apartment"
 msgstr "Квартира"
 
-#: .././classes/Conversion.php:295
+#: .././classes/Conversion.php:316
 msgid "Gastronomy"
 msgstr "Гастрономия"
 
-#: .././classes/Conversion.php:296
+#: .././classes/Conversion.php:317
 msgid "House"
 msgstr "Дом"
 
-#: .././classes/Conversion.php:297
+#: .././classes/Conversion.php:318
 msgid "Industrial"
 msgstr "Промышленность"
 
-#: .././classes/Conversion.php:298 .././classes/Conversion.php:358
+#: .././classes/Conversion.php:319 .././classes/Conversion.php:396
 msgid "Parking space"
 msgstr "Парковка"
 
-#: .././classes/Conversion.php:299
+#: .././classes/Conversion.php:320
 msgid "Plot"
 msgstr "Сюжет"
 
-#: .././classes/Conversion.php:300
+#: .././classes/Conversion.php:321
 msgid "Secondary rooms"
 msgstr "Вторичные номера"
 
-#: .././classes/Conversion.php:301
+#: .././classes/Conversion.php:322
 msgid "Garden"
 msgstr "Сад"
 
-#: .././classes/Conversion.php:302
+#: .././classes/Conversion.php:323
 msgid "Commercial"
 msgstr "Коммерческий сектор "
 
-#: .././classes/Conversion.php:319
+#: .././classes/Conversion.php:349
 msgid "Public transportation"
 msgstr "Общественный транспорт"
 
-#: .././classes/Conversion.php:320
+#: .././classes/Conversion.php:350
 msgid "Shopping"
 msgstr "Покупки"
 
-#: .././classes/Conversion.php:321
+#: .././classes/Conversion.php:351
 msgid "Kindergarten"
 msgstr "Детский сад"
 
-#: .././classes/Conversion.php:322
+#: .././classes/Conversion.php:352
 msgid "Motorway"
 msgstr "Автомагистраль"
 
-#: .././classes/Conversion.php:323
+#: .././classes/Conversion.php:353
 msgid "Primary school"
 msgstr "Начальная школа"
 
-#: .././classes/Conversion.php:324
+#: .././classes/Conversion.php:354
 msgid "Secondary school"
 msgstr "Средняя школа"
 
-#: .././classes/Conversion.php:329 .././classes/Single.php:619
-#: .././classes/Single.php:633 .././classes/Single.php:650
-#: .././classes/Single.php:676 .././classes/Single.php:866
-#: .././classes/Single.php:892
+#: .././classes/Conversion.php:360 .././classes/Single.php:419
+#: .././classes/Single.php:652 .././classes/Single.php:666
+#: .././classes/Single.php:683 .././classes/Single.php:709
+#: .././classes/Single.php:907 .././classes/Single.php:933
+#: .././classes/Single.php:956
 msgid "On Request"
 msgstr "Учебные курсы по запросу"
 
-#: .././classes/Conversion.php:330
+#: .././classes/Conversion.php:361
 msgid "By Agreement"
 msgstr "По соглашению"
 
-#: .././classes/Conversion.php:331
+#: .././classes/Conversion.php:362
 msgid "Immediate"
 msgstr "Непосредственный"
 
-#: .././classes/Conversion.php:337
+#: .././classes/Conversion.php:365 .././classes/Single.php:947
+#: .././classes/Single.php:954
+msgid "Available"
+msgstr "Доступно"
+
+#: .././classes/Conversion.php:367
+msgid "Sold"
+msgstr ""
+
+#: .././classes/Conversion.php:368
+#, fuzzy
+msgid "Rented"
+msgstr "Стоимость аренды"
+
+#: .././classes/Conversion.php:375
 msgid "Child friendly"
 msgstr "Для детей"
 
-#: .././classes/Conversion.php:340
+#: .././classes/Conversion.php:378
 #, php-format
 msgid "%d garages"
 msgstr "%d гаражи"
 
-#: .././classes/Conversion.php:342
+#: .././classes/Conversion.php:380
 msgid "Garage"
 msgstr "Гараж"
 
-#: .././classes/Conversion.php:347
+#: .././classes/Conversion.php:385
 #, php-format
 msgid "%dx balconies"
 msgstr "%d х балконов"
 
-#: .././classes/Conversion.php:349
+#: .././classes/Conversion.php:387
 msgid "Balcony"
 msgstr "Балкон"
 
-#: .././classes/Conversion.php:352
+#: .././classes/Conversion.php:390
 msgid "Vista"
 msgstr "Vista"
 
-#: .././classes/Conversion.php:353
+#: .././classes/Conversion.php:391
 msgid "Cable TV"
 msgstr "Кабельное ТВ"
 
-#: .././classes/Conversion.php:356
+#: .././classes/Conversion.php:394
 #, php-format
 msgid "%d Parking spaces"
 msgstr "%d Парковочные места"
 
-#: .././classes/Conversion.php:363
+#: .././classes/Conversion.php:401
 #, php-format
 msgid "%d Pets allowed"
 msgstr "%d с животными"
 
-#: .././classes/Conversion.php:365
+#: .././classes/Conversion.php:403
 msgid "Pets allowed"
 msgstr "Домашние животные"
 
-#: .././classes/Conversion.php:368
+#: .././classes/Conversion.php:406
 msgid "ISDN Anschluss"
 msgstr "ISDN аншлюса"
 
-#: .././classes/Conversion.php:372
+#: .././classes/Conversion.php:410
 #, php-format
 msgid "%d Restrooms"
 msgstr "%d Туалеты"
 
-#: .././classes/Conversion.php:374
+#: .././classes/Conversion.php:412
 msgid "Restrooms"
 msgstr "Туалеты"
 
-#: .././classes/Conversion.php:379
+#: .././classes/Conversion.php:417
 #, php-format
 msgid "%d elevators"
 msgstr "%d лифты"
 
-#: .././classes/Conversion.php:381
+#: .././classes/Conversion.php:419
 msgid "Elevator"
 msgstr "Лифт"
 
-#: .././classes/Conversion.php:385
+#: .././classes/Conversion.php:423
 msgid "Fireplace"
 msgstr "Fireplace"
 
-#: .././classes/Conversion.php:386
+#: .././classes/Conversion.php:424
 msgid "wheelchair accessible"
 msgstr "инвалидных колясок"
 
-#: .././classes/Conversion.php:387
+#: .././classes/Conversion.php:425
 msgid "Ramp"
 msgstr "Ramp (Рамп)"
 
-#: .././classes/Conversion.php:388
+#: .././classes/Conversion.php:426
 msgid "lifting platform"
 msgstr "подъемная платформа"
 
-#: .././classes/Conversion.php:389
+#: .././classes/Conversion.php:427
 msgid "Railway terminal"
 msgstr "Железнодорожный терминал"
 
-#: .././classes/Conversion.php:390
+#: .././classes/Conversion.php:428
 msgid "Water Supply"
 msgstr "Водоснабжение"
 
-#: .././classes/Conversion.php:391
+#: .././classes/Conversion.php:429
 msgid "Sewage supply"
 msgstr "Питания Канализация"
 
-#: .././classes/Conversion.php:392
+#: .././classes/Conversion.php:430
 msgid "Power Supply"
 msgstr "Источники электропитания"
 
-#: .././classes/Conversion.php:393
+#: .././classes/Conversion.php:431
 msgid "Gas supply"
 msgstr "Газоснабжение"
 
-#: .././classes/Conversion.php:394
+#: .././classes/Conversion.php:432
 msgid "Corner house"
 msgstr "Угловой дом"
 
-#: .././classes/Conversion.php:395
+#: .././classes/Conversion.php:433
 msgid "Middle house"
 msgstr "Ближний дом"
 
-#: .././classes/Conversion.php:396
+#: .././classes/Conversion.php:434
 msgid "Gardenhouse"
 msgstr "Gardenhouse"
 
-#: .././classes/Conversion.php:397
+#: .././classes/Conversion.php:435
 msgid "Raised ground floor"
 msgstr "Поднятый на первом этаже"
 
-#: .././classes/Conversion.php:398
+#: .././classes/Conversion.php:436
 msgid "New building"
 msgstr "Новостройка"
 
-#: .././classes/Conversion.php:399
+#: .././classes/Conversion.php:437
 msgid "Old building"
 msgstr "Старое здание"
 
-#: .././classes/Conversion.php:400
+#: .././classes/Conversion.php:438
 msgid "Under roof"
 msgstr "Под крышей"
 
-#: .././classes/Conversion.php:401
+#: .././classes/Conversion.php:439
 msgid "Swimmingpool"
 msgstr "Бассейн"
 
-#: .././classes/Conversion.php:402
+#: .././classes/Conversion.php:440
 msgid "Minergie general"
 msgstr "Вообще Minergie"
 
-#: .././classes/Conversion.php:403
+#: .././classes/Conversion.php:441
 msgid "Minergie certified"
 msgstr "Minergie сертифицированы"
 
-#: .././classes/Conversion.php:404
+#: .././classes/Conversion.php:442
 msgid "Under building laws"
 msgstr "По законам строительных"
 
-#: .././classes/Conversion.php:405
+#: .././classes/Conversion.php:443
 msgid "Building land connected"
 msgstr "Земельные участки под строительство связано"
 
-#: .././classes/Conversion.php:406
+#: .././classes/Conversion.php:444
 msgid "Flat sharing community"
 msgstr "Общежитие сообщество"
 
-#: .././classes/Import.php:500 .././classes/Single.php:1264
+#: .././classes/ImportOLD.php:589 .././classes/Single.php:1312
+#: .././classes/Single.php:1404
 msgid "month"
 msgstr "месяц"
 
-#: .././classes/Import.php:501 .././classes/Single.php:1265
+#: .././classes/ImportOLD.php:590 .././classes/Single.php:1313
+#: .././classes/Single.php:1405
 msgid "week"
 msgstr "неделя"
 
-#: .././classes/Import.php:502 .././classes/Single.php:1266
+#: .././classes/ImportOLD.php:591 .././classes/Single.php:1314
+#: .././classes/Single.php:1406
 msgid "day"
 msgstr "день"
 
-#: .././classes/Import.php:503 .././classes/Single.php:1267
+#: .././classes/ImportOLD.php:592 .././classes/Single.php:1315
+#: .././classes/Single.php:1407
 msgid "year"
 msgstr "год"
 
-#: .././classes/Import.php:504 .././classes/Single.php:1268
+#: .././classes/ImportOLD.php:593 .././classes/Single.php:1316
+#: .././classes/Single.php:1408
 msgid "hour"
 msgstr "час"
 
-#: .././classes/Single.php:248
+#: .././classes/Single.php:265
 msgid "Ground"
 msgstr "Земля"
 
-#: .././classes/Single.php:547
+#: .././classes/Single.php:580
 msgid "Number of rooms:"
 msgstr "Количество комнат:"
 
-#: .././classes/Single.php:553
+#: .././classes/Single.php:586
 msgid "Surface usable:"
 msgstr "Поверхностные использовать:"
 
-#: .././classes/Single.php:559
+#: .././classes/Single.php:592
 msgid "Living space:"
 msgstr "Жилая площадь:"
 
-#: .././classes/Single.php:565
+#: .././classes/Single.php:598
 msgid "Property space:"
 msgstr "Пространство недвижимости:"
 
-#: .././classes/Single.php:571
+#: .././classes/Single.php:604
 msgid "Floor:"
 msgstr "Этаж:"
 
-#: .././classes/Single.php:577
+#: .././classes/Single.php:610
 msgid "Number of floors:"
 msgstr "Количество этажей:"
 
-#: .././classes/Single.php:583
+#: .././classes/Single.php:616
 msgid "Year of construction:"
 msgstr "Год строительства:"
 
-#: .././classes/Single.php:589
+#: .././classes/Single.php:622
 msgid "Year of renovation:"
 msgstr "Год последней реконструкции:"
 
-#: .././classes/Single.php:595
+#: .././classes/Single.php:628
 msgid "Available:"
 msgstr "Доступно:"
 
-#: .././classes/Single.php:606 .././classes/Single.php:702
+#: .././classes/Single.php:639 .././classes/Single.php:743
 msgid "Address"
 msgstr "Адрес"
 
-#: .././classes/Single.php:612
+#: .././classes/Single.php:645
 msgid "rent"
 msgstr "аренда"
 
-#: .././classes/Single.php:612
+#: .././classes/Single.php:645
 msgid "Price"
 msgstr "Цена"
 
-#: .././classes/Single.php:615
+#: .././classes/Single.php:648
 msgid "Sales price:"
 msgstr "Цена продажи:"
 
-#: .././classes/Single.php:625
+#: .././classes/Single.php:658
 msgid "Gross price:"
 msgstr "Цена брутто:"
 
-#: .././classes/Single.php:629
+#: .././classes/Single.php:662
 msgid "Net price:"
 msgstr "Цена нетто:"
 
-#: .././classes/Single.php:637 .././classes/Single.php:683
+#: .././classes/Single.php:670 .././classes/Single.php:716
 msgid "Additional costs"
 msgstr "Дополнительные расходы"
 
-#: .././classes/Single.php:644
+#: .././classes/Single.php:677
 msgid "Offer"
 msgstr "Предложение"
 
-#: .././classes/Single.php:648 .././classes/Single.php:864
+#: .././classes/Single.php:681 .././classes/Single.php:905
 msgid "Sales price"
 msgstr "Продажная цена"
 
-#: .././classes/Single.php:658 .././classes/Single.php:874
+#: .././classes/Single.php:691 .././classes/Single.php:915
 msgid "Gross price"
 msgstr "Валовая цена"
 
-#: .././classes/Single.php:666 .././classes/Single.php:882
+#: .././classes/Single.php:699 .././classes/Single.php:923
 msgid "Net price"
 msgstr "Цена нетто"
 
-#: .././classes/Single.php:674 .././classes/Single.php:890
+#: .././classes/Single.php:707 .././classes/Single.php:931
 msgid "Rent price"
 msgstr "Стоимость аренды"
 
-#: .././classes/Single.php:695
-msgid "Reference"
-msgstr "Ссылка на "
-
-#: .././classes/Single.php:720
+#: .././classes/Single.php:761
 msgid "Features"
 msgstr "Характеристики:"
 
-#: .././classes/Single.php:727
+#: .././classes/Single.php:768
 msgid "Documents"
 msgstr "Документы"
 
-#: .././classes/Single.php:734
+#: .././classes/Single.php:775
 msgid "Distances"
 msgstr "Расстояния"
 
-#: .././classes/Single.php:906
-msgid "Available"
-msgstr "Доступно"
-
-#: .././classes/Single.php:925
+#: .././classes/Single.php:973
 msgid "Previous"
 msgstr "Предыдущая"
 
-#: .././classes/Single.php:926
+#: .././classes/Single.php:974
 msgid "To list"
 msgstr "К списку"
 
-#: .././classes/Single.php:927
+#: .././classes/Single.php:975
 msgid "Next"
 msgstr "Следующая"
 
-#: .././classes/Single.php:1002
+#: .././classes/Single.php:1050
 msgid "Base data"
 msgstr "База данных"
 
-#: .././classes/Single.php:1011
+#: .././classes/Single.php:1059
 msgid "Description"
 msgstr "Описание"
 
-#: .././classes/Single.php:1017
+#: .././classes/Single.php:1065
 msgid "Specifications"
 msgstr "Технические характеристики"
 
-#: .././classes/Single.php:1065
+#: .././classes/Single.php:1113
 msgid "View lager version"
 msgstr "Посмотреть лагер версия"
 
-#: .././classes/Single.php:1104
+#: .././classes/Single.php:1131
+msgid "Contact provider directly"
+msgstr ""
+
+#: .././classes/Single.php:1152
 msgid "Provider"
 msgstr "Ппровайдер"
 
-#: .././classes/Single.php:1114 .././classes/Single.php:1171
+#: .././classes/Single.php:1162 .././classes/Single.php:1219
 msgid "I am interested concerning this property. Please contact me."
 msgstr ""
 "Я заинтересован в отношении этого имущества. Пожалуйста, свяжитесь со мной."
 
-#: .././classes/Single.php:1115
+#: .././classes/Single.php:1163
 msgid "E-Mail"
 msgstr "Эл. почта"
 
-#: .././classes/Single.php:1131
+#: .././classes/Single.php:1179
 msgid "Fax"
 msgstr "Факс:"
 
-#: .././classes/Single.php:1159
+#: .././classes/Single.php:1207
 msgid "Contact person"
 msgstr "Контактное лицо"
 
-#: .././classes/Single.php:1179
+#: .././classes/Single.php:1227
 msgid "Phone direct"
 msgstr "Телефон прямой"
 
-#: .././classes/Single.php:1184
+#: .././classes/Single.php:1232
 msgid "Mobile"
 msgstr "Мобильный"
 
-#: .././classes/Single.php:1215
+#: .././classes/Single.php:1263
 msgid "Share"
 msgstr "Поделиться"
 
-#: .././classes/Single.php:1326
+#: .././classes/Single.php:1374
 msgid "per"
 msgstr "за"
 
-#: .././classes/Single.php:1363
+#: .././classes/Single.php:1450
 msgid "and"
 msgstr "и"
 
-#: .././classes/Single.php:1415
+#: .././classes/Single.php:1502
 msgid "Document"
 msgstr "Документ"
