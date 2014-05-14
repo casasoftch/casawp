@@ -490,6 +490,9 @@
                       $return .= '<p>' . $attachment->post_excerpt . '</p>';
                     $return .= '</div>';
                   }
+                  if ($this->getAvailability()) {
+                    $return .= $this->getAvailability();
+                  }
                   
                 $return .= '</div>';
                 $i++;
