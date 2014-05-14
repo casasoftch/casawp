@@ -18,7 +18,7 @@
 						<header class="casasync-single-header">
 							<h1 class="casasync-single-title"><?php echo $single->getTitle(); ?></h1>
 						</header>
-						<div class="casasync-single-content">
+						<div class="casasync-single-contentarea">
 							<?php echo $single->getGallery(); ?>
 							<br>
 							<?php echo $single->getTabable(); ?>
