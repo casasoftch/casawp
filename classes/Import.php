@@ -1258,6 +1258,9 @@ class Import {
         if (!in_array($propertysegment, array('m2','km2','full'))) {
           $propertysegment = 'full';
         }
+        if (is_object($propertysegment)) {
+          $propertysegment = $propertysegment->__toString(); 
+        }
         $the_extraPrice = (float) $extraCost->__toString();
 
         $extraPrice[] = array(

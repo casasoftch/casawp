@@ -919,9 +919,10 @@
 											<?php
 												$url = get_admin_url('', 'admin.php?page=casasync');
 												$manually = $url . '&do_import=true';
+												$force_last = $manually . '&force_last_import=true';
 												$forced = $manually . '&force_all_properties=true&force_last_import=true';
 											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $manually  ?>">manueller Import</a> ∙ <a href="<?php echo $forced  ?>">erzwungener Import</a>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $manually  ?>">manueller Import</a> ∙ <a href="<?php echo $force_last  ?>">data-done.xml import</a> ∙ <a href="<?php echo $forced  ?>">erzwungener Import</a>
 										</label></p>
 									</fieldset>
 								</td>
