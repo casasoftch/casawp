@@ -1515,11 +1515,12 @@
     }
 
 
-    public function getFeaturedImage() {
+    public function getFeaturedImage($link = true) {
       $return = NULL;
       $pid = get_the_ID();
       if (has_post_thumbnail($pid)) {
-        $return .= '<a href ="' . get_permalink($pid) . '" class="casasync-thumbnail" style="position:relative;">';
+        $url = ($link ? get_permalink($pid) : '#');
+        $return .= '<a href ="' . $url . '" class="casasync-thumbnail" style="position:relative;">';
         $return .= $this->getAvailability();
         $return .= get_the_post_thumbnail($pid, 'casasync-thumb');
         $return .= '</a>';
