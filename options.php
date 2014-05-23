@@ -50,6 +50,8 @@
 				break;
 			case 'archiveview':
 				$checkbox_traps = array(
+					'casasync_show_sticky_properties',
+					'casasync_hide_sticky_properties_in_main',
 					'casasync_archive_show_street_and_number',
 					'casasync_archive_show_zip',
 					'casasync_archive_show_location',
@@ -569,6 +571,39 @@
 								</select>
 							</td>
 						</tr>
+					<?php echo $table_end; ?>
+					<?php echo $table_start; ?>
+						<tr valign="top">
+								<th scope="row">Oben gehaltene Objekte</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span></span></legend>
+										<?php $name = 'casasync_show_sticky_properties'; ?>
+										<?php $text = 'Speziel ausgewiesen'; ?>
+										<p><label>
+											<?php
+												$url = get_admin_url('', 'admin.php?page=casasync');
+												$manually = $url . '&do_import=true';
+												$forced = $manually . '&force_all_properties=true&force_last_import=true';
+											?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
+									<fieldset>
+										<legend class="screen-reader-text"><span></span></legend>
+										<?php $name = 'casasync_hide_sticky_properties_in_main'; ?>
+										<?php $text = 'in der Hauptliste verstecken'; ?>
+										<p><label>
+											<?php
+												$url = get_admin_url('', 'admin.php?page=casasync');
+												$manually = $url . '&do_import=true';
+												$forced = $manually . '&force_all_properties=true&force_last_import=true';
+											?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
+								</td>
+							</tr>
 					<?php echo $table_end; ?>
 					<?php echo $table_start; ?>
 						<tr valign="top">
