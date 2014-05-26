@@ -576,6 +576,9 @@ class Import {
   }
 
   public function setOfferAttachments($xmlattachments, $wp_post, $property_id, $casasync_id){
+    ### future task: for better performace compare new and old data ###
+
+    
     //get xml media files
     $the_casasync_attachments = array();
     if ($xmlattachments) {
@@ -696,6 +699,28 @@ class Import {
       } //foreach ($the_casasync_attachments as $the_mediaitem) {
 
       //featured image
+      $args = array(
+        'post_type'   => 'attachment',
+        'numberposts' => -1,
+        'post_status' => null,
+        'post_parent' => $wp_post->ID,
+        'tax_query'   => array(
+          'relation'  => 'AND',
+          array(
+            'taxonomy' => 'casasync_attachment_type',
+            'field'    => 'slug',
+            'terms'    => array( 'image', 'plan', 'document' )
+          )
+        )
+      );
+      $attachments = get_posts($args);
+      if ($attachments) {
+        unset($wp_casasync_attachments);
+        foreach ($attachments as $attachment) {
+          $wp_casasync_attachments[] = $attachment;
+        }
+      }
+
       $attachment_image_order = array();
       foreach ($the_casasync_attachments as $the_mediaitem) {
         if ($the_mediaitem['type'] == 'image') {
