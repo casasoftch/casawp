@@ -7297,30 +7297,6 @@ td.visible-print {
   content: "\f196";
 }
 /*.casasync-archive,*/
-.casasync-single {
-  margin-left: -10px;
-  margin-right: -10px;
-}
-.casasync-single:before,
-.casasync-single:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */
-}
-.casasync-single:after {
-  clear: both;
-}
-.casasync-single:before,
-.casasync-single:after {
-  content: " ";
-  /* 1 */
-  display: table;
-  /* 2 */
-}
-.casasync-single:after {
-  clear: both;
-}
 .casasync-archive-content,
 .casasync-single-content {
   float: left;
