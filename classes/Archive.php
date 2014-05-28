@@ -364,6 +364,8 @@
         $return =  '<div class="' . $wrapper_class . ' ' . $size . '">';
         $return .=  '<h3>' . $title . '</h3>';
         $return .= '<form action="' .  get_post_type_archive_link( 'casasync_property' ) . '" class="casasync-filterform">';
+
+        $return .= ($size == 'small') ? '<div class="wrap">' : null;
         //if permalinks are off
         if ( get_option('permalink_structure') == '' ) {
             $return .= '<input type="hidden" name="post_type" value="casasync_property" />';
@@ -397,7 +399,8 @@
             }
             $return .= '</select>';
         }
-                
+        $return .= ($size == 'small') ? '</div>' : null;
+
         $return .= '<input class="casasync-filterform-button" type="submit" value="' . __('Search','casasync') . '" />';
         $return .= '</form>';
         $return .= '<div class="clearfix"></div>';
