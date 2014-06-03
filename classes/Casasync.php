@@ -633,7 +633,7 @@ class CasaSync {
 
     public function contact_shortcode($atts){
         extract( shortcode_atts( array(
-            'recipients' => 'Steven Imhof:si@casasoft.ch',
+            'recipients' => 'Casasoft:dev@casasoft.ch',
             'remcat'     => false,
             'ccs'        => '',
             'post_id'    => false
@@ -720,9 +720,9 @@ class CasaSync {
             }
             if ($validation) {
                 $casa_id = get_post_meta( $post_id, 'casasync_id', $single = true );
-                $casa_id_arr = explode('_', $casa_id);
-                $customer_id = $casa_id_arr[0];
-                $property_id = $casa_id_arr[1];
+                $casa_id_arr = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $casa_id);
+                $property_id = $casa_id_arr[0];
+                $property_lang = $casa_id_arr[1];
 
                 //REM
                 if ($remcat != '') {
@@ -745,7 +745,7 @@ class CasaSync {
                         9  => get_post_meta($post_id, 'casasync_property_address_streetaddress', true),
                         10 => get_post_meta($post_id, 'casasync_property_address_locality', true),
                         11 => $type,
-                        12 => 'DE', //LANG
+                        12 => $property_lang,
                         13 => '', //anrede
                         14 => (isset($_POST['firstname']) ? $_POST['firstname'] : ''),
                         15 => (isset($_POST['lastname']) ? $_POST['lastname'] : ''),
@@ -761,6 +761,7 @@ class CasaSync {
                         25 => '',
                         26 => ''
                     );
+
                     $remCat_str = '';
                     foreach ($remCat as $key => $value) {
                         $remCat_str .= '#' . $value;
@@ -809,7 +810,7 @@ class CasaSync {
                     $message .= '</tr>';
                 }
                 $message.='</table>';
-    
+
                 $template = str_replace('{:logo_src:}', '#', $template);
                 $template = str_replace('{:logo_url:}', '#', $template);
                 $template = str_replace('{:site_title:}', $_SERVER['SERVER_NAME'], $template);

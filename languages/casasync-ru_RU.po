@@ -1610,7 +1610,7 @@ msgstr "Средняя школа"
 #: .././classes/Single.php:907 .././classes/Single.php:933
 #: .././classes/Single.php:956
 msgid "On Request"
-msgstr "Учебные курсы по запросу"
+msgstr "по запросу"
 
 #: .././classes/Conversion.php:361
 msgid "By Agreement"
@@ -1867,7 +1867,7 @@ msgstr "Цена"
 
 #: .././classes/Single.php:648
 msgid "Sales price:"
-msgstr "Цена продажи:"
+msgstr "Цена:"
 
 #: .././classes/Single.php:658
 msgid "Gross price:"
@@ -1887,7 +1887,7 @@ msgstr "Предложение"
 
 #: .././classes/Single.php:681 .././classes/Single.php:905
 msgid "Sales price"
-msgstr "Продажная цена"
+msgstr "Цена"
 
 #: .././classes/Single.php:691 .././classes/Single.php:915
 msgid "Gross price"
