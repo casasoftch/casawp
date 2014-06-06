@@ -148,6 +148,9 @@
         case 'price':
             $args['orderby'] = 'price';
             break;
+        case 'menu_order':
+            $args['orderby'] = 'menu_order';
+            break;
         case 'date':
         default:
             $args['orderby'] = 'date';
