@@ -336,8 +336,7 @@
       $this->seller['locality']      = get_post_meta( get_the_ID(), 'seller_org_address_locality', $single = true );
       $this->seller['region']        = get_post_meta( get_the_ID(), 'seller_org_address_region', $single = true );
       $this->seller['postalcode']    = get_post_meta( get_the_ID(), 'seller_org_address_postalcode', $single = true );
-      $this->seller['street']        = get_post_meta( get_the_ID(), 'seller_org_address_streetaddress', $single = true ).' '.
-                                       get_post_meta( get_the_ID(), 'casasync_property_address_streetnumber', $single = true );
+      $this->seller['street']        = get_post_meta( get_the_ID(), 'seller_org_address_streetaddress', $single = true );
       $this->seller['legalname']     = get_post_meta( get_the_ID(), 'seller_org_legalname', $single = true );
       $this->seller['email']         = get_post_meta( get_the_ID(), 'seller_org_email', $single = true );
       $this->seller['fax']           = get_post_meta( get_the_ID(), 'seller_org_fax', $single = true );
