@@ -132,6 +132,14 @@ jQuery(document).ready(function($) {
     // remove attr multiple (safari bug)
     var userAgent = window.navigator.userAgent;
     if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
-        jQuery('.casasync_multiselect').removeAttr('multiple');
+        selector = '.casasync_multiselect';
+        $(selector).removeAttr('multiple');
+        $(selector).each(function( index ) {
+            var hasSelectedItem = $(this).find(':selected');
+            if(hasSelectedItem.length == 0) {
+                var placeholder = $(this).attr('data-placeholder');
+                $(this).append('<option value="" selected disabled style="display:none;">' + placeholder + '</option>');
+            }
+        });
     }
 });
