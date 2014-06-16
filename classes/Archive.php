@@ -168,12 +168,14 @@
         $options = array();
         $terms = get_terms('casasync_category');
         foreach ($terms as $term) {
-            $options[$term->slug]['value'] = $term->slug; 
-            //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
-
             $label = $this->conversion->casasync_convert_categoryKeyToLabel($term->slug, $term->name);
-            $options[$term->slug]['label'] = $label;
-            $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+            //$options[$term->slug]['label'] = $this->conversion->casasync_convert_categoryKeyToLabel($term->name) . ' (' . $term->count . ')';
+           
+            if ($label) {
+                $options[$term->slug]['value'] = $term->slug; 
+                $options[$term->slug]['label'] = $label;
+                $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+            }
         }
         return $options;
     }
