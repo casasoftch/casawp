@@ -291,13 +291,12 @@
     public function casasync_convert_categoryKeyToLabel($key, $fallback = ''){
         $label = null;
 
-        if (substr($key, 0, 7) == 'custom_' && function_exists('icl_get_home_url')) {
-            $current_lang = ICL_LANGUAGE_CODE;
+        if (substr($key, 0, 7) == 'custom_') {
+            $current_lang = function_exists('icl_get_home_url') ? ICL_LANGUAGE_CODE : 'de';
             $translations = get_option('casasync_custom_category_translations');
             if (!is_array($translations)) {
               $translations = array();
             }
-
             foreach ($translations as $slug => $strings) {
               if ($slug == $key) {
                 if ($strings['show']) {
