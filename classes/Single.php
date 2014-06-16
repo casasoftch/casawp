@@ -1118,7 +1118,7 @@
           $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $this->getAddress('property') ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $this->getAddress('property') )) . "&amp;t=m&amp;z=12";
           $map_url_embed = $map_url . '&amp;output=embed';
           $return = '<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-address="'. str_replace('<br>', ', ', $this->getAddress('property')) . '"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '" class="casasync-fancybox" data-fancybox-type="iframe">' . __('View lager version', 'casasync') . '</a></small></div></div>';
-          $return .= '<div class="casasync-visible-xs"><a class="btn btn-default btn-block" href="' . $map_url . '"><i class="icon icon-map-marker"></i> Auf Google Maps anzeigen</a></div>';
+          $return .= '<div class="casasync-visible-xs"><a class="btn btn-default btn-block" href="' . $map_url . '" target="_blank"><i class="fa fa-map-marker"></i> Auf Google Maps anzeigen</a></div>';
         }
       }
       return $return;
