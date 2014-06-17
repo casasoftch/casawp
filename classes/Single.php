@@ -1447,6 +1447,9 @@
         case 'surface_property':
           return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>2</sup>') : false);
           break;
+        case 'volume':
+          return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>3</sup>') : false);
+          break;
         case 'distances':
           $distances = array();
           foreach ($this->conversion->casasync_get_allDistanceKeys() as $distance_key) {
