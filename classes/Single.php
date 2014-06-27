@@ -291,9 +291,9 @@
       $sales['propertysegment'] = get_post_meta( get_the_ID(), 'price_propertysegment', $single = true );
       $sales['timesegment']     = get_post_meta( get_the_ID(), 'price_timesegment', $single = true );
 
-      $gross['num']             = get_post_meta( get_the_ID(), 'grossprice', $single = true );
-      $gross['propertysegment'] = get_post_meta( get_the_ID(), 'grossprice_propertysegment', $single = true );
-      $gross['timesegment']     = get_post_meta( get_the_ID(), 'grossprice_timesegment', $single = true );
+      $gross['num']             = get_post_meta( get_the_ID(), 'grossPrice', $single = true );
+      $gross['propertysegment'] = get_post_meta( get_the_ID(), 'grossPrice_propertysegment', $single = true );
+      $gross['timesegment']     = get_post_meta( get_the_ID(), 'grossPrice_timesegment', $single = true );
 
       $net['num']             = get_post_meta( get_the_ID(), 'netPrice', $single = true );
       $net['propertysegment'] = get_post_meta( get_the_ID(), 'netPrice_propertysegment', $single = true );
@@ -1347,11 +1347,11 @@
             }
           }
           if ($this->main_basis == 'rent') {
-            if ($this->prices['gross'] || $this->prices['net']) {
+            if ($this->prices['gross']['num'] || $this->prices['net']['num']) {
               if ($this->prices['gross']) {
                 $price = $this->prices['gross'];
               }
-              if ($this->prices['net']) {
+              if ($this->prices['net']['num']) {
                 $price = $this->prices['net'];
               }
             }
