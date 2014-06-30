@@ -1471,10 +1471,10 @@
       }
     }
 
-    public function getAllNumvals($sort = NULL) {
+     public function getAllNumvals($sort = NULL) {
       $return = array();
       foreach ($this->numvals as $numval) {
-        if (array_search($numval["key"], $sort)) {
+        if (array_search($numval["key"], $sort) !== false) {
           $return[array_search($numval["key"], $sort)] = $numval;
         } else {
           $array_keys_to_num = !empty($return) ? max(array_keys($return)) : 0;
@@ -1482,6 +1482,7 @@
           $return[$h_key] = $numval;
         }
       }
+      ksort($return);
       return $return;
     }
 
