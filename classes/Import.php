@@ -1239,7 +1239,7 @@ class Import {
       if (!in_array($new_meta_data['price_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['price_timesegment'])) {
         $new_meta_data['price_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
-      $new_meta_data['price_propertysegment'] = $xmloffer->price['propertysegment'];
+      $new_meta_data['price_propertysegment'] = $xmloffer->price['propertysegment']->__toString();
       if (!in_array($new_meta_data['price_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['price_propertysegment'])) {
         $new_meta_data['price_propertysegment'] = 'full';
       }
@@ -1251,7 +1251,7 @@ class Import {
       if (!in_array($new_meta_data['netPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['netPrice_timesegment'])) {
         $new_meta_data['netPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
-      $new_meta_data['netPrice_propertysegment'] = $xmloffer->netPrice['propertysegment'];
+      $new_meta_data['netPrice_propertysegment'] = $xmloffer->netPrice['propertysegment']->__toString();
       if (!in_array($new_meta_data['netPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['netPrice_propertysegment'])) {
         $new_meta_data['netPrice_propertysegment'] = 'full';
       }
@@ -1263,7 +1263,7 @@ class Import {
       if (!in_array($new_meta_data['grossPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['grossPrice_timesegment'])) {
         $new_meta_data['grossPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
-      $new_meta_data['grossPrice_propertysegment'] = $xmloffer->grossPrice['propertysegment'];
+      $new_meta_data['grossPrice_propertysegment'] = $xmloffer->grossPrice['propertysegment']->__toString();
       if (!in_array($new_meta_data['grossPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['grossPrice_propertysegment'])) {
         $new_meta_data['grossPrice_propertysegment'] = 'full';
       }
