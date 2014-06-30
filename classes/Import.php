@@ -1192,6 +1192,7 @@ class Import {
       $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
                                                                    $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
       $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName                   );
+      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand                   );
     }
 
 

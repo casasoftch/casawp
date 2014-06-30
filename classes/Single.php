@@ -338,6 +338,7 @@
       $this->seller['postalcode']    = get_post_meta( get_the_ID(), 'seller_org_address_postalcode', $single = true );
       $this->seller['street']        = get_post_meta( get_the_ID(), 'seller_org_address_streetaddress', $single = true );
       $this->seller['legalname']     = get_post_meta( get_the_ID(), 'seller_org_legalname', $single = true );
+      $this->seller['brand']         = get_post_meta( get_the_ID(), 'seller_org_brand', $single = true );
       $this->seller['email']         = get_post_meta( get_the_ID(), 'seller_org_email', $single = true );
       $this->seller['fax']           = get_post_meta( get_the_ID(), 'seller_org_fax', $single = true );
       $this->seller['phone_direct']  = get_post_meta( get_the_ID(), 'seller_org_phone_direct', $single = true );
@@ -1158,6 +1159,7 @@
       if($this->hasSeller()) {
         $return  = '<h3><i class="fa fa-briefcase"></i> ' . __('Provider' , 'casasync') . '</h3><address>';
         $return .= ($this->seller['legalname'] != '') ? ('<strong>' . $this->seller['legalname'] . '</strong><br>') : ('');
+        $return .= ($this->seller['brand'] != '') ? ($this->seller['brand'] . '<br>') : ('');
         $return .= $this->getAddress('seller');
 
         $return .= '<div class="casasync-seller-infos">';
@@ -1358,6 +1360,7 @@
           }
           break;
       }
+
       switch ($format) {
         case 'num':
           $return = $price['num'];
