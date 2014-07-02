@@ -983,7 +983,7 @@ class Import {
     }
 
     //have categories changed?
-    if (array_diff($new_categories, $old_categories)) {
+    if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
       $slugs_to_remove = array_diff($old_categories, $new_categories);
       $slugs_to_add    = array_diff($new_categories, $old_categories);
       $this->transcript[$casasync_id]['categories_changed']['removed_category'] = $slugs_to_remove;
