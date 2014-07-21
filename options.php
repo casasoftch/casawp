@@ -580,7 +580,7 @@
 									<fieldset>
 										<legend class="screen-reader-text"><span></span></legend>
 										<?php $name = 'casasync_show_sticky_properties'; ?>
-										<?php $text = 'Speziel ausgewiesen'; ?>
+										<?php $text = 'Speziell ausgewiesen'; ?>
 										<p><label>
 											<?php
 												$url = get_admin_url('', 'admin.php?page=casasync');
@@ -950,7 +950,7 @@
 									<fieldset>
 										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
 										<?php $name = 'casasync_live_import'; ?>
-										<?php $text = 'Änderungen automatisch bei jedem Aufruff überprüffen und updaten.'; ?>
+										<?php $text = 'Änderungen automatisch bei jedem Aufruf überprüfen und updaten.'; ?>
 										<p><label>
 											<?php
 												$url = get_admin_url('', 'admin.php?page=casasync');
