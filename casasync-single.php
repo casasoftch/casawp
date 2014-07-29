@@ -6,7 +6,7 @@
 		<?php echo stripslashes(get_option('casasync_before_content')); ?>
 		<?php if ($template->setTemplate('single', $single)): ?>
 			<?php echo $template->render(); ?>
-		<?php else: ?>	
+	<?php else: ?>	
 			<div class="casasync-single">
 				<div class="casasync-row">
 					<nav class="casasync-single-pagination-top">

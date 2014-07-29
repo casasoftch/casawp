@@ -74,6 +74,8 @@ jQuery(document).ready(function($) {
                     $('.casasync-single-prev').addClass('disabled');
                 }
                 $('.casasync-single-pagination').css('display','none').removeClass('hidden').show('fast');
+
+                $('.casasync-single').trigger("casasync-pagination-update");
             }
         });
     };
