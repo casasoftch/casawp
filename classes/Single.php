@@ -1361,14 +1361,15 @@
           break;
       }
 
+      $return = '';
       switch ($format) {
         case 'num':
-          $return = $price['num'];
+          $return .= $price['num'];
           break;
         case 'currency':
         case 'formated':
         case 'full':
-          $return = $this->price_currency . ' ';
+          $return .= $this->price_currency . ' ';
         case 'formated':
         case 'full':
           if(array_key_exists('num', $price) && $price['num'] != NULL) {
@@ -1380,9 +1381,24 @@
                       ) . '.–';
           }
         case 'full':
-            $return .= (array_key_exists('propertysegment', $price) && $price['propertysegment'] != NULL && $price['propertysegment'] != 'full') ? (' / ' . substr($price['propertysegment'], 0, -1) . '<sup>2</sup>') : ('');
-            $sep     = (array_key_exists('propertysegment', $price) && $price['propertysegment'] != NULL && $price['propertysegment'] != 'full') ? (__('per', 'casasync')) : ('/');
-            $return .= (array_key_exists('timesegment', $price)     && $price['timesegment']     != NULL && $price['timesegment'] != 'infinite') ? (' ' . $sep . ' ' . str_replace($price['timesegment'], $timesegment_labels[$price['timesegment']], $price['timesegment'])) : ('');
+            $sep     = '/';
+            if (
+                array_key_exists('propertysegment', $price) 
+                && $price['propertysegment'] != NULL 
+                && $price['propertysegment'] != 'full'
+            ) {
+                $return .= '&nbsp;' . $sep . '&nbsp;' . substr($price['propertysegment'], 0, -1) . '<sup>2</sup>';              
+            }
+            if (
+                array_key_exists('timesegment', $price)     
+                && $price['timesegment'] != NULL 
+                && $price['timesegment'] != 'infinite'
+            ) {
+                $return .= '&nbsp;' . $sep . '&nbsp;' . str_replace($price['timesegment'], $timesegment_labels[$price['timesegment']], $price['timesegment']);
+            }
+      }
+      if ($return) {
+        $return = '<span style="white-space: nowrap;">' . $return . '</span>';
       }
       return $return;
     }
@@ -1419,11 +1435,12 @@
           );
 
           $extraPrice = array(
-            'value' =>
-              (isset($extraCost['currency']) && $extraCost['currency'] ? $extraCost['currency'] . ' ' : '') .
+            'value' => '<span style="white-space: nowrap;">'.
+              (isset($extraCost['currency']) && $extraCost['currency'] ? $extraCost['currency'] . '&nbsp;' : '') .
               number_format(round($extraCost['price']), 0, '', '\'') . '.&#8211;' .
-              ($propertysegment != 'full' ? ' / ' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
-              ($timesegment != 'infinite' ? ' / ' . $timesegment_labels[(string) $timesegment] : '')
+              ($propertysegment != 'full' ? '&nbsp;/&nbsp;' . substr($propertysegment, 0, -1) . '<sup>2</sup>' : '') .
+              ($timesegment != 'infinite' ? '&nbsp;/&nbsp;' . $timesegment_labels[(string) $timesegment] : '')
+              . '</span>'
             ,
             'title' => (string) $extraCost['title']
           );

@@ -1235,7 +1235,7 @@ class Import {
     //prices 
     // is_object($new_meta_data['price_timesegment']) should be fixed!!!!!!!!!!!!
     if ($xmloffer->price) {
-      $new_meta_data['price_timesegment'] = $xmloffer->price['timesegment'];
+      $new_meta_data['price_timesegment'] = $xmloffer->price['timesegment']->__toString();
       if (!in_array($new_meta_data['price_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['price_timesegment'])) {
         $new_meta_data['price_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
@@ -1247,7 +1247,7 @@ class Import {
     }
 
     if ($xmloffer->netPrice) {
-      $new_meta_data['netPrice_timesegment'] = $xmloffer->netPrice['timesegment'];
+      $new_meta_data['netPrice_timesegment'] = $xmloffer->netPrice['timesegment']->__toString();
       if (!in_array($new_meta_data['netPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['netPrice_timesegment'])) {
         $new_meta_data['netPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
@@ -1259,7 +1259,7 @@ class Import {
     }
 
     if ($xmloffer->grossPrice) {
-      $new_meta_data['grossPrice_timesegment'] = $xmloffer->grossPrice['timesegment'];
+      $new_meta_data['grossPrice_timesegment'] = $xmloffer->grossPrice['timesegment']->__toString();
       if (!in_array($new_meta_data['grossPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['grossPrice_timesegment'])) {
         $new_meta_data['grossPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
       }
