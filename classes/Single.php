@@ -674,7 +674,7 @@
           }
         }
         if ($this->getExtraCosts('Nebenkosten')) {
-          $content .= __('Additional costs', 'casasync') . ': ' . $this->getExtraCosts('Nebenkosten');
+          $content .= '<br>'.__('Additional costs', 'casasync') . ': ' . $this->getExtraCosts('Nebenkosten');
         }
       $content .= '</div></div>';
       return $content;
