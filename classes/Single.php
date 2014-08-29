@@ -152,7 +152,8 @@
             $args['orderby'] = 'menu_order';
             break;
         case 'casasync_referenceId':
-            $args['orderby'] = 'casasync_referenceId';
+            $args['meta_key'] = 'casasync_referenceId';
+            $args['orderby'] = 'meta_value';
             break;
         case 'date':
         default:
