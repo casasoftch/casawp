@@ -151,6 +151,9 @@
         case 'menu_order':
             $args['orderby'] = 'menu_order';
             break;
+        case 'casasync_referenceId':
+            $args['orderby'] = 'casasync_referenceId';
+            break;
         case 'date':
         default:
             $args['orderby'] = 'date';

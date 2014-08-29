@@ -562,6 +562,7 @@
 									<option <?php echo (get_option($name)  == 'title' ? 'selected="selected"' : ''); ?> value="title">Titel</option>
 									<option <?php echo (get_option($name)  == 'price' ? 'selected="selected"' : ''); ?> value="price">Preis</option>
 									<option <?php echo (get_option($name)  == 'location' ? 'selected="selected"' : ''); ?> value="location">Ort</option>
+									<option <?php echo (get_option($name)  == 'casasync_referenceId' ? 'selected="selected"' : ''); ?> value="casasync_referenceId">Referenz-ID</option>
 									<option <?php echo (get_option($name)  == 'menu_order' ? 'selected="selected"' : ''); ?> value="menu_order">Eigene Reihenfolge</option>
 								</select>
 								<?php $name = 'casasync_archive_order'; ?>
