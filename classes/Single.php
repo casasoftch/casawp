@@ -1476,7 +1476,14 @@
         case 'surface_usable':
         case 'surface_living':
         case 'surface_property':
-          return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>2</sup>') : false);
+          if (isset($this->numvals[$name])) {
+            preg_match_all('/^(\d+)(\w+)$/', $this->numvals[$name]['value'], $matches);
+            $number = implode($matches[1]);
+            $letter = implode($matches[2]);
+            return number_format($number, 0, '.', "'") . $letter . '<sup>2</sup>';
+          } else {
+            return false;
+          }
           break;
         case 'volume':
           return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>3</sup>') : false);
