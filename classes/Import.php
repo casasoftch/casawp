@@ -1019,16 +1019,24 @@ class Import {
 
   public function casasyncImport(){
     if ($this->getImportFile()) {
-      $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
-      $this->updateOffers();
+      
+      
+      
       if (is_admin()) {
+        $this->updateOffers();
         echo '<div id="message" class="updated"><p>Casasync <strong>updated</strong>.</p><pre>' . print_r($this->transcript, true) . '</pre></div>';
+      } else {
+        //do task in the background
+        add_action('asynchronous_import', array($this,'updateOffers'));
+        wp_schedule_single_event(time(), 'asynchronous_import');
       }
     }
   }
 
 
   public function updateOffers(){
+    $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
+    set_time_limit (300);
     global $wpdb;
     $found_posts = array();
 
