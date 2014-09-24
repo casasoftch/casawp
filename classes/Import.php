@@ -1036,7 +1036,7 @@ class Import {
 
   public function updateOffers(){
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
-    set_time_limit (300);
+    set_time_limit(300);
     global $wpdb;
     $found_posts = array();
 
