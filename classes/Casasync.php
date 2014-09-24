@@ -151,6 +151,10 @@ class CasaSync {
                     case 'menu_order':
                         $query->set('orderby', 'menu_order');
                         break;
+                    case 'casasync_referenceId':
+                        $query->set('meta_key', 'casasync_referenceId');
+                        $query->set('orderby', 'meta_value');
+                        break;
                     case 'date':
                     default:
                         $query->set('orderby', 'date');

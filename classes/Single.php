@@ -151,6 +151,10 @@
         case 'menu_order':
             $args['orderby'] = 'menu_order';
             break;
+        case 'casasync_referenceId':
+            $args['meta_key'] = 'casasync_referenceId';
+            $args['orderby'] = 'meta_value';
+            break;
         case 'date':
         default:
             $args['orderby'] = 'date';
@@ -781,6 +785,13 @@
         $content .= '<div class="casasync_distances">';
         $content .= '<h3>' . __('Distances','casasync') . '</h3>';
         $content .= $this->getAllDistances();
+        $content .= '</div>';
+      }
+
+      if ($this->getProvidedURL()) {
+        $content .= '<div class="casasync_provided_url">';
+        $content .= '<h3>' . __('Link','casasync') . '</h3>';
+        $content .= $this->getProvidedURL();
         $content .= '</div>';
       }
 
@@ -1465,7 +1476,14 @@
         case 'surface_usable':
         case 'surface_living':
         case 'surface_property':
-          return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>2</sup>') : false);
+          if (isset($this->numvals[$name])) {
+            preg_match_all('/^(\d+)(\w+)$/', $this->numvals[$name]['value'], $matches);
+            $number = implode($matches[1]);
+            $letter = implode($matches[2]);
+            return number_format($number, 0, '.', "'") . $letter . '<sup>2</sup>';
+          } else {
+            return false;
+          }
           break;
         case 'volume':
           return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value'] . '<sup>3</sup>') : false);
@@ -1540,6 +1558,18 @@
       if($count > 1) {
         return $html;
       }
+    }
+
+    public function getProvidedURL() {
+      $html = NULL;
+      $providedURL = get_post_meta(get_the_ID(), 'the_urls');
+      if($providedURL) {
+        if(substr($providedURL[0][0]['href'], 0, 4) != "http") {
+          $providedURL[0][0]['href'] = 'http://' . $providedURL[0][0]['href'];
+        }
+        $html = '<a href="' . $providedURL[0][0]['href'] . '" title="' . $providedURL[0][0]['title'] . '" target="_blank">' . $providedURL[0][0]['label'] . '</a>';
+      }
+      return $html;
     }
 
 
