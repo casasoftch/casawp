@@ -274,11 +274,11 @@ class CasaSync {
     function registerScriptsAndStyles(){
         switch (get_option('casasync_load_css', 'bootstrapv3')) {
             case 'bootstrapv2':
-                wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs2.css' );
+                wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casasync_template_bs2.css' );
                 wp_enqueue_style( 'casasync-css' );
                 break;
             case 'bootstrapv3':
-                wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync_template_bs3.css' );
+                wp_register_style( 'casasync-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casasync_template_bs3.css' );
                 wp_enqueue_style( 'casasync-css' );
                 break;
             case 'none':
@@ -291,7 +291,7 @@ class CasaSync {
                 case 'bootstrapv2':
                     wp_enqueue_script(
                         'casasync_bootstrap2',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap.min.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap.min.js',
                         array( 'jquery' ),
                         false,
                         true
@@ -300,35 +300,35 @@ class CasaSync {
                 case 'bootstrapv3':
                     wp_enqueue_script(
                         'casasync_bootstrap3_transition',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/transition.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/transition.js',
                         array( 'jquery' ),
                         false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_tab',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tab.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tab.js',
                         array( 'jquery' ),
                         false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_carousel',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/carousel.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/carousel.js',
                         array( 'jquery' ),
                         false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_tooltip',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/tooltip.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tooltip.js',
                         array( 'jquery' ),
                         false,
                         true
                     );
                     wp_enqueue_script(
                         'casasync_bootstrap3_popover',
-                        CASASYNC_PLUGIN_URL . 'assets/js/bootstrap3/popover.js',
+                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/popover.js',
                         array( 'jquery' ),
                         false,
                         true
@@ -344,13 +344,13 @@ class CasaSync {
 
         wp_enqueue_script(
             'jstorage',
-            CASASYNC_PLUGIN_URL . 'assets/js/jstorage.js',
+            CASASYNC_PLUGIN_URL . 'plugin_assets/js/jstorage.js',
             array( 'jquery' )
         );
         if(is_singular('casasync_property')) {
             wp_enqueue_script(
                 'casasync_jquery_eqheight',
-                CASASYNC_PLUGIN_URL . 'assets/js/jquery.equal-height-columns.js',
+                CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.equal-height-columns.js',
                 array( 'jquery' ),
                 false,
                 true
@@ -358,12 +358,12 @@ class CasaSync {
             if (get_option( 'casasync_load_fancybox', 1 )) {
                 wp_enqueue_script(
                     'fancybox',
-                    CASASYNC_PLUGIN_URL . 'assets/js/jquery.fancybox.pack.js',
+                    CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.fancybox.pack.js',
                     array( 'jquery' ),
                     false,
                     true
                 );
-                wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'assets/css/jquery.fancybox.css' );
+                wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'plugin_assets/css/jquery.fancybox.css' );
                 wp_enqueue_style( 'fancybox' );
             }
         }
@@ -371,12 +371,12 @@ class CasaSync {
         if (get_option( 'casasync_load_chosen', 1 )) {
             wp_enqueue_script(
                 'chosen',
-                CASASYNC_PLUGIN_URL . 'assets/js/chosen.jquery.min.js',
+                CASASYNC_PLUGIN_URL . 'plugin_assets/js/chosen.jquery.min.js',
                 array( 'jquery' ),
                 false,
                 true
             );
-            wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'assets/css/chosen.css' );
+            wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
             wp_enqueue_style( 'chosen-css' );
         }
         if (get_option( 'casasync_load_googlemaps', 1 ) && is_singular('casasync_property')) {
@@ -390,7 +390,7 @@ class CasaSync {
         }
         wp_enqueue_script(
             'casasync_script',
-            CASASYNC_PLUGIN_URL . 'assets/js/script.js',
+            CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
             array( 'jquery' ),
             false,
             true
@@ -504,7 +504,7 @@ class CasaSync {
             'hierarchical'       => false,
             'menu_position'      => null,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-            'menu_icon'          => CASASYNC_PLUGIN_URL . 'assets/img/building.png',
+            'menu_icon'          => CASASYNC_PLUGIN_URL . 'plugin_assets/img/building.png',
             'show_in_nav_menus'  => true
         );
         register_post_type( 'casasync_property', $args );

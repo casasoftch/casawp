@@ -23,7 +23,7 @@
 
         wp_enqueue_script(
             'casasync_script',
-            CASASYNC_PLUGIN_URL . 'assets/js/script.js',
+            CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
             array( 'jquery'),
             false,
             true

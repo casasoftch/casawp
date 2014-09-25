@@ -1,17 +1,17 @@
 <?php
-namespace CasaSync;
-/**
- * @package CasaSync
- */
 /*
-Plugin Name: CasaSync
-Plugin URI: http://immobilien-plugin.ch
-Description: Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
-Version: 3.0.3
-Author: Casasoft AG
-Author URI: http://casasoft.ch
-License: GPL2
-*/
+ *	Plugin Name: 	CasaSync
+ *  Plugin URI: 	http://immobilien-plugin.ch
+ *	Description:    Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
+ *	Author:         Casasoft AG
+ *	Author URI:     http://casasoft.ch
+ *	Version: 		3.0.3
+ *	Text Domain: 	complexmanager
+ *	Domain Path: 	languages/
+ *	License: 		GPL2
+ */
+
+namespace CasaSync;
 
 $foldername = 'casasync';
 
@@ -42,4 +42,3 @@ if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
 	$import = new Import();
 	$transcript = $import->getLastTranscript();
 }
-?>

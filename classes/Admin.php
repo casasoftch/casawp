@@ -65,7 +65,7 @@ class Admin {
 			'administrator',
 			'casasync',
 			array($this,'casasync_add_options_page'),
-			CASASYNC_PLUGIN_URL . 'assets/img/building.png'
+			CASASYNC_PLUGIN_URL . 'plugin_assets/img/building.png'
 		);
 	}
 
@@ -74,12 +74,12 @@ class Admin {
 	}
 
 	public function registerAdminScriptsAndStyles() {
-		wp_register_style( 'casasync-admin-css', CASASYNC_PLUGIN_URL . 'assets/css/casasync-admin.css' );
+		wp_register_style( 'casasync-admin-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casasync-admin.css' );
         wp_enqueue_style( 'casasync-admin-css' );
 
         wp_enqueue_script(
             'casasync_admin_scipts',
-            CASASYNC_PLUGIN_URL . 'assets/js/admin-scripts.js',
+            CASASYNC_PLUGIN_URL . 'plugin_assets/js/admin-scripts.js',
             array( 'jquery' ),
             false,
             true
