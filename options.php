@@ -131,7 +131,8 @@
 			'appearance'  => 'Design',
 			'singleview'  => 'Einzelansicht',
 			'archiveview' => 'Archivansicht',
-			'contactform' => 'Kontaktformular'
+			'contactform' => 'Kontaktformular',
+			'logs' => 'Logs'
 		); 
 	    echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
@@ -939,6 +940,21 @@
 							</tr>
 						<?php echo $table_end; ?>
 						<?php
+					break;
+				case 'logs':
+					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/logs';
+					$log = $dir."/".date('Y M').'.log';
+					echo "<h3>" . date('Y M') . "</h3>";
+					echo "<ul>";
+				    if (is_file($log)) {
+				    	$file_handle = fopen($log, "r");
+						while (!feof($file_handle)) {
+						   $line = fgets($file_handle);
+						   echo '<li>'.$line.'</li>';
+						}
+						fclose($file_handle);	
+				    }
+				    echo "</ul>";
 					break;
 				case 'general':
 				default:
