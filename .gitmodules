@@ -1,0 +1,3 @@
+[submodule "plugin_assets/js/featherlight"]
+	path = plugin_assets/js/featherlight
+	url = https://github.com/noelboss/featherlight.git
