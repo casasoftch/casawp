@@ -954,10 +954,10 @@
 							$arr = json_decode($line, true);
 							if ($arr) {
 						   		foreach ($arr as $key => $value) {
-						   			echo '<th><strong>'.$key.'</strong></th><td><pre>'.print_r($value,true).'</pre></td>';
+						   			echo '<th valign="top"><strong>'.$key.'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.print_r($value,true).'</pre></td>';
 						   		}
 						  	} else {
-								echo '<th></th><td><pre>'.$line.'</pre></td>';	
+								echo '<th valign="top"></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></td>';	
 							}
 							echo "</tr>";
 						   
