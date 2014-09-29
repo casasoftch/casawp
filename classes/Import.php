@@ -1028,7 +1028,7 @@ class Import {
   public function casasyncImport(){
     if ($this->getImportFile()) {
       
-      $this->addToLog($this->transcript);
+      
       
       if (is_admin()) {
         $this->updateOffers();
@@ -1128,6 +1128,8 @@ class Import {
     }
 
     flush_rewrite_rules();
+
+    $this->addToLog($this->transcript);
   }
 
   public function simpleXMLget($node, $fallback = false){
