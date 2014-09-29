@@ -945,16 +945,27 @@
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/logs';
 					$log = $dir."/".date('Y M').'.log';
 					echo "<h3>" . date('Y M') . "</h3>";
-					echo "<ul>";
+					echo "<table>";
 				    if (is_file($log)) {
 				    	$file_handle = fopen($log, "r");
 						while (!feof($file_handle)) {
-						   $line = fgets($file_handle);
-						   echo '<li>'.$line.'</li>';
+							echo "<tr>";
+							$line = fgets($file_handle);
+							$arr = json_decode($line, true);
+							if ($arr) {
+						   		foreach ($arr as $key => $value) {
+						   			echo '<th><strong>'.$key.'</strong></th><td><pre>'.print_r($value,true).'</pre></td>';
+						   		}
+						  	} else {
+								echo '<th></th><td><pre>'.$line.'</pre></td>';	
+							}
+							echo "</tr>";
+						   
 						}
 						fclose($file_handle);	
 				    }
-				    echo "</ul>";
+				    echo "</table>";
+
 					break;
 				case 'general':
 				default:

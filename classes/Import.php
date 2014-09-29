@@ -1022,7 +1022,7 @@ class Import {
     if (!file_exists($dir)) {
         mkdir($dir, 0777, true);
     }
-    file_put_contents($dir."/".date('Y M').'.log', "\n".date('Y.m.d H:i')."\t".json_encode($transcript), FILE_APPEND);
+    file_put_contents($dir."/".date('Y M').'.log', "\n".json_encode(array(date('Y.m.d H:i') => $transcript)), FILE_APPEND);
   }
 
   public function casasyncImport(){
