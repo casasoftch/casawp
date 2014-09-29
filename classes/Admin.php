@@ -14,7 +14,8 @@ class Admin {
 		// appearance
 		add_option('casasync_load_css', 'bootstrapv3');
 		add_option('casasync_load_bootstrap_scripts', '1');
-		add_option('casasync_load_fancybox', '1');
+		//add_option('casasync_load_fancybox', '1');
+		add_option('casasync_load_featherlight', '1');
 		add_option('casasync_load_chosen', '1');
 		add_option('casasync_load_googlemaps', '1');
 		//single view

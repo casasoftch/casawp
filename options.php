@@ -24,7 +24,8 @@
 				$checkbox_traps = array(
 					'casasync_load_css',
 					'casasync_load_bootstrap_scripts',
-					'casasync_load_fancybox',
+					//'casasync_load_fancybox',
+					'casasync_load_featherlight',
 					'casasync_load_chosen',
 					'casasync_load_googlemaps'
 				);
@@ -187,8 +188,16 @@
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
+										<?php /* ?>
 										<?php $name = 'casasync_load_fancybox'; ?>
 										<?php $text = 'Fancybox'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<br>
+										<php */ ?>
+										<?php $name = 'casasync_load_featherlight'; ?>
+										<?php $text = 'Feather Light (Lightbox)'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>

@@ -21,7 +21,13 @@ jQuery(document).ready(function($) {
         return false;
     });
 
-    if (window.casasyncOptionParams && window.casasyncOptionParams.fancybox == 1) {
+    
+    if (window.casasyncOptionParams && window.casasyncOptionParams.featherlight == 1) {
+        if($('.property-image-gallery').length){
+            $('.property-image-gallery').featherlightGallery();
+        }
+    }
+    /*if (window.casasyncOptionParams && window.casasyncOptionParams.fancybox == 1) {
         if($('.casasync-fancybox').length){
             $('.casasync-fancybox').fancybox({
                 helpers     : {
@@ -29,7 +35,7 @@ jQuery(document).ready(function($) {
                 }
             });
         }
-    }
+    }*/
 
     if (window.casasyncOptionParams && window.casasyncOptionParams.chosen == 1) {
         var config = {

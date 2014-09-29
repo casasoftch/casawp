@@ -80,7 +80,8 @@ class CasaSync {
         $script_params = array(
            'google_maps'           => get_option('casasync_load_googlemaps', 0),
            'google_maps_zoomlevel' => get_option('casasync_single_use_zoomlevel', 12),
-           'fancybox'              => get_option('casasync_load_fancybox', 0),
+           //'fancybox'              => get_option('casasync_load_fancybox', 0),
+           'featherlight'          => get_option('casasync_load_featherlight', 0),
            'chosen'                => get_option('casasync_load_chosen', 0),
            'load_css'              => get_option('casasync_load_css', 'bootstrapv3'),
            'load_bootstrap_js'     => get_option('casasync_load_bootstrap_scripts')
@@ -355,7 +356,7 @@ class CasaSync {
                 false,
                 true
             );
-            if (get_option( 'casasync_load_fancybox', 1 )) {
+            /*if (get_option( 'casasync_load_fancybox', 1 )) {
                 wp_enqueue_script(
                     'fancybox',
                     CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.fancybox.pack.js',
@@ -365,6 +366,27 @@ class CasaSync {
                 );
                 wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'plugin_assets/css/jquery.fancybox.css' );
                 wp_enqueue_style( 'fancybox' );
+            }*/
+            if (get_option( 'casasync_load_featherlight', 1 )) {
+                wp_enqueue_script(
+                    'featherlight',
+                    CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.js',
+                    array( 'jquery' ),
+                    false,
+                    true
+                );
+                wp_register_style( 'featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.css' );
+                wp_enqueue_style( 'featherlight' );
+
+                wp_enqueue_script(
+                    'featherlight-gallery',
+                    CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.js',
+                    array( 'jquery', 'featherlight' ),
+                    false,
+                    true
+                );
+                wp_register_style( 'featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.css' );
+                wp_enqueue_style( 'featherlight-gallery' );
             }
         }
 

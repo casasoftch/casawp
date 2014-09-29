@@ -446,7 +446,7 @@
                       $i++;
                       $return .= '<div class="' . ($i == 1 ? 'active' : '') . ' item" data-slide-number="'.($i-1) .'">';
                         $thumbimgL = wp_get_attachment_image( $attachment->ID, 'full', true );
-                        $return .= '<a href="'. wp_get_attachment_url( $attachment->ID ) .'" class="casasync-fancybox" data-fancybox-group="casasync-property-images">'. $thumbimgL .'</a>';
+                        $return .= '<a href="'. wp_get_attachment_url( $attachment->ID ) .'" data-featherlight="#casasync-property-images">'. $thumbimgL .'</a>';
                         $return .= '<div id="carousel-text" class="carousel-caption" >';
                         if($attachment->post_excerpt != '') {
                           $return .= '<p>'. $attachment->post_excerpt .'</p>';
@@ -487,8 +487,8 @@
                 $return .= '<div class="item '.($i==0?'active':'').'">';
                   $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
                   $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
-                  if (get_option('casasync_load_fancybox', false)) {
-                    $return .= '<a href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '" class="casasync-fancybox" data-fancybox-group="group">' . $img . '</a>';
+                  if (get_option('casasync_load_featherlight', false)) {
+                    $return .= '<a class="property-image-gallery" href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '">' . $img . '</a>';
                   } else {
                     $return .= $img;
                   }
@@ -1129,7 +1129,7 @@
         if(get_option('casasync_single_use_zoomlevel') != '0'){
           $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $this->getAddress('property') ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $this->getAddress('property') )) . "&amp;t=m&amp;z=12";
           $map_url_embed = $map_url . '&amp;output=embed';
-          $return = '<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-address="'. str_replace('<br>', ', ', $this->getAddress('property')) . '"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '" class="casasync-fancybox" data-fancybox-type="iframe">' . __('View lager version', 'casasync') . '</a></small></div></div>';
+          $return = '<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-address="'. str_replace('<br>', ', ', $this->getAddress('property')) . '"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '">' . __('View lager version', 'casasync') . '</a></small></div></div>';
           $return .= '<div class="casasync-visible-xs"><a class="btn btn-default btn-block" href="' . $map_url . '" target="_blank"><i class="fa fa-map-marker"></i> Auf Google Maps anzeigen</a></div>';
         }
       }
