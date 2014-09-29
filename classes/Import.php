@@ -322,20 +322,19 @@ class Import {
   }
 
   public function updateInsertWPMLconnection($offer_pos, $wp_post, $lang, $casasync_id){
-    global $wpdb;
     if ($this->hasWPML()) {
 
       if ($this->getMainLang() == $lang) {
         $this->curtrid = wpml_get_content_trid('post_casasync_property', $wp_post->ID);
       }
 
-      $_POST['icl_post_language'] = $language_code = $lang; 
+      $_POST['icl_post_language'] = $lang; 
       
       global $sitepress;
       if ($this->getMainLang() != $lang) {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $language_code, $sitepress->get_default_language(), true);
+        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
       } else {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $language_code, NULL, true);
+        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $lang, NULL, true);
       }
     }
   }

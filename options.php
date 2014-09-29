@@ -953,8 +953,12 @@
 							$line = fgets($file_handle);
 							$arr = json_decode($line, true);
 							if ($arr) {
-						   		foreach ($arr as $key => $value) {
-						   			echo '<th valign="top"><strong>'.$key.'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.print_r($value,true).'</pre></td>';
+						   		foreach ($arr as $datestamp => $properties) {
+						   			echo '<th valign="top"><strong>'.$datestamp.'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
+						   				foreach ($properties as $slug => $property) {
+						   					echo "\n" . $slug . ': ' . json_encode($property);
+						   				}
+						   			echo '</pre></td>';
 						   		}
 						  	} else {
 								echo '<th valign="top"></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></td>';	
