@@ -963,7 +963,7 @@
 							$arr = json_decode($line, true);
 							if ($arr) {
 						   		foreach ($arr as $datestamp => $properties) {
-						   			echo '<th valign="top"><strong>'.$datestamp.'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
+						   			echo '<th valign="top"><strong>'.str_replace(' ', "T", $datestamp) .'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
 						   				foreach ($properties as $slug => $property) {
 						   					echo "\n" . $slug . ': ' . json_encode($property);
 						   				}
