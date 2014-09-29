@@ -5,7 +5,7 @@
  *	Description:    Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
  *	Author:         Casasoft AG
  *	Author URI:     http://casasoft.ch
- *	Version: 		3.0.4
+ *	Version: 		3.0.5
  *	Text Domain: 	complexmanager
  *	Domain Path: 	languages/
  *	License: 		GPL2
