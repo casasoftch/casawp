@@ -1017,10 +1017,18 @@ class Import {
 
   }
 
+  public function addToLog($transcript){
+    $dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/logs';
+    if (!file_exists($dir)) {
+        mkdir($dir, 0777, true);
+    }
+    file_put_contents($dir."/".date('Y M').'.log', "\n".date('Y.m.d H:i')."\t".json_encode($transcript), FILE_APPEND);
+  }
+
   public function casasyncImport(){
     if ($this->getImportFile()) {
       
-      
+      $this->addToLog($this->transcript);
       
       if (is_admin()) {
         $this->updateOffers();
@@ -1092,6 +1100,8 @@ class Import {
 
     //3. remove all the unused properties
     $properties_to_remove = get_posts(  array(
+      'suppress_filters'=>true,
+      'language'=>'ALL',
       'numberposts' =>  100,
       'exclude'     =>  $found_posts,
       'post_type'   =>  'casasync_property',
@@ -1101,6 +1111,8 @@ class Import {
     foreach ($properties_to_remove as $prop_to_rm) {
       //remove the attachments
       $attachments = get_posts( array(
+        'suppress_filters'=>true,
+        'language'=>'ALL',
         'post_type'      => 'attachment',
         'posts_per_page' => -1,
         'post_parent'    => $prop_to_rm->ID,
