@@ -6,7 +6,7 @@
  *	Author:         Casasoft AG
  *	Author URI:     http://casasoft.ch
  *	Version: 		3.0.6
- *	Text Domain: 	complexmanager
+ *	Text Domain: 	casasync
  *	Domain Path: 	languages/
  *	License: 		GPL2
  */

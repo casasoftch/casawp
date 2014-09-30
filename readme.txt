@@ -36,6 +36,9 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 == Changelog ==
 
+= 3.0.7 = 
+* fixed: admin-scripts.js bug
+
 = 3.0.6 = 
 * fixed: what was ment to be done at previous version
 

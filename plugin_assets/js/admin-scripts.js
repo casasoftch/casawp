@@ -1,6 +1,4 @@
-
-jQuery.noConflict();
-jQuery(document).ready(function($) {
+(function($){
 
     /* formular requests
     --------------------------------------------- */
@@ -31,4 +29,4 @@ jQuery(document).ready(function($) {
         });
     });
 
-});
+}(jQuery));
