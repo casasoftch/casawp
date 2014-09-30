@@ -526,7 +526,7 @@ class CasaSync {
             'hierarchical'       => false,
             'menu_position'      => null,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-            'menu_icon'          => CASASYNC_PLUGIN_URL . 'plugin_assets/img/building.png',
+            'menu_icon'          => 'dashicons-admin-home',
             'show_in_nav_menus'  => true
         );
         register_post_type( 'casasync_property', $args );
