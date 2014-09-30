@@ -34,11 +34,10 @@ Well, yes and no. Essentialy the plugin activates custom post types and a render
 
 The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory (/wp-content/uploads/casasync/import/data.xml) and activate a import (either this happens automaticaly, or you may activate it manually within WordPress). Essentialy you can keep this file up-to-date to ensure a synchonised state (be aware that the file will be renamed data-done.xml once imported). Currently supported is CasaXML build 5, but build 6 will eventually be prefered as soon it has been blessed.
 
-
 == Changelog ==
 
 = 3.0.6 = 
-* fixed: what was ment to be done at 3.0.5 :-)
+* fixed: what was ment to be done at previous version
 
 = 3.0.5 = 
 * fixed: featerlight assets were not synced correctly
