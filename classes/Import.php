@@ -1099,7 +1099,7 @@ class Import {
       $this->transcript['properties_removed'] = count($properties_to_remove);
     }
 
-    flush_rewrite_rules();
+    //flush_rewrite_rules();
 
     $this->addToLog($this->transcript);
   }
