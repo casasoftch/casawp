@@ -7,7 +7,7 @@ Tested up to: 4.0.0
 Author: Casasoft AG
 Author URI: http://casasoft.ch
 License: GPL2
-Stable tag: 3.0.6
+Stable tag: 3.0.7
 
 Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
 
@@ -38,6 +38,8 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 = 3.0.7 = 
 * fixed: admin-scripts.js bug
+* new: offer-logo import and single->getLogo() function
+* new: single->getSalesPerson() & single->getSeller() optional Titles/Icons
 
 = 3.0.6 = 
 * fixed: what was ment to be done at previous version

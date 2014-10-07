@@ -7,6 +7,7 @@
     public $attachments = array();
     public $documents = array();
     public $plans = array();
+    public $logos = array();
     public $address_street = false;
     public $address_streetnumber = false;
     public $address_postalcode = false;
@@ -222,6 +223,14 @@
         'post_parent'              => get_the_ID(),
         //'exclude'                => get_post_thumbnail_id(),
         'casasync_attachment_type' => 'plan'
+      ) ); 
+
+      $this->logos = get_posts( array(
+        'post_type'                => 'attachment',
+        'posts_per_page'           => -1,
+        'post_parent'              => get_the_ID(),
+        //'exclude'                => get_post_thumbnail_id(),
+        'casasync_attachment_type' => 'offer-logo'
       ) ); 
 
       $this->address_street       = get_post_meta( get_the_ID(), 'casasync_property_address_streetaddress', $single = true );
@@ -535,6 +544,19 @@
         //  $return .= '</ul></div>';
         //}
         return $return;
+      }
+    }
+
+    //TODO: Svgs dont work yet
+    public function getLogo(){
+      if ($this->logos) {
+        foreach ($this->logos as $logo) {
+          $img     = wp_get_attachment_image( $logo->ID, 'full', true, array('class' => 'carousel-image') );
+          $img_url = wp_get_attachment_image_src( $logo->ID, 'full' );
+          if ($img_url) {
+            return '<img class="casasync-offer-logo img-responsive" alt="Property Logo" title="Property Logo" src="'.$img_url[0].'" />';
+          }
+        }
       }
     }
 
@@ -1166,9 +1188,12 @@
         }
     }
 
-    public function getSeller() {
+    public function getSeller($title = true, $icon = true) {
       if($this->hasSeller()) {
-        $return  = '<h3><i class="fa fa-briefcase"></i> ' . __('Provider' , 'casasync') . '</h3><address>';
+        $return = '';
+        if ($title) {
+            $return  .= '<h3>'.($icon ? '<i class="fa fa-briefcase"></i> ' : '') . __('Provider' , 'casasync') . '</h3><address>';
+        }
         $return .= ($this->seller['legalname'] != '') ? ('<strong>' . $this->seller['legalname'] . '</strong><br>') : ('');
         $return .= ($this->seller['brand'] != '') ? ($this->seller['brand'] . '<br>') : ('');
         $return .= $this->getAddress('seller');
@@ -1222,9 +1247,9 @@
       }
     }
 
-    public function getSalesPerson() {
+    public function getSalesPerson($title = true, $icon = true) {
       if ($this->hasSalesPerson()) {
-        $return = '<h3><i class="fa fa-user"></i> ' . __('Contact person' , 'casasync') . '</h3><address>';
+        $return = '<h3>'.($icon ? '<i class="fa fa-briefcase"></i> ' : '') . __('Contact person' , 'casasync') . '</h3><address>';
         if ($this->salesperson['givenname'] != '' && $this->salesperson['familyname'] != '') {
           $return .= '<p><strong>' . $this->salesperson['givenname'] . ' ' . $this->salesperson['familyname'] . '</strong>';
         }
