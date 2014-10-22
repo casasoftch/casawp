@@ -497,7 +497,7 @@
                   $img     = wp_get_attachment_image( $attachment->ID, 'full', true, array('class' => 'carousel-image') );
                   $img_url = wp_get_attachment_image_src( $attachment->ID, 'full' );
                   /*if (get_option('casasync_load_featherlight', false)) {*/
-                    $return .= '<a class="property-image-gallery" href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '">' . $img . '</a>';
+                    $return .= '<a class="property-image-gallery" rel="casasync-single-gallery" href="' . $img_url[0] . '" title="' . $attachment->post_excerpt . '">' . $img . '</a>';
                   /*} else {
                     $return .= $img;
                   }*/
