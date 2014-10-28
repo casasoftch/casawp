@@ -547,6 +547,27 @@
       }
     }
 
+    public function getGalleryThumbnails() {
+      $html = '';
+
+      if ($this->attachments) {
+        $html .= '<div class="casasync-gallery-thumbnails">';
+        $max_thumbnail = get_option('casasync_single_max_thumbnails', 15);
+        $count = 0;
+          foreach ( $this->attachments as $attachment ) {
+            if ($count < $max_thumbnail) {
+              $thumbImgMeidum = wp_get_attachment_image( $attachment->ID, 'thumbnail', true );
+              $thumbImgFull = wp_get_attachment_image_src( $attachment->ID, 'full', true );
+              $html .= '<a class="property-image-gallery" rel="casasync-thumbnail-gallery" href="' . $thumbImgFull[0] . '" title="' . $attachment->post_excerpt . '">' . $thumbImgMeidum . '</a>';
+            }
+            $count++;
+          }
+        $html .= '</div>';
+      }
+
+      return $html;
+    }
+
     //TODO: Svgs dont work yet
     public function getLogo(){
       if ($this->logos) {
