@@ -1,4 +1,6 @@
 <?php
+namespace CasaSync;
+
 /*
  *	Plugin Name: 	CasaSync
  *  Plugin URI: 	http://immobilien-plugin.ch
@@ -11,7 +13,6 @@
  *	License: 		GPL2
  */
 
-namespace CasaSync;
 
 $foldername = 'casasync';
 
