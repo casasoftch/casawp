@@ -28,6 +28,8 @@ class Admin {
 		add_option('casasync_single_show_surface_living', '1');
 		add_option('casasync_single_show_surface_property', '1');
 		add_option('casasync_single_use_zoomlevel', '12');
+		add_option('casasync_single_max_thumbnails', '15');
+		add_option('casasync_single_thumbnail_ideal_width', '150');
 		//archive view
 		add_option('casasync_archive_show_location', '1');
 		add_option('casasync_archive_show_number_of_rooms', '1');

@@ -397,6 +397,27 @@
 									</fieldset>
 								</td>
 							</tr>
+							<tr>
+								<th scope="row">Thumbnails</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
+										<?php $name = 'casasync_single_max_thumbnails'; ?>
+										<?php $text = 'Maximale Anzahl Thumbnails'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
+										</label>
+									</fieldset>
+									<fieldset>
+										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
+										<?php $name = 'casasync_single_thumbnail_ideal_width'; ?>
+										<?php $text = 'Ideale Breite der Thumbnails'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
 						<?php echo $table_end; ?>
 						<?php echo $table_start; ?>
 						<h3>Standard Daten</h3>
