@@ -38,7 +38,8 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 = 3.0.8 = 
 * fixed: bug with featherlight and bootstrap 2
-* new: offer-logo import and single->getLogo() function
+* added: page-attributes for post type casasync_property
+* added: thumbnail gallery
 
 = 3.0.7 = 
 * fixed: admin-scripts.js bug
