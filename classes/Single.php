@@ -1581,7 +1581,7 @@
       return $html;
     }
 
-    public function getAllDocuments() {
+    public function getAllDocuments($icon = false) {
       $html = false;
       $count = 1;
       $args = array(
@@ -1590,12 +1590,12 @@
       );
       $attachments = get_children( $args );
       if($attachments) {
-        $html .= '<ul class="casasync-unstyled">';
+        $html .= '<ul class="casasync-unstyled casasync-documents">';
         foreach ( (array) $attachments as $attachment_id => $attachment ) {
           if(strpos($attachment->post_mime_type, 'image') === false ) {
             $url = wp_get_attachment_url( $attachment_id );
             $title = (is_numeric($attachment->post_title)) ? (__('Document', 'casasync') . ' ' . $count) : ($attachment->post_title);
-            $html .= '<li><a href="' . $url . '" title="' . $title . '" target="_blank" >' . $title . '</a></li>';
+            $html .= '<li>' . $icon . '<a href="' . $url . '" title="' . $title . '" target="_blank" >' . $title . '</a></li>';
             $count++;
           }
         }
