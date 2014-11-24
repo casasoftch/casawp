@@ -94,6 +94,12 @@ class Import {
       'distance_motorway'                            ,
       'distance_school1'                             ,
       'distance_school2'                             ,
+      'distance_bus_stop',
+      'distance_train_station',
+      'distance_post',
+      'distance_bank',
+      'distance_cable_railway_station',
+      'distance_boat_dock',
 
       'casasync_features'                            ,
   );

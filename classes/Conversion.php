@@ -339,20 +339,33 @@
             'distance_kindergarten',
             'distance_motorway',
             'distance_school1',
-            'distance_school2'
+            'distance_school2',
+            'distance_bus_stop',
+            'distance_train_station',
+            'distance_post',
+            'distance_bank',
+            'distance_cable_railway_station',
+            'distance_boat_dock',
         );
     }
 
     public function casasync_convert_distanceKeyToLabel($key){
         switch ($key) {
-            case 'distance_public_transport':   return __('Public transportation' ,'casasync');break;
-            case 'distance_shop':               return __('Shopping' ,'casasync');break;
-            case 'distance_kindergarten':       return __('Kindergarten' ,'casasync');break;
-            case 'distance_motorway':           return __('Motorway' ,'casasync');break;
-            case 'distance_school1':            return __('Primary school' ,'casasync');break;
-            case 'distance_school2':            return __('Secondary school' ,'casasync');break;
+            case 'distance_public_transport':      return __('Public transportation' ,'casasync');break;
+            case 'distance_shop':                  return __('Shopping' ,'casasync');break;
+            case 'distance_kindergarten':          return __('Kindergarten' ,'casasync');break;
+            case 'distance_motorway':              return __('Motorway' ,'casasync');break;
+            case 'distance_school1':               return __('Primary school' ,'casasync');break;
+            case 'distance_school2':               return __('Secondary school' ,'casasync');break;
+            case 'distance_bus_stop':              return __('Bus stop' ,'casasync');break;
+            case 'distance_train_station':         return __('Train station' ,'casasync');break;
+            case 'distance_post':                  return __('Post' ,'casasync');break;
+            case 'distance_bank':                  return __('Bank' ,'casasync');break;
+            case 'distance_cable_railway_station': return __('Railway Station' ,'casasync');break;
+            case 'distance_boat_dock':             return __('Boat dock' ,'casasync');break;
         }
     }
+    
     public function casasync_convert_availabilityKeyToLabel($key){
         switch ($key) {
             //old
