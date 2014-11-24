@@ -1178,16 +1178,30 @@ class Import {
     }
     $new_meta_data['casasync_start']                          = $this->simpleXMLget($xmloffer->start);
     $new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
-    if ($xmloffer->seller && $xmloffer->seller->organization && $xmloffer->seller->organization->address) {
-      $new_meta_data['seller_org_address_country']               = $this->simpleXMLget($xmloffer->seller->organization->address->Country            );
-      $new_meta_data['seller_org_address_locality']              = $this->simpleXMLget($xmloffer->seller->organization->address->locality           );
-      $new_meta_data['seller_org_address_region']                = $this->simpleXMLget($xmloffer->seller->organization->address->region             );
-      $new_meta_data['seller_org_address_postalcode']            = $this->simpleXMLget($xmloffer->seller->organization->address->postalCode         );
-      $new_meta_data['seller_org_address_postofficeboxnumber']   = $this->simpleXMLget($xmloffer->seller->organization->address->postOfficeBoxNumber);
-      $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
-                                                                   $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
-      $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName                   );
-      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand                   );
+    if ($xmloffer->seller && $xmloffer->seller->organization) {
+      foreach ($xmloffer->seller->organization->phone as $number) {
+        if ($number['type'] == 'direct') {
+          $new_meta_data['seller_org_phone_direct'] = $number->__toString();
+        } elseif($number['type'] == 'central') {
+          $new_meta_data['seller_org_phone_central'] = $number->__toString();
+        } elseif ($number['type'] == 'mobile') {
+          $new_meta_data['seller_org_phone_mobile'] = $number->__toString();
+        } else {
+          
+        }
+      }
+
+      $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName          );
+      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand              );
+      if ($xmloffer->seller->organization->address) {
+        $new_meta_data['seller_org_address_country']               = $this->simpleXMLget($xmloffer->seller->organization->address->Country            );
+        $new_meta_data['seller_org_address_locality']              = $this->simpleXMLget($xmloffer->seller->organization->address->locality           );
+        $new_meta_data['seller_org_address_region']                = $this->simpleXMLget($xmloffer->seller->organization->address->region             );
+        $new_meta_data['seller_org_address_postalcode']            = $this->simpleXMLget($xmloffer->seller->organization->address->postalCode         );
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $this->simpleXMLget($xmloffer->seller->organization->address->postOfficeBoxNumber);
+        $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
+                                                                     $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
+      }
     }
 
 
