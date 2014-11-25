@@ -679,7 +679,7 @@
                 break;
               case 'casasync_single_show_availability':
                 if ($this->getAvailabilityLabel()) {
-                  $content .= __('Available:','casasync') . ' ' . $br . $this->getAvailabilityLabel();
+                  $content .= __('Available from:','casasync') . ' ' . $br . $this->getAvailabilityLabel();
                   $content .= $br;
                 }
               break;

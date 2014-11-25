@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-11-24 10:39+0100\n"
+"POT-Creation-Date: 2014-11-25 11:10+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -1850,8 +1850,8 @@ msgid "Year of renovation:"
 msgstr "Letzte Renovation:"
 
 #: .././classes/Single.php:682
-msgid "Available:"
-msgstr "Verfügbar:"
+msgid "Available from:"
+msgstr "Verfügbar ab:"
 
 #: .././classes/Single.php:693 .././classes/Single.php:797
 msgid "Address"
