@@ -346,6 +346,7 @@
             'distance_bank',
             'distance_cable_railway_station',
             'distance_boat_dock',
+            'distance_airport'
         );
     }
 
@@ -363,6 +364,7 @@
             case 'distance_bank':                  return __('Bank' ,'casasync');break;
             case 'distance_cable_railway_station': return __('Railway Station' ,'casasync');break;
             case 'distance_boat_dock':             return __('Boat dock' ,'casasync');break;
+            case 'distance_airport':               return __('Airport', 'casasync');break;
         }
     }
     

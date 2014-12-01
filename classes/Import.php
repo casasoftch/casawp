@@ -100,6 +100,7 @@ class Import {
       'distance_bank',
       'distance_cable_railway_station',
       'distance_boat_dock',
+      'distance_airport',
 
       'casasync_features'                            ,
   );
