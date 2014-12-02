@@ -600,8 +600,10 @@
 
         $presentable_numvals = array(
           'casasync_single_show_number_of_rooms',
-          'casasync_single_show_surface_usable',
-          'casasync_single_show_surface_living',
+          #'casasync_single_show_surface_usable',
+          #'casasync_single_show_surface_living',
+          'casasync_single_show_area_sia_nf',
+          'casasync_single_show_area_bwf',
           'casasync_single_show_surface_property',
           'casasync_single_show_floor',
           'casasync_single_show_number_of_floors',
@@ -635,15 +637,15 @@
                   $content .= $br;
                 }
                 break;
-              case 'casasync_single_show_surface_usable':
-                if ($this->getNumval('surface_usable')){
-                  $content .= __('Surface usable:', 'casasync') . ' ' . $this->getNumval('surface_usable');
+              case 'casasync_single_show_area_sia_nf':
+                if ($this->getNumval('area_sia_nf')){
+                  $content .= __('Surface usable:', 'casasync') . ' ' . $this->getNumval('area_sia_nf');
                   $content .= $br;
                 }
                 break;
-              case 'casasync_single_show_surface_living':
-                if ($this->getNumval('surface_living')){
-                  $content .= __('Living space:', 'casasync') . ' ' . $this->getNumval('surface_living');
+              case 'casasync_single_show_area_bwf':
+                if ($this->getNumval('area_bwf')){
+                  $content .= __('Living space:', 'casasync') . ' ' . $this->getNumval('area_bwf');
                   $content .= $br;
                 }
                 break;
@@ -799,7 +801,7 @@
           .'</tr>';
         }
 
-        $all_numvals = $this->getAllNumvals(array('surface_usable', 'surface_living', 'surface_property'));
+        $all_numvals = $this->getAllNumvals(array('area_sia_gf', 'area_sia_nf', 'area_bwf', 'area_nwf', 'surface_property'));
 
         foreach ($all_numvals as $numval) {
           $content .= '<tr>
@@ -846,8 +848,10 @@
         'casasync_archive_show_street_and_number',
         'casasync_archive_show_location',
         'casasync_archive_show_number_of_rooms',
-        'casasync_archive_show_surface_usable',
-        'casasync_archive_show_surface_living',
+        #'casasync_archive_show_surface_usable',
+        #'casasync_archive_show_surface_living',
+        'casasync_archive_show_area_sia_nf',
+        'casasync_archive_show_area_bwf',
         'casasync_archive_show_surface_property',
         'casasync_archive_show_floor',
         'casasync_archive_show_number_of_floors',
@@ -904,19 +908,19 @@
                 .'</tr>';
               }
               break;
-            case 'casasync_archive_show_surface_usable':
-              if ($this->getNumval('surface_usable')){
+            case 'casasync_archive_show_area_sia_nf':
+              if ($this->getNumval('area_sia_nf')){
                 $return .= '<tr>'
                   .'<th>' .  __('Surface usable', 'casasync') . '</th>'
-                  .'<td>' . $this->getNumval('surface_usable') . '</td>'
+                  .'<td>' . $this->getNumval('area_sia_nf') . '</td>'
                 .'</tr>';
               }
               break;
-            case 'casasync_archive_show_surface_living':
-              if ($this->getNumval('surface_living')){
+            case 'casasync_archive_show_area_bwf':
+              if ($this->getNumval('area_bwf')){
                 $return .= '<tr>'
                   .'<th>' . __('Living space', 'casasync') . '</th>'
-                  .'<td>' . $this->getNumval('surface_living', true) . '</td>'
+                  .'<td>' . $this->getNumval('area_bwf', true) . '</td>'
                 .'</tr>';
               }
               break;
@@ -1519,8 +1523,12 @@
         case 'number_of_rooms':
           return (isset($this->numvals[$name]) ? ($this->numvals[$name]['value']) : false);
           break;
-        case 'surface_usable':
-        case 'surface_living':
+        #case 'surface_usable':
+        #case 'surface_living':
+        case 'area_bwf':
+        case 'area_nwf':
+        case 'area_sia_gf':
+        case 'area_sia_nf':
         case 'surface_property':
           if (isset($this->numvals[$name])) {
             preg_match_all('/^(\d+)(\w+)$/', $this->numvals[$name]['value'], $matches);

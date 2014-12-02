@@ -11,9 +11,15 @@ class Import {
   public $transcript = array();
   public $curtrid = false;
   public $meta_keys = array(
-      'surface_living'              ,
+     #'surface_living'              ,
       'surface_property'            ,
-      'surface_usable'              ,
+      #'surface_usable'              ,
+
+      'area_bwf'                    ,
+      'area_nwf'                    ,
+      'area_sia_gf'                 ,
+      'area_sia_nf'                 ,
+
       'volume'                      ,
       'ceiling_height'              ,
       'hall_height'                 ,
@@ -410,8 +416,8 @@ class Import {
             $numval_from = $numval_parts[0];
             $numval_to = (isset($numval_parts[1]) ? $numval_parts[1] : false);
             $the_values[] = array(
-              'from' => $this->conversion->casasync_numStringToArray($numval_from),
-              'to' => $this->conversion->casasync_numStringToArray($numval_to)
+              'from' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_from),
+              'to' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_to)
             );
           }
           $the_numvals[(string)$numval['key']] = $the_values;
@@ -442,9 +448,13 @@ class Import {
             $r_numvals[$key] = $the_value;*/
             break;
           //simple value with si
-          case 'surface_living':
+          #case 'surface_living':
           case 'surface_property':
-          case 'surface_usable':
+          #case 'surface_usable':
+          case 'area_bwf':
+          case 'area_nwf':
+          case 'area_sia_gf':
+          case 'area_sia_nf':
           case 'volume':
           case 'ceiling_height':
           case 'hall_height':

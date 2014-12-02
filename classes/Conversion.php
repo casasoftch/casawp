@@ -1,10 +1,10 @@
 <?php
   namespace CasaSync;
 
-  class Conversion {  
-    
-    public function __construct(){ 
-    }  
+  class Conversion {
+
+    public function __construct(){
+    }
 
     public function countrycode_to_countryname($cc=''){
         $arr = $this->country_arrays();
@@ -270,8 +270,14 @@
 
     public function casasync_convert_numvalKeyToLabel($key){
         switch ($key) {
-            case 'surface_living':             return __('Living space' ,'casasync');break;
+            #case 'surface_living':             return __('Living space' ,'casasync');break;
+            #case 'surface_usable':             return __('Surface usable' ,'casasync');break;
             case 'surface_property':           return __('Property space' ,'casasync');break;
+            case 'area_bwf':                   return __('Living space' ,'casasync');break;
+            case 'area_nwf':                   return __('Net living space' ,'casasync');break;
+            case 'area_sia_gf':                return __('Gross floor area' ,'casasync');break;
+            case 'area_sia_nf':                return __('Surface usable' ,'casasync');break;
+
             case 'year_renovated':             return __('Year of renovation' ,'casasync');break;
             case 'year_built':                 return __('Year of construction' ,'casasync');break;
             case 'number_of_rooms':            return __('Number of rooms' ,'casasync');break;
@@ -279,12 +285,17 @@
             case 'floor':                      return __('Floor' ,'casasync');break;
             case 'volume':                     return __('Volume' ,'casasync');break;
             case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
-            case 'surface_usable':             return __('Surface usable' ,'casasync');break;
             case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
             case 'hall_height':                return __('Hall height' ,'casasync');break;
             case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casasync');break;
             case 'carrying_capacity_crane':    return __('Carrying capacity crane' ,'casasync');break;
             case 'carrying_capacity_elevator': return __('Carrying capacity elevator' ,'casasync');break;
+
+            /*
+            'area_bwf'                    ,
+      'area_nwf'                    ,
+      'area_sia_gf'                 ,
+      'area_sia_nf'*/
         }
     }
 
@@ -367,7 +378,7 @@
             case 'distance_airport':               return __('Airport', 'casasync');break;
         }
     }
-    
+
     public function casasync_convert_availabilityKeyToLabel($key){
         switch ($key) {
             //old
@@ -463,8 +474,12 @@
 
     public function casasync_get_allNumvalKeys(){
       return array(
-        'surface_living',
-        'surface_usable',
+        #'surface_living',
+        #'surface_usable',
+        'area_bwf',
+        'area_nwf',
+        'area_sia_gf',
+        'area_sia_nf',
         'surface_property',
         'year_renovated',
         'year_built',
@@ -481,7 +496,8 @@
       );
     }
 
-    public function casasync_numStringToArray($string){
+    public function casasync_numStringToArray($key, $string){
+      
       $si = false;
       if ($string == '') {
         return false;
@@ -534,6 +550,21 @@
             $si = $first . $second;
         }
       }
+
+      switch ($key) {
+        case 'area_bwf':
+        case 'area_nwf':
+        case 'area_sia_gf':
+        case 'area_sia_nf':
+          if(!$si) {
+            $si = 'm';
+          }
+          break;
+        default:
+          break;
+      }
+
+
       return array('value' => (FLOAT) $string, 'si' => $si);
     }
-  }  
+  }
