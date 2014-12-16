@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
     if ($('.casasync-basic-box').length){
         if (window.casasyncOptionParams && window.casasyncOptionParams.load_css == 'bootstrapv3') {
             var selector = '.casasync-basic-box';
-            $(selector).equalHeightColumns({
+            $(selector+":visible").equalHeightColumns({
                 speed : 500
             });
         }
