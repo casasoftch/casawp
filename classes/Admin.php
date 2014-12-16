@@ -24,15 +24,21 @@ class Admin {
 		add_option('casasync_share_twitter', '0');
 		add_option('casasync_use_captcha', '0');
 		add_option('casasync_single_show_number_of_rooms', '1');
-		add_option('casasync_single_show_surface_usable', '1');
-		add_option('casasync_single_show_surface_living', '1');
+		#add_option('casasync_single_show_surface_usable', '1');
+		add_option('casasync_single_show_area_sia_nf', '1');
+		add_option('casasync_single_show_area_bwf', '1');
+		#add_option('casasync_single_show_surface_living', '1');
 		add_option('casasync_single_show_surface_property', '1');
 		add_option('casasync_single_use_zoomlevel', '12');
+		add_option('casasync_single_max_thumbnails', '15');
+		add_option('casasync_single_thumbnail_ideal_width', '150');
 		//archive view
 		add_option('casasync_archive_show_location', '1');
 		add_option('casasync_archive_show_number_of_rooms', '1');
-		add_option('casasync_archive_show_surface_usable', '1');
-		add_option('casasync_archive_show_surface_living', '1');
+		#add_option('casasync_archive_show_surface_usable', '1');
+		#add_option('casasync_archive_show_surface_living', '1');
+		add_option('casasync_archive_show_area_bwf', '1');
+		add_option('casasync_archive_show_area_sia_nf', '1');
 		add_option('casasync_archive_show_surface_property', '1');
 		add_option('casasync_archive_show_year_built', '1');
 		add_option('casasync_archive_show_price', '1');

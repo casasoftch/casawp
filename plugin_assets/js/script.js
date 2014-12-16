@@ -130,6 +130,61 @@ jQuery(document).ready(function($) {
         }
     }
 
+    /**/
+    if($('.casasync-gallery-thumbnails').length && window.casasyncOptionParams){
+        function setThumbnailColumns() {
+            var that = '.casasync-gallery-thumbnails';
+            var attachments = $(that).find('a');
+            var width = $(that).width();
+            var idealThumbnailWidth = window.casasyncOptionParams.thumbnails_ideal_width;
+
+            if ( width ) {
+                var columns = Math.min( Math.round( width / idealThumbnailWidth ), 8 ) || 1;
+                var imageSize = width / columns;
+                $( attachments ).each(function( index ) {
+                    $(this).attr( 'data-col', columns );
+                });
+            }
+            if (typeof ticker === 'undefined') {
+                var windowWidth = $(window).width();
+                var windowHeight = $(window).height();
+                ticker = setInterval(function () {
+                    if ((width != $(window).width()) || (height != $(window).height())) {
+                        windowWidth = $(window).width();
+                        windowHeight = $(window).height();
+                        setThumbnailColumns();
+                    }
+                }, 300);
+            }
+        }
+        setThumbnailColumns();
+    }
+    /*
+    var prev = $attachments.columns,
+    width = $attachments.width();
+    if ( width ) {
+        $attachments.columns = Math.min( Math.round( width / 150 ), 12 ) || 1;
+
+        if ( ! prev || prev !== $attachments.columns ) {
+            $attachments.closest( '.media-frame-content' ).attr( 'data-columns', $attachments.columns );
+        }
+    }
+    if (!that.ticker) {
+        var $window = $(window);
+        that.windowWidth = $window.width();
+        that.windowHeight = $window.height();
+        that.ticker = setInterval(function () {
+            if ((width != $window.width()) || (height != $window.height())) {
+                that.windowWidth = $window.width();
+                that.windowHeight = $window.height();
+
+                that['setColumns'](_relatedTarget);
+            }
+        }, 300);
+    }*/
+    /**/
+
+
     if ((window.casasyncOptionParams && window.casasyncOptionParams.load_css == 'bootstrapv2') && (window.casasyncOptionParams && window.casasyncOptionParams.load_bootstrap_js == 1)) {
         // Bootstrap 2 Scripts
         $('#casasyncCarousel').carousel({

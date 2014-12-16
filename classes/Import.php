@@ -11,9 +11,15 @@ class Import {
   public $transcript = array();
   public $curtrid = false;
   public $meta_keys = array(
-      'surface_living'              ,
+     #'surface_living'              ,
       'surface_property'            ,
-      'surface_usable'              ,
+      #'surface_usable'              ,
+
+      'area_bwf'                    ,
+      'area_nwf'                    ,
+      'area_sia_gf'                 ,
+      'area_sia_nf'                 ,
+
       'volume'                      ,
       'ceiling_height'              ,
       'hall_height'                 ,
@@ -94,6 +100,13 @@ class Import {
       'distance_motorway'                            ,
       'distance_school1'                             ,
       'distance_school2'                             ,
+      'distance_bus_stop',
+      'distance_train_station',
+      'distance_post',
+      'distance_bank',
+      'distance_cable_railway_station',
+      'distance_boat_dock',
+      'distance_airport',
 
       'casasync_features'                            ,
   );
@@ -403,8 +416,8 @@ class Import {
             $numval_from = $numval_parts[0];
             $numval_to = (isset($numval_parts[1]) ? $numval_parts[1] : false);
             $the_values[] = array(
-              'from' => $this->conversion->casasync_numStringToArray($numval_from),
-              'to' => $this->conversion->casasync_numStringToArray($numval_to)
+              'from' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_from),
+              'to' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_to)
             );
           }
           $the_numvals[(string)$numval['key']] = $the_values;
@@ -435,9 +448,13 @@ class Import {
             $r_numvals[$key] = $the_value;*/
             break;
           //simple value with si
-          case 'surface_living':
+          #case 'surface_living':
           case 'surface_property':
-          case 'surface_usable':
+          #case 'surface_usable':
+          case 'area_bwf':
+          case 'area_nwf':
+          case 'area_sia_gf':
+          case 'area_sia_nf':
           case 'volume':
           case 'ceiling_height':
           case 'hall_height':
@@ -1178,16 +1195,30 @@ class Import {
     }
     $new_meta_data['casasync_start']                          = $this->simpleXMLget($xmloffer->start);
     $new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
-    if ($xmloffer->seller && $xmloffer->seller->organization && $xmloffer->seller->organization->address) {
-      $new_meta_data['seller_org_address_country']               = $this->simpleXMLget($xmloffer->seller->organization->address->Country            );
-      $new_meta_data['seller_org_address_locality']              = $this->simpleXMLget($xmloffer->seller->organization->address->locality           );
-      $new_meta_data['seller_org_address_region']                = $this->simpleXMLget($xmloffer->seller->organization->address->region             );
-      $new_meta_data['seller_org_address_postalcode']            = $this->simpleXMLget($xmloffer->seller->organization->address->postalCode         );
-      $new_meta_data['seller_org_address_postofficeboxnumber']   = $this->simpleXMLget($xmloffer->seller->organization->address->postOfficeBoxNumber);
-      $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
-                                                                   $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
-      $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName                   );
-      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand                   );
+    if ($xmloffer->seller && $xmloffer->seller->organization) {
+      foreach ($xmloffer->seller->organization->phone as $number) {
+        if ($number['type'] == 'direct') {
+          $new_meta_data['seller_org_phone_direct'] = $number->__toString();
+        } elseif($number['type'] == 'central') {
+          $new_meta_data['seller_org_phone_central'] = $number->__toString();
+        } elseif ($number['type'] == 'mobile') {
+          $new_meta_data['seller_org_phone_mobile'] = $number->__toString();
+        } else {
+          
+        }
+      }
+
+      $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName          );
+      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand              );
+      if ($xmloffer->seller->organization->address) {
+        $new_meta_data['seller_org_address_country']               = $this->simpleXMLget($xmloffer->seller->organization->address->Country            );
+        $new_meta_data['seller_org_address_locality']              = $this->simpleXMLget($xmloffer->seller->organization->address->locality           );
+        $new_meta_data['seller_org_address_region']                = $this->simpleXMLget($xmloffer->seller->organization->address->region             );
+        $new_meta_data['seller_org_address_postalcode']            = $this->simpleXMLget($xmloffer->seller->organization->address->postalCode         );
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $this->simpleXMLget($xmloffer->seller->organization->address->postOfficeBoxNumber);
+        $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
+                                                                     $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
+      }
     }
 
 

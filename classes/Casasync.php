@@ -78,13 +78,14 @@ class CasaSync {
 
     public function setOptionJsVars(){
         $script_params = array(
-           'google_maps'           => get_option('casasync_load_googlemaps', 0),
-           'google_maps_zoomlevel' => get_option('casasync_single_use_zoomlevel', 12),
-           //'fancybox'              => get_option('casasync_load_fancybox', 0),
-           'featherlight'          => get_option('casasync_load_featherlight', 0),
-           'chosen'                => get_option('casasync_load_chosen', 0),
-           'load_css'              => get_option('casasync_load_css', 'bootstrapv3'),
-           'load_bootstrap_js'     => get_option('casasync_load_bootstrap_scripts')
+           'google_maps'              => get_option('casasync_load_googlemaps', 0),
+           'google_maps_zoomlevel'    => get_option('casasync_single_use_zoomlevel', 12),
+           //'fancybox'                 => get_option('casasync_load_fancybox', 0),
+           'featherlight'             => get_option('casasync_load_featherlight', 0),
+           'chosen'                   => get_option('casasync_load_chosen', 0),
+           'load_css'                 => get_option('casasync_load_css', 'bootstrapv3'),
+           'load_bootstrap_js'        => get_option('casasync_load_bootstrap_scripts'),
+           'thumbnails_ideal_width'   => get_option('casasync_single_thumbnail_ideal_width', 150),
         );
         wp_localize_script( 'casasync_script', 'casasyncOptionParams', $script_params );
     }
@@ -525,7 +526,7 @@ class CasaSync {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
+            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes' ),
             'menu_icon'          => 'dashicons-admin-home',
             'show_in_nav_menus'  => true
         );

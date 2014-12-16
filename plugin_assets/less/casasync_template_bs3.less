@@ -252,6 +252,25 @@
 			.btn-block;
 		}
 	}
+	.casasync-gallery-thumbnails{
+		margin-left: -8px;
+		margin-right: -8px;
+		a{
+			display: inline-block;
+			padding: 8px;
+			img{
+				height: 100%;
+			}
+		}
+		a[data-col='1']{ width: 100%; }
+		a[data-col='2']{ width: 50%; }
+		a[data-col='3']{ width: 33.33%; }
+		a[data-col='4']{ width: 25%; }
+		a[data-col='5']{ width: 20%; }
+		a[data-col='6']{ width: 16.66%; }
+		a[data-col='7']{ width: 14.285%; }
+		a[data-col='8']{ width: 12.5%; }
+	}
 	.casasync-tabable-nav{
 		.nav;
 		.nav-tabs;
@@ -315,7 +334,9 @@
 		.hidden-lg;
 	}
 }
-
+body .featherlight{
+	z-index: 9999;
+}
 .entry-content{
 	.casasync-slider-thumbnails{
 		.hidden-sm;

@@ -36,16 +36,18 @@
 					'casasync_share_googleplus',
 					'casasync_share_twitter',
 					'casasync_single_show_number_of_rooms',
-			        'casasync_single_show_surface_usable',
-			        'casasync_single_show_surface_living',
-			        'casasync_single_show_surface_property',
-			        'casasync_single_show_floor',
-			        'casasync_single_show_number_of_floors',
-			        'casasync_single_show_year_built',
-			        'casasync_single_show_year_renovated',
-			        'casasync_single_show_carousel_indicators',
-			        'casasync_single_show_availability',
-			        'casasync_sellerfallback_show_organization',
+					#'casasync_single_show_surface_usable',
+					#'casasync_single_show_surface_living',
+					'casasync_single_show_area_bwf',
+					'casasync_single_show_area_sia_nf',
+					'casasync_single_show_surface_property',
+					'casasync_single_show_floor',
+					'casasync_single_show_number_of_floors',
+					'casasync_single_show_year_built',
+					'casasync_single_show_year_renovated',
+					'casasync_single_show_carousel_indicators',
+					'casasync_single_show_availability',
+					'casasync_sellerfallback_show_organization',
 					'casasync_sellerfallback_show_person_view',
 				);
 				break;
@@ -57,17 +59,19 @@
 					'casasync_archive_show_zip',
 					'casasync_archive_show_location',
 					'casasync_archive_show_number_of_rooms',
-			        'casasync_archive_show_surface_usable',
-			        'casasync_archive_show_surface_living',
-			        'casasync_archive_show_surface_property',
-			        'casasync_archive_show_floor',
-			        'casasync_archive_show_number_of_floors',
-			        'casasync_archive_show_year_built',
-			        'casasync_archive_show_year_renovated',
-			        'casasync_archive_show_price',
-			        'casasync_archive_show_excerpt',
-			        'casasync_archive_show_availability',
-			        'casasync_archive_show_thumbnail_size_crop'
+					#'casasync_single_show_surface_usable',
+					#'casasync_single_show_surface_living',
+					'casasync_archive_show_area_bwf',
+					'casasync_archive_show_area_sia_nf',
+					'casasync_archive_show_surface_property',
+					'casasync_archive_show_floor',
+					'casasync_archive_show_number_of_floors',
+					'casasync_archive_show_year_built',
+					'casasync_archive_show_year_renovated',
+					'casasync_archive_show_price',
+					'casasync_archive_show_excerpt',
+					'casasync_archive_show_availability',
+					'casasync_archive_show_thumbnail_size_crop'
 				);
 				break;
 			case 'contactform':
@@ -267,22 +271,22 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_surface_usable'; ?>
+										<?php $name = 'casasync_single_show_area_sia_nf'; ?>
 										<?php $text = 'Nutzfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_surface_usable_order'; ?>
+										<?php $name = 'casasync_single_show_area_sia_nf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_surface_living'; ?>
+										<?php $name = 'casasync_single_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_surface_living_order'; ?>
+										<?php $name = 'casasync_single_show_area_bwf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
@@ -393,6 +397,27 @@
 										<?php $text = 'Navigation mit Kreisen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">Thumbnails</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
+										<?php $name = 'casasync_single_max_thumbnails'; ?>
+										<?php $text = 'Maximale Anzahl Thumbnails'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
+										</label>
+									</fieldset>
+									<fieldset>
+										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
+										<?php $name = 'casasync_single_thumbnail_ideal_width'; ?>
+										<?php $text = 'Ideale Breite der Thumbnails'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
 										</label>
 									</fieldset>
 								</td>
@@ -679,22 +704,22 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_surface_usable'; ?>
+										<?php $name = 'casasync_archive_show_area_sia_nf'; ?>
 										<?php $text = 'Nutzfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_surface_usable_order'; ?>
+										<?php $name = 'casasync_archive_show_area_sia_nf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_surface_living'; ?>
+										<?php $name = 'casasync_archive_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_surface_living_order'; ?>
+										<?php $name = 'casasync_archive_show_area_bwf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
