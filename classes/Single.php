@@ -70,7 +70,75 @@
     public function __construct($post){ 
       $this->conversion = new Conversion;
       $this->setProperty($post);
-    }  
+    }
+
+    public function getPropertyQuery() {
+      $query = $_GET;
+      $w_categories = array();
+      if (isset($query['casasync_category_s'])) {
+        foreach ($query['casasync_category_s'] as $slug => $value) {
+          $w_categories[] = $value;
+        }
+      }
+      $taxquery_new = array();
+      if ($w_categories) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_category',
+               'terms' => $w_categories,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
+
+      $w_locations = array();
+      if (isset($query['casasync_location_s'])) {
+        foreach ($query['casasync_location_s'] as $slug => $options) {
+          $w_locations[] = $value;
+        }
+        if ($w_locations) {
+          $taxquery_new[] =
+             array(
+                 'taxonomy' => 'casasync_location',
+                 'terms' => $w_locations,
+                 'include_children' => 1,
+                 'field' => 'slug',
+                 'operator'=> 'IN'
+             )
+          ;
+        }
+      }
+      $w_salestypes = array();
+      if (isset($query['casasync_salestype_s'])) {
+        foreach ($query['casasync_salestype_s'] as $slug => $options) {
+          $w_salestypes[] = $value;
+        }
+      }
+      if ($w_salestypes) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_salestype',
+               'terms' => $w_salestypes,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
+
+      $posts_per_page = 2000;
+      $args = array(
+        'post_type' => 'casasync_property',
+        'posts_per_page' => $posts_per_page,
+        'tax_query' => $taxquery_new, 
+      );
+
+      $the_query = new \WP_Query( $args );
+
+      return $the_query;
+    }
 
     public function getPrevNext($query){
       $w_categories = array();
