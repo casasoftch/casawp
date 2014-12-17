@@ -112,7 +112,10 @@
       }
       $w_salestypes = array();
       if (isset($query['casasync_salestype_s'])) {
-        foreach ($query['casasync_salestype_s'] as $slug => $options) {
+        if (!is_array($query['casasync_salestype_s'])) {
+          $query['casasync_salestype_s'] = array($query['casasync_salestype_s']);
+        }
+        foreach ($query['casasync_salestype_s'] as $slug => $value) {
           $w_salestypes[] = $value;
         }
       }
