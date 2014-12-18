@@ -497,9 +497,12 @@
       if($this->start) {
         $current_datetime = strtotime(date('c'));
         $property_datetime = strtotime($this->start);
+        
         if ($property_datetime > $current_datetime && $this->start != false) {
           $datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
           $return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
+        } else if ($this->start == false || $this->start == ''){
+          $return = __('On Request', 'casasync');  
         } else {
           $return = $this->conversion->casasync_convert_availabilityKeyToLabel('immediately');
         }
@@ -800,6 +803,21 @@
       return $content;
     }
 
+    public function formatStartdate($str){
+      if (!$str) {
+        return __('On Request' ,'casasync');
+      }
+      $datetime = new \DateTime($str);
+      if (!$datetime) {
+        return __('On Request' ,'casasync');
+      }
+      if ($datetime < new \DateTime('now')) {
+        return __('Immediate' ,'casasync');
+      }
+      return $datetime->format('d.m.Y');
+
+    } 
+
     public function getSpecificationsTable(){
       $content = '<h3>' . __('Offer','casasync'). '</h3>';
       $content .= '<table class="table">';
@@ -846,9 +864,9 @@
       }
       if ($this->the_availability) {
         $content .= '<tr>'
-              .'<td class="width-25">' . __('Availability','casasync') . '</td>'
+              .'<td class="width-25">' . __('Available from:','casasync') . '</td>'
             .'<td class="width-75">';
-            $content .= $this->the_availability;
+            $content .= $this->formatStartdate($this->start);
             $content .= '</td>'
             .'</tr>';
       }
