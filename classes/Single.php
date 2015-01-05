@@ -182,6 +182,7 @@
           ;
         }
       }
+
       $w_salestypes = array();
       if (array_key_exists('salestypes', $query)) {
         foreach ($query['salestypes'] as $slug => $options) {
@@ -201,7 +202,28 @@
            )
         ;
       }
-
+      
+      $w_availabilities = array();
+      if (array_key_exists('availabilities', $query)) {
+        foreach ($query['availabilities'] as $slug => $options) {
+          if ($options['checked']) {
+            $w_availabilities[] = $options['value'];
+          }
+        }
+      } else {
+        $w_availabilities = array('active','reserved');
+      }
+      if ($w_availabilities) {
+        $taxquery_new[] =
+           array(
+               'taxonomy' => 'casasync_availability',
+               'terms' => $w_availabilities,
+               'include_children' => 1,
+               'field' => 'slug',
+               'operator'=> 'IN'
+           )
+        ;
+      }
 
       $posts_per_page = get_option('posts_per_page', 10);
       $args = array(
