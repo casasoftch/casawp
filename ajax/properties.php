@@ -5,7 +5,7 @@
 	$mapData = array();
 	$i=1;
 	foreach ($propertyQuery->posts as $key => $post) {
-		$featured_img_src = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID()), 'medium' );
+		$featured_img_src = wp_get_attachment_image_src(get_post_thumbnail_id( get_the_ID()), 'large' );
 		$mapData[$i] = array();
 		$mapData[$i]['id'] = $post->ID;
 		$mapData[$i]['title'] = $post->post_title;
