@@ -1184,6 +1184,9 @@
     }
 
     public function getContactform(){
+      if ($this->availability == 'reference') {
+        return false;
+      }
       $emails = $this->getContactEmails();
       $i = 0;
       foreach ($emails as $k => $v) {
