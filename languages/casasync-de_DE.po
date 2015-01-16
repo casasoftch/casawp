@@ -1538,15 +1538,15 @@ msgstr "Wohnung"
 
 #: .././classes/Conversion.php:328
 msgid "Attic Flat"
-msgstr ""
+msgstr "Attikawohnung"
 
 #: .././classes/Conversion.php:329
 msgid "Bachelor Flat"
-msgstr ""
+msgstr "Einliegerwohnung"
 
 #: .././classes/Conversion.php:330
 msgid "Bifamiliar House"
-msgstr ""
+msgstr "Doppeleinfamilienhaus"
 
 #: .././classes/Conversion.php:331
 #, fuzzy
@@ -1560,15 +1560,15 @@ msgstr "Autogarage"
 
 #: .././classes/Conversion.php:333
 msgid "Duplex"
-msgstr ""
+msgstr "Maisonette / Duplex"
 
 #: .././classes/Conversion.php:334
 msgid "Factory"
-msgstr ""
+msgstr "Fabrik"
 
 #: .././classes/Conversion.php:335
 msgid "Farm"
-msgstr ""
+msgstr "Farm"
 
 #: .././classes/Conversion.php:336
 #, fuzzy
@@ -1577,7 +1577,7 @@ msgstr "Haus"
 
 #: .././classes/Conversion.php:337
 msgid "Furnished Flat"
-msgstr ""
+msgstr "Möbl. Wohnobj."
 
 #: .././classes/Conversion.php:338 .././classes/Conversion.php:462
 msgid "Garage"
@@ -1585,11 +1585,11 @@ msgstr "Autogarage"
 
 #: .././classes/Conversion.php:339
 msgid "Loft"
-msgstr ""
+msgstr "Loft"
 
 #: .././classes/Conversion.php:340
 msgid "Mountain Farm"
-msgstr ""
+msgstr "Alpwirtschaft"
 
 #: .././classes/Conversion.php:341
 msgid "Multiple Dwelling"
@@ -1597,7 +1597,7 @@ msgstr "Mehrfamilienhaus"
 
 #: .././classes/Conversion.php:342
 msgid "Open Slot"
-msgstr ""
+msgstr "offener Parkplatz"
 
 #: .././classes/Conversion.php:343
 #, fuzzy
@@ -1628,15 +1628,15 @@ msgstr "Einfamilienhaus"
 
 #: .././classes/Conversion.php:349
 msgid "Single Room"
-msgstr ""
+msgstr "Einzelzimmer"
 
 #: .././classes/Conversion.php:350
 msgid "Terrace Flat"
-msgstr ""
+msgstr "Terrassenwohnung"
 
 #: .././classes/Conversion.php:351
 msgid "Terrace House"
-msgstr ""
+msgstr "Terrassenhaus"
 
 #: .././classes/Conversion.php:352
 #, fuzzy
@@ -1650,11 +1650,11 @@ msgstr "Anguilla"
 
 #: .././classes/Conversion.php:354
 msgid "Chalet"
-msgstr ""
+msgstr "Chalet"
 
 #: .././classes/Conversion.php:355
 msgid "Studio"
-msgstr ""
+msgstr "Studio"
 
 #: .././classes/Conversion.php:356
 msgid "House"
@@ -1662,7 +1662,7 @@ msgstr "Haus"
 
 #: .././classes/Conversion.php:357
 msgid "Covered Slot"
-msgstr ""
+msgstr "Unterstand"
 
 #: .././classes/Conversion.php:359
 msgid "Commercial"
@@ -1705,19 +1705,19 @@ msgstr "Neubau"
 
 #: .././classes/Conversion.php:368
 msgid "Advertising Area"
-msgstr ""
+msgstr "Werbefläche"
 
 #: .././classes/Conversion.php:369
 msgid "Arcade"
-msgstr ""
+msgstr "Arcade"
 
 #: .././classes/Conversion.php:370
 msgid "Atelier"
-msgstr ""
+msgstr "Atelier"
 
 #: .././classes/Conversion.php:371
 msgid "Bakery"
-msgstr ""
+msgstr "Bäckerei"
 
 #: .././classes/Conversion.php:372
 #, fuzzy
@@ -1726,23 +1726,23 @@ msgstr "Bahrain"
 
 #: .././classes/Conversion.php:373
 msgid "Butcher"
-msgstr ""
+msgstr "Metzgerei"
 
 #: .././classes/Conversion.php:374
 msgid "Café"
-msgstr ""
+msgstr "Café"
 
 #: .././classes/Conversion.php:375
 msgid "Casino"
-msgstr ""
+msgstr "Casino"
 
 #: .././classes/Conversion.php:376
 msgid "Cheese Factory"
-msgstr ""
+msgstr "Käserei"
 
 #: .././classes/Conversion.php:377
 msgid "Club/Disco"
-msgstr ""
+msgstr "Club/Disco"
 
 #: .././classes/Conversion.php:378
 #, fuzzy
@@ -1756,27 +1756,27 @@ msgstr "Garten"
 
 #: .././classes/Conversion.php:380
 msgid "Hairdresser"
-msgstr ""
+msgstr "Coiffeursalon"
 
 #: .././classes/Conversion.php:381
 msgid "Kiosk"
-msgstr ""
+msgstr "Kiosk"
 
 #: .././classes/Conversion.php:382
 msgid "Movie Theater"
-msgstr ""
+msgstr "Kino / Theater"
 
 #: .././classes/Conversion.php:383
 msgid "Office"
-msgstr ""
+msgstr "Büro"
 
 #: .././classes/Conversion.php:384
 msgid "Practice"
-msgstr ""
+msgstr "Praxis"
 
 #: .././classes/Conversion.php:385
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurant"
 
 #: .././classes/Conversion.php:386
 #, fuzzy
@@ -1790,7 +1790,7 @@ msgstr "Shoppingcenter"
 
 #: .././classes/Conversion.php:388
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
 #: .././classes/Conversion.php:423
 msgid "Public transportation"
@@ -1916,7 +1916,7 @@ msgstr "Haustiere erlaubt"
 
 #: .././classes/Conversion.php:488
 msgid "ISDN Anschluss"
-msgstr ""
+msgstr "ISDN Anschluss"
 
 #: .././classes/Conversion.php:492
 #, php-format
@@ -2151,7 +2151,7 @@ msgstr "Distanzen"
 
 #: .././classes/Single.php:949
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: .././classes/Single.php:1149
 msgid "Previous"
@@ -2229,11 +2229,11 @@ msgstr "Dokument"
 
 #: .././options.php:117
 msgid "Einstellungen gespeichert.."
-msgstr ""
+msgstr "Einstellungen gespeichert.."
 
 #: .././options.php:123
 msgid "Daten wurden importiert.."
-msgstr ""
+msgstr "Daten wurden importiert.."
 
 #~ msgid "per"
 #~ msgstr "pro"
