@@ -127,6 +127,7 @@ class CasaSync {
 
 
     public function customize_casasync_category($query){
+        $query->set('post-type', "casasync_property");
 
         if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
