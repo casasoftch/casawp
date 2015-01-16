@@ -92,6 +92,7 @@ class Import {
       'grossPrice'                                   ,
       'netPrice'                                     ,
       'the_urls'                                     ,
+      'the_tags'                                     ,
       'extraPrice'                                   ,
 
       'distance_public_transport'                    ,
@@ -1248,6 +1249,18 @@ class Import {
       $new_meta_data['the_urls'] = $the_urls;
     }
 
+
+    //tags
+    $the_tags = array();
+    if ($xmloffer->tags) {
+      foreach ($xmloffer->tags->tag as $tag) {
+        $the_tags[] = $this->simpleXMLget($tag);
+      }
+    }
+    $new_meta_data['the_tags'] = $the_tags;
+
+
+
     $offer_type     = $this->simpleXMLget($xmloffer->type);
     $new_meta_data['price_currency'] = $this->simpleXMLget($xmloffer->priceCurrency);
 
@@ -1364,7 +1377,7 @@ class Import {
 
     if ($new_meta_data != $old_meta_data) {
       foreach ($this->meta_keys as $key) {
-        if (in_array($key, array('the_urls', 'extraPrice'))) {
+        if (in_array($key, array('the_urls', 'the_tags', 'extraPrice'))) {
           if (isset($new_meta_data[$key])) {
             $new_meta_data[$key] = $new_meta_data[$key];
           }

@@ -11,6 +11,15 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
+	"\/ajax\/properties.php": {
+		"fileType": 8192,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/ajax\/properties.php",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
 	"\/assets\/screenshot-1.png": {
 		"fileType": 32768,
 		"ignore": 0,
@@ -921,6 +930,17 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/plugin_assets\/js\/jstorage.js",
 		"outputAbbreviatedPath": "\/plugin_assets\/js\/min\/jstorage-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/plugin_assets\/js\/min\/script-min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/plugin_assets\/js\/min\/script-min.js",
+		"outputAbbreviatedPath": "\/plugin_assets\/js\/min\/min\/script-min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -2688,8 +2708,8 @@
 		"disableJavascript": 0,
 		"fileType": 1,
 		"ieCompatibility": 1,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
+		"ignore": 0,
+		"ignoreWasSetByUser": 1,
 		"inputAbbreviatedPath": "\/plugin_assets\/less\/casasync_template_bs3.less",
 		"outputAbbreviatedPath": "\/plugin_assets\/css\/casasync_template_bs3.css",
 		"outputPathIsOutsideProject": 0,
@@ -3039,7 +3059,7 @@
 	},
 "hooks": [
 	],
-"lastSavedByUser": "Jeremias Nater",
+"lastSavedByUser": "Jens Stalder",
 "manualImportLinks": {
 	},
 "projectAttributes": {

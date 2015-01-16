@@ -8958,3 +8958,43 @@ td.casasync-visible-xs {
     width: 100%;
   }
 }
+.featherlight .featherlight-previous span {
+  font-size: 0px;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.featherlight .featherlight-previous span.pull-left {
+  margin-right: .3em;
+}
+.featherlight .featherlight-previous span.pull-right {
+  margin-left: .3em;
+}
+.featherlight .featherlight-previous span:before {
+  font-size: 80px;
+  content: "\f053";
+}
+.featherlight .featherlight-next span {
+  font-size: 0px;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.featherlight .featherlight-next span.pull-left {
+  margin-right: .3em;
+}
+.featherlight .featherlight-next span.pull-right {
+  margin-left: .3em;
+}
+.featherlight .featherlight-next span:before {
+  font-size: 80px;
+  content: "\f054";
+}
