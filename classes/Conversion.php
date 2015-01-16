@@ -321,16 +321,73 @@
 
         if (!$label) {
           switch ($key) {
-              case 'agriculture':     $label = __('Agriculture' ,'casasync');break;
-              case 'apartment':       $label = __('Apartment' ,'casasync');break;
-              case 'gastronomy':      $label = __('Gastronomy' ,'casasync');break;
-              case 'house':           $label = __('House' ,'casasync');break;
-              case 'industrial':      $label = __('Industrial' ,'casasync');break;
-              case 'parking':         $label = __('Parking space' ,'casasync');break;
-              case 'plot':            $label = __('Plot' ,'casasync');break;
               case 'secondary-rooms': $label = __('Secondary rooms' ,'casasync');break;
               case 'garden':          $label = __('Garden' ,'casasync');break;
+
+              case 'apartment':       $label = __('Apartment' ,'casasync');break;
+              case 'attic-flat':      $label = __('Attic Flat' ,'casasync');break;
+              case 'bachelor-flat':      $label = __('Bachelor Flat' ,'casasync');break;
+              case 'bifamiliar-house':      $label = __('Bifamiliar House' ,'casasync');break;
+              case 'building-land':      $label = __('Building Land' ,'casasync');break;
+              case 'double-garage':      $label = __('Double Garage' ,'casasync');break;
+              case 'duplex':      $label = __('Duplex' ,'casasync');break;
+              case 'factory':      $label = __('Factory' ,'casasync');break;
+              case 'farm':      $label = __('Farm' ,'casasync');break;
+              case 'farm-house':      $label = __('Farm House' ,'casasync');break;
+              case 'furnished-flat':      $label = __('Furnished Flat' ,'casasync');break;
+              case 'garage':      $label = __('Garage' ,'casasync');break;
+              case 'loft':      $label = __('Loft' ,'casasync');break;
+              case 'mountain-farm':      $label = __('Mountain Farm' ,'casasync');break;
+              case 'multiple-dwelling':      $label = __('Multiple Dwelling' ,'casasync');break;
+              case 'open-slot':      $label = __('Open Slot' ,'casasync');break;
+              case 'parking-space':      $label = __('Parking Space' ,'casasync');break;
+              case 'plot':            $label = __('Plot' ,'casasync');break;
+              case 'roof-flat':      $label = __('Roof Flat' ,'casasync');break;
+              case 'row-house':      $label = __('Row House' ,'casasync');break;
+              case 'single-garage':      $label = __('Single Garage' ,'casasync');break;
+              case 'single-house':      $label = __('Single House' ,'casasync');break;
+              case 'single-room':      $label = __('Single Room' ,'casasync');break;
+              case 'terrace-flat':      $label = __('Terrace Flat' ,'casasync');break;
+              case 'terrace-house':      $label = __('Terrace House' ,'casasync');break;
+              case 'underground-slot':      $label = __('Underground Slot' ,'casasync');break;
+              case 'villa':      $label = __('Villa' ,'casasync');break;
+              case 'chalet':      $label = __('Chalet' ,'casasync');break;
+              case 'studio':      $label = __('Studio' ,'casasync');break;
+              case 'house':           $label = __('House' ,'casasync');break;
+              case 'covered-slot':      $label = __('Covered Slot' ,'casasync');break;
+
               case 'commercial':      $label = __('Commercial' ,'casasync');break;
+              case 'gastronomy':      $label = __('Gastronomy' ,'casasync');break;
+              case 'vacation':      $label = __('Vacation' ,'casasync');break;
+              case 'agriculture':     $label = __('Agriculture' ,'casasync');break;
+              case 'industrial':      $label = __('Industrial' ,'casasync');break;
+              case 'residential':      $label = __('Residential' ,'casasync');break;
+              case 'storage':      $label = __('Storage' ,'casasync');break;
+              case 'parking':         $label = __('Parking space' ,'casasync');break;
+              case 'building':      $label = __('Building' ,'casasync');break;
+              case 'advertising-area':      $label = __('Advertising Area' ,'casasync');break;
+              case 'arcade':      $label = __('Arcade' ,'casasync');break;
+              case 'atelier':      $label = __('Atelier' ,'casasync');break;
+              case 'bakery':      $label = __('Bakery' ,'casasync');break;
+              case 'bar':      $label = __('Bar' ,'casasync');break;
+              case 'butcher':      $label = __('Butcher' ,'casasync');break;
+              case 'café':      $label = __('Café' ,'casasync');break;
+              case 'casino':      $label = __('Casino' ,'casasync');break;
+              case 'cheese-factory':      $label = __('Cheese Factory' ,'casasync');break;
+              case 'club/disco':      $label = __('Club/Disco' ,'casasync');break;
+              case 'fuel-station':      $label = __('Fuel Station' ,'casasync');break;
+              case 'gardening':      $label = __('Gardening' ,'casasync');break;
+              case 'hairdresser':      $label = __('Hairdresser' ,'casasync');break;
+              case 'kiosk':      $label = __('Kiosk' ,'casasync');break;
+              case 'movie-theater':      $label = __('Movie Theater' ,'casasync');break;
+              case 'office':      $label = __('Office' ,'casasync');break;
+              case 'practice':      $label = __('Practice' ,'casasync');break;
+              case 'restaurant':      $label = __('Restaurant' ,'casasync');break;
+              case 'shop':      $label = __('Shop' ,'casasync');break;
+              case 'shopping-centre':      $label = __('Shopping Centre' ,'casasync');break;
+              case 'hotel':      $label = __('Hotel' ,'casasync');break;
+
+
           }
         }
 
