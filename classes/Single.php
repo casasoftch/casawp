@@ -551,7 +551,7 @@
                       $i++;
                       $return .= '<div class="' . ($i == 1 ? 'active' : '') . ' item" data-slide-number="'.($i-1) .'">';
                         $thumbimgL = wp_get_attachment_image( $attachment->ID, 'full', true );
-                        $return .= '<a href="'. wp_get_attachment_url( $attachment->ID ) .'" data-featherlight="image">'. $thumbimgL .'</a>';
+                        $return .= '<a class="property-image-gallery" rel="casasync-single-gallery" href="'. wp_get_attachment_url( $attachment->ID ) .'">'. $thumbimgL .'</a>';
                         $return .= '<div id="carousel-text" class="carousel-caption" >';
                         if($attachment->post_excerpt != '') {
                           $return .= '<p>'. $attachment->post_excerpt .'</p>';

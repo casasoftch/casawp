@@ -8434,6 +8434,48 @@ a.badge:focus {
 body .featherlight {
   z-index: 9999;
 }
+.featherlight .featherlight-previous span {
+  font-size: 0px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.featherlight .featherlight-previous span.pull-left {
+  margin-right: .3em;
+}
+.featherlight .featherlight-previous span.pull-right {
+  margin-left: .3em;
+}
+.featherlight .featherlight-previous span:before {
+  font-size: 80px;
+  content: "\f053";
+}
+.featherlight .featherlight-next span {
+  font-size: 0px;
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.featherlight .featherlight-next span.pull-left {
+  margin-right: .3em;
+}
+.featherlight .featherlight-next span.pull-right {
+  margin-left: .3em;
+}
+.featherlight .featherlight-next span:before {
+  font-size: 80px;
+  content: "\f054";
+}
 .entry-content .casasync-slider-thumbnails ul {
   width: 100%;
   *zoom: 1;

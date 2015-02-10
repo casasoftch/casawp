@@ -302,6 +302,25 @@
 body .featherlight{
 	z-index: 9999;
 }
+.featherlight .featherlight-previous span{
+	font-size: 0px;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+	.fa;
+	&:before{
+		font-size: 80px;
+		content: @fa-var-chevron-left;
+	}
+}
+.featherlight .featherlight-next span{
+	font-size: 0px;
+	.fa;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+	&:before{
+		font-size: 80px;
+		content: @fa-var-chevron-right;	
+
+	}
+}
 .entry-content{
 	.casasync-slider-thumbnails{
 		.hidden-tablet();
