@@ -7,7 +7,7 @@ Tested up to: 4.0.0
 Author: Casasoft AG
 Author URI: http://casasoft.ch
 License: GPL2
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 
 Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
 
@@ -35,6 +35,9 @@ Well, yes and no. Essentialy the plugin activates custom post types and a render
 The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory (/wp-content/uploads/casasync/import/data.xml) and activate a import (either this happens automaticaly, or you may activate it manually within WordPress). Essentialy you can keep this file up-to-date to ensure a synchonised state (be aware that the file will be renamed data-done.xml once imported). Currently supported is CasaXML build 5, but build 6 will eventually be prefered as soon it has been blessed.
 
 == Changelog ==
+
+= 3.0.9 = 
+* added: more translatable categories
 
 = 3.0.8 = 
 * fixed: bug with featherlight and bootstrap 2
