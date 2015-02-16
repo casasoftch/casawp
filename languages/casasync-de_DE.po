@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1549,14 +1549,12 @@ msgid "Bifamiliar House"
 msgstr "Doppeleinfamilienhaus"
 
 #: .././classes/Conversion.php:331
-#, fuzzy
 msgid "Building Land"
-msgstr "Bauland erschlossen"
+msgstr "Bauland"
 
 #: .././classes/Conversion.php:332
-#, fuzzy
 msgid "Double Garage"
-msgstr "Autogarage"
+msgstr "Doppelgarage"
 
 #: .././classes/Conversion.php:333
 msgid "Duplex"
@@ -1571,9 +1569,8 @@ msgid "Farm"
 msgstr "Farm"
 
 #: .././classes/Conversion.php:336
-#, fuzzy
 msgid "Farm House"
-msgstr "Haus"
+msgstr "Bauernhaus"
 
 #: .././classes/Conversion.php:337
 msgid "Furnished Flat"
@@ -1600,7 +1597,6 @@ msgid "Open Slot"
 msgstr "offener Parkplatz"
 
 #: .././classes/Conversion.php:343
-#, fuzzy
 msgid "Parking Space"
 msgstr "Parkplatz"
 
@@ -1613,14 +1609,12 @@ msgid "Roof Flat"
 msgstr "Dachwohnung"
 
 #: .././classes/Conversion.php:346
-#, fuzzy
 msgid "Row House"
-msgstr "Haus"
+msgstr "Reihenhaus"
 
 #: .././classes/Conversion.php:347
-#, fuzzy
 msgid "Single Garage"
-msgstr "Singapur"
+msgstr "Einzelgarage"
 
 #: .././classes/Conversion.php:348
 msgid "Single House"
@@ -1639,14 +1633,12 @@ msgid "Terrace House"
 msgstr "Terrassenhaus"
 
 #: .././classes/Conversion.php:352
-#, fuzzy
 msgid "Underground Slot"
-msgstr "Gedeckt"
+msgstr "Tiefgarage"
 
 #: .././classes/Conversion.php:353
-#, fuzzy
 msgid "Villa"
-msgstr "Anguilla"
+msgstr "Villa"
 
 #: .././classes/Conversion.php:354
 msgid "Chalet"
