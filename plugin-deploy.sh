@@ -7,7 +7,7 @@ BRANCH=${2-'trunk'}
 # paths
 SRC_DIR=$(git rev-parse --show-toplevel)
 DIR_NAME=$(basename $SRC_DIR)
-DEST_DIR=~/svn/$DIR_NAME/$BRANCH
+DEST_DIR=~/svn/$DIR_NAME
  
 # build first
 if [ -f "$SRC_DIR/bin/build" ]; then
