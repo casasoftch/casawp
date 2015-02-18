@@ -8,10 +8,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Language: fr_FR\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
 #: .././casasync-archive.php:31
@@ -1826,7 +1827,7 @@ msgstr "suivant"
 
 #: .././classes/Single.php:1002
 msgid "Base data"
-msgstr "Base de données d'"
+msgstr "Informations principales"
 
 #: .././classes/Single.php:1011
 msgid "Description"

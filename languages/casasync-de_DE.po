@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1675,7 +1675,7 @@ msgstr "Landwirtschaft"
 
 #: .././classes/Conversion.php:363
 msgid "Industrial"
-msgstr "Gewerbe/Industrie"
+msgstr "Gewerbe / Industrie"
 
 #: .././classes/Conversion.php:364
 msgid "Residential"
