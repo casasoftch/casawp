@@ -1539,7 +1539,7 @@
       $return = '';
       switch ($format) {
         case 'num':
-          $return .= $price['num'];
+          $return .= isset($price['num']) ? $price['num'] : '';
           break;
         case 'currency':
         case 'formated':
