@@ -1076,39 +1076,41 @@
               }
               break;
             case 'casasync_archive_show_price':
-              if ($this->main_basis == 'buy') {
-                $return .= '<tr>'
-                  .'<th>' . __('Sales price','casasync') . '</th>'
-                .'<td>';
-                $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync');
-                $return .= '</td>'
-                .'</tr>';
-              }
-              if ($this->main_basis == 'rent') {
-                if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
-                  if ($this->getPrice('gross')) {
-                    $return .= '<tr>'
-                      .'<th>' . __('Gross price','casasync') . '</th>'
-                    .'<td>';
-                    $return .= $this->getPrice('gross', 'full');
-                    $return .= '</td>'
-                    .'</tr>';
-                  }
-                  if ($this->getPrice('net')) {
-                    $return .= '<tr>'
-                      .'<th>' . __('Net price','casasync') . '</th>'
-                    .'<td>';
-                    $return .= $this->getPrice('net', 'full');
-                    $return .= '</td>'
-                    .'</tr>';
-                  }
-                } else {
+              if ($this->availability != 'reference') {
+                if ($this->main_basis == 'buy') {
                   $return .= '<tr>'
-                      .'<th>' . __('Rent price','casasync') . '</th>'
-                    .'<td>';
-                    $return .=  __('On Request', 'casasync');
-                    $return .= '</td>'
-                    .'</tr>';
+                    .'<th>' . __('Sales price','casasync') . '</th>'
+                  .'<td>';
+                  $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync');
+                  $return .= '</td>'
+                  .'</tr>';
+                }
+                if ($this->main_basis == 'rent') {
+                  if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
+                    if ($this->getPrice('gross')) {
+                      $return .= '<tr>'
+                        .'<th>' . __('Gross price','casasync') . '</th>'
+                      .'<td>';
+                      $return .= $this->getPrice('gross', 'full');
+                      $return .= '</td>'
+                      .'</tr>';
+                    }
+                    if ($this->getPrice('net')) {
+                      $return .= '<tr>'
+                        .'<th>' . __('Net price','casasync') . '</th>'
+                      .'<td>';
+                      $return .= $this->getPrice('net', 'full');
+                      $return .= '</td>'
+                      .'</tr>';
+                    }
+                  } else {
+                    $return .= '<tr>'
+                        .'<th>' . __('Rent price','casasync') . '</th>'
+                      .'<td>';
+                      $return .=  __('On Request', 'casasync');
+                      $return .= '</td>'
+                      .'</tr>';
+                  }
                 }
               }
               break;
@@ -1118,20 +1120,22 @@
                 }
               break;
               case 'casasync_archive_show_availability':
-                if ($this->getAvailabilityLabel()) {
-                  $return .= '<tr>'
-                    .'<th>' . __('Available','casasync') . '</th>'
-                  .'<td>';
-                  $return .= $this->getAvailabilityLabel();
-                  $return .= '</td>'
-                  .'</tr>';
-                } else {
-                  $return .= '<tr>'
-                    .'<th>' . __('Available','casasync') . '</th>'
-                  .'<td>';
-                  $return .= __('On Request', 'casasync');
-                  $return .= '</td>'
-                  .'</tr>';
+                if ($this->availability != 'reference') {
+                  if ($this->getAvailabilityLabel()) {
+                    $return .= '<tr>'
+                      .'<th>' . __('Available','casasync') . '</th>'
+                    .'<td>';
+                    $return .= $this->getAvailabilityLabel();
+                    $return .= '</td>'
+                    .'</tr>';
+                  } else {
+                    $return .= '<tr>'
+                      .'<th>' . __('Available','casasync') . '</th>'
+                    .'<td>';
+                    $return .= __('On Request', 'casasync');
+                    $return .= '</td>'
+                    .'</tr>';
+                  }
                 }
               break;
             default:
