@@ -44,16 +44,24 @@ Template Name: Objekt Archive
 						<?php endif; ?>
 						<?php while ( have_posts() ) : the_post(); ?>
 							<?php $single = new CasaSync\Single($post);?>
+							<?php $isReference = has_term( 'reference', 'casasync_availability', $post ); ?>
 							<?php if ($template->setTemplate('archive_single', $single)): ?>
 								<?php echo $template->render(); ?>
 							<?php else: ?>
 								<div class="casasync-property">
 									<div class="casasync-thumbnail-wrapper">
-										<?php //echo $single->getAvailability(); ?>
-										<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+										<?php if ($isReference): ?>
+											<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage(true) : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+										<?php else: ?>
+											<?php echo ($single->getFeaturedImage() ? $single->getFeaturedImage(false) : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+										<?php endif; ?>
 									</div>
 									<div class="casasync-text">
-										<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
+										<?php if ($isReference): ?>
+											<h3><?php echo $single->getTitle(); ?></h3>
+										<?php else: ?>
+											<h3><a href="<?php echo $single->getPermalink() ?>"><?php echo $single->getTitle(); ?></a></h3>
+										<?php endif; ?>
 										<?php echo $single->getQuickInfosTable(); ?>
 									</div>
 								</div>

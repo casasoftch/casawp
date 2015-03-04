@@ -1745,15 +1745,38 @@
     }
 
 
-    public function getFeaturedImage($link = true) {
-      $return = NULL;
+    public function getFeaturedImage($lightbox = false) {
+      $return = '';
       $pid = get_the_ID();
+
+
+      if (has_post_thumbnail($pid)) {
+        if ($lightbox) {
+          $url = wp_get_attachment_url( get_post_thumbnail_id($pid) );
+          $return .= '<a href ="' . $url . '" class="casasync-thumbnail property-image-gallery" style="position:relative;">';
+          $return .= get_the_post_thumbnail($pid, 'casasync-thumb');
+          $return .= '</a>';
+        } else {
+          $return .= '<a href ="' . get_permalink($pid) . '" class="casasync-thumbnail" style="position:relative;">';
+          $return .= $this->getAvailability();
+          $return .= get_the_post_thumbnail($pid, 'casasync-thumb');
+          $return .= '</a>';
+        }
+      }
+      return $return;
+
+
+
       if (has_post_thumbnail($pid)) {
         $return .= '<a ';
         if ($link) {
           $return .= 'href ="' . get_permalink($pid) . '"';
         }
-        $return .= ' class="casasync-thumbnail" style="position:relative;">';
+        $lightbox_class = '';
+        if ($lightbox) {
+          $lightbox_class = 'property-image-gallery';
+        }
+        $return .= ' class="casasync-thumbnail '. $lightbox_class .'" style="position:relative;">';
         $return .= $this->getAvailability();
         $return .= get_the_post_thumbnail($pid, 'casasync-thumb');
         $return .= '</a>';
