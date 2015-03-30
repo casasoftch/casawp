@@ -85,7 +85,7 @@
 					'casasync_form_locality_required',
 					'casasync_form_phone_required',
 					'casasync_form_email_required',
-					'casasync_form_message_required'
+					'casasync_form_message_required',
 				);
 				break;
 			case 'general':
@@ -968,6 +968,24 @@
 										<?php $text = 'Nachricht'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+						<h3>Event Tracking</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Event-Tracking</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Aktiv</span></legend>
+										<?php $name = 'casasync_form_event_tracking'; ?>
+										<?php $text = 'Aktiv'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
+											<br><span class="description">Beispiel: _gaq.push(['_trackEvent', '%casasync_id%', 'Submit'])</span>
+											<br><span class="description">Erlaubte Variablen: casasync_id</span>
 										</label>
 									</fieldset>
 								</td>

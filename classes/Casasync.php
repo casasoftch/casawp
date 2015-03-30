@@ -897,12 +897,12 @@ class CasaSync {
                     }
                 }
                 if($remcat_sended === true or $email_sended === true) {
-                    echo '<p class="alert alert-success">' . __('Thank you!', 'casasync') . '</p>'; //Vielen Dank!
+                    add_action('wp_footer', array('\CasaSync\Single', 'getEventTrackingCode'));
+                   echo '<p class="alert alert-success">' . __('Thank you!', 'casasync') . '</p>'; //Vielen Dank!
                 } else {
                     echo '<p class="alert alert-danger">' . __('Error!', 'casasync') . '</p>'; //Fehler!
                 }
             }
-
         } else {
             $validation = false;
         }
@@ -1117,7 +1117,6 @@ class CasaSync {
         } //validation
         return $form;  
     }
-
 
     //Format meta boxes
     function plib_format_box() {

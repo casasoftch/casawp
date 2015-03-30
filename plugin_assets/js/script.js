@@ -184,7 +184,6 @@ jQuery(document).ready(function($) {
     }*/
     /**/
 
-
     if ((window.casasyncOptionParams && window.casasyncOptionParams.load_css == 'bootstrapv2') && (window.casasyncOptionParams && window.casasyncOptionParams.load_bootstrap_js == 1)) {
         // Bootstrap 2 Scripts
         $('#casasyncCarousel').carousel({

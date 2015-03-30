@@ -1862,6 +1862,19 @@
       }
     }
 
+    public static function getEventTrackingCode() {
+      $return = '';
+      $eventTrackingCode = get_option('casasync_form_event_tracking');
+      if ($eventTrackingCode != "") {
+          $eventTrackingCode = stripslashes($eventTrackingCode);
+          if (strpos($eventTrackingCode,'%casasync_id%') !== false) {
+              $casasync_id = get_post_meta(get_the_ID(), 'casasync_id', true);
+              $return = str_replace('%casasync_id%', $casasync_id, $eventTrackingCode);
+          }
+      }
+      echo '<script>' . $return . '</script>';
+    }
+
 
     public function getTextBetweenTags($string, $tagname){
       $d = new DOMDocument();
