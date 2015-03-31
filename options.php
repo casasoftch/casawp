@@ -984,7 +984,7 @@
 										<?php $text = 'Aktiv'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
-											<br><span class="description">Beispiel: _gaq.push(['_trackEvent', '%casasync_id%', 'Submit'])</span>
+											<br><span class="description">Beispiel: _gaq.push(['_trackEvent', '%casasync_id%', 'Casasync Kontaktanfrage'])</span>
 											<br><span class="description">Erlaubte Variablen: casasync_id</span>
 										</label>
 									</fieldset>

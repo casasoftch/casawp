@@ -121,7 +121,7 @@ jQuery(document).ready(function($) {
                                     position: location
                                 });
                             }
-                            google.maps.event.addDomListener(window, 'load', initialize);
+                            initialize();
                             //$('#map-canvas').animate({'height' : '400px'}, 500);
                         }
                     });
