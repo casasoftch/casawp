@@ -358,56 +358,69 @@
 
 
     public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = false){ //'Erweiterte Suche'
-        global $wp_query;
-        if (!$title) {
-            $title = __('Advanced Search', 'casasync');
-        }
-        $size = ($size == 'large') ? ('large') : ('small');
-        $return =  '<div class="' . $wrapper_class . ' ' . $size . '">';
-        $return .=  '<h3>' . $title . '</h3>';
-        $return .= '<form action="' .  get_post_type_archive_link( 'casasync_property' ) . '" class="casasync-filterform">';
 
-        $return .= ($size == 'small') ? '<div class="wrap">' : null;
-        //if permalinks are off
-        if ( get_option('permalink_structure') == '' ) {
-            $return .= '<input type="hidden" name="post_type" value="casasync_property" />';
-        }
+        $return = '';
 
-        $salestype_options = $this->getSalestypeOptions();
-        if(count($salestype_options) > 1) {
-            $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose offer','casasync') . '">';
-            foreach ($salestype_options as $option) {
+        //in my area causes disabled filter
+        $mylng = (float) (isset($_GET['my_lng']) ? $_GET['my_lng'] : null);
+        $mylat = (float) (isset($_GET['my_lat']) ? $_GET['my_lat'] : null);
+        $radiusKm = (int) (isset($_GET['radius_km']) ? $_GET['radius_km'] : 10);
+        if ($mylng && $mylat) {
+            $return .= '<p class="alert alert-info">Suchresultate für Objekte in Ihrer Umgebung.</p>';
+            $return .= '<a href="#" class="btn btn-primary btn-block">Weitere Objekte Suchen</a>';
+        } else {
+
+            //normal filter
+            global $wp_query;
+            if (!$title) {
+                $title = __('Advanced Search', 'casasync');
+            }
+            $size = ($size == 'large') ? ('large') : ('small');
+            $return .=  '<div class="' . $wrapper_class . ' ' . $size . '">';
+            $return .=  '<h3>' . $title . '</h3>';
+            $return .= '<form action="' .  get_post_type_archive_link( 'casasync_property' ) . '" class="casasync-filterform">';
+
+            $return .= ($size == 'small') ? '<div class="wrap">' : null;
+            //if permalinks are off
+            if ( get_option('permalink_structure') == '' ) {
+                $return .= '<input type="hidden" name="post_type" value="casasync_property" />';
+            }
+
+            $salestype_options = $this->getSalestypeOptions();
+            if(count($salestype_options) > 1) {
+                $return .= '<select name="casasync_salestype_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose offer','casasync') . '">';
+                foreach ($salestype_options as $option) {
+                    $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+                }
+                $return .= '</select>';
+            }
+
+            $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose category','casasync') . '">';
+            $cat_options = $this->getCategoryOptions();
+            foreach ($cat_options as $option) {
                 $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
             }
             $return .= '</select>';
-        }
-
-        $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose category','casasync') . '">';
-        $cat_options = $this->getCategoryOptions();
-        foreach ($cat_options as $option) {
-            $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
-        }
-        $return .= '</select>';
-        
-        $return .= '<select name="casasync_location_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose locality','casasync') . '">';
-        $return .= $this->getLocationsOptionsHyr();
-        $return .= '</select>';
-
-        $availability_options = $this->getAvailabilityOptions();
-        if(count($availability_options) > 1) {
-            $return .= '<select name="casasync_availability_s[]" multiple class="hidden" data-placeholder="' . __('Choose availability','casasync') . '">';
-            foreach ($availability_options as $option) {
-                $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
-            }
+            
+            $return .= '<select name="casasync_location_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose locality','casasync') . '">';
+            $return .= $this->getLocationsOptionsHyr();
             $return .= '</select>';
+
+            $availability_options = $this->getAvailabilityOptions();
+            if(count($availability_options) > 1) {
+                $return .= '<select name="casasync_availability_s[]" multiple class="hidden" data-placeholder="' . __('Choose availability','casasync') . '">';
+                foreach ($availability_options as $option) {
+                    $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+                }
+                $return .= '</select>';
+            }
+            $return .= ($size == 'small') ? '</div>' : null;
+
+            $return .= '<input class="casasync-filterform-button" type="submit" value="' . __('Search','casasync') . '" />';
+            $return .= '</form>';
+            $return .= '<div class="clearfix"></div>';
+            $return .= '</div>';
         }
-        $return .= ($size == 'small') ? '</div>' : null;
-
-        $return .= '<input class="casasync-filterform-button" type="submit" value="' . __('Search','casasync') . '" />';
-        $return .= '</form>';
-        $return .= '<div class="clearfix"></div>';
-        $return .= '</div>';
-
         return $return;
     }
   }
