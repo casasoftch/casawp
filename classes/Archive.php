@@ -367,7 +367,7 @@
         $radiusKm = (int) (isset($_GET['radius_km']) ? $_GET['radius_km'] : 10);
         if ($mylng && $mylat) {
             $return .= '<p class="alert alert-info">Suchresultate für Objekte in Ihrer Umgebung.</p>';
-            $return .= '<a href="#" class="btn btn-primary btn-block">Weitere Objekte Suchen</a>';
+            $return .= '<a href="/immobilien" class="btn btn-primary btn-block">Weitere Objekte Suchen</a>';
         } else {
 
             //normal filter
