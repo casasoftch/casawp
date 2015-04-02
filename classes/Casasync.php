@@ -249,12 +249,39 @@ class CasaSync {
                     $query->set('tax_query', $taxquery_new);
                 }
 
-                /*echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-                print_r($query);
-                echo "</textarea>";
-*/
+                
+                add_filter( 'posts_where' , array($this, 'nearmefilter') );    
+
             }
         }
+    }
+
+    public function nearmefilter($where){
+        $mylng = (float) (isset($_GET['my_lng']) ? $_GET['my_lng'] : null);
+        $mylat = (float) (isset($_GET['my_lat']) ? $_GET['my_lat'] : null);
+        $radiusKm = (int) (isset($_GET['radius_km']) ? $_GET['radius_km'] : 10);
+        if ($mylng && $mylat) {
+            global $wpdb;
+            add_filter( 'posts_join' , array($this, 'nearmejoin') );
+
+            $where .= " AND $wpdb->posts.ID IN (SELECT post_id FROM $wpdb->postmeta WHERE
+                 ( 6371 * acos( cos( radians(" . $mylat . ") ) 
+                                * cos( radians( latitude.meta_value ) ) 
+                                * cos( radians( longitude.meta_value ) 
+                                - radians(" . $mylng . ") ) 
+                                + sin( radians(" . $mylat . ") ) 
+                                * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";  
+              
+        }
+
+        return $where;  
+    }
+
+    public function nearmejoin($join){
+        global $wpdb;
+        $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casasync_property_geo_latitude' ";
+        $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casasync_property_geo_longitude' ";
+        return $join;
     }
 
     public function casasync_image_attachment_fields_to_edit($form_fields, $post) {
