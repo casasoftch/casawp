@@ -699,6 +699,7 @@
           #'casasync_single_show_surface_usable',
           #'casasync_single_show_surface_living',
           'casasync_single_show_area_sia_nf',
+          'casasync_single_show_area_nwf',
           'casasync_single_show_area_bwf',
           'casasync_single_show_surface_property',
           'casasync_single_show_floor',
