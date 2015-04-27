@@ -12,6 +12,7 @@
 		$mapData[$i] = array();
 		$mapData[$i]['id']        = $post->ID;
 		$mapData[$i]['title']     = $post->post_title;
+		$mapData[$i]['excerpt']   = $post->excerpt;
 		$mapData[$i]['permalink'] = get_permalink($post->ID);
 		$mapData[$i]['lat']       = get_post_meta(get_the_ID(), ('casasync_property_geo_latitude'), true );
 		$mapData[$i]['lng']       = get_post_meta(get_the_ID(), ('casasync_property_geo_longitude'), true );
