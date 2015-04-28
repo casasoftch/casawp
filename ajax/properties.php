@@ -24,7 +24,7 @@
 			'address_locality' => $single->address_locality,
 			'area_bwf'         => $single->getNumval('area_bwf') ? $single->getNumval('area_bwf') : '',
 			'area_nwf'         => $single->getNumval('area_nwf') ? $single->getNumval('area_nwf') : '',
-			'price'            => $single->getPrice('auto')
+			'price'            => $single->getPrice('auto', 'full')
 		);
 
 		$i++;
