@@ -1497,6 +1497,7 @@
     }
 
     public function getPrice($type = 'auto', $format = 'num', $byrequest = true){
+      $price = array();
       $timesegment_labels = array(
         'm' => __('month', 'casasync'),
         'w' => __('week', 'casasync'),
