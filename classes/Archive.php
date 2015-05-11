@@ -37,6 +37,26 @@
              )
           ;
         }
+        $w_categories_not = array();
+        if (isset($query['casasync_category_not_s'])) {
+            foreach ($query['casasync_category_not_s'] as $slug => $value) {
+                $w_categories_not[] = $value;
+            }
+        }
+        if (isset($query['casasync_category_not'])) {
+            $w_categories_not[] = $query['casasync_category_not'];
+        }
+        if ($w_categories_not) {
+            $taxquery_new[] =
+               array(
+                   'taxonomy' => 'casasync_category',
+                   'terms' => $w_categories_not,
+                   'include_children' => 1,
+                   'field' => 'slug',
+                   'operator'=> 'NOT IN'
+               )
+            ;
+        }
 
         $w_locations = array();
         if (isset($query['casasync_location_s'])) {
@@ -58,30 +78,26 @@
                )
             ;
         }
-        
-
-
         $w_locations_not = array();
         if (isset($query['casasync_location_not_s'])) {
             foreach ($query['casasync_location_not_s'] as $slug => $value) {
                 $w_locations_not[] = $value;
             }
-            if (isset($query['casasync_location_not'])) {
-                $w_locations_not[] = $query['casasync_location_not'];
-            }
-            if ($w_locations_not) {
-                $taxquery_new[] =
-                   array(
-                       'taxonomy' => 'casasync_location',
-                       'terms' => $w_locations_not,
-                       'include_children' => 1,
-                       'field' => 'slug',
-                       'operator'=> 'NOT IN'
-                   )
-                ;
-            }
         }
-
+        if (isset($query['casasync_location_not'])) {
+            $w_locations_not[] = $query['casasync_location_not'];
+        }
+        if ($w_locations_not) {
+            $taxquery_new[] =
+               array(
+                   'taxonomy' => 'casasync_location',
+                   'terms' => $w_locations_not,
+                   'include_children' => 1,
+                   'field' => 'slug',
+                   'operator'=> 'NOT IN'
+               )
+            ;
+        }
 
         $w_salestypes = array();
         if (isset($query['casasync_salestype_s'])) {
