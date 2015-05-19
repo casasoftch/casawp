@@ -9,7 +9,6 @@
 	$mapData = array();
 	$i=1;
 	foreach ($archive->getProperties() as $property) {
-		$featured_img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $property->property->ID), 'large' );
 		$mapData[$i] = array();
 		$mapData[$i]['id']        = $property->property->ID;
 		$mapData[$i]['title']     = $property->property->post_title;

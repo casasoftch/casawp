@@ -67,7 +67,17 @@
       'fallback'      => false
     );
 
-    public function __construct($post){ 
+    public $loadImages     = true;
+    public $loadDocuments  = true;
+    public $loadPlans      = true;
+    public $loadOfferLogos = true;
+
+    public function __construct($post, $loadImages = true, $loadDocuments = true, $loadPlans = true, $loadOfferLogos = true){ 
+      $this->loadImages     = $loadImages;
+      $this->loadDocuments  = $loadDocuments;
+      $this->loadPlans      = $loadPlans;
+      $this->loadOfferLogos = $loadOfferLogos;
+
       $this->conversion = new Conversion;
       $this->setProperty($post);
     }
@@ -287,44 +297,52 @@
 
     }
 
-
     public function setProperty($post){
       $this->property = $post;
 
-      $this->attachments = get_posts( array(
-        'post_type'                => 'attachment',
-        'posts_per_page'           => -1,
-        'post_parent'              => get_the_ID(),
-        //'exclude'                => get_post_thumbnail_id(),
-        'casasync_attachment_type' => 'image',
-        'orderby'                  => 'menu_order',
-        'order'                    => 'ASC'
-      ) ); 
 
-      $this->documents = get_posts( array(
-        'post_type'                => 'attachment',
-        'posts_per_page'           => -1,
-        'post_parent'              => get_the_ID(),
-        //'exclude'                => get_post_thumbnail_id(),
-        'casasync_attachment_type' => 'document',
-        'orderby'                  => 'menu_order'
-      ) ); 
+      if ($this->loadImages) {
+        $this->attachments = get_posts( array(
+          'post_type'                => 'attachment',
+          'posts_per_page'           => -1,
+          'post_parent'              => get_the_ID(),
+          //'exclude'                => get_post_thumbnail_id(),
+          'casasync_attachment_type' => 'image',
+          'orderby'                  => 'menu_order',
+          'order'                    => 'ASC'
+        ) );
+      }
 
-      $this->plans = get_posts( array(
-        'post_type'                => 'attachment',
-        'posts_per_page'           => -1,
-        'post_parent'              => get_the_ID(),
-        //'exclude'                => get_post_thumbnail_id(),
-        'casasync_attachment_type' => 'plan'
-      ) ); 
+      if($this->loadDocuments) {
+        $this->documents = get_posts( array(
+          'post_type'                => 'attachment',
+          'posts_per_page'           => -1,
+          'post_parent'              => get_the_ID(),
+          //'exclude'                => get_post_thumbnail_id(),
+          'casasync_attachment_type' => 'document',
+          'orderby'                  => 'menu_order'
+        ) );
+      }
 
-      $this->logos = get_posts( array(
-        'post_type'                => 'attachment',
-        'posts_per_page'           => -1,
-        'post_parent'              => get_the_ID(),
-        //'exclude'                => get_post_thumbnail_id(),
-        'casasync_attachment_type' => 'offer-logo'
-      ) ); 
+      if($this->loadPlans) {
+        $this->plans = get_posts( array(
+          'post_type'                => 'attachment',
+          'posts_per_page'           => -1,
+          'post_parent'              => get_the_ID(),
+          //'exclude'                => get_post_thumbnail_id(),
+          'casasync_attachment_type' => 'plan'
+        ) );
+      }
+
+      if($this->loadOfferLogos) {
+        $this->logos = get_posts( array(
+          'post_type'                => 'attachment',
+          'posts_per_page'           => -1,
+          'post_parent'              => get_the_ID(),
+          //'exclude'                => get_post_thumbnail_id(),
+          'casasync_attachment_type' => 'offer-logo'
+        ) );
+      }
 
       $this->address_street       = get_post_meta( get_the_ID(), 'casasync_property_address_streetaddress', $single = true );
       $this->address_streetnumber = get_post_meta( get_the_ID(), 'casasync_property_address_streetnumber', $single = true );

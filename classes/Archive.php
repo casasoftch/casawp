@@ -139,7 +139,7 @@
         $properties = array();
         while ( have_posts() ) : the_post();
 
-            $single = new Single($post);
+            $single = new Single($post, false, false, false, false);
             $properties[] = $single;
         endwhile; 
         return $properties;
