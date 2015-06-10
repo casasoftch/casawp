@@ -127,10 +127,9 @@ class CasaSync {
 
 
     public function customize_casasync_category($query){
-        $query->set('post-type', "casasync_property");
-
         if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
+                $query->set('post-type', "casasync_property");
 
                 $posts_per_page = get_option('posts_per_page', 10);
                 $query->set('posts_per_page', $posts_per_page);
@@ -175,6 +174,8 @@ class CasaSync {
                     $categories = $_GET['casasync_category_s'];
                 } elseif (isset($_GET['casasync_category_s'])) {
                     $categories = array($_GET['casasync_category_s']);
+                } elseif(is_tax('casasync_category')) {
+                    $categories = array(get_query_var( 'casasync_category' ));
                 } else {
                     $categories = array();
                 }
@@ -191,6 +192,8 @@ class CasaSync {
                     $locations = $_GET['casasync_location_s'];
                 } elseif (isset($_GET['casasync_location_s'])) {
                     $locations = array($_GET['casasync_location_s']);
+                } elseif(is_tax('casasync_location')) {
+                    $locations = array(get_query_var( 'casasync_location' ));
                 } else {
                     $locations = array();
                 }
@@ -210,7 +213,7 @@ class CasaSync {
                 } elseif (isset($_GET['casasync_salestype_s'])) {
                     $salestypes = array($_GET['casasync_salestype_s']);
                 } elseif(is_tax('casasync_salestype')) {
-                    //$salestypes = array('rent','buy', 'reference');
+                    $salestypes = array(get_query_var( 'casasync_salestype' ));
                 } else {
                     //$salestypes = array('rent','buy');
                 }
@@ -231,6 +234,7 @@ class CasaSync {
                 } elseif (isset($_GET['casasync_availability_s'])) {
                     $availabilities = array($_GET['casasync_availability_s']);
                 } elseif(is_tax('casasync_availability')) {
+                    $availabilities = array(get_query_var( 'casasync_availability' ));
                 } else {
                     //reference and taken are hidden by default
                     $availabilities = array('active','reserved');
@@ -248,6 +252,7 @@ class CasaSync {
                 if ($taxquery_new) {
                     $query->set('tax_query', $taxquery_new);
                 }
+
 
                 
                 add_filter( 'posts_where' , array($this, 'nearmefilter') );    
