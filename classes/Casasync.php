@@ -8,6 +8,7 @@ class CasaSync {
     public $admin = false;
     public $conversion = null;
     public $show_sticky = true;
+    public $tax_query = array();
 
     public function __construct(){  
         $this->conversion = new Conversion;
@@ -253,7 +254,7 @@ class CasaSync {
                     $query->set('tax_query', $taxquery_new);
                 }
 
-
+                $this->tax_query = $taxquery_new;
                 
                 add_filter( 'posts_where' , array($this, 'nearmefilter') );    
 
@@ -917,7 +918,9 @@ class CasaSync {
                 $sender_fistname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
                 $sender_lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
     
-                $header  = "From: \"$sender_fistname $sender_lastname\" <$sender_email>\r\n";
+                $header  = "From: \"$sender_fistname $sender_lastname\" <info@".$_SERVER['SERVER_NAME'].">\r\n";
+                $hedaer .= "Reply-To: \"$sender_fistname $sender_lastname\" <$sender_email>\r\n";
+
                 $header .= "MIME-Version: 1.0\r\n";
                 $header .= "Content-Type: text/html; charset=UTF-8\r\n";
     
