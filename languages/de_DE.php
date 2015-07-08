@@ -52,6 +52,7 @@
                 case 'Base data':           $translated_text = 'Grunddaten';break;
                 case 'Plans & Documents':   $translated_text = 'Pläne & Dokumente';break;
                 case 'Rooms:':              $translated_text = 'Zimmer:';break;
+                case 'Lavatory:':           $translated_text = 'Nasszellen:';break;
                 case 'Rooms':               $translated_text = 'Zimmer';break;
                 case 'Floor':               $translated_text = 'Etage';break;
                 case 'Rent price:':         $translated_text = 'Mietpreis:';break;

@@ -281,6 +281,7 @@
             case 'year_renovated':             return __('Year of renovation' ,'casasync');break;
             case 'year_built':                 return __('Year of construction' ,'casasync');break;
             case 'number_of_rooms':            return __('Number of rooms' ,'casasync');break;
+            case 'number_of_lavatory':            return __('Number of lavatory' ,'casasync');break;
             case 'number_of_floors':           return __('Number of floors' ,'casasync');break;
             case 'floor':                      return __('Floor' ,'casasync');break;
             case 'volume':                     return __('Volume' ,'casasync');break;
@@ -542,6 +543,7 @@
         'year_built',
         'number_of_rooms',
         'number_of_floors',
+        'number_of_lavatory',
         'floor',
         'number_of_apartments',
         'volume',
