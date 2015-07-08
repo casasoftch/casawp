@@ -32,6 +32,7 @@ class Import {
       'number_of_rooms'             ,
       'number_of_apartments'        ,
       'number_of_floors'            ,
+      'number_of_lavatory'          ,
 
       'casasync_visitInformation'                    ,
       'casasync_property_url'                        ,
@@ -405,6 +406,7 @@ class Import {
   }
 
   public function numvalsXMLtoArray($numericValues){
+
     //set numericValues
     $the_numvals = array();
     if ($numericValues && $numericValues->value) {
@@ -438,6 +440,7 @@ class Import {
         }
         $r_distances[$key] = $the_value;
       }
+      
       if (in_array($key, $all_numval_keys)) {
         switch ($key) {
           //multiple simple values
@@ -479,7 +482,9 @@ class Import {
             $r_numvals[$key] = $the_value;
             break;
           //float
+          case 'number_of_lavatory':
           case 'number_of_rooms':
+          case 'number_of_lavatory':
           case 'number_of_apartments':
           case 'number_of_floors':
             $the_value = '';
@@ -1350,14 +1355,15 @@ class Import {
     $persons = $this->personsXMLtoArray($xmloffer->seller);
     $new_meta_data = array_merge($new_meta_data, $persons);
 
-    //nuvals
+    //nuvals    
     $numericValues = $this->numvalsXMLtoArray($property->numericValues);
     $new_meta_data = array_merge($new_meta_data, $numericValues);
+    
 
     //features
     $new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
 
-    //clean up arrays
+    //clean up arrays   
     foreach ($old_meta_data as $key => $value) {
       if (!in_array($key, $this->meta_keys)) {
         unset($old_meta_data[$key]);

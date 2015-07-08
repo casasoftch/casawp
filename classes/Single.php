@@ -1700,6 +1700,7 @@
 
      public function getAllNumvals($sort = NULL) {
       $return = array();
+      
       foreach ($this->numvals as $numval) {
         if (array_search($numval["key"], $sort) !== false) {
           $return[array_search($numval["key"], $sort)] = $numval;
