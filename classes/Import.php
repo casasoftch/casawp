@@ -33,6 +33,7 @@ class Import {
       'number_of_apartments'        ,
       'number_of_floors'            ,
       'number_of_lavatory'          ,
+      'number_of_guest_wc'          ,
 
       'casasync_visitInformation'                    ,
       'casasync_property_url'                        ,
@@ -482,7 +483,7 @@ class Import {
             $r_numvals[$key] = $the_value;
             break;
           //float
-          case 'number_of_lavatory':
+          case 'number_of_guest_wc':
           case 'number_of_rooms':
           case 'number_of_lavatory':
           case 'number_of_apartments':
