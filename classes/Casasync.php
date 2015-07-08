@@ -693,6 +693,7 @@ class CasaSync {
         $id1 = wp_insert_term('Image', 'casasync_attachment_type', array('slug' => 'image'));
         $id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
         $id3 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
+        $id3 = wp_insert_term('Documentation', 'casasync_attachment_type', array('slug' => 'documentation'));
     }
 
 

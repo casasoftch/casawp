@@ -1751,6 +1751,17 @@
         return $html;
       }
     }
+    public function getAllDocumentations() {
+      $args = array(
+        'post_type' => 'attachment',
+        'posts_per_page' => -1,
+        'casasync_attachment_type' => 'documentation',
+        'post_status' =>'publish',
+        'post_parent' => get_the_ID(),
+      ); 
+      $attachments = get_posts( $args );
+      return $attachments;
+    }
 
     public function getProvidedURL() {
       $html = NULL;
