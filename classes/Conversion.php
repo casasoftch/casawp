@@ -545,6 +545,7 @@
         'number_of_rooms',
         'number_of_floors',
         'number_of_lavatory',
+        'number_of_guest_wc',
         'floor',
         'number_of_apartments',
         'volume',
