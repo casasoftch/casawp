@@ -88,6 +88,15 @@ class Import {
       'seller_inquiry_person_phone_central'          ,
       'seller_inquiry_person_phone_mobile'           ,
       'seller_inquiry_person_gender'                 ,
+      'seller_visit_person_function'               ,
+      'seller_visit_person_givenname'              ,
+      'seller_visit_person_familyname'             ,
+      'seller_visit_person_email'                  ,
+      'seller_visit_person_fax'                    ,
+      'seller_visit_person_phone_direct'           ,
+      'seller_visit_person_phone_central'          ,
+      'seller_visit_person_phone_mobile'           ,
+      'seller_visit_person_gender'                 ,
       'casasync_property_geo_latitude'               ,
       'casasync_property_geo_longitude'              ,
       'price'                                        ,
@@ -360,7 +369,7 @@ class Import {
     if ($seller && $seller->person) {
       foreach ($seller->person as $person) {
         $type = $person['type']->__toString();
-        if ($type && in_array($type, array('inquiry', 'view'))) {
+        if ($type && in_array($type, array('inquiry', 'view', 'visit'))) {
           $prefix = 'seller' . ($type != 'view' ? '_' . $type : '') . '_person_';
 
           $r_persons[$prefix.'function']   = $this->simpleXMLget($person->function);
