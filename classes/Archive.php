@@ -17,6 +17,7 @@
 
     public function setRequestParams($query){
         $w_categories = array();
+        
         if (isset($query['casasync_category_s'])) {
           foreach ($query['casasync_category_s'] as $slug => $value) {
             $w_categories[] = $value;
@@ -25,7 +26,9 @@
         if (isset($query['casasync_category'])) {
             $w_categories[] = $query['casasync_category'];
         }
+        
         $taxquery_new = array();
+
         if ($w_categories) {
           $taxquery_new[] =
              array(
@@ -36,7 +39,9 @@
                  'operator'=> 'IN'
              )
           ;
+
         }
+        
         $w_categories_not = array();
         if (isset($query['casasync_category_not_s'])) {
             foreach ($query['casasync_category_not_s'] as $slug => $value) {
@@ -51,6 +56,47 @@
                array(
                    'taxonomy' => 'casasync_category',
                    'terms' => $w_categories_not,
+                   'include_children' => 1,
+                   'field' => 'slug',
+                   'operator'=> 'NOT IN'
+               )
+            ;
+        }
+
+        $w_availability = array();
+        if (isset($query['casasync_availability_s'])) {
+          foreach ($query['casasync_availability_s'] as $slug => $value) {
+            $w_availability[] = $value;
+          }
+        }
+        if (isset($query['casasync_availability'])) {
+            $w_availability[] = $query['casasync_availability'];
+        }
+        if ($w_availability) {
+          $taxquery_new[] =
+             array(
+                 'taxonomy' => 'casasync_availability',
+                 'terms' => $w_availability,
+                 'include_children' => 1,
+                 'field' => 'slug',
+                 'operator'=> 'IN'
+             )
+          ;
+        }
+        $w_availability_not = array();
+        if (isset($query['casasync_availability_not_s'])) {
+            foreach ($query['casasync_availability_not_s'] as $slug => $value) {
+                $w_availability_not[] = $value;
+            }
+        }
+        if (isset($query['casasync_availability_not'])) {
+            $w_availability_not[] = $query['casasync_availability_not'];
+        }
+        if ($w_availability_not) {
+            $taxquery_new[] =
+               array(
+                   'taxonomy' => 'casasync_availability',
+                   'terms' => $w_availability_not,
                    'include_children' => 1,
                    'field' => 'slug',
                    'operator'=> 'NOT IN'
@@ -129,6 +175,7 @@
           'posts_per_page' => $posts_per_page,
           'tax_query' => $taxquery_new, 
         );
+        
 
         //query_posts( $args ); ????????????????????????????????????????????????????????????
         $this->query = $args;
@@ -295,6 +342,7 @@
     public function getCategoryOptions(){
         global $wp_query;
         $categories = array();
+        
         foreach ($this->query["tax_query"] as $tax_query) {
             if ($tax_query['taxonomy'] == 'casasync_category') {
                 $categories = $tax_query['terms'];
@@ -316,19 +364,19 @@
     }
     public function getLocationsOptions($return_unchecked = true){
         global $wp_query;
-        $categories = array();
+        $locations = array();
         foreach ($this->query["tax_query"] as $tax_query) {
             if ($tax_query['taxonomy'] == 'casasync_location') {
-                $categories = $tax_query['terms'];
+                $locations = $tax_query['terms'];
             }
         }
         $options = array();
         $terms = get_terms('casasync_location');
         foreach ($terms as $term) {
-            if (in_array($term->slug, $categories) || $return_unchecked ) {
+            if (in_array($term->slug, $locations) || $return_unchecked ) {
                 $options[$term->slug]['value'] = $term->slug; 
                 $options[$term->slug]['label'] = $term->name;
-                $options[$term->slug]['checked'] = (in_array($term->slug, $categories) ? 'SELECTED' : '');
+                $options[$term->slug]['checked'] = (in_array($term->slug, $locations) ? 'SELECTED' : '');
             }
         }
         return $options;
