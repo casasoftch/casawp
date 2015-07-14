@@ -1830,6 +1830,10 @@
       return $attachments;
     }
 
+    public function getAllVirutalTours() {
+      return get_post_meta(get_the_ID(), 'the_urls', true);
+    }
+
     public function getAllDocumentations() {
       $args = array(
         'post_type' => 'attachment',

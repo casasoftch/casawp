@@ -102,6 +102,7 @@ class Import {
       'price'                                        ,
       'grossPrice'                                   ,
       'netPrice'                                     ,
+      'the_url'                                     ,
       'the_urls'                                     ,
       'the_tags'                                     ,
       'extraPrice'                                   ,
@@ -1238,31 +1239,58 @@ class Import {
     }
 
 
-    //urls
-    $the_urls = array();
-    if ($xmloffer->url) {
-      foreach ($xmloffer->url as $url) {
-        $href = $url->__toString();
-        $label = (isset($url['label']) && $url['label'] ? $url['label'] : false);
-        $title = (isset($url['title']) && $url['title'] ? $url['title'] : false);
-        $rank =  (isset($url['rank'])  && (int) $url['rank'] ? (int) $url['rank'] : false);
-        if ($rank ) {
-          $the_urls[$rank] = array(
-            'href' => $href,
-            'label' => ($label ? $label : $href),
-            'title' => ($title ? $title : $href)
-          );
-        } else {
-          $the_urls[] = array(
-            'href' => $href,
-            'label' => ($label ? $label : $href),
-            'title' => ($title ? $title : $href)
-          );
-        }
-      }
-      ksort($the_urls);
-      $new_meta_data['the_urls'] = $the_urls;
-    }
+     //url
+    $the_url = array();
+     if ($xmloffer->url) {
+       foreach ($xmloffer->url as $url) {
+         $href = $url->__toString();
+         $label = (isset($url['label']) && $url['label'] ? $url['label'] : false);
+         $title = (isset($url['title']) && $url['title'] ? $url['title'] : false);
+         $rank =  (isset($url['rank'])  && (int) $url['rank'] ? (int) $url['rank'] : false);
+         if ($rank ) {
+           $the_url[$rank] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         } else {
+           $the_url[] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         }
+       }
+       ksort($the_url);
+       $new_meta_data['the_url'] = $the_url;
+     }
+
+     //urls
+     $url = null;
+     $the_urls = array();
+     if ($xmloffer->urls) {
+       foreach ($xmloffer->urls->url as $url) {
+         $href = $url->__toString();
+         $label = (isset($url['label']) ? $url['label'] : false);
+         $title = (isset($url['title']) ? $url['title'] : false);
+         $type =  (isset($url['type'])  ? (string) $url['type'] : false);
+         if ($type ) {
+           $the_urls[$type][] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         } else {
+           $the_urls[] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         }
+       }
+       ksort($the_urls);
+       $new_meta_data['the_urls'] = $the_urls;
+     }
 
 
     //tags
@@ -1393,7 +1421,7 @@ class Import {
 
     if ($new_meta_data != $old_meta_data) {
       foreach ($this->meta_keys as $key) {
-        if (in_array($key, array('the_urls', 'the_tags', 'extraPrice'))) {
+        if (in_array($key, array('the_urls', 'the_url', 'the_tags', 'extraPrice'))) {
           if (isset($new_meta_data[$key])) {
             $new_meta_data[$key] = $new_meta_data[$key];
           }
