@@ -59,14 +59,9 @@
       'honorific'     => false,
     );
     public $visitperson = array(
-      'function'      => '',
       'givenname'     => '',
-      'familyname'    => '',
-      'email'         => '',
       'phone_direct'  => '',
-      'phone_mobile'  => '',
-      'gender'        => '',
-      'honorific'     => false,
+      'note'        => '',
     );
     public $seller_inquiry = array(
       'email'         => ''
@@ -503,15 +498,9 @@
       $this->salesperson['phone_mobile']  = get_post_meta(get_the_ID(), 'seller_person_phone_mobile', true);
       $this->salesperson['gender']        = get_post_meta(get_the_ID(), 'seller_person_gender', true);
 
-      $this->visitperson['function']      = get_post_meta(get_the_ID(), 'seller_visit_person_function', true);
       $this->visitperson['givenname']     = get_post_meta(get_the_ID(), 'seller_visit_person_givenname', true);
-      $this->visitperson['familyname']    = get_post_meta(get_the_ID(), 'seller_visit_person_familyname', true);
-      $this->visitperson['email']         = get_post_meta(get_the_ID(), 'seller_visit_person_email', true);
-      //$this->visitperson['fax']           = get_post_meta(get_the_ID(), 'seller_visit_person_fax', true);
       $this->visitperson['phone_direct']  = get_post_meta(get_the_ID(), 'seller_visit_person_phone_direct', true);
-      $this->visitperson['phone_central'] = get_post_meta(get_the_ID(), 'seller_visit_person_phone_central', true);
-      $this->visitperson['phone_mobile']  = get_post_meta(get_the_ID(), 'seller_visit_person_phone_mobile', true);
-      $this->visitperson['gender']        = get_post_meta(get_the_ID(), 'seller_visit_person_gender', true);
+      $this->visitperson['note']        = get_post_meta(get_the_ID(), 'seller_visit_person_note', true);
 
       if (get_option('casasync_sellerfallback_show_person_view') == 1) {
         if (!$this->hasSalesPerson()) {
@@ -1432,10 +1421,7 @@
     public function hasVisitPerson(){
       if (
           $this->visitperson['givenname']
-          . $this->visitperson['familyname']
-          . $this->visitperson['email']
           . $this->visitperson['phone_direct']
-          . $this->visitperson['phone_mobile']
         ) {
         return true;
       }
@@ -1485,30 +1471,19 @@
     public function getVisitPerson($title = true, $icon = true) {
       if ($this->hasVisitPerson()) {
         $return = '<h3>'.($icon ? '<i class="fa fa-briefcase"></i> ' : '') . __('Contact person' , 'casasync') . '</h3><address>';
-        if ($this->visitperson['givenname'] != '' && $this->visitperson['familyname'] != '') {
-          $return .= '<p><strong>' . $this->visitperson['givenname'] . ' ' . $this->visitperson['familyname'] . '</strong>';
+        if ($this->visitperson['givenname'] != '') {
+          $return .= '<p><strong>' . $this->visitperson['givenname'] . '</strong>';
         }
-        if ($this->visitperson['function'] != '') {
-          $return .= '<br><i>' . $this->visitperson['function'] . '</i></p>';
-        }
-          if ($this->visitperson['email'] != '') {
-            $objektlink = get_permalink();
-            $id_number = ($this->reference_id) ? ($this->reference_id) : ($this->casa_id);
-            $mailto = 'mailto:' . $this->visitperson['email'] . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
-              . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casasync'))
-            .'%0A%0ALink:%20' . $objektlink;
-            $return .= '<p><span class="casasync-label">' . __('Email', 'casasync') . '</span>'
-            .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->visitperson['email'] . '</a></span></p>';
-          }
+       
+          
         if($this->visitperson['phone_direct'] != '') {
           $return .= '<p class="casasync-phone-direct">'
             .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
           .'<span class="value break-word"> ' . $this->visitperson['phone_direct'] . '</span></p>';
         }
-        if($this->visitperson['phone_mobile'] != '') {
-          $return .= '<p class="casasync-phone-mobile">'
-            .'<span class="casasync-label">' . __('Mobile', 'casasync')  . '</span>'
-          .'<span class="value break-word"> ' . $this->visitperson['phone_mobile'] . '</span></p>';
+        if($this->visitperson['note'] != '') {
+          $return .= '<p class="casasync-note">'
+            .'<p>' . $this->visitperson['note']  . '</p>';
         }
         $return .= '</address>';
         return $return;
