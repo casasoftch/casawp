@@ -589,7 +589,7 @@ class Import {
     $the_casasync_attachments = array();
     if ($xmlattachments) {
       foreach ($xmlattachments->media as $media) {
-        if (in_array($media['type']->__toString(), array('image', 'document', 'plan', 'offer-logo', 'documentation'))) {
+        if (in_array($media['type']->__toString(), array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
           $filename = ($media->file->__toString() ? $media->file->__toString() : $media->url->__toString());
           $the_casasync_attachments[] = array(
             'type'    => $media['type']->__toString(),
@@ -616,7 +616,7 @@ class Import {
         array(
           'taxonomy' => 'casasync_attachment_type',
           'field'    => 'slug',
-          'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'documentation' )
+          'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'sales-brochure' )
         )
       )
     );
@@ -715,7 +715,7 @@ class Import {
           array(
             'taxonomy' => 'casasync_attachment_type',
             'field'    => 'slug',
-            'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'documentation' )
+            'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'sales-brochure' )
           )
         )
       );

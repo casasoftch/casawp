@@ -1834,11 +1834,11 @@
       return get_post_meta(get_the_ID(), 'the_urls', true);
     }
 
-    public function getAllDocumentations() {
+    public function getAllSalesBrochure() {
       $args = array(
         'post_type' => 'attachment',
         'posts_per_page' => -1,
-        'casasync_attachment_type' => 'documentation',
+        'casasync_attachment_type' => 'sales-brochure',
         'post_status' =>'publish',
         'post_parent' => get_the_ID(),
       ); 
