@@ -1823,7 +1823,7 @@
 
     public function getProvidedURL() {
       $html = NULL;
-      $providedURL = get_post_meta(get_the_ID(), 'the_urls');
+      $providedURL = get_post_meta(get_the_ID(), 'the_url');
       if($providedURL) {
         if(substr($providedURL[0][0]['href'], 0, 4) != "http") {
           $providedURL[0][0]['href'] = 'http://' . $providedURL[0][0]['href'];
