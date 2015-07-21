@@ -268,8 +268,8 @@
         return $country_arr;
     }
 
-    public function canton_arrays(){
-        $canton_arr = array(
+    public function region_arrays(){
+        $region_arr = array(
           "AG" => __("Aargau", 'casasync'),
           "AI" => __("Appenzell Innerrhoden", 'casasync'),
           "AR" => __("Appenzell Ausserrhoden", 'casasync'),
@@ -297,7 +297,7 @@
           "ZG" => __("Zug", 'casasync'),
           "ZH" => __("Zürich", 'casasync')
         );
-        return $canton_arr;
+        return $region_arr;
     }
 
     public function casasync_convert_numvalKeyToLabel($key){
