@@ -268,6 +268,38 @@
         return $country_arr;
     }
 
+    public function canton_arrays(){
+        $canton_arr = array(
+          "AG" => __("Aargau", 'casasync'),
+          "AI" => __("Appenzell Innerrhoden", 'casasync'),
+          "AR" => __("Appenzell Ausserrhoden", 'casasync'),
+          "BE" => __("Bern", 'casasync'),
+          "BL" => __("Basel-Land", 'casasync'),
+          "BS" => __("Basel-Stadt", 'casasync'),
+          "FR" => __("Fribourg", 'casasync'),
+          "GE" => __("Genève", 'casasync'),
+          "GL" => __("Glarus", 'casasync'),
+          "GR" => __("Graubünden", 'casasync'),
+          "JU" => __("Jura", 'casasync'),
+          "LU" => __("Luzern", 'casasync'),
+          "NE" => __("Neuchâtel", 'casasync'),
+          "NW" => __("Nidwalden", 'casasync'),
+          "OW" => __("Obwalden", 'casasync'),
+          "SG" => __("Sankt Gallen", 'casasync'),
+          "SH" => __("Schaffhausen", 'casasync'),
+          "SO" => __("Solothurn", 'casasync'),
+          "SZ" => __("Schwyz", 'casasync'),
+          "TG" => __("Thurgau", 'casasync'),
+          "TI" => __("Ticino", 'casasync'),
+          "UR" => __("Uri", 'casasync'),
+          "VS" => __("Valais", 'casasync'),
+          "VD" => __("Vaud", 'casasync'),
+          "ZG" => __("Zug", 'casasync'),
+          "ZH" => __("Zürich", 'casasync')
+        );
+        return $canton_arr;
+    }
+
     public function casasync_convert_numvalKeyToLabel($key){
         switch ($key) {
             #case 'surface_living':             return __('Living space' ,'casasync');break;
