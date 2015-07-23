@@ -528,8 +528,15 @@
         }
     }
 
+    public function labelSort($a, $b){
+      return strcmp($a["label"], $b["label"]);
+    }
+
 
     public function getFilterForm($size = 'large', $wrapper_class = 'casasync-filterform-wrap', $title = false){ //'Erweiterte Suche'
+
+
+
 
         $return = '';
 
@@ -569,8 +576,11 @@
 
             $return .= '<select name="casasync_category_s[]" multiple class="casasync_multiselect chosen-select" data-placeholder="' . __('Choose category','casasync') . '">';
             $cat_options = $this->getCategoryOptions();
+
+            usort($cat_options, array($this, "labelSort"));
             foreach ($cat_options as $option) {
                 $return .= "<option value='" . $option['value'] . "' " . $option['checked'] . ">" . $option['label'] . "</option>";
+
             }
             $return .= '</select>';
             

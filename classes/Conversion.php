@@ -268,7 +268,7 @@
         return $country_arr;
     }
 
-    public function region_arrays(){
+    public function region_arrays(){ // todo: Deutsche Bundesländer hinzufügen
         $region_arr = array(
           "AG" => __("Aargau", 'casasync'),
           "AI" => __("Appenzell Innerrhoden", 'casasync'),
