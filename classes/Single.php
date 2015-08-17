@@ -972,10 +972,23 @@
         $content .= '</div>';
       }
 
-      if ($this->getProvidedURL()) {
+      /*if ($this->getProvidedURL()) {
         $content .= '<div class="casasync_provided_url">';
         $content .= '<h3>' . __('Link','casasync') . '</h3>';
         $content .= $this->getProvidedURL();
+        $content .= '</div>';
+      }*/
+
+      if ($this->getUrls()) {
+        $content .= '<div class="casasync_provided_url">';
+        $content .= '<h3>' . __('Links','casasync') . '</h3>';
+        foreach ($this->getUrls() as $url_wrapper) {
+          foreach ($url_wrapper as $url) {
+            $content .= '<a href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. $url['label'] .'</a><br>';
+          }
+          
+        }
+        
         $content .= '</div>';
       }
 
@@ -1271,6 +1284,21 @@
       $content .= '<div class="casasync-tabable-pane" id="text_description">';
       $content .= $this->content;
       $content .= '</div>';
+
+
+      //Videos
+      $urls = $this->getUrls();
+      if ($urls && array_key_exists('youtube', $urls)) {
+        $nav .= '<li><a data-toggle="tab" href="#tab_videos"><small>' . __('Videos', 'casasync') . '</small></a></li>';
+        $content .= '<div class="casasync-tabable-pane" id="tab_videos">';
+        global $wp_embed;
+        foreach ($urls['youtube'] as $key => $url) {
+          $content .= '<div class="casasync-youtube-video-wrapper embed-responsive embed-responsive-16by9">';
+          $content .= $wp_embed->run_shortcode('[embed]'.$url['href'].'[/embed]'); 
+          $content .= '</div>';
+        }
+        $content .= '</div>';
+      }
 
       //details table
       $nav .= '<li><a data-toggle="tab" href="#text_numbers"><small>' . __("Specifications", 'casasync') . '</small></a></li>';
@@ -1973,6 +2001,10 @@
           $return[] = $item->textContent;
       }
       return (array_key_exists(0, $return) ? $return[0] : '');
+    }
+
+    public function getUrls(){
+      return get_post_meta( get_the_ID(), 'the_urls', $single = true );
     }
 
   }  

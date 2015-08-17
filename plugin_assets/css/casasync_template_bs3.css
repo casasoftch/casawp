@@ -9000,3 +9000,10 @@ td.casasync-visible-xs {
   font-size: 80px;
   content: "\f054";
 }
+.casasync-virtual-tour-btn {
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+.casasync-youtube-video-wrapper {
+  margin-bottom: 10px;
+}

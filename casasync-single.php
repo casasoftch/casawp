@@ -29,6 +29,16 @@
 						<div class="casasync-single-aside-container">
 							<?php echo $single->getPagination(); ?>
 						</div>
+						<div class="casasync-single-aside-container casasync-virtual-tour-btn">
+							<?php 
+								$urls = $single->getUrls();
+								if ($urls && array_key_exists('virtual-tour', $urls)) {
+									foreach ($urls['virtual-tour'] as $key => $url) {
+										echo '<a class="btn btn-default btn-block" href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : __('Virtual Tour', 'casasync')) .'</a>';
+									}
+								}
+							?>
+						</div>
 						<div class="casasync-single-aside-container">
 							<?php echo $single->getContactform(); ?>
 						</div>

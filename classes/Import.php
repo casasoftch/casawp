@@ -1271,14 +1271,14 @@ class Import {
          if ($type ) {
            $the_urls[$type][] = array(
              'href' => $href,
-             'label' => ($label ? $label : $href),
-             'title' => ($title ? $title : $href)
+             'label' => $label,
+             'title' => $title
            );
          } else {
            $the_urls[] = array(
              'href' => $href,
-             'label' => ($label ? $label : $href),
-             'title' => ($title ? $title : $href)
+             'label' => $label,
+             'title' => $title
            );
          }
        }

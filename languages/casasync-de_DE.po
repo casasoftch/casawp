@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-07-27 08:25+0100\n"
+"POT-Creation-Date: 2015-08-17 10:11+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.7.4\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -20,18 +20,18 @@ msgstr ""
 #: .././classes/Single.php:559 .././classes/Single.php:832
 #: .././classes/Single.php:846 .././classes/Single.php:858
 #: .././classes/Single.php:862 .././classes/Single.php:878
-#: .././classes/Single.php:904 .././classes/Single.php:1112
-#: .././classes/Single.php:1138 .././classes/Single.php:1163
+#: .././classes/Single.php:904 .././classes/Single.php:1125
+#: .././classes/Single.php:1151 .././classes/Single.php:1176
 msgid "On Request"
 msgstr "Auf Anfrage"
 
 #: .././ajax/properties.php:26 .././ajax/properties.php:70
-#: .././classes/Single.php:902 .././classes/Single.php:1136
+#: .././classes/Single.php:902 .././classes/Single.php:1149
 msgid "Rent price"
 msgstr "Mietpreis"
 
 #: .././ajax/properties.php:26 .././ajax/properties.php:70
-#: .././classes/Single.php:876 .././classes/Single.php:1110
+#: .././classes/Single.php:876 .././classes/Single.php:1123
 msgid "Sales price"
 msgstr "Kaufpreis"
 
@@ -51,6 +51,10 @@ msgid ""
 msgstr ""
 "Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte "
 "versuchen Sie es mit anderen Suchbegriffen."
+
+#: .././casasync-single.php:37
+msgid "Virtual Tour"
+msgstr "Virtuelle Tour"
 
 #: .././classes/Archive.php:468
 msgid "Buy"
@@ -388,7 +392,7 @@ msgid "Last name"
 msgstr "Nachname"
 
 #: .././classes/Casasync.php:730 .././classes/Casasync.php:1025
-#: .././classes/Casasync.php:1123 .././classes/Single.php:1446
+#: .././classes/Casasync.php:1123 .././classes/Single.php:1472
 msgid "Email"
 msgstr "E-Mail"
 
@@ -401,7 +405,7 @@ msgid "Title"
 msgstr "Titel"
 
 #: .././classes/Casasync.php:733 .././classes/Casasync.php:1021
-#: .././classes/Casasync.php:1115 .././classes/Single.php:1385
+#: .././classes/Casasync.php:1115 .././classes/Single.php:1411
 msgid "Phone"
 msgstr "Telefon"
 
@@ -410,7 +414,7 @@ msgid "Company"
 msgstr "Firma"
 
 #: .././classes/Casasync.php:736 .././classes/Casasync.php:979
-#: .././classes/Casasync.php:1063 .././classes/Single.php:1029
+#: .././classes/Casasync.php:1063 .././classes/Single.php:1042
 msgid "Street"
 msgstr "Strasse"
 
@@ -420,7 +424,7 @@ msgid "ZIP"
 msgstr "PLZ"
 
 #: .././classes/Casasync.php:738 .././classes/Casasync.php:988
-#: .././classes/Casasync.php:1077 .././classes/Single.php:1037
+#: .././classes/Casasync.php:1077 .././classes/Single.php:1050
 msgid "Locality"
 msgstr "Ort"
 
@@ -1580,11 +1584,11 @@ msgstr ""
 msgid "Zürich"
 msgstr ""
 
-#: .././classes/Conversion.php:307 .././classes/Single.php:1069
+#: .././classes/Conversion.php:307 .././classes/Single.php:1082
 msgid "Property space"
 msgstr "Grundstücksfläche"
 
-#: .././classes/Conversion.php:308 .././classes/Single.php:1061
+#: .././classes/Conversion.php:308 .././classes/Single.php:1074
 msgid "Living space"
 msgstr "Bruttowohnfläche"
 
@@ -1596,19 +1600,19 @@ msgstr "Nettowohnfläche"
 msgid "Gross floor area"
 msgstr "Bruttogeschossfläche"
 
-#: .././classes/Conversion.php:311 .././classes/Single.php:1053
+#: .././classes/Conversion.php:311 .././classes/Single.php:1066
 msgid "Surface usable"
 msgstr "Nutzfläche"
 
-#: .././classes/Conversion.php:313 .././classes/Single.php:1101
+#: .././classes/Conversion.php:313 .././classes/Single.php:1114
 msgid "Year of renovation"
 msgstr "Letzte Renovation"
 
-#: .././classes/Conversion.php:314 .././classes/Single.php:1093
+#: .././classes/Conversion.php:314 .././classes/Single.php:1106
 msgid "Year of construction"
 msgstr "Baujahr"
 
-#: .././classes/Conversion.php:315 .././classes/Single.php:1045
+#: .././classes/Conversion.php:315 .././classes/Single.php:1058
 msgid "Number of rooms"
 msgstr "Anzahl Zimmer"
 
@@ -1620,12 +1624,12 @@ msgstr "Anzahl Nasszellen"
 msgid "Number of guest toilets"
 msgstr "Anzahl Gäste WC"
 
-#: .././classes/Conversion.php:318 .././classes/Single.php:1085
+#: .././classes/Conversion.php:318 .././classes/Single.php:1098
 msgid "Number of floors"
 msgstr "Anzahl Etagen"
 
 #: .././classes/Conversion.php:319 .././classes/Single.php:399
-#: .././classes/Single.php:1077
+#: .././classes/Single.php:1090
 msgid "Floor"
 msgstr "Etage"
 
@@ -1798,9 +1802,8 @@ msgid "Gastronomy"
 msgstr "Gastronomie"
 
 #: .././classes/Conversion.php:395
-#, fuzzy
 msgid "Vacation"
-msgstr "Ortschaft"
+msgstr "Ferien"
 
 #: .././classes/Conversion.php:396
 msgid "Agriculture"
@@ -1812,21 +1815,19 @@ msgstr "Gewerbe / Industrie"
 
 #: .././classes/Conversion.php:398
 msgid "Residential"
-msgstr ""
+msgstr "Wohnen"
 
 #: .././classes/Conversion.php:399
-#, fuzzy
 msgid "Storage"
-msgstr "Autogarage"
+msgstr "Lager"
 
 #: .././classes/Conversion.php:400 .././classes/Conversion.php:512
 msgid "Parking space"
 msgstr "Parkplatz"
 
 #: .././classes/Conversion.php:401
-#, fuzzy
 msgid "Building"
-msgstr "Neubau"
+msgstr "Angeschlossenes Bauland"
 
 #: .././classes/Conversion.php:402
 msgid "Advertising Area"
@@ -1845,9 +1846,8 @@ msgid "Bakery"
 msgstr "Bäckerei"
 
 #: .././classes/Conversion.php:406
-#, fuzzy
 msgid "Bar"
-msgstr "Bahrain"
+msgstr "Bar"
 
 #: .././classes/Conversion.php:407
 msgid "Butcher"
@@ -1870,12 +1870,10 @@ msgid "Club/Disco"
 msgstr "Club/Disco"
 
 #: .././classes/Conversion.php:412
-#, fuzzy
 msgid "Fuel Station"
 msgstr "Bergbahn"
 
 #: .././classes/Conversion.php:413
-#, fuzzy
 msgid "Gardening"
 msgstr "Garten"
 
@@ -1904,12 +1902,10 @@ msgid "Restaurant"
 msgstr "Restaurant"
 
 #: .././classes/Conversion.php:420
-#, fuzzy
 msgid "Shop"
 msgstr "Shoppingcenter"
 
 #: .././classes/Conversion.php:421
-#, fuzzy
 msgid "Shopping Centre"
 msgstr "Shoppingcenter"
 
@@ -1977,8 +1973,8 @@ msgstr "Nach Vereinbarung"
 msgid "Immediate"
 msgstr "Sofort"
 
-#: .././classes/Conversion.php:481 .././classes/Single.php:1154
-#: .././classes/Single.php:1161
+#: .././classes/Conversion.php:481 .././classes/Single.php:1167
+#: .././classes/Single.php:1174
 msgid "Available"
 msgstr "Verfügbar"
 
@@ -2140,28 +2136,28 @@ msgstr "Bauland erschlossen"
 msgid "Flat sharing community"
 msgstr "In Wohngemeinschaft"
 
-#: .././classes/ImportOLD.php:589 .././classes/Single.php:1560
-#: .././classes/Single.php:1669
+#: .././classes/ImportOLD.php:589 .././classes/Single.php:1586
+#: .././classes/Single.php:1695
 msgid "month"
 msgstr "Monat"
 
-#: .././classes/ImportOLD.php:590 .././classes/Single.php:1561
-#: .././classes/Single.php:1670
+#: .././classes/ImportOLD.php:590 .././classes/Single.php:1587
+#: .././classes/Single.php:1696
 msgid "week"
 msgstr "Woche"
 
-#: .././classes/ImportOLD.php:591 .././classes/Single.php:1562
-#: .././classes/Single.php:1671
+#: .././classes/ImportOLD.php:591 .././classes/Single.php:1588
+#: .././classes/Single.php:1697
 msgid "day"
 msgstr "Tag"
 
-#: .././classes/ImportOLD.php:592 .././classes/Single.php:1563
-#: .././classes/Single.php:1672
+#: .././classes/ImportOLD.php:592 .././classes/Single.php:1589
+#: .././classes/Single.php:1698
 msgid "year"
 msgstr "Jahr"
 
-#: .././classes/ImportOLD.php:593 .././classes/Single.php:1564
-#: .././classes/Single.php:1673
+#: .././classes/ImportOLD.php:593 .././classes/Single.php:1590
+#: .././classes/Single.php:1699
 msgid "hour"
 msgstr "Stunde"
 
@@ -2237,11 +2233,11 @@ msgstr "Nebenkosten"
 msgid "Offer"
 msgstr "Angebot"
 
-#: .././classes/Single.php:886 .././classes/Single.php:1120
+#: .././classes/Single.php:886 .././classes/Single.php:1133
 msgid "Gross price"
 msgstr "Bruttomiete"
 
-#: .././classes/Single.php:894 .././classes/Single.php:1128
+#: .././classes/Single.php:894 .././classes/Single.php:1141
 msgid "Net price"
 msgstr "Nettomiete"
 
@@ -2257,81 +2253,85 @@ msgstr "Dokumente"
 msgid "Distances"
 msgstr "Distanzen"
 
-#: .././classes/Single.php:977
+#: .././classes/Single.php:984
 msgid "Link"
 msgstr "Link"
 
-#: .././classes/Single.php:1181
+#: .././classes/Single.php:1194
 msgid "Previous"
 msgstr "Zurück"
 
-#: .././classes/Single.php:1182
+#: .././classes/Single.php:1195
 msgid "To list"
 msgstr "Zur Liste"
 
-#: .././classes/Single.php:1183
+#: .././classes/Single.php:1196
 msgid "Next"
 msgstr "Weiter"
 
-#: .././classes/Single.php:1261
+#: .././classes/Single.php:1274
 msgid "Base data"
 msgstr "Grunddaten"
 
-#: .././classes/Single.php:1270
+#: .././classes/Single.php:1283
 msgid "Description"
 msgstr "Beschreibung"
 
-#: .././classes/Single.php:1276
+#: .././classes/Single.php:1292
+msgid "Videos"
+msgstr ""
+
+#: .././classes/Single.php:1302
 msgid "Specifications"
 msgstr "Datenblatt"
 
-#: .././classes/Single.php:1325
+#: .././classes/Single.php:1351
 msgid "View lager version"
 msgstr "Grössere Ansicht anzeigen"
 
-#: .././classes/Single.php:1343
+#: .././classes/Single.php:1369
 msgid "Contact provider directly"
 msgstr "Jetzt Anbieter direkt kontaktieren"
 
-#: .././classes/Single.php:1366
+#: .././classes/Single.php:1392
 msgid "Provider"
 msgstr "Anbieter"
 
-#: .././classes/Single.php:1378 .././classes/Single.php:1444
+#: .././classes/Single.php:1404 .././classes/Single.php:1470
 msgid "I am interested concerning this property. Please contact me."
 msgstr ""
 "Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir "
 "auf."
 
-#: .././classes/Single.php:1379
+#: .././classes/Single.php:1405
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#: .././classes/Single.php:1395
+#: .././classes/Single.php:1421
 msgid "Fax"
 msgstr "Fax"
 
-#: .././classes/Single.php:1432 .././classes/Single.php:1473
+#: .././classes/Single.php:1458 .././classes/Single.php:1499
 msgid "Contact person"
 msgstr "Kontaktperson"
 
-#: .././classes/Single.php:1452 .././classes/Single.php:1481
+#: .././classes/Single.php:1478 .././classes/Single.php:1507
 msgid "Phone direct"
 msgstr "Telefon direkt"
 
-#: .././classes/Single.php:1457
+#: .././classes/Single.php:1483
 msgid "Mobile"
 msgstr "Mobile"
 
-#: .././classes/Single.php:1510
+#: .././classes/Single.php:1536
 msgid "Share"
 msgstr "Empfehlen"
 
-#: .././classes/Single.php:1730
+#: .././classes/Single.php:1756
 msgid "and"
 msgstr "und"
 
-#: .././classes/Single.php:1784
+#: .././classes/Single.php:1810
 msgid "Document"
 msgstr "Dokument"
 
