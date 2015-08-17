@@ -982,7 +982,7 @@
       if ($this->getUrls()) {
         $content .= '<div class="casasync_provided_url">';
         $content .= '<h3>' . __('Links','casasync') . '</h3>';
-        $content .= '<ul>';
+        $content .= '<ul class="casasync-unstyled casasync-links-list">';
         foreach ($this->getUrls() as $url_wrapper) {
           foreach ($url_wrapper as $url) {
             $content .= '<li><a href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : $url['href']) .'</a></li>';
