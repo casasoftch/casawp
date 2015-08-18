@@ -920,7 +920,7 @@ class CasaSync {
                 $sender_lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
     
                 $header  = "From: \"$sender_fistname $sender_lastname\" <info@".$_SERVER['SERVER_NAME'].">\r\n";
-                $hedaer .= "Reply-To: \"$sender_fistname $sender_lastname\" <$sender_email>\r\n";
+                $header .= "Reply-To: \"$sender_fistname $sender_lastname\" <$sender_email>\r\n";
 
                 $header .= "MIME-Version: 1.0\r\n";
                 $header .= "Content-Type: text/html; charset=UTF-8\r\n";
