@@ -71,6 +71,9 @@
       'remcat'        => false,
       'fallback'      => false
     );
+    public $property_geo_latitude;
+    public $property_geo_longitude;
+
 
     public $loadImages     = true;
     public $loadDocuments  = true;
@@ -356,6 +359,9 @@
       $this->address_locality     = get_post_meta( get_the_ID(), 'casasync_property_address_locality', $single = true );
       $this->address_country      = get_post_meta( get_the_ID(), 'casasync_property_address_country', $single = true );
       $this->address_country_name = $this->conversion->countrycode_to_countryname($this->address_country);
+
+      $this->property_geo_latitude  = get_post_meta( get_the_ID(), 'casasync_property_geo_latitude', $single = true );
+      $this->property_geo_longitude = get_post_meta( get_the_ID(), 'casasync_property_geo_longitude', $single = true );
 
 
       $this->casa_id = get_post_meta( get_the_ID(), 'casasync_id', $single = true );
@@ -1348,10 +1354,12 @@
     public function getMap() {
       $return = NULL;
       if ($this->getAddress('property')){
-        if(get_option('casasync_single_use_zoomlevel') != '0'){
-          $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . urlencode( str_replace(' ',', ', str_replace('<br>', ', ', $this->getAddress('property') ))) . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . urlencode( str_replace('<br>', ', ', $this->getAddress('property') )) . "&amp;t=m&amp;z=12";
+        if(get_option('casasync_single_use_zoomlevel') != '0' && $this->address_street != ''){
+          #$this->property_geo_longitude
+          #$this->property_geo_latitude
+          $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . $this->property_geo_latitude.','.$this->property_geo_longitude . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . $this->property_geo_latitude.','.$this->property_geo_longitude . "&amp;t=m&amp;z=12";
           $map_url_embed = $map_url . '&amp;output=embed';
-          $return = '<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-address="'. str_replace('<br>', ', ', $this->getAddress('property')) . '"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '">' . __('View lager version', 'casasync') . '</a></small></div></div>';
+          $return = '<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-lat="'.$this->property_geo_latitude.'" data-lng="'.$this->property_geo_longitude.'"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="' . $map_url . '">' . __('View lager version', 'casasync') . '</a></small></div></div>';
           $return .= '<div class="casasync-visible-xs"><a class="btn btn-default btn-block" href="' . $map_url . '" target="_blank"><i class="fa fa-map-marker"></i> Auf Google Maps anzeigen</a></div>';
         }
       }

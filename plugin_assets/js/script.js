@@ -91,40 +91,25 @@ jQuery(document).ready(function($) {
         if ($('.casasync-map').length && google) {
             $('.casasync-map').each(function(){
                 var $mapwraper = $(this);
-                if ($mapwraper.data('address')) {
-                    geocoder = new google.maps.Geocoder();
-                    geocoder.geocode( { 'address': $mapwraper.data('address')}, function(results, status) {
-                        if (status == google.maps.GeocoderStatus.OK) {
-                            var map;
-                            function initialize() {
-                                if (results[0]) {
-                                    var location = results[0].geometry.location;
-                                    var bounds = results[0].geometry.bounds;
-                                } else {
-                                    var location = null;
-                                    var bounds = null;
-                                }
-                                var mapOptions = {
-                                  zoom: parseInt(window.casasyncOptionParams.google_maps_zoomlevel),
-                                  mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                  center: location
-                                };
-                                $mapwraper.show();
-                                map = new google.maps.Map(document.getElementById('map-canvas'),
-                                  mapOptions);
+                if ($mapwraper.data('lat') && $mapwraper.data('lng')) {
+                    
+                    var map;
+                    function initialize() {
+                        var location = new google.maps.LatLng($mapwraper.data('lat'),$mapwraper.data('lng'));
+                        var mapOptions = {
+                          zoom: parseInt(window.casasyncOptionParams.google_maps_zoomlevel),
+                          mapTypeId: google.maps.MapTypeId.ROADMAP,
+                          center: location
+                        };
+                        $mapwraper.show();
+                        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-                                if (bounds) {
-                                    map.fitBounds(bounds);
-                                }
-                                var marker = new google.maps.Marker({
-                                    map: map,
-                                    position: location
-                                });
-                            }
-                            initialize();
-                            //$('#map-canvas').animate({'height' : '400px'}, 500);
-                        }
-                    });
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: location
+                        });
+                    }
+                    initialize();
                 };
             });
         }
