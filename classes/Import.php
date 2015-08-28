@@ -57,6 +57,14 @@ class Import {
       'netPrice_timesegment'                         ,
       'netPrice_propertysegment'                     ,
       'priceForOrder'                                ,
+      'parking-exterior-space'                       ,
+      'parking-carport'                              ,
+      'parking-garage-connected'                     ,
+      'parking-garage-box'                           ,
+      'parking-garage-underground'                   ,
+      'parking-house'                                ,
+      'room-workroom'                                ,
+      'room-storage-basement'                        ,
       'seller_org_address_country'                   ,
       'seller_org_address_locality'                  ,
       'seller_org_address_region'                    ,
@@ -504,9 +512,26 @@ class Import {
       }
     }
 
-
     return array_merge($r_numvals, $r_distances);
+  }
 
+  public function integratedOffersToArray($integratedOffers){
+    $the_offers = array();
+
+    if (!empty($integratedOffers)) {
+      foreach ($integratedOffers->integratedOffer as $offer) {
+        $the_offer = array();
+        $the_offer['price']           = (int) $offer;
+        $the_offer['frequency']       = (int) $offer['frequency'];
+        $the_offer['timesegment']     = (string) $offer['timesegment'];
+        $the_offer['propertysegment'] = (string) $offer['propertysegment'];
+        $the_offer['inclusive']       = (int) $offer['inclusive'];
+
+        $the_offers[(string) $offer['type']][] = $the_offer;
+      }
+    }
+
+    return $the_offers;
   }
 
 
@@ -1390,7 +1415,11 @@ class Import {
     //nuvals    
     $numericValues = $this->numvalsXMLtoArray($property->numericValues);
     $new_meta_data = array_merge($new_meta_data, $numericValues);
-    
+
+    //integratedOffers
+    $integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
+    $new_meta_data = array_merge($new_meta_data, $integratedOffers);
+
 
     //features
     $new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
