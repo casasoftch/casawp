@@ -340,14 +340,9 @@
     }
 
     public function getCategoryOptions(){
-        global $wp_query;
         $categories = array();
+        $categories = $this->getCorrectTaxQuery('casasync_category');
         
-        foreach ($this->query["tax_query"] as $tax_query) {
-            if ($tax_query['taxonomy'] == 'casasync_category') {
-                $categories = $tax_query['terms'];
-            }
-        }
         $options = array();
         $terms = get_terms('casasync_category');
         foreach ($terms as $term) {
@@ -363,13 +358,9 @@
         return $options;
     }
     public function getLocationsOptions($return_unchecked = true){
-        global $wp_query;
         $locations = array();
-        foreach ($this->query["tax_query"] as $tax_query) {
-            if ($tax_query['taxonomy'] == 'casasync_location') {
-                $locations = $tax_query['terms'];
-            }
-        }
+        $locations = $this->getCorrectTaxQuery('casasync_location');
+        
         $options = array();
         $terms = get_terms('casasync_location');
         foreach ($terms as $term) {
@@ -382,19 +373,9 @@
         return $options;
     }
     public function getLocationsOptionsHyr() {
-        global $wp_query;
-        if (isset($wp_query->query_vars['casasync_location'])) {
-            $locations = explode(',', $wp_query->query_vars['casasync_location']);
-        } else {
-            $locations = array();
-        }
         $locations = array();
-        foreach ($this->query["tax_query"] as $tax_query) {
-            if ($tax_query['taxonomy'] == 'casasync_location') {
-                $locations = $tax_query['terms'];
-            }
-        }
-
+        $locations = $this->getCorrectTaxQuery('casasync_location');
+       
         $return = '';
         $terms_lvl1 = get_terms('casasync_location',array('parent'=>0));
         $no_child_lvl1 = '';
@@ -453,11 +434,7 @@
     }
     public function getSalestypeOptions() {
         $salestypes = array();
-        foreach ($this->query["tax_query"] as $tax_query) {
-            if ($tax_query['taxonomy'] == 'casasync_salestype') {
-                $salestypes = $tax_query['terms'];
-            }
-        }
+        $salestypes = $this->getCorrectTaxQuery('casasync_salestype');
 
         $terms = get_terms('casasync_salestype');
         $options = array();
@@ -478,21 +455,9 @@
     }
 
     public function getAvailabilityOptions() {
-        global $wp_query;
-        $casasync_availability = get_terms('casasync_availability');
-        foreach ($casasync_availability as $term) {            
-            if (isset($wp_query->query_vars['casasync_availability'])) {
-                $cur_basis = explode(',', $wp_query->query_vars['casasync_availability'] );
-            } else {
-                $cur_basis = array();
-            }
-        }
         $availabilities = array();
-        foreach ($this->query["tax_query"] as $tax_query) {
-            if ($tax_query['taxonomy'] == 'casasync_availability') {
-                $availabilities = $tax_query['terms'];
-            }
-        }
+        $availabilities = $this->getCorrectTaxQuery('casasync_availability');
+
         $terms = get_terms('casasync_availability');
         $options = array();
         foreach ($terms as $term) {
@@ -513,6 +478,26 @@
             $options[$term->slug]['checked'] = (in_array($term->slug, $availabilities) ? 'SELECTED' : '');
         }
         return $options;
+    }
+
+    public function getCorrectTaxQuery($taxonomy) {
+      global $wp_query;
+      $query = array();
+
+      // get params from $wp_query or $this->query
+      if (empty($this->query["tax_query"])) {
+        $tax_query = $wp_query->tax_query->queries;
+      } else {
+        $tax_query = $this->query["tax_query"];
+      }
+
+      foreach ($tax_query as $tax_query) {
+          if ($tax_query['taxonomy'] == $taxonomy) {
+              $query = $tax_query['terms'];
+          }
+      }
+
+      return $query;
     }
 
     public function getStickyProperties(){
