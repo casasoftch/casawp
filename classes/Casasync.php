@@ -37,6 +37,8 @@ class CasaSync {
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
         register_activation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casasync_activation'));
         register_deactivation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casasync_deactivation'));
+
+        add_action('wp_head', array($this, 'add_meta_tags'));
     
         if ( function_exists( 'add_theme_support' ) ) {
             add_theme_support( 'post-thumbnails' );
@@ -1195,5 +1197,17 @@ class CasaSync {
             echo '<td>'.'</tr>';
         }
         echo '</table>';
+    }
+
+    function add_meta_tags() {
+        global $post;
+        if ( is_singular('casasync_property') ) {
+            echo '<meta property="og:url"          content="' . get_the_permalink() . '" />' . "\n";
+            echo '<meta property="og:type"         content="article" />' . "\n";
+            echo '<meta property="og:title"        content="' . get_the_title() . '" />' . "\n";
+            echo '<meta property="og:description"  content="' . strip_tags($post->post_content) . '" />' . "\n";
+            echo '<meta property="og:image"        content="' . wp_get_attachment_url( get_post_thumbnail_id() ) . '">' . "\n";
+            echo '<meta property="og:locale"       content="' . get_locale() . '" />' . "\n";
+        }
     }
 }
