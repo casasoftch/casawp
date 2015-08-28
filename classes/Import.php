@@ -1201,8 +1201,8 @@ class Import {
     $new_meta_data['casasync_property_address_streetaddress'] = $this->simpleXMLget($property->address->street);
     $new_meta_data['casasync_property_address_streetnumber']  = $this->simpleXMLget($property->address->streetNumber);
     if ($property->geo) {
-      $new_meta_data['casasync_property_geo_latitude']          = (float) $this->simpleXMLget($property->geo->latitude);
-      $new_meta_data['casasync_property_geo_longitude']         = (float) $this->simpleXMLget($property->geo->longitude);
+      $new_meta_data['casasync_property_geo_latitude']          = $this->simpleXMLget($property->geo->latitude);
+      $new_meta_data['casasync_property_geo_longitude']         = $this->simpleXMLget($property->geo->longitude);
     }
     $new_meta_data['casasync_start']                          = $this->simpleXMLget($xmloffer->start);
     $new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
