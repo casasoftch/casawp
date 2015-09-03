@@ -1284,32 +1284,32 @@ class Import {
        $new_meta_data['the_url'] = $the_url;
      }
 
-     //urls
-     $url = null;
-     $the_urls = array();
-     if ($xmloffer->urls) {
-       foreach ($xmloffer->urls->url as $url) {
-         $href = $url->__toString();
-         $label = (isset($url['label']) ? $url['label'] : false);
-         $title = (isset($url['title']) ? $url['title'] : false);
-         $type =  (isset($url['type'])  ? (string) $url['type'] : false);
-         if ($type ) {
-           $the_urls[$type][] = array(
-             'href' => $href,
-             'label' => $label,
-             'title' => $title
-           );
-         } else {
-           $the_urls[] = array(
-             'href' => $href,
-             'label' => $label,
-             'title' => $title
-           );
-         }
+   //urls
+   $url = null;
+   $the_urls = array();
+   if ($xmloffer->urls) {
+     foreach ($xmloffer->urls->url as $url) {
+       $href = $url->__toString();
+       $label = (isset($url['label']) ? $url['label'] : false);
+       $title = (isset($url['title']) ? $url['title'] : false);
+       $type =  (isset($url['type'])  ? (string) $url['type'] : false);
+       if ($type ) {
+         $the_urls[$type][] = array(
+           'href' => (is_object($href) ? (string) $href : $href),
+           'label' => (is_object($label) ? (string) $label : $label),
+           'title' => (is_object($title) ? (string) $title : $title)
+         );
+       } else {
+         $the_urls[] = array(
+           'href' => (is_object($href) ? (string) $href : $href),
+           'label' => (is_object($label) ? (string) $label : $label),
+           'title' => (is_object($title) ? (string) $title : $title)
+         );
        }
-       ksort($the_urls);
-       $new_meta_data['the_urls'] = $the_urls;
      }
+     ksort($the_urls);
+     $new_meta_data['the_urls'] = $the_urls;
+   }
 
 
     //tags
