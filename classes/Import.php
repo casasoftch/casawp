@@ -1290,6 +1290,10 @@ class Import {
    if ($xmloffer->urls) {
      foreach ($xmloffer->urls->url as $url) {
        $href = $url->__toString();
+       if (! (substr( $href, 0, 7 ) === "http://" || substr( $href, 0, 8 ) === "https://") ) {
+        $href = 'http://'.$href;
+       }
+
        $label = (isset($url['label']) ? $url['label'] : false);
        $title = (isset($url['title']) ? $url['title'] : false);
        $type =  (isset($url['type'])  ? (string) $url['type'] : false);
