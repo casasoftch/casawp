@@ -27,6 +27,7 @@
 		);
 		$i++;
 	}
+
 	echo json_encode($mapData);
 
 	/**
