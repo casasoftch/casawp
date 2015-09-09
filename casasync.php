@@ -28,7 +28,6 @@ if (!is_admin()) {
 	include(CASASYNC_PLUGIN_DIR . 'classes/Archive.php');
 }
 include(CASASYNC_PLUGIN_DIR . 'classes/Import.php');
-include(CASASYNC_PLUGIN_DIR . 'classes/ImportLegacy.php');
 
 $casaSync = new CasaSync();
 if (is_admin()) {
@@ -41,15 +40,6 @@ if (is_admin()) {
 	}
 }
 if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
-	if (get_option('casasync_legacy')) {
-		$import = new ImportLegacy(true, false);	
-	} else {
-		$import = new Import(true, false);
-		
-	}
-	$transcript = $import->getLastTranscript();
-}
-if (isset($_GET['gatewayupdate'])) {
-	$import = new Import(false, true);
+	$import = new Import();
 	$transcript = $import->getLastTranscript();
 }
