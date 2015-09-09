@@ -96,7 +96,8 @@
 					'casasync_remCat',
 					'casasync_remCat_email',
 					'casasync_before_content',
-					'casasync_after_content'
+					'casasync_after_content',
+					'casasync_legacy'
 				);
 				break;
 		}
@@ -1066,6 +1067,44 @@
 										<p><?php echo $text; ?></p>
 										<p><label>
 											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
+										</label></p>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">CASAGATEWAY (Publisher) import (optional)</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>API Schlüssel</span></legend>
+										<?php $name = 'casasync_api_key'; ?>
+										<?php $text = 'API Key'; ?>
+										<p><?php echo $text; ?></p>
+										<p>
+											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
+										</p>
+									</fieldset>
+									<fieldset>
+										<legend class="screen-reader-text"><span>Privater Schlüssel</span></legend>
+										<?php $name = 'casasync_private_key'; ?>
+										<?php $text = 'Private Key'; ?>
+										<p><?php echo $text; ?></p>
+										<p>
+											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
+										</p>
+									</fieldset>
+
+									<a href="<?php echo  get_admin_url('', 'admin.php?page=casasync&gatewayupdate=1'); ?>">Aktuelles XML von CASAGATWAY laden</a>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Legacy import</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Altes importscript für casaXML draft aktivieren.</span></legend>
+										<?php $name = 'casasync_legacy'; ?>
+										<?php $text = 'Altes importscript für casaXML draft aktivieren.'; ?>
+										<p><label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> 
 										</label></p>
 									</fieldset>
 								</td>
