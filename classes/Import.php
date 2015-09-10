@@ -1018,6 +1018,16 @@ class Import {
     }
   }
 
+  public function gatewaypoke(){
+    add_action('asynchronous_gatewayupdate', array($this,'gatewaypokeanswer'));
+    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
+  }
+
+  public function gatewaypokeanswer(){
+    $this->updateImportFileThroughCasaGateway();
+    $this->updateOffers();
+  }
+
   public function updateImportFileThroughCasaGateway(){
     $apikey = get_option('casasync_api_key');
     $privatekey = get_option('casasync_private_key');
