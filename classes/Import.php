@@ -1020,13 +1020,13 @@ class Import {
 
   public function gatewaypoke(){
     add_action('asynchronous_gatewayupdate', array($this,'gatewaypokeanswer'));
-    $this->addToLog('Scheduled Update on: ' . time());
+    $this->addToLog('Scheduled an Update on: ' . time());
     wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
   }
 
   public function gatewaypokeanswer(){
     $this->updateImportFileThroughCasaGateway();
-    $this->addToLog('Scheduled Update produced at: ' . time());
+    $this->addToLog('gateway import answer: ' . time());
     $this->updateOffers();
   }
 
@@ -1095,7 +1095,7 @@ class Import {
         file_put_contents($file, $response);
       } 
 
-      echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
+      //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       echo '<div id="message" class="updated"> API Keys missing</div>';
     }
