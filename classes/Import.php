@@ -1020,11 +1020,13 @@ class Import {
 
   public function gatewaypoke(){
     add_action('asynchronous_gatewayupdate', array($this,'gatewaypokeanswer'));
+    $this->addToLog('Scheduled Update on: ' . time());
     wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
   }
 
   public function gatewaypokeanswer(){
     $this->updateImportFileThroughCasaGateway();
+    $this->addToLog('Scheduled Update produced at: ' . time());
     $this->updateOffers();
   }
 
