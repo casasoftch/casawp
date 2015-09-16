@@ -45,11 +45,21 @@ if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
 		$import = new ImportLegacy(true, false);	
 	} else {
 		$import = new Import(true, false);
-		
 	}
 	$transcript = $import->getLastTranscript();
 }
 if (isset($_GET['gatewayupdate'])) {
 	$import = new Import(false, true);
+	$import = new Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
+if (isset($_GET['gatewaypoke'])) {
+	//$import = new Import(false, false);
+	//$import->gatewaypoke();
+
+	$import = new Import(false, true);
+	$import = new Import(true, false);
+	$transcript = $import->getLastTranscript();
+}
+
+

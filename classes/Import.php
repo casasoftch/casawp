@@ -266,15 +266,14 @@ class Import {
         if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id)) {
           mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id);
         }
-        if (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
+        if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
           $could_copy = copy($the_mediaitem['url'], CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
-        } else {
-          $could_copy = false;
+          if (!$could_copy) {
+            $filename = false;
+          }
         }
 
-        if (!$could_copy) {
-          $filename = false;
-        }
+        
       }
     } else { //missing
       $filename = false;
@@ -554,24 +553,26 @@ class Import {
     return $publisher_options;
   }
 
-  public function setOfferAttachments($xmlattachments, $wp_post, $property_id, $casasync_id){
+  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casasync_id){
     ### future task: for better performace compare new and old data ###
 
     
     //get xml media files
     $the_casasync_attachments = array();
-    if ($xmlattachments) {
-      foreach ($xmlattachments->media as $media) {
-        if (in_array($media['type']->__toString(), array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
-          $filename = ($media->file->__toString() ? $media->file->__toString() : $media->url->__toString());
+    if ($offer_medias) {
+      $o = 0;
+      foreach ($offer_medias as $offer_media) {
+        $o++;
+        $media = $offer_media['media'];
+        if (in_array($offer_media['type'], array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
           $the_casasync_attachments[] = array(
-            'type'    => $media['type']->__toString(),
-            'alt'     => $media->alt->__toString(),
-            'title'   => preg_replace('/\.[^.]+$/', '', ( $media->title->__toString() ? $media->title->__toString() : basename($filename)) ),
-            'file'    => $media->file->__toString(),
-            'url'     => $media->url->__toString(),
-            'caption' => $media->caption->__toString(),
-            'order'   => $media['order']->__toString()
+            'type'    => $offer_media['type'],
+            'alt'     => $offer_media['alt'],
+            'title'   => preg_replace('/\.[^.]+$/', '', ( $offer_media['title'] ? $offer_media['title'] : basename($media['original_file'])) ),
+            'file'    => '',
+            'url'     => $media['original_file'],
+            'caption' => $offer_media['caption'],
+            'order'   => $o
           );
         }
       }
@@ -1017,6 +1018,18 @@ class Import {
     }
   }
 
+  public function gatewaypoke(){
+    add_action('asynchronous_gatewayupdate', array($this,'gatewaypokeanswer'));
+    $this->addToLog('Scheduled an Update on: ' . time());
+    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
+  }
+
+  public function gatewaypokeanswer(){
+    $this->updateImportFileThroughCasaGateway();
+    $this->addToLog('gateway import answer: ' . time());
+    $this->updateOffers();
+  }
+
   public function updateImportFileThroughCasaGateway(){
     $apikey = get_option('casasync_api_key');
     $privatekey = get_option('casasync_private_key');
@@ -1082,7 +1095,7 @@ class Import {
         file_put_contents($file, $response);
       } 
 
-      echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
+      //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       echo '<div id="message" class="updated"> API Keys missing</div>';
     }
@@ -1094,7 +1107,7 @@ class Import {
 
   public function property2Array($property_xml){
 
-    $this->addToTranscript("*** CasaXml Conversion start ***");
+    //$this->addToTranscript("*** CasaXml Conversion start ***");
 
     $propertydata['address'] = array(
         'country'       => ($property_xml->address->country->__toString() ?:''),
@@ -1235,7 +1248,11 @@ class Import {
         foreach ($property_xml->offers->offer as $offer_xml) { 
             $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
             $offerData['type'] =  $property_xml->type->__toString();
-            $offerData['start'] =  new \DateTime($property_xml->start->__toString());
+            if ($property_xml->start) {
+              $offerData['start'] =  new \DateTime($property_xml->start->__toString());
+            } else {
+              $offerData['start'] = null;
+            }
             $offerData['status'] = 'active';
             $offerData['name'] = $offer_xml->name->__toString();
             $offerData['excerpt'] = $property_xml->excerpt->__toString();
@@ -1309,7 +1326,7 @@ class Import {
     $propertydata['offers'] = $offerDatas;
 
 
-    $this->addToTranscript("*** CasaXml Conversion complete ***");
+    //$this->addToTranscript("*** CasaXml Conversion complete ***");
 
     return $propertydata;
 
@@ -1419,6 +1436,7 @@ class Import {
 
   public function updateOffer($casasync_id, $offer_pos, $property, $offer, $wp_post){
     //$publisher_options = $offer->publish;
+    $publisher_options = array();
 
     //lang
     $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casasync_id);
@@ -1477,7 +1495,10 @@ class Import {
     $new_meta_data['casasync_property_geo_latitude']          = $property['address']['lat'];
     $new_meta_data['casasync_property_geo_longitude']         = $property['address']['lng'];
 
-    $new_meta_data['casasync_start']                          = $offer['start']->format('Y-m-d H:i:s');
+    if ($offer['start']) {
+      $new_meta_data['casasync_start']                          = $offer['start']->format('Y-m-d H:i:s');
+    }
+    
     //$new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
     if (isset($property['organization'])) {
       //$new_meta_data['seller_org_phone_direct'] = $property['organization'][''];
@@ -1507,9 +1528,7 @@ class Import {
       $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
       $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
     }
-    echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-    print_r($property);
-    echo "</textarea>";
+    
     $personType = 'inquiry';
     if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
       $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
@@ -1706,7 +1725,7 @@ class Import {
     $this->setOfferSalestype($wp_post, $property['type'], $casasync_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casasync_id);
     //$this->setOfferLocalities($wp_post, $property->address, $casasync_id);
-    //$this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casasync_id);
+    $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casasync_id);
     
 
   }
