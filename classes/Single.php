@@ -549,22 +549,22 @@
       }*/
 
       #new
-      if($this->start) {
-        $current_datetime = strtotime(date('c'));
+      $current_datetime = strtotime(date('c'));
+      if ($this->start) {
         $property_datetime = strtotime($this->start);
-        
-        if ($property_datetime > $current_datetime && $this->start != false) {
-          $datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
-          $return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
-        } else if ($this->start == false || $this->start == ''){
-          $return = __('On Request', 'casasync');  
-        } else {
-          $return = $this->conversion->casasync_convert_availabilityKeyToLabel('immediately');
-        }
       } else {
-        $return = __('On Request', 'casasync');
+        $property_datetime = '';
       }
-
+      
+      if ($this->start != false && $property_datetime > $current_datetime) {
+        $datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
+        $return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
+      } else if ($this->start == false || $this->start == ''){
+        $return = __('On Request', 'casasync');  
+      } else {
+        $return = $this->conversion->casasync_convert_availabilityKeyToLabel('immediately');
+      }
+        
       return $return;
     }
 
