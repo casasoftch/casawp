@@ -1,7 +1,7 @@
 <?php
 namespace CasaSync;
 
-class Import {
+class ImportLegacy {
   public $lastTranscript = '';
   public $importFile = false;
   public $main_lang = false;
@@ -132,9 +132,8 @@ class Import {
       add_action( 'init', array($this, 'casasyncImport') );  
     }
     if ($casagatewayupdate) {
-      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );  
+      //nope that is a non legacy thing!!!!
     }
-    //$this->casasyncImport();
   }
 
   public function getImportFile(){
@@ -176,12 +175,12 @@ class Import {
 
   public function extractDescription($offer){
     $the_description = '';
-    foreach ($offer['descriptions'] as $description) {
+    foreach ($offer->description as $description) {
       $the_description .= ($the_description ? '<hr class="property-separator" />' : '');
       if ($description['title']) {
-        $the_description .= '<h2>' . $description['title'] . '</h2>';
+        $the_description .= '<h2>' . $description['title']->__toString() . '</h2>';
       }
-      $the_description .= $description['text'];
+      $the_description .= $description->__toString();
     }
     return $the_description;
   }
@@ -266,14 +265,15 @@ class Import {
         if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id)) {
           mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id);
         }
-        if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
+        if (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
           $could_copy = copy($the_mediaitem['url'], CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
-          if (!$could_copy) {
-            $filename = false;
-          }
+        } else {
+          $could_copy = false;
         }
 
-        
+        if (!$could_copy) {
+          $filename = false;
+        }
       }
     } else { //missing
       $filename = false;
@@ -369,6 +369,57 @@ class Import {
         $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $lang, NULL, true);
       }
     }
+  }
+
+  public function personsXMLtoArray($seller){
+    $r_persons = array();
+    if ($seller && $seller->person) {
+      foreach ($seller->person as $person) {
+        $type = $person['type']->__toString();
+        if ($type && in_array($type, array('inquiry', 'view', 'visit'))) {
+          $prefix = 'seller' . ($type != 'view' ? '_' . $type : '') . '_person_';
+
+          $r_persons[$prefix.'function']   = $this->simpleXMLget($person->function);
+          $r_persons[$prefix.'givenname']  = $this->simpleXMLget($person->givenName);
+          $r_persons[$prefix.'familyname'] = $this->simpleXMLget($person->familyName);
+          $r_persons[$prefix.'email']      = $this->simpleXMLget($person->email);
+          $r_persons[$prefix.'fax']        = $this->simpleXMLget($person->faxNumber);
+          $r_persons[$prefix.'phone_direct'] = '';
+          $r_persons[$prefix.'phone_central'] = '';
+          $r_persons[$prefix.'phone_mobile'] = '';
+          if ($person->phone) {
+            $central = false;
+            foreach ($person->phone as $phone) {
+              if ($phone['type']) {
+                switch ($phone['type']->__toString()) {
+                  case 'direct':
+                    $r_persons[$prefix.'phone_direct'] = $phone->__toString();
+                    break;
+                  case 'central':
+                    $r_persons[$prefix.'phone_central'] = $phone->__toString();
+                    break;
+                  case 'mobile':
+                    $r_persons[$prefix.'phone_mobile'] = $phone->__toString();
+                    break;
+                  default:
+                    if (!$phone_central) {
+                      $r_persons[$prefix.'phone_central'] = $phone->__toString();
+                    }
+                    break;
+                }
+              } else {
+                if (!$central) {
+                  $r_persons[$prefix.'phone_central'] = $phone->__toString();
+                }
+              }
+            }
+          }
+          $r_persons[$prefix.'gender'] = $this->simpleXMLget($person->gender);
+        }
+      }
+    }
+
+    return $r_persons;
   }
 
   public function numvalsXMLtoArray($numericValues){
@@ -553,26 +604,24 @@ class Import {
     return $publisher_options;
   }
 
-  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casasync_id){
+  public function setOfferAttachments($xmlattachments, $wp_post, $property_id, $casasync_id){
     ### future task: for better performace compare new and old data ###
 
     
     //get xml media files
     $the_casasync_attachments = array();
-    if ($offer_medias) {
-      $o = 0;
-      foreach ($offer_medias as $offer_media) {
-        $o++;
-        $media = $offer_media['media'];
-        if (in_array($offer_media['type'], array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
+    if ($xmlattachments) {
+      foreach ($xmlattachments->media as $media) {
+        if (in_array($media['type']->__toString(), array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
+          $filename = ($media->file->__toString() ? $media->file->__toString() : $media->url->__toString());
           $the_casasync_attachments[] = array(
-            'type'    => $offer_media['type'],
-            'alt'     => $offer_media['alt'],
-            'title'   => preg_replace('/\.[^.]+$/', '', ( $offer_media['title'] ? $offer_media['title'] : basename($media['original_file'])) ),
-            'file'    => '',
-            'url'     => $media['original_file'],
-            'caption' => $offer_media['caption'],
-            'order'   => $o
+            'type'    => $media['type']->__toString(),
+            'alt'     => $media->alt->__toString(),
+            'title'   => preg_replace('/\.[^.]+$/', '', ( $media->title->__toString() ? $media->title->__toString() : basename($filename)) ),
+            'file'    => $media->file->__toString(),
+            'url'     => $media->url->__toString(),
+            'caption' => $media->caption->__toString(),
+            'order'   => $media['order']->__toString()
           );
         }
       }
@@ -950,7 +999,7 @@ class Import {
     //supported
     if ($categories) {
       foreach ($categories as $category) {
-        $new_categories[] = $category;
+        $new_categories[] = $category->__toString();
       }
     }
     //custom
@@ -1018,319 +1067,10 @@ class Import {
     }
   }
 
-  public function gatewaypoke(){
-    add_action('asynchronous_gatewayupdate', array($this,'gatewaypokeanswer'));
-    $this->addToLog('Scheduled an Update on: ' . time());
-    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
-  }
-
-  public function gatewaypokeanswer(){
-    $this->updateImportFileThroughCasaGateway();
-    $this->addToLog('gateway import answer: ' . time());
-    $this->updateOffers();
-  }
-
   public function updateImportFileThroughCasaGateway(){
-    $apikey = get_option('casasync_api_key');
-    $privatekey = get_option('casasync_private_key');
-    $apiurl = 'http://beta.immobilien-gateway.ch/rest/publisher-properties';
-    $options = array(
-      'format' => 'casa-xml',
-      'debug' => 1
-    );
-    if ($apikey && $privatekey) {
-
-      //specify the current UnixTimeStamp
-      $timestamp = time();
-
-      //sort the options alphabeticaly and combine it into the checkstring
-      ksort($options);
-      $checkstring = '';
-      foreach ($options as $key => $value) {
-          $checkstring .= $key . $value;
-      }
-      
-      //add private key at end of the checkstring
-      $checkstring .= $privatekey;
-
-      //add the timestamp at the end of the checkstring
-      $checkstring .= $timestamp;
-
-      //hash it to specify the hmac
-      $hmac = hash('sha256', $checkstring, false);
-
-      //combine the query (DONT INCLUDE THE PRIVATE KEY!!!)
-      $query = array(
-          'hmac' => $hmac,
-          'apikey' => $apikey,
-          'timestamp' => $timestamp
-      ) + $options;
-
-      //build url
-      $url = $apiurl . '?' . http_build_query($query);
-
-      $response = false;
-      try {
-          //$url = 'http://casacloud.cloudcontrolapp.com' . '/rest/provider-properties?' . http_build_query($query);
-          $ch = curl_init(); 
-          curl_setopt($ch, CURLOPT_URL, $url); 
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-          curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-          $response = curl_exec($ch); 
-          $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-          if($httpCode == 404) {
-              $response = $httpCode;
-          }
-          curl_close($ch); 
-      } catch (Exception $e) {
-          $response =  $e->getMessage() ;
-      }
-
-      if ($response) {
-        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import')) {
-          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import');
-        }
-        $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data.xml';
-
-        file_put_contents($file, $response);
-      } 
-
-      //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
-    } else {
-      echo '<div id="message" class="updated"> API Keys missing</div>';
-    }
+    //nope that is a non-legacy thing
   }
 
-  public function addToTranscript($msg){
-    $this->transcript[] = $msg;
-  }
-
-  public function property2Array($property_xml){
-
-    //$this->addToTranscript("*** CasaXml Conversion start ***");
-
-    $propertydata['address'] = array(
-        'country'       => ($property_xml->address->country->__toString() ?:''),
-        'locality'      => ($property_xml->address->locality->__toString() ?:''),
-        'region'        => ($property_xml->address->region->__toString() ?:''),
-        'postal_code'   => ($property_xml->address->postalCode->__toString() ?:''),
-        'street'        => ($property_xml->address->street->__toString() ?:''),
-        'street_number' => ($property_xml->address->street_number->__toString() ?:''),
-        'subunit'       => ($property_xml->address->subunit->__toString() ?:''),
-        'lng'           => ($property_xml->address->geo ? $property_xml->address->geo->longitude->__toString():''),
-        'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString():''),
-    );
-
-    $propertydata['last_update'] = new \DateTime((isset($property_xml->softwareInformation->lastUpdate) ? $property_xml->softwareInformation->lastUpdate->__toString() : ''));
-    $propertydata['exportproperty_id'] = (isset($property_xml['id']) ? $property_xml['id']->__toString() : '');
-    $propertydata['availability'] = ($property_xml->availability->__toString() ? $property_xml->availability->__toString() : 'available');
-    $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
-    $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
-    $propertydata['price'] = $property_xml->price->__toString();
-    $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
-    $propertydata['net_price'] = $property_xml->netPrice->__toString();
-    $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtoupper($property_xml->netPrice['timesegment']->__toString()) : '');
-    $propertydata['net_price_property_segment'] = (!$property_xml->netPrice['propertysegment']?: str_replace('2', '', $property_xml->netPrice['propertysegment']->__toString()));
-    $propertydata['gross_price'] = $property_xml->grossPrice->__toString();
-    $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtoupper($property_xml->grossPrice['timesegment']->__toString()) : '');
-    $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
-    $propertydata['status'] = 'active';
-    $propertydata['type'] =  $property_xml->type->__toString();
-    $propertydata['zoneTypes'] = ($property_xml->zoneTypes ? $property_xml->zoneTypes->__toString() : '');
-    $propertydata['parcelNumbers'] = ($property_xml->parcelNumbers ? $property_xml->parcelNumbers->__toString() : '');
-
-    $propertydata['property_categories'] = array();
-    if ($property_xml->categories) {
-        foreach ($property_xml->categories->category as $xml_category) {
-            $propertydata['property_categories'][] = $xml_category->__toString();
-        }
-    }
-
-    $propertydata['property_utilities'] = array();
-    if ($property_xml->utilities) {
-        foreach ($property_xml->utilities->utility as $xml_utility) {
-            $propertydata['property_utilities'][] = $xml_utility->__toString();
-        }
-    }
-
-    $propertydata['numeric_values'] = array();
-    if ($property_xml->numericValues) {
-        foreach ($property_xml->numericValues->value as $xml_numval) {
-            $key = (isset($xml_numval['key']) ? $xml_numval['key']->__toString() : false);
-            if ($key) {
-                $value = $xml_numval->__toString();
-                $propertydata['numeric_values'][] = array(
-                    'key' => $key,
-                    'value' => $value
-                );
-            }
-        }
-    }
-
-    $propertydata['features'] = array();
-    if ($property_xml->features) {
-        foreach ($property_xml->features->feature as $xml_feature) {
-            $propertydata['features'][] = $xml_feature->__toString();
-        }
-    }
-
-    //seller ****************************************************************
-    if ($property_xml->seller) {
-
-        $propertydata['organization'] = array();
-
-        //organization
-        if ($property_xml->seller->organization) {
-            $propertydata['organization']['displayName']    = $property_xml->seller->organization->legalName->__toString();
-            $propertydata['organization']['addition']         = $property_xml->seller->organization->brand->__toString();
-            $propertydata['organization']['email']         = $property_xml->seller->organization->email->__toString();
-            $propertydata['organization']['email_rem']     = $property_xml->seller->organization->emailRem->__toString();
-            $propertydata['organization']['fax']           = $property_xml->seller->organization->fax->__toString();
-            $propertydata['organization']['phone']         = $property_xml->seller->organization->phone->__toString();
-            $propertydata['organization']['website_url']   = ($property_xml->seller->organization ? $property_xml->seller->organization->website->__toString() : '');
-            $propertydata['organization']['website_title'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['title']->__toString() : '');
-            $propertydata['organization']['website_label'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['label']->__toString() : '');
-        }
-       
-        //viewPerson
-        $propertydata['viewPerson'] = array();
-        if ($property_xml->seller->viewPerson) {
-            $person                                  = $property_xml->seller->viewPerson;
-            $propertydata['viewPerson']['function']  = $person->function->__toString();
-            $propertydata['viewPerson']['firstName'] = $person->givenName->__toString();
-            $propertydata['viewPerson']['lastName']  = $person->familyName->__toString();
-            $propertydata['viewPerson']['email']     = $person->email->__toString();
-            $propertydata['viewPerson']['fax']       = $person->fax->__toString();
-            $propertydata['viewPerson']['phone']     = $person->phone->__toString();
-            $propertydata['viewPerson']['mobile']    = $person->mobile->__toString();
-            $propertydata['viewPerson']['gender']    = $person->gender->__toString();
-            $propertydata['viewPerson']['note']      = $person->note->__toString();
-        }
-
-        //visitPerson
-        $propertydata['visitPerson'] = array();
-        if ($property_xml->seller->visitPerson) {
-            $person                                   = $property_xml->seller->visitPerson;
-            $propertydata['visitPerson']['function']  = $person->function->__toString();
-            $propertydata['visitPerson']['firstName'] = $person->givenName->__toString();
-            $propertydata['visitPerson']['lastName']  = $person->familyName->__toString();
-            $propertydata['visitPerson']['email']     = $person->email->__toString();
-            $propertydata['visitPerson']['fax']       = $person->fax->__toString();
-            $propertydata['visitPerson']['phone']     = $person->phone->__toString();
-            $propertydata['visitPerson']['mobile']    = $person->mobile->__toString();
-            $propertydata['visitPerson']['gender']    = $person->gender->__toString();
-            $propertydata['visitPerson']['note']      = $person->note->__toString();
-        }
-
-        //inquiryPerson
-        $propertydata['inquiryPerson'] = array();
-        if ($property_xml->seller->inquiryPerson) {
-            $person                                     = $property_xml->seller->inquiryPerson;
-            $propertydata['inquiryPerson']['function']  = $person->function->__toString();
-            $propertydata['inquiryPerson']['firstName'] = $person->givenName->__toString();
-            $propertydata['inquiryPerson']['lastName']  = $person->familyName->__toString();
-            $propertydata['inquiryPerson']['email']     = $person->email->__toString();
-            $propertydata['inquiryPerson']['fax']       = $person->fax->__toString();
-            $propertydata['inquiryPerson']['phone']     = $person->phone->__toString();
-            $propertydata['inquiryPerson']['mobile']    = $person->mobile->__toString();
-            $propertydata['inquiryPerson']['gender']    = $person->gender->__toString();
-            $propertydata['inquiryPerson']['note']      = $person->note->__toString();
-        }
-
-    }
-    //END sellers ****************************************************************
-
-
-
-    //offers
-    $offerDatas = array();
-    if ($property_xml->offers) {
-        foreach ($property_xml->offers->offer as $offer_xml) { 
-            $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
-            $offerData['type'] =  $property_xml->type->__toString();
-            if ($property_xml->start) {
-              $offerData['start'] =  new \DateTime($property_xml->start->__toString());
-            } else {
-              $offerData['start'] = null;
-            }
-            $offerData['status'] = 'active';
-            $offerData['name'] = $offer_xml->name->__toString();
-            $offerData['excerpt'] = $property_xml->excerpt->__toString();
-            
-            //publisher settings
-            $publishingDatas = array();
-            if ($offer_xml->publishers) {
-                foreach ($offer_xml->publishers->publisher as $publisher_xml) {
-                    $options = array();
-                    if ($publisher_xml->options) {
-                        foreach ($publisher_xml->options->option as $option_xml) {
-                            $options[$option_xml['key']->__toString()][] = $option_xml->__toString();
-                        }
-                    }
-                    $publishingDatas[$publisher_xml['id']->__toString()] = array(
-                        'options' => $options
-                    );
-                }
-            }
-
-            $offerData['publish'] = $publishingDatas;
-
-            //descriptions
-            $descriptionDatas = array();
-            if ($offer_xml->descriptions) {
-                foreach ($offer_xml->descriptions->description as $xml_description) {
-                    $title = (isset($xml_description['title']) ? $xml_description['title']->__toString() : false);
-                    $text = $xml_description->__toString();
-                    
-                    $descriptionDatas[] = array(
-                        'title' => $title,
-                        'text' => $text,
-                    );
-                }
-            }
-            $offerData['descriptions'] = $descriptionDatas;
-
-            //attachments
-            $offerData['offer_medias'] = array();
-            if ($offer_xml->attachments) {
-                foreach ($offer_xml->attachments->media as $xml_media) {
-                    if ($xml_media->file) {
-                        $source = dirname($this->file) . $xml_media->file->__toString();
-                    } elseif ($xml_media->url) {
-                        $source = $xml_media->url->__toString();
-                        $source = implode('/', array_map('rawurlencode', explode('/', $source)));
-                        $source = str_replace('http%3A//', 'http://', $source);
-                        $source = str_replace('https%3A//', 'https://', $source);                        
-                    } else {
-                        $this->addToTranscript("file or url missing from attachment media!");
-                        continue;
-                    }
-                    $offerData['offer_medias'][] = array(
-                        'alt' => $xml_media->alt->__toString(),
-                        'title' => $xml_media->title->__toString(),
-                        'caption' => $xml_media->caption->__toString(),
-                        'description' => $xml_media->description->__toString(),
-                        'type' => (isset($xml_media['type']) ? $xml_media['type']->__toString() : 'image'),
-                        'media' => array(
-                            'original_file' => $source,
-                        )
-                    );
-                }
-            }
-
-            $offerDatas[] = $offerData;
-
-        }            
-    }        
-
-    $propertydata['offers'] = $offerDatas;
-
-
-    //$this->addToTranscript("*** CasaXml Conversion complete ***");
-
-    return $propertydata;
-
-}
 
   public function updateOffers(){
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
@@ -1339,29 +1079,28 @@ class Import {
     $found_posts = array();
 
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
-    foreach ($xml->properties->property as $property) {
-      $propertyData = $this->property2Array($property);
+    foreach ($xml->property as $property) {
       //make main language first and single out if not multilingual
-      $theoffers = array();
+      $xmloffers = array();
       $i = 0;
-      foreach ($propertyData['offers'] as $offer) {
+      foreach ($property->offer as $offer) {
         $i++;
         if ($offer['lang'] == $this->getMainLang()) {
-          $theoffers[0] = $offer;
+          $xmloffers[0] = $offer;
         } else {
           if ($this->hasWPML()) {
-            $theoffers[$i] = $offer;
+            $xmloffers[$i] = $offer;
           }
         }
       }
       $offer_pos = 0;
       $first_offer_trid = false;
-      foreach ($theoffers as $offerData) {
+      foreach ($xmloffers as $xmloffer) {
         $offer_pos++;
 
 
         //is it already in db
-        $casasync_id = $propertyData['exportproperty_id'] . $offerData['lang'];
+        $casasync_id = $property['id'] . $xmloffer['lang'];
 
         $the_query = new \WP_Query( 'post_type=casasync_property&suppress_filters=true&meta_key=casasync_id&meta_value=' . $casasync_id );
         $wp_post = false;
@@ -1384,7 +1123,7 @@ class Import {
           $wp_post = get_post($insert_id, OBJECT, 'raw');
         }
         $found_posts[] = $wp_post->ID;
-        $this->updateOffer($casasync_id, $offer_pos, $propertyData, $offerData, $wp_post);
+        $this->updateOffer($casasync_id, $offer_pos, $property, $xmloffer, $wp_post);
 
       }
     }
@@ -1434,22 +1173,21 @@ class Import {
   }
 
 
-  public function updateOffer($casasync_id, $offer_pos, $property, $offer, $wp_post){
-    //$publisher_options = $offer->publish;
-    $publisher_options = array();
+  public function updateOffer($casasync_id, $offer_pos, $property, $xmloffer, $wp_post){
+    $publisher_options = $this->publisherOptionsXMLtoArray($xmloffer->publisherSettings);
 
     //lang
-    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casasync_id);
+    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $xmloffer['lang'], $casasync_id);
 
     /* main post data */
     $new_main_data = array(
       'ID'            => $wp_post->ID,
-      'post_title'    => $offer['name'],
-      'post_content'  => $this->extractDescription($offer),
+      'post_title'    => $xmloffer->name->__toString(),
+      'post_content'  => $this->extractDescription($xmloffer),
       'post_status'   => 'publish',
       'post_type'     => 'casasync_property',
-      'post_excerpt'  => $offer['excerpt'],
-      'post_date'     => $property['last_update']->format('Y-m-d H:i:s'),
+      'post_excerpt'  => $xmloffer->excerpt->__toString(),
+      'post_date'     => date('Y-m-d H:i:s', strtotime(($property->software->creation->__toString() ? $property->software->creation->__toString() : $property->software->lastUpdate->__toString() ) )),
       //'post_modified' => date('Y-m-d H:i:s', strtotime($property->software->lastUpdate->__toString())),
     );
 
@@ -1484,86 +1222,79 @@ class Import {
     }
 
     $new_meta_data = array();
-    //$casasync_visitInformation = $property->visitInformation->__toString();
-    //$casasync_property_url = $property->url->__toString();
-    $new_meta_data['casasync_property_address_country']       = $property['address']['country'];
-    $new_meta_data['casasync_property_address_locality']      = $property['address']['locality'];
-    $new_meta_data['casasync_property_address_region']        = $property['address']['region'];
-    $new_meta_data['casasync_property_address_postalcode']    = $property['address']['postal_code'];
-    $new_meta_data['casasync_property_address_streetaddress'] = $property['address']['street'];
-    $new_meta_data['casasync_property_address_streetnumber']  = $property['address']['street_number'];
-    $new_meta_data['casasync_property_geo_latitude']          = $property['address']['lat'];
-    $new_meta_data['casasync_property_geo_longitude']         = $property['address']['lng'];
-
-    if ($offer['start']) {
-      $new_meta_data['casasync_start']                          = $offer['start']->format('Y-m-d H:i:s');
+    $casasync_visitInformation = $property->visitInformation->__toString();
+    $casasync_property_url = $property->url->__toString();
+    $new_meta_data['casasync_property_address_country']       = $this->simpleXMLget($property->address->country);
+    $new_meta_data['casasync_property_address_locality']      = $this->simpleXMLget($property->address->locality);
+    $new_meta_data['casasync_property_address_region']        = $this->simpleXMLget($property->address->region);
+    $new_meta_data['casasync_property_address_postalcode']    = $this->simpleXMLget($property->address->postalCode);
+    $new_meta_data['casasync_property_address_streetaddress'] = $this->simpleXMLget($property->address->street);
+    $new_meta_data['casasync_property_address_streetnumber']  = $this->simpleXMLget($property->address->streetNumber);
+    if ($property->geo) {
+      $new_meta_data['casasync_property_geo_latitude']          = $this->simpleXMLget($property->geo->latitude);
+      $new_meta_data['casasync_property_geo_longitude']         = $this->simpleXMLget($property->geo->longitude);
     }
-    
-    //$new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
-    if (isset($property['organization'])) {
-      //$new_meta_data['seller_org_phone_direct'] = $property['organization'][''];
-      $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
-      //$new_meta_data['seller_org_phone_mobile'] = $property['organization'][''];
-      $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
-      $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
-      if (isset($property['organization']['address'])) {
-        $new_meta_data['seller_org_address_country']               = $property['organization']['address']['country'];
-        $new_meta_data['seller_org_address_locality']              = $property['organization']['address']['locality'];
-        $new_meta_data['seller_org_address_region']                = $property['organization']['address']['region'];
-        $new_meta_data['seller_org_address_postalcode']            = $property['organization']['address']['postal_code'];
-        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['address']['postofficeboxnumber'];
-        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['address']['street'].' '.$property['organization']['address']['street_number'];
+    $new_meta_data['casasync_start']                          = $this->simpleXMLget($xmloffer->start);
+    $new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
+    if ($xmloffer->seller && $xmloffer->seller->organization) {
+      foreach ($xmloffer->seller->organization->phone as $number) {
+        if ($number['type'] == 'direct') {
+          $new_meta_data['seller_org_phone_direct'] = $number->__toString();
+        } elseif($number['type'] == 'central') {
+          $new_meta_data['seller_org_phone_central'] = $number->__toString();
+        } elseif ($number['type'] == 'mobile') {
+          $new_meta_data['seller_org_phone_mobile'] = $number->__toString();
+        } else {
+          
+        }
+      }
+
+      $new_meta_data['seller_org_legalname']                     = $this->simpleXMLget($xmloffer->seller->organization->legalName          );
+      $new_meta_data['seller_org_brand']                         = $this->simpleXMLget($xmloffer->seller->organization->brand              );
+      if ($xmloffer->seller->organization->address) {
+        $new_meta_data['seller_org_address_country']               = $this->simpleXMLget($xmloffer->seller->organization->address->Country            );
+        $new_meta_data['seller_org_address_locality']              = $this->simpleXMLget($xmloffer->seller->organization->address->locality           );
+        $new_meta_data['seller_org_address_region']                = $this->simpleXMLget($xmloffer->seller->organization->address->region             );
+        $new_meta_data['seller_org_address_postalcode']            = $this->simpleXMLget($xmloffer->seller->organization->address->postalCode         );
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $this->simpleXMLget($xmloffer->seller->organization->address->postOfficeBoxNumber);
+        $new_meta_data['seller_org_address_streetaddress']         = $this->simpleXMLget($xmloffer->seller->organization->address->street             ).' '.
+                                                                     $this->simpleXMLget($xmloffer->seller->organization->address->streetNumber       );
       }
     }
 
-    $personType = 'view';
-    if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
-      $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
-      $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
-      $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];
-      $new_meta_data[$prefix.'email']         = $property[$personType.'Person']['email'];
-      $new_meta_data[$prefix.'fax']           = $property[$personType.'Person']['fax'];
-      $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
-      $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
-      $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
-    }
-    
-    $personType = 'inquiry';
-    if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
-      $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
-      $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
-      $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];
-      $new_meta_data[$prefix.'email']         = $property[$personType.'Person']['email'];
-      $new_meta_data[$prefix.'fax']           = $property[$personType.'Person']['fax'];
-      $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
-      $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
-      $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
-    }
 
-    $personType = 'visit';
-    if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
-      $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
-      $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
-      $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];
-      $new_meta_data[$prefix.'email']         = $property[$personType.'Person']['email'];
-      $new_meta_data[$prefix.'fax']           = $property[$personType.'Person']['fax'];
-      $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
-      $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
-      $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
-    }
-
-
-
+     //url
+    $the_url = array();
+     if ($xmloffer->url) {
+       foreach ($xmloffer->url as $url) {
+         $href = $url->__toString();
+         $label = (isset($url['label']) && $url['label'] ? $url['label'] : false);
+         $title = (isset($url['title']) && $url['title'] ? $url['title'] : false);
+         $rank =  (isset($url['rank'])  && (int) $url['rank'] ? (int) $url['rank'] : false);
+         if ($rank ) {
+           $the_url[$rank] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         } else {
+           $the_url[] = array(
+             'href' => $href,
+             'label' => ($label ? $label : $href),
+             'title' => ($title ? $title : $href)
+           );
+         }
+       }
+       ksort($the_url);
+       $new_meta_data['the_url'] = $the_url;
+     }
 
    //urls
- /*  $url = null;
+   $url = null;
    $the_urls = array();
-   if ($offer['urls']) {
-     foreach ($offer['urls'] as $url) {
-       $href = $url['url'];
+   if ($xmloffer->urls) {
+     foreach ($xmloffer->urls->url as $url) {
+       $href = $url->__toString();
        if (! (substr( $href, 0, 7 ) === "http://" || substr( $href, 0, 8 ) === "https://") ) {
         $href = 'http://'.$href;
        }
@@ -1573,58 +1304,83 @@ class Import {
        $type =  (isset($url['type'])  ? (string) $url['type'] : false);
        if ($type ) {
          $the_urls[$type][] = array(
-           'href' => $href,
-           'label' => $label,
-           'title' => $title
+           'href' => (is_object($href) ? (string) $href : $href),
+           'label' => (is_object($label) ? (string) $label : $label),
+           'title' => (is_object($title) ? (string) $title : $title)
          );
        } else {
          $the_urls[] = array(
-           'href' => $href,
-           'label' => $label,
-           'title' =>  $title
+           'href' => (is_object($href) ? (string) $href : $href),
+           'label' => (is_object($label) ? (string) $label : $label),
+           'title' => (is_object($title) ? (string) $title : $title)
          );
        }
      }
      ksort($the_urls);
      $new_meta_data['the_urls'] = $the_urls;
-  }*/
+   }
 
 
-  //tags
-  /*$the_tags = array();
-  if ($xmloffer->tags) {
-    foreach ($xmloffer->tags->tag as $tag) {
-      $the_tags[] = $this->simpleXMLget($tag);
+    //tags
+    $the_tags = array();
+    if ($xmloffer->tags) {
+      foreach ($xmloffer->tags->tag as $tag) {
+        $the_tags[] = $this->simpleXMLget($tag);
+      }
     }
-  }
-  $new_meta_data['the_tags'] = $the_tags;*/
+    $new_meta_data['the_tags'] = $the_tags;
 
 
 
-    $offer_type     = $property['type'];
-    $new_meta_data['price_currency'] = $property['price_currency'];
+    $offer_type     = $this->simpleXMLget($xmloffer->type);
+    $new_meta_data['price_currency'] = $this->simpleXMLget($xmloffer->priceCurrency);
 
-    $new_meta_data['availability'] = $property['availability'];
+    if ($xmloffer->availability) {
+      $new_meta_data['availability'] = $this->simpleXMLget($xmloffer->availability);
+      /*if ($xmloffer->availability['title']) {
+        $new_meta_data['availability_label'] = $this->simpleXMLget($xmloffer->availability['title']);
+      }*/
+    }
 
     //prices 
-    if ($property['price']) {
-      $new_meta_data['price'] = $property['price'];
-      $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
+    // is_object($new_meta_data['price_timesegment']) should be fixed!!!!!!!!!!!!
+    if ($xmloffer->price) {
+      $new_meta_data['price_timesegment'] = ($xmloffer->price['timesegment'] ? $xmloffer->price['timesegment']->__toString() : '');
+      if (!in_array($new_meta_data['price_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['price_timesegment'])) {
+        $new_meta_data['price_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
+      }
+      $new_meta_data['price_propertysegment'] = ($xmloffer->price['propertysegment'] ? $xmloffer->price['propertysegment']->__toString() : '');
+      if (!in_array($new_meta_data['price_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['price_propertysegment'])) {
+        $new_meta_data['price_propertysegment'] = 'full';
+      }
+      $new_meta_data['price'] = (float) $xmloffer->price->__toString();
     }
 
-    if ($property['net_price']) {
-      $new_meta_data['netPrice'] = $property['net_price'];
-      $new_meta_data['netPrice_timesegment'] = $property['net_price_time_segment'];
-      $new_meta_data['netPrice_propertysegment'] = $property['net_price_property_segment'];
+    if ($xmloffer->netPrice) {
+      $new_meta_data['netPrice_timesegment'] = ($xmloffer->netPrice['timesegment'] ? $xmloffer->netPrice['timesegment']->__toString() : '');
+      if (!in_array($new_meta_data['netPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['netPrice_timesegment'])) {
+        $new_meta_data['netPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
+      }
+      $new_meta_data['netPrice_propertysegment'] = ($xmloffer->netPrice['propertysegment'] ? $xmloffer->netPrice['propertysegment']->__toString() : '');
+      if (!in_array($new_meta_data['netPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['netPrice_propertysegment'])) {
+        $new_meta_data['netPrice_propertysegment'] = 'full';
+      }
+      $new_meta_data['netPrice'] = (float) $xmloffer->netPrice->__toString();
     }
 
-    if ($property['gross_price']) {
-      $new_meta_data['netPrice'] = $property['gross_price'];
-      $new_meta_data['netPrice_timesegment'] = $property['gross_price_time_segment'];
-      $new_meta_data['netPrice_propertysegment'] = $property['gross_price_property_segment'];
+    if ($xmloffer->grossPrice) {
+      $new_meta_data['grossPrice_timesegment'] = ($xmloffer->grossPrice['timesegment'] ? $xmloffer->grossPrice['timesegment']->__toString() : '');
+      if (!in_array($new_meta_data['grossPrice_timesegment'], array('m','w','d','y','h','infinite')) || is_object($new_meta_data['grossPrice_timesegment'])) {
+        $new_meta_data['grossPrice_timesegment'] = ($offer_type == 'rent' ? 'm' : 'infinite');
+      }
+      $new_meta_data['grossPrice_propertysegment'] = ($xmloffer->grossPrice['propertysegment'] ? $xmloffer->grossPrice['propertysegment']->__toString() : '');
+      if (!in_array($new_meta_data['grossPrice_propertysegment'], array('m2','km2','full')) || is_object($new_meta_data['grossPrice_propertysegment'])) {
+        $new_meta_data['grossPrice_propertysegment'] = 'full';
+      }
+      $new_meta_data['grossPrice'] = (float) $xmloffer->grossPrice->__toString();
     }
 
-/*
+
     $extraPrice = array();
     if($xmloffer->extraCost){
       foreach ($xmloffer->extraCost as $extraCost) {
@@ -1653,7 +1409,7 @@ class Import {
         );
       }
       $new_meta_data['extraPrice'] = $extraPrice;
-    }*/
+    }
 
     //price for order
     $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== 0)      ? ($new_meta_data['price'])      :(9999999999);
@@ -1661,17 +1417,21 @@ class Import {
     $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== 0)   ? ($new_meta_data['netPrice'])   :(9999999999);
     $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
+    //persons
+    $persons = $this->personsXMLtoArray($xmloffer->seller);
+    $new_meta_data = array_merge($new_meta_data, $persons);
+
     //nuvals    
-    //$numericValues = $this->numvalsXMLtoArray($property->numericValues);
-    //$new_meta_data = array_merge($new_meta_data, $numericValues);
+    $numericValues = $this->numvalsXMLtoArray($property->numericValues);
+    $new_meta_data = array_merge($new_meta_data, $numericValues);
 
     //integratedOffers
-    //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
-    //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
+    $integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
+    $new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
 
     //features
-    //$new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
+    $new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
 
     //clean up arrays   
     foreach ($old_meta_data as $key => $value) {
@@ -1718,14 +1478,11 @@ class Import {
       }
     }
 
-    if (isset($property['property_categories'])) {
-      $this->setOfferCategories($wp_post, $property['property_categories'], $publisher_options, $casasync_id);
-    }
-    
-    $this->setOfferSalestype($wp_post, $property['type'], $casasync_id);
-    $this->setOfferAvailability($wp_post, $property['availability'], $casasync_id);
-    //$this->setOfferLocalities($wp_post, $property->address, $casasync_id);
-    $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casasync_id);
+    $this->setOfferCategories($wp_post, $property->category, $publisher_options, $casasync_id);
+    $this->setOfferSalestype($wp_post, $this->simpleXMLget($xmloffer->type, false), $casasync_id);
+    $this->setOfferAvailability($wp_post, $this->simpleXMLget($xmloffer->availability, false), $casasync_id);
+    $this->setOfferLocalities($wp_post, $property->address, $casasync_id);
+    $this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casasync_id);
     
 
   }
