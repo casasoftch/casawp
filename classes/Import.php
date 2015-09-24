@@ -371,102 +371,6 @@ class Import {
     }
   }
 
-  public function numvalsXMLtoArray($numericValues){
-
-    //set numericValues
-    $the_numvals = array();
-    if ($numericValues && $numericValues->value) {
-      foreach ($numericValues->value as $numval) {
-        if ($numval->__toString() && $numval['key']) {
-          $values = explode('+', $numval->__toString());
-          $the_values = array();
-          foreach ($values as $value) {
-            $numval_parts = explode('to', $value);
-            $numval_from = $numval_parts[0];
-            $numval_to = (isset($numval_parts[1]) ? $numval_parts[1] : false);
-            $the_values[] = array(
-              'from' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_from),
-              'to' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_to)
-            );
-          }
-          $the_numvals[(string)$numval['key']] = $the_values;
-        }
-      }
-    }
-    $all_distance_keys     = $this->conversion->casasync_get_allDistanceKeys();
-    $all_numval_keys       = $this->conversion->casasync_get_allNumvalKeys();
-    $r_distances         = array();
-    $r_numvals            = array();
-
-    foreach ($the_numvals as $key => $numval) {
-      if (in_array($key, $all_distance_keys)) {
-        $the_value = '';
-        foreach ($numval as $key2 => $value) {
-          $the_value .= ($key2 != 0 ? '+' : '') . '[' . $value['from']['value'] . $value['from']['si'] . ']';
-        }
-        $r_distances[$key] = $the_value;
-      }
-      
-      if (in_array($key, $all_numval_keys)) {
-        switch ($key) {
-          //multiple simple values
-          case 'multiple':
-            /*$the_value = '';
-            foreach ($numval as $key2 => $value) {
-              $the_value .= ($key2 != 0 ? '+' : '') . '[' . $value['from']['value'] . ']';
-            }
-            $r_numvals[$key] = $the_value;*/
-            break;
-          //simple value with si
-          #case 'surface_living':
-          case 'surface_property':
-          #case 'surface_usable':
-          case 'area_bwf':
-          case 'area_nwf':
-          case 'area_sia_gf':
-          case 'area_sia_nf':
-          case 'volume':
-          case 'ceiling_height':
-          case 'hall_height':
-          case 'maximal_floor_loading':
-          case 'carrying_capacity_crane':
-          case 'carrying_capacity_elevator':
-            $the_value = '';
-            foreach ($numval as $key2 => $value) {
-              $the_value = $value['from']['value'] . $value['from']['si'];
-            }
-            $r_numvals[$key] = $the_value;
-            break;
-          //INT
-          case 'floor':
-          case 'year_built':
-          case 'year_renovated':
-            $the_value = '';
-            foreach ($numval as $key2 => $value) {
-              $the_value = round($value['from']['value']);
-            }
-            $r_numvals[$key] = $the_value;
-            break;
-          //float
-          case 'number_of_guest_wc':
-          case 'number_of_rooms':
-          case 'number_of_lavatory':
-          case 'number_of_apartments':
-          case 'number_of_floors':
-            $the_value = '';
-            foreach ($numval as $key2 => $value) {
-              $the_value = $value['from']['value'];
-            }
-            $r_numvals[$key] = $the_value;
-            break;
-          default:
-            break;
-        }
-      }
-    }
-
-    return array_merge($r_numvals, $r_distances);
-  }
 
   public function integratedOffersToArray($integratedOffers){
     $the_offers = array();
@@ -486,40 +390,6 @@ class Import {
 
     return $the_offers;
   }
-
-
-  public function featuresXMLtoJson($features){
-    $the_features = array();
-    if ($features && $features->feature) {
-      $set_orders = array();
-      foreach ($features->feature as $feature) {
-        if ($feature['key']) {
-          $key = $feature['key']->__toString();
-          $value = $feature->__toString();
-          if ($set_orders) {
-            $next_key_available = max($set_orders) + 1;
-          } else {
-            $next_key_available = 0;
-          }
-          $order = ($feature['order'] && !in_array($feature['order']->__toString(), $set_orders) ? $feature['order']->__toString() : $next_key_available);
-          $set_orders[] = $order;
-
-          $the_features[$order] = array(
-            'key' => $key,
-            'value' => $value,
-          );
-        }
-      }
-    }
-    if ($the_features) {
-      ksort($the_features);
-      $the_features_json = json_encode($the_features);
-    } else {
-      $the_features_json = '';
-    }
-    return $the_features_json;
-  }
-
 
   /*
     KEYS: custom_category_{$i}
@@ -823,10 +693,10 @@ class Import {
     
   }
 
-  public function setOfferLocalities($wp_post, $xml_address, $casasync_id){
-    $country  = strtoupper( $this->simpleXMLget($xml_address->country, 'CH'));
-    $region   = $this->simpleXMLget($xml_address->region, false);
-    $locality = $this->simpleXMLget($xml_address->locality, false);
+  public function setOfferLocalities($wp_post, $address, $casasync_id){
+    $country  = strtoupper($address['country']);
+    $region   = $address['region'];
+    $locality = $address['locality'];
 
     $country_arr = array($country, 'country_'.strtolower($country));
     $lvl1_arr = false;
@@ -1624,7 +1494,7 @@ class Import {
       $new_meta_data['netPrice_propertysegment'] = $property['gross_price_property_segment'];
     }
 
-/*
+    /*
     $extraPrice = array();
     if($xmloffer->extraCost){
       foreach ($xmloffer->extraCost as $extraCost) {
@@ -1662,8 +1532,11 @@ class Import {
     $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
     //nuvals    
-    //$numericValues = $this->numvalsXMLtoArray($property->numericValues);
-    //$new_meta_data = array_merge($new_meta_data, $numericValues);
+    $numericValues = array();
+    foreach ($property['numeric_values'] as $numval) {
+      $numericValues[$numval['key']] = $numval['value'];
+    }
+    $new_meta_data = array_merge($new_meta_data, $numericValues);
 
     //integratedOffers
     //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
@@ -1671,7 +1544,10 @@ class Import {
 
 
     //features
-    //$new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
+    foreach ($property['features'] as $key => $feature) {
+      $features[] = array('key' => $key, 'value' => $feature);
+    }
+    $new_meta_data['casasync_features'] = json_encode($features);
 
     //clean up arrays   
     foreach ($old_meta_data as $key => $value) {
@@ -1724,7 +1600,7 @@ class Import {
     
     $this->setOfferSalestype($wp_post, $property['type'], $casasync_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casasync_id);
-    //$this->setOfferLocalities($wp_post, $property->address, $casasync_id);
+    $this->setOfferLocalities($wp_post, $property['address'], $casasync_id);
     $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casasync_id);
     
 
