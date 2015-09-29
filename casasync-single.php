@@ -14,9 +14,6 @@
 						<?php echo $single->getPagination(); ?>
 					</nav>
 				</div>
-
-				<?= $offer->renderBasicBoxes() ?>
-
 				<div class="casasync-row">
 					<div class="casasync-single-content">
 						<header class="casasync-single-header">
