@@ -105,6 +105,17 @@ class OfferService{
 		return $this->attachments;
 	}
 
+	public function getFieldValue($key){
+		switch (true) {
+			case strpos($key,'address') === 0:
+				return $this->getFieldValue('casasync_property_'.$key);
+				break;
+			default:
+				return get_post_meta( $this->post->ID, $key, $single = true );
+				break;
+		}
+	}
+
 	private function render($view, $args){
 		$renderer = new PhpRenderer();
 		$resolver = new Resolver\AggregateResolver();
