@@ -1,6 +1,4 @@
 <?php
-namespace CasaSync;
-
 /*
  *	Plugin Name: 	CasaSync
  *  Plugin URI: 	http://immobilien-plugin.ch
@@ -20,20 +18,71 @@ define('CASASYNC_PLUGIN_URL', home_url() . '/wp-content/plugins/' . $foldername 
 define('CASASYNC_PLUGIN_URI', home_url() . '/wp-content/plugins/' . $foldername . '/');
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 
-include(CASASYNC_PLUGIN_DIR . 'classes/Conversion.php');
-include(CASASYNC_PLUGIN_DIR . 'classes/Templateable.php');
-include(CASASYNC_PLUGIN_DIR . 'classes/Casasync.php');
-if (!is_admin()) {
-	include(CASASYNC_PLUGIN_DIR . 'classes/Single.php');
-	include(CASASYNC_PLUGIN_DIR . 'classes/Archive.php');
-}
-include(CASASYNC_PLUGIN_DIR . 'classes/Import.php');
-include(CASASYNC_PLUGIN_DIR . 'classes/ImportLegacy.php');
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
+chdir(dirname(__DIR__));
 
-$casaSync = new CasaSync();
+// Setup autoloading
+include CASASYNC_PLUGIN_DIR . 'vendor/autoload.php';
+include 'modules/Casasync/module.php';
+//include CASASYNC_PLUGIN_DIR . 'vendor/casasoft/zf2-modules/src/CasasoftStandards/src/CasasoftStandards/Service/Category.php';
+//include CASASYNC_PLUGIN_DIR . 'vendor/casasoft/zf2-modules/src/CasasoftStandards/src/CasasoftStandards/Service/CategoryService.php';
+
+
+$configuration=array(
+		'modules' => array(
+			'CasasoftStandards',
+			'CasasoftMessenger',
+			'Casasync'
+		),
+		'module_listener_options' => array(
+				'config_glob_paths'    => array(
+						__DIR__.'/config/autoload/{,*.}{global,local}.php',
+				),
+				'module_paths' => array(
+						__DIR__.'/module',
+						__DIR__.'/vendor',
+				),
+		),
+);
+
+use Zend\EventManager\EventManager;
+use Zend\Http\PhpEnvironment;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
+
+$config = $configuration;
+
+$serviceManager = new ServiceManager();
+$eventManager=new EventManager();
+
+use Zend\Loader\AutoloaderFactory;
+use Zend\Mvc\Service\ServiceManagerConfig;
+AutoloaderFactory::factory();
+// setup service manager
+$serviceManager = new ServiceManager(new ServiceManagerConfig());
+$serviceManager->setService('ApplicationConfig', $configuration);
+
+// set translator
+use Zend\I18n\Translator\Translator;
+$translator = new Translator();
+$translator->setLocale('de');
+$serviceManager->setService('Translator', $translator);
+
+// load modules -- which will provide services, configuration, and more
+$serviceManager->get('ModuleManager')->loadModules();
+$casasync = new CasaSync\Plugin($serviceManager);
+
+global $casasync;
+
+
+
 if (is_admin()) {
-	include(CASASYNC_PLUGIN_DIR . 'classes/Admin.php');
-	$casaSyncAdmin = new Admin();
+	$casaSyncAdmin = new CasaSync\Admin();
 
 	if (isset($casaSyncAdmin)) {
 		register_activation_hook(__FILE__, array($casaSyncAdmin,'casasync_install'));
@@ -42,23 +91,23 @@ if (is_admin()) {
 }
 if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
 	if (get_option('casasync_legacy')) {
-		$import = new ImportLegacy(true, false);	
+		$import = new CasaSync\ImportLegacy(true, false);	
 	} else {
-		$import = new Import(true, false);
+		$import = new CasaSync\Import(true, false);
 	}
 	$transcript = $import->getLastTranscript();
 }
 if (isset($_GET['gatewayupdate'])) {
-	$import = new Import(false, true);
-	$import = new Import(true, false);
+	$import = new CasaSync\Import(false, true);
+	$import = new CasaSync\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 if (isset($_GET['gatewaypoke'])) {
 	//$import = new Import(false, false);
 	//$import->gatewaypoke();
 
-	$import = new Import(false, true);
-	$import = new Import(true, false);
+	$import = new CasaSync\Import(false, true);
+	$import = new CasaSync\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 

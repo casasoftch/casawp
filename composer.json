@@ -1,0 +1,28 @@
+{
+    "name": "casasoft/casasync",
+    "description": "Casasync WordPress Plugin",
+    "license": "",
+    "keywords": [
+        "casasync",
+        "casasoft"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:CasasoftCH/zf2-modules.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*",
+        "casasoft/zf2-modules": "dev-master"
+    },
+    "require-dev": {
+    },
+    "autoload":{
+        "psr-4": {
+            "CasaSync\\": "src/"
+        }
+    }
+}

@@ -1,25 +1,29 @@
 <?php $template = new CasaSync\Templateable();?>
-
+<?php global $casasync; ?>
 <?php get_header(); ?>
 	<?php while ( have_posts() ) : the_post();?>
+		<?php $offer = $casasync->getOffer($post); ?>
 		<?php $single = new CasaSync\Single($post);?>
 		<?php echo stripslashes(get_option('casasync_before_content')); ?>
 		<?php if ($template->setTemplate('single', $single)): ?>
 			<?php echo $template->render(); ?>
-	<?php else: ?>	
+		<?php else: ?>	
 			<div class="casasync-single">
 				<div class="casasync-row">
 					<nav class="casasync-single-pagination-top">
 						<?php echo $single->getPagination(); ?>
 					</nav>
 				</div>
+
+				<?= $offer->renderBasicBoxes() ?>
+
 				<div class="casasync-row">
 					<div class="casasync-single-content">
 						<header class="casasync-single-header">
-							<h1 class="casasync-single-title"><?php echo $single->getTitle(); ?></h1>
+							<h1 class="casasync-single-title"><?php echo $offer->getTitle() ?></h1>
 						</header>
 						<div class="casasync-single-contentarea">
-							<?php echo $single->getGallery(); ?>
+							<?php echo $offer->renderGallery(); ?>
 							<br>
 							<?php echo $single->getTabable(); ?>
 							<?php echo $single->contactSellerByMailBox(); ?>
