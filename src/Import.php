@@ -903,7 +903,7 @@ class Import {
   public function updateImportFileThroughCasaGateway(){
     $apikey = get_option('casasync_api_key');
     $privatekey = get_option('casasync_private_key');
-    $apiurl = 'http://beta.immobilien-gateway.ch/rest/publisher-properties';
+    $apiurl = 'http://immobilien-gateway.ch/rest/publisher-properties';
     $options = array(
       'format' => 'casa-xml',
       'debug' => 1
@@ -1203,6 +1203,22 @@ class Import {
 }
 
   public function updateOffers(){
+     //make sure dires exist
+
+    if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/cassaync')) {
+      mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync');
+    }
+    if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/cassaync/import')) {
+      mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import');
+    }
+    if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/cassaync/import/attachment')) {
+      mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment');
+    }
+    if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/cassaync/import/attachment/externalsync')) {
+      mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync');
+    }
+
+
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
     set_time_limit(300);
     global $wpdb;
