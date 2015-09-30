@@ -219,35 +219,6 @@ class Import {
     }
   }
 
-  public function convertXmlPublisherOptions($publisher_options_xml){
-    $publisher_options = array();
-      foreach ($publisher_options_xml as $settings) {
-        if ($settings['id'] == 'casasync') {
-          if ($settings->options) {
-            foreach ($settings->options->option as $option) {
-              $key   = (isset($option['name']) ? $option['name'] : false);
-              $value = $option->__toString();
-              if ($key && $value) {
-                if (strpos($key, 'custom_category_') === 0) {
-                  $parts = explode('_', $key);
-                  $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-                  $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-                  $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-                  if ($slug) {
-                    $publisher_options['custom_categories'][$sort]['slug'] = $value;
-                  } elseif ($label) {
-                    $publisher_options['custom_categories'][$label]['label'] = $value;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-    return $publisher_options;
-  }
-
   public function casasyncUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
       $filename = '/casasync/import/attachment/'. $the_mediaitem['file'];
@@ -391,37 +362,6 @@ class Import {
     return $the_offers;
   }
 
-  /*
-    KEYS: custom_category_{$i}
-  */
-  public function publisherOptionsXMLtoArray($publisher_options_xml){
-    $publisher_options = array();
-      foreach ($publisher_options_xml as $settings) {
-        if ($settings['id'] == 'casasync') {
-          if ($settings->options) {
-            foreach ($settings->options->option as $option) {
-              $key   = (isset($option['name']) ? $option['name'] : false);
-              $value = $option->__toString();
-              if ($key && $value) {
-                if (strpos($key, 'custom_category_') === 0) {
-                  $parts = explode('_', $key);
-                  $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-                  $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-                  $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-                  if ($slug) {
-                    $publisher_options['custom_categories'][$sort]['slug'] = $value;
-                  } elseif ($label) {
-                    $publisher_options['custom_categories'][$label]['label'] = $value;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-    return $publisher_options;
-  }
 
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casasync_id){
     ### future task: for better performace compare new and old data ###
@@ -806,8 +746,8 @@ class Import {
     
   }
 
-  public function setOfferCategories($wp_post, $categories, $publisher_options, $casasync_id){
-    $new_categories = array();;
+  public function setOfferCategories($wp_post, $categories, $customCategories, $casasync_id){
+    $new_categories = array();
     $old_categories = array();
 
     //set post category
@@ -824,8 +764,8 @@ class Import {
       }
     }
     //custom
-    if (isset($publisher_options['custom_categories'])) {
-      $custom_categories = $publisher_options['custom_categories'];
+    if (isset($customCategories)) {
+      $custom_categories = $customCategories;
       sort($custom_categories);
       foreach ($custom_categories as $custom_category) {
         $new_categories[] = 'custom_' . $custom_category['slug'];
@@ -841,8 +781,8 @@ class Import {
 
       //get the custom labels they need them
       $custom_categorylabels = array();
-      if (isset($publisher_options['custom_categories'])) {
-        foreach ($publisher_options['custom_categories'] as $custom) {
+      if (isset($customCategories)) {
+        foreach ($customCategories as $custom) {
           $custom_categorylabels[$custom['slug']] = $custom['label'];
         }
       }
@@ -1203,6 +1143,7 @@ class Import {
 }
 
   public function updateOffers(){
+
      //make sure dires exist
 
     if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/cassaync')) {
@@ -1323,6 +1264,16 @@ class Import {
   public function updateOffer($casasync_id, $offer_pos, $property, $offer, $wp_post){
     //$publisher_options = $offer->publish;
     $publisher_options = array();
+    if (isset($offer['publish'])) {
+      foreach ($offer['publish'] as $slug => $content) {
+        if (isset($content['options'])) {
+          foreach ($content['options'] as $key => $value) {
+            $publisher_options[$key] = $value;
+          }
+        }
+      }
+    }
+    
 
     //lang
     $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casasync_id);
@@ -1560,6 +1511,7 @@ class Import {
 
 
     //features
+    $features = array();
     foreach ($property['features'] as $key => $feature) {
       $features[] = array('key' => $key, 'value' => $feature);
     }
@@ -1611,7 +1563,22 @@ class Import {
     }
 
     if (isset($property['property_categories'])) {
-      $this->setOfferCategories($wp_post, $property['property_categories'], $publisher_options, $casasync_id);
+      $custom_categories = array();
+      foreach ($publisher_options as $key => $values) {
+        if (strpos($key, 'custom_category') === 0) {
+          $parts = explode('_', $key);
+          $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+          $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
+          $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
+          if ($slug) {
+            $custom_categories[$sort]['slug'] = $values[0];
+          } elseif ($label) {
+            $custom_categories[$label]['label'] = $values[0];
+          }
+          
+        }
+      }
+      $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casasync_id);
     }
     
     $this->setOfferSalestype($wp_post, $property['type'], $casasync_id);
