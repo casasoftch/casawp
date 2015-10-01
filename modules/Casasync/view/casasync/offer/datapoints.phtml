@@ -2,13 +2,7 @@
 	<?php if ($numval->getKey() == 'special_availability'): ?>
 		Special<br>
 	<?php else: ?>
-		<?php if ($numval->getSi() == 'm2'): ?>
-			<?= $numval->getLabel() ?> <?= $numval->getValue() ?>m<sup>2</sup>
-		<?php elseif ($numval->getSi() == 'm'): ?>
-			<?= $numval->getLabel() ?> <?= $numval->getValue() ?>m
-		<?php else: ?>
-			<?= $numval->getLabel() ?> <?= $numval->getValue() ?>
-		<?php endif ?>
+		<?= $numval->getLabel() ?> <?= $this->offer->renderNumvalValue($numval) ?>
 		<br>
 	<?php endif ?>
 <?php endforeach ?>

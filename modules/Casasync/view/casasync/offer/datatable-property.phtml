@@ -1,0 +1,24 @@
+<table class="table">
+  <?php $reference_or_property_id = ($this->reference_id) ? ($this->reference_id) : ($this->property_id); ?>
+  <?php if($reference_or_property_id) : ?>
+    <tr>
+      <td class="width-25"><?= __('Reference','casasync') ?></td>
+      <td class="width-75"><?= $reference_or_property_id ?></td>
+    </tr>
+  <?php endif; ?>
+
+  <?php if($this->getAddress('property')) : ?>
+    <tr>
+      <td class="width-25"><?= __('Address','casasync') ?></td>
+      <td class="width-75">' . $this->getAddress('property') ?></td>
+    </tr>
+  <?php endif; ?>
+
+  <?php $all_numvals = $this->getAllNumvals(array('area_sia_gf', 'area_sia_nf', 'area_bwf', 'area_nwf', 'surface_property'));  ?>
+  <?php foreach ($all_numvals as $numval) : ?>
+    <tr>
+      <td class="width-25"><?= __($numval['title'], 'casasync') ?></td>
+      <td class="width-75">' . $this->getNumval($numval["key"]) ?></td>
+    </tr>
+  <?php endforeach ?>
+</table>

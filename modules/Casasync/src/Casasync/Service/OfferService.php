@@ -60,7 +60,7 @@ class OfferService{
 		return $this->categories;
 	}
 
-	public function getCategoryLabels(){
+	public function renderCategoryLabels(){
 		$cat_labels = array();
 		foreach ($this->getCategories() as $category) {
 			$cat_labels[] = $category->getLabel();
@@ -110,6 +110,8 @@ class OfferService{
 			case strpos($key,'address') === 0:
 				return $this->getFieldValue('casasync_property_'.$key);
 				break;
+			case !strpos($key,'casasync') === 0:
+				return $this->getFieldValue('casasync_'.$key);
 			default:
 				return get_post_meta( $this->post->ID, $key, $single = true );
 				break;
@@ -189,6 +191,29 @@ class OfferService{
 		return '...';
 	}
 
+	//view actions "direct"
+	public function renderNumvalValue($numval){
+		switch ($numval->getSi()) {
+			case 'm2': return $numval->getValue() .'m<sup>2</sup>'; break;
+			case 'm':  return $numval->getValue() .'m'; break;
+			default:   return $numval->getValue(); break;
+		}
+		return null;
+	}
+
+	public function renderContent(){
+		$html = '';
+		foreach ($this->getContentParts() as $part) {
+			$html .= $part;
+		}
+		return $html;
+	}
+
+	public function getContentParts(){
+		$content = apply_filters('the_content', $this->post->post_content);
+     	$content_parts = explode('<hr class="property-separator" />', $content);
+     	return $content_parts;
+	}
 
 	//view actions
 	public function getGallery(){
@@ -229,6 +254,8 @@ class OfferService{
 		));
 	}
 
+	
+
 	public function renderDatapoints($context = 'single'){
 		if ($context == 'single') {
 			$datapoints = $this->getPrimarySingleDatapoints();
@@ -248,5 +275,15 @@ class OfferService{
 			'numvals' => $numvals
 		));
 	}
+
+	public function getMap(){
+		return $this->renderMap();
+	}
+	public function renderMap(){
+		return $this->render('map', array(
+			'offer' => $this
+		));	    
+	}
+
 
 }

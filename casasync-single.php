@@ -22,8 +22,8 @@
 						<div class="casasync-single-contentarea">
 							<?php echo $offer->renderGallery(); ?>
 							<br>
-							<?php //echo $single->getTabable(); ?>
-							<?php echo $offer->renderTabable(); ?>
+							<?php //echo $offer->renderTabable(); ?>
+							<?php echo $single->getTabable(); ?>
 							<?php echo $single->contactSellerByMailBox(); ?>
 						</div>
 					</div>
