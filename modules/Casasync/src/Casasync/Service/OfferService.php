@@ -10,6 +10,8 @@ class OfferService{
     private $attachments = null;
     private $numvals = array();
     private $numvals_to_display = null;
+    private $salestype = null;
+    private $metas = null;
 
     public function __construct($categoryService, $numvalService, $messengerService){
     	$this->categoryService = $categoryService;
@@ -60,6 +62,19 @@ class OfferService{
 		return $this->categories;
 	}
 
+	public function getSalestype(){
+		if ($this->salestype === null) {
+			$types = get_the_terms( $this->post->ID, 'casasync_salestype' );
+			if ($types) {
+				$type = array_pop($types);
+				$this->salestype = $type->slug;
+			} else {
+				$this->salestype = false;
+			}
+		}
+		return $this->salestype;
+	}
+
 	public function renderCategoryLabels(){
 		$cat_labels = array();
 		foreach ($this->getCategories() as $category) {
@@ -105,31 +120,89 @@ class OfferService{
 		return $this->attachments;
 	}
 
-	public function getFieldValue($key){
+	public function getMetas(){
+		if ($this->metas === null) {
+			$this->metas = get_post_meta($this->post->ID);
+		}
+		return $this->metas;
+	}
+
+	public function getMeta($key){
+		if (array_key_exists($key, $this->getMetas())) {
+			return $this->metas[$key][0];
+		}
+		return null;
+	}
+
+	public function getFieldValue($key, $fallback = null){
 		switch (true) {
 			case strpos($key,'address') === 0:
-				return $this->getFieldValue('casasync_property_'.$key);
+				$value = $this->getFieldValue('casasync_property_'.$key, $fallback);
 				break;
-			case !strpos($key,'casasync') === 0:
-				return $this->getFieldValue('casasync_'.$key);
 			default:
-				return get_post_meta( $this->post->ID, $key, $single = true );
+				$value = $this->getMeta($key);
 				break;
 		}
+		if (!$value) {
+			//try with casasync prefix
+			$value = $this->getMeta('casasync_'.$key);
+		}
+		if ($value) {
+			return $value;
+		} else {
+			return $fallback;
+		}
 	}
+
 
 	private function render($view, $args){
 		$renderer = new PhpRenderer();
 		$resolver = new Resolver\AggregateResolver();
 		$renderer->setResolver($resolver);
+
 		$stack = new Resolver\TemplatePathStack(array(
 		    'script_paths' => array(
-		        CASASYNC_PLUGIN_DIR . '/modules/Casasync/view'
+		    	CASASYNC_PLUGIN_DIR . '/view',
+		    	get_template_directory() . '/casasync'
 		    )
 		));
 		$resolver->attach($stack);
 		$model = new ViewModel($args);
-		$model->setTemplate('casasync/offer/'.$view);
+
+		$stack = array(
+			'bootstrap3',
+			'bootstrap4'
+		);
+
+		$viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
+		$template = $viewgroup.'/'.$view;
+		if (false === $resolver->resolve($template)) {
+			$template = false;
+
+			//try up the stack
+			for ($i=1; $i < 5; $i++) { 
+				$ancestor = array_search($viewgroup, $stack)-$i;	
+				if (isset($stack[$ancestor])) {
+					if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
+						continue;
+					} else {
+						$template = $stack[$ancestor].'/'.$view;
+						break;
+					}
+				} else {
+					break;
+				}	
+			}
+
+			if (!$template) {
+				return "View file not found for: " . $viewgroup;
+			}
+
+		}
+		$model->setTemplate($template);
+
+		
+
 		$result = $renderer->render($model);
 
 		return $result;
@@ -215,10 +288,65 @@ class OfferService{
      	return $content_parts;
 	}
 
-	//view actions
-	public function getGallery(){
-		return $this->renderGallery();
+	public function renderPrice($scope = 'gross'){
+		$type = $this->getSalestype();
+
+		$meta_prefix = 'price';
+		if ($type == 'rent') {
+			$meta_prefix = 'grossPrice';
+			if ($scope == 'net') { $meta_prefix = 'netPrice';}	
+		}
+		
+		$value = $this->getFieldValue($meta_prefix, false);
+		$currency = $this->getFieldValue('price_currency', 'CHF');
+		$propertySegment = $this->getFieldValue($meta_prefix.'_propertysegment', 'all');
+		$timeSegment = $this->getFieldValue($meta_prefix.'_timesegment', 'infinite');
+
+		$timesegment_labels = array(
+	        'm' => __('month', 'casasync'),
+	        'w' => __('week', 'casasync'),
+	        'd' => __('day', 'casasync'),
+	        'y' => __('year', 'casasync'),
+	        'h' => __('hour', 'casasync')
+	    );
+
+		if ($value) {
+			$parts = array();
+			$parts[] = $currency;
+			$parts[] = number_format(round($value), 0, '', '\'');
+			$parts[] = ($propertySegment != 'all' ? ' / m<sup>2</sup>' : '' );
+			$parts[] = (in_array($timeSegment, array_keys($timesegment_labels)) ? ' / ' . $timesegment_labels[$timeSegment] : '' );
+			array_walk($parts, function(&$value){ $value = trim($value);});
+			$parts = array_filter($parts);
+			return implode(' ', $parts);
+		} else {
+			return __('On Request', 'casasync');
+		}
+		
 	}
+
+
+	public function renderAvailabilityDate(){
+		$current_datetime = strtotime(date('c'));
+		$start = $this->getFieldValue('start', false);
+		$property_datetime = false;
+	    if ($start) {
+	    	$property_datetime = strtotime($this->start);
+	    }
+	    
+	    if ($property_datetime && $property_datetime > $current_datetime) {
+	    	$datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
+	    	$return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
+	    } else if (!$property_datetime){
+	    	$return = __('On Request', 'casasync');  
+	    } else {
+	    	$return = __('Immediate' ,'casasync');
+	    }
+	      
+	    return $return;
+	}
+
+	//view actions
 	public function renderGallery(){
 		$attachments = $this->getAttachments();
 		return $this->render('gallery', array(
@@ -227,27 +355,18 @@ class OfferService{
 		));
 	}
 
-	public function getTabable(){
-		return $this->renderTabable();
-	}
 	public function renderTabable(){
 		return $this->render('tabable', array(
 			'offer' => $this
 		));
 	}
 
-	public function getBasicBoxes(){
-		return $this->renderBasicBoxes();
-	}
 	public function renderBasicBoxes(){
 		return $this->render('basic-boxes', array(
 			'offer' => $this
 		));
 	}
 
-	public function getAddress(){
-		return $this->renderAddress();
-	}
 	public function renderAddress(){
 		return $this->render('address', array(
 			'offer' => $this
@@ -276,13 +395,22 @@ class OfferService{
 		));
 	}
 
-	public function getMap(){
-		return $this->renderMap();
-	}
 	public function renderMap(){
 		return $this->render('map', array(
 			'offer' => $this
 		));	    
+	}
+
+	public function renderDatatableOffer(){
+		return $this->render('datatable-offer', array(
+			'offer' => $this
+		));
+	}
+
+	public function renderDatatableProperty(){
+		return $this->render('datatable-property', array(
+			'offer' => $this
+		));
 	}
 
 

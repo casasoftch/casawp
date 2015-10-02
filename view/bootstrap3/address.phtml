@@ -1,0 +1,13 @@
+<?php 
+
+$lines = array();
+$lines[] = $this->offer->getFieldValue('address_streetaddress') . ' ' . $this->offer->getFieldValue('address_streetnumber');
+$lines[] = $this->offer->getFieldValue('address_postalcode') . ' ' . $this->offer->getFieldValue('address_locality');
+if (class_exists('Locale') && $this->offer->getFieldValue('address_country')) {
+	$lines[] = Locale::getDisplayRegion('-'.$this->offer->getFieldValue('address_country'), get_bloginfo('language'));
+}
+
+array_walk($lines, function(&$value){$value = trim($value);});
+$lines = array_filter($lines);
+
+echo implode('<br>', $lines);

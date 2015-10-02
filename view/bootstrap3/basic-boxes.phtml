@@ -12,7 +12,7 @@
 </div>
 <div class="casasync-basic-box">
   <div>
-      <?= $price_title = ($offer->type == 'rent') ? (__('rent', 'casasync')) : (__('Price', 'casasync')); ?>
-      <h4><?= $price_title ?></h4>  
+      <h4><?= ($offer->type == 'rent') ? (__('rent', 'casasync')) : (__('Price', 'casasync')); ?></h4>
+      <?= $this->offer->renderPrice() ?>
   </div>
 </div>

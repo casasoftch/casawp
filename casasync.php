@@ -70,8 +70,8 @@ $serviceManager->setService('ApplicationConfig', $configuration);
 // set translator
 use Zend\I18n\Translator\Translator;
 $translator = new Translator();
-//$translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. '/vendor/casasoft/zf2-modules/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
-$translator->setLocale('de');
+$translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/zf2-modules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
+$translator->setLocale(substr(get_bloginfo('language'), 0, 2));
 $serviceManager->setService('Translator', $translator);
 
 // load modules -- which will provide services, configuration, and more
@@ -79,8 +79,6 @@ $serviceManager->get('ModuleManager')->loadModules();
 $casasync = new CasaSync\Plugin($serviceManager);
 
 global $casasync;
-
-
 
 if (is_admin()) {
 	$casaSyncAdmin = new CasaSync\Admin();

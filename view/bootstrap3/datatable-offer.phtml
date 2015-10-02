@@ -1,40 +1,31 @@
 <table class="table">
-  <?php if ($this->main_basis == 'buy') : ?>
+  <?php if ($this->offer->getSalestype() == 'buy') : ?>
     <tr>
       <td class="width-25"><?= __('Sales price', 'casasync') ?></td>
       <td class="width-75">
-        <?php $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync'); ?>
+        <?= $this->offer->renderPrice() ?>
       </td>
     </tr>
   <?php endif; ?>
   <?php if ($this->main_basis == 'rent') : ?>
-    <?php if ( $this->getPrice('gross') || $this->getPrice('net')  ) : ?>
-      <?php if ($this->getPrice('gross')) : ?>
-        <tr>
+    <?php if ($this->offer->renderPrice('gross')): ?>
+       <tr>
           <td class="width-25"><?= __('Gross price','casasync') ?></td>
           <td class="width-75">
-            <?= $this->getPrice('gross', 'full'); ?>
+            <?= $this->offer->renderPrice('gross'); ?>
           </td>
         </tr>
-      <?php endif; ?>
-      <?php if ($this->getPrice('net')) : ?>
-        <tr>
+    <?php endif ?>
+    <?php if ($this->offer->renderPrice('net')): ?>
+       <tr>
           <td class="width-25"><?= __('Net price','casasync') ?></td>
           <td class="width-75">
-            <?= $this->getPrice('net', 'full') ?>
+            <?= $this->offer->renderPrice('net'); ?>
           </td>
         </tr>
-      <?php else : ?>
-        <tr>
-          <td class="width-25"><?= __('Rent price','casasync') ?></td>
-          <td class="width-75">
-            <?= __('On Request', 'casasync') ?>
-          </td>
-        </tr>
-      <?php endif; ?>
-    <?php endif; ?>
+    <?php endif ?>
   <?php endif; ?>
-  <?php if ($this->getExtraCosts('Nebenkosten')) : ?>
+  <?php if (0==1&&$this->getExtraCosts('Nebenkosten')) : ?>
     <tr>
       <td class="width-25"><?= __('Additional costs', 'casasync') ?></td>
       <td class="width-75"><?= $this->getExtraCosts('Nebenkosten') ?></td>

@@ -1,7 +1,0 @@
-<?php 
-
-$address  = ($this->offer->getFieldValue('address_street') ? $this->offer->getFieldValue('address_street') . ' ' . $this->offer->getFieldValue('address_streetnumber') . '<br>' : '');
-$address .= ($this->offer->getFieldValue('address_postalcode') ?  $this->offer->getFieldValue('address_postalcode') . ' ': '') . ($this->offer->getFieldValue('address_locality') ? $this->offer->getFieldValue('address_locality') : '') . ($this->offer->getFieldValue('address_postalcode') || $this->offer->getFieldValue('address_locality') ? '<br>' : '');
-$address .= ($this->offer->getFieldValue('address_country_name') ? $this->offer->getFieldValue('address_country_name') : '');
-
-echo $address;

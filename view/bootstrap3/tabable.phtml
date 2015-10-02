@@ -29,10 +29,8 @@
       <h3><?= __('Offer','casasync') ?></h3>
       <?= $this->offer->renderDatatableOffer() ?>
 
-      <?php if ($this->offer->numvals || $this->offer->getAddress('property') || $this->offer->reference_id || $this->offer->property_id) : ?>
-        <h3><?= __('Property','casasync') ?></h3>
-        <?= $this->offer->renderDatatableProperty() ?>
-      <?php endif; ?>
+      <h3><?= __('Property','casasync') ?></h3>
+      <?= $this->offer->renderDatatableProperty() ?>
 
       <?php if ($this->offer->features) : ?>
         <div class="casasync-features">

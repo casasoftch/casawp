@@ -2,7 +2,6 @@
 	<?php if ($numval->getKey() == 'special_availability'): ?>
 		Special<br>
 	<?php else: ?>
-		<?= $numval->getLabel() ?> <?= $this->offer->renderNumvalValue($numval) ?>
-		<br>
+		<?= $numval->getLabel() ?>: <?= $this->offer->renderNumvalValue($numval) ?><br>
 	<?php endif ?>
 <?php endforeach ?>
