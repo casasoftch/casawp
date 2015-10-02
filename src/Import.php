@@ -1085,6 +1085,26 @@ class Import {
 
             $offerData['publish'] = $publishingDatas;
 
+            //urls
+            $urlDatas = array();
+            if ($offer_xml->urls) {
+                foreach ($offer_xml->urls->url as $xml_url) {
+                    $title = (isset($xml_url['title']) ? $xml_url['title']->__toString() : false);
+                    $type = (isset($xml_url['type']) ? $xml_url['type']->__toString() : false);
+                    $label = (isset($xml_url['label']) ? $xml_url['label']->__toString() : false);
+                    $url = $xml_url->__toString();
+                    
+                    $urlDatas[] = array(
+                        'title' => $title,
+                        'type' => $type,
+                        'label' => $label,
+                        'url' => $url,
+
+                    );
+                }
+            }
+            $offerData['urls'] = $urlDatas;
+                
             //descriptions
             $descriptionDatas = array();
             if ($offer_xml->descriptions) {
