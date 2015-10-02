@@ -91,7 +91,7 @@
         $this->setProperty($post);
       }
 
-      //lets invite to the new kid
+      //lets invite the new kid
       global $casasync;
       $this->offer = $casasync->getOffer($post);
 

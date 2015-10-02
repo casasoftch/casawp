@@ -1396,7 +1396,7 @@ class Import {
 
 
    //urls
- /*  $url = null;
+   $url = null;
    $the_urls = array();
    if ($offer['urls']) {
      foreach ($offer['urls'] as $url) {
@@ -1424,7 +1424,7 @@ class Import {
      }
      ksort($the_urls);
      $new_meta_data['the_urls'] = $the_urls;
-  }*/
+  }
 
 
   //tags
