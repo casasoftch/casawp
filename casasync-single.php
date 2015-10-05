@@ -48,9 +48,6 @@
 						<div class="casasync-single-aside-container">
 							<?php echo $single->getSalesPerson(); ?>
 						</div>
-						<div class="casasync-single-aside-container">
-							<?php echo $single->getAllShareWidgets(); ?>
-						</div>
 					</aside>
 				</div>
 			</div>

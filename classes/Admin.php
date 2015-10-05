@@ -19,7 +19,7 @@ class Admin {
 		add_option('casasync_load_chosen', '1');
 		add_option('casasync_load_googlemaps', '1');
 		//single view
-		add_option('casasync_share_facebook', '1');
+		add_option('casasync_share_facebook', '0');
 		add_option('casasync_share_googleplus', '0');
 		add_option('casasync_share_twitter', '0');
 		add_option('casasync_use_captcha', '0');
