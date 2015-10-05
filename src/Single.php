@@ -967,7 +967,26 @@
           break;
         case 'property':
           //the new kid stole it
-          return $this->offer->renderAddress();       
+          //return $this->offer->renderAddress();
+
+          //TMP
+          if ($singleline === false) {
+             $address  = ($this->address_street ? $this->address_street . ' ' . $this->address_streetnumber . '<br>' : '');
+             $address .= ($this->address_postalcode ?  $this->address_postalcode . ' ': '') . ($this->address_locality ? $this->address_locality : '') . ($this->address_postalcode || $this->address_locality ? '<br>' : '');
+             $address .= ($this->address_country_name ? $this->address_country_name : '');
+           } else {
+             $address = '';
+             if(is_post_type_archive('casasync_property')) {
+               if(get_option('casasync_archive_show_zip', '0') != '0') {
+                 $address .= ($this->address_postalcode ? $this->address_postalcode . ' ' : '');
+               }
+             } else {
+               $address .= ($this->address_postalcode ? $this->address_postalcode . ' ' : '');
+             }
+             $address .= ($this->address_locality ? $this->address_locality : '');
+             $address .= ($this->address_country ? ' (' . $this->address_country . ')' : '');
+           }
+            return $address;
         default:
           break;
       }
