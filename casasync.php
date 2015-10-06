@@ -25,7 +25,7 @@ define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 chdir(dirname(__DIR__));
 
 // Setup autoloading
-include CASASYNC_PLUGIN_DIR . 'vendor/autoload.php';
+include 'vendor/autoload.php';
 include 'modules/Casasync/Module.php';
 
 
