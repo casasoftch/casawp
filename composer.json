@@ -10,13 +10,13 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:CasasoftCH/zf2-modules.git"
+            "url": "git@github.com:CasasoftCH/casamodules.git"
         }
     ],
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*",
-        "casasoft/zf2-modules": "dev-master"
+        "casasoft/casamodules": "1.0.*"
     },
     "require-dev": {
     },

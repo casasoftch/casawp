@@ -27,8 +27,6 @@ chdir(dirname(__DIR__));
 // Setup autoloading
 include CASASYNC_PLUGIN_DIR . 'vendor/autoload.php';
 include 'modules/Casasync/Module.php';
-//include CASASYNC_PLUGIN_DIR . 'vendor/casasoft/zf2-modules/src/CasasoftStandards/src/CasasoftStandards/Service/Category.php';
-//include CASASYNC_PLUGIN_DIR . 'vendor/casasoft/zf2-modules/src/CasasoftStandards/src/CasasoftStandards/Service/CategoryService.php';
 
 
 $configuration=array(
@@ -70,7 +68,7 @@ $serviceManager->setService('ApplicationConfig', $configuration);
 // set translator
 use Zend\I18n\Translator\Translator;
 $translator = new Translator();
-$translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/zf2-modules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
+$translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
 $translator->setLocale(substr(get_bloginfo('language'), 0, 2));
 $serviceManager->setService('Translator', $translator);
 

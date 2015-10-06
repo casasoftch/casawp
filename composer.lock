@@ -4,16 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f91f1693a2ef31152fd6e2d3b4830635",
-    "content-hash": "2d08f7b07e8e0c04b31de0b25daf029d",
+    "hash": "4db52b838559fdf2135f308fcc485503",
+    "content-hash": "b28c88727f6fb198f7c75cd3ff70f00a",
     "packages": [
         {
-            "name": "casasoft/zf2-modules",
-            "version": "dev-master",
+            "name": "casasoft/casamodules",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:CasasoftCH/zf2-modules.git",
-                "reference": "7022644cbace5a488f0d52ca66706df508761722"
+                "url": "git@github.com:CasasoftCH/casamodules.git",
+                "reference": "3fa3c99865e0cd27c5321379ff6ffb7c87d43db7"
             },
             "require": {
                 "php": ">=5.3.2"
@@ -32,13 +32,13 @@
                     "CasasoftHelpers\\": "src/",
                     "CasasoftThumb\\": "src/",
                     "CasasoftStandards\\": "src/",
-                    "DbGenerator": "src/",
-                    "CasasoftMessenger": "src/",
-                    "CasasoftGeo": "src/"
+                    "DbGenerator\\": "src/",
+                    "CasasoftMessenger\\": "src/",
+                    "CasasoftGeo\\": "src/"
                 }
             },
             "license": [
-                "MIT"
+                "GPL"
             ],
             "authors": [
                 {
@@ -46,12 +46,12 @@
                     "email": "jens.stalder@casasoft.ch"
                 }
             ],
-            "description": "Casasoft Modules for Zend Framework 2 implementations.",
+            "description": "Casasoft Modules for Zend Framework 2 (PSR7) implementations.",
             "homepage": "http://casasoft.ch/",
             "keywords": [
                 "zf2"
             ],
-            "time": "2015-09-28 12:16:22"
+            "time": "2015-10-06 11:26:38"
         },
         {
             "name": "doctrine/instantiator",
@@ -458,16 +458,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.9",
+            "version": "4.8.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "73fad41adb5b7bc3a494bb930d90648df1d5e74b"
+                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/73fad41adb5b7bc3a494bb930d90648df1d5e74b",
-                "reference": "73fad41adb5b7bc3a494bb930d90648df1d5e74b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/463163747474815c5ccd4ae12b5b355ec12158e8",
+                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8",
                 "shasum": ""
             },
             "require": {
@@ -526,20 +526,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-09-20 12:56:44"
+            "time": "2015-10-01 09:14:30"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5e2645ad49d196e020b85598d7c97e482725786a",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/ac8e7a3db35738d56ee9a76e78a4e03d97628983",
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983",
                 "shasum": ""
             },
             "require": {
@@ -582,7 +582,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-08-19 09:14:08"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -3891,9 +3891,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "casasoft/zf2-modules": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
