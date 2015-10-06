@@ -14,10 +14,11 @@ class OfferService{
     private $metas = null;
     /*private $numvals = array(); */
 
-    public function __construct($categoryService, $numvalService, $messengerService, $utilityService){
+    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService){
     	$this->utilityService = $utilityService;
     	$this->categoryService = $categoryService;
     	$this->numvalService = $numvalService;
+        $this->featureService = $featureService;
     	$this->messengerService = $messengerService;
     }
 
@@ -80,28 +81,8 @@ class OfferService{
 
 			// always only one availability
 			$this->availability = isset($terms[0]) ? $terms[0] : false;
-
-			/*case 'active':       return __('Available' ,'casasync');break;
-			case 'reserved':     return __('Reserved' ,'casasync');break;
-			case 'sold':         return __('Sold' ,'casasync');break;
-			case 'rented':       return __('Rented' ,'casasync');break;
-			case 'reference':    return __('Reference' ,'casasync');break;*/
-
-
-			/*foreach ($terms as $termName) {
-				if ($this->categoryService->keyExists($termName)) {
-					$this->availability[] = $this->categoryService->getItem($termName);
-				} else if ($this->utilityService->keyExists($termName)) {
-					$this->availability[] = $this->utilityService->getItem($termName);
-				} else {
-					$unknown_category = new \CasasoftStandards\Service\Category();
-					$unknown_category->setKey($termName);
-					$unknown_category->setLabel('?'.$termName);
-					$this->availability[] = $unknown_category;
-				}
-			}*/
 		}
-		return $this->availability = 1;
+		return $this->availability;
 	}
 
 	public function getSalestype(){
@@ -116,6 +97,55 @@ class OfferService{
 		}
 		return $this->salestype;
 	}
+
+	public function getAllFeatures() {
+        $features = array();
+        /*echo '<pre>';
+        print_r($this->getFieldValue('features'));
+        echo '</pre>';*/
+        
+
+	  /*if ($this->features) {
+	    foreach ($this->features as $key => $value) {
+	      if (isset($key)) {
+	        $html .= '<span class="casasync-label"><i class="fa fa-check"></i> '
+	          . __($this->conversion->casasync_convert_featureKeyToLabel($value['key']), "casasync") 
+	        .'</span> ';
+	      }
+	    }
+	  }*/
+	}
+    public function getFeature($key){
+        foreach ($this->getFeatures() as $numval) {
+            if ($numval->getKey() == $key) {
+                return $numval;
+            }
+        }
+    }
+
+    public function getFeatures(){
+        $features = array();
+        foreach ($this->featureService->getItems() as $feature) {
+            //$value = $this->getFieldValue('features', false);
+            $meta_features = json_decode($this->getFieldValue('features', false), true);
+            foreach ($meta_features as $meta_feature) {
+                if ($meta_feature["value"] == $feature->getKey()) {
+                    $features[$feature->getKey()] = $feature;
+                    break;
+                }
+            }
+        }
+        return $features;
+    }
+
+    public function renderFeatures() {
+        $features = $this->getFeatures();
+        return $this->render('features', array(
+            'features' => $features
+        ));
+
+    }
+
 
 	public function renderCategoryLabels(){
 		$cat_labels = array();
