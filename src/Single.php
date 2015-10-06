@@ -960,6 +960,8 @@
     public function getAddress($from, $singleline = false){
       switch ($from) {
         case 'seller':
+          #return $this->offer->renderSellerAddress();
+          //TMP
           $address  = ($this->seller['street'] ? $this->seller['street'] . '<br>' : '');
           $address .= ($this->seller['postalcode'] ?  $this->seller['postalcode'] . ' ': '') . ($this->seller['locality'] ? $this->seller['locality'] : '') . ($this->seller['postalcode'] || $this->seller['locality'] ? '<br>' : '');
           $address .= $this->conversion->countrycode_to_countryname($this->seller['country']); 
@@ -967,7 +969,7 @@
           break;
         case 'property':
           //the new kid stole it
-          //return $this->offer->renderAddress();
+          #return $this->offer->renderAddress();
 
           //TMP
           if ($singleline === false) {

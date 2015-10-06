@@ -7,19 +7,28 @@ use Zend\View\Resolver;
 class OfferService{
     public $post = null;
     private $categories = null;
+    private $availability = null;
     private $attachments = null;
-    private $numvals = array();
     private $numvals_to_display = null;
     private $salestype = null;
     private $metas = null;
+    /*private $numvals = array(); */
 
-    public function __construct($categoryService, $numvalService, $messengerService){
+    public function __construct($categoryService, $numvalService, $messengerService, $utilityService){
+    	$this->utilityService = $utilityService;
     	$this->categoryService = $categoryService;
     	$this->numvalService = $numvalService;
     	$this->messengerService = $messengerService;
     }
 
+    private function resetPost(){
+	    foreach (get_class_vars(get_class($this)) as $var => $def_val){
+	        $this->$var= $def_val;
+	    }
+   	}
+
     public function setPost($post){
+    	$this->resetPost();
         $this->post = $post;
     }
 
@@ -51,8 +60,10 @@ class OfferService{
 			foreach ($terms as $termName) {
 				if ($this->categoryService->keyExists($termName)) {
 					$this->categories[] = $this->categoryService->getItem($termName);
+				} else if ($this->utilityService->keyExists($termName)) {
+					$this->categories[] = $this->utilityService->getItem($termName);
 				} else {
-					$unknown_category = new CasasoftStandards\Service\Category();
+					$unknown_category = new \CasasoftStandards\Service\Category();
 					$unknown_category->setKey($termName);
 					$unknown_category->setLabel('?'.$termName);
 					$this->categories[] = $unknown_category;
@@ -60,6 +71,37 @@ class OfferService{
 			}
 		}
 		return $this->categories;
+	}
+
+	public function getAvailablility() {
+		if ($this->availability === null) {
+			$terms = wp_get_post_terms( $this->post->ID, 'casasync_availability', array("fields" => "names"));
+			#$terms = $this->getFieldValue('availability', false);
+
+			// always only one availability
+			$this->availability = isset($terms[0]) ? $terms[0] : false;
+
+			/*case 'active':       return __('Available' ,'casasync');break;
+			case 'reserved':     return __('Reserved' ,'casasync');break;
+			case 'sold':         return __('Sold' ,'casasync');break;
+			case 'rented':       return __('Rented' ,'casasync');break;
+			case 'reference':    return __('Reference' ,'casasync');break;*/
+
+
+			/*foreach ($terms as $termName) {
+				if ($this->categoryService->keyExists($termName)) {
+					$this->availability[] = $this->categoryService->getItem($termName);
+				} else if ($this->utilityService->keyExists($termName)) {
+					$this->availability[] = $this->utilityService->getItem($termName);
+				} else {
+					$unknown_category = new \CasasoftStandards\Service\Category();
+					$unknown_category->setKey($termName);
+					$unknown_category->setLabel('?'.$termName);
+					$this->availability[] = $unknown_category;
+				}
+			}*/
+		}
+		return $this->availability = 1;
 	}
 
 	public function getSalestype(){
@@ -92,17 +134,15 @@ class OfferService{
 	}
 
 	public function getNumvals(){
-		if ($this->numvals == null) {
-			foreach ($this->numvalService->getItems() as $numval) {
-				$value = get_post_meta( $this->post->ID, $numval->getKey(), $single = true );
-				if ($value) {
-					$numval->setValue($value);
-					$this->numvals[$numval->getKey()] = $numval;
-				}
+		$numvals = array();
+		foreach ($this->numvalService->getItems() as $numval) {
+			$value = $this->getFieldValue($numval->getKey(), false);
+			if ($value) {
+				$numval->setValue($value);
+				$numvals[$numval->getKey()] = $numval;
 			}
-			
 		}
-		return $this->numvals;
+		return $numvals;
 	}
 
 	public function getAttachments(){
@@ -260,9 +300,9 @@ class OfferService{
         return $this->numvals_to_display;
 	}
 
-	public function getAvailablility(){
+	/*public function getAvailablility(){
 		return '...';
-	}
+	}*/
 
 	//view actions "direct"
 	public function renderNumvalValue($numval){
@@ -369,6 +409,14 @@ class OfferService{
 
 	public function renderAddress(){
 		return $this->render('address', array(
+			'type' => 'property',
+			'offer' => $this
+		));
+	}
+
+	public function renderSellerAddress(){
+		return $this->render('address', array(
+			'type' => 'seller',
 			'offer' => $this
 		));
 	}
@@ -383,7 +431,11 @@ class OfferService{
 		}
 		$numvals = array();
 		foreach ($datapoints as $key) {
-			$numval = $this->getNumval($key);
+			if ($key == 'special_availability') {
+				$numval = 'special_availability';
+			} else {
+				$numval = $this->getNumval($key);
+			}
 			if ($numval) {
 				$numvals[] = $numval;
 			}

@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "f5720df8d113a0d61b2fddd2007a76b7",
-    "content-hash": "44cfda5dbf637ad81787fa438116642b",
     "packages": [
         {
             "name": "casasoft/casamodules",
