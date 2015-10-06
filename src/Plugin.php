@@ -3,6 +3,14 @@ namespace CasaSync;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
+use Zend\EventManager\EventManager;
+use Zend\Http\PhpEnvironment;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Mvc\Service\ServiceManagerConfig;
+use Zend\I18n\Translator\Translator;
 
 class Plugin {  
     public $textids = false;
@@ -13,10 +21,7 @@ class Plugin {
     public $show_sticky = true;
     public $tax_query = array();
 
-    public function __construct($serviceManager){  
-        $this->serviceManager = $serviceManager;
-        $this->queryService = $this->serviceManager->get('CasasyncQuery');
-
+    public function __construct($configuration){  
         $this->conversion = new Conversion;
 
         add_filter('upload_dir',  array($this, 'setUploadDir'));
@@ -61,6 +66,45 @@ class Plugin {
         //add_action( 'load_textdomain', array($this, 'setTranslation'));
         add_filter('page_template', array($this, 'casasync_page_template'));
         add_action('plugins_loaded', array($this, 'setTranslation'));
+            
+
+
+
+        // setup service manager
+        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+        $serviceManager->setService('ApplicationConfig', $configuration);
+
+        // set translator
+        $translator = new Translator();
+        $translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
+        $translator->setLocale(substr(get_bloginfo('language'), 0, 2));
+        $serviceManager->setService('Translator', $translator);
+
+        // load modules -- which will provide services, configuration, and more
+        $serviceManager->get('ModuleManager')->loadModules();
+
+       
+        //renderer
+        $this->renderer = new PhpRenderer();
+        $pluginManager = $this->renderer->getHelperPluginManager();
+
+         //view helper plugins
+        $defaultHelperMapClasses = [
+            'Zend\Form\View\HelperConfig',
+            'Zend\I18n\View\HelperConfig',
+            'Zend\Navigation\View\HelperConfig'
+        ];
+        foreach ($defaultHelperMapClasses as $configClass) {
+            if (is_string($configClass) && class_exists($configClass)) {
+                $config = new $configClass;
+                $config->configureServiceManager($pluginManager);
+
+            }
+        }
+
+        $this->serviceManager = $serviceManager;
+        $this->queryService = $this->serviceManager->get('CasasyncQuery');
+
 
     }
 
@@ -182,8 +226,64 @@ class Plugin {
       }
     }
 
+    public function render($view, $args){
+        $renderer = $this->renderer;
+        $resolver = new Resolver\AggregateResolver();
+        $renderer->setResolver($resolver);
+
+
+        $stack = new Resolver\TemplatePathStack(array(
+            'script_paths' => array(
+                CASASYNC_PLUGIN_DIR . '/view',
+                get_template_directory() . '/casasync'
+            )
+        ));
+        $resolver->attach($stack);
+        $model = new ViewModel($args);
+
+        $stack = array(
+            'bootstrap3',
+            'bootstrap4'
+        );
+
+        $viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
+
+        $template = $viewgroup.'/'.$view;
+        if (false === $resolver->resolve($template)) {
+            $template = false;
+
+            //try up the stack
+            for ($i=1; $i < 5; $i++) { 
+                $ancestor = array_search($viewgroup, $stack)-$i;    
+                if (isset($stack[$ancestor])) {
+                    if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
+                        continue;
+                    } else {
+                        $template = $stack[$ancestor].'/'.$view;
+                        break;
+                    }
+                } else {
+                    break;
+                }   
+            }
+
+            if (!$template) {
+                return "View file not found for: " . $viewgroup;
+            }
+
+        }
+        $model->setTemplate($template);
+
+        
+
+        $result = $renderer->render($model);
+
+        return $result;
+    }
+
     public function renderArchiveFilter(){
-        return 'FUTURE FILTER';
+        $form = new \Casasync\Form\FilterForm();
+        return $this->render('archive-filter', array('form' => $form));
     }
 
     public function include_template_function( $template_path ) {

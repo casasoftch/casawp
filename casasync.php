@@ -26,7 +26,7 @@ chdir(dirname(__DIR__));
 // Setup autoloading
 include 'vendor/autoload.php';
 include 'modules/Casasync/Module.php';
-$configuration=array(
+$configuration = array(
 		'modules' => array(
 			'CasasoftStandards',
 			'CasasoftMessenger',
@@ -43,33 +43,10 @@ $configuration=array(
 		),
 );
 
-use Zend\EventManager\EventManager;
-use Zend\Http\PhpEnvironment;
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManager;
-
-$serviceManager = new ServiceManager();
-$eventManager = new EventManager();
-
 use Zend\Loader\AutoloaderFactory;
-use Zend\Mvc\Service\ServiceManagerConfig;
 AutoloaderFactory::factory();
-// setup service manager
-$serviceManager = new ServiceManager(new ServiceManagerConfig());
-$serviceManager->setService('ApplicationConfig', $configuration);
 
-// set translator
-use Zend\I18n\Translator\Translator;
-$translator = new Translator();
-$translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
-$translator->setLocale(substr(get_bloginfo('language'), 0, 2));
-$serviceManager->setService('Translator', $translator);
-
-// load modules -- which will provide services, configuration, and more
-$serviceManager->get('ModuleManager')->loadModules();
-$casasync = new CasaSync\Plugin($serviceManager);
+$casasync = new CasaSync\Plugin($configuration);
 
 global $casasync;
 

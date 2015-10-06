@@ -1,0 +1,6 @@
+<?php 
+	echo $this->form()->openTag($form);
+	echo $this->formRow($form->get('title'));
+	echo $this->formRow($form->get('artist'));
+	echo $this->formSubmit($form->get('submit'));
+	echo $this->form()->closeTag();

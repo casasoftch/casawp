@@ -251,57 +251,8 @@ class OfferService{
 
 
 	public function render($view, $args){
-		$renderer = new PhpRenderer();
-		$resolver = new Resolver\AggregateResolver();
-		$renderer->setResolver($resolver);
-
-		$stack = new Resolver\TemplatePathStack(array(
-		    'script_paths' => array(
-		    	CASASYNC_PLUGIN_DIR . '/view',
-		    	get_template_directory() . '/casasync'
-		    )
-		));
-		$resolver->attach($stack);
-		$model = new ViewModel($args);
-
-		$stack = array(
-			'bootstrap3',
-			'bootstrap4'
-		);
-
-		$viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
-
-		$template = $viewgroup.'/'.$view;
-		if (false === $resolver->resolve($template)) {
-			$template = false;
-
-			//try up the stack
-			for ($i=1; $i < 5; $i++) { 
-				$ancestor = array_search($viewgroup, $stack)-$i;	
-				if (isset($stack[$ancestor])) {
-					if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
-						continue;
-					} else {
-						$template = $stack[$ancestor].'/'.$view;
-						break;
-					}
-				} else {
-					break;
-				}	
-			}
-
-			if (!$template) {
-				return "View file not found for: " . $viewgroup;
-			}
-
-		}
-		$model->setTemplate($template);
-
-		
-
-		$result = $renderer->render($model);
-
-		return $result;
+		global $casasync;
+		return $casasync->render($view, $args);
 	}
 
 	public function getPrimarySingleDatapoints(){
