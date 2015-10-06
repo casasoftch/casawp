@@ -6,9 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor' => array($vendorDir . '/phpdocumentor/reflection-docblock/src'),
-    'ZendXml\\' => array($vendorDir . '/zendframework/zendxml/library'),
-    'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'DbGenerator\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftThumb\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftStandards\\' => array($vendorDir . '/casasoft/casamodules/src'),
