@@ -1,6 +1,7 @@
 <?php foreach ($this->numvals as $numval): ?>
-	<?php if ($numval->getKey() == 'special_availability'): ?>
-		Special<br>
+	<?php if ($numval == 'special_availability'): ?>
+		<?= __('Available from:','casasync') ?>
+		<?= $this->offer->renderAvailabilityDate() ?><br>
 	<?php else: ?>
 		<?= $numval->getLabel() ?>: <?= $this->offer->renderNumvalValue($numval) ?><br>
 	<?php endif ?>

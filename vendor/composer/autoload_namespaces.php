@@ -6,16 +6,14 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor' => array($vendorDir . '/phpdocumentor/reflection-docblock/src'),
-    'ZendXml\\' => array($vendorDir . '/zendframework/zendxml/library'),
-    'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
-    'DbGenerator' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftThumb\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftStandards\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftMessenger' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftHelpers\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftGeo' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftEmail\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasasoftAuth\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
-    'CasaLogService\\' => array($vendorDir . '/casasoft/zf2-modules/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
+    'DbGenerator\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftThumb\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftStandards\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftMessenger\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftHelpers\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftGeo\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftEmail\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasasoftAuth\\' => array($vendorDir . '/casasoft/casamodules/src'),
+    'CasaLogService\\' => array($vendorDir . '/casasoft/casamodules/src'),
 );

@@ -32,7 +32,7 @@
       <h3><?= __('Property','casasync') ?></h3>
       <?= $this->offer->renderDatatableProperty() ?>
 
-      <?php if ($this->offer->features) : ?>
+      <?php if ($this->offer->getAllFeatures()) : ?>
         <div class="casasync-features">
           <h3><?= __('Features','casasync') ?></h3>
           <?= $this->offer->renderDatatableFeatures() ?>
