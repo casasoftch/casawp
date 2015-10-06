@@ -32,18 +32,25 @@
       <h3><?= __('Property','casasync') ?></h3>
       <?= $this->offer->renderDatatableProperty() ?>
 
-      <?php if ($this->offer->getAllFeatures()) : ?>
+
+      <?php if ($this->offer->getFeatures()) : ?>
         <div class="casasync-features">
           <h3><?= __('Features','casasync') ?></h3>
-          <?= $this->offer->renderDatatableFeatures() ?>
-          <?= $this->offer->getAllFeatures() ?>
+          <?= $this->offer->renderFeatures() ?>
         </div>
       <?php endif; ?>
 
-      <?php if ($this->offer->getAllDocuments()) : ?>
+      <?php /*if ($this->offer->getAllDocuments()) : ?>
         <div class="casasync-documents">
           <h3><?= __('Documents','casasync') ?></h3>
           <?= $this->offer->getAllDocuments(); ?>
+        </div>
+      <?php endif;*/ ?>
+
+      <?php if ($this->offer->getDistances()) : ?>
+        <div class="casasync-distances">
+          <h3><?= __('Distances','casasync') ?></h3>
+          <?= $this->offer->renderDistances() ?>
         </div>
       <?php endif; ?>
 
