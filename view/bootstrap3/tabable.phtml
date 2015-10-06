@@ -40,10 +40,17 @@
         </div>
       <?php endif; ?>
 
-      <?php if ($this->offer->getAllDocuments()) : ?>
+      <?php /*if ($this->offer->getAllDocuments()) : ?>
         <div class="casasync-documents">
           <h3><?= __('Documents','casasync') ?></h3>
           <?= $this->offer->getAllDocuments(); ?>
+        </div>
+      <?php endif;*/ ?>
+
+      <?php if ($this->offer->getDistances()) : ?>
+        <div class="casasync-distances">
+          <h3><?= __('Distances','casasync') ?></h3>
+          <?= $this->offer->renderDistances() ?>
         </div>
       <?php endif; ?>
 

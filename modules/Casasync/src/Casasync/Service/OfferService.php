@@ -98,23 +98,6 @@ class OfferService{
 		return $this->salestype;
 	}
 
-	public function getAllFeatures() {
-        $features = array();
-        /*echo '<pre>';
-        print_r($this->getFieldValue('features'));
-        echo '</pre>';*/
-        
-
-	  /*if ($this->features) {
-	    foreach ($this->features as $key => $value) {
-	      if (isset($key)) {
-	        $html .= '<span class="casasync-label"><i class="fa fa-check"></i> '
-	          . __($this->conversion->casasync_convert_featureKeyToLabel($value['key']), "casasync") 
-	        .'</span> ';
-	      }
-	    }
-	  }*/
-	}
     public function getFeature($key){
         foreach ($this->getFeatures() as $numval) {
             if ($numval->getKey() == $key) {
@@ -143,9 +126,15 @@ class OfferService{
         return $this->render('features', array(
             'features' => $features
         ));
-
     }
 
+    public function renderDistances() {
+        $distances = $this->getDistances();
+        /* todo: how to render distances? */
+        return $this->render('distances', array(
+            'distances' => $distances
+        ));
+    }
 
 	public function renderCategoryLabels(){
 		$cat_labels = array();
@@ -166,14 +155,30 @@ class OfferService{
 	public function getNumvals(){
 		$numvals = array();
 		foreach ($this->numvalService->getItems() as $numval) {
-			$value = $this->getFieldValue($numval->getKey(), false);
-			if ($value) {
-				$numval->setValue($value);
-				$numvals[$numval->getKey()] = $numval;
-			}
+            if (strpos($numval->getKey(), "distance_") !== 0) {
+    			$value = $this->getFieldValue($numval->getKey(), false);
+    			if ($value) {
+    				$numval->setValue($value);
+    				$numvals[$numval->getKey()] = $numval;
+    			}
+            }
 		}
 		return $numvals;
 	}
+
+    public function getDistances(){
+        $numvals = array();
+        foreach ($this->numvalService->getItems() as $numval) {
+            if (strpos($numval->getKey(), "distance_") === 0) {
+                $value = $this->getFieldValue($numval->getKey(), false);
+                if ($value) {
+                    $numval->setValue($value);
+                    $numvals[$numval->getKey()] = $numval;
+                }
+            }
+        }
+        return $numvals;
+    }
 
 	public function getAttachments(){
 		if ($this->attachments === null) {
