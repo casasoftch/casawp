@@ -45,9 +45,17 @@ class OfferService{
     }
 
     public function to_array() {
-    	$post_array = $this->post->to_array();
-		$offer_array = get_object_vars( $this );
-		return array_merge($post_array, $offer_array);
+		$offer_array = array(
+			'post' => $this->post->to_array()
+		);
+
+		//basics
+		$offer_array['title'] = $this->getTitle();
+
+    	//if load categories example
+    	$offer_array['categories'] = $this->getCategoriesArray();
+
+		return $offer_array;
 	}
 
 	public function getTitle(){
@@ -71,6 +79,18 @@ class OfferService{
 			}
 		}
 		return $this->categories;
+	}
+
+	public function getCategoriesArray(){
+		$categories = $this->getCategories();
+		$arr_categories = array();
+		foreach ($categories as $category) {
+			$arr_categories[] = array(
+				'key' => $category->getKey(),
+				'label' => $category->getLabel()
+			);
+		}
+		return $arr_categories;
 	}
 
 	public function getAvailablility() {
@@ -195,7 +215,7 @@ class OfferService{
 	}
 
 
-	private function render($view, $args){
+	public function render($view, $args){
 		$renderer = new PhpRenderer();
 		$resolver = new Resolver\AggregateResolver();
 		$renderer->setResolver($resolver);
@@ -215,6 +235,7 @@ class OfferService{
 		);
 
 		$viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
+
 		$template = $viewgroup.'/'.$view;
 		if (false === $resolver->resolve($template)) {
 			$template = false;
