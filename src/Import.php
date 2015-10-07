@@ -219,6 +219,35 @@ class Import {
     }
   }
 
+  public function setCasasyncFeatureTerm($term_slug, $label = false) {
+    $label = (!$label ? $term_slug : $label);
+    $term = get_term_by('slug', $term_slug, 'casasync_feature', OBJECT, 'raw' );
+    //$existing_term_id = term_exists( $label, 'casasync_feature');
+    $existing_term_id = false;
+    if ($term) {
+      if (
+        $term->slug != $term_slug
+        || $term->name != $label
+      ) {
+        wp_update_term($term->term_id, 'casasync_feature', array(
+          'name' => $label,
+          'slug' => $term_slug
+        ));
+      }
+    } else {
+      $options = array(
+        'description' => '',
+        'slug' => $term_slug
+      );
+      $id = wp_insert_term(
+        $label,
+        'casasync_feature',
+        $options
+      );
+      return $id;
+    }
+  }
+
   public function casasyncUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
       $filename = '/casasync/import/attachment/'. $the_mediaitem['file'];
@@ -802,6 +831,51 @@ class Import {
       }
       if ($connect_term_ids) {
         wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casasync_category' );
+      }
+    }
+
+  }
+
+  public function setOfferFeatures($wp_post, $features, $casasync_id){
+    $new_features = array();
+    $old_features = array();
+
+    //set post feature
+    $old_features = array();
+    $wp_feature_terms = wp_get_object_terms($wp_post->ID, 'casasync_feature');
+    foreach ($wp_feature_terms as $term) {
+      $old_features[] = $term->slug;
+    }
+
+    //supported
+    if ($features) {
+      foreach ($features as $feature) {
+        $new_features[] = $feature;
+      }
+    }
+
+    //have features changed?
+    if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
+      $slugs_to_remove = array_diff($old_features, $new_features);
+      $slugs_to_add    = array_diff($new_features, $old_features);
+      $this->transcript[$casasync_id]['features_changed']['removed_feature'] = $slugs_to_remove;
+      $this->transcript[$casasync_id]['features_changed']['added_feature'] = $slugs_to_add;
+
+      //make sure the features exist first
+      foreach ($slugs_to_add as $new_term_slug) {
+        $label = false;
+        $this->setCasasyncFeatureTerm($new_term_slug, $label);
+      }
+
+      //add the new ones
+      $feature_terms = get_terms( array('casasync_feature'), array('hide_empty' => false));
+      foreach ($feature_terms as $term) {
+        if (in_array($term->slug, $new_features)) {
+          $connect_term_ids[] = (int) $term->term_id;
+        }
+      }
+      if ($connect_term_ids) {
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casasync_feature' );
       }
     }
 
@@ -1537,6 +1611,9 @@ class Import {
     }
     $new_meta_data['casasync_features'] = json_encode($features);
 
+
+
+
     //clean up arrays   
     foreach ($old_meta_data as $key => $value) {
       if (!in_array($key, $this->meta_keys)) {
@@ -1601,6 +1678,7 @@ class Import {
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casasync_id);
     }
     
+    $this->setOfferFeatures($wp_post, $property['features'], $casasync_id);
     $this->setOfferSalestype($wp_post, $property['type'], $casasync_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casasync_id);
     $this->setOfferLocalities($wp_post, $property['address'], $casasync_id);

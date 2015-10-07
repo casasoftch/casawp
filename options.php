@@ -814,68 +814,26 @@
 				default:
 					?>
 						<?php /******* Kontaktformular *******/ ?>
-						<h3>Email</h3>
+						<h3>Anfrage-Variante</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Anfrage an Kontakt-E-Mail Adresse vom Objekt senden?</th>
+								<th scope="row"><label><input name="casasync_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casasync_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<legend class="screen-reader-text"><span>Anfrage an Kontakt-E-Mail Adresse vom Objekt senden?</span></legend>
-										<input name="casasync_request_per_mail_value" type="text" value="Vom Objekt definiert" class="regular-text" readonly="readonly" disabled="disabled"> 
-										<?php $name = 'casasync_request_per_mail'; ?>
-										<?php $text = 'Ja'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
-										<?php $text = 'Nein'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
+										<input style="width:100%" name="casasoft_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casasoft_publisherid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casasoft_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casasoft_customerid') ?>" class="regular-text"> 
+										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
 									</fieldset>
 								</td>
 							</tr>
+						<?php echo $table_end; ?>
+						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Anfrage an REMCat E-Mail Adresse senden?</th>
+								<th scope="row"><label><input name="casasync_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casasync_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<legend class="screen-reader-text"><span>Anfrage an REMCat E-Mail Adresse senden?</span></legend>
-										<?php $name = 'casasync_remCat_email'; ?>
-											<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
-										<?php $name = 'casasync_request_per_remcat'; ?>
-										<?php $text = 'Ja'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
-										<?php $text = 'Nein'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
-									</fieldset>
-								</td>
-							</tr>
-							<tr valign="top">
-								<th scope="row">Weitere Empfänger festlegen</th>
-								<td class="front-static-pages contactform-tab">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Weitere Empfänger festlegen</span></legend>
-										<?php $name = 'casasync_request_per_mail_fallback_value'; ?>
-											<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
-										<?php $name = 'casasync_request_per_mail_fallback'; ?>
-										<?php $text = 'Immer'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="always" <?php echo (get_option($name) == 'always' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
-										<?php $text = 'Nein'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="0" <?php echo (get_option($name) == '0' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-										</label>
-										<?php $text = 'Fallback'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="radio" value="fallback" <?php echo (get_option($name) == 'fallback' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
-
-										</label>
-										<br>
-										<p><span class="description">Falls Fallback ausgewählt ist, wird nur eine E-Mail gesendet, falls die Kontakt-E-Mail Adresse im Objekt nicht hinterlegt ist.</span><p>
+										<input style="width:100%" name="casasync_email_fallback" type="text" placeholder="EMAIL" value=""> 
+										<small>(Objekte mit deklarierten Anfrage-Emails werden bevorzugt)</small>
 									</fieldset>
 								</td>
 							</tr>

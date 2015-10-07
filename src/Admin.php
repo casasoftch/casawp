@@ -58,6 +58,7 @@ class Admin {
 		add_option('casasync_form_phone_required', '1');
 		add_option('casasync_form_email_required', '1');
 		add_option('casasync_form_message_required', '1');
+
 	}
 
 	public function casasync_remove() {

@@ -213,6 +213,46 @@ class OfferService{
 		return $this->attachments;
 	}
 
+	public function getImages(){
+		$images = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'image', 'casasync_attachment_type', $attachment )){
+				$images[] = $attachment;
+			}
+		}
+		return $images;
+	}
+
+	public function getDocuments(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'document', 'casasync_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
+
+	public function getSalesBrochures(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'sales-brochure', 'casasync_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
+
+	public function getPlans(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'plan', 'casasync_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
+
 	public function getMetas(){
 		if ($this->metas === null) {
 			$this->metas = get_post_meta($this->post->ID);
@@ -436,9 +476,9 @@ class OfferService{
 
 	//view actions
 	public function renderGallery(){
-		$attachments = $this->getAttachments();
+		$images = $this->getImages();
 		return $this->render('gallery', array(
-			'attachments' => $attachments,
+			'images' => $images,
 			'offer' => $this
 		));
 	}
@@ -533,10 +573,76 @@ class OfferService{
 
 	public function renderContactForm(){
         $form = new \Casasync\Form\ContactForm();
+        $sent = false;
+        $customerid = get_option('casasoft_customerid');
+        $publisherid = get_option('casasoft_publisherid');
+        $email = get_option('casasync_email_fallback');
+
+        if ($this->getFieldValue('seller_org_customerid', false)) {
+        	$customerid = $this->getFieldValue('seller_org_customerid', false);
+        }
+        if ($this->getFieldValue('seller_inquiry_person_email', false)) {
+        	$email = $this->getFieldValue('seller_inquiry_person_email', false);
+        }
+        
+        if (get_option('casasync_inquiry_method') == 'casamail') {
+        	//casamail
+        	if (!$customerid || !$publisherid) {
+        		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casasync&tab=contactform">here</a></p>';
+        	}
+        	
+        } else {
+        	if (!$email) {
+        		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casasync&tab=contactform">here</a></p>';
+        	}
+        }
+
+        if ($_POST) {
+        	$filter = $form->getFilter();
+	        $form->setInputFilter($filter);
+        	$form->setData($_POST);
+        	if ($form->isValid()) {
+			    $validatedData = $form->getData();
+			    $sent = true;
+			    if (isset($_POST['email']) && $_POST['email']) {
+			    	//SPAM
+			    } else {
+			    	//add to WP for safekeeping
+			    	$post = array(
+			    		'post_type' => 'casasync_inquiry',
+			    		'post_content' => $form->get('message')->getValue(),
+			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('reference_id') ? $this->getFieldValue('reference_id') : $this->getFieldValue('casasync_id')) . '] ' . $this->getTitle()),
+			    		'post_status' => 'private',
+			    		'ping_status' => false
+			    	);
+			    	$inquiry_id = wp_insert_post($post);
+			    	foreach ($form->getElements() as $element) {
+			    		if (!in_array($element->getName(), array('message')) ) {
+			    			add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
+			    		}
+			    	}
+			    	add_post_meta($inquiry_id, 'casasync_id', $this->getFieldValue('casasync_id'), true );
+			    	add_post_meta($inquiry_id, 'reference_id', $this->getFieldValue('reference_id'), true );
+
+			    	if (get_option('casasync_inquiry_method') == 'casamail') {
+			        	//casamail
+			        } else {
+			        	
+			        }
+			    }
+
+			} else {
+			    $messages = $form->getMessages();
+			}
+        } else {
+        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casasync'));
+        }
+
         //$form->bind($this->queryService);
         return $this->render('contact-form', array(
         	'form' => $form,
-        	'offer' => $this
+        	'offer' => $this,
+        	'sent' => $sent
         ));
     }
 

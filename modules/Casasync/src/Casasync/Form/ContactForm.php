@@ -95,4 +95,118 @@ class ContactForm extends Form
             )
         ));
     }
+
+    public function getFilter(){
+        $filter = new \Zend\InputFilter\InputFilter();
+        $filter->add(array(
+            'name' => 'firstname',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'lastname',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'street',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'postal_code',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 4
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'locality',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'phone',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'emailreal',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'email_address',
+                    'options' => array(
+                        //'allow' => ALLOW_DNS,
+                        'deep' => true,
+                        'domain' => true,
+                        'hostname' => '',
+                        'mx' => true
+                    )
+                )
+            ),
+        ));
+
+        
+
+        return $filter;
+    }
 }

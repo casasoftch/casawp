@@ -80,6 +80,13 @@ class Plugin {
         $translator->setLocale(substr(get_bloginfo('language'), 0, 2));
         $serviceManager->setService('Translator', $translator);
 
+        // mvc translator
+        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
+        $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
+        \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
+
+        
+
         // load modules -- which will provide services, configuration, and more
         $serviceManager->get('ModuleManager')->loadModules();
 
@@ -105,6 +112,7 @@ class Plugin {
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get('CasasyncQuery');
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
+        $this->numvalService = $this->serviceManager->get('CasasoftNumval');
         
 
 
@@ -617,6 +625,10 @@ class Plugin {
 
 
     public function setPostTypes(){
+
+        /*----------  properties  ----------*/
+        
+
         $labels = array(
             'name'               => __('Properties', 'casasync'),
             'singular_name'      => __('Property', 'casasync'),
@@ -649,6 +661,220 @@ class Plugin {
         );
         register_post_type( 'casasync_property', $args );
 
+        $used = array();
+        if( function_exists('acf_add_local_field_group') ):
+
+            foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
+                $fields = array();
+
+                foreach ($groupsettings['items'] as $key => $settings) {
+                    $used[] = $key;
+                    $fields[] = array(
+                        'key' => 'field_casasync_property_'.$key,
+                        'label' => $this->numvalService->getItem($key)->getLabel(),
+                        'name' => $key,
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array (
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                    );
+                }
+
+                acf_add_local_field_group(array (
+                    'key' => 'group_casasync_property_numvals_'.$group,
+                    'title' => $groupsettings['name'],
+                    'fields' => $fields,
+                    'location' => array (
+                        array (
+                            array (
+                                'param' => 'post_type',
+                                'operator' => '==',
+                                'value' => 'casasync_property',
+                            ),
+                        ),
+                    ),
+                    'menu_order' => 0,
+                    'position' => 'normal',
+                    'style' => 'default',
+                    'label_placement' => 'left',
+                    'instruction_placement' => 'label',
+                    'hide_on_screen' => array (
+                        0 => 'excerpt',
+                        1 => 'discussion',
+                        2 => 'comments',
+                        3 => 'revisions',
+                        5 => 'author',
+                        6 => 'format',
+                        10 => 'send-trackbacks',
+                        11 => 'custom_fields'
+                    ),
+                ));
+            }
+
+            $fields = array();
+            foreach ($this->numvalService->getItems() as $numval) {
+                if (!in_array($numval->getKey(), $used)) {
+                    $fields[] = array(
+                        'key' => 'field_casasync_property_'.$numval->getKey(),
+                        'label' => $numval->getLabel(),
+                        'name' => $numval->getKey(),
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array (
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                    );
+                }
+            }
+            if ($fields) {
+                acf_add_local_field_group(array (
+                    'key' => 'group_casasync_property_numvals_unsorted',
+                    'title' => 'Ungeordnete werte',
+                    'fields' => $fields,
+                    'location' => array (
+                        array (
+                            array (
+                                'param' => 'post_type',
+                                'operator' => '==',
+                                'value' => 'casasync_property',
+                            ),
+                        ),
+                    ),
+                    'menu_order' => 0,
+                    'position' => 'default',
+                    'style' => 'default',
+                    'label_placement' => 'left',
+                    'instruction_placement' => 'label',
+                    'hide_on_screen' => array (
+                        0 => 'excerpt',
+                        1 => 'discussion',
+                        2 => 'comments',
+                        3 => 'revisions',
+                        5 => 'author',
+                        6 => 'format',
+                        10 => 'send-trackbacks',
+                        11 => 'custom_fields'
+                    ),
+                ));
+            }
+            
+            add_action( 'add_meta_boxes_casasync_property', array($this,'casasync_property_custom_metaboxes'), 10, 2 );
+
+        endif;
+
+        
+
+
+
+        /*----------  Inquiry  ----------*/
+    
+        $labels = array(
+            'name'               => __('Inquiries', 'casasync'),
+            'singular_name'      => __('Inquiry', 'casasync'),
+            'add_new'            => __('Add New', 'casasync'),
+            'add_new_item'       => __('Add New inquiry', 'casasync'),
+            'edit_item'          => __('Edit Inquiry', 'casasync'),
+            'new_item'           => __('New Inquiry', 'casasync'),
+            'all_items'          => __('All Inquiries', 'casasync'),
+            'view_item'          => __('View Inquiry', 'casasync'),
+            'search_items'       => __('Search Inquiries', 'casasync'),
+            'not_found'          => __('No inquiries found', 'casasync'),
+            'not_found_in_trash' => __('No inquiries found in Trash', 'casasync'),
+            'menu_name'          => __('Inquiries', 'casasync')
+        );
+        $args = array(
+            'labels'             => $labels,
+            'public'             => false,
+            'publicly_queryable' => false,
+            'show_ui'            => true,
+            'show_in_menu'       => true,
+            'query_var'          => true,
+            'rewrite'            => array( 'slug' => 'anfragen' ),
+            'capability_type'    => 'post',
+            'has_archive'        => false,
+            'hierarchical'       => false,
+            'menu_position'      => null,
+            'supports'           => array( 'title', 'editor', 'author','custom-fields', 'page-attributes' ),
+            'menu_icon'          => 'dashicons-admin-comments',
+            'show_in_nav_menus'  => true
+        );
+        register_post_type( 'casasync_inquiry', $args );
+
+
+        if( function_exists('acf_add_local_field_group') ):
+            $fields = array();
+            $form = new \Casasync\Form\ContactForm();
+            foreach ($form->getElements() as $element) {
+                if ($element->getName() != 'message') {
+                    $fields[] = array(
+                        'key' => 'field_casasync_inquiry_sender_'.$element->getName(),
+                        'label' => $element->getLabel(),
+                        'name' => 'sender_'.$element->getName(),
+                        'type' => 'text',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array (
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                    );
+                }
+            }
+            acf_add_local_field_group(array (
+                'key' => 'group_casasync_inquiry',
+                'title' => 'Sender',
+                'fields' => $fields,
+                'location' => array (
+                    array (
+                        array (
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'casasync_inquiry',
+                        ),
+                    ),
+                ),
+                'menu_order' => 0,
+                'position' => 'side',
+                'style' => 'default',
+                'label_placement' => 'left',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => array (
+                    0 => 'excerpt',
+                    1 => 'discussion',
+                    2 => 'comments',
+                    3 => 'revisions',
+                    4 => 'slug',
+                    5 => 'author',
+                    6 => 'format',
+                    7 => 'page_attributes',
+                    8 => 'categories',
+                    9 => 'tags',
+                    10 => 'send-trackbacks',
+                    11 => 'custom_fields'
+                ),
+            ));
+        endif;
+
+
+        /*----------  category  ----------*/
+        
         $labels = array(
             'name'              => __( 'Property categories', 'casasync'),
             'singular_name'     => __( 'Category', 'casasync'),
@@ -672,6 +898,34 @@ class Plugin {
         );
         register_taxonomy( 'casasync_category', array( 'casasync_property' ), $args );
 
+        /*----------  features  ----------*/
+        
+        $labels = array(
+            'name'              => __( 'Property features', 'casasync'),
+            'singular_name'     => __( 'Feature', 'casasync'),
+            'search_items'      => __( 'Search Categories', 'casasync'),
+            'all_items'         => __( 'All Categories', 'casasync'),
+            'parent_item'       => __( 'Parent Feature', 'casasync'),
+            'parent_item_colon' => __( 'Parent Feature:', 'casasync'),
+            'edit_item'         => __( 'Edit Feature', 'casasync'),
+            'update_item'       => __( 'Update Feature', 'casasync'),
+            'add_new_item'      => __( 'Add New Feature', 'casasync'),
+            'new_item_name'     => __( 'New Feature Name', 'casasync'),
+            'menu_name'         => __( 'Feature', 'casasync')
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
+        );
+        register_taxonomy( 'casasync_feature', array( 'casasync_property' ), $args );
+
+
+        /*----------  location  ----------*/
+        
         $labels = array(
             'name'              => __( 'Property locations', 'casasync' ),
             'singular_name'     => __( 'Location', 'casasync' ),
@@ -695,6 +949,9 @@ class Plugin {
         );
         register_taxonomy( 'casasync_location', array( 'casasync_property' ), $args );
 
+
+        /*----------  salestypes  ----------*/
+        
         $labels = array(
             'name'                       => __( 'Property salestypes', 'casasync' ),
             'singular_name'              => __( 'Salestype', 'casasync' ),
@@ -721,6 +978,9 @@ class Plugin {
         );
         register_taxonomy( 'casasync_salestype', array( 'casasync_property' ), $args );
 
+
+        /*----------  availability  ----------*/
+        
         $labels = array(
             'name'                       => __( 'Property availability', 'casasync' ),
             'singular_name'              => __( 'Availability', 'casasync' ),
@@ -746,6 +1006,10 @@ class Plugin {
             'rewrite'           => array( 'slug' => 'immobilien-verfuegbarkeit' )
         );
         register_taxonomy( 'casasync_availability', array( 'casasync_property' ), $args );
+
+
+
+        /*----------  attachments  ----------*/        
 
         $labels = array(
           'name'              => __( 'Property Attachment Types', 'casasync' ),
@@ -775,6 +1039,21 @@ class Plugin {
         $id2 = wp_insert_term('Plan', 'casasync_attachment_type', array('slug' => 'plan'));
         $id3 = wp_insert_term('Document', 'casasync_attachment_type', array('slug' => 'document'));
         $id3 = wp_insert_term('Sales Brochure', 'casasync_attachment_type', array('slug' => 'sales-brochure'));
+    }
+
+    function casasync_property_custom_metaboxes($post){
+        add_meta_box('unsorted-metas', __('Additional Meta Fields'),  array($this, 'casasync_add_unsorted_metabox'), 'casasync_property', 'normal', 'low');
+    }
+
+    function casasync_add_unsorted_metabox($post) {
+        $meta_keys = get_post_custom_keys($post->ID);
+        echo '<table class="acf-table">';
+        foreach ($meta_keys as $meta_key) {
+            if (!array_key_exists($meta_key, $this->numvalService->items)) {
+                echo '<tr><td class="acf-label">'.$meta_key . '</td><td class="acf-input">' . implode(', ',get_post_custom_values($meta_key, $post->ID)) . '</td></tr>';
+            }
+        }        
+        echo "</table>";
     }
 
 
