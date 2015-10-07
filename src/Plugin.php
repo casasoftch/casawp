@@ -1,5 +1,16 @@
 <?php
 namespace CasaSync;
+use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\Resolver;
+use Zend\EventManager\EventManager;
+use Zend\Http\PhpEnvironment;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Mvc\Service\ServiceManagerConfig;
+use Zend\I18n\Translator\Translator;
 
 class Plugin {  
     public $textids = false;
@@ -10,26 +21,12 @@ class Plugin {
     public $show_sticky = true;
     public $tax_query = array();
 
-    public function __construct($serviceManager){  
-        $this->serviceManager = $serviceManager;
-        $categoryService = $this->serviceManager->get('CasasoftCategory');
-        //$this->translator = new \Zend\I18n\Translator\Translator();
-        //$this->translator->addTranslationFilePattern('Gettext', CASASYNC_PLUGIN_DIR . 'vendor/casasoft/zf2-modules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
-
-
+    public function __construct($configuration){  
         $this->conversion = new Conversion;
-        
-        if ( !function_exists( 'add_action' ) ) {
-            echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-            exit;
-        }
+
         add_filter('upload_dir',  array($this, 'setUploadDir'));
-        $upload = wp_upload_dir();
-        define('CASASYNC_CUR_UPLOAD_PATH', $upload['path'] );
-        define('CASASYNC_CUR_UPLOAD_URL', $upload['url'] );
-        define('CASASYNC_CUR_UPLOAD_BASEDIR', $upload['basedir'] );
-        define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl'] );
         remove_filter('upload_dir', array($this, 'setUploadDir'));
+
         add_shortcode('casasync_contact', array($this,'contact_shortcode'));
         add_action('init', array($this, 'setPostTypes'));
         add_action('admin_menu', array($this, 'setMetaBoxes'));
@@ -38,7 +35,7 @@ class Plugin {
         add_filter("attachment_fields_to_edit", array($this, "casasync_image_attachment_fields_to_edit"), null, 2);
         add_filter("attachment_fields_to_save", array($this, "casasync_image_attachment_fields_to_save"), null, 2);
         if (!is_admin()) {
-            add_action('pre_get_posts', array($this, 'customize_casasync_category'));  
+            add_action('pre_get_posts', array($this, 'casasync_queryfilter'));  
         }
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
         register_activation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casasync_activation'));
@@ -67,17 +64,57 @@ class Plugin {
         $this->setMetaBoxes();
 
         //add_action( 'load_textdomain', array($this, 'setTranslation'));
-        add_filter( 'page_template', array($this, 'casasync_page_template' ));
-
+        add_filter('page_template', array($this, 'casasync_page_template'));
         add_action('plugins_loaded', array($this, 'setTranslation'));
+            
 
+
+
+        // setup service manager
+        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+        $serviceManager->setService('ApplicationConfig', $configuration);
+
+        // set translator
+        $translator = new Translator();
+        $translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
+        $translator->setLocale(substr(get_bloginfo('language'), 0, 2));
+        $serviceManager->setService('Translator', $translator);
+
+        // load modules -- which will provide services, configuration, and more
+        $serviceManager->get('ModuleManager')->loadModules();
+
+       
+        //renderer
+        $this->renderer = new PhpRenderer();
+        $pluginManager = $this->renderer->getHelperPluginManager();
+
+         //view helper plugins
+        $defaultHelperMapClasses = [
+            'Zend\Form\View\HelperConfig',
+            'Zend\I18n\View\HelperConfig',
+            'Zend\Navigation\View\HelperConfig'
+        ];
+        foreach ($defaultHelperMapClasses as $configClass) {
+            if (is_string($configClass) && class_exists($configClass)) {
+                $config = new $configClass;
+                $config->configureServiceManager($pluginManager);
+
+            }
+        }
+
+        $this->serviceManager = $serviceManager;
+        $this->queryService = $this->serviceManager->get('CasasyncQuery');
+        $this->categoryService = $this->serviceManager->get('CasasoftCategory');
+        
 
 
     }
 
-
-
-
+    public function casasync_queryfilter($query){
+        $this->queryService->setQuery();
+        $query = $this->queryService->applyToWpQuery($query);
+        return $query;
+    }
     
     function casasync_page_template( $page_template ){
         global $post;
@@ -115,30 +152,208 @@ class Plugin {
         //actions to perform once on plugin uninstall go here
     }
 
-    public function include_template_function( $template_path ) {
-        if ( get_post_type() == 'casasync_property' && is_single()) {
-            if ($_GET && isset($_GET['ajax'])) {
-                $template_path = CASASYNC_PLUGIN_DIR . '/ajax/prevnext.php';
-            } elseif ( $theme_file = locate_template( array( 'casasync-single.php' ) ) ) {
-                $template_path = $theme_file;
+    public function renderSingle($post){
+        $offer = $this->getOffer($post);
+        return $offer->render('single', array('offer' => $offer));
+    }
+
+    public function renderArchiveSingle($post){
+        $offer = $this->getOffer($post);
+        return $offer->render('single-archive', array('offer' => $offer));
+    }
+
+    public function renderArchivePagination(){
+        global $wp_query;
+
+        if ( $GLOBALS['wp_query']->max_num_pages < 2 ) {
+            return;
+        }
+
+        $paged        = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+        $pagenum_link = html_entity_decode( get_pagenum_link() );
+        $query_args   = array();
+        $url_parts    = explode( '?', $pagenum_link );
+
+        if ( isset( $url_parts[1] ) ) {
+            wp_parse_str( $url_parts[1], $query_args );
+        }
+
+        $pagenum_link = remove_query_arg( array_keys( $query_args ), $pagenum_link );
+        $pagenum_link = trailingslashit( $pagenum_link ) . '%_%';
+
+        $format  = $GLOBALS['wp_rewrite']->using_index_permalinks() && ! strpos( $pagenum_link, 'index.php' ) ? 'index.php/' : '';
+        $format .= $GLOBALS['wp_rewrite']->using_permalinks() ? user_trailingslashit( 'page/%#%', 'paged' ) : '?paged=%#%';
+
+        // Set up paginated links.
+        $links = paginate_links( array(
+            'base'     => $pagenum_link,
+            'format'   => $format,
+            'total'    => $GLOBALS['wp_query']->max_num_pages,
+            'current'  => $paged,
+            'mid_size' => 1,
+            'add_args' => $query_args,
+            'prev_text' => '&laquo;',
+            'next_text' => '&raquo;',
+            'type' => 'list',
+        ) );
+
+        if ( $links ) {
+            return '<div class="casasync-pagination ' . (get_option('casasync_load_css', 'bootstrapv3') == 'bootstrapv2' ? 'pagination' : '') . '">' . $links . '</div>';
+        }
+
+
+
+      $total_pages = $wp_query->max_num_pages;
+      if ($total_pages > 1) {
+        $current_page = max(1, get_query_var('paged'));
+        if($current_page) {
+            //TODO: prev/next These dont work yet!
+            $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
+            $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
+            $i = 0;
+            $return = '<ul class="casasync-pagination">';
+            $return .= $prev_page;
+            while ($i < $total_pages) {
+                $i++;
+                if ($current_page == $i) {
+                    $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
+                } else {
+                    $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+              }
+            }
+            $return .= $next_page;
+            $return .= '</ul>';
+            return $return;
+        }
+      }
+    }
+
+    public function render($view, $args){
+        $renderer = $this->renderer;
+        $resolver = new Resolver\AggregateResolver();
+        $renderer->setResolver($resolver);
+
+
+        $stack = new Resolver\TemplatePathStack(array(
+            'script_paths' => array(
+                CASASYNC_PLUGIN_DIR . '/view',
+                get_template_directory() . '/casasync'
+            )
+        ));
+        $resolver->attach($stack);
+        $model = new ViewModel($args);
+
+        $stack = array(
+            'bootstrap3',
+            'bootstrap4'
+        );
+
+        $viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
+
+        $template = $viewgroup.'/'.$view;
+        if (false === $resolver->resolve($template)) {
+            $template = false;
+
+            //try up the stack
+            for ($i=1; $i < 5; $i++) { 
+                $ancestor = array_search($viewgroup, $stack)-$i;    
+                if (isset($stack[$ancestor])) {
+                    if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
+                        continue;
+                    } else {
+                        $template = $stack[$ancestor].'/'.$view;
+                        break;
+                    }
+                } else {
+                    break;
+                }   
+            }
+
+            if (!$template) {
+                return "View file not found for: " . $viewgroup;
+            }
+
+        }
+        $model->setTemplate($template);
+
+        
+
+        $result = $renderer->render($model);
+
+        return $result;
+    }
+
+    public function getCategories(){
+        $categories = array();
+        $category_terms = get_terms('casasync_category', array(
+            'hide_empty'        => true, 
+        ));
+        foreach ($category_terms as $category_term) {
+            if ($this->categoryService->keyExists($category_term->slug)) {
+                $categories[] = $this->categoryService->getItem($category_term->slug);
+            } else if ($this->utilityService->keyExists($category_term->slug)) {
+                $categories[] = $this->utilityService->getItem($category_term->slug);
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . '/casasync-single.php';
+                $unknown_category = new \CasasoftStandards\Service\Category();
+                $unknown_category->setKey($category_term->slug);
+                $unknown_category->setLabel('?'.$category_term->slug);
+                $categories[] = $unknown_category;
             }
         }
-        if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
-            if ($_GET && isset($_GET['casasync_map'])) {
-                $template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
-            } elseif ( $theme_file = locate_template(array('casasync-archive.php'))) {
-                $template_path = $theme_file;
+        return $categories;
+    }
+
+    public function getLocations(){
+        $localities = get_terms('casasync_location',array('hierarchical'      => true));
+        return $localities;
+    }
+
+    public function renderArchiveFilter(){
+        $this->getLocations();
+        $form = new \Casasync\Form\FilterForm(
+            $this->getCategories(),
+            $this->getLocations()
+        );
+        return $this->render('archive-filter', array('form' => $form));
+    }
+
+    public function include_template_function( $template_path ) {
+        if ( get_post_type() == 'casasync_property' && is_single()) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
+                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/prevnext.php';
+                header('Content-Type: application/json');
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casasync-single-json.php';
+                if ( $theme_file = locate_template( array( 'casasync-single-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . '/casasync-archive.php';
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casasync-single.php';
+                if ( $theme_file = locate_template( array( 'casasync-single.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            }
+
+        }
+        if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
+            if ($_GET && (isset($_GET['casasync_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
+                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
+                header('Content-Type: application/json');
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casasync-archive-json.php';
+                if ( $theme_file = locate_template( array( 'casasync-archive-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            } else {
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casasync-archive.php';
+                if ( $theme_file = locate_template(array('casasync-archive.php'))) {
+                    $template_path = $theme_file;
+                }
             }
         }
         return $template_path;
     }
 
 
-    public function customize_casasync_category($query){
+    /*public function customize_casasync_category($query){
         if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
                 $query->set('post-type', "casasync_property");
@@ -271,9 +486,9 @@ class Plugin {
 
             }
         }
-    }
+    }*/
 
-    public function nearmefilter($where){
+    /*public function nearmefilter($where){
         $mylng = (float) (isset($_GET['my_lng']) ? $_GET['my_lng'] : null);
         $mylat = (float) (isset($_GET['my_lat']) ? $_GET['my_lat'] : null);
         $radiusKm = (int) (isset($_GET['radius_km']) ? $_GET['radius_km'] : 10);
@@ -299,7 +514,7 @@ class Plugin {
         $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casasync_property_geo_latitude' ";
         $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casasync_property_geo_longitude' ";
         return $join;
-    }
+    }*/
 
     public function casasync_image_attachment_fields_to_edit($form_fields, $post) {
         $form_fields["origin"] = array(

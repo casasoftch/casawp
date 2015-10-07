@@ -1,0 +1,13 @@
+<?= $this->form()->openTag($form); ?>
+<div
+    class="form-group <?php if($this->formElementErrors($form->get('categories'))) echo "error" ?>">
+    <label><?php echo $form->get('categories')->getLabel() ?></label>
+    <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control')); ?>
+    <?php if ($this->formElementErrors($form->get('categories'))): ?>
+		<span class="help-inline"><?php echo $this->formElementErrors($form->get('categories')) ?></span>    	
+    <?php endif ?>
+</div>
+
+<?= $this->formSubmit($form->get('submit')->setAttribute('class', 'btn btn-default btn-block')); ?>
+<?= $this->form()->closeTag(); ?>
+

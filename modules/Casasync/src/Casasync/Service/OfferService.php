@@ -47,9 +47,17 @@ class OfferService{
     }
 
     public function to_array() {
-    	$post_array = $this->post->to_array();
-		$offer_array = get_object_vars( $this );
-		return array_merge($post_array, $offer_array);
+		$offer_array = array(
+			'post' => $this->post->to_array()
+		);
+
+		//basics
+		$offer_array['title'] = $this->getTitle();
+
+    	//if load categories example
+    	$offer_array['categories'] = $this->getCategoriesArray();
+
+		return $offer_array;
 	}
 
 	public function getTitle(){
@@ -73,6 +81,18 @@ class OfferService{
 			}
 		}
 		return $this->categories;
+	}
+
+	public function getCategoriesArray(){
+		$categories = $this->getCategories();
+		$arr_categories = array();
+		foreach ($categories as $category) {
+			$arr_categories[] = array(
+				'key' => $category->getKey(),
+				'label' => $category->getLabel()
+			);
+		}
+		return $arr_categories;
 	}
 
 	public function getAvailablility() {
@@ -228,57 +248,9 @@ class OfferService{
 	}
 
 
-	private function render($view, $args){
-		$renderer = new PhpRenderer();
-		$resolver = new Resolver\AggregateResolver();
-		$renderer->setResolver($resolver);
-
-		$stack = new Resolver\TemplatePathStack(array(
-		    'script_paths' => array(
-		    	CASASYNC_PLUGIN_DIR . '/view',
-		    	get_template_directory() . '/casasync'
-		    )
-		));
-		$resolver->attach($stack);
-		$model = new ViewModel($args);
-
-		$stack = array(
-			'bootstrap3',
-			'bootstrap4'
-		);
-
-		$viewgroup = get_option('casasync_viewgroup', 'bootstrap3');
-		$template = $viewgroup.'/'.$view;
-		if (false === $resolver->resolve($template)) {
-			$template = false;
-
-			//try up the stack
-			for ($i=1; $i < 5; $i++) { 
-				$ancestor = array_search($viewgroup, $stack)-$i;	
-				if (isset($stack[$ancestor])) {
-					if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
-						continue;
-					} else {
-						$template = $stack[$ancestor].'/'.$view;
-						break;
-					}
-				} else {
-					break;
-				}	
-			}
-
-			if (!$template) {
-				return "View file not found for: " . $viewgroup;
-			}
-
-		}
-		$model->setTemplate($template);
-
-		
-
-		$result = $renderer->render($model);
-
-		return $result;
+	public function render($view, $args){
+		global $casasync;
+		return $casasync->render($view, $args);
 	}
 
     private function getSingleDynamicFields() {
