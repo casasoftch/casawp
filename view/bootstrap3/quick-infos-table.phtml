@@ -1,10 +1,12 @@
+<?php //todo set default data */ ?>
+
 <table class="table">
     <tbody>
-
-        <?php if($this->offer->getFieldValue('property_address_streetaddress')): ?>
+        <?php $value = $this->offer->getFieldValue('property_address_streetaddress') ?>
+        <?php if($value): ?>
             <tr>
                 <th><?= __('Street', 'casasync') ?></th>
-                <td><?= $this->offer->getFieldValue('property_address_streetaddress') . ' ' .
+                <td><?= $value . ' ' .
                 $this->offer->getFieldValue('property_address_streetnumber') ?></td>
             </tr>
         <?php endif; ?>
@@ -16,12 +18,86 @@
             </tr>
         <?php endif; ?>
 
-        <?php #if($this->offer->getMeta('area_sia_nf')): ?>
+        <?php $value = $this->offer->getNumval('sia_nf'); ?>
+        <?php if($value): ?>
             <tr>
                 <th><?= __('Surface usable', 'casasync') ?></th>
-                <td><?= $this->offer->getMeta('area_bwf') ?></td>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
-        <?php #endif; ?>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('area_bwf'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Living space', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('surface_property'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Property space', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = false #floor; ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Floor', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('number_of_floors'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Number of floors', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('year_built'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Year of construction', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('year_renovated'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Year of renovation', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = false #price ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('', 'casasync') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php /* todo: implement getExcerpt
+        $value = $this->offer->getExcerpt() ?>
+        <?php if($value): ?>
+            <tr>
+                <td colspan="2"><?= $value ?></td>
+            </tr>
+        <?php endif;*/ ?>
+
+        <?php /* todo: implement availability*/
+        $value = false # ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('', 'casasync') ?></th>
+                <td></td>
+            </tr>
+        <?php endif; ?>
 
     </tbody>
 </table>

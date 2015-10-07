@@ -346,6 +346,7 @@ class OfferService{
         return $value_to_display;
     }
     public function renderQuickInfosTable() {
+        // todo: delete options for achrive-fields. new way is to edit the view file
         return $this->render('quick-infos-table', array(
             'offer' => $this
         ));
