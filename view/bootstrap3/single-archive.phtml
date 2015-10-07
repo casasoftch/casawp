@@ -1,6 +1,6 @@
 <div class="casasync-property">
 	<div class="casasync-thumbnail-wrapper">
-		<?php echo ($offer->getFeaturedImage() ? $offer->renderFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
 	</div>
 	<div class="casasync-text">
 		<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>

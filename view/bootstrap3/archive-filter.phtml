@@ -16,7 +16,15 @@
 		<!-- </div> -->
 	<?php endif ?>
 
-	<?= $this->formSubmit($form->get('submit')->setAttribute('class', 'casasync-filterform-button')); ?>
+	<?php if ($form->getSalestypeOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('salestypes')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('salestypes')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Vermarktungsart wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+	
+	<input type="submit" class="casasync-filterform-button" value="<?= __('Search') ?>">
+
 	<?= $this->form()->closeTag(); ?>
 	<div class="clearfix"></div>
 </div>

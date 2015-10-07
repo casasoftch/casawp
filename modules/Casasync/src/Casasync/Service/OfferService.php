@@ -345,7 +345,6 @@ class OfferService{
         ksort($value_to_display);
         return $value_to_display;
     }
-
     public function renderQuickInfosTable() {
         return $this->render('quick-infos-table', array(
             'offer' => $this
@@ -469,6 +468,18 @@ class OfferService{
 		));
 	}
 
+	public function renderSeller(){
+		return $this->render('seller', array(
+			'offer' => $this
+		));
+	}
+
+	public function renderSalesPerson(){
+		return $this->render('sales-person', array(
+			'offer' => $this
+		));
+	}
+
 	
 
 	public function renderDatapoints($context = 'single'){
@@ -513,5 +524,27 @@ class OfferService{
 		));
 	}
 
+	public function renderFeaturedImage(){
+		return $this->render('featured-image', array(
+			'offer' => $this
+		));
+	}
+
+	public function renderContactForm(){
+        $form = new \Casasync\Form\ContactForm();
+        //$form->bind($this->queryService);
+        return $this->render('contact-form', array(
+        	'form' => $form,
+        	'offer' => $this
+        ));
+    }
+
+    public function renderContactFormElement($element){
+    	return $this->render('contact-form-element', array('element' => $element));
+    }
+
+    public function renderPagination(){
+    	return $this->render('single-pagination', array());
+    }
 
 }

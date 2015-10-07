@@ -1,13 +1,25 @@
 <?= $this->form()->openTag($form); ?>
-<div
-    class="form-group <?php if($this->formElementErrors($form->get('categories'))) echo "error" ?>">
-    <label><?php echo $form->get('categories')->getLabel() ?></label>
-    <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control')); ?>
-    <?php if ($this->formElementErrors($form->get('categories'))): ?>
-		<span class="help-inline"><?php echo $this->formElementErrors($form->get('categories')) ?></span>    	
-    <?php endif ?>
+<div class="casasync-row">
+	<div class="casasync-col-md-5">
+		<?= $this->offer->renderContactFormElement($form->get('firstname')) ?>
+	</div>
+	<div class="casasync-col-md-7">
+		<?= $this->offer->renderContactFormElement($form->get('lastname')) ?>
+	</div>
 </div>
+<?= $this->offer->renderContactFormElement($form->get('street')) ?>
+<div class="casasync-row">
+	<div class="casasync-col-md-5">
+		<?= $this->offer->renderContactFormElement($form->get('postal_code')) ?>
+	</div>
+	<div class="casasync-col-md-7">
+		<?= $this->offer->renderContactFormElement($form->get('locality')) ?>
+	</div>
+</div>
+<?= $this->offer->renderContactFormElement($form->get('country')) ?>
+<?= $this->offer->renderContactFormElement($form->get('phone')) ?>
+<?= $this->offer->renderContactFormElement($form->get('emailreal')) ?>
+<?= $this->offer->renderContactFormElement($form->get('message')) ?>
 
-<?= $this->formSubmit($form->get('submit')->setAttribute('class', 'btn btn-default btn-block')); ?>
 <?= $this->form()->closeTag(); ?>
 

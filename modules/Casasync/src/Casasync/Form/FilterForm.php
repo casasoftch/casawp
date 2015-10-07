@@ -6,15 +6,18 @@ use Zend\Form\Form;
 class FilterForm extends Form
 {
     public $categories = array();
+    public $salestypes = array();
     public $locations = array();
 
-    public function __construct($categories = array(), $locations = array()){
+    public function __construct($categories = array(), $salestypes = array(), $locations = array()){
         $this->categories = $categories;
+        $this->salestypes = $salestypes;
         $this->locations = $locations;
 
         parent::__construct('filter');
 
         $this->setAttribute('method', 'GET');
+        $this->setAttribute('action', '/immobilien/');
 
         if ($this->categories) {
             $category_options = $this->getCategoryOptions();
@@ -27,6 +30,20 @@ class FilterForm extends Form
                 'options' => array(
                     'label' => __('Category', 'casasync'),
                     'value_options' => $category_options,
+                ),
+            ));
+        }
+        if ($this->salestypes) {
+            $salestype_options = $this->getSalestypeOptions();
+            $this->add(array(
+                'name' => 'salestypes',
+                'type' => 'Select',
+                'attributes' => array(
+                    'multiple' => 'multiple',
+                ),
+                'options' => array(
+                    'label' => __('Sales type', 'casasync'),
+                    'value_options' => $salestype_options,
                 ),
             ));
         }
@@ -44,15 +61,6 @@ class FilterForm extends Form
                 ),
             ));
         }
-        
-        $this->add(array(
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => array(
-                'value' => __('Search'),
-                'id' => 'submitbutton',
-            ),
-        ));
     }
 
     public function getCategoryOptions(){
@@ -61,6 +69,15 @@ class FilterForm extends Form
             $category_options[$category->getKey()] = $category->getLabel();
         }
         return $category_options;
+    }
+
+    public function getSalestypeOptions(){
+        /*$salestype_options = array();
+        foreach ($this->salestypes as $salestype) {
+            $salestype_options[$salestype->getKey()] = $salestype->getLabel();
+        }
+        return $salestype_options;*/
+        return $this->salestypes;
     }
 
     public function getLocationOptions(){

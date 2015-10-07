@@ -1,0 +1,5 @@
+<div class="btn-group btn-group-justified casasync-single-pagination casasync-btn-justified hidden">
+	<a href="" class="btn btn-default casasync-single-next" role="button"><i class="fa fa-arrow-left"></i><span> <?= __('Previous','casasync') ?></span></a>
+	<a href="" class="btn btn-default casasync-single-archivelink" role="button"><?= __('To list','casasync') ?></a>
+	<a href="" class="btn btn-default casasync-single-prev" role="button"><span><?= __('Next','casasync') ?> </span><i class="fa fa-arrow-right"></i></a>
+</div>

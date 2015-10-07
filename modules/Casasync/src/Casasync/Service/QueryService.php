@@ -77,6 +77,8 @@ class QueryService{
         /*if (is_tax('casasync_category')) {
             $query['categories'] = array(get_query_var( 'casasync_category' ));
         }
+*/
+        /*
         if (is_tax('casasync_location')) {
             $query['locations'] = array(get_query_var( 'casasync_location' ));
         }
@@ -92,6 +94,21 @@ class QueryService{
 
    
     public function applyToWpQuery($query){
+
+        //tax pages overides
+        if (is_tax('casasync_category')) {
+            $this->query['categories'] = array(get_query_var( 'casasync_category' ));
+        }
+        if (is_tax('casasync_location')) {
+            $this->query['locations'] = array(get_query_var( 'casasync_location' ));
+        }
+        if (is_tax('casasync_salestype')) {
+            $this->query['salestypes'] = array(get_query_var( 'casasync_salestype' ));
+        }
+        if (is_tax('casasync_availability')) {
+            $this->query['availabilities'] = array(get_query_var( 'casasync_availability' ));
+        }
+
     	if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
                 $query->set('post-type', $this->query['post-type']);
