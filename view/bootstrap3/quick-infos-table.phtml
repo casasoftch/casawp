@@ -1,19 +1,34 @@
 <table class="table">
     <tbody>
 
-        <?php if($this->address_street): ?>
+        <?php if($this->offer->getFieldValue('property_address_streetaddress')): ?>
             <tr>
                 <th><?= __('Street', 'casasync') ?></th>
-                <td><?= $this->address_street . ' ' . $this->address_streetnumber ?></td>
+                <td><?= $this->offer->getFieldValue('property_address_streetaddress') . ' ' .
+                $this->offer->getFieldValue('property_address_streetnumber') ?></td>
             </tr>
-        <?php } ?>
+        <?php endif; ?>
+
+        <?php if(1==0 && $this->offer->getFieldValue('property_address_streetaddress')): ?>
+            <tr>
+                <th><?= __('Locality', 'casasync') ?></th>
+                <td><?php /* get adress*/ ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php #if($this->offer->getMeta('area_sia_nf')): ?>
+            <tr>
+                <th><?= __('Surface usable', 'casasync') ?></th>
+                <td><?= $this->offer->getMeta('area_bwf') ?></td>
+            </tr>
+        <?php #endif; ?>
 
     </tbody>
 </table>
 
 
 <?php
-/*'casasync_archive_show_street_and_number',
+/*'
 'casasync_archive_show_location',
 'casasync_archive_show_number_of_rooms',
 'casasync_archive_show_area_sia_nf',

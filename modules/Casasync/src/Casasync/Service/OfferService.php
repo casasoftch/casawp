@@ -248,7 +248,7 @@ class OfferService{
 	}
 
 
-	public function render($view, $args){
+	public function render($view, $args = array()){
 		global $casasync;
 		return $casasync->render($view, $args);
 	}
@@ -347,7 +347,9 @@ class OfferService{
     }
 
     public function renderQuickInfosTable() {
-        return $this->render('quick-infos-table');
+        return $this->render('quick-infos-table', array(
+            'offer' => $this
+        ));
     }
 
 	//view actions "direct"
