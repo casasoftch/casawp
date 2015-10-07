@@ -310,10 +310,12 @@ class Plugin {
 
     public function renderArchiveFilter(){
         $this->getLocations();
+
         $form = new \Casasync\Form\FilterForm(
             $this->getCategories(),
             $this->getLocations()
         );
+        $form->bind($this->queryService);
         return $this->render('archive-filter', array('form' => $form));
     }
 

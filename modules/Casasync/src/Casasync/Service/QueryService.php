@@ -37,6 +37,9 @@ class QueryService{
         //$this->applyToWpQuery();
         return $query;
     }
+    public function getQuery(){
+        return $this->query;
+    }
 
     private function interpretRequest(){
         $r_query = $_GET;
@@ -208,6 +211,14 @@ class QueryService{
         $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casasync_property_geo_latitude' ";
         $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casasync_property_geo_longitude' ";
         return $join;
+    }
+
+    public function getArrayCopy(){
+        return $this->getQuery();
+    }
+
+    public function exchangeArray(){
+        return $this->getQuery();
     }
 
 }
