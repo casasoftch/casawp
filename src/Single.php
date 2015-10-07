@@ -960,7 +960,7 @@
     public function getAddress($from, $singleline = false){
       switch ($from) {
         case 'seller':
-          #return $this->offer->renderSellerAddress();
+          return $this->offer->renderSellerAddress();
           //TMP
           $address  = ($this->seller['street'] ? $this->seller['street'] . '<br>' : '');
           $address .= ($this->seller['postalcode'] ?  $this->seller['postalcode'] . ' ': '') . ($this->seller['locality'] ? $this->seller['locality'] : '') . ($this->seller['postalcode'] || $this->seller['locality'] ? '<br>' : '');

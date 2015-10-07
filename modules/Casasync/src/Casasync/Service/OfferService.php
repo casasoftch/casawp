@@ -9,10 +9,11 @@ class OfferService{
     private $categories = null;
     private $availability = null;
     private $attachments = null;
-    private $numvals_to_display = null;
+    private $documents = null;
+    private $single_dynamic_fields = null;
+    private $archive_dynamic_fields = null;
     private $salestype = null;
     private $metas = null;
-    /*private $numvals = array(); */
 
     public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService){
     	$this->utilityService = $utilityService;
@@ -97,9 +98,6 @@ class OfferService{
 	public function getAvailablility() {
 		if ($this->availability === null) {
 			$terms = wp_get_post_terms( $this->post->ID, 'casasync_availability', array("fields" => "names"));
-			#$terms = $this->getFieldValue('availability', false);
-
-			// always only one availability
 			$this->availability = isset($terms[0]) ? $terms[0] : false;
 		}
 		return $this->availability;
@@ -129,7 +127,6 @@ class OfferService{
     public function getFeatures(){
         $features = array();
         foreach ($this->featureService->getItems() as $feature) {
-            //$value = $this->getFieldValue('features', false);
             $meta_features = json_decode($this->getFieldValue('features', false), true);
             foreach ($meta_features as $meta_feature) {
                 if ($meta_feature["value"] == $feature->getKey()) {
@@ -150,9 +147,9 @@ class OfferService{
 
     public function renderDistances() {
         $distances = $this->getDistances();
-        /* todo: how to render distances? */
         return $this->render('distances', array(
-            'distances' => $distances
+            'distances' => $distances,
+            'offer' => $this
         ));
     }
 
@@ -207,7 +204,8 @@ class OfferService{
 	          'posts_per_page'           => -1,
 	          'post_parent'              => $this->post->ID,
 	          //'exclude'                => get_post_thumbnail_id(),
-	          'casasync_attachment_type' => 'image',
+              'taxonomy'                 => 'casasync_attachment_type',
+	          //'casasync_attachment_type' => 'image',
 	          'orderby'                  => 'menu_order',
 	          'order'                    => 'ASC'
 	        ) );
@@ -255,31 +253,48 @@ class OfferService{
 		return $casasync->render($view, $args);
 	}
 
-	public function getPrimarySingleDatapoints(){
-		if ($this->numvals_to_display === null) {
-			$presentable_numvals = array(
-	          'casasync_single_show_number_of_rooms',
-	          #'casasync_single_show_surface_usable',
-	          #'casasync_single_show_surface_living',
-	          'casasync_single_show_area_sia_nf',
-	          'casasync_single_show_area_nwf',
-	          'casasync_single_show_area_bwf',
-	          'casasync_single_show_surface_property',
-	          'casasync_single_show_floor',
-	          'casasync_single_show_number_of_floors',
-	          'casasync_single_show_year_built',
-	          'casasync_single_show_year_renovated',
-	          'casasync_single_show_availability'
-	        );
+    private function getSingleDynamicFields() {
+        return array(
+          'casasync_single_show_number_of_rooms',
+          'casasync_single_show_area_sia_nf',
+          'casasync_single_show_area_nwf',
+          'casasync_single_show_area_bwf',
+          'casasync_single_show_surface_property',
+          'casasync_single_show_floor',
+          'casasync_single_show_number_of_floors',
+          'casasync_single_show_year_built',
+          'casasync_single_show_year_renovated',
+          'casasync_single_show_availability'
+        );
+    }
 
-	        $numvals_to_display = array();
+    private function getArchiveDynamicFields() {
+        return array(
+            'casasync_archive_show_street_and_number',
+            'casasync_archive_show_location',
+            'casasync_archive_show_number_of_rooms',
+            'casasync_archive_show_area_sia_nf',
+            'casasync_archive_show_area_bwf',
+            'casasync_archive_show_surface_property',
+            'casasync_archive_show_floor',
+            'casasync_archive_show_number_of_floors',
+            'casasync_archive_show_year_built',
+            'casasync_archive_show_year_renovated',
+            'casasync_archive_show_price',
+            'casasync_archive_show_excerpt',
+            'casasync_archive_show_availability'
+        );
+    }
+
+	public function getPrimarySingleDatapoints(){
+		if ($this->single_dynamic_fields === null) {
+			
+	        $values_to_display = array();
 	        $i = 1000;
-	        foreach ($presentable_numvals as $value) {
+	        foreach ($this->getSingleDynamicFields() as $value) {
 	          if(get_option($value, false)) {
 	          	switch ($value) {
 					case 'casasync_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
-		          	case 'casasync_single_show_surface_usable': $key = 'unknown'; break;
-		          	case 'casasync_single_show_surface_living': $key = 'unknown'; break;
 		          	case 'casasync_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
 		          	case 'casasync_single_show_area_nwf': $key = 'area_nwf'; break;
 		          	case 'casasync_single_show_area_bwf': $key = 'area_bwf'; break;
@@ -292,24 +307,48 @@ class OfferService{
 					default: $key='unknown'; break;
 				}
 
-	            $numval_order = get_option($value.'_order', false);
-	            if($numval_order) {
-	              $numvals_to_display[$numval_order] = $key;
+	            $value_order = get_option($value.'_order', false);
+	            if($value_order) {
+	              $values_to_display[$value_order] = $key;
 	            } else {
-	              $numvals_to_display[$i] = $key;
+	              $values_to_display[$i] = $key;
 	              $i++;
 	            }
 	          }
 	        }
-	        ksort($numvals_to_display);
-	        $this->numvals_to_display = $numvals_to_display;
+	        ksort($values_to_display);
+	        $this->single_dynamic_fields = $values_to_display;
         }
-        return $this->numvals_to_display;
+        return $this->single_dynamic_fields;
 	}
 
-	/*public function getAvailablility(){
-		return '...';
-	}*/
+    public function getPrimaryArchiveDatapoints() {
+        $value_to_display = array();
+        $i = 1000;
+        foreach ($this->getArchiveDynamicFields() as $value) {
+          if(get_option($value, false)) {
+
+
+                  
+
+
+
+            $value_order = get_option($value.'_order', false);
+            if($value_order) {
+              $value_to_display[$value_order] = $value;
+            } else {
+              $value_to_display[$i] = $value;
+              $i++;
+            }
+          }
+        }
+        ksort($value_to_display);
+        return $value_to_display;
+    }
+
+    public function renderQuickInfosTable() {
+        return $this->render('quick-infos-table');
+    }
 
 	//view actions "direct"
 	public function renderNumvalValue($numval){
