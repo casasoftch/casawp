@@ -3,26 +3,105 @@ namespace Casasync\Service;
 
 class QueryService{
    
+    private $defaultQuery = array();
 
     public function __construct(){
-    
+        $this->defaultQuery = array(
+            'post-type' => 'casasync_property',
+            'posts_per_page' => get_option('posts_per_page', 10),
+            'order' => get_option('casasync_archive_order', 'DESC'),
+            'ignore_sticky_posts' => 0,
+            'post__not_in' => null,
+            'orderby' => get_option('casasync_archive_orderby', 'date'),
+            'categories' => array(),
+            'locations' => array(),
+            'salestypes' => array(),
+            'availabilities' => array(),
+            'my_lng' => null,
+            'my_lat' => null,
+            'radius_km' => 10,
+        );
+        $this->setQuery();
     }
 
-    public function filter($query){
+    private $query = false;
+    public function setQuery($manualquery = array()){
+        $requestquery = $this->interpretRequest();
+        $query = array_merge($this->defaultQuery, $requestquery, $manualquery);
+        foreach ($query as $key => $value) {
+            if (!array_key_exists($key, $this->defaultQuery)) {
+                unset($query[$key]);
+            }
+        }
+        $this->query = $query;
+        //$this->applyToWpQuery();
+        return $query;
+    }
+
+    private function interpretRequest(){
+        $r_query = $_GET;
+        $query = array();
+        foreach ($r_query as $key => $value) {
+            switch ($key) {
+                case 'casasync_category_s':
+                case 'casasync_category':
+                case 'categories':
+                    $query['categories'] = (is_array($value) ? $value : array($value));
+                    break;
+                case 'casasync_location_s':
+                case 'casasync_location':
+                case 'locations':
+                    $query['locations'] = (is_array($value) ? $value : array($value));
+                    break;
+                case 'casasync_salestype_s':
+                case 'casasync_salestype':
+                case 'salestypes':
+                    $query['salestypes'] = (is_array($value) ? $value : array($value));
+                    break;
+                case 'casasync_availability_s':
+                case 'casasync_availability':
+                case 'availabilities':
+                    $query['availabilities'] = (is_array($value) ? $value : array($value));
+                    break;
+                
+                default:
+                    $query[$key] = $value;
+                    break;
+            }
+        }
+
+        //tax_queries override this
+        /*if (is_tax('casasync_category')) {
+            $query['categories'] = array(get_query_var( 'casasync_category' ));
+        }
+        if (is_tax('casasync_location')) {
+            $query['locations'] = array(get_query_var( 'casasync_location' ));
+        }
+        if (is_tax('casasync_salestype')) {
+            $query['locations'] = array(get_query_var( 'casasync_salestype' ));
+        }
+        if (is_tax('casasync_availability')) {
+            $query['locations'] = array(get_query_var( 'casasync_availability' ));
+        }*/
+
+        return $query;
+    }
+
+   
+    public function applyToWpQuery($query){
     	if ($query->is_main_query()) {
             if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive('casasync_property')) {
-                $query->set('post-type', "casasync_property");
+                $query->set('post-type', $this->query['post-type']);
+                $query->set('posts_per_page', $this->query['posts_per_page']);
+                $query->set('order', $this->query['order']);
 
-                $posts_per_page = get_option('posts_per_page', 10);
-                $query->set('posts_per_page', $posts_per_page);
-                $query->set('order', get_option('casasync_archive_order', 'DESC'));
+                $query->set('ignore_sticky_posts',$this->query['ignore_sticky_posts']);
 
-                $query->set('ignore_sticky_posts',0);
                 if (get_option( 'casasync_hide_sticky_properties_in_main')) {
                     $query->set('post__not_in', get_option( 'sticky_posts' ));
                 }
                 
-                switch (get_option('casasync_archive_orderby', 'date')) {
+                switch ($this->query['orderby']) {
                     case 'title':
                         $query->set('orderby', 'title');
                         break;
@@ -52,79 +131,39 @@ class QueryService{
 
                 $taxquery_new = array();
 
-                if ((isset($_GET['casasync_category_s']) && is_array($_GET['casasync_category_s']) )) {
-                    $categories = $_GET['casasync_category_s'];
-                } elseif (isset($_GET['casasync_category_s'])) {
-                    $categories = array($_GET['casasync_category_s']);
-                } elseif(is_tax('casasync_category')) {
-                    $categories = array(get_query_var( 'casasync_category' ));
-                } else {
-                    $categories = array();
-                }
-                if ($categories) {
+                if ($this->query['categories']) {
                     $taxquery_new[] = array(
                         'taxonomy'         => 'casasync_category',
-                        'terms'            => $categories,
+                        'terms'            => $this->query['categories'],
                         'include_children' => 1,
                         'field'            => 'slug',
                         'operator'         => 'IN'
                     );
                 }
-                if ((isset($_GET['casasync_location_s']) && is_array($_GET['casasync_location_s']) )) {
-                    $locations = $_GET['casasync_location_s'];
-                } elseif (isset($_GET['casasync_location_s'])) {
-                    $locations = array($_GET['casasync_location_s']);
-                } elseif(is_tax('casasync_location')) {
-                    $locations = array(get_query_var( 'casasync_location' ));
-                } else {
-                    $locations = array();
-                }
-                if ($locations) {
+                if ($this->query['locations']) {
                     $taxquery_new[] = array(
                         'taxonomy' => 'casasync_location',
-                        'terms' => $locations,
+                        'terms' => $this->query['locations'],
                         'include_children' => 1,
                         'field' => 'slug',
                         'operator'=> 'IN'
                     );
                 }
 
-                $salestypes = array();
-                if ((isset($_GET['casasync_salestype_s']) && is_array($_GET['casasync_salestype_s']) )) {
-                    $salestypes = $_GET['casasync_salestype_s'];
-                } elseif (isset($_GET['casasync_salestype_s'])) {
-                    $salestypes = array($_GET['casasync_salestype_s']);
-                } elseif(is_tax('casasync_salestype')) {
-                    $salestypes = array(get_query_var( 'casasync_salestype' ));
-                } else {
-                    //$salestypes = array('rent','buy');
-                }
-                if ($salestypes) {
+                if ($this->query['salestypes']) {
                     $taxquery_new[] = array(
                         'taxonomy' => 'casasync_salestype',
-                        'terms' => $salestypes,
+                        'terms' => $this->query['salestypes'],
                         'include_children' => 1,
                         'field' => 'slug',
                         'operator'=> 'IN'
                      );
                 }
 
-
-                $availabilities = array();
-                if ((isset($_GET['casasync_availability_s']) && is_array($_GET['casasync_availability_s']) )) {
-                    $availabilities = $_GET['casasync_availability_s'];
-                } elseif (isset($_GET['casasync_availability_s'])) {
-                    $availabilities = array($_GET['casasync_availability_s']);
-                } elseif(is_tax('casasync_availability')) {
-                    $availabilities = array(get_query_var( 'casasync_availability' ));
-                } else {
-                    //reference and taken are hidden by default
-                    $availabilities = array('active','reserved');
-                }
-                if ($availabilities) {
+                if ($this->query['availabilities']) {
                     $taxquery_new[] = array(
                         'taxonomy' => 'casasync_availability',
-                        'terms' => $availabilities,
+                        'terms' => $this->query['availabilities'],
                         'include_children' => 1,
                         'field' => 'slug',
                         'operator'=> 'IN'
@@ -135,8 +174,6 @@ class QueryService{
                     $query->set('tax_query', $taxquery_new);
                 }
 
-                $this->tax_query = $taxquery_new;
-                
                 add_filter( 'posts_where' , array($this, 'nearmefilter') );    
 
             }
@@ -146,9 +183,9 @@ class QueryService{
    	}
 
    	public function nearmefilter($where){
-        $mylng = (float) (isset($_GET['my_lng']) ? $_GET['my_lng'] : null);
-        $mylat = (float) (isset($_GET['my_lat']) ? $_GET['my_lat'] : null);
-        $radiusKm = (int) (isset($_GET['radius_km']) ? $_GET['radius_km'] : 10);
+        $mylng = (float) (isset($this->query['my_lng']) ? $this->query['my_lng'] : null);
+        $mylat = (float) (isset($this->query['my_lat']) ? $this->query['my_lat'] : null);
+        $radiusKm = (int) (isset($this->query['radius_km']) ? $this->query['radius_km'] : 10);
         if ($mylng && $mylat) {
             global $wpdb;
             add_filter( 'posts_join' , array($this, 'nearmejoin') );

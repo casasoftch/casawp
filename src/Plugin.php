@@ -104,15 +104,17 @@ class Plugin {
 
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get('CasasyncQuery');
+        $this->categoryService = $this->serviceManager->get('CasasoftCategory');
+        
 
 
     }
-
 
     public function casasync_queryfilter($query){
-        $query = $this->queryService->filter($query);
+        $this->queryService->setQuery();
+        $query = $this->queryService->applyToWpQuery($query);
+        return $query;
     }
-
     
     function casasync_page_template( $page_template ){
         global $post;
@@ -281,8 +283,37 @@ class Plugin {
         return $result;
     }
 
+    public function getCategories(){
+        $categories = array();
+        $category_terms = get_terms('casasync_category', array(
+            'hide_empty'        => true, 
+        ));
+        foreach ($category_terms as $category_term) {
+            if ($this->categoryService->keyExists($category_term->slug)) {
+                $categories[] = $this->categoryService->getItem($category_term->slug);
+            } else if ($this->utilityService->keyExists($category_term->slug)) {
+                $categories[] = $this->utilityService->getItem($category_term->slug);
+            } else {
+                $unknown_category = new \CasasoftStandards\Service\Category();
+                $unknown_category->setKey($category_term->slug);
+                $unknown_category->setLabel('?'.$category_term->slug);
+                $categories[] = $unknown_category;
+            }
+        }
+        return $categories;
+    }
+
+    public function getLocations(){
+        $localities = get_terms('casasync_location',array('hierarchical'      => true));
+        return $localities;
+    }
+
     public function renderArchiveFilter(){
-        $form = new \Casasync\Form\FilterForm();
+        $this->getLocations();
+        $form = new \Casasync\Form\FilterForm(
+            $this->getCategories(),
+            $this->getLocations()
+        );
         return $this->render('archive-filter', array('form' => $form));
     }
 

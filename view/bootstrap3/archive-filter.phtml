@@ -1,6 +1,22 @@
-<?php 
-	echo $this->form()->openTag($form);
-	echo $this->formRow($form->get('title'));
-	echo $this->formRow($form->get('artist'));
-	echo $this->formSubmit($form->get('submit'));
-	echo $this->form()->closeTag();
+<div class="casasync-filterform-wrap large">
+	<h3><?= __('Advanced Search', 'casasync') ?></h3>
+	<?= $this->form()->openTag($form->setAttribute('class', 'casasync-filterform')); ?>
+	
+	<?php if ($form->getCategoryOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('categories')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Kategorie wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+
+	<?php if ($form->getLocationOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('locations')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('locations')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Ortschaft wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+
+	<?= $this->formSubmit($form->get('submit')->setAttribute('class', 'casasync-filterform-button')); ?>
+	<?= $this->form()->closeTag(); ?>
+	<div class="clearfix"></div>
+</div>
