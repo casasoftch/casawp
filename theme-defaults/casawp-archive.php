@@ -20,9 +20,7 @@ __( 'Property list', 'casawp' );
 	<?php endif; ?>
 	<div class="col-md-4 casawp-archive-filter">
 		<?php echo $casawp->renderArchiveFilter() ?>
-		<?php 
-			$tags = wp_tag_cloud(array('taxonomy' => 'casawp_feature')); 
-		?>
+		<?php //wp_tag_cloud(array('taxonomy' => 'casawp_feature')); ?>
 	</div>
 </div>
 
