@@ -588,8 +588,8 @@ class OfferService{
 	public function renderContactForm(){
         $form = new \casawp\Form\ContactForm();
         $sent = false;
-        $customerid = get_option('casasoft_customerid');
-        $publisherid = get_option('casasoft_publisherid');
+        $customerid = get_option('casawp_customerid');
+        $publisherid = get_option('casawp_publisherid');
         $email = get_option('casawp_email_fallback');
 
         if ($this->getFieldValue('seller_org_customerid', false)) {
@@ -640,6 +640,36 @@ class OfferService{
 
 			    	if (get_option('casawp_inquiry_method') == 'casamail') {
 			        	//casamail
+			    		$data = $_POST;
+			    		$data['email'] = $_POST['emailreal'];
+			    		$data['provider'] = $customerid;
+			    		$data['publisher'] = $publisherid;
+			    		$data['lang'] = substr(get_bloginfo('language'), 0, 2);
+			    		$data['property_reference'] = $this->getFieldValue('casawp_id');
+						$data_string = json_encode($data);                                                                                   
+						                                                                                                                     
+						$ch = curl_init('http://onemail.ch/api/msg');
+						curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+						curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+						curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+						    'Content-Type: application/json',                                                                                
+						    'Content-Length: ' . strlen($data_string))                                                                       
+						);
+
+						curl_setopt($ch, CURLOPT_USERPWD,  "casawp:MQX-2C2-Hrh-zUu");
+						                                                                                                                     
+						$result = curl_exec($ch);
+						$json = json_decode($result, true);
+						if (isset($json['validation_messages'])) {
+							wp_mail( 'js@casasoft.ch', 'casawp casamail issue', print_r($json['validation_messages'], true));
+							return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
+						}
+
+						//header("Location: /anfrage-erfolg/");
+						//die('SUCCESS');
+
+
 			        } else {
 			        	
 			        }

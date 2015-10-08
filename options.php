@@ -820,8 +820,8 @@
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casasoft_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casasoft_publisherid') ?>" class="regular-text"> 
-										<input style="width:100%" name="casasoft_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casasoft_customerid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
 									</fieldset>
 								</td>
@@ -829,7 +829,7 @@
 						<?php echo $table_end; ?>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
+								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
 										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value=""> 
