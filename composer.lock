@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7aea8d15d6f1845a6dbdba1b59222be4",
-    "content-hash": "f10b9ea7f8daff6b2d42c0cccce46d85",
+    "hash": "6fdb3a977c712e7e79b43a9832b4e98a",
+    "content-hash": "0426d16456f8c4666be4ce44867045cd",
     "packages": [
         {
             "name": "casasoft/casamodules",

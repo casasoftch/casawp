@@ -1,6 +1,6 @@
 {
     "name": "casasoft/casawp",
-    "description": "Casasync WordPress Plugin",
+    "description": "casawp WordPress Plugin",
     "license": "",
     "keywords": [
         "casawp",
@@ -30,7 +30,7 @@
     },
     "autoload":{
         "psr-4": {
-            "CasaWp\\": "src/"
+            "casawp\\": "classes/"
         }
     }
 }

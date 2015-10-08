@@ -1,11 +1,11 @@
 <?php
 /*
- *	Plugin Name: 	CasaWp
+ *	Plugin Name: 	CASAWP
  *  Plugin URI: 	http://immobilien-plugin.ch
  *	Description:    Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
  *	Author:         Casasoft AG
- *	Author URI:     http://casasoft.ch
- *	Version: 		3.0.9
+ *	Author URI:     https://casasoft.ch
+ *	Version: 		2.0.0
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
@@ -25,12 +25,12 @@ chdir(dirname(__DIR__));
 
 // Setup autoloading
 include 'vendor/autoload.php';
-include 'modules/Casasync/Module.php';
+include 'modules/casawp/Module.php';
 $configuration = array(
 		'modules' => array(
 			'CasasoftStandards',
 			'CasasoftMessenger',
-			'Casasync'
+			'casawp'
 		),
 		'module_listener_options' => array(
 				'config_glob_paths'    => array(
@@ -46,34 +46,34 @@ $configuration = array(
 use Zend\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
-$casawp = new CasaWp\Plugin($configuration);
+$casawp = new casawp\Plugin($configuration);
 
 global $casawp;
 
 if (is_admin()) {
-	$casaSyncAdmin = new CasaWp\Admin();
+	$casaSyncAdmin = new casawp\Admin();
 	register_activation_hook(__FILE__, array($casaSyncAdmin,'casawp_install'));
 	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casawp_remove'));
 }
 
 if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 	if (get_option('casawp_legacy')) {
-		$import = new CasaWp\ImportLegacy(true, false);	
+		$import = new casawp\ImportLegacy(true, false);	
 	} else {
-		$import = new CasaWp\Import(true, false);
+		$import = new casawp\Import(true, false);
 	}
 	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewayupdate'])) {
-	$import = new CasaWp\Import(false, true);
-	$import = new CasaWp\Import(true, false);
+	$import = new casawp\Import(false, true);
+	$import = new casawp\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewaypoke'])) {
-	$import = new CasaWp\Import(false, true);
-	$import = new CasaWp\Import(true, false);
+	$import = new casawp\Import(false, true);
+	$import = new casawp\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 

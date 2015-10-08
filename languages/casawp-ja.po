@@ -1,1843 +1,1872 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2014-02-24 23:41+0100\n"
+"POT-Creation-Date: 2014-02-25 10:06+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.7\n"
-"X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
 #: .././casawp-archive.php:31
 msgid "No image"
-msgstr ""
+msgstr "画像がありません"
 
 #: .././casawp-archive.php:46
 msgid "Nothing Found"
-msgstr ""
+msgstr "何も見つかりませんでした"
 
 #: .././casawp-archive.php:47
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."
 msgstr ""
+"申し訳ありませんが、何も検索用語と一致しませんでした。いくつかの異なったキー"
+"ワードで、もう一度やり直してください。"
 
 #: .././options.php:98
 msgid "Einstellungen gespeichert.."
-msgstr ""
+msgstr "Einstellungen gespeichert .."
 
 #: .././options.php:104
 msgid "Daten wurden importiert.."
-msgstr ""
+msgstr "DATEN wurden importiert .."
 
 #: .././classes/Archive.php:300
 msgid "Choose offer"
-msgstr ""
+msgstr "プランを選ぶ"
 
 #: .././classes/Archive.php:307
 msgid "Choose category"
-msgstr ""
+msgstr "カテゴリを選択"
 
 #: .././classes/Archive.php:314
 msgid "Choose locality"
-msgstr ""
+msgstr "局所性を選択してください"
 
 #: .././classes/Archive.php:318
 msgid "Search"
-msgstr ""
+msgstr "検索"
 
 #: .././classes/casawp.php:215
 msgid "Custom Text Field"
-msgstr ""
+msgstr "カスタムテキストフ​​ィールド"
 
 #: .././classes/casawp.php:219
 msgid "Original filename"
-msgstr ""
+msgstr "元のファイル名"
 
 #: .././classes/casawp.php:425 .././classes/casawp.php:436
 msgid "Properties"
-msgstr ""
+msgstr "プロパティ"
 
 #: .././classes/casawp.php:426 .././classes/Single.php:690
 msgid "Property"
-msgstr ""
+msgstr "財産"
 
 #: .././classes/casawp.php:427
 msgid "Add New"
-msgstr ""
+msgstr "新規追加"
 
 #: .././classes/casawp.php:428
 msgid "Add New Property"
-msgstr ""
+msgstr "新しいプロパティを追加"
 
 #: .././classes/casawp.php:429
 msgid "Edit Property"
-msgstr ""
+msgstr "[プロパティの編集]"
 
 #: .././classes/casawp.php:430
 msgid "New Property"
-msgstr ""
+msgstr "新しいプロパティ"
 
 #: .././classes/casawp.php:431
 msgid "All Properties"
-msgstr ""
+msgstr "すべてのプロパティ"
 
 #: .././classes/casawp.php:432
 msgid "View Property"
-msgstr ""
+msgstr "ビューのプロパティ"
 
 #: .././classes/casawp.php:433
 msgid "Search Properties"
-msgstr ""
+msgstr "検索プロパティ"
 
 #: .././classes/casawp.php:434
 msgid "No properties found"
-msgstr ""
+msgstr "見つかりませんプロパティ"
 
 #: .././classes/casawp.php:435
 msgid "No properties found in Trash"
-msgstr ""
+msgstr "ゴミ箱には見つかりませんプロパティ"
 
 #: .././classes/casawp.php:457
 msgid "Property categories"
-msgstr ""
+msgstr "プロパティカテゴリ"
 
 #: .././classes/casawp.php:458 .././classes/casawp.php:467
 msgid "Category"
-msgstr ""
+msgstr "カテゴリ"
 
 #: .././classes/casawp.php:459
 msgid "Search Categories"
-msgstr ""
+msgstr "検索カテゴリー"
 
 #: .././classes/casawp.php:460
 msgid "All Categories"
-msgstr ""
+msgstr "すべてのカテゴリ"
 
 #: .././classes/casawp.php:461
 msgid "Parent Category"
-msgstr ""
+msgstr "親カテゴリ"
 
 #: .././classes/casawp.php:462
 msgid "Parent Category:"
-msgstr ""
+msgstr "親カテゴリ："
 
 #: .././classes/casawp.php:463
 msgid "Edit Category"
-msgstr ""
+msgstr "カテゴリの編集"
 
 #: .././classes/casawp.php:464
 msgid "Update Category"
-msgstr ""
+msgstr "カテゴリーを更新"
 
 #: .././classes/casawp.php:465
 msgid "Add New Category"
-msgstr ""
+msgstr "新しいカテゴリを追加"
 
 #: .././classes/casawp.php:466
 msgid "New Category Name"
-msgstr ""
+msgstr "新しいカテゴリ名"
 
 #: .././classes/casawp.php:480
 msgid "Property locations"
-msgstr ""
+msgstr "プロパティの場所"
 
 #: .././classes/casawp.php:481 .././classes/casawp.php:490
 msgid "Location"
-msgstr ""
+msgstr "場所"
 
 #: .././classes/casawp.php:482
 msgid "Search Locations"
-msgstr ""
+msgstr "検索場所"
 
 #: .././classes/casawp.php:483
 msgid "All Locations"
-msgstr ""
+msgstr "すべての場所"
 
 #: .././classes/casawp.php:484
 msgid "Parent Location"
-msgstr ""
+msgstr "親ロケーション"
 
 #: .././classes/casawp.php:485
 msgid "Parent Location:"
-msgstr ""
+msgstr "親場所："
 
 #: .././classes/casawp.php:486
 msgid "Edit Location"
-msgstr ""
+msgstr "編集場所"
 
 #: .././classes/casawp.php:487
 msgid "Update Location"
-msgstr ""
+msgstr "場所を更新"
 
 #: .././classes/casawp.php:488
 msgid "Add New Location"
-msgstr ""
+msgstr "新しい場所を追加する"
 
 #: .././classes/casawp.php:489
 msgid "New Location Name"
-msgstr ""
+msgstr "新しいロケーション名"
 
 #: .././classes/casawp.php:503
 msgid "Property salestypes"
-msgstr ""
+msgstr "不動産のsalestypes"
 
 #: .././classes/casawp.php:504 .././classes/casawp.php:516
 msgid "Salestype"
-msgstr ""
+msgstr "Sales type"
 
 #: .././classes/casawp.php:505
 msgid "Search Salestypes"
-msgstr ""
+msgstr "検索Salestypes"
 
 #: .././classes/casawp.php:506
 msgid "Popular Salestypes"
-msgstr ""
+msgstr "人気Salestypes"
 
 #: .././classes/casawp.php:507
 msgid "All Salestypes"
-msgstr ""
+msgstr "すべてSalestypes"
 
 #: .././classes/casawp.php:508
 msgid "Edit Salestype"
-msgstr ""
+msgstr "編集Salestype"
 
 #: .././classes/casawp.php:509
 msgid "Update Salestype"
-msgstr ""
+msgstr "アップデートSalestype"
 
 #: .././classes/casawp.php:510
 msgid "Add New Salestype"
-msgstr ""
+msgstr "新しいSalestypeを追加"
 
 #: .././classes/casawp.php:511
 msgid "New Salestype Name"
-msgstr ""
+msgstr "新しいSalestype名"
 
 #: .././classes/casawp.php:512
 msgid "Separate salestypes with commas"
-msgstr ""
+msgstr "カンマで区切りsalestypes"
 
 #: .././classes/casawp.php:513
 msgid "Add or remove salestypes"
-msgstr ""
+msgstr "salestypesを追加または削除"
 
 #: .././classes/casawp.php:514
 msgid "Choose from the most used salestypes"
-msgstr ""
+msgstr "最も使用されるsalestypesからお選びいただけます"
 
 #: .././classes/casawp.php:515
 msgid "No Salestypes found."
-msgstr ""
+msgstr "いいえSalestypesが見つかりませんでした。"
 
 #: .././classes/casawp.php:529
 msgid "Property Attachment Types"
-msgstr ""
+msgstr "不動産の添付ファイルの種類"
 
 #: .././classes/casawp.php:530 .././classes/casawp.php:539
 msgid "Attachment Type"
-msgstr ""
+msgstr "添付ファイルの種類"
 
 #: .././classes/casawp.php:531
 msgid "Search Attachment Types"
-msgstr ""
+msgstr "検索添付ファイルの種類"
 
 #: .././classes/casawp.php:532
 msgid "All Attachment Types"
-msgstr ""
+msgstr "すべての添付ファイルの種類"
 
 #: .././classes/casawp.php:533
 msgid "Parent Attachment Type"
-msgstr ""
+msgstr "親アタッチメントタイプ"
 
 #: .././classes/casawp.php:534
 msgid "Parent Attachment Type:"
-msgstr ""
+msgstr "親アタッチメントの種類："
 
 #: .././classes/casawp.php:535
 msgid "Edit Attachment Type"
-msgstr ""
+msgstr "[添付ファイルの編集タイプ"
 
 #: .././classes/casawp.php:536
 msgid "Update Attachment Type"
-msgstr ""
+msgstr "アップデート取り付けタイプ"
 
 #: .././classes/casawp.php:537
 msgid "Add New Attachment Type"
-msgstr ""
+msgstr "新しい添付ファイルの種類を追加します。"
 
 #: .././classes/casawp.php:538
 msgid "New Attachment Type Name"
-msgstr ""
+msgstr "新しい添付ファイルタイプ名"
 
-#: .././classes/casawp.php:585 .././classes/casawp.php:815
-#: .././classes/casawp.php:896
+#: .././classes/casawp.php:585 .././classes/casawp.php:822
+#: .././classes/casawp.php:903
 msgid "First name"
-msgstr ""
+msgstr "ファーストネーム"
 
-#: .././classes/casawp.php:586 .././classes/casawp.php:819
-#: .././classes/casawp.php:902
+#: .././classes/casawp.php:586 .././classes/casawp.php:826
+#: .././classes/casawp.php:909
 msgid "Last name"
-msgstr ""
+msgstr "名字"
 
-#: .././classes/casawp.php:587 .././classes/casawp.php:872
-#: .././classes/casawp.php:970 .././classes/Single.php:1173
+#: .././classes/casawp.php:587 .././classes/casawp.php:879
+#: .././classes/casawp.php:977 .././classes/Single.php:1173
 msgid "Email"
-msgstr ""
+msgstr "Eメール"
 
 #: .././classes/casawp.php:588
 msgid "Salutation"
-msgstr ""
+msgstr "挨拶"
 
 #: .././classes/casawp.php:589
 msgid "Title"
-msgstr ""
+msgstr "タイトル"
 
-#: .././classes/casawp.php:590 .././classes/casawp.php:868
-#: .././classes/casawp.php:962 .././classes/Single.php:1121
+#: .././classes/casawp.php:590 .././classes/casawp.php:875
+#: .././classes/casawp.php:969 .././classes/Single.php:1121
 msgid "Phone"
-msgstr ""
+msgstr "電話"
 
 #: .././classes/casawp.php:592
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
-#: .././classes/casawp.php:593 .././classes/casawp.php:826
-#: .././classes/casawp.php:910 .././classes/Single.php:784
+#: .././classes/casawp.php:593 .././classes/casawp.php:833
+#: .././classes/casawp.php:917 .././classes/Single.php:784
 msgid "Street"
-msgstr ""
+msgstr "ストリート"
 
-#: .././classes/casawp.php:594 .././classes/casawp.php:831
-#: .././classes/casawp.php:918
+#: .././classes/casawp.php:594 .././classes/casawp.php:838
+#: .././classes/casawp.php:925
 msgid "ZIP"
-msgstr ""
+msgstr "ZIP"
 
-#: .././classes/casawp.php:595 .././classes/casawp.php:835
-#: .././classes/casawp.php:924 .././classes/Single.php:792
+#: .././classes/casawp.php:595 .././classes/casawp.php:842
+#: .././classes/casawp.php:931 .././classes/Single.php:792
 msgid "Locality"
-msgstr ""
+msgstr "地域"
 
-#: .././classes/casawp.php:596 .././classes/casawp.php:841
-#: .././classes/casawp.php:932
+#: .././classes/casawp.php:596 .././classes/casawp.php:848
+#: .././classes/casawp.php:939
 msgid "Country"
-msgstr ""
+msgstr "国"
 
 #: .././classes/casawp.php:597
 msgid "Kanton"
-msgstr ""
+msgstr "カントン"
 
 #: .././classes/casawp.php:598
 msgid "Subject"
-msgstr ""
+msgstr "テーマ"
 
-#: .././classes/casawp.php:599 .././classes/casawp.php:877
-#: .././classes/casawp.php:978
+#: .././classes/casawp.php:599 .././classes/casawp.php:884
+#: .././classes/casawp.php:985
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 #: .././classes/casawp.php:600
 msgid "Recipient"
-msgstr ""
+msgstr "受信者"
 
 #: .././classes/casawp.php:637
 msgid "Required"
+msgstr "必須"
+
+#: .././classes/casawp.php:733
+#, fuzzy
+msgid "Show property ..."
+msgstr "新しいプロパティ"
+
+#: .././classes/casawp.php:749
+msgid "Inquiry for a property online"
 msgstr ""
 
-#: .././classes/casawp.php:798
+#: .././classes/casawp.php:750
+msgid "New inquiry"
+msgstr ""
+
+#: .././classes/casawp.php:751
+#, php-format
+msgid "A new inquiry from %s has been sent"
+msgstr ""
+
+#: .././classes/casawp.php:790
+msgid "Thank you!"
+msgstr ""
+
+#: .././classes/casawp.php:792
+msgid "Error!"
+msgstr ""
+
+#: .././classes/casawp.php:805
 msgid "Please consider the following errors and try sending it again"
-msgstr ""
+msgstr "次のエラーを考慮して、再度送信してみてください"
 
-#: .././classes/casawp.php:883 .././classes/casawp.php:986
+#: .././classes/casawp.php:890 .././classes/casawp.php:993
 msgid "Please fill out all the fields"
-msgstr ""
+msgstr "すべてのフィールドに必要事項を記入してください"
 
-#: .././classes/casawp.php:886 .././classes/casawp.php:989
+#: .././classes/casawp.php:893 .././classes/casawp.php:996
 msgid "Send"
-msgstr ""
+msgstr "送信"
 
 #: .././classes/Conversion.php:20
 msgid "Andorra"
-msgstr ""
+msgstr "アンドラ"
 
 #: .././classes/Conversion.php:21
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "アラブ首長国連邦"
 
 #: .././classes/Conversion.php:22
 msgid "Afghanistan"
-msgstr ""
+msgstr "アフガニスタン"
 
 #: .././classes/Conversion.php:23
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "アンチグアバーブーダ"
 
 #: .././classes/Conversion.php:24
 msgid "Anguilla"
-msgstr ""
+msgstr "アングイラ"
 
 #: .././classes/Conversion.php:25
 msgid "Albania"
-msgstr ""
+msgstr "アルバニア"
 
 #: .././classes/Conversion.php:26
 msgid "Armenia"
-msgstr ""
+msgstr "アルメニア"
 
 #: .././classes/Conversion.php:27
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "オランダ領アンティル"
 
 #: .././classes/Conversion.php:28
 msgid "Angola"
-msgstr ""
+msgstr "アンゴラ"
 
 #: .././classes/Conversion.php:29
 msgid "Antarctica"
-msgstr ""
+msgstr "南極大陸"
 
 #: .././classes/Conversion.php:30
 msgid "Argentina"
-msgstr ""
+msgstr "アルゼンチン"
 
 #: .././classes/Conversion.php:31
 msgid "American Samoa"
-msgstr ""
+msgstr "米領サモア"
 
 #: .././classes/Conversion.php:32
 msgid "Austria"
-msgstr ""
+msgstr "オーストリア"
 
 #: .././classes/Conversion.php:33
 msgid "Australia"
-msgstr ""
+msgstr "オーストラリア"
 
 #: .././classes/Conversion.php:34
 msgid "Aruba"
-msgstr ""
+msgstr "アルーバ"
 
 #: .././classes/Conversion.php:35
 msgid "Azerbaijan"
-msgstr ""
+msgstr "アゼルバイジャン"
 
 #: .././classes/Conversion.php:36
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "ボスニアヘルツェゴビナ"
 
 #: .././classes/Conversion.php:37
 msgid "Barbados"
-msgstr ""
+msgstr "バルバドス"
 
 #: .././classes/Conversion.php:38
 msgid "Bangladesh"
-msgstr ""
+msgstr "バングラデシュ"
 
 #: .././classes/Conversion.php:39
 msgid "Belgium"
-msgstr ""
+msgstr "ベルギー"
 
 #: .././classes/Conversion.php:40
 msgid "Burkina Faso"
-msgstr ""
+msgstr "ブルキナファソ"
 
 #: .././classes/Conversion.php:41
 msgid "Bulgaria"
-msgstr ""
+msgstr "ブルガリア"
 
 #: .././classes/Conversion.php:42
 msgid "Bahrain"
-msgstr ""
+msgstr "バーレーン"
 
 #: .././classes/Conversion.php:43
 msgid "Burundi"
-msgstr ""
+msgstr "ブルンジ"
 
 #: .././classes/Conversion.php:44
 msgid "Benin"
-msgstr ""
+msgstr "ベニン"
 
 #: .././classes/Conversion.php:45
 msgid "Bermuda"
-msgstr ""
+msgstr "バミューダ"
 
 #: .././classes/Conversion.php:46
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "ブルネイ  ダルサラーム国"
 
 #: .././classes/Conversion.php:47
 msgid "Bolivia"
-msgstr ""
+msgstr "ボリビア"
 
 #: .././classes/Conversion.php:48
 msgid "Brazil"
-msgstr ""
+msgstr "ブラジル"
 
 #: .././classes/Conversion.php:49
 msgid "Bahamas"
-msgstr ""
+msgstr "バハマ"
 
 #: .././classes/Conversion.php:50
 msgid "Bhutan"
-msgstr ""
+msgstr "ブータン"
 
 #: .././classes/Conversion.php:51
 msgid "Bouvet Island"
-msgstr ""
+msgstr "ブーヴェ島"
 
 #: .././classes/Conversion.php:52
 msgid "Botswana"
-msgstr ""
+msgstr "ボツワナ"
 
 #: .././classes/Conversion.php:53
 msgid "Belarus"
-msgstr ""
+msgstr "ベラルーシ"
 
 #: .././classes/Conversion.php:54
 msgid "Belize"
-msgstr ""
+msgstr "ベリーズ"
 
 #: .././classes/Conversion.php:55
 msgid "Canada"
-msgstr ""
+msgstr "カナダ"
 
 #: .././classes/Conversion.php:56
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "ココス (キーリング) 諸島"
 
 #: .././classes/Conversion.php:57
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "コンゴ民主共和国"
 
 #: .././classes/Conversion.php:58
 msgid "Central African Republic"
-msgstr ""
+msgstr "中央アフリカ共和国"
 
 #: .././classes/Conversion.php:59
 msgid "Congo"
-msgstr ""
+msgstr "コンゴ"
 
 #: .././classes/Conversion.php:60
 msgid "Switzerland"
-msgstr ""
+msgstr "スイス"
 
 #: .././classes/Conversion.php:61
 msgid "Cote D'Ivoire"
-msgstr ""
+msgstr "コートジボワール"
 
 #: .././classes/Conversion.php:62
 msgid "Cook Islands"
-msgstr ""
+msgstr "クック諸島"
 
 #: .././classes/Conversion.php:63
 msgid "Chile"
-msgstr ""
+msgstr "チリ"
 
 #: .././classes/Conversion.php:64
 msgid "Cameroon"
-msgstr ""
+msgstr "カメルーン"
 
 #: .././classes/Conversion.php:65
 msgid "China"
-msgstr ""
+msgstr "中国"
 
 #: .././classes/Conversion.php:66
 msgid "Colombia"
-msgstr ""
+msgstr "コロンビア"
 
 #: .././classes/Conversion.php:67
 msgid "Costa Rica"
-msgstr ""
+msgstr "コスタリカ"
 
 #: .././classes/Conversion.php:68
 msgid "Cuba"
-msgstr ""
+msgstr "キューバ"
 
 #: .././classes/Conversion.php:69
 msgid "Cape Verde"
-msgstr ""
+msgstr "カボヴェルデ"
 
 #: .././classes/Conversion.php:70
 msgid "Christmas Island"
-msgstr ""
+msgstr "クリスマス島"
 
 #: .././classes/Conversion.php:71
 msgid "Cyprus"
-msgstr ""
+msgstr "キプロス"
 
 #: .././classes/Conversion.php:72
 msgid "Czech Republic"
-msgstr ""
+msgstr "チェコ共和国"
 
 #: .././classes/Conversion.php:73
 msgid "Germany"
-msgstr ""
+msgstr "ドイツ"
 
 #: .././classes/Conversion.php:74
 msgid "Djibouti"
-msgstr ""
+msgstr "ジブチ"
 
 #: .././classes/Conversion.php:75
 msgid "Denmark"
-msgstr ""
+msgstr "デンマーク"
 
 #: .././classes/Conversion.php:76
 msgid "Dominica"
-msgstr ""
+msgstr "ドミニカ"
 
 #: .././classes/Conversion.php:77
 msgid "Dominican Republic"
-msgstr ""
+msgstr "ドミニカ共和国"
 
 #: .././classes/Conversion.php:78
 msgid "Algeria"
-msgstr ""
+msgstr "アルジェリア"
 
 #: .././classes/Conversion.php:79
 msgid "Ecuador"
-msgstr ""
+msgstr "エクアドル"
 
 #: .././classes/Conversion.php:80
 msgid "Estonia"
-msgstr ""
+msgstr "エストニア"
 
 #: .././classes/Conversion.php:81
 msgid "Egypt"
-msgstr ""
+msgstr "エジプト"
 
 #: .././classes/Conversion.php:82
 msgid "Western Sahara"
-msgstr ""
+msgstr "西サハラ"
 
 #: .././classes/Conversion.php:83
 msgid "Eritrea"
-msgstr ""
+msgstr "エリトリア"
 
 #: .././classes/Conversion.php:84
 msgid "Spain"
-msgstr ""
+msgstr "スペイン"
 
 #: .././classes/Conversion.php:85
 msgid "Ethiopia"
-msgstr ""
+msgstr "エチオピア"
 
 #: .././classes/Conversion.php:86
 msgid "Finland"
-msgstr ""
+msgstr "フィンランド"
 
 #: .././classes/Conversion.php:87
 msgid "Fiji"
-msgstr ""
+msgstr "フィジー"
 
 #: .././classes/Conversion.php:88
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "フォークランド諸島 (マルビナス)"
 
 #: .././classes/Conversion.php:89
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "ミクロネシア連邦"
 
 #: .././classes/Conversion.php:90
 msgid "Faroe Islands"
-msgstr ""
+msgstr "フェロー諸島"
 
 #: .././classes/Conversion.php:91
 msgid "France"
-msgstr ""
+msgstr "フランス"
 
 #: .././classes/Conversion.php:92
 msgid "France, Metropolitan"
-msgstr ""
+msgstr "フランス都市部"
 
 #: .././classes/Conversion.php:93
 msgid "Gabon"
-msgstr ""
+msgstr "ガボン"
 
 #: .././classes/Conversion.php:94
 msgid "United Kingdom"
-msgstr ""
+msgstr "イギリス"
 
 #: .././classes/Conversion.php:95
 msgid "Grenada"
-msgstr ""
+msgstr "グレナダ"
 
 #: .././classes/Conversion.php:96
 msgid "Georgia"
-msgstr ""
+msgstr "ジョージア"
 
 #: .././classes/Conversion.php:97
 msgid "French Guiana"
-msgstr ""
+msgstr "仏領ギアナ"
 
 #: .././classes/Conversion.php:98
 msgid "Ghana"
-msgstr ""
+msgstr "ガーナ"
 
 #: .././classes/Conversion.php:99
 msgid "Gibraltar"
-msgstr ""
+msgstr "ジブラルタル"
 
 #: .././classes/Conversion.php:100
 msgid "Greenland"
-msgstr ""
+msgstr "グリーンランド"
 
 #: .././classes/Conversion.php:101
 msgid "Gambia"
-msgstr ""
+msgstr "ガンビア"
 
 #: .././classes/Conversion.php:102
 msgid "Guinea"
-msgstr ""
+msgstr "ギニア"
 
 #: .././classes/Conversion.php:103
 msgid "Guadeloupe"
-msgstr ""
+msgstr "グアドループ"
 
 #: .././classes/Conversion.php:104
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "赤道ギニア"
 
 #: .././classes/Conversion.php:105
 msgid "Greece"
-msgstr ""
+msgstr "ギリシャ"
 
 #: .././classes/Conversion.php:106
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "南ジョージアおよび南サンドイッチ諸島"
 
 #: .././classes/Conversion.php:107
 msgid "Guatemala"
-msgstr ""
+msgstr "グアテマラ"
 
 #: .././classes/Conversion.php:108
 msgid "Guam"
-msgstr ""
+msgstr "グアム"
 
 #: .././classes/Conversion.php:109
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "ギニア-ビサウ"
 
 #: .././classes/Conversion.php:110
 msgid "Guyana"
-msgstr ""
+msgstr "ガイアナ"
 
 #: .././classes/Conversion.php:111
 msgid "Hong Kong"
-msgstr ""
+msgstr "香港"
 
 #: .././classes/Conversion.php:112
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "ハード・マクドナルド諸島"
 
 #: .././classes/Conversion.php:113
 msgid "Honduras"
-msgstr ""
+msgstr "ホンジュラス"
 
 #: .././classes/Conversion.php:114
 msgid "Croatia"
-msgstr ""
+msgstr "クロアチア"
 
 #: .././classes/Conversion.php:115
 msgid "Haiti"
-msgstr ""
+msgstr "ハイチ"
 
 #: .././classes/Conversion.php:116
 msgid "Hungary"
-msgstr ""
+msgstr "ハンガリー"
 
 #: .././classes/Conversion.php:117
 msgid "Indonesia"
-msgstr ""
+msgstr "インドネシア"
 
 #: .././classes/Conversion.php:118
 msgid "Ireland"
-msgstr ""
+msgstr "アイルランド"
 
 #: .././classes/Conversion.php:119
 msgid "Israel"
-msgstr ""
+msgstr "イスラエル"
 
 #: .././classes/Conversion.php:120
 msgid "India"
-msgstr ""
+msgstr "インド"
 
 #: .././classes/Conversion.php:121
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "英領インド洋領土"
 
 #: .././classes/Conversion.php:122
 msgid "Iraq"
-msgstr ""
+msgstr "イラク"
 
 #: .././classes/Conversion.php:123
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "イランイスラム共和国"
 
 #: .././classes/Conversion.php:124
 msgid "Iceland"
-msgstr ""
+msgstr "アイスランド"
 
 #: .././classes/Conversion.php:125
 msgid "Italy"
-msgstr ""
+msgstr "イタリア"
 
 #: .././classes/Conversion.php:126
 msgid "Jamaica"
-msgstr ""
+msgstr "ジャマイカ"
 
 #: .././classes/Conversion.php:127
 msgid "Jordan"
-msgstr ""
+msgstr "ヨルダン"
 
 #: .././classes/Conversion.php:128
 msgid "Japan"
-msgstr ""
+msgstr "日本"
 
 #: .././classes/Conversion.php:129
 msgid "Kenya"
-msgstr ""
+msgstr "ケニア"
 
 #: .././classes/Conversion.php:130
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "キルギスタン"
 
 #: .././classes/Conversion.php:131
 msgid "Cambodia"
-msgstr ""
+msgstr "カンボジア"
 
 #: .././classes/Conversion.php:132
 msgid "Kiribati"
-msgstr ""
+msgstr "キリバス"
 
 #: .././classes/Conversion.php:133
 msgid "Comoros"
-msgstr ""
+msgstr "コモロ"
 
 #: .././classes/Conversion.php:134
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "セントクリストファー・ネイビス"
 
 #: .././classes/Conversion.php:135
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "北朝鮮（朝鮮民主主義人民共和国）"
 
 #: .././classes/Conversion.php:136
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "韓国（大韓民国）"
 
 #: .././classes/Conversion.php:137
 msgid "Kuwait"
-msgstr ""
+msgstr "クウェート"
 
 #: .././classes/Conversion.php:138
 msgid "Cayman Islands"
-msgstr ""
+msgstr "ケイマン諸島"
 
 #: .././classes/Conversion.php:139
 msgid "Kazakstan"
-msgstr ""
+msgstr "カザフスタン"
 
 #: .././classes/Conversion.php:140
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "ラオス人民民主共和国"
 
 #: .././classes/Conversion.php:141
 msgid "Lebanon"
-msgstr ""
+msgstr "レバノン"
 
 #: .././classes/Conversion.php:142
 msgid "Saint Lucia"
-msgstr ""
+msgstr "セントルシア"
 
 #: .././classes/Conversion.php:143
 msgid "Liechtenstein"
-msgstr ""
+msgstr "リクテンスタイン"
 
 #: .././classes/Conversion.php:144
 msgid "Sri Lanka"
-msgstr ""
+msgstr "スリランカ"
 
 #: .././classes/Conversion.php:145
 msgid "Liberia"
-msgstr ""
+msgstr "リベリア"
 
 #: .././classes/Conversion.php:146
 msgid "Lesotho"
-msgstr ""
+msgstr "レソト"
 
 #: .././classes/Conversion.php:147
 msgid "Lithuania"
-msgstr ""
+msgstr "リトアニア"
 
 #: .././classes/Conversion.php:148
 msgid "Luxembourg"
-msgstr ""
+msgstr "        Luxembourg"
 
 #: .././classes/Conversion.php:149
 msgid "Latvia"
-msgstr ""
+msgstr "ラトヴィア"
 
 #: .././classes/Conversion.php:150
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "リビア"
 
 #: .././classes/Conversion.php:151
 msgid "Morocco"
-msgstr ""
+msgstr "モロッコ"
 
 #: .././classes/Conversion.php:152
 msgid "Monaco"
-msgstr ""
+msgstr "モナコ"
 
 #: .././classes/Conversion.php:153
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "モルドバ共和国"
 
 #: .././classes/Conversion.php:154
 msgid "Madagascar"
-msgstr ""
+msgstr "マダガスカル"
 
 #: .././classes/Conversion.php:155
 msgid "Marshall Islands"
-msgstr ""
+msgstr "マーシャル諸島"
 
 #: .././classes/Conversion.php:156
 msgid "Macedonia"
-msgstr ""
+msgstr "マケドニア"
 
 #: .././classes/Conversion.php:157
 msgid "Mali"
-msgstr ""
+msgstr "マリ"
 
 #: .././classes/Conversion.php:158
 msgid "Myanmar"
-msgstr ""
+msgstr "ミャンマー"
 
 #: .././classes/Conversion.php:159
 msgid "Mongolia"
-msgstr ""
+msgstr "モンゴル"
 
 #: .././classes/Conversion.php:160
 msgid "Macau"
-msgstr ""
+msgstr "マカオ"
 
 #: .././classes/Conversion.php:161
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "北マリアナ諸島"
 
 #: .././classes/Conversion.php:162
 msgid "Martinique"
-msgstr ""
+msgstr "マルティニク"
 
 #: .././classes/Conversion.php:163
 msgid "Mauritania"
-msgstr ""
+msgstr "モーリタニア"
 
 #: .././classes/Conversion.php:164
 msgid "Montserrat"
-msgstr ""
+msgstr "モンセラト"
 
 #: .././classes/Conversion.php:165
 msgid "Malta"
-msgstr ""
+msgstr "マルタ"
 
 #: .././classes/Conversion.php:166
 msgid "Mauritius"
-msgstr ""
+msgstr "モーリシャス"
 
 #: .././classes/Conversion.php:167
 msgid "Maldives"
-msgstr ""
+msgstr "モルディブ"
 
 #: .././classes/Conversion.php:168
 msgid "Malawi"
-msgstr ""
+msgstr "マラウイ"
 
 #: .././classes/Conversion.php:169
 msgid "Mexico"
-msgstr ""
+msgstr "メキシコ"
 
 #: .././classes/Conversion.php:170
 msgid "Malaysia"
-msgstr ""
+msgstr "マレーシア"
 
 #: .././classes/Conversion.php:171
 msgid "Mozambique"
-msgstr ""
+msgstr "モザンビーク"
 
 #: .././classes/Conversion.php:172
 msgid "Namibia"
-msgstr ""
+msgstr "ナミビア"
 
 #: .././classes/Conversion.php:173
 msgid "New Caledonia"
-msgstr ""
+msgstr "ニューカレドニア"
 
 #: .././classes/Conversion.php:174
 msgid "Niger"
-msgstr ""
+msgstr "ニジェール"
 
 #: .././classes/Conversion.php:175
 msgid "Norfolk Island"
-msgstr ""
+msgstr "ノーフォーク島"
 
 #: .././classes/Conversion.php:176
 msgid "Nigeria"
-msgstr ""
+msgstr "ナイジェリア"
 
 #: .././classes/Conversion.php:177
 msgid "Nicaragua"
-msgstr ""
+msgstr "ニカラグア"
 
 #: .././classes/Conversion.php:178
 msgid "Netherlands"
-msgstr ""
+msgstr "オランダ"
 
 #: .././classes/Conversion.php:179
 msgid "Norway"
-msgstr ""
+msgstr "ノルウェー"
 
 #: .././classes/Conversion.php:180
 msgid "Nepal"
-msgstr ""
+msgstr "ネパール"
 
 #: .././classes/Conversion.php:181
 msgid "Nauru"
-msgstr ""
+msgstr "ナウル"
 
 #: .././classes/Conversion.php:182
 msgid "Niue"
-msgstr ""
+msgstr "ニウエ"
 
 #: .././classes/Conversion.php:183
 msgid "New Zealand"
-msgstr ""
+msgstr "ニュージーnjhjkh"
 
 #: .././classes/Conversion.php:184
 msgid "Oman"
-msgstr ""
+msgstr "オマーン"
 
 #: .././classes/Conversion.php:185
 msgid "Panama"
-msgstr ""
+msgstr "パナマ"
 
 #: .././classes/Conversion.php:186
 msgid "Peru"
-msgstr ""
+msgstr "ペルー"
 
 #: .././classes/Conversion.php:187
 msgid "French Polynesia"
-msgstr ""
+msgstr "仏領ポリネシア"
 
 #: .././classes/Conversion.php:188
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "パプアニューギニア"
 
 #: .././classes/Conversion.php:189
 msgid "Philippines"
-msgstr ""
+msgstr "フィリピン"
 
 #: .././classes/Conversion.php:190
 msgid "Pakistan"
-msgstr ""
+msgstr "パキスタン"
 
 #: .././classes/Conversion.php:191
 msgid "Poland"
-msgstr ""
+msgstr "ポーランド"
 
 #: .././classes/Conversion.php:192
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "サンピエール・ミクロン"
 
 #: .././classes/Conversion.php:193
 msgid "Pitcairn Islands"
-msgstr ""
+msgstr "ピトケアン諸島"
 
 #: .././classes/Conversion.php:194
 msgid "Puerto Rico"
-msgstr ""
+msgstr "プエルトリコ"
 
 #: .././classes/Conversion.php:195
 msgid "Palestinian Territory"
-msgstr ""
+msgstr "パレスチナ自治政府"
 
 #: .././classes/Conversion.php:196
 msgid "Portugal"
-msgstr ""
+msgstr "ポルトガル"
 
 #: .././classes/Conversion.php:197
 msgid "Palau"
-msgstr ""
+msgstr "パラオ"
 
 #: .././classes/Conversion.php:198
 msgid "Paraguay"
-msgstr ""
+msgstr "パラグアイ"
 
 #: .././classes/Conversion.php:199
 msgid "Qatar"
-msgstr ""
+msgstr "カタール"
 
 #: .././classes/Conversion.php:200
 msgid "Reunion"
-msgstr ""
+msgstr "レユニオン"
 
 #: .././classes/Conversion.php:201
 msgid "Romania"
-msgstr ""
+msgstr "ルーマニア"
 
 #: .././classes/Conversion.php:202
 msgid "Russian Federation"
-msgstr ""
+msgstr "ロシア連邦"
 
 #: .././classes/Conversion.php:203
 msgid "Rwanda"
-msgstr ""
+msgstr "ルワンダ"
 
 #: .././classes/Conversion.php:204
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "サウジアラビア"
 
 #: .././classes/Conversion.php:205
 msgid "Solomon Islands"
-msgstr ""
+msgstr "ソロモン諸島"
 
 #: .././classes/Conversion.php:206
 msgid "Seychelles"
-msgstr ""
+msgstr "セーシェル"
 
 #: .././classes/Conversion.php:207
 msgid "Sudan"
-msgstr ""
+msgstr "スーダン"
 
 #: .././classes/Conversion.php:208
 msgid "Sweden"
-msgstr ""
+msgstr "スウェーデン"
 
 #: .././classes/Conversion.php:209
 msgid "Singapore"
-msgstr ""
+msgstr "シンガポール"
 
 #: .././classes/Conversion.php:210
 msgid "Saint Helena"
-msgstr ""
+msgstr "セントヘレナ"
 
 #: .././classes/Conversion.php:211
 msgid "Slovenia"
-msgstr ""
+msgstr "スロヴェニア"
 
 #: .././classes/Conversion.php:212
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "スヴァールバルおよびヤンマイエン"
 
 #: .././classes/Conversion.php:213
 msgid "Slovakia"
-msgstr ""
+msgstr "スロバキア"
 
 #: .././classes/Conversion.php:214
 msgid "Sierra Leone"
-msgstr ""
+msgstr "シエラレオネ"
 
 #: .././classes/Conversion.php:215
 msgid "San Marino"
-msgstr ""
+msgstr "サンマリノ"
 
 #: .././classes/Conversion.php:216
 msgid "Senegal"
-msgstr ""
+msgstr "セネガル"
 
 #: .././classes/Conversion.php:217
 msgid "Somalia"
-msgstr ""
+msgstr "ソマリア"
 
 #: .././classes/Conversion.php:218
 msgid "Suriname"
-msgstr ""
+msgstr "スリナム"
 
 #: .././classes/Conversion.php:219
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "サントメ プリンシペ民主共和国"
 
 #: .././classes/Conversion.php:220
 msgid "El Salvador"
-msgstr ""
+msgstr "エルサルバドル"
 
 #: .././classes/Conversion.php:221
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "シリアアラブ共和国"
 
 #: .././classes/Conversion.php:222
 msgid "Swaziland"
-msgstr ""
+msgstr "スワジランド"
 
 #: .././classes/Conversion.php:223
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "タークスおよびカイコス諸島"
 
 #: .././classes/Conversion.php:224
 msgid "Chad"
-msgstr ""
+msgstr "チャド"
 
 #: .././classes/Conversion.php:225
 msgid "French Southern Territories"
-msgstr ""
+msgstr "仏領南部地方"
 
 #: .././classes/Conversion.php:226
 msgid "Togo"
-msgstr ""
+msgstr "トーゴ"
 
 #: .././classes/Conversion.php:227
 msgid "Thailand"
-msgstr ""
+msgstr "タイ"
 
 #: .././classes/Conversion.php:228
 msgid "Tajikistan"
-msgstr ""
+msgstr "タジキスタン"
 
 #: .././classes/Conversion.php:229
 msgid "Tokelau"
-msgstr ""
+msgstr "トケラウ"
 
 #: .././classes/Conversion.php:230
 msgid "Turkmenistan"
-msgstr ""
+msgstr "トルクメニスタン"
 
 #: .././classes/Conversion.php:231
 msgid "Tunisia"
-msgstr ""
+msgstr "チュニジア"
 
 #: .././classes/Conversion.php:232
 msgid "Tonga"
-msgstr ""
+msgstr "トンガ"
 
 #: .././classes/Conversion.php:233
 msgid "Timor-Leste"
-msgstr ""
+msgstr "東ティモール"
 
 #: .././classes/Conversion.php:234
 msgid "Turkey"
-msgstr ""
+msgstr "トルコ"
 
 #: .././classes/Conversion.php:235
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "トリニダードトバゴ"
 
 #: .././classes/Conversion.php:236
 msgid "Tuvalu"
-msgstr ""
+msgstr "ツヴァル"
 
 #: .././classes/Conversion.php:237
 msgid "Taiwan"
-msgstr ""
+msgstr "台湾"
 
 #: .././classes/Conversion.php:238
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "タンザニア連合共和国"
 
 #: .././classes/Conversion.php:239
 msgid "Ukraine"
-msgstr ""
+msgstr "ウクライナ"
 
 #: .././classes/Conversion.php:240
 msgid "Uganda"
-msgstr ""
+msgstr "ウガンダ"
 
 #: .././classes/Conversion.php:241
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "アメリカ合衆国外諸島"
 
 #: .././classes/Conversion.php:242
 msgid "United States"
-msgstr ""
+msgstr "{0}{/0}United States"
 
 #: .././classes/Conversion.php:243
 msgid "Uruguay"
-msgstr ""
+msgstr "ウルグアイ"
 
 #: .././classes/Conversion.php:244
 msgid "Uzbekistan"
-msgstr ""
+msgstr "ウズベキスタン"
 
 #: .././classes/Conversion.php:245
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "教皇庁（バチカン市国）"
 
 #: .././classes/Conversion.php:246
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "セントヴィンセントおよびグレナディーン"
 
 #: .././classes/Conversion.php:247
 msgid "Venezuela"
-msgstr ""
+msgstr "ベネズエラ"
 
 #: .././classes/Conversion.php:248
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "英領ヴァージン諸島"
 
 #: .././classes/Conversion.php:249
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "米領ヴァージン諸島"
 
 #: .././classes/Conversion.php:250
 msgid "Vietnam"
-msgstr ""
+msgstr "ベトナム"
 
 #: .././classes/Conversion.php:251
 msgid "Vanuatu"
-msgstr ""
+msgstr "ヴァヌアツ"
 
 #: .././classes/Conversion.php:252
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "ワリー エ フトゥーナ諸島"
 
 #: .././classes/Conversion.php:253
 msgid "Samoa"
-msgstr ""
+msgstr "サモア"
 
 #: .././classes/Conversion.php:254
 msgid "Yemen"
-msgstr ""
+msgstr "イエメン"
 
 #: .././classes/Conversion.php:255
 msgid "Mayotte"
-msgstr ""
+msgstr "マヨット"
 
 #: .././classes/Conversion.php:256
 msgid "Serbia"
-msgstr ""
+msgstr "セルビア"
 
 #: .././classes/Conversion.php:257
 msgid "South Africa"
-msgstr ""
+msgstr "南アフリカ"
 
 #: .././classes/Conversion.php:258
 msgid "Zambia"
-msgstr ""
+msgstr "ザンビア"
 
 #: .././classes/Conversion.php:259
 msgid "Montenegro"
-msgstr ""
+msgstr "モンテネグロ"
 
 #: .././classes/Conversion.php:260
 msgid "Zimbabwe"
-msgstr ""
+msgstr "ジンバブウェ"
 
 #: .././classes/Conversion.php:261
 msgid "Aland Islands"
-msgstr ""
+msgstr "オーランド諸島"
 
 #: .././classes/Conversion.php:262
 msgid "Guernsey"
-msgstr ""
+msgstr "ガーンジー"
 
 #: .././classes/Conversion.php:263
 msgid "Isle of Man"
-msgstr ""
+msgstr "マン島"
 
 #: .././classes/Conversion.php:264
 msgid "Jersey"
-msgstr ""
+msgstr "ジャージー"
 
 #: .././classes/Conversion.php:265
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "セントバーツ"
 
 #: .././classes/Conversion.php:266
 msgid "Saint Martin"
-msgstr ""
+msgstr "サンマルタン島"
 
 #: .././classes/Conversion.php:273 .././classes/Single.php:816
 msgid "Living space"
-msgstr ""
+msgstr "生活空間"
 
 #: .././classes/Conversion.php:274 .././classes/Single.php:824
 msgid "Property space"
-msgstr ""
+msgstr "不動産のスペース"
 
 #: .././classes/Conversion.php:275 .././classes/Single.php:856
 msgid "Year of renovation"
-msgstr ""
+msgstr "改装した年"
 
 #: .././classes/Conversion.php:276 .././classes/Single.php:848
 msgid "Year of construction"
-msgstr ""
+msgstr "建設した年"
 
 #: .././classes/Conversion.php:277 .././classes/Single.php:800
 msgid "Number of rooms"
-msgstr ""
+msgstr "部屋数"
 
 #: .././classes/Conversion.php:278 .././classes/Single.php:840
 msgid "Number of floors"
-msgstr ""
+msgstr "フロアの数"
 
 #: .././classes/Conversion.php:279 .././classes/Single.php:250
 #: .././classes/Single.php:832
 msgid "Floor"
-msgstr ""
+msgstr "フロア"
 
 #: .././classes/Conversion.php:280
 msgid "Volume"
-msgstr ""
+msgstr "ボリューム（Volume）"
 
 #: .././classes/Conversion.php:281
 msgid "Number of apartments"
-msgstr ""
+msgstr "アパートの数"
 
 #: .././classes/Conversion.php:282 .././classes/Single.php:808
 msgid "Surface usable"
-msgstr ""
+msgstr "表面に使用可能"
 
 #: .././classes/Conversion.php:283
 msgid "Ceiling height"
-msgstr ""
+msgstr "天井高"
 
 #: .././classes/Conversion.php:284
 msgid "Hall height"
-msgstr ""
+msgstr "ホールの高さ"
 
 #: .././classes/Conversion.php:285
 msgid "Maximal floor loading"
-msgstr ""
+msgstr "最大床荷重"
 
 #: .././classes/Conversion.php:286
 msgid "Carrying capacity crane"
-msgstr ""
+msgstr "容量クレーンを運ぶ"
 
 #: .././classes/Conversion.php:287
 msgid "Carrying capacity elevator"
-msgstr ""
+msgstr "容量エレベーターを運ぶ"
 
 #: .././classes/Conversion.php:293
 msgid "Agriculture"
-msgstr ""
+msgstr "農業"
 
 #: .././classes/Conversion.php:294
 msgid "Apartment"
-msgstr ""
+msgstr "アパートメント"
 
 #: .././classes/Conversion.php:295
 msgid "Gastronomy"
-msgstr ""
+msgstr "ガストロノミー"
 
 #: .././classes/Conversion.php:296
 msgid "House"
-msgstr ""
+msgstr "企業"
 
 #: .././classes/Conversion.php:297
 msgid "Industrial"
-msgstr ""
+msgstr "インダストリアル"
 
 #: .././classes/Conversion.php:298 .././classes/Conversion.php:358
 msgid "Parking space"
-msgstr ""
+msgstr "駐車場"
 
 #: .././classes/Conversion.php:299
 msgid "Plot"
-msgstr ""
+msgstr "あら"
 
 #: .././classes/Conversion.php:300
 msgid "Secondary rooms"
-msgstr ""
+msgstr "二次室"
 
 #: .././classes/Conversion.php:301
 msgid "Garden"
-msgstr ""
+msgstr "庭"
 
 #: .././classes/Conversion.php:302
 msgid "Commercial"
-msgstr ""
+msgstr "商用版"
 
 #: .././classes/Conversion.php:319
 msgid "Public transportation"
-msgstr ""
+msgstr "公共交通機関"
 
 #: .././classes/Conversion.php:320
 msgid "Shopping"
-msgstr ""
+msgstr "ショッピング"
 
 #: .././classes/Conversion.php:321
 msgid "Kindergarten"
-msgstr ""
+msgstr "幼稚園"
 
 #: .././classes/Conversion.php:322
 msgid "Motorway"
-msgstr ""
+msgstr "高速道路"
 
 #: .././classes/Conversion.php:323
 msgid "Primary school"
-msgstr ""
+msgstr "小学校"
 
 #: .././classes/Conversion.php:324
 msgid "Secondary school"
-msgstr ""
+msgstr "中等学校"
 
 #: .././classes/Conversion.php:329 .././classes/Single.php:619
 #: .././classes/Single.php:633 .././classes/Single.php:650
 #: .././classes/Single.php:676 .././classes/Single.php:866
 #: .././classes/Single.php:892
 msgid "On Request"
-msgstr ""
+msgstr "要リクエスト"
 
 #: .././classes/Conversion.php:330
 msgid "By Agreement"
-msgstr ""
+msgstr "合意によって"
 
 #: .././classes/Conversion.php:331
 msgid "Immediate"
-msgstr ""
+msgstr "即時実行"
 
 #: .././classes/Conversion.php:337
 msgid "Child friendly"
-msgstr ""
+msgstr "子連れにおすすめ"
 
 #: .././classes/Conversion.php:340
 #, php-format
 msgid "%d garages"
-msgstr ""
+msgstr "%dガレージ"
 
 #: .././classes/Conversion.php:342
 msgid "Garage"
-msgstr ""
+msgstr "車庫"
 
 #: .././classes/Conversion.php:347
 #, php-format
 msgid "%dx balconies"
-msgstr ""
+msgstr "%d Xバルコニー"
 
 #: .././classes/Conversion.php:349
 msgid "Balcony"
-msgstr ""
+msgstr "バルコニー"
 
 #: .././classes/Conversion.php:352
 msgid "Vista"
-msgstr ""
+msgstr "Vista"
 
 #: .././classes/Conversion.php:353
 msgid "Cable TV"
-msgstr ""
+msgstr "ケーブルテレビ"
 
 #: .././classes/Conversion.php:356
 #, php-format
 msgid "%d Parking spaces"
-msgstr ""
+msgstr "%d駐車スペース"
 
 #: .././classes/Conversion.php:363
 #, php-format
 msgid "%d Pets allowed"
-msgstr ""
+msgstr "%dペット可"
 
 #: .././classes/Conversion.php:365
 msgid "Pets allowed"
-msgstr ""
+msgstr "ペット同伴可能"
 
 #: .././classes/Conversion.php:368
 msgid "ISDN Anschluss"
-msgstr ""
+msgstr "ISDNの併合"
 
 #: .././classes/Conversion.php:372
 #, php-format
 msgid "%d Restrooms"
-msgstr ""
+msgstr "%dトイレ"
 
 #: .././classes/Conversion.php:374
 msgid "Restrooms"
-msgstr ""
+msgstr "トイレ"
 
 #: .././classes/Conversion.php:379
 #, php-format
 msgid "%d elevators"
-msgstr ""
+msgstr "%dエレベーター"
 
 #: .././classes/Conversion.php:381
 msgid "Elevator"
-msgstr ""
+msgstr "エレベーター"
 
 #: .././classes/Conversion.php:385
 msgid "Fireplace"
-msgstr ""
+msgstr "暖炉"
 
 #: .././classes/Conversion.php:386
 msgid "wheelchair accessible"
-msgstr ""
+msgstr "車椅子でのアクセス可能"
 
 #: .././classes/Conversion.php:387
 msgid "Ramp"
-msgstr ""
+msgstr "ランプ。"
 
 #: .././classes/Conversion.php:388
 msgid "lifting platform"
-msgstr ""
+msgstr "昇降台"
 
 #: .././classes/Conversion.php:389
 msgid "Railway terminal"
-msgstr ""
+msgstr "鉄道のターミナル"
 
 #: .././classes/Conversion.php:390
 msgid "Water Supply"
-msgstr ""
+msgstr "給水"
 
 #: .././classes/Conversion.php:391
 msgid "Sewage supply"
-msgstr ""
+msgstr "下水供給"
 
 #: .././classes/Conversion.php:392
 msgid "Power Supply"
-msgstr ""
+msgstr "電源装置"
 
 #: .././classes/Conversion.php:393
 msgid "Gas supply"
-msgstr ""
+msgstr "ガスの供給"
 
 #: .././classes/Conversion.php:394
 msgid "Corner house"
-msgstr ""
+msgstr "コー​​ナーハウス"
 
 #: .././classes/Conversion.php:395
 msgid "Middle house"
-msgstr ""
+msgstr "真ん中の家"
 
 #: .././classes/Conversion.php:396
 msgid "Gardenhouse"
-msgstr ""
+msgstr "Gardenhouse"
 
 #: .././classes/Conversion.php:397
 msgid "Raised ground floor"
-msgstr ""
+msgstr "上げ階"
 
 #: .././classes/Conversion.php:398
 msgid "New building"
-msgstr ""
+msgstr "新築"
 
 #: .././classes/Conversion.php:399
 msgid "Old building"
-msgstr ""
+msgstr "古い建物"
 
 #: .././classes/Conversion.php:400
 msgid "Under roof"
-msgstr ""
+msgstr "屋根の下"
 
 #: .././classes/Conversion.php:401
 msgid "Swimmingpool"
-msgstr ""
+msgstr "スイミングプール"
 
 #: .././classes/Conversion.php:402
 msgid "Minergie general"
-msgstr ""
+msgstr "Minergie一般"
 
 #: .././classes/Conversion.php:403
 msgid "Minergie certified"
-msgstr ""
+msgstr "認定Minergie"
 
 #: .././classes/Conversion.php:404
 msgid "Under building laws"
-msgstr ""
+msgstr "建築法の下で"
 
 #: .././classes/Conversion.php:405
 msgid "Building land connected"
-msgstr ""
+msgstr "宅地接続"
 
 #: .././classes/Conversion.php:406
 msgid "Flat sharing community"
-msgstr ""
+msgstr "フラット共有コミュニティ"
 
-#: .././classes/Import.php:482 .././classes/Single.php:1264
+#: .././classes/Import.php:500 .././classes/Single.php:1264
 msgid "month"
-msgstr ""
+msgstr "月"
 
-#: .././classes/Import.php:483 .././classes/Single.php:1265
+#: .././classes/Import.php:501 .././classes/Single.php:1265
 msgid "week"
-msgstr ""
+msgstr "週"
 
-#: .././classes/Import.php:484 .././classes/Single.php:1266
+#: .././classes/Import.php:502 .././classes/Single.php:1266
 msgid "day"
-msgstr ""
+msgstr "日"
 
-#: .././classes/Import.php:485 .././classes/Single.php:1267
+#: .././classes/Import.php:503 .././classes/Single.php:1267
 msgid "year"
-msgstr ""
+msgstr "年"
 
-#: .././classes/Import.php:486 .././classes/Single.php:1268
+#: .././classes/Import.php:504 .././classes/Single.php:1268
 msgid "hour"
-msgstr ""
+msgstr "時"
 
 #: .././classes/Single.php:248
 msgid "Ground"
-msgstr ""
+msgstr "地面"
 
 #: .././classes/Single.php:547
 msgid "Number of rooms:"
-msgstr ""
+msgstr "部屋数："
 
 #: .././classes/Single.php:553
 msgid "Surface usable:"
-msgstr ""
+msgstr "使用可能な表面："
 
 #: .././classes/Single.php:559
 msgid "Living space:"
-msgstr ""
+msgstr "占有面積："
 
 #: .././classes/Single.php:565
 msgid "Property space:"
-msgstr ""
+msgstr "不動産のスペース："
 
 #: .././classes/Single.php:571
 msgid "Floor:"
-msgstr ""
+msgstr "床："
 
 #: .././classes/Single.php:577
 msgid "Number of floors:"
-msgstr ""
+msgstr "スイートルームの数："
 
 #: .././classes/Single.php:583
 msgid "Year of construction:"
-msgstr ""
+msgstr "建設した年："
 
 #: .././classes/Single.php:589
 msgid "Year of renovation:"
-msgstr ""
+msgstr "改装年："
 
 #: .././classes/Single.php:595
 msgid "Available:"
-msgstr ""
+msgstr "利用可能："
 
 #: .././classes/Single.php:606 .././classes/Single.php:702
 msgid "Address"
-msgstr ""
+msgstr "しょざいｔ"
 
 #: .././classes/Single.php:612
 msgid "rent"
-msgstr ""
+msgstr "家賃"
 
 #: .././classes/Single.php:612
 msgid "Price"
-msgstr ""
+msgstr "価格"
 
 #: .././classes/Single.php:615
 msgid "Sales price:"
-msgstr ""
+msgstr "販売価格："
 
 #: .././classes/Single.php:625
 msgid "Gross price:"
-msgstr ""
+msgstr "グロス価格："
 
 #: .././classes/Single.php:629
 msgid "Net price:"
-msgstr ""
+msgstr "正味価格："
 
 #: .././classes/Single.php:637 .././classes/Single.php:683
 msgid "Additional costs"
-msgstr ""
+msgstr "追加費用"
 
 #: .././classes/Single.php:644
 msgid "Offer"
-msgstr ""
+msgstr "申し出"
 
 #: .././classes/Single.php:648 .././classes/Single.php:864
 msgid "Sales price"
-msgstr ""
+msgstr "販売価格"
 
 #: .././classes/Single.php:658 .././classes/Single.php:874
 msgid "Gross price"
-msgstr ""
+msgstr "総価格"
 
 #: .././classes/Single.php:666 .././classes/Single.php:882
 msgid "Net price"
-msgstr ""
+msgstr "正価"
 
 #: .././classes/Single.php:674 .././classes/Single.php:890
 msgid "Rent price"
-msgstr ""
+msgstr "のレンタル価格"
 
 #: .././classes/Single.php:695
 msgid "Reference"
-msgstr ""
+msgstr "リファレンス"
 
 #: .././classes/Single.php:720
 msgid "Features"
-msgstr ""
+msgstr "特長"
 
 #: .././classes/Single.php:727
 msgid "Documents"
-msgstr ""
+msgstr "文書"
 
 #: .././classes/Single.php:734
 msgid "Distances"
-msgstr ""
+msgstr "距離"
 
 #: .././classes/Single.php:906
 msgid "Available"
-msgstr ""
+msgstr "利用できる"
 
 #: .././classes/Single.php:925
 msgid "Previous"
-msgstr ""
+msgstr "前"
 
 #: .././classes/Single.php:926
 msgid "To list"
-msgstr ""
+msgstr "一覧へ"
 
 #: .././classes/Single.php:927
 msgid "Next"
-msgstr ""
+msgstr "次"
 
 #: .././classes/Single.php:1002
 msgid "Base data"
-msgstr ""
+msgstr "基本データ"
 
 #: .././classes/Single.php:1011
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: .././classes/Single.php:1017
 msgid "Specifications"
-msgstr ""
+msgstr "仕様"
 
 #: .././classes/Single.php:1065
 msgid "View lager version"
-msgstr ""
+msgstr "ビューラガーバージョン"
 
 #: .././classes/Single.php:1104
 msgid "Provider"
-msgstr ""
+msgstr "プロバイダー"
 
 #: .././classes/Single.php:1114 .././classes/Single.php:1171
 msgid "I am interested concerning this property. Please contact me."
-msgstr ""
+msgstr "私は、このプロパティについて興味を持っています。私に連絡してください。"
 
 #: .././classes/Single.php:1115
 msgid "E-Mail"
-msgstr ""
+msgstr "メール"
 
 #: .././classes/Single.php:1131
 msgid "Fax"
-msgstr ""
+msgstr "ファックス"
 
 #: .././classes/Single.php:1159
 msgid "Contact person"
-msgstr ""
+msgstr "連絡窓口"
 
 #: .././classes/Single.php:1179
 msgid "Phone direct"
-msgstr ""
+msgstr "電話直通電話"
 
 #: .././classes/Single.php:1184
 msgid "Mobile"
-msgstr ""
+msgstr "モバイル"
 
 #: .././classes/Single.php:1215
 msgid "Share"
-msgstr ""
+msgstr "シェア"
 
 #: .././classes/Single.php:1326
 msgid "per"
-msgstr ""
+msgstr "あたりの"
 
 #: .././classes/Single.php:1363
 msgid "and"
-msgstr ""
+msgstr "そして友人たち！"
 
 #: .././classes/Single.php:1415
 msgid "Document"
-msgstr ""
+msgstr "ドキュメント"
