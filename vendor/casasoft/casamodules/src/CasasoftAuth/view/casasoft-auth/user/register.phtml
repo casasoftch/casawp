@@ -1,0 +1,33 @@
+<div class="container">
+	<br><br>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<h2 class="center-title"><?php echo $this->translate('Register') ?></h2>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form method="post" name="register" id="register">
+						<?php 
+							if ($this->registerform) {
+								$form = $this->registerform;
+								$form->prepare();
+								//echo $this->form()->openTag($form);
+								echo $this->formRow($form->get('user')->get('name'));
+								echo $this->formRow($form->get('user')->get('email'));
+						        echo $this->formRow($form->get('password1'));
+						        echo $this->formRow($form->get('user')->get('username'));
+						        //echo $this->formRow($form->get('password2'));
+								echo $this->formHidden($form->get('target'));
+						        echo $this->formRow($form->get('user')->get('locale'));
+						        echo $this->formRow($form->get('user')->get('postalcode'));
+						        echo $this->formRow($form->get('user')->get('locality'));
+						        echo $this->formRow($form->get('user')->get('mobilephone'));
+
+							}
+						 ?>
+					 	<button type="submit" class="btn btn-primary pull-right">Registrieren</button>
+					 </form>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>

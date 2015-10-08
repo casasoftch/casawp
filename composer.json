@@ -1,0 +1,36 @@
+{
+    "name": "casasoft/casasync",
+    "description": "Casasync WordPress Plugin",
+    "license": "",
+    "keywords": [
+        "casasync",
+        "casasoft"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:CasasoftCH/casamodules.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zend-loader": "2.*",
+        "zendframework/zend-mvc": "2.*",
+        "zendframework/zend-i18n": "2.*",
+        "zendframework/zend-modulemanager": "2.*",
+        "zendframework/zend-view": "2.*",
+        "zendframework/zend-serializer": "2.*",
+        "zendframework/zend-log": "2.*",
+        "zendframework/zend-servicemanager": "2.*",
+        "zendframework/zend-escaper" : "2.*",
+        "casasoft/casamodules": "1.0.*"
+    },
+    "require-dev": {
+    },
+    "autoload":{
+        "psr-4": {
+            "CasaSync\\": "src/"
+        }
+    }
+}

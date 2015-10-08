@@ -1,0 +1,1277 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CasaNet\n"
+"POT-Creation-Date: 2015-05-12 14:35+0100\n"
+"PO-Revision-Date: 2015-05-12 14:35+0100\n"
+"Last-Translator: Jens Stalder <js@casasoft.ch>\n"
+"Language-Team: CasaSoft <info@casasoft.ch>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;translatePlural:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: src/CasasoftStandards/Service/CategoryService.php:34
+msgid "Apartment"
+msgstr "Appartement"
+
+#: src/CasasoftStandards/Service/CategoryService.php:38
+msgid "Attic flat"
+msgstr "Appartement en attique"
+
+#: src/CasasoftStandards/Service/CategoryService.php:42
+msgid "Bachelor flat"
+msgstr "Appartement de célibataire"
+
+#: src/CasasoftStandards/Service/CategoryService.php:46
+msgid "Bifamiliar house"
+msgstr "Maison jumelée"
+
+#: src/CasasoftStandards/Service/CategoryService.php:50
+msgid "Building land"
+msgstr "Terrain constructible"
+
+#: src/CasasoftStandards/Service/CategoryService.php:54
+#: src/CasasoftStandards/Service/FeatureService.php:142
+msgid "Double garage"
+msgstr "Garage double"
+
+#: src/CasasoftStandards/Service/CategoryService.php:58
+msgid "Duplex"
+msgstr "Duplex"
+
+#: src/CasasoftStandards/Service/CategoryService.php:62
+msgid "Factory"
+msgstr "Fabrique"
+
+#: src/CasasoftStandards/Service/CategoryService.php:66
+msgid "Farm"
+msgstr "Ferme"
+
+#: src/CasasoftStandards/Service/CategoryService.php:70
+msgid "Farm house"
+msgstr "Ferme"
+
+#: src/CasasoftStandards/Service/CategoryService.php:74
+msgid "Furnished flat"
+msgstr "Appartement meublé"
+
+#: src/CasasoftStandards/Service/CategoryService.php:78
+#: src/CasasoftStandards/Service/FeatureService.php:136
+msgid "Garage"
+msgstr "Garage"
+
+#: src/CasasoftStandards/Service/CategoryService.php:82
+#: src/CasasoftStandards/Service/CategoryService.php:154
+msgid "House"
+msgstr "Maison"
+
+#: src/CasasoftStandards/Service/CategoryService.php:86
+msgid "Loft"
+msgstr "Loft"
+
+#: src/CasasoftStandards/Service/CategoryService.php:90
+msgid "Mountain farm"
+msgstr "Ferme en montagne"
+
+#: src/CasasoftStandards/Service/CategoryService.php:94
+msgid "Multiple dwelling"
+msgstr "Immeuble"
+
+#: src/CasasoftStandards/Service/CategoryService.php:98
+msgid "Open slot"
+msgstr "Place de parking dehors"
+
+#: src/CasasoftStandards/Service/CategoryService.php:102
+msgid "Parking space"
+msgstr "Place de parking"
+
+#: src/CasasoftStandards/Service/CategoryService.php:106
+msgid "Plot"
+msgstr "Terrain"
+
+#: src/CasasoftStandards/Service/CategoryService.php:110
+msgid "Roof flat"
+msgstr "Appartement mansardé"
+
+#: src/CasasoftStandards/Service/CategoryService.php:114
+msgid "Row house"
+msgstr "Maison mitoyenne"
+
+#: src/CasasoftStandards/Service/CategoryService.php:118
+msgid "Single garage"
+msgstr "Garage"
+
+#: src/CasasoftStandards/Service/CategoryService.php:122
+msgid "Single house"
+msgstr "Maison individuelle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:126
+msgid "Single room"
+msgstr "Chambre individuelle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:130
+msgid "Terrace flat"
+msgstr "Appartement en terrasse"
+
+#: src/CasasoftStandards/Service/CategoryService.php:134
+msgid "Terrace house"
+msgstr "Maison en terrasse"
+
+#: src/CasasoftStandards/Service/CategoryService.php:138
+msgid "Underground slot"
+msgstr "Parking souterrain"
+
+#: src/CasasoftStandards/Service/CategoryService.php:142
+msgid "Villa"
+msgstr "Villa"
+
+#: src/CasasoftStandards/Service/CategoryService.php:146
+msgid "Chalet"
+msgstr "Chalet"
+
+#: src/CasasoftStandards/Service/CategoryService.php:150
+msgid "Studio"
+msgstr "Studio"
+
+#: src/CasasoftStandards/Service/CategoryService.php:158
+msgid "Covered slot"
+msgstr "Parking couvert"
+
+#: src/CasasoftStandards/Service/CategoryService.php:165
+msgid "Construction project"
+msgstr "Construction projet"
+
+#: src/CasasoftStandards/Service/FeatureService.php:36
+msgid "Fireplace"
+msgstr "Foyer"
+
+#: src/CasasoftStandards/Service/FeatureService.php:40
+msgid "Cable TV"
+msgstr "Cable TV"
+
+#: src/CasasoftStandards/Service/FeatureService.php:44
+msgid "Ramp"
+msgstr "Rampe"
+
+#: src/CasasoftStandards/Service/FeatureService.php:48
+msgid "Has lifting platform"
+msgstr "Pont élévateur existant"
+
+#: src/CasasoftStandards/Service/FeatureService.php:52
+msgid "Railway terminal"
+msgstr "Station téléphérique"
+
+#: src/CasasoftStandards/Service/FeatureService.php:56
+msgid "Flat sharing community"
+msgstr "Communauté"
+
+#: src/CasasoftStandards/Service/FeatureService.php:60
+msgid "Connected building land"
+msgstr "Terrain constructible raccordé"
+
+#: src/CasasoftStandards/Service/FeatureService.php:64
+msgid "Gardenhouse"
+msgstr "Abri de jardin"
+
+#: src/CasasoftStandards/Service/FeatureService.php:68
+msgid "Is under roof"
+msgstr "Couvert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:75
+msgid "Raised ground floor"
+msgstr "Rez-de-chaussée élevé"
+
+#: src/CasasoftStandards/Service/FeatureService.php:80
+msgid "Has elevator"
+msgstr "Ascenseur"
+
+#: src/CasasoftStandards/Service/FeatureService.php:84
+msgid "Nice view"
+msgstr "Belle vue"
+
+#: src/CasasoftStandards/Service/FeatureService.php:90
+msgid "Lake view"
+msgstr "Vue sur le lac"
+
+#: src/CasasoftStandards/Service/FeatureService.php:96
+msgid "Mountain view"
+msgstr "Vue sur les montagnes"
+
+#: src/CasasoftStandards/Service/FeatureService.php:102
+msgid "Sunny"
+msgstr "Ensoleillé(e)"
+
+#: src/CasasoftStandards/Service/FeatureService.php:109
+msgid "Quiet"
+msgstr "Calme"
+
+#: src/CasasoftStandards/Service/FeatureService.php:115
+msgid "Projected construction (not yet realized)"
+msgstr "Construction projetée (pas encore réalisée)"
+
+#: src/CasasoftStandards/Service/FeatureService.php:121
+msgid "Contains demolition structure"
+msgstr "Contient la structure de la démolition"
+
+#: src/CasasoftStandards/Service/FeatureService.php:128
+msgid "Child friendly"
+msgstr "Familial(e)"
+
+#: src/CasasoftStandards/Service/FeatureService.php:132
+#: src/CasasoftStandards/Service/UtilityService.php:62
+msgid "Parking"
+msgstr "Parking"
+
+#: src/CasasoftStandards/Service/FeatureService.php:148
+msgid "Car port"
+msgstr "Carport"
+
+#: src/CasasoftStandards/Service/FeatureService.php:154
+msgid "Double car port"
+msgstr "Carport double"
+
+#: src/CasasoftStandards/Service/FeatureService.php:161
+msgid "On a slope"
+msgstr "Terrain en pente"
+
+#: src/CasasoftStandards/Service/FeatureService.php:166
+msgid "South-facing slope"
+msgstr "Versant sud"
+
+#: src/CasasoftStandards/Service/FeatureService.php:171
+msgid "Even Ground"
+msgstr "Plat(e)"
+
+#: src/CasasoftStandards/Service/FeatureService.php:176
+msgid "Balcony"
+msgstr "Balcon"
+
+#: src/CasasoftStandards/Service/FeatureService.php:180
+msgid "ISDN"
+msgstr "ISDN"
+
+#: src/CasasoftStandards/Service/FeatureService.php:184
+msgid "Wheelchair accessible"
+msgstr "Fauteuil roulant accessible"
+
+#: src/CasasoftStandards/Service/FeatureService.php:188
+msgid "Animal friendly"
+msgstr "Respectueux des animaux"
+
+#: src/CasasoftStandards/Service/FeatureService.php:195
+msgid "Restrooms"
+msgstr "Cabinet de toilette"
+
+#: src/CasasoftStandards/Service/FeatureService.php:199
+msgid "Water supply"
+msgstr "Raccordement de l'eau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:203
+msgid "Sewage supply"
+msgstr "Raccordement de l'eau usée"
+
+#: src/CasasoftStandards/Service/FeatureService.php:207
+msgid "Power supply"
+msgstr "Raccordement d'éléctricité"
+
+#: src/CasasoftStandards/Service/FeatureService.php:211
+msgid "Gas supply"
+msgstr "Raccordement de gaz"
+
+#: src/CasasoftStandards/Service/FeatureService.php:216
+msgid "Corner house"
+msgstr "Maison angle"
+
+#: src/CasasoftStandards/Service/FeatureService.php:220
+msgid "Middle house"
+msgstr "Maison au milieu"
+
+#: src/CasasoftStandards/Service/FeatureService.php:227
+msgid "New"
+msgstr "Nouveau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:231
+msgid "Old"
+msgstr "Vieux"
+
+#: src/CasasoftStandards/Service/FeatureService.php:235
+msgid "has building law restrictions"
+msgstr "Limitations du droit relatif aux constructions"
+
+#: src/CasasoftStandards/Service/FeatureService.php:240
+msgid "Swimmingpool"
+msgstr "Pool"
+
+#: src/CasasoftStandards/Service/FeatureService.php:244
+msgid "Minergie general"
+msgstr "Minergie générale"
+
+#: src/CasasoftStandards/Service/FeatureService.php:248
+msgid "Minergie certified"
+msgstr "Minergie certifiée"
+
+#: src/CasasoftStandards/Service/NumvalService.php:31
+msgid "General"
+msgstr "Général"
+
+#: src/CasasoftStandards/Service/NumvalService.php:61
+msgid "Number of"
+msgstr "Nombre"
+
+#: src/CasasoftStandards/Service/NumvalService.php:75
+msgid "Areas"
+msgstr "Surface"
+
+#: src/CasasoftStandards/Service/NumvalService.php:104
+msgid "Distances"
+msgstr "Distance"
+
+#: src/CasasoftStandards/Service/NumvalService.php:164
+msgid "Floor"
+msgstr "Etage"
+
+#: src/CasasoftStandards/Service/NumvalService.php:170
+msgid "Floors"
+msgstr "Etages"
+
+#: src/CasasoftStandards/Service/NumvalService.php:176
+msgid "Apartments"
+msgstr "Appartements"
+
+#: src/CasasoftStandards/Service/NumvalService.php:182
+msgid "Bathrooms"
+msgstr "Salles de bain"
+
+#: src/CasasoftStandards/Service/NumvalService.php:188
+msgid "Numver of parcels"
+msgstr "Nombre de parcelles"
+
+#: src/CasasoftStandards/Service/NumvalService.php:194
+msgid "Distance to kindergarten"
+msgstr "Distance école  maternelle"
+
+#: src/CasasoftStandards/Service/NumvalService.php:200
+msgid "Distance to primary school"
+msgstr "Distance école primaire"
+
+#: src/CasasoftStandards/Service/NumvalService.php:206
+msgid "Distance to high school"
+msgstr "Distance lycée"
+
+#: src/CasasoftStandards/Service/NumvalService.php:212
+msgid "Distance to college"
+msgstr "Distance université"
+
+#: src/CasasoftStandards/Service/NumvalService.php:218
+msgid "Distance to bus stop"
+msgstr "Distance arrêt de bus"
+
+#: src/CasasoftStandards/Service/NumvalService.php:224
+msgid "Distance to train station"
+msgstr "Distance gare"
+
+#: src/CasasoftStandards/Service/NumvalService.php:230
+msgid "Distance to post"
+msgstr "Distance poste"
+
+#: src/CasasoftStandards/Service/NumvalService.php:236
+msgid "Distance to bank"
+msgstr "Distance banque"
+
+#: src/CasasoftStandards/Service/NumvalService.php:242
+msgid "Distance to railway station"
+msgstr "Distance téléphérique"
+
+#: src/CasasoftStandards/Service/NumvalService.php:248
+msgid "Distance to boat dock"
+msgstr "Distance port"
+
+#: src/CasasoftStandards/Service/NumvalService.php:254
+msgid "Distance to public transport"
+msgstr "Distance transport publique"
+
+#: src/CasasoftStandards/Service/NumvalService.php:260
+msgid "Distance to shop"
+msgstr "Distance achat"
+
+#: src/CasasoftStandards/Service/NumvalService.php:266
+msgid "Distance to freeway"
+msgstr "Distance autoroute"
+
+#: src/CasasoftStandards/Service/NumvalService.php:272
+msgid "Rooms"
+msgstr "Chambres"
+
+#: src/CasasoftStandards/Service/NumvalService.php:278
+msgid "Max. elevator weight"
+msgstr "Poids max. ascenseur"
+
+#: src/CasasoftStandards/Service/NumvalService.php:285
+msgid "Property land area"
+msgstr "Surface terrain"
+
+#: src/CasasoftStandards/Service/NumvalService.php:306
+#: src/CasasoftStandards/Service/NumvalService.php:579
+msgid "Total living area"
+msgstr "Surface habitable brut"
+
+#: src/CasasoftStandards/Service/NumvalService.php:312
+msgid "Net floor area"
+msgstr "Surface principale"
+
+#: src/CasasoftStandards/Service/NumvalService.php:318
+msgid "Floorspace"
+msgstr "Surface cultivable"
+
+#: src/CasasoftStandards/Service/NumvalService.php:324
+msgid "Main floor space"
+msgstr "Surface principale"
+
+#: src/CasasoftStandards/Service/NumvalService.php:330
+msgid "Secondary usable area"
+msgstr "Surface secondaire"
+
+#: src/CasasoftStandards/Service/NumvalService.php:337
+msgid "Traffic area"
+msgstr "Espace réservé à la circulation routière"
+
+#: src/CasasoftStandards/Service/NumvalService.php:343
+msgid "Functional surface"
+msgstr "Surface fonctionnelle"
+
+#: src/CasasoftStandards/Service/NumvalService.php:351
+msgid "Construction area"
+msgstr "Surface construction"
+
+#: src/CasasoftStandards/Service/NumvalService.php:357
+msgid "Construction area supporting"
+msgstr "Surface construction de soutènement"
+
+#: src/CasasoftStandards/Service/NumvalService.php:363
+msgid "Construction area non-supporting"
+msgstr "Surface construction pas de soutènement"
+
+#: src/CasasoftStandards/Service/NumvalService.php:379
+msgid "SIA-AGF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:385
+msgid "SIA-ANGF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:391
+msgid "SIA-ANF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:397
+msgid "SIA-AVF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:403
+msgid "SIA-AFF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:411
+msgid "SIA-AFK"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:417
+msgid "SIA-AFFT"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:423
+msgid "SIA-AFFN"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:440
+msgid "SIA-GV"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:446
+msgid "SIA-ANGV"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:452
+msgid "SIA-ANV"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:458
+msgid "SIA-AVV"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:464
+#: src/CasasoftStandards/Service/NumvalService.php:472
+msgid "SIA-AFV"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:489
+msgid "SIA-GSF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:495
+msgid "SIA-UO"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:501
+msgid "SIA-BUF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:507
+msgid "SIA-UUF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:513
+msgid "SIA-GGF"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:522
+msgid "SIA-GFZ"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:528
+msgid "SIA-AZ"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:534
+#: src/CasasoftStandards/Service/NumvalService.php:540
+#: src/CasasoftStandards/Service/NumvalService.php:546
+msgid "SIA-BMZ"
+msgstr ""
+
+#: src/CasasoftStandards/Service/NumvalService.php:555
+msgid "Cubature GVA"
+msgstr "Cubature GVA"
+
+#: src/CasasoftStandards/Service/NumvalService.php:561
+msgid "Cubature SIA"
+msgstr "Cubature SIA"
+
+#: src/CasasoftStandards/Service/NumvalService.php:567
+msgid "Utilization number"
+msgstr "Indice d'utilisation"
+
+#: src/CasasoftStandards/Service/NumvalService.php:573
+msgid "Construction utilization number"
+msgstr "Indice d'utilisation (construction)"
+
+#: src/CasasoftStandards/Service/NumvalService.php:585
+msgid "Net living area"
+msgstr "Surface habitable net"
+
+#: src/CasasoftStandards/Service/NumvalService.php:597
+msgid "Year built"
+msgstr "Année de construction"
+
+#: src/CasasoftStandards/Service/NumvalService.php:603
+msgid "Year of last renovation"
+msgstr "Année de rénovation"
+
+#: src/CasasoftStandards/Service/NumvalService.php:609
+msgid "Ceiling height"
+msgstr "Hauteur du plafond"
+
+#: src/CasasoftStandards/Service/NumvalService.php:615
+msgid "Hall height"
+msgstr "Hauteur d'halle"
+
+#: src/CasasoftStandards/Service/NumvalService.php:621
+msgid "Max. floor loading"
+msgstr "Pollution du sol max."
+
+#: src/CasasoftStandards/Service/NumvalService.php:627
+msgid "Carrying capacity for crane"
+msgstr "Pollution de grue max."
+
+#: src/CasasoftStandards/Service/NumvalService.php:633
+msgid "Carrying capacity for elevator"
+msgstr "Pollution d'ascenseur max."
+
+#: src/CasasoftStandards/Service/NumvalService.php:640
+msgid "Land price"
+msgstr "Prix du terrain"
+
+#: src/CasasoftStandards/Service/NumvalService.php:647
+msgid "Gross premium"
+msgstr "Prime brute"
+
+#: src/CasasoftStandards/Service/UtilityService.php:34
+msgid "Commercial"
+msgstr "Commercial(e)"
+
+#: src/CasasoftStandards/Service/UtilityService.php:38
+msgid "Gastronomy"
+msgstr "Gastronomie"
+
+#: src/CasasoftStandards/Service/UtilityService.php:42
+msgid "Vacation"
+msgstr "Vacances"
+
+#: src/CasasoftStandards/Service/UtilityService.php:46
+msgid "Agricultural"
+msgstr "Agriculture"
+
+#: src/CasasoftStandards/Service/UtilityService.php:50
+msgid "Industrial"
+msgstr "Industrial"
+
+#: src/CasasoftStandards/Service/UtilityService.php:54
+msgid "Residential"
+msgstr "Habiter"
+
+#: src/CasasoftStandards/Service/UtilityService.php:58
+msgid "Storage"
+msgstr "Entrepôt"
+
+#~ msgid "Cabletv"
+#~ msgstr "Cable TV"
+
+#~ msgid "Street"
+#~ msgstr "Rue"
+
+#~ msgid "Addition"
+#~ msgstr "Complément"
+
+#~ msgid "Postal Code"
+#~ msgstr "Code postal"
+
+#~ msgid "City"
+#~ msgstr "Ville"
+
+#~ msgid "Latitude"
+#~ msgstr "Latitude"
+
+#~ msgid "Longitude"
+#~ msgstr "Longitude"
+
+#~ msgid "Country"
+#~ msgstr "Pays"
+
+#~ msgid "Property development"
+#~ msgstr "Viabilisation"
+
+#~ msgid "Property is partialy developed"
+#~ msgstr "Viabilisation partielle"
+
+#~ msgid "Property is not developed"
+#~ msgstr "Non viabilisé"
+
+#~ msgid "Property is Developed"
+#~ msgstr "Viabilisation complète"
+
+#~ msgid "Email"
+#~ msgstr "Email"
+
+#~ msgid "Language"
+#~ msgstr "Langue"
+
+#~ msgid "Role"
+#~ msgstr "Rôle"
+
+#~ msgid "Password"
+#~ msgstr "Mot de passe"
+
+#~ msgid "Login"
+#~ msgstr "Ouverture d'une session"
+
+#~ msgid "Chosen Password"
+#~ msgstr "Mot de passe choisi"
+
+#~ msgid "Repeat Password"
+#~ msgstr "Répéter mot de passe"
+
+#~ msgid "Rent"
+#~ msgstr "Louer"
+
+#~ msgid "Buy"
+#~ msgstr "Acheter"
+
+#~ msgid "Hour"
+#~ msgstr "Heure"
+
+#~ msgid "Week"
+#~ msgstr "Semaine"
+
+#~ msgid "Month"
+#~ msgstr "Mois"
+
+#~ msgid "Year"
+#~ msgstr "An"
+
+#~ msgid "Per request"
+#~ msgstr "Sur demande"
+
+#~ msgid "in one second"
+#~ msgid_plural "in %s seconds"
+#~ msgstr[0] "Dans une seconde"
+#~ msgstr[1] "in %s Sekunden"
+
+#~ msgid "in one minute"
+#~ msgid_plural "in %s minutes"
+#~ msgstr[0] "Dans une minute"
+#~ msgstr[1] "In %s Minuten"
+
+#~ msgid "in one hour"
+#~ msgid_plural "in %s hours"
+#~ msgstr[0] "Dans une heure"
+#~ msgstr[1] "in %s Stunden"
+
+#~ msgid "in one day"
+#~ msgid_plural "in %s days"
+#~ msgstr[0] "Dans un jour"
+#~ msgstr[1] "in %s Tagen"
+
+#~ msgid "in one week"
+#~ msgid_plural "in %s weeks"
+#~ msgstr[0] "Dans une semaine"
+#~ msgstr[1] "in %s Wochen"
+
+#~ msgid "one second ago"
+#~ msgid_plural "%s seconds ago"
+#~ msgstr[0] "Il y a une seconde"
+#~ msgstr[1] "vor %s Sekunden"
+
+#~ msgid "one minute ago"
+#~ msgid_plural "%s minutes ago"
+#~ msgstr[0] "Il y a une minute"
+#~ msgstr[1] "vor %s Minuten"
+
+#~ msgid "one hour ago"
+#~ msgid_plural "%s hours ago"
+#~ msgstr[0] "Il y a une heure"
+#~ msgstr[1] "vor %s Stunden"
+
+#~ msgid "one day ago"
+#~ msgid_plural "%s days ago"
+#~ msgstr[0] "Il y a un jour"
+#~ msgstr[1] "vor %s Tagen"
+
+#~ msgid "one week ago"
+#~ msgid_plural "%s weeks ago"
+#~ msgstr[0] "Il y a une semaine"
+#~ msgstr[1] "vor %s Wochen"
+
+#~ msgid "updated a property"
+#~ msgstr "Objet actualisé"
+
+#~ msgid "created a property"
+#~ msgstr "Objet établi"
+
+#~ msgid "removed a property"
+#~ msgstr "Objet effacé"
+
+#~ msgid "updated a searchprofile"
+#~ msgstr "Profil de recherche actualisé"
+
+#~ msgid "created a searchprofile"
+#~ msgstr "Profil de recherche établi"
+
+#~ msgid "removed a searchprofile"
+#~ msgstr "Profil de recherche effacé"
+
+#~ msgid "created a contact entry"
+#~ msgstr "Note de contact établi"
+
+#~ msgid "updated a contact entry"
+#~ msgstr "Note de contact adapté"
+
+#~ msgid "%1$s has %2$s for %3$s."
+#~ msgstr "%1$s a %2$s pour %3$s."
+
+#~ msgid "Unknown user has %1$s for %2$s."
+#~ msgstr "Utilisateur inconnu a %1$s pour %2$s."
+
+#~ msgid "%1$s has done something for %2$s."
+#~ msgstr "%1$s a fait quelque chose pour %2$s."
+
+#~ msgid "%1$s has %2$s."
+#~ msgstr "%1$s a %2$s."
+
+#~ msgid "Unknown user has done something for %1$s."
+#~ msgstr "Utilisateur inconnu a fait quelque chose pour %1$s."
+
+#~ msgid "Unknown user has %1$s."
+#~ msgstr "Utilisateur inconnu a %1$s."
+
+#~ msgid "%1$s has done something."
+#~ msgstr "%1$s a fait quelque chose."
+
+#~ msgid "Something happened under cover B-)."
+#~ msgstr "Quelque chose a été exécuté caché B-)."
+
+#~ msgid "Offer date:"
+#~ msgstr "Date de l'offre :"
+
+#~ msgid "Specifications"
+#~ msgstr "Caractéristiques"
+
+#~ msgid "Reference No."
+#~ msgstr "Référence Nº"
+
+#~ msgid "Zone"
+#~ msgstr "Zone"
+
+#~ msgid "Type"
+#~ msgstr "Type"
+
+#~ msgid "Price"
+#~ msgstr "Prix"
+
+#~ msgid "Address"
+#~ msgstr "Adresse"
+
+#~ msgid "Available from"
+#~ msgstr "Disponible à partir de:"
+
+#~ msgid "Contract duration"
+#~ msgstr "Durée du contrat."
+
+#~ msgid "Features:"
+#~ msgstr "Caractéristiques :"
+
+#~ msgid "Edit Profile"
+#~ msgstr "Adapter le profil"
+
+#~ msgid "Change password"
+#~ msgstr "Changer le mot de passe"
+
+#~ msgid "Please enter your email and specify your new password to change your user settings. You will receive your profile through E-Mail."
+#~ msgstr "Pour changer vos données d'utilisateur entrez votre adresse email et un nouveau mot de passe. Vous recevez les données d'utilisateur par email."
+
+#~ msgid "Forgot password"
+#~ msgstr "Mot de passe oublié"
+
+#~ msgid "Register"
+#~ msgstr "Registrer"
+
+#~ msgid "Trends"
+#~ msgstr "Tendances"
+
+#~ msgid "News & Media"
+#~ msgstr "Actualité"
+
+#~ msgid "Authors"
+#~ msgstr "Autoren"
+
+#~ msgid "Library"
+#~ msgstr "Bibliothek"
+
+#~ msgid "Search"
+#~ msgstr "Recherche"
+
+#~ msgid "Search the entire collection"
+#~ msgstr "Suche gesamte Bibliothek"
+
+#~ msgid "My Account"
+#~ msgstr "Mein Konto"
+
+#~ msgid "Go to your account"
+#~ msgstr "Zu deinem Konto"
+
+#~ msgid "Logout"
+#~ msgstr "Abmelden"
+
+#~ msgid "Could not find Brand with ID:"
+#~ msgstr "Konnte die Marke nicht finden:"
+
+#~ msgid "Slug is already taken"
+#~ msgstr "Url-Name existiert bereits"
+
+#~ msgid "Item has been created"
+#~ msgstr "Eintrag wurde erstellt"
+
+#~ msgid "Item has been updated"
+#~ msgstr "Eintrag wurde aktualisiert"
+
+#~ msgid "Item has been deleted"
+#~ msgstr "Eintrag wurde gelöscht"
+
+#~ msgid "Could not find Item with ID:"
+#~ msgstr "Konnte den Eintrag nicht finden:"
+
+#~ msgid "Could not find item with ID:"
+#~ msgstr "Konnte den Eintrag nicht finden:"
+
+#~ msgid "Username is already taken"
+#~ msgstr "Benutzername existiert bereits"
+
+#~ msgid "Email is already taken"
+#~ msgstr "E-Mail existiert bereits"
+
+#~ msgid "You are now logged in."
+#~ msgstr "Sie sind jetzt angemeldet."
+
+#~ msgid "You habe been logged out"
+#~ msgstr "Sie wurden abgemeldet"
+
+#~ msgid "German"
+#~ msgstr "Deutsch"
+
+#~ msgid "English"
+#~ msgstr "Englisch"
+
+#~ msgid "Sort"
+#~ msgstr "Ordnen"
+
+#~ msgid "Name"
+#~ msgstr "Name"
+
+#~ msgid "Slug"
+#~ msgstr "Slug"
+
+#~ msgid "None"
+#~ msgstr "Nichts"
+
+#~ msgid "Save"
+#~ msgstr "Sichern"
+
+#, fuzzy
+#~ msgid "Name FR"
+#~ msgstr "Name"
+
+#~ msgid "Username"
+#~ msgstr "Benutzername"
+
+#~ msgid "Chosen Username"
+#~ msgstr "Gewünschter Benutzername"
+
+#~ msgid "Firstname"
+#~ msgstr "Prénom"
+
+#~ msgid "Lastname"
+#~ msgstr "Nom"
+
+#~ msgid "ZIP"
+#~ msgstr "PLZ"
+
+#~ msgid "Locality"
+#~ msgstr "Ort"
+
+#~ msgid "John"
+#~ msgstr "Bernard"
+
+#~ msgid "First Name"
+#~ msgstr "Prénom"
+
+#~ msgid "Doe"
+#~ msgstr "Anquetil"
+
+#~ msgid "Last Name"
+#~ msgstr "Nom"
+
+#~ msgid "Company Inc."
+#~ msgstr "Entreprise (SA)"
+
+#~ msgid "Company"
+#~ msgstr "Entreprise"
+
+#~ msgid "username@domain.com"
+#~ msgstr "user@domain.ch"
+
+#~ msgid "Telephone"
+#~ msgstr "Téléphone"
+
+#~ msgid "Brand 1, brand 2"
+#~ msgstr "Marque 1, Marque 2"
+
+#~ msgid "Requested Brands"
+#~ msgstr "Marque(s) souhaitée(s)"
+
+#~ msgid "Remark"
+#~ msgstr "Commentaire"
+
+#~ msgid "Set new password"
+#~ msgstr "Neues Passwort setzen"
+
+#~ msgid "First name"
+#~ msgstr "Prénom"
+
+#~ msgid "Last name"
+#~ msgstr "Nom"
+
+#~ msgid "Administrator"
+#~ msgstr "Administrator"
+
+#~ msgid "Verified"
+#~ msgstr "Verifiziert"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "Delete"
+#~ msgstr "Löschen"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Are you sure you want to delete this item?"
+#~ msgstr "Sind Sie sicher das Sie diesen Eintrag löschen möchten?"
+
+#~ msgid "Categories"
+#~ msgstr "Catégories"
+
+#~ msgid "A 404 error occurred"
+#~ msgstr "Ein 404 Fehler ist aufgetreten"
+
+#~ msgid "The requested controller was unable to dispatch the request."
+#~ msgstr "Der verlangte Controller konnte die Anfrage nicht versenden."
+
+#~ msgid "The requested controller could not be mapped to an existing controller class."
+#~ msgstr "Der verlangte Controller konnte nicht auf eine existierende Klasse verknüpft werden."
+
+#~ msgid "The requested controller was not dispatchable."
+#~ msgstr "Der verlangte Controller konnte nicht abgesendet werden "
+
+#~ msgid "The requested URL could not be matched by routing."
+#~ msgstr "Die verlangte URL konnte vom routing nicht gefunden werden."
+
+#~ msgid "We cannot determine at this time why a 404 was generated."
+#~ msgstr "Wir können momentan nicht feststellen wieso diese 404 aufgetreten ist."
+
+#~ msgid "Controller"
+#~ msgstr "Controller"
+
+#~ msgid "resolves to %s"
+#~ msgstr "Lösungen zu %s"
+
+#~ msgid "Additional information"
+#~ msgstr "Weitere Informationen"
+
+#~ msgid "File"
+#~ msgstr "Datei"
+
+#~ msgid "Message"
+#~ msgstr "Nachricht"
+
+#~ msgid "Stack trace"
+#~ msgstr "Fluss Verfolgung"
+
+#~ msgid "Previous exceptions"
+#~ msgstr "Vorherige Ausnahme"
+
+#~ msgid "No Exception available"
+#~ msgstr "Keine Ausnahme verfügbar"
+
+#~ msgid "An error occurred"
+#~ msgstr "Ein Fehler ist aufgetreten"
+
+#, fuzzy
+#~ msgid "Nachname"
+#~ msgstr "Nachname"
+
+#~ msgid "Shopping Cart"
+#~ msgstr "Warenkorb"
+
+#~ msgid "Go to the shopping cart"
+#~ msgstr "Zum Warenkorb"
+
+#~ msgid "My Items"
+#~ msgstr "Meine Einkäufe"
+
+#~ msgid "Go to your purchased items"
+#~ msgstr "Zu deinen gekauften Produkten "
+
+#~ msgid "Product has been flagged as downloadable but the file is missing!"
+#~ msgstr "Das Produkt wurde als Digital gekennzeichnet aber die Datei fehlt!"
+
+#~ msgid "Not authorized!"
+#~ msgstr "Nicht Autorisiert!"
+
+#~ msgid "File is missing! Report this problem!"
+#~ msgstr "Datei fehlt! Bitte melden Sie dieses Problem!"
+
+#~ msgid "Product could not be found!"
+#~ msgstr "Produkt konnte nicht gefunden werden!"
+
+#~ msgid "Refreshed"
+#~ msgstr "Aktualisiert"
+
+#~ msgid "Your Shopping cart is empty."
+#~ msgstr "Der Einkaufswagen ist leer."
+
+#~ msgid "Search string"
+#~ msgstr "Such Kriterien"
+
+#~ msgid "Title"
+#~ msgstr "Titel"
+
+#~ msgid "Excerpt"
+#~ msgstr "Auszug"
+
+#~ msgid "Is Shippable"
+#~ msgstr "Ist Lieferbar"
+
+#~ msgid "Is Downloadable"
+#~ msgstr "Ist Digital"
+
+#~ msgid "Volume"
+#~ msgstr "Ausgabe"
+
+#~ msgid "Parent product"
+#~ msgstr "Übergeordnetes Produkt"
+
+#~ msgid "Name in german"
+#~ msgstr "Name auf Deutsch"
+
+#~ msgid "Name in english"
+#~ msgstr "Name auf Englisch"
+
+#~ msgid "Date released"
+#~ msgstr "Erstellungsdatum"
+
+#~ msgid "User"
+#~ msgstr "Benutzer"
+
+#~ msgid "Publication"
+#~ msgstr "Publikation"
+
+#~ msgid "Courses &amp; Seminars"
+#~ msgstr "Kurs &amp; Seminare"
+
+#~ msgid "About Us"
+#~ msgstr "Über Uns"
+
+#~ msgid "Infos"
+#~ msgstr "Infos"
+
+#~ msgid "Hello"
+#~ msgstr "Hallo"
+
+#~ msgid "Service &amp; Infos"
+#~ msgstr "Service &amp; Infos"
+
+#~ msgid "page"
+#~ msgstr "seite"
+
+#~ msgid "Category (%s) is uknown"
+#~ msgstr "Kategorie (%s) ist unbekannt"
+
+#~ msgid "%s file(s) failed to import"
+#~ msgstr "%s Bild(er) konnten nicht importiert werden."
+
+#~ msgid "Although the file(s): %s were declared in an import, the physical file could not copied and/or found."
+#~ msgstr "Obwohl die/das Bild(er) (%s) im Import deklariert wurde, wurde die physikalische Datei nicht gefunden."
+
+#~ msgid "Notice has occured (%s) times"
+#~ msgstr "Warnung ist (%s) mal erschienen"
+
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
+#~ msgid "Properties"
+#~ msgstr "Objekte"
+
+#~ msgid "Settings"
+#~ msgstr "Einstellungen"
+
+#~ msgid "Software"
+#~ msgstr "Software"
+
+#~ msgid "Export"
+#~ msgstr "Export"
+
+#~ msgid "Import"
+#~ msgstr "Import"
+
+#~ msgid "Inquiries"
+#~ msgstr "Anfragen"
+
+#~ msgid "The category (%s) could not be imported for one of the properties. It appears to not be supported as an official Property Category"
+#~ msgstr "Die Kategorie (%s) konnte von einem Objekt nicht importiert werden. Es sieht so aus als wäre diese Kategorie nicht offiziell unterstützt."
+
+#~ msgid "You have a new notification"
+#~ msgid_plural "You have %s new notifications"
+#~ msgstr[0] "Sie haben eine neue Meldung"
+#~ msgstr[1] "Sie haben %s neue Meldungen"
+
+#~ msgid "View all notifications"
+#~ msgstr "Alle Meldungen anzeigen"
+
+#~ msgid "Most recent property changes"
+#~ msgstr "Zuletzt geänderte Objekte"
+
+#~ msgid "More from"
+#~ msgstr "Mehr von"
+
+#~ msgid "Loading..."
+#~ msgstr "Wird geladen…"
+
+#~ msgid "Numeric Values"
+#~ msgstr "Numerische Werte"
+
+#~ msgid "Other"
+#~ msgstr "Andere"
+
+#~ msgid "Date Modified:"
+#~ msgstr "Bearbeitungsdatum:"
+
+#~ msgid "Sales price:"
+#~ msgstr "Kaufpreis"
+
+#~ msgid "Daily"
+#~ msgstr "Täglich"
+
+#~ msgid "Rent (including extra costs):"
+#~ msgstr "Miete: (Inkl. Nebenkosten):"
+
+#~ msgid "Inquiries go to"
+#~ msgstr "Anfragen gehen zu"
+
+#~ msgid "Published to:"
+#~ msgstr "Veröffentlicht zu:"
+
+#~ msgid "Synchronization:"
+#~ msgstr "Synchronisation:"
+
+#~ msgid "Data is in sync."
+#~ msgstr "Die Daten sind Synchron."
+
+#~ msgid "should be published:"
+#~ msgstr "ist veröffentlicht:"
+
+#~ msgid "Data in sync and should be published."
+#~ msgstr "Daten sind synchron und sollten veröffentlicht sein."
+
+#~ msgid "There are issues with this service at this time."
+#~ msgstr "Es gibt Probleme mit diesem Dienst zu diesem Zeitpunkt."
+
+#~ msgid "Dieser Benutzer wurde bereits aktiviert. %sJetzt anmelden!%s"
+#~ msgstr "Dieser Benutzer wurde bereits aktiviert. %sJetzt anmelden!%s"
+
+#~ msgid "Do you have an alternate E-Mail address"
+#~ msgstr "Haben Sie eine alternative E-Mail-Adresse"
+
+#~ msgid "Want to sign up a new user?"
+#~ msgstr "Möchten Sie einen neuen Benutzer anmelden?"
+
+#~ msgid "My Profile Settings"
+#~ msgstr "Profil Einstellungen"
+
+#~ msgid "Other users"
+#~ msgstr "Andere Benutzer"
+
+#~ msgid "Local image was not found"
+#~ msgstr "Lokales Bild konnte nicht gefunden werden"
+
+#~ msgid "Seller"
+#~ msgstr "Verkäufer"
+
+#~ msgid "Provider"
+#~ msgstr "Anbieter"
+
+#~ msgid "Provider-infos"
+#~ msgstr "Anbieter Informationen"
+
+#~ msgid "Sellers"
+#~ msgstr "Verkäufer"
+
+#~ msgid "My Properties"
+#~ msgstr "Meine Objekte"

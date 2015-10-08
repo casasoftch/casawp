@@ -1,0 +1,8 @@
+<?php if ($this->offer->getFieldValue('address_streetaddress') && $this->offer->getFieldValue('property_geo_latitude')) : ?>
+	<?php if(get_option('casasync_single_use_zoomlevel') != '0') : ?>
+		<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . $this->offer->getFieldValue('property_geo_latitude') .','.$this->offer->getFieldValue('property_geo_longitude') . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . $this->offer->getFieldValue('property_geo_latitude') .',' . $this->offer->getFieldValue('property_geo_longitude') . "&amp;t=m&amp;z=12"; ?>
+		<div class="casasync-hidden-xs"><div class="casasync-map" style="display:none" data-lat="<?= $this->offer->getFieldValue('property_geo_latitude') ?>" data-lng="<?= $this->offer->getFieldValue('property_geo_longitude') ?>"><div id="map-canvas" style="width:100%; height:400px;" ></div><br /><small><a href="<?= $map_url ?>"><?= __('View lager version', 'casasync') ?></a></small></div></div>
+		<div class="casasync-visible-xs"><a class="btn btn-default btn-block" href="<?= $map_url ?>" target="_blank"><i class="fa fa-map-marker"></i> Auf Google Maps anzeigen</a></div>
+	<?php endif; ?>
+<?php endif; ?>
+
