@@ -1,5 +1,5 @@
 <?php
-  namespace CasaSync;
+  namespace CasaWp;
 
   class Templateable {  
     public $template = false;
@@ -17,23 +17,23 @@
       $this->type = $type;
       switch ($type) {
         case 'archive':
-          if (get_option( 'casasync_archive_template', false )) {
-            $this->template = stripslashes(get_option( 'casasync_archive_template', false ));
+          if (get_option( 'casawp_archive_template', false )) {
+            $this->template = stripslashes(get_option( 'casawp_archive_template', false ));
           } else {
             $this->template = false;
           }
           break;
         case 'single':
-          if (get_option( 'casasync_single_template', false )) {
-            $this->template = stripslashes(get_option( 'casasync_single_template', false ));
+          if (get_option( 'casawp_single_template', false )) {
+            $this->template = stripslashes(get_option( 'casawp_single_template', false ));
           } else {
             $this->template = false;
           }
           break;
         case 'archive_single':
 
-          if (get_option( 'casasync_archive_single_template', false )) {
-            $this->template = stripslashes(get_option( 'casasync_archive_single_template', false ));
+          if (get_option( 'casawp_archive_single_template', false )) {
+            $this->template = stripslashes(get_option( 'casawp_archive_single_template', false ));
           } else {
             $this->template = false;
           }
@@ -102,7 +102,7 @@
       while ($finished == false) {
           $translatable_str = $this->getStringBetween($return, "__(", ")");
           if ($translatable_str) {
-              $return = str_replace("__(" . $translatable_str . ")", __($translatable_str, 'casasync'), $return);
+              $return = str_replace("__(" . $translatable_str . ")", __($translatable_str, 'casawp'), $return);
           } else {
               $finished = true;
           }

@@ -1,44 +1,44 @@
-<div class="casasync-row">
-	<nav class="casasync-single-pagination-top">
+<div class="casawp-row">
+	<nav class="casawp-single-pagination-top">
 		<?php echo $offer->renderPagination(); ?>
 	</nav>
 </div>
-<div class="casasync-row">
-	<div class="casasync-single-content">
-		<header class="casasync-single-header">
-			<h1 class="casasync-single-title"><?php echo $offer->getTitle() ?></h1>
+<div class="casawp-row">
+	<div class="casawp-single-content">
+		<header class="casawp-single-header">
+			<h1 class="casawp-single-title"><?php echo $offer->getTitle() ?></h1>
 		</header>
-		<div class="casasync-single-contentarea">
+		<div class="casawp-single-contentarea">
 			<?php echo $offer->renderGallery(); ?>
 			<br>
 			<?php echo $offer->renderTabable(); ?>
 			<?php //echo $offer->contactSellerByMailBox(); ?>
 		</div>
 	</div>
-	<aside class="casasync-single-aside">
-		<div class="casasync-single-aside-container">
+	<aside class="casawp-single-aside">
+		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderPagination(); ?>
 		</div>
-		<div class="casasync-single-aside-container casasync-virtual-tour-btn">
+		<div class="casawp-single-aside-container casawp-virtual-tour-btn">
 			<?php 
 				$urls = $offer->renderUrls();
 				if ($urls && array_key_exists('virtual-tour', $urls)) {
 					foreach ($urls['virtual-tour'] as $key => $url) {
-						echo '<a class="btn btn-default btn-block" href="'.$url['href'].'" tarrender="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : __('Virtual Tour', 'casasync')) .'</a>';
+						echo '<a class="btn btn-default btn-block" href="'.$url['href'].'" tarrender="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : __('Virtual Tour', 'casawp')) .'</a>';
 					}
 				}
 			?>
 		</div>
-		<div class="casasync-single-aside-container">
+		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderContactform(); ?>
 		</div>
-		<div class="casasync-single-aside-container">
+		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderSeller(); ?>
 		</div>
-		<div class="casasync-single-aside-container">
+		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderSalesPerson(); ?>
 		</div>
-		<div class="casasync-single-aside-container">
+		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderAllShareWidgets(); ?>
 		</div>
 	</aside>

@@ -5,7 +5,7 @@
         <?php $value = $this->offer->getFieldValue('property_address_streetaddress') ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Street', 'casasync') ?></th>
+                <th><?= __('Street', 'casawp') ?></th>
                 <td><?= $value . ' ' .
                 $this->offer->getFieldValue('property_address_streetnumber') ?></td>
             </tr>
@@ -13,7 +13,7 @@
 
         <?php if(1==0 && $this->offer->getFieldValue('property_address_streetaddress')): ?>
             <tr>
-                <th><?= __('Locality', 'casasync') ?></th>
+                <th><?= __('Locality', 'casawp') ?></th>
                 <td><?php /* get adress*/ ?></td>
             </tr>
         <?php endif; ?>
@@ -21,7 +21,7 @@
         <?php $value = $this->offer->getNumval('sia_nf'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Surface usable', 'casasync') ?></th>
+                <th><?= __('Surface usable', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -29,7 +29,7 @@
         <?php $value = $this->offer->getNumval('area_bwf'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Living space', 'casasync') ?></th>
+                <th><?= __('Living space', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -37,7 +37,7 @@
         <?php $value = $this->offer->getNumval('surface_property'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Property space', 'casasync') ?></th>
+                <th><?= __('Property space', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -45,7 +45,7 @@
         <?php $value = false #floor; ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Floor', 'casasync') ?></th>
+                <th><?= __('Floor', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -53,7 +53,7 @@
         <?php $value = $this->offer->getNumval('number_of_floors'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Number of floors', 'casasync') ?></th>
+                <th><?= __('Number of floors', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -61,7 +61,7 @@
         <?php $value = $this->offer->getNumval('year_built'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Year of construction', 'casasync') ?></th>
+                <th><?= __('Year of construction', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -69,7 +69,7 @@
         <?php $value = $this->offer->getNumval('year_renovated'); ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('Year of renovation', 'casasync') ?></th>
+                <th><?= __('Year of renovation', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -77,7 +77,7 @@
         <?php $value = false #price ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('', 'casasync') ?></th>
+                <th><?= __('', 'casawp') ?></th>
                 <td><?= $this->offer->renderNumvalValue($value) ?></td>
             </tr>
         <?php endif; ?>
@@ -94,7 +94,7 @@
         $value = false # ?>
         <?php if($value): ?>
             <tr>
-                <th><?= __('', 'casasync') ?></th>
+                <th><?= __('', 'casawp') ?></th>
                 <td></td>
             </tr>
         <?php endif; ?>
@@ -105,18 +105,18 @@
 
 <?php
 /*'
-'casasync_archive_show_location',
-'casasync_archive_show_number_of_rooms',
-'casasync_archive_show_area_sia_nf',
-'casasync_archive_show_area_bwf',
-'casasync_archive_show_surface_property',
-'casasync_archive_show_floor',
-'casasync_archive_show_number_of_floors',
-'casasync_archive_show_year_built',
-'casasync_archive_show_year_renovated',
-'casasync_archive_show_price',
-'casasync_archive_show_excerpt',
-'casasync_archive_show_availability'
+'casawp_archive_show_location',
+'casawp_archive_show_number_of_rooms',
+'casawp_archive_show_area_sia_nf',
+'casawp_archive_show_area_bwf',
+'casawp_archive_show_surface_property',
+'casawp_archive_show_floor',
+'casawp_archive_show_number_of_floors',
+'casawp_archive_show_year_built',
+'casawp_archive_show_year_renovated',
+'casawp_archive_show_price',
+'casawp_archive_show_excerpt',
+'casawp_archive_show_availability'
 
 ###################
   $return .= '<table class="table">';
@@ -124,93 +124,93 @@
 
   foreach ($value_to_display as $value) {
     switch ($value) {
-      case 'casasync_archive_show_street_and_number':
+      case 'casawp_archive_show_street_and_number':
         if($this->address_street){
             $return .= '<tr>'
-            .'<th>' . __('Street', 'casasync') . '</th>'
+            .'<th>' . __('Street', 'casawp') . '</th>'
             .'<td>' . $this->address_street . ' ' . $this->address_streetnumber . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_location':
+      case 'casawp_archive_show_location':
         if ($this->getAddress('property')){
           $return .= '<tr>'
-            .'<th>' . __('Locality', 'casasync') . '</th>'
+            .'<th>' . __('Locality', 'casawp') . '</th>'
             .'<td>' . $this->getAddress('property', true) . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_number_of_rooms':
+      case 'casawp_archive_show_number_of_rooms':
         if ($this->getNumval('number_of_rooms')){
           $return .= '<tr>'
-            .'<th>' .  __('Number of rooms', 'casasync') . '</th>'
+            .'<th>' .  __('Number of rooms', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('number_of_rooms') . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_area_sia_nf':
+      case 'casawp_archive_show_area_sia_nf':
         if ($this->getNumval('area_sia_nf')){
           $return .= '<tr>'
-            .'<th>' .  __('Surface usable', 'casasync') . '</th>'
+            .'<th>' .  __('Surface usable', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('area_sia_nf') . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_area_bwf':
+      case 'casawp_archive_show_area_bwf':
         if ($this->getNumval('area_bwf')){
           $return .= '<tr>'
-            .'<th>' . __('Living space', 'casasync') . '</th>'
+            .'<th>' . __('Living space', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('area_bwf', true) . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_surface_property':
+      case 'casawp_archive_show_surface_property':
         if ($this->getNumval('surface_property')){
           $return .= '<tr>'
-            .'<th>' . __('Property space', 'casasync') . '</th>'
+            .'<th>' . __('Property space', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('surface_property', true) . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_floor':
+      case 'casawp_archive_show_floor':
         if ($this->floors){
           $return .= '<tr>'
-            .'<th>' . __('Floor', 'casasync') . '</th>'
+            .'<th>' . __('Floor', 'casawp') . '</th>'
             .'<td>' . $this->floors[0] . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_number_of_floors':
+      case 'casawp_archive_show_number_of_floors':
        if ($this->getNumval('number_of_floors')){
           $return .= '<tr>'
-            .'<th>' . __('Number of floors', 'casasync') . '</th>'
+            .'<th>' . __('Number of floors', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('number_of_floors', true) . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_year_built':
+      case 'casawp_archive_show_year_built':
         if ($this->getNumval('year_built')){
               $return .= '<tr>'
-            .'<th>' . __('Year of construction', 'casasync') . '</th>'
+            .'<th>' . __('Year of construction', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('year_built', true) . '</td>'
           .'</tr>';
           }
         break;
-      case 'casasync_archive_show_year_renovated':
+      case 'casawp_archive_show_year_renovated':
         if ($this->getNumval('year_renovated')){
           $return .= '<tr>'
-            .'<th>' . __('Year of renovation', 'casasync') . '</th>'
+            .'<th>' . __('Year of renovation', 'casawp') . '</th>'
             .'<td>' . $this->getNumval('year_renovated', true) . '</td>'
           .'</tr>';
         }
         break;
-      case 'casasync_archive_show_price':
+      case 'casawp_archive_show_price':
         if ($this->availability != 'reference') {
           if ($this->main_basis == 'buy') {
             $return .= '<tr>'
-              .'<th>' . __('Sales price','casasync') . '</th>'
+              .'<th>' . __('Sales price','casawp') . '</th>'
             .'<td>';
-            $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casasync');
+            $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casawp');
             $return .= '</td>'
             .'</tr>';
           }
@@ -218,7 +218,7 @@
             if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
               if ($this->getPrice('gross')) {
                 $return .= '<tr>'
-                  .'<th>' . __('Gross price','casasync') . '</th>'
+                  .'<th>' . __('Gross price','casawp') . '</th>'
                 .'<td>';
                 $return .= $this->getPrice('gross', 'full');
                 $return .= '</td>'
@@ -226,7 +226,7 @@
               }
               if ($this->getPrice('net')) {
                 $return .= '<tr>'
-                  .'<th>' . __('Net price','casasync') . '</th>'
+                  .'<th>' . __('Net price','casawp') . '</th>'
                 .'<td>';
                 $return .= $this->getPrice('net', 'full');
                 $return .= '</td>'
@@ -234,34 +234,34 @@
               }
             } else {
               $return .= '<tr>'
-                  .'<th>' . __('Rent price','casasync') . '</th>'
+                  .'<th>' . __('Rent price','casawp') . '</th>'
                 .'<td>';
-                $return .=  __('On Request', 'casasync');
+                $return .=  __('On Request', 'casawp');
                 $return .= '</td>'
                 .'</tr>';
             }
           }
         }
         break;
-        case 'casasync_archive_show_excerpt':
+        case 'casawp_archive_show_excerpt':
           if($this->getExcerpt()) {
             $return .= '<tr><td colspan="2">' . $this->getExcerpt() . '</td></tr>';
           }
         break;
-        case 'casasync_archive_show_availability':
+        case 'casawp_archive_show_availability':
           if ($this->availability != 'reference') {
             if ($this->getAvailabilityLabel()) {
               $return .= '<tr>'
-                .'<th>' . __('Available','casasync') . '</th>'
+                .'<th>' . __('Available','casawp') . '</th>'
               .'<td>';
               $return .= $this->getAvailabilityLabel();
               $return .= '</td>'
               .'</tr>';
             } else {
               $return .= '<tr>'
-                .'<th>' . __('Available','casasync') . '</th>'
+                .'<th>' . __('Available','casawp') . '</th>'
               .'<td>';
-              $return .= __('On Request', 'casasync');
+              $return .= __('On Request', 'casawp');
               $return .= '</td>'
               .'</tr>';
             }

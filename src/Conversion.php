@@ -1,5 +1,5 @@
 <?php
-  namespace CasaSync;
+  namespace CasaWp;
 
   class Conversion {
 
@@ -17,313 +17,313 @@
 
     public function country_arrays(){
         $country_arr = array(
-          "AD" => __("Andorra", 'casasync'),
-          "AE" => __("United Arab Emirates", 'casasync'),
-          "AF" => __("Afghanistan", 'casasync'),
-          "AG" => __("Antigua and Barbuda", 'casasync'),
-          "AI" => __("Anguilla", 'casasync'),
-          "AL" => __("Albania", 'casasync'),
-          "AM" => __("Armenia", 'casasync'),
-          "AN" => __("Netherlands Antilles", 'casasync'),
-          "AO" => __("Angola", 'casasync'),
-          "AQ" => __("Antarctica", 'casasync'),
-          "AR" => __("Argentina", 'casasync'),
-          "AS" => __("American Samoa", 'casasync'),
-          "AT" => __("Austria", 'casasync'),
-          "AU" => __("Australia", 'casasync'),
-          "AW" => __("Aruba", 'casasync'),
-          "AZ" => __("Azerbaijan", 'casasync'),
-          "BA" => __("Bosnia and Herzegovina", 'casasync'),
-          "BB" => __("Barbados", 'casasync'),
-          "BD" => __("Bangladesh", 'casasync'),
-          "BE" => __("Belgium", 'casasync'),
-          "BF" => __("Burkina Faso", 'casasync'),
-          "BG" => __("Bulgaria", 'casasync'),
-          "BH" => __("Bahrain", 'casasync'),
-          "BI" => __("Burundi", 'casasync'),
-          "BJ" => __("Benin", 'casasync'),
-          "BM" => __("Bermuda", 'casasync'),
-          "BN" => __("Brunei Darussalam", 'casasync'),
-          "BO" => __("Bolivia", 'casasync'),
-          "BR" => __("Brazil", 'casasync'),
-          "BS" => __("Bahamas", 'casasync'),
-          "BT" => __("Bhutan", 'casasync'),
-          "BV" => __("Bouvet Island", 'casasync'),
-          "BW" => __("Botswana", 'casasync'),
-          "BY" => __("Belarus", 'casasync'),
-          "BZ" => __("Belize", 'casasync'),
-          "CA" => __("Canada", 'casasync'),
-          "CC" => __("Cocos (Keeling) Islands", 'casasync'),
-          "CD" => __("Congo, The Democratic Republic of the", 'casasync'),
-          "CF" => __("Central African Republic", 'casasync'),
-          "CG" => __("Congo", 'casasync'),
-          "CH" => __("Switzerland", 'casasync'),
-          "CI" => __("Cote D'Ivoire", 'casasync'),
-          "CK" => __("Cook Islands", 'casasync'),
-          "CL" => __("Chile", 'casasync'),
-          "CM" => __("Cameroon", 'casasync'),
-          "CN" => __("China", 'casasync'),
-          "CO" => __("Colombia", 'casasync'),
-          "CR" => __("Costa Rica", 'casasync'),
-          "CU" => __("Cuba", 'casasync'),
-          "CV" => __("Cape Verde", 'casasync'),
-          "CX" => __("Christmas Island", 'casasync'),
-          "CY" => __("Cyprus", 'casasync'),
-          "CZ" => __("Czech Republic", 'casasync'),
-          "DE" => __("Germany", 'casasync'),
-          "DJ" => __("Djibouti", 'casasync'),
-          "DK" => __("Denmark", 'casasync'),
-          "DM" => __("Dominica", 'casasync'),
-          "DO" => __("Dominican Republic", 'casasync'),
-          "DZ" => __("Algeria", 'casasync'),
-          "EC" => __("Ecuador", 'casasync'),
-          "EE" => __("Estonia", 'casasync'),
-          "EG" => __("Egypt", 'casasync'),
-          "EH" => __("Western Sahara", 'casasync'),
-          "ER" => __("Eritrea", 'casasync'),
-          "ES" => __("Spain", 'casasync'),
-          "ET" => __("Ethiopia", 'casasync'),
-          "FI" => __("Finland", 'casasync'),
-          "FJ" => __("Fiji", 'casasync'),
-          "FK" => __("Falkland Islands (Malvinas)", 'casasync'),
-          "FM" => __("Micronesia, Federated States of", 'casasync'),
-          "FO" => __("Faroe Islands", 'casasync'),
-          "FR" => __("France", 'casasync'),
-          "FX" => __("France, Metropolitan", 'casasync'),
-          "GA" => __("Gabon", 'casasync'),
-          "GB" => __("United Kingdom", 'casasync'),
-          "GD" => __("Grenada", 'casasync'),
-          "GE" => __("Georgia", 'casasync'),
-          "GF" => __("French Guiana", 'casasync'),
-          "GH" => __("Ghana", 'casasync'),
-          "GI" => __("Gibraltar", 'casasync'),
-          "GL" => __("Greenland", 'casasync'),
-          "GM" => __("Gambia", 'casasync'),
-          "GN" => __("Guinea", 'casasync'),
-          "GP" => __("Guadeloupe", 'casasync'),
-          "GQ" => __("Equatorial Guinea", 'casasync'),
-          "GR" => __("Greece", 'casasync'),
-          "GS" => __("South Georgia and the South Sandwich Islands", 'casasync'),
-          "GT" => __("Guatemala", 'casasync'),
-          "GU" => __("Guam", 'casasync'),
-          "GW" => __("Guinea-Bissau", 'casasync'),
-          "GY" => __("Guyana", 'casasync'),
-          "HK" => __("Hong Kong", 'casasync'),
-          "HM" => __("Heard Island and McDonald Islands", 'casasync'),
-          "HN" => __("Honduras", 'casasync'),
-          "HR" => __("Croatia", 'casasync'),
-          "HT" => __("Haiti", 'casasync'),
-          "HU" => __("Hungary", 'casasync'),
-          "ID" => __("Indonesia", 'casasync'),
-          "IE" => __("Ireland", 'casasync'),
-          "IL" => __("Israel", 'casasync'),
-          "IN" => __("India", 'casasync'),
-          "IO" => __("British Indian Ocean Territory", 'casasync'),
-          "IQ" => __("Iraq", 'casasync'),
-          "IR" => __("Iran, Islamic Republic of", 'casasync'),
-          "IS" => __("Iceland", 'casasync'),
-          "IT" => __("Italy", 'casasync'),
-          "JM" => __("Jamaica", 'casasync'),
-          "JO" => __("Jordan", 'casasync'),
-          "JP" => __("Japan", 'casasync'),
-          "KE" => __("Kenya", 'casasync'),
-          "KG" => __("Kyrgyzstan", 'casasync'),
-          "KH" => __("Cambodia", 'casasync'),
-          "KI" => __("Kiribati", 'casasync'),
-          "KM" => __("Comoros", 'casasync'),
-          "KN" => __("Saint Kitts and Nevis", 'casasync'),
-          "KP" => __("Korea, Democratic People's Republic of", 'casasync'),
-          "KR" => __("Korea, Republic of", 'casasync'),
-          "KW" => __("Kuwait", 'casasync'),
-          "KY" => __("Cayman Islands", 'casasync'),
-          "KZ" => __("Kazakstan", 'casasync'),
-          "LA" => __("Lao People's Democratic Republic", 'casasync'),
-          "LB" => __("Lebanon", 'casasync'),
-          "LC" => __("Saint Lucia", 'casasync'),
-          "LI" => __("Liechtenstein", 'casasync'),
-          "LK" => __("Sri Lanka", 'casasync'),
-          "LR" => __("Liberia", 'casasync'),
-          "LS" => __("Lesotho", 'casasync'),
-          "LT" => __("Lithuania", 'casasync'),
-          "LU" => __("Luxembourg", 'casasync'),
-          "LV" => __("Latvia", 'casasync'),
-          "LY" => __("Libyan Arab Jamahiriya", 'casasync'),
-          "MA" => __("Morocco", 'casasync'),
-          "MC" => __("Monaco", 'casasync'),
-          "MD" => __("Moldova, Republic of", 'casasync'),
-          "MG" => __("Madagascar", 'casasync'),
-          "MH" => __("Marshall Islands", 'casasync'),
-          "MK" => __("Macedonia", 'casasync'),
-          "ML" => __("Mali", 'casasync'),
-          "MM" => __("Myanmar", 'casasync'),
-          "MN" => __("Mongolia", 'casasync'),
-          "MO" => __("Macau", 'casasync'),
-          "MP" => __("Northern Mariana Islands", 'casasync'),
-          "MQ" => __("Martinique", 'casasync'),
-          "MR" => __("Mauritania", 'casasync'),
-          "MS" => __("Montserrat", 'casasync'),
-          "MT" => __("Malta", 'casasync'),
-          "MU" => __("Mauritius", 'casasync'),
-          "MV" => __("Maldives", 'casasync'),
-          "MW" => __("Malawi", 'casasync'),
-          "MX" => __("Mexico", 'casasync'),
-          "MY" => __("Malaysia", 'casasync'),
-          "MZ" => __("Mozambique", 'casasync'),
-          "NA" => __("Namibia", 'casasync'),
-          "NC" => __("New Caledonia", 'casasync'),
-          "NE" => __("Niger", 'casasync'),
-          "NF" => __("Norfolk Island", 'casasync'),
-          "NG" => __("Nigeria", 'casasync'),
-          "NI" => __("Nicaragua", 'casasync'),
-          "NL" => __("Netherlands", 'casasync'),
-          "NO" => __("Norway", 'casasync'),
-          "NP" => __("Nepal", 'casasync'),
-          "NR" => __("Nauru", 'casasync'),
-          "NU" => __("Niue", 'casasync'),
-          "NZ" => __("New Zealand", 'casasync'),
-          "OM" => __("Oman", 'casasync'),
-          "PA" => __("Panama", 'casasync'),
-          "PE" => __("Peru", 'casasync'),
-          "PF" => __("French Polynesia", 'casasync'),
-          "PG" => __("Papua New Guinea", 'casasync'),
-          "PH" => __("Philippines", 'casasync'),
-          "PK" => __("Pakistan", 'casasync'),
-          "PL" => __("Poland", 'casasync'),
-          "PM" => __("Saint Pierre and Miquelon", 'casasync'),
-          "PN" => __("Pitcairn Islands", 'casasync'),
-          "PR" => __("Puerto Rico", 'casasync'),
-          "PS" => __("Palestinian Territory", 'casasync'),
-          "PT" => __("Portugal", 'casasync'),
-          "PW" => __("Palau", 'casasync'),
-          "PY" => __("Paraguay", 'casasync'),
-          "QA" => __("Qatar", 'casasync'),
-          "RE" => __("Reunion", 'casasync'),
-          "RO" => __("Romania", 'casasync'),
-          "RU" => __("Russian Federation", 'casasync'),
-          "RW" => __("Rwanda", 'casasync'),
-          "SA" => __("Saudi Arabia", 'casasync'),
-          "SB" => __("Solomon Islands", 'casasync'),
-          "SC" => __("Seychelles", 'casasync'),
-          "SD" => __("Sudan", 'casasync'),
-          "SE" => __("Sweden", 'casasync'),
-          "SG" => __("Singapore", 'casasync'),
-          "SH" => __("Saint Helena", 'casasync'),
-          "SI" => __("Slovenia", 'casasync'),
-          "SJ" => __("Svalbard and Jan Mayen", 'casasync'),
-          "SK" => __("Slovakia", 'casasync'),
-          "SL" => __("Sierra Leone", 'casasync'),
-          "SM" => __("San Marino", 'casasync'),
-          "SN" => __("Senegal", 'casasync'),
-          "SO" => __("Somalia", 'casasync'),
-          "SR" => __("Suriname", 'casasync'),
-          "ST" => __("Sao Tome and Principe", 'casasync'),
-          "SV" => __("El Salvador", 'casasync'),
-          "SY" => __("Syrian Arab Republic", 'casasync'),
-          "SZ" => __("Swaziland", 'casasync'),
-          "TC" => __("Turks and Caicos Islands", 'casasync'),
-          "TD" => __("Chad", 'casasync'),
-          "TF" => __("French Southern Territories", 'casasync'),
-          "TG" => __("Togo", 'casasync'),
-          "TH" => __("Thailand", 'casasync'),
-          "TJ" => __("Tajikistan", 'casasync'),
-          "TK" => __("Tokelau", 'casasync'),
-          "TM" => __("Turkmenistan", 'casasync'),
-          "TN" => __("Tunisia", 'casasync'),
-          "TO" => __("Tonga", 'casasync'),
-          "TL" => __("Timor-Leste", 'casasync'),
-          "TR" => __("Turkey", 'casasync'),
-          "TT" => __("Trinidad and Tobago", 'casasync'),
-          "TV" => __("Tuvalu", 'casasync'),
-          "TW" => __("Taiwan", 'casasync'),
-          "TZ" => __("Tanzania, United Republic of", 'casasync'),
-          "UA" => __("Ukraine", 'casasync'),
-          "UG" => __("Uganda", 'casasync'),
-          "UM" => __("United States Minor Outlying Islands", 'casasync'),
-          "US" => __("United States", 'casasync'),
-          "UY" => __("Uruguay", 'casasync'),
-          "UZ" => __("Uzbekistan", 'casasync'),
-          "VA" => __("Holy See (Vatican City State)", 'casasync'),
-          "VC" => __("Saint Vincent and the Grenadines", 'casasync'),
-          "VE" => __("Venezuela", 'casasync'),
-          "VG" => __("Virgin Islands, British", 'casasync'),
-          "VI" => __("Virgin Islands, U.S.", 'casasync'),
-          "VN" => __("Vietnam", 'casasync'),
-          "VU" => __("Vanuatu", 'casasync'),
-          "WF" => __("Wallis and Futuna", 'casasync'),
-          "WS" => __("Samoa", 'casasync'),
-          "YE" => __("Yemen", 'casasync'),
-          "YT" => __("Mayotte", 'casasync'),
-          "RS" => __("Serbia", 'casasync'),
-          "ZA" => __("South Africa", 'casasync'),
-          "ZM" => __("Zambia", 'casasync'),
-          "ME" => __("Montenegro", 'casasync'),
-          "ZW" => __("Zimbabwe", 'casasync'),
-          "AX" => __("Aland Islands", 'casasync'),
-          "GG" => __("Guernsey", 'casasync'),
-          "IM" => __("Isle of Man", 'casasync'),
-          "JE" => __("Jersey", 'casasync'),
-          "BL" => __("Saint Barthelemy", 'casasync'),
-          "MF" => __("Saint Martin", 'casasync')
+          "AD" => __("Andorra", 'casawp'),
+          "AE" => __("United Arab Emirates", 'casawp'),
+          "AF" => __("Afghanistan", 'casawp'),
+          "AG" => __("Antigua and Barbuda", 'casawp'),
+          "AI" => __("Anguilla", 'casawp'),
+          "AL" => __("Albania", 'casawp'),
+          "AM" => __("Armenia", 'casawp'),
+          "AN" => __("Netherlands Antilles", 'casawp'),
+          "AO" => __("Angola", 'casawp'),
+          "AQ" => __("Antarctica", 'casawp'),
+          "AR" => __("Argentina", 'casawp'),
+          "AS" => __("American Samoa", 'casawp'),
+          "AT" => __("Austria", 'casawp'),
+          "AU" => __("Australia", 'casawp'),
+          "AW" => __("Aruba", 'casawp'),
+          "AZ" => __("Azerbaijan", 'casawp'),
+          "BA" => __("Bosnia and Herzegovina", 'casawp'),
+          "BB" => __("Barbados", 'casawp'),
+          "BD" => __("Bangladesh", 'casawp'),
+          "BE" => __("Belgium", 'casawp'),
+          "BF" => __("Burkina Faso", 'casawp'),
+          "BG" => __("Bulgaria", 'casawp'),
+          "BH" => __("Bahrain", 'casawp'),
+          "BI" => __("Burundi", 'casawp'),
+          "BJ" => __("Benin", 'casawp'),
+          "BM" => __("Bermuda", 'casawp'),
+          "BN" => __("Brunei Darussalam", 'casawp'),
+          "BO" => __("Bolivia", 'casawp'),
+          "BR" => __("Brazil", 'casawp'),
+          "BS" => __("Bahamas", 'casawp'),
+          "BT" => __("Bhutan", 'casawp'),
+          "BV" => __("Bouvet Island", 'casawp'),
+          "BW" => __("Botswana", 'casawp'),
+          "BY" => __("Belarus", 'casawp'),
+          "BZ" => __("Belize", 'casawp'),
+          "CA" => __("Canada", 'casawp'),
+          "CC" => __("Cocos (Keeling) Islands", 'casawp'),
+          "CD" => __("Congo, The Democratic Republic of the", 'casawp'),
+          "CF" => __("Central African Republic", 'casawp'),
+          "CG" => __("Congo", 'casawp'),
+          "CH" => __("Switzerland", 'casawp'),
+          "CI" => __("Cote D'Ivoire", 'casawp'),
+          "CK" => __("Cook Islands", 'casawp'),
+          "CL" => __("Chile", 'casawp'),
+          "CM" => __("Cameroon", 'casawp'),
+          "CN" => __("China", 'casawp'),
+          "CO" => __("Colombia", 'casawp'),
+          "CR" => __("Costa Rica", 'casawp'),
+          "CU" => __("Cuba", 'casawp'),
+          "CV" => __("Cape Verde", 'casawp'),
+          "CX" => __("Christmas Island", 'casawp'),
+          "CY" => __("Cyprus", 'casawp'),
+          "CZ" => __("Czech Republic", 'casawp'),
+          "DE" => __("Germany", 'casawp'),
+          "DJ" => __("Djibouti", 'casawp'),
+          "DK" => __("Denmark", 'casawp'),
+          "DM" => __("Dominica", 'casawp'),
+          "DO" => __("Dominican Republic", 'casawp'),
+          "DZ" => __("Algeria", 'casawp'),
+          "EC" => __("Ecuador", 'casawp'),
+          "EE" => __("Estonia", 'casawp'),
+          "EG" => __("Egypt", 'casawp'),
+          "EH" => __("Western Sahara", 'casawp'),
+          "ER" => __("Eritrea", 'casawp'),
+          "ES" => __("Spain", 'casawp'),
+          "ET" => __("Ethiopia", 'casawp'),
+          "FI" => __("Finland", 'casawp'),
+          "FJ" => __("Fiji", 'casawp'),
+          "FK" => __("Falkland Islands (Malvinas)", 'casawp'),
+          "FM" => __("Micronesia, Federated States of", 'casawp'),
+          "FO" => __("Faroe Islands", 'casawp'),
+          "FR" => __("France", 'casawp'),
+          "FX" => __("France, Metropolitan", 'casawp'),
+          "GA" => __("Gabon", 'casawp'),
+          "GB" => __("United Kingdom", 'casawp'),
+          "GD" => __("Grenada", 'casawp'),
+          "GE" => __("Georgia", 'casawp'),
+          "GF" => __("French Guiana", 'casawp'),
+          "GH" => __("Ghana", 'casawp'),
+          "GI" => __("Gibraltar", 'casawp'),
+          "GL" => __("Greenland", 'casawp'),
+          "GM" => __("Gambia", 'casawp'),
+          "GN" => __("Guinea", 'casawp'),
+          "GP" => __("Guadeloupe", 'casawp'),
+          "GQ" => __("Equatorial Guinea", 'casawp'),
+          "GR" => __("Greece", 'casawp'),
+          "GS" => __("South Georgia and the South Sandwich Islands", 'casawp'),
+          "GT" => __("Guatemala", 'casawp'),
+          "GU" => __("Guam", 'casawp'),
+          "GW" => __("Guinea-Bissau", 'casawp'),
+          "GY" => __("Guyana", 'casawp'),
+          "HK" => __("Hong Kong", 'casawp'),
+          "HM" => __("Heard Island and McDonald Islands", 'casawp'),
+          "HN" => __("Honduras", 'casawp'),
+          "HR" => __("Croatia", 'casawp'),
+          "HT" => __("Haiti", 'casawp'),
+          "HU" => __("Hungary", 'casawp'),
+          "ID" => __("Indonesia", 'casawp'),
+          "IE" => __("Ireland", 'casawp'),
+          "IL" => __("Israel", 'casawp'),
+          "IN" => __("India", 'casawp'),
+          "IO" => __("British Indian Ocean Territory", 'casawp'),
+          "IQ" => __("Iraq", 'casawp'),
+          "IR" => __("Iran, Islamic Republic of", 'casawp'),
+          "IS" => __("Iceland", 'casawp'),
+          "IT" => __("Italy", 'casawp'),
+          "JM" => __("Jamaica", 'casawp'),
+          "JO" => __("Jordan", 'casawp'),
+          "JP" => __("Japan", 'casawp'),
+          "KE" => __("Kenya", 'casawp'),
+          "KG" => __("Kyrgyzstan", 'casawp'),
+          "KH" => __("Cambodia", 'casawp'),
+          "KI" => __("Kiribati", 'casawp'),
+          "KM" => __("Comoros", 'casawp'),
+          "KN" => __("Saint Kitts and Nevis", 'casawp'),
+          "KP" => __("Korea, Democratic People's Republic of", 'casawp'),
+          "KR" => __("Korea, Republic of", 'casawp'),
+          "KW" => __("Kuwait", 'casawp'),
+          "KY" => __("Cayman Islands", 'casawp'),
+          "KZ" => __("Kazakstan", 'casawp'),
+          "LA" => __("Lao People's Democratic Republic", 'casawp'),
+          "LB" => __("Lebanon", 'casawp'),
+          "LC" => __("Saint Lucia", 'casawp'),
+          "LI" => __("Liechtenstein", 'casawp'),
+          "LK" => __("Sri Lanka", 'casawp'),
+          "LR" => __("Liberia", 'casawp'),
+          "LS" => __("Lesotho", 'casawp'),
+          "LT" => __("Lithuania", 'casawp'),
+          "LU" => __("Luxembourg", 'casawp'),
+          "LV" => __("Latvia", 'casawp'),
+          "LY" => __("Libyan Arab Jamahiriya", 'casawp'),
+          "MA" => __("Morocco", 'casawp'),
+          "MC" => __("Monaco", 'casawp'),
+          "MD" => __("Moldova, Republic of", 'casawp'),
+          "MG" => __("Madagascar", 'casawp'),
+          "MH" => __("Marshall Islands", 'casawp'),
+          "MK" => __("Macedonia", 'casawp'),
+          "ML" => __("Mali", 'casawp'),
+          "MM" => __("Myanmar", 'casawp'),
+          "MN" => __("Mongolia", 'casawp'),
+          "MO" => __("Macau", 'casawp'),
+          "MP" => __("Northern Mariana Islands", 'casawp'),
+          "MQ" => __("Martinique", 'casawp'),
+          "MR" => __("Mauritania", 'casawp'),
+          "MS" => __("Montserrat", 'casawp'),
+          "MT" => __("Malta", 'casawp'),
+          "MU" => __("Mauritius", 'casawp'),
+          "MV" => __("Maldives", 'casawp'),
+          "MW" => __("Malawi", 'casawp'),
+          "MX" => __("Mexico", 'casawp'),
+          "MY" => __("Malaysia", 'casawp'),
+          "MZ" => __("Mozambique", 'casawp'),
+          "NA" => __("Namibia", 'casawp'),
+          "NC" => __("New Caledonia", 'casawp'),
+          "NE" => __("Niger", 'casawp'),
+          "NF" => __("Norfolk Island", 'casawp'),
+          "NG" => __("Nigeria", 'casawp'),
+          "NI" => __("Nicaragua", 'casawp'),
+          "NL" => __("Netherlands", 'casawp'),
+          "NO" => __("Norway", 'casawp'),
+          "NP" => __("Nepal", 'casawp'),
+          "NR" => __("Nauru", 'casawp'),
+          "NU" => __("Niue", 'casawp'),
+          "NZ" => __("New Zealand", 'casawp'),
+          "OM" => __("Oman", 'casawp'),
+          "PA" => __("Panama", 'casawp'),
+          "PE" => __("Peru", 'casawp'),
+          "PF" => __("French Polynesia", 'casawp'),
+          "PG" => __("Papua New Guinea", 'casawp'),
+          "PH" => __("Philippines", 'casawp'),
+          "PK" => __("Pakistan", 'casawp'),
+          "PL" => __("Poland", 'casawp'),
+          "PM" => __("Saint Pierre and Miquelon", 'casawp'),
+          "PN" => __("Pitcairn Islands", 'casawp'),
+          "PR" => __("Puerto Rico", 'casawp'),
+          "PS" => __("Palestinian Territory", 'casawp'),
+          "PT" => __("Portugal", 'casawp'),
+          "PW" => __("Palau", 'casawp'),
+          "PY" => __("Paraguay", 'casawp'),
+          "QA" => __("Qatar", 'casawp'),
+          "RE" => __("Reunion", 'casawp'),
+          "RO" => __("Romania", 'casawp'),
+          "RU" => __("Russian Federation", 'casawp'),
+          "RW" => __("Rwanda", 'casawp'),
+          "SA" => __("Saudi Arabia", 'casawp'),
+          "SB" => __("Solomon Islands", 'casawp'),
+          "SC" => __("Seychelles", 'casawp'),
+          "SD" => __("Sudan", 'casawp'),
+          "SE" => __("Sweden", 'casawp'),
+          "SG" => __("Singapore", 'casawp'),
+          "SH" => __("Saint Helena", 'casawp'),
+          "SI" => __("Slovenia", 'casawp'),
+          "SJ" => __("Svalbard and Jan Mayen", 'casawp'),
+          "SK" => __("Slovakia", 'casawp'),
+          "SL" => __("Sierra Leone", 'casawp'),
+          "SM" => __("San Marino", 'casawp'),
+          "SN" => __("Senegal", 'casawp'),
+          "SO" => __("Somalia", 'casawp'),
+          "SR" => __("Suriname", 'casawp'),
+          "ST" => __("Sao Tome and Principe", 'casawp'),
+          "SV" => __("El Salvador", 'casawp'),
+          "SY" => __("Syrian Arab Republic", 'casawp'),
+          "SZ" => __("Swaziland", 'casawp'),
+          "TC" => __("Turks and Caicos Islands", 'casawp'),
+          "TD" => __("Chad", 'casawp'),
+          "TF" => __("French Southern Territories", 'casawp'),
+          "TG" => __("Togo", 'casawp'),
+          "TH" => __("Thailand", 'casawp'),
+          "TJ" => __("Tajikistan", 'casawp'),
+          "TK" => __("Tokelau", 'casawp'),
+          "TM" => __("Turkmenistan", 'casawp'),
+          "TN" => __("Tunisia", 'casawp'),
+          "TO" => __("Tonga", 'casawp'),
+          "TL" => __("Timor-Leste", 'casawp'),
+          "TR" => __("Turkey", 'casawp'),
+          "TT" => __("Trinidad and Tobago", 'casawp'),
+          "TV" => __("Tuvalu", 'casawp'),
+          "TW" => __("Taiwan", 'casawp'),
+          "TZ" => __("Tanzania, United Republic of", 'casawp'),
+          "UA" => __("Ukraine", 'casawp'),
+          "UG" => __("Uganda", 'casawp'),
+          "UM" => __("United States Minor Outlying Islands", 'casawp'),
+          "US" => __("United States", 'casawp'),
+          "UY" => __("Uruguay", 'casawp'),
+          "UZ" => __("Uzbekistan", 'casawp'),
+          "VA" => __("Holy See (Vatican City State)", 'casawp'),
+          "VC" => __("Saint Vincent and the Grenadines", 'casawp'),
+          "VE" => __("Venezuela", 'casawp'),
+          "VG" => __("Virgin Islands, British", 'casawp'),
+          "VI" => __("Virgin Islands, U.S.", 'casawp'),
+          "VN" => __("Vietnam", 'casawp'),
+          "VU" => __("Vanuatu", 'casawp'),
+          "WF" => __("Wallis and Futuna", 'casawp'),
+          "WS" => __("Samoa", 'casawp'),
+          "YE" => __("Yemen", 'casawp'),
+          "YT" => __("Mayotte", 'casawp'),
+          "RS" => __("Serbia", 'casawp'),
+          "ZA" => __("South Africa", 'casawp'),
+          "ZM" => __("Zambia", 'casawp'),
+          "ME" => __("Montenegro", 'casawp'),
+          "ZW" => __("Zimbabwe", 'casawp'),
+          "AX" => __("Aland Islands", 'casawp'),
+          "GG" => __("Guernsey", 'casawp'),
+          "IM" => __("Isle of Man", 'casawp'),
+          "JE" => __("Jersey", 'casawp'),
+          "BL" => __("Saint Barthelemy", 'casawp'),
+          "MF" => __("Saint Martin", 'casawp')
         );
         return $country_arr;
     }
 
     public function region_arrays(){ // todo: Deutsche Bundesländer hinzufügen
         $region_arr = array(
-          "AG" => __("Aargau", 'casasync'),
-          "AI" => __("Appenzell Innerrhoden", 'casasync'),
-          "AR" => __("Appenzell Ausserrhoden", 'casasync'),
-          "BE" => __("Bern", 'casasync'),
-          "BL" => __("Basel-Land", 'casasync'),
-          "BS" => __("Basel-Stadt", 'casasync'),
-          "FR" => __("Fribourg", 'casasync'),
-          "GE" => __("Genève", 'casasync'),
-          "GL" => __("Glarus", 'casasync'),
-          "GR" => __("Graubünden", 'casasync'),
-          "JU" => __("Jura", 'casasync'),
-          "LU" => __("Luzern", 'casasync'),
-          "NE" => __("Neuchâtel", 'casasync'),
-          "NW" => __("Nidwalden", 'casasync'),
-          "OW" => __("Obwalden", 'casasync'),
-          "SG" => __("Sankt Gallen", 'casasync'),
-          "SH" => __("Schaffhausen", 'casasync'),
-          "SO" => __("Solothurn", 'casasync'),
-          "SZ" => __("Schwyz", 'casasync'),
-          "TG" => __("Thurgau", 'casasync'),
-          "TI" => __("Ticino", 'casasync'),
-          "UR" => __("Uri", 'casasync'),
-          "VS" => __("Valais", 'casasync'),
-          "VD" => __("Vaud", 'casasync'),
-          "ZG" => __("Zug", 'casasync'),
-          "ZH" => __("Zürich", 'casasync')
+          "AG" => __("Aargau", 'casawp'),
+          "AI" => __("Appenzell Innerrhoden", 'casawp'),
+          "AR" => __("Appenzell Ausserrhoden", 'casawp'),
+          "BE" => __("Bern", 'casawp'),
+          "BL" => __("Basel-Land", 'casawp'),
+          "BS" => __("Basel-Stadt", 'casawp'),
+          "FR" => __("Fribourg", 'casawp'),
+          "GE" => __("Genève", 'casawp'),
+          "GL" => __("Glarus", 'casawp'),
+          "GR" => __("Graubünden", 'casawp'),
+          "JU" => __("Jura", 'casawp'),
+          "LU" => __("Luzern", 'casawp'),
+          "NE" => __("Neuchâtel", 'casawp'),
+          "NW" => __("Nidwalden", 'casawp'),
+          "OW" => __("Obwalden", 'casawp'),
+          "SG" => __("Sankt Gallen", 'casawp'),
+          "SH" => __("Schaffhausen", 'casawp'),
+          "SO" => __("Solothurn", 'casawp'),
+          "SZ" => __("Schwyz", 'casawp'),
+          "TG" => __("Thurgau", 'casawp'),
+          "TI" => __("Ticino", 'casawp'),
+          "UR" => __("Uri", 'casawp'),
+          "VS" => __("Valais", 'casawp'),
+          "VD" => __("Vaud", 'casawp'),
+          "ZG" => __("Zug", 'casawp'),
+          "ZH" => __("Zürich", 'casawp')
         );
         return $region_arr;
     }
 
-    public function casasync_convert_numvalKeyToLabel($key){
+    public function casawp_convert_numvalKeyToLabel($key){
         switch ($key) {
-            #case 'surface_living':             return __('Living space' ,'casasync');break;
-            #case 'surface_usable':             return __('Surface usable' ,'casasync');break;
-            case 'surface_property':           return __('Property space' ,'casasync');break;
-            case 'area_bwf':                   return __('Living space' ,'casasync');break;
-            case 'area_nwf':                   return __('Net living space' ,'casasync');break;
-            case 'area_sia_gf':                return __('Gross floor area' ,'casasync');break;
-            case 'area_sia_nf':                return __('Surface usable' ,'casasync');break;
+            #case 'surface_living':             return __('Living space' ,'casawp');break;
+            #case 'surface_usable':             return __('Surface usable' ,'casawp');break;
+            case 'surface_property':           return __('Property space' ,'casawp');break;
+            case 'area_bwf':                   return __('Living space' ,'casawp');break;
+            case 'area_nwf':                   return __('Net living space' ,'casawp');break;
+            case 'area_sia_gf':                return __('Gross floor area' ,'casawp');break;
+            case 'area_sia_nf':                return __('Surface usable' ,'casawp');break;
 
-            case 'year_renovated':             return __('Year of renovation' ,'casasync');break;
-            case 'year_built':                 return __('Year of construction' ,'casasync');break;
-            case 'number_of_rooms':            return __('Number of rooms' ,'casasync');break;
-            case 'number_of_lavatory':            return __('Number of lavatory' ,'casasync');break;
-            case 'number_of_guest_wc':            return __('Number of guest toilets' ,'casasync');break;
-            case 'number_of_floors':           return __('Number of floors' ,'casasync');break;
-            case 'floor':                      return __('Floor' ,'casasync');break;
-            case 'volume':                     return __('Volume' ,'casasync');break;
-            case 'number_of_apartments':       return __('Number of apartments' ,'casasync');break;
-            case 'ceiling_height':             return __('Ceiling height' ,'casasync');break;
-            case 'hall_height':                return __('Hall height' ,'casasync');break;
-            case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casasync');break;
-            case 'carrying_capacity_crane':    return __('Carrying capacity crane' ,'casasync');break;
-            case 'carrying_capacity_elevator': return __('Carrying capacity elevator' ,'casasync');break;
+            case 'year_renovated':             return __('Year of renovation' ,'casawp');break;
+            case 'year_built':                 return __('Year of construction' ,'casawp');break;
+            case 'number_of_rooms':            return __('Number of rooms' ,'casawp');break;
+            case 'number_of_lavatory':            return __('Number of lavatory' ,'casawp');break;
+            case 'number_of_guest_wc':            return __('Number of guest toilets' ,'casawp');break;
+            case 'number_of_floors':           return __('Number of floors' ,'casawp');break;
+            case 'floor':                      return __('Floor' ,'casawp');break;
+            case 'volume':                     return __('Volume' ,'casawp');break;
+            case 'number_of_apartments':       return __('Number of apartments' ,'casawp');break;
+            case 'ceiling_height':             return __('Ceiling height' ,'casawp');break;
+            case 'hall_height':                return __('Hall height' ,'casawp');break;
+            case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casawp');break;
+            case 'carrying_capacity_crane':    return __('Carrying capacity crane' ,'casawp');break;
+            case 'carrying_capacity_elevator': return __('Carrying capacity elevator' ,'casawp');break;
 
             /*
             'area_bwf'                    ,
@@ -333,12 +333,12 @@
         }
     }
 
-    public function casasync_convert_categoryKeyToLabel($key, $fallback = ''){
+    public function casawp_convert_categoryKeyToLabel($key, $fallback = ''){
         $label = null;
 
         if (substr($key, 0, 7) == 'custom_') {
             $current_lang = function_exists('icl_get_home_url') ? ICL_LANGUAGE_CODE : 'de';
-            $translations = get_option('casasync_custom_category_translations');
+            $translations = get_option('casawp_custom_category_translations');
             if (!is_array($translations)) {
               $translations = array();
             }
@@ -355,71 +355,71 @@
 
         if (!$label) {
           switch ($key) {
-              case 'secondary-rooms': $label = __('Secondary rooms' ,'casasync');break;
-              case 'garden':          $label = __('Garden' ,'casasync');break;
+              case 'secondary-rooms': $label = __('Secondary rooms' ,'casawp');break;
+              case 'garden':          $label = __('Garden' ,'casawp');break;
 
-              case 'apartment':       $label = __('Apartment' ,'casasync');break;
-              case 'attic-flat':      $label = __('Attic Flat' ,'casasync');break;
-              case 'bachelor-flat':      $label = __('Bachelor Flat' ,'casasync');break;
-              case 'bifamiliar-house':      $label = __('Bifamiliar House' ,'casasync');break;
-              case 'building-land':      $label = __('Building Land' ,'casasync');break;
-              case 'double-garage':      $label = __('Double Garage' ,'casasync');break;
-              case 'duplex':      $label = __('Duplex' ,'casasync');break;
-              case 'factory':      $label = __('Factory' ,'casasync');break;
-              case 'farm':      $label = __('Farm' ,'casasync');break;
-              case 'farm-house':      $label = __('Farm House' ,'casasync');break;
-              case 'furnished-flat':      $label = __('Furnished Flat' ,'casasync');break;
-              case 'garage':      $label = __('Garage' ,'casasync');break;
-              case 'loft':      $label = __('Loft' ,'casasync');break;
-              case 'mountain-farm':      $label = __('Mountain Farm' ,'casasync');break;
-              case 'multiple-dwelling':      $label = __('Multiple Dwelling' ,'casasync');break;
-              case 'open-slot':      $label = __('Open Slot' ,'casasync');break;
-              case 'parking-space':      $label = __('Parking Space' ,'casasync');break;
-              case 'plot':            $label = __('Plot' ,'casasync');break;
-              case 'roof-flat':      $label = __('Roof Flat' ,'casasync');break;
-              case 'row-house':      $label = __('Row House' ,'casasync');break;
-              case 'single-garage':      $label = __('Single Garage' ,'casasync');break;
-              case 'single-house':      $label = __('Single House' ,'casasync');break;
-              case 'single-room':      $label = __('Single Room' ,'casasync');break;
-              case 'terrace-flat':      $label = __('Terrace Flat' ,'casasync');break;
-              case 'terrace-house':      $label = __('Terrace House' ,'casasync');break;
-              case 'underground-slot':      $label = __('Underground Slot' ,'casasync');break;
-              case 'villa':      $label = __('Villa' ,'casasync');break;
-              case 'chalet':      $label = __('Chalet' ,'casasync');break;
-              case 'studio':      $label = __('Studio' ,'casasync');break;
-              case 'house':           $label = __('House' ,'casasync');break;
-              case 'covered-slot':      $label = __('Covered Slot' ,'casasync');break;
+              case 'apartment':       $label = __('Apartment' ,'casawp');break;
+              case 'attic-flat':      $label = __('Attic Flat' ,'casawp');break;
+              case 'bachelor-flat':      $label = __('Bachelor Flat' ,'casawp');break;
+              case 'bifamiliar-house':      $label = __('Bifamiliar House' ,'casawp');break;
+              case 'building-land':      $label = __('Building Land' ,'casawp');break;
+              case 'double-garage':      $label = __('Double Garage' ,'casawp');break;
+              case 'duplex':      $label = __('Duplex' ,'casawp');break;
+              case 'factory':      $label = __('Factory' ,'casawp');break;
+              case 'farm':      $label = __('Farm' ,'casawp');break;
+              case 'farm-house':      $label = __('Farm House' ,'casawp');break;
+              case 'furnished-flat':      $label = __('Furnished Flat' ,'casawp');break;
+              case 'garage':      $label = __('Garage' ,'casawp');break;
+              case 'loft':      $label = __('Loft' ,'casawp');break;
+              case 'mountain-farm':      $label = __('Mountain Farm' ,'casawp');break;
+              case 'multiple-dwelling':      $label = __('Multiple Dwelling' ,'casawp');break;
+              case 'open-slot':      $label = __('Open Slot' ,'casawp');break;
+              case 'parking-space':      $label = __('Parking Space' ,'casawp');break;
+              case 'plot':            $label = __('Plot' ,'casawp');break;
+              case 'roof-flat':      $label = __('Roof Flat' ,'casawp');break;
+              case 'row-house':      $label = __('Row House' ,'casawp');break;
+              case 'single-garage':      $label = __('Single Garage' ,'casawp');break;
+              case 'single-house':      $label = __('Single House' ,'casawp');break;
+              case 'single-room':      $label = __('Single Room' ,'casawp');break;
+              case 'terrace-flat':      $label = __('Terrace Flat' ,'casawp');break;
+              case 'terrace-house':      $label = __('Terrace House' ,'casawp');break;
+              case 'underground-slot':      $label = __('Underground Slot' ,'casawp');break;
+              case 'villa':      $label = __('Villa' ,'casawp');break;
+              case 'chalet':      $label = __('Chalet' ,'casawp');break;
+              case 'studio':      $label = __('Studio' ,'casawp');break;
+              case 'house':           $label = __('House' ,'casawp');break;
+              case 'covered-slot':      $label = __('Covered Slot' ,'casawp');break;
 
-              case 'commercial':      $label = __('Commercial' ,'casasync');break;
-              case 'gastronomy':      $label = __('Gastronomy' ,'casasync');break;
-              case 'vacation':      $label = __('Vacation' ,'casasync');break;
-              case 'agriculture':     $label = __('Agriculture' ,'casasync');break;
-              case 'industrial':      $label = __('Industrial' ,'casasync');break;
-              case 'residential':      $label = __('Residential' ,'casasync');break;
-              case 'storage':      $label = __('Storage' ,'casasync');break;
-              case 'parking':         $label = __('Parking space' ,'casasync');break;
-              case 'building':      $label = __('Building' ,'casasync');break;
-              case 'advertising-area':      $label = __('Advertising Area' ,'casasync');break;
-              case 'arcade':      $label = __('Arcade' ,'casasync');break;
-              case 'atelier':      $label = __('Atelier' ,'casasync');break;
-              case 'bakery':      $label = __('Bakery' ,'casasync');break;
-              case 'bar':      $label = __('Bar' ,'casasync');break;
-              case 'butcher':      $label = __('Butcher' ,'casasync');break;
-              case 'café':      $label = __('Café' ,'casasync');break;
-              case 'casino':      $label = __('Casino' ,'casasync');break;
-              case 'cheese-factory':      $label = __('Cheese Factory' ,'casasync');break;
-              case 'club/disco':      $label = __('Club/Disco' ,'casasync');break;
-              case 'fuel-station':      $label = __('Fuel Station' ,'casasync');break;
-              case 'gardening':      $label = __('Gardening' ,'casasync');break;
-              case 'hairdresser':      $label = __('Hairdresser' ,'casasync');break;
-              case 'kiosk':      $label = __('Kiosk' ,'casasync');break;
-              case 'movie-theater':      $label = __('Movie Theater' ,'casasync');break;
-              case 'office':      $label = __('Office' ,'casasync');break;
-              case 'practice':      $label = __('Practice' ,'casasync');break;
-              case 'restaurant':      $label = __('Restaurant' ,'casasync');break;
-              case 'shop':      $label = __('Shop' ,'casasync');break;
-              case 'shopping-centre':      $label = __('Shopping Centre' ,'casasync');break;
-              case 'hotel':      $label = __('Hotel' ,'casasync');break;
+              case 'commercial':      $label = __('Commercial' ,'casawp');break;
+              case 'gastronomy':      $label = __('Gastronomy' ,'casawp');break;
+              case 'vacation':      $label = __('Vacation' ,'casawp');break;
+              case 'agriculture':     $label = __('Agriculture' ,'casawp');break;
+              case 'industrial':      $label = __('Industrial' ,'casawp');break;
+              case 'residential':      $label = __('Residential' ,'casawp');break;
+              case 'storage':      $label = __('Storage' ,'casawp');break;
+              case 'parking':         $label = __('Parking space' ,'casawp');break;
+              case 'building':      $label = __('Building' ,'casawp');break;
+              case 'advertising-area':      $label = __('Advertising Area' ,'casawp');break;
+              case 'arcade':      $label = __('Arcade' ,'casawp');break;
+              case 'atelier':      $label = __('Atelier' ,'casawp');break;
+              case 'bakery':      $label = __('Bakery' ,'casawp');break;
+              case 'bar':      $label = __('Bar' ,'casawp');break;
+              case 'butcher':      $label = __('Butcher' ,'casawp');break;
+              case 'café':      $label = __('Café' ,'casawp');break;
+              case 'casino':      $label = __('Casino' ,'casawp');break;
+              case 'cheese-factory':      $label = __('Cheese Factory' ,'casawp');break;
+              case 'club/disco':      $label = __('Club/Disco' ,'casawp');break;
+              case 'fuel-station':      $label = __('Fuel Station' ,'casawp');break;
+              case 'gardening':      $label = __('Gardening' ,'casawp');break;
+              case 'hairdresser':      $label = __('Hairdresser' ,'casawp');break;
+              case 'kiosk':      $label = __('Kiosk' ,'casawp');break;
+              case 'movie-theater':      $label = __('Movie Theater' ,'casawp');break;
+              case 'office':      $label = __('Office' ,'casawp');break;
+              case 'practice':      $label = __('Practice' ,'casawp');break;
+              case 'restaurant':      $label = __('Restaurant' ,'casawp');break;
+              case 'shop':      $label = __('Shop' ,'casawp');break;
+              case 'shopping-centre':      $label = __('Shopping Centre' ,'casawp');break;
+              case 'hotel':      $label = __('Hotel' ,'casawp');break;
 
 
           }
@@ -434,7 +434,7 @@
         }
     }
 
-    public function casasync_get_allDistanceKeys(){
+    public function casawp_get_allDistanceKeys(){
         return array(
             'distance_public_transport',
             'distance_shop',
@@ -452,118 +452,118 @@
         );
     }
 
-    public function casasync_convert_distanceKeyToLabel($key){
+    public function casawp_convert_distanceKeyToLabel($key){
         switch ($key) {
-            case 'distance_public_transport':      return __('Public transportation' ,'casasync');break;
-            case 'distance_shop':                  return __('Shopping' ,'casasync');break;
-            case 'distance_kindergarten':          return __('Kindergarten' ,'casasync');break;
-            case 'distance_motorway':              return __('Motorway' ,'casasync');break;
-            case 'distance_school1':               return __('Primary school' ,'casasync');break;
-            case 'distance_school2':               return __('Secondary school' ,'casasync');break;
-            case 'distance_bus_stop':              return __('Bus stop' ,'casasync');break;
-            case 'distance_train_station':         return __('Train station' ,'casasync');break;
-            case 'distance_post':                  return __('Post' ,'casasync');break;
-            case 'distance_bank':                  return __('Bank' ,'casasync');break;
-            case 'distance_cable_railway_station': return __('Railway Station' ,'casasync');break;
-            case 'distance_boat_dock':             return __('Boat dock' ,'casasync');break;
-            case 'distance_airport':               return __('Airport', 'casasync');break;
+            case 'distance_public_transport':      return __('Public transportation' ,'casawp');break;
+            case 'distance_shop':                  return __('Shopping' ,'casawp');break;
+            case 'distance_kindergarten':          return __('Kindergarten' ,'casawp');break;
+            case 'distance_motorway':              return __('Motorway' ,'casawp');break;
+            case 'distance_school1':               return __('Primary school' ,'casawp');break;
+            case 'distance_school2':               return __('Secondary school' ,'casawp');break;
+            case 'distance_bus_stop':              return __('Bus stop' ,'casawp');break;
+            case 'distance_train_station':         return __('Train station' ,'casawp');break;
+            case 'distance_post':                  return __('Post' ,'casawp');break;
+            case 'distance_bank':                  return __('Bank' ,'casawp');break;
+            case 'distance_cable_railway_station': return __('Railway Station' ,'casawp');break;
+            case 'distance_boat_dock':             return __('Boat dock' ,'casawp');break;
+            case 'distance_airport':               return __('Airport', 'casawp');break;
         }
     }
 
-    public function casasync_convert_availabilityKeyToLabel($key){
+    public function casawp_convert_availabilityKeyToLabel($key){
         switch ($key) {
             //old
-            case 'on-request':   return __('On Request' ,'casasync');break;
-            case 'by-agreement': return __('By Agreement' ,'casasync');break;
-            case 'immediately':  return __('Immediate' ,'casasync');break;
+            case 'on-request':   return __('On Request' ,'casawp');break;
+            case 'by-agreement': return __('By Agreement' ,'casawp');break;
+            case 'immediately':  return __('Immediate' ,'casawp');break;
 
             //new
-            case 'active':       return __('Available' ,'casasync');break;
-            case 'reserved':     return __('Reserved' ,'casasync');break;
-            case 'sold':         return __('Sold' ,'casasync');break;
-            case 'rented':       return __('Rented' ,'casasync');break;
-            case 'reference':    return __('Reference' ,'casasync');break;
+            case 'active':       return __('Available' ,'casawp');break;
+            case 'reserved':     return __('Reserved' ,'casawp');break;
+            case 'sold':         return __('Sold' ,'casawp');break;
+            case 'rented':       return __('Rented' ,'casawp');break;
+            case 'reference':    return __('Reference' ,'casawp');break;
         }
     }
 
-    public function casasync_convert_featureKeyToLabel($key, $value = false){
+    public function casawp_convert_featureKeyToLabel($key, $value = false){
         switch ($key) {
-            case 'prop_child-friendly':   return __('Child friendly' ,'casasync');break;
+            case 'prop_child-friendly':   return __('Child friendly' ,'casawp');break;
             case 'prop_garage':
                 if ($value && $value > 1) {
-                    return printf( __( '%d garages', 'casasync'), $value );
+                    return printf( __( '%d garages', 'casawp'), $value );
                 } else {
-                    return __('Garage' ,'casasync');
+                    return __('Garage' ,'casawp');
                 }
             break;
             case 'prop_balcony':
                 if ($value) {
-                    return printf( __( '%dx balconies', 'casasync'), $value );
+                    return printf( __( '%dx balconies', 'casawp'), $value );
                 } else {
-                    return __('Balcony' ,'casasync');
+                    return __('Balcony' ,'casawp');
                 }
             break;
-            case 'prop_view':   return __('Vista' ,'casasync');break;
-            case 'prop_cabletv':   return __('Cable TV' ,'casasync');break;
+            case 'prop_view':   return __('Vista' ,'casawp');break;
+            case 'prop_cabletv':   return __('Cable TV' ,'casawp');break;
             case 'prop_parking':
                 if ($value) {
-                    return printf( __( '%d Parking spaces', 'casasync'), $value );
+                    return printf( __( '%d Parking spaces', 'casawp'), $value );
                 } else {
-                    return __('Parking space' ,'casasync');
+                    return __('Parking space' ,'casawp');
                 }
             break;
             case 'animal_allowed':
                 if ($value) {
-                    return printf( __( '%d Pets allowed', 'casasync'), $value );
+                    return printf( __( '%d Pets allowed', 'casawp'), $value );
                 } else {
-                    return __('Pets allowed' ,'casasync');
+                    return __('Pets allowed' ,'casawp');
                 }
                 break;
-            case 'isdn':   return __('ISDN Anschluss' ,'casasync');
+            case 'isdn':   return __('ISDN Anschluss' ,'casawp');
                 break;
             case 'restrooms':
                 if ($value && $value != 1) {
-                    return printf( __( '%d Restrooms', 'casasync'), $value );
+                    return printf( __( '%d Restrooms', 'casawp'), $value );
                 } else {
-                    return __('Restrooms' ,'casasync');
+                    return __('Restrooms' ,'casawp');
                 }
                 break;
             case 'prop_elevator':
                 if ($value && $value != 1) {
-                    return printf( __( '%d elevators', 'casasync'), $value );
+                    return printf( __( '%d elevators', 'casawp'), $value );
                 } else {
-                    return __('Elevator' ,'casasync');
+                    return __('Elevator' ,'casawp');
                 }
                 break;
 
-            case 'prop_fireplace':          return __('Fireplace' ,'casasync');break;
-            case 'wheelchair_accessible':   return __('wheelchair accessible' ,'casasync');break;
-            case 'ramp':                    return __('Ramp' ,'casasync');break;
-            case 'lifting_platform':        return __('lifting platform' ,'casasync');break;
-            case 'railway_terminal':        return __('Railway terminal' ,'casasync');break;
-            case 'water_supply':            return __('Water Supply' ,'casasync');break;
-            case 'sewage_supply':           return __('Sewage supply' ,'casasync');break;
-            case 'power_supply':            return __('Power Supply' ,'casasync');break;
-            case 'gas_supply':              return __('Gas supply' ,'casasync');break;
-            case 'corner_house':            return __('Corner house' ,'casasync');break;
-            case 'middle_house':            return __('Middle house' ,'casasync');break;
-            case 'gardenhouse':             return __('Gardenhouse' ,'casasync');break;
-            case 'raised_ground_floor':     return __('Raised ground floor' ,'casasync');break;
-            case 'new_building':            return __('New building' ,'casasync');break;
-            case 'old_building':            return __('Old building' ,'casasync');break;
-            case 'under_roof':              return __('Under roof' ,'casasync');break;
-            case 'swimmingpool':            return __('Swimmingpool' ,'casasync');break;
-            case 'minergie_general':        return __('Minergie general' ,'casasync');break;
-            case 'minergie_certified':      return __('Minergie certified' ,'casasync');break;
-            case 'under_building_laws':     return __('Under building laws' ,'casasync');break;
-            case 'building_land_connected': return __('Building land connected' ,'casasync');break;
-            case 'flat_sharing_community':  return __('Flat sharing community' ,'casasync');break;
+            case 'prop_fireplace':          return __('Fireplace' ,'casawp');break;
+            case 'wheelchair_accessible':   return __('wheelchair accessible' ,'casawp');break;
+            case 'ramp':                    return __('Ramp' ,'casawp');break;
+            case 'lifting_platform':        return __('lifting platform' ,'casawp');break;
+            case 'railway_terminal':        return __('Railway terminal' ,'casawp');break;
+            case 'water_supply':            return __('Water Supply' ,'casawp');break;
+            case 'sewage_supply':           return __('Sewage supply' ,'casawp');break;
+            case 'power_supply':            return __('Power Supply' ,'casawp');break;
+            case 'gas_supply':              return __('Gas supply' ,'casawp');break;
+            case 'corner_house':            return __('Corner house' ,'casawp');break;
+            case 'middle_house':            return __('Middle house' ,'casawp');break;
+            case 'gardenhouse':             return __('Gardenhouse' ,'casawp');break;
+            case 'raised_ground_floor':     return __('Raised ground floor' ,'casawp');break;
+            case 'new_building':            return __('New building' ,'casawp');break;
+            case 'old_building':            return __('Old building' ,'casawp');break;
+            case 'under_roof':              return __('Under roof' ,'casawp');break;
+            case 'swimmingpool':            return __('Swimmingpool' ,'casawp');break;
+            case 'minergie_general':        return __('Minergie general' ,'casawp');break;
+            case 'minergie_certified':      return __('Minergie certified' ,'casawp');break;
+            case 'under_building_laws':     return __('Under building laws' ,'casawp');break;
+            case 'building_land_connected': return __('Building land connected' ,'casawp');break;
+            case 'flat_sharing_community':  return __('Flat sharing community' ,'casawp');break;
 
             default : return $key . ($value ? ': ' . $value : ''); break;
         }
     }
 
-    public function casasync_get_allNumvalKeys(){
+    public function casawp_get_allNumvalKeys(){
       return array(
         #'surface_living',
         #'surface_usable',
@@ -589,7 +589,7 @@
       );
     }
 
-    public function casasync_numStringToArray($key, $string){
+    public function casawp_numStringToArray($key, $string){
       
       $si = false;
       if ($string == '') {

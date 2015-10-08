@@ -1,27 +1,27 @@
-<h3><?= __('Offer','casasync') ?></h3>
+<h3><?= __('Offer','casawp') ?></h3>
 <?= $this->offer->renderDatatableOffer() ?>
 
-<h3><?= __('Property','casasync') ?></h3>
+<h3><?= __('Property','casawp') ?></h3>
 <?= $this->offer->renderDatatableProperty() ?>
 
 
 <?php if ($this->offer->getFeatures()) : ?>
-  <div class="casasync-features">
-    <h3><?= __('Features','casasync') ?></h3>
+  <div class="casawp-features">
+    <h3><?= __('Features','casawp') ?></h3>
     <?= $this->offer->renderFeatures() ?>
   </div>
 <?php endif; ?>
 
 <?php if ($this->offer->getDistances()) : ?>
-  <div class="casasync-distances">
-    <h3><?= __('Distances','casasync') ?></h3>
+  <div class="casawp-distances">
+    <h3><?= __('Distances','casawp') ?></h3>
     <?= $this->offer->renderDistances() ?>
   </div>
 <?php endif; ?>
 
 <?php if ($this->offer->getSalesBrochures() || $this->offer->getDocuments() || $this->offer->getPlans()) : ?>
-  <div class="casasync-documents">
-    <h3><?= __('Documents','casasync') ?></h3>
+  <div class="casawp-documents">
+    <h3><?= __('Documents','casawp') ?></h3>
     <?php foreach ($this->offer->getSalesBrochures() as $document): ?>
       <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
     <?php endforeach ?>
@@ -36,16 +36,16 @@
 
 <?php /* ?>
 <?php if ($this->offer->getAllDistances()) { ?>
-  <div class="casasync_distances">
-    <h3><?= ('Distances','casasync') ?></h3>
+  <div class="casawp_distances">
+    <h3><?= ('Distances','casawp') ?></h3>
     <?= $this->offer->getAllDistances(); ?>
   </div>
 <?php endif; ?>
 
 <?php if ($this->offer->getUrls()) : ?>
-  <div class="casasync_provided_url">
-    <h3><?= ('Links','casasync') ?></h3>
-    <ul class="casasync-unstyled casasync-links-list">
+  <div class="casawp_provided_url">
+    <h3><?= ('Links','casawp') ?></h3>
+    <ul class="casawp-unstyled casawp-links-list">
       <?php foreach ($this->getUrls() as $url_wrapper) : ?>
         <?php foreach ($url_wrapper as $url) :?>
           <li><a href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : $url['href']) .'</a></li>

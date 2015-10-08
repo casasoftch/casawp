@@ -14,15 +14,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
-#: .././casasync-archive.php:33 .././casasync-archive.php:53
+#: .././casawp-archive.php:33 .././casawp-archive.php:53
 msgid "No image"
 msgstr "Нет изображения"
 
-#: .././casasync-archive.php:68
+#: .././casawp-archive.php:68
 msgid "Nothing Found"
 msgstr "Ничего не найдено"
 
-#: .././casasync-archive.php:69
+#: .././casawp-archive.php:69
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."

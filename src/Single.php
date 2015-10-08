@@ -1,5 +1,5 @@
 <?php
-  namespace CasaSync;
+  namespace CasaWp;
 
   class Single {  
     public $conversion = null;
@@ -92,8 +92,8 @@
       }
 
       //lets invite the new kid
-      global $casasync;
-      $this->offer = $casasync->prepareOffer($post);
+      global $casawp;
+      $this->offer = $casawp->prepareOffer($post);
 
 
 
@@ -103,8 +103,8 @@
     public function getPropertyQuery() {
       $query = $_GET;
       $w_categories = array();
-      if (isset($query['casasync_category_s'])) {
-        foreach ($query['casasync_category_s'] as $slug => $value) {
+      if (isset($query['casawp_category_s'])) {
+        foreach ($query['casawp_category_s'] as $slug => $value) {
           $w_categories[] = $value;
         }
       }
@@ -112,7 +112,7 @@
       if ($w_categories) {
         $taxquery_new[] =
            array(
-               'taxonomy' => 'casasync_category',
+               'taxonomy' => 'casawp_category',
                'terms' => $w_categories,
                'include_children' => 1,
                'field' => 'slug',
@@ -122,14 +122,14 @@
       }
 
       $w_locations = array();
-      if (isset($query['casasync_location_s'])) {
-        foreach ($query['casasync_location_s'] as $slug => $options) {
+      if (isset($query['casawp_location_s'])) {
+        foreach ($query['casawp_location_s'] as $slug => $options) {
           $w_locations[] = $value;
         }
         if ($w_locations) {
           $taxquery_new[] =
              array(
-                 'taxonomy' => 'casasync_location',
+                 'taxonomy' => 'casawp_location',
                  'terms' => $w_locations,
                  'include_children' => 1,
                  'field' => 'slug',
@@ -139,18 +139,18 @@
         }
       }
       $w_salestypes = array();
-      if (isset($query['casasync_salestype_s'])) {
-        if (!is_array($query['casasync_salestype_s'])) {
-          $query['casasync_salestype_s'] = array($query['casasync_salestype_s']);
+      if (isset($query['casawp_salestype_s'])) {
+        if (!is_array($query['casawp_salestype_s'])) {
+          $query['casawp_salestype_s'] = array($query['casawp_salestype_s']);
         }
-        foreach ($query['casasync_salestype_s'] as $slug => $value) {
+        foreach ($query['casawp_salestype_s'] as $slug => $value) {
           $w_salestypes[] = $value;
         }
       }
       if ($w_salestypes) {
         $taxquery_new[] =
            array(
-               'taxonomy' => 'casasync_salestype',
+               'taxonomy' => 'casawp_salestype',
                'terms' => $w_salestypes,
                'include_children' => 1,
                'field' => 'slug',
@@ -161,7 +161,7 @@
 
       $posts_per_page = 2000;
       $args = array(
-        'post_type' => 'casasync_property',
+        'post_type' => 'casawp_property',
         'posts_per_page' => $posts_per_page,
         'tax_query' => $taxquery_new, 
       );
@@ -182,7 +182,7 @@
       if ($w_categories) {
         $taxquery_new[] =
            array(
-               'taxonomy' => 'casasync_category',
+               'taxonomy' => 'casawp_category',
                'terms' => $w_categories,
                'include_children' => 1,
                'field' => 'slug',
@@ -201,7 +201,7 @@
         if ($w_locations) {
           $taxquery_new[] =
              array(
-                 'taxonomy' => 'casasync_location',
+                 'taxonomy' => 'casawp_location',
                  'terms' => $w_locations,
                  'include_children' => 1,
                  'field' => 'slug',
@@ -222,7 +222,7 @@
       if ($w_salestypes) {
         $taxquery_new[] =
            array(
-               'taxonomy' => 'casasync_salestype',
+               'taxonomy' => 'casawp_salestype',
                'terms' => $w_salestypes,
                'include_children' => 1,
                'field' => 'slug',
@@ -244,7 +244,7 @@
       if ($w_availabilities) {
         $taxquery_new[] =
            array(
-               'taxonomy' => 'casasync_availability',
+               'taxonomy' => 'casawp_availability',
                'terms' => $w_availabilities,
                'include_children' => 1,
                'field' => 'slug',
@@ -255,16 +255,16 @@
 
       $posts_per_page = get_option('posts_per_page', 10);
       $args = array(
-        'post_type' => 'casasync_property',
+        'post_type' => 'casawp_property',
         'posts_per_page' => $posts_per_page,
         'tax_query' => $taxquery_new, 
       );
-      switch (get_option('casasync_archive_orderby', 'date')) {
+      switch (get_option('casawp_archive_orderby', 'date')) {
         case 'title':
             $args['orderby'] = 'title';
             break;
         case 'location':
-            $args['meta_key'] = 'casasync_property_address_locality';
+            $args['meta_key'] = 'casawp_property_address_locality';
             $args['orderby'] = 'meta_value';
             break;
         case 'price':
@@ -273,8 +273,8 @@
         case 'menu_order':
             $args['orderby'] = 'menu_order';
             break;
-        case 'casasync_referenceId':
-            $args['meta_key'] = 'casasync_referenceId';
+        case 'casawp_referenceId':
+            $args['meta_key'] = 'casawp_referenceId';
             $args['orderby'] = 'meta_value';
             break;
         case 'date':
@@ -282,7 +282,7 @@
             $args['orderby'] = 'date';
             break;
       }
-      $args['order'] = get_option('casasync_archive_order', 'DESC');
+      $args['order'] = get_option('casawp_archive_order', 'DESC');
       $the_query = new \WP_Query( $args );
 
       $prev = false;
@@ -302,9 +302,9 @@
       }
 
       if ( get_option('permalink_structure') == '' ) {
-        $post_type_slug = 'casasync_property';
+        $post_type_slug = 'casawp_property';
       } else {
-        $post_type = get_post_type_object('casasync_property');
+        $post_type = get_post_type_object('casawp_property');
         $post_type_slug = $post_type->rewrite['slug'];
       }
       $prevnext = array(
@@ -325,7 +325,7 @@
           'posts_per_page'           => -1,
           'post_parent'              => get_the_ID(),
           //'exclude'                => get_post_thumbnail_id(),
-          'casasync_attachment_type' => 'image',
+          'casawp_attachment_type' => 'image',
           'orderby'                  => 'menu_order',
           'order'                    => 'ASC'
         ) );
@@ -337,7 +337,7 @@
           'posts_per_page'           => -1,
           'post_parent'              => get_the_ID(),
           //'exclude'                => get_post_thumbnail_id(),
-          'casasync_attachment_type' => 'document',
+          'casawp_attachment_type' => 'document',
           'orderby'                  => 'menu_order'
         ) );
       }
@@ -348,7 +348,7 @@
           'posts_per_page'           => -1,
           'post_parent'              => get_the_ID(),
           //'exclude'                => get_post_thumbnail_id(),
-          'casasync_attachment_type' => 'plan'
+          'casawp_attachment_type' => 'plan'
         ) );
       }
 
@@ -358,51 +358,51 @@
           'posts_per_page'           => -1,
           'post_parent'              => get_the_ID(),
           //'exclude'                => get_post_thumbnail_id(),
-          'casasync_attachment_type' => 'offer-logo'
+          'casawp_attachment_type' => 'offer-logo'
         ) );
       }
 
-      $this->address_street       = get_post_meta( get_the_ID(), 'casasync_property_address_streetaddress', $single = true );
-      $this->address_streetnumber = get_post_meta( get_the_ID(), 'casasync_property_address_streetnumber', $single = true );
-      $this->address_postalcode   = get_post_meta( get_the_ID(), 'casasync_property_address_postalcode', $single = true );
-      $this->address_region       = get_post_meta( get_the_ID(), 'casasync_property_address_region', $single = true );
-      $this->address_locality     = get_post_meta( get_the_ID(), 'casasync_property_address_locality', $single = true );
-      $this->address_country      = get_post_meta( get_the_ID(), 'casasync_property_address_country', $single = true );
+      $this->address_street       = get_post_meta( get_the_ID(), 'casawp_property_address_streetaddress', $single = true );
+      $this->address_streetnumber = get_post_meta( get_the_ID(), 'casawp_property_address_streetnumber', $single = true );
+      $this->address_postalcode   = get_post_meta( get_the_ID(), 'casawp_property_address_postalcode', $single = true );
+      $this->address_region       = get_post_meta( get_the_ID(), 'casawp_property_address_region', $single = true );
+      $this->address_locality     = get_post_meta( get_the_ID(), 'casawp_property_address_locality', $single = true );
+      $this->address_country      = get_post_meta( get_the_ID(), 'casawp_property_address_country', $single = true );
       $this->address_country_name = $this->conversion->countrycode_to_countryname($this->address_country);
 
-      $this->property_geo_latitude  = get_post_meta( get_the_ID(), 'casasync_property_geo_latitude', $single = true );
-      $this->property_geo_longitude = get_post_meta( get_the_ID(), 'casasync_property_geo_longitude', $single = true );
+      $this->property_geo_latitude  = get_post_meta( get_the_ID(), 'casawp_property_geo_latitude', $single = true );
+      $this->property_geo_longitude = get_post_meta( get_the_ID(), 'casawp_property_geo_longitude', $single = true );
 
 
-      $this->casa_id = get_post_meta( get_the_ID(), 'casasync_id', $single = true );
+      $this->casa_id = get_post_meta( get_the_ID(), 'casawp_id', $single = true );
       $casa_id_arr = explode('_', $this->casa_id);
       $this->customer_id = (!empty($casa_id_arr[0])) ? $casa_id_arr[0] : null;
       $this->property_id =(!empty($casa_id_arr[1])) ? $casa_id_arr[1] : null;
 
-      $this->reference_id = get_post_meta( get_the_ID(), 'casasync_referenceId', $single = true );
+      $this->reference_id = get_post_meta( get_the_ID(), 'casawp_referenceId', $single = true );
 
-      $this->start = get_post_meta( get_the_ID(), 'casasync_start', $single = true );
+      $this->start = get_post_meta( get_the_ID(), 'casawp_start', $single = true );
 
-      $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
+      $categories = wp_get_post_terms( get_the_ID(), 'casawp_category'); 
       $this->categories_names = array();
       foreach ($categories as $category) {
-        if ($this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name)) {
-          $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
+        if ($this->conversion->casawp_convert_categoryKeyToLabel($category->slug, $category->name)) {
+          $this->categories_names[] = $this->conversion->casawp_convert_categoryKeyToLabel($category->slug, $category->name);
         }
       } 
 
-      $availabilities = wp_get_post_terms( get_the_ID(), 'casasync_availability'); 
+      $availabilities = wp_get_post_terms( get_the_ID(), 'casawp_availability'); 
       $availability = false;
       if ($availabilities) {
         $availability = $availabilities[0];
-        $this->the_availability = $this->conversion->casasync_convert_availabilityKeyToLabel($availability->slug);
+        $this->the_availability = $this->conversion->casawp_convert_availabilityKeyToLabel($availability->slug);
       }
 
       
       $this->categories_names = array();
       foreach ($categories as $category) {
-        if ($this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name)) {
-          $this->categories_names[] = $this->conversion->casasync_convert_categoryKeyToLabel($category->slug, $category->name);
+        if ($this->conversion->casawp_convert_categoryKeyToLabel($category->slug, $category->name)) {
+          $this->categories_names[] = $this->conversion->casawp_convert_categoryKeyToLabel($category->slug, $category->name);
         }
       } 
 
@@ -410,9 +410,9 @@
       if($floors != "") {
         if($floors == '0') {
           $floor_type = '';
-          $this->floors[] = __('Ground', 'casasync');
+          $this->floors[] = __('Ground', 'casawp');
         } elseif(strpos($floors, '-') === false) {
-          $floor_type = '. ' . __('Floor', 'casasync');
+          $floor_type = '. ' . __('Floor', 'casawp');
         } else {
           $floors = str_replace('-', '', $floors);
           $floor_type = '. UG';
@@ -420,10 +420,10 @@
         $this->floors[] = $floors . $floor_type;
       }
       
-      $basis = wp_get_post_terms( get_the_ID(), 'casasync_salestype'); 
+      $basis = wp_get_post_terms( get_the_ID(), 'casawp_salestype'); 
       $basis_slugs = array();
       foreach ($basis as $basi) {
-        $this->basises[] = __(ucfirst($basi->name),'casasync');
+        $this->basises[] = __(ucfirst($basi->name),'casawp');
         $basis_slugs[] = $basi->slug;
       } 
       if ($basis_slugs) {
@@ -457,18 +457,18 @@
         'extra_costs' => $extra_costs_arr
       );
 
-      $this->urls = get_post_meta( get_the_ID(), 'casasync_urls', $single = true );
+      $this->urls = get_post_meta( get_the_ID(), 'casawp_urls', $single = true );
 
-      foreach ($this->conversion->casasync_get_allNumvalKeys() as $numval_key) {
+      foreach ($this->conversion->casawp_get_allNumvalKeys() as $numval_key) {
         $numval = get_post_meta( get_the_ID(), $numval_key, $single = true );
         if ($numval) {
-          $title = $this->conversion->casasync_convert_numvalKeyToLabel($numval_key);
+          $title = $this->conversion->casawp_convert_numvalKeyToLabel($numval_key);
           $this->numvals[$numval_key] = array('title' => $title, 'value' => $numval, 'key' => $numval_key);
         }
       }
 
 
-      $features_json = get_post_meta( get_the_ID(), 'casasync_features', $single = true );
+      $features_json = get_post_meta( get_the_ID(), 'casawp_features', $single = true );
       if ($features_json) {
         $this->features = json_decode($features_json, true);
       }
@@ -490,17 +490,17 @@
       $this->seller['phone_central'] = get_post_meta( get_the_ID(), 'seller_org_phone_central', $single = true );
       $this->seller['phone_mobile']  = get_post_meta( get_the_ID(), 'seller_org_phone_mobile', $single = true );
 
-      if (get_option('casasync_sellerfallback_show_organization') == 1) {
+      if (get_option('casawp_sellerfallback_show_organization') == 1) {
         if (!$this->hasSeller()) {
-          $this->seller['country']       = get_option('casasync_sellerfallback_address_country');
-          $this->seller['locality']      = get_option('casasync_sellerfallback_address_locality');
-          $this->seller['region']        = get_option('casasync_sellerfallback_address_region');
-          $this->seller['postalcode']    = get_option('casasync_sellerfallback_address_postalcode');
-          $this->seller['street']        = get_option('casasync_sellerfallback_address_street');
-          $this->seller['legalname']     = get_option('casasync_sellerfallback_legalname');
-          $this->seller['email']         = get_option('casasync_sellerfallback_email');
-          $this->seller['fax']           = get_option('casasync_sellerfallback_fax');
-          $this->seller['phone_central'] = get_option('casasync_sellerfallback_phone_central');
+          $this->seller['country']       = get_option('casawp_sellerfallback_address_country');
+          $this->seller['locality']      = get_option('casawp_sellerfallback_address_locality');
+          $this->seller['region']        = get_option('casawp_sellerfallback_address_region');
+          $this->seller['postalcode']    = get_option('casawp_sellerfallback_address_postalcode');
+          $this->seller['street']        = get_option('casawp_sellerfallback_address_street');
+          $this->seller['legalname']     = get_option('casawp_sellerfallback_legalname');
+          $this->seller['email']         = get_option('casawp_sellerfallback_email');
+          $this->seller['fax']           = get_option('casawp_sellerfallback_fax');
+          $this->seller['phone_central'] = get_option('casawp_sellerfallback_phone_central');
         }
       }
       
@@ -518,15 +518,15 @@
       $this->visitperson['phone_direct']  = get_post_meta(get_the_ID(), 'seller_visit_person_phone_direct', true);
       $this->visitperson['note']        = get_post_meta(get_the_ID(), 'seller_visit_person_note', true);
 
-      if (get_option('casasync_sellerfallback_show_person_view') == 1) {
+      if (get_option('casawp_sellerfallback_show_person_view') == 1) {
         if (!$this->hasSalesPerson()) {
-          $this->salesperson['function']      = get_option('casasync_salesperson_fallback_function');
-          $this->salesperson['givenname']     = get_option('casasync_salesperson_fallback_givenname');
-          $this->salesperson['familyname']    = get_option('casasync_salesperson_fallback_familyname');
-          $this->salesperson['email']         = get_option('casasync_salesperson_fallback_email');
-          //$this->salesperson['phone_direct']  = get_option('casasync_salesperson_fallback_phone_direct');
-          $this->salesperson['phone_mobile']  = get_option('casasync_salesperson_fallback_phone_mobile');
-          $this->salesperson['gender']        = get_option('casasync_salesperson_fallback_gender');
+          $this->salesperson['function']      = get_option('casawp_salesperson_fallback_function');
+          $this->salesperson['givenname']     = get_option('casawp_salesperson_fallback_givenname');
+          $this->salesperson['familyname']    = get_option('casawp_salesperson_fallback_familyname');
+          $this->salesperson['email']         = get_option('casawp_salesperson_fallback_email');
+          //$this->salesperson['phone_direct']  = get_option('casawp_salesperson_fallback_phone_direct');
+          $this->salesperson['phone_mobile']  = get_option('casawp_salesperson_fallback_phone_mobile');
+          $this->salesperson['gender']        = get_option('casawp_salesperson_fallback_gender');
         }
       }
       if ($this->salesperson['gender'] == 'F') {
@@ -616,14 +616,14 @@
       $html = '';
 
       if ($this->attachments) {
-        $html .= '<div class="casasync-gallery-thumbnails">';
-        $max_thumbnail = get_option('casasync_single_max_thumbnails', 15);
+        $html .= '<div class="casawp-gallery-thumbnails">';
+        $max_thumbnail = get_option('casawp_single_max_thumbnails', 15);
         $count = 0;
           foreach ( $this->attachments as $attachment ) {
             if ($count < $max_thumbnail) {
               $thumbImgMeidum = wp_get_attachment_image( $attachment->ID, 'thumbnail', true );
               $thumbImgFull = wp_get_attachment_image_src( $attachment->ID, 'full', true );
-              $html .= '<a class="property-image-gallery" rel="casasync-thumbnail-gallery" href="' . $thumbImgFull[0] . '" title="' . $attachment->post_excerpt . '">' . $thumbImgMeidum . '</a>';
+              $html .= '<a class="property-image-gallery" rel="casawp-thumbnail-gallery" href="' . $thumbImgFull[0] . '" title="' . $attachment->post_excerpt . '">' . $thumbImgMeidum . '</a>';
             }
             $count++;
           }
@@ -667,8 +667,8 @@
       }
       if ($i > 0) {
         $html = '<div class="single-property-container">'
-          .'<p class="casasyncContact"><i class="fa fa-envelope"></i> '
-          .'<a href="#casasyncPropertyContactForm" id="casasyncContactAnchor">' . __('Contact provider directly', 'casasync') . '</a>'
+          .'<p class="casawpContact"><i class="fa fa-envelope"></i> '
+          .'<a href="#casawpPropertyContactForm" id="casawpContactAnchor">' . __('Contact provider directly', 'casawp') . '</a>'
         .'</p></div>';
         return $html;
       }
@@ -724,19 +724,19 @@
 
     public function getVisitPerson($title = true, $icon = true) {
       if ($this->hasVisitPerson()) {
-        $return = '<h3>'.($icon ? '<i class="fa fa-briefcase"></i> ' : '') . __('Contact person' , 'casasync') . '</h3><address>';
+        $return = '<h3>'.($icon ? '<i class="fa fa-briefcase"></i> ' : '') . __('Contact person' , 'casawp') . '</h3><address>';
         if ($this->visitperson['givenname'] != '') {
           $return .= '<p><strong>' . $this->visitperson['givenname'] . '</strong>';
         }
        
           
         if($this->visitperson['phone_direct'] != '') {
-          $return .= '<p class="casasync-phone-direct">'
-            .'<span class="casasync-label">' . __('Phone direct', 'casasync')  . '</span>'
+          $return .= '<p class="casawp-phone-direct">'
+            .'<span class="casawp-label">' . __('Phone direct', 'casawp')  . '</span>'
           .'<span class="value break-word"> ' . $this->visitperson['phone_direct'] . '</span></p>';
         }
         if($this->visitperson['note'] != '') {
-          $return .= '<p class="casasync-note">'
+          $return .= '<p class="casawp-note">'
             .'<p>' . $this->visitperson['note']  . '</p>';
         }
         $return .= '</address>';
@@ -748,7 +748,7 @@
       $return = false;
       switch ($name) {
         case 'facebook':
-          if (get_option( 'casasync_share_facebook', false )) {
+          if (get_option( 'casawp_share_facebook', false )) {
             $return .= '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div>';
           }
           break;
@@ -760,16 +760,16 @@
 
     public function getAllShareWidgets() {
       $return = false;
-      if (get_option( 'casasync_share_facebook', false )) {
-        $return = '<h3><i class="fa fa-share-square"></i> ' . __('Share', 'casasync') . '</h3>';
+      if (get_option( 'casawp_share_facebook', false )) {
+        $return = '<h3><i class="fa fa-share-square"></i> ' . __('Share', 'casawp') . '</h3>';
         $return .= '<div class="fb-like" data-send="true" data-layout="button_count" data-href="http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '" data-width="200" data-show-faces="true"></div><br>';
       }
 
-      if(get_option( 'casasync_share_googleplus', false )) {
+      if(get_option( 'casawp_share_googleplus', false )) {
         $return .= '<div class="g-plusone" data-size="medium"></div><br>';
       }
 
-      if(get_option( 'casasync_share_twitter', false )) {
+      if(get_option( 'casawp_share_twitter', false )) {
         $return .= '<a href="https://twitter.com/share" class="twitter-share-button" data-lang="de">Twittern</a><br>';
       }
       add_action('wp_footer', array($this, 'getShareWidgetsScripts'), 30);
@@ -778,7 +778,7 @@
 
     public function getShareWidgetsScripts() {
       $return = null;
-      if (get_option( 'casasync_share_facebook', false )) {
+      if (get_option( 'casawp_share_facebook', false )) {
         $return .= '<div id="fb-root"></div><script>(function(d, s, id) {'
           .'var js, fjs = d.getElementsByTagName(s)[0];'
           .'if (d.getElementById(id)) return;'
@@ -787,7 +787,7 @@
           .'fjs.parentNode.insertBefore(js, fjs);'
         ."}(document, 'script', 'facebook-jssdk'));</script>";
       }
-      if(get_option( 'casasync_share_googleplus', false )) {
+      if(get_option( 'casawp_share_googleplus', false )) {
          $return .= '<script type="text/javascript">'
           .'(function() {'
           ."var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;"
@@ -796,7 +796,7 @@
           ."})();"
         .'</script>';
       }
-      if(get_option( 'casasync_share_twitter', false )) {
+      if(get_option( 'casawp_share_twitter', false )) {
         $return .= '<script type="text/javascript">'
           .'!function(d,s,id){'
           .'var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)'
@@ -811,11 +811,11 @@
     public function getPrice($type = 'auto', $format = 'num', $byrequest = true){
       $price = array();
       $timesegment_labels = array(
-        'm' => __('month', 'casasync'),
-        'w' => __('week', 'casasync'),
-        'd' => __('day', 'casasync'),
-        'y' => __('year', 'casasync'),
-        'h' => __('hour', 'casasync')
+        'm' => __('month', 'casawp'),
+        'w' => __('week', 'casawp'),
+        'd' => __('day', 'casawp'),
+        'y' => __('year', 'casawp'),
+        'h' => __('hour', 'casawp')
       );
 
       switch ($type) {
@@ -904,7 +904,7 @@
 
           $timesegment     = '';
           $propertysegment = '';
-          $offer_types = get_terms('casasync_salestype');
+          $offer_types = get_terms('casawp_salestype');
 
           foreach ($offer_types as $k => $v) {
             $offer_type = $v->name = 'rent' ? 'rent' : 'buy';
@@ -921,11 +921,11 @@
           }
 
           $timesegment_labels = array(
-            'm' => __('month', 'casasync'),
-            'w' => __('week', 'casasync'),
-            'd' => __('day', 'casasync'),
-            'y' => __('year', 'casasync'),
-            'h' => __('hour', 'casasync')
+            'm' => __('month', 'casawp'),
+            'w' => __('week', 'casawp'),
+            'd' => __('day', 'casawp'),
+            'y' => __('year', 'casawp'),
+            'h' => __('hour', 'casawp')
           );
 
           $extraPrice = array(
@@ -977,12 +977,12 @@
           break;
         case 'distances':
           $distances = array();
-          foreach ($this->conversion->casasync_get_allDistanceKeys() as $distance_key) {
+          foreach ($this->conversion->casawp_get_allDistanceKeys() as $distance_key) {
             $distance = get_post_meta( get_the_ID(), $distance_key, $single = true );
-            $distance_arr = $this->casasync_distance_to_array($distance);
+            $distance_arr = $this->casawp_distance_to_array($distance);
             if ($distance) {
-              $title = $this->conversion->casasync_convert_distanceKeyToLabel($distance_key);
-              $distances[$distance_key] = array('title' => $title, 'value' => implode($distance_arr, ' ' . __('and','casasync') . ' '));
+              $title = $this->conversion->casawp_convert_distanceKeyToLabel($distance_key);
+              $distances[$distance_key] = array('title' => $title, 'value' => implode($distance_arr, ' ' . __('and','casawp') . ' '));
             }
           }
           return $distances;
@@ -1014,8 +1014,8 @@
       if ($this->features) {
         foreach ($this->features as $key => $value) {
           if (isset($key)) {
-            $html .= '<span class="casasync-label"><i class="fa fa-check"></i> '
-              . __($this->conversion->casasync_convert_featureKeyToLabel($value['key']), "casasync") 
+            $html .= '<span class="casawp-label"><i class="fa fa-check"></i> '
+              . __($this->conversion->casawp_convert_featureKeyToLabel($value['key']), "casawp") 
             .'</span> ';
           }
         }
@@ -1032,11 +1032,11 @@
       );
       $attachments = get_children( $args );
       if($attachments) {
-        $html .= '<ul class="casasync-unstyled casasync-documents">';
+        $html .= '<ul class="casawp-unstyled casawp-documents">';
         foreach ( (array) $attachments as $attachment_id => $attachment ) {
           if(strpos($attachment->post_mime_type, 'image') === false ) {
             $url = wp_get_attachment_url( $attachment_id );
-            $title = (is_numeric($attachment->post_title)) ? (__('Document', 'casasync') . ' ' . $count) : ($attachment->post_title);
+            $title = (is_numeric($attachment->post_title)) ? (__('Document', 'casawp') . ' ' . $count) : ($attachment->post_title);
             $html .= '<li>' . $icon . '<a href="' . $url . '" title="' . $title . '" target="_blank" >' . $title . '</a></li>';
             $count++;
           }
@@ -1052,7 +1052,7 @@
       $args = array(
         'post_type' => 'attachment',
         'posts_per_page' => -1,
-        'casasync_attachment_type' => 'plan',
+        'casawp_attachment_type' => 'plan',
         'post_status' =>'publish',
         'post_parent' => get_the_ID(),
       ); 
@@ -1068,7 +1068,7 @@
       $args = array(
         'post_type' => 'attachment',
         'posts_per_page' => -1,
-        'casasync_attachment_type' => 'sales-brochure',
+        'casawp_attachment_type' => 'sales-brochure',
         'post_status' =>'publish',
         'post_parent' => get_the_ID(),
       ); 
@@ -1115,10 +1115,10 @@
             $availability_converted_slug = $this->availability;
             break;
         }
-        $availability_converted_name = $this->conversion->casasync_convert_availabilityKeyToLabel($availability_converted_slug);
+        $availability_converted_name = $this->conversion->casawp_convert_availabilityKeyToLabel($availability_converted_slug);
 
         $return .= '<div class="availability-outerlabel">';
-        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($availability_converted_name, 'casasync') . '</div>';
+        $return .= '<div class="availability-label availability-label-' . $this->availability . '">' . __($availability_converted_name, 'casawp') . '</div>';
         $return .= '</div>';
       }
       return $return;
@@ -1128,7 +1128,7 @@
       $distances = $this->getNumval('distances');
       $html = NULL;
       if($distances) {
-        $html .= '<ul class="casasync-unstyled">';
+        $html .= '<ul class="casawp-unstyled">';
         foreach ($distances as $key => $value) {
           $html .= '<li><strong>' . $value['title'] . ': </strong>';
           $html .= '<span>' . $value['value'] . '</span></li>';
@@ -1138,7 +1138,7 @@
       return $html;
     }
 
-    public function casasync_distance_to_array($distance){
+    public function casawp_distance_to_array($distance){
       if ($distance) {
         $distance_quirk = trim($distance,"[");   
         $distance_quirk = trim($distance_quirk,"]");
@@ -1171,12 +1171,12 @@
 
     public static function getEventTrackingCode() {
       $return = '';
-      $eventTrackingCode = get_option('casasync_form_event_tracking');
+      $eventTrackingCode = get_option('casawp_form_event_tracking');
       if ($eventTrackingCode != "") {
           $eventTrackingCode = stripslashes($eventTrackingCode);
-          if (strpos($eventTrackingCode,'%casasync_id%') !== false) {
-              $casasync_id = get_post_meta(get_the_ID(), 'casasync_id', true);
-              $return = str_replace('%casasync_id%', $casasync_id, $eventTrackingCode);
+          if (strpos($eventTrackingCode,'%casawp_id%') !== false) {
+              $casawp_id = get_post_meta(get_the_ID(), 'casawp_id', true);
+              $return = str_replace('%casawp_id%', $casawp_id, $eventTrackingCode);
           }
       }
       echo '<script>' . $return . '</script>';

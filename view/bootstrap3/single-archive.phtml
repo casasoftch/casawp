@@ -1,8 +1,8 @@
-<div class="casasync-property">
-	<div class="casasync-thumbnail-wrapper">
-		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casasync-missing-gallery">' . __('No image', 'casasync') . '</div>'); ?>
+<div class="casawp-property">
+	<div class="casawp-thumbnail-wrapper">
+		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
 	</div>
-	<div class="casasync-text">
+	<div class="casawp-text">
 		<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
 		<?php echo $offer->renderQuickInfosTable(); ?>
 	</div>

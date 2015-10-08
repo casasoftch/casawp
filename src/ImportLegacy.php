@@ -1,5 +1,5 @@
 <?php
-namespace CasaSync;
+namespace CasaWp;
 
 class ImportLegacy {
   public $lastTranscript = '';
@@ -35,17 +35,17 @@ class ImportLegacy {
       'number_of_lavatory'          ,
       'number_of_guest_wc'          ,
 
-      'casasync_visitInformation'                    ,
-      'casasync_property_url'                        ,
-      'casasync_property_address_country'            ,
-      'casasync_property_address_locality'           ,
-      'casasync_property_address_region'             ,
-      'casasync_property_address_postalcode'         ,
-      'casasync_property_address_streetaddress'      ,
-      'casasync_property_address_streetnumber'       ,
-      'casasync_urls'                                ,
-      'casasync_start'                               ,
-      'casasync_referenceId'                         ,
+      'casawp_visitInformation'                    ,
+      'casawp_property_url'                        ,
+      'casawp_property_address_country'            ,
+      'casawp_property_address_locality'           ,
+      'casawp_property_address_region'             ,
+      'casawp_property_address_postalcode'         ,
+      'casawp_property_address_streetaddress'      ,
+      'casawp_property_address_streetnumber'       ,
+      'casawp_urls'                                ,
+      'casawp_start'                               ,
+      'casawp_referenceId'                         ,
       'availability'                                 ,
       'availability_label'                           ,
       'offer_type'                                   ,
@@ -99,8 +99,8 @@ class ImportLegacy {
       'seller_visit_person_givenname'              ,
       'seller_visit_person_phone_direct'           ,
       'seller_visit_person_note'                 ,
-      'casasync_property_geo_latitude'               ,
-      'casasync_property_geo_longitude'              ,
+      'casawp_property_geo_latitude'               ,
+      'casawp_property_geo_longitude'              ,
       'price'                                        ,
       'grossPrice'                                   ,
       'netPrice'                                     ,
@@ -123,13 +123,13 @@ class ImportLegacy {
       'distance_boat_dock',
       'distance_airport',
 
-      'casasync_features'                            ,
+      'casawp_features'                            ,
   );
 
   public function __construct($doimport = true, $casagatewayupdate = false){
     $this->conversion = new Conversion;
     if ($doimport) {
-      add_action( 'init', array($this, 'casasyncImport') );  
+      add_action( 'init', array($this, 'casawpImport') );  
     }
     if ($casagatewayupdate) {
       //nope that is a non legacy thing!!!!
@@ -139,16 +139,16 @@ class ImportLegacy {
   public function getImportFile(){
     if (!$this->importFile) {
       $good_to_go = false;
-      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import')) {
-        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import');
+      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
+        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import');
       }
-      $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data.xml';
+      $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
       if (file_exists($file)) {
         $good_to_go = true;
       } else {
         //if force last check for last
         if (isset($_GET['force_last_import'])) {
-          $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml';
+          $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml';
           if (file_exists($file)) {
             $good_to_go = true;
           }
@@ -169,7 +169,7 @@ class ImportLegacy {
   }
 
   public function backupImportFile(){
-    copy ( $this->getImportFile() , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/done/' . date('Y_m_d_H_i_s') . '_completed.xml');
+    copy ( $this->getImportFile() , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . date('Y_m_d_H_i_s') . '_completed.xml');
     return true;
   }
 
@@ -191,15 +191,15 @@ class ImportLegacy {
 
   public function setCasasyncCategoryTerm($term_slug, $label = false) {
     $label = (!$label ? $term_slug : $label);
-    $term = get_term_by('slug', $term_slug, 'casasync_category', OBJECT, 'raw' );
-    //$existing_term_id = term_exists( $label, 'casasync_category');
+    $term = get_term_by('slug', $term_slug, 'casawp_category', OBJECT, 'raw' );
+    //$existing_term_id = term_exists( $label, 'casawp_category');
     $existing_term_id = false;
     if ($term) {
       if (
         $term->slug != $term_slug
         || $term->name != $label
       ) {
-        wp_update_term($term->term_id, 'casasync_category', array(
+        wp_update_term($term->term_id, 'casawp_category', array(
           'name' => $label,
           'slug' => $term_slug
         ));
@@ -211,7 +211,7 @@ class ImportLegacy {
       );
       $id = wp_insert_term(
         $label,
-        'casasync_category',
+        'casawp_category',
         $options
       );
       return $id;
@@ -221,7 +221,7 @@ class ImportLegacy {
   public function convertXmlPublisherOptions($publisher_options_xml){
     $publisher_options = array();
       foreach ($publisher_options_xml as $settings) {
-        if ($settings['id'] == 'casasync') {
+        if ($settings['id'] == 'casawp') {
           if ($settings->options) {
             foreach ($settings->options->option as $option) {
               $key   = (isset($option['name']) ? $option['name'] : false);
@@ -247,11 +247,11 @@ class ImportLegacy {
     return $publisher_options;
   }
 
-  public function casasyncUploadAttachment($the_mediaitem, $post_id, $property_id) {
+  public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
-      $filename = '/casasync/import/attachment/'. $the_mediaitem['file'];
+      $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
     } elseif ($the_mediaitem['url']) { //external
-      $filename = '/casasync/import/attachment/externalsync/' . $property_id . '/' . basename($the_mediaitem['url']);
+      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($the_mediaitem['url']);
 
       //extention is required
       $file_parts = pathinfo($filename);
@@ -259,11 +259,11 @@ class ImportLegacy {
           $filename = $filename . '.jpg';
       }
       if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
-        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync')) {
-          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync');
+        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync')) {
+          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync');
         }
-        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id)) {
-          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casasync/import/attachment/externalsync/' . $property_id);
+        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id)) {
+          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id);
         }
         if (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
           $could_copy = copy($the_mediaitem['url'], CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
@@ -300,9 +300,9 @@ class ImportLegacy {
       wp_update_attachment_metadata( $attach_id, $attach_data );
 
       //category
-      $term = get_term_by('slug', $the_mediaitem['type'], 'casasync_attachment_type');
+      $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
       $term_id = $term->term_id;
-      wp_set_post_terms( $attach_id,  array($term_id), 'casasync_attachment_type' );
+      wp_set_post_terms( $attach_id,  array($term_id), 'casawp_attachment_type' );
 
       //alt
       update_post_meta($attach_id, '_wp_attachment_image_alt', $the_mediaitem['alt']);
@@ -353,20 +353,20 @@ class ImportLegacy {
     return false;
   }
 
-  public function updateInsertWPMLconnection($offer_pos, $wp_post, $lang, $casasync_id){
+  public function updateInsertWPMLconnection($offer_pos, $wp_post, $lang, $casawp_id){
     if ($this->hasWPML()) {
 
       if ($this->getMainLang() == $lang) {
-        $this->curtrid = wpml_get_content_trid('post_casasync_property', $wp_post->ID);
+        $this->curtrid = wpml_get_content_trid('post_casawp_property', $wp_post->ID);
       }
 
       $_POST['icl_post_language'] = $lang; 
       
       global $sitepress;
       if ($this->getMainLang() != $lang) {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
+        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
       } else {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casasync_property', $this->curtrid, $lang, NULL, true);
+        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, NULL, true);
       }
     }
   }
@@ -436,16 +436,16 @@ class ImportLegacy {
             $numval_from = $numval_parts[0];
             $numval_to = (isset($numval_parts[1]) ? $numval_parts[1] : false);
             $the_values[] = array(
-              'from' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_from),
-              'to' => $this->conversion->casasync_numStringToArray($numval['key'], $numval_to)
+              'from' => $this->conversion->casawp_numStringToArray($numval['key'], $numval_from),
+              'to' => $this->conversion->casawp_numStringToArray($numval['key'], $numval_to)
             );
           }
           $the_numvals[(string)$numval['key']] = $the_values;
         }
       }
     }
-    $all_distance_keys     = $this->conversion->casasync_get_allDistanceKeys();
-    $all_numval_keys       = $this->conversion->casasync_get_allNumvalKeys();
+    $all_distance_keys     = $this->conversion->casawp_get_allDistanceKeys();
+    $all_numval_keys       = $this->conversion->casawp_get_allNumvalKeys();
     $r_distances         = array();
     $r_numvals            = array();
 
@@ -578,7 +578,7 @@ class ImportLegacy {
   public function publisherOptionsXMLtoArray($publisher_options_xml){
     $publisher_options = array();
       foreach ($publisher_options_xml as $settings) {
-        if ($settings['id'] == 'casasync') {
+        if ($settings['id'] == 'casawp') {
           if ($settings->options) {
             foreach ($settings->options->option as $option) {
               $key   = (isset($option['name']) ? $option['name'] : false);
@@ -604,17 +604,17 @@ class ImportLegacy {
     return $publisher_options;
   }
 
-  public function setOfferAttachments($xmlattachments, $wp_post, $property_id, $casasync_id){
+  public function setOfferAttachments($xmlattachments, $wp_post, $property_id, $casawp_id){
     ### future task: for better performace compare new and old data ###
 
     
     //get xml media files
-    $the_casasync_attachments = array();
+    $the_casawp_attachments = array();
     if ($xmlattachments) {
       foreach ($xmlattachments->media as $media) {
         if (in_array($media['type']->__toString(), array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
           $filename = ($media->file->__toString() ? $media->file->__toString() : $media->url->__toString());
-          $the_casasync_attachments[] = array(
+          $the_casawp_attachments[] = array(
             'type'    => $media['type']->__toString(),
             'alt'     => $media->alt->__toString(),
             'title'   => preg_replace('/\.[^.]+$/', '', ( $media->title->__toString() ? $media->title->__toString() : basename($filename)) ),
@@ -628,7 +628,7 @@ class ImportLegacy {
     }
 
     //get post attachments already attached
-    $wp_casasync_attachments = array();
+    $wp_casawp_attachments = array();
     $args = array(
       'post_type'   => 'attachment',
       'numberposts' => -1,
@@ -637,7 +637,7 @@ class ImportLegacy {
       'tax_query'   => array(
         'relation'  => 'AND',
         array(
-          'taxonomy' => 'casasync_attachment_type',
+          'taxonomy' => 'casawp_attachment_type',
           'field'    => 'slug',
           'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'sales-brochure' )
         )
@@ -646,18 +646,18 @@ class ImportLegacy {
     $attachments = get_posts($args);
     if ($attachments) {
       foreach ($attachments as $attachment) {
-        $wp_casasync_attachments[] = $attachment;
+        $wp_casawp_attachments[] = $attachment;
       }
     }
 
     //upload necesary images to wordpress
-    if (isset($the_casasync_attachments)) {
-      $wp_casasync_attachments_to_remove = $wp_casasync_attachments;
-      foreach ($the_casasync_attachments as $the_mediaitem) {
+    if (isset($the_casawp_attachments)) {
+      $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
+      foreach ($the_casawp_attachments as $the_mediaitem) {
         //look up wp and see if file is already attached
         $existing = false;
         $existing_attachment = array();
-        foreach ($wp_casasync_attachments as $key => $wp_mediaitem) {
+        foreach ($wp_casawp_attachments as $key => $wp_mediaitem) {
           $attachment_customfields = get_post_custom($wp_mediaitem->ID);
           $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
           $alt = '';
@@ -665,9 +665,9 @@ class ImportLegacy {
             $existing = true;
 
             //its here to stay
-            unset($wp_casasync_attachments_to_remove[$key]);
+            unset($wp_casawp_attachments_to_remove[$key]);
 
-            $types = wp_get_post_terms( $wp_mediaitem->ID, 'casasync_attachment_type');
+            $types = wp_get_post_terms( $wp_mediaitem->ID, 'casawp_attachment_type');
             if (array_key_exists(0, $types)) {
               $typeslug = $types[0]->slug;
               $alt = get_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', true);
@@ -686,7 +686,7 @@ class ImportLegacy {
             //have its values changed?
             if($existing_attachment != $the_mediaitem ){
               $changed = true;
-              $this->transcript[$casasync_id]['attachments']["updated"] = 1;
+              $this->transcript[$casawp_id]['attachments']["updated"] = 1;
               //update attachment data
               if ($existing_attachment['caption'] != $the_mediaitem['caption']
                 || $existing_attachment['title'] != $the_mediaitem['title']
@@ -700,9 +700,9 @@ class ImportLegacy {
               }
               //update attachment category
               if ($existing_attachment['type'] != $the_mediaitem['type']) {
-                $term = get_term_by('slug', $the_mediaitem['type'], 'casasync_attachment_type');
+                $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
                 $term_id = $term->term_id;
-                wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casasync_attachment_type' );
+                wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casawp_attachment_type' );
               }
               //update attachment alt
               if ($alt != $the_mediaitem['alt']) {
@@ -716,16 +716,16 @@ class ImportLegacy {
 
         if (!$existing) {
           //insert the new image
-          $new_id = $this->casasyncUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
+          $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
           if (is_int($new_id)) {
-            $this->transcript[$casasync_id]['attachments']["created"] = $the_mediaitem['file'];
+            $this->transcript[$casawp_id]['attachments']["created"] = $the_mediaitem['file'];
           } else {
-            $this->transcript[$casasync_id]['attachments']["failed_to_create"] = $new_id;
+            $this->transcript[$casawp_id]['attachments']["failed_to_create"] = $new_id;
           }
         }
         
 
-      } //foreach ($the_casasync_attachments as $the_mediaitem) {
+      } //foreach ($the_casawp_attachments as $the_mediaitem) {
 
       //featured image
       $args = array(
@@ -736,7 +736,7 @@ class ImportLegacy {
         'tax_query'   => array(
           'relation'  => 'AND',
           array(
-            'taxonomy' => 'casasync_attachment_type',
+            'taxonomy' => 'casawp_attachment_type',
             'field'    => 'slug',
             'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'sales-brochure' )
           )
@@ -744,14 +744,14 @@ class ImportLegacy {
       );
       $attachments = get_posts($args);
       if ($attachments) {
-        unset($wp_casasync_attachments);
+        unset($wp_casawp_attachments);
         foreach ($attachments as $attachment) {
-          $wp_casasync_attachments[] = $attachment;
+          $wp_casawp_attachments[] = $attachment;
         }
       }
 
       $attachment_image_order = array();
-      foreach ($the_casasync_attachments as $the_mediaitem) {
+      foreach ($the_casawp_attachments as $the_mediaitem) {
         if ($the_mediaitem['type'] == 'image') {
           $attachment_image_order[$the_mediaitem['order']] = $the_mediaitem;
         }
@@ -760,14 +760,14 @@ class ImportLegacy {
         ksort($attachment_image_order);
         $attachment_image_order = reset($attachment_image_order);
         if (!empty($attachment_image_order)) {
-          foreach ($wp_casasync_attachments as $wp_mediaitem) {
+          foreach ($wp_casawp_attachments as $wp_mediaitem) {
             $attachment_customfields = get_post_custom($wp_mediaitem->ID);
             $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
             if ($original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])) {
               $cur_thumbnail_id = get_post_thumbnail_id( $wp_post->ID );
               if ($cur_thumbnail_id != $wp_mediaitem->ID) {
                 set_post_thumbnail( $wp_post->ID, $wp_mediaitem->ID );
-                $this->transcript[$casasync_id]['attachments']["featured_image_set"] = 1;
+                $this->transcript[$casawp_id]['attachments']["featured_image_set"] = 1;
               }
             }
           }
@@ -775,8 +775,8 @@ class ImportLegacy {
       }
 
       //images to remove
-      foreach ($wp_casasync_attachments_to_remove as $attachment) {
-        $this->transcript[$casasync_id]['attachments']["removed"] = $attachment;
+      foreach ($wp_casawp_attachments_to_remove as $attachment) {
+        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
 
         $attachment_customfields = get_post_custom($attachment->ID);
         $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
@@ -784,17 +784,17 @@ class ImportLegacy {
       }
 
 
-    } //(isset($the_casasync_attachments)
+    } //(isset($the_casawp_attachments)
 
    
   }
 
-  public function setOfferSalestype($wp_post, $salestype, $casasync_id){
+  public function setOfferSalestype($wp_post, $salestype, $casawp_id){
     $new_salestype = null;
     $old_salestype = null;
 
     if ($salestype) {
-      $new_salestype = get_term_by('slug', $salestype, 'casasync_salestype', OBJECT, 'raw' );
+      $new_salestype = get_term_by('slug', $salestype, 'casawp_salestype', OBJECT, 'raw' );
       if (!$new_salestype) {
         $options = array(
           'description' => '',
@@ -802,29 +802,29 @@ class ImportLegacy {
         );
         $id = wp_insert_term(
           $salestype,
-          'casasync_salestype',
+          'casawp_salestype',
           $options
         );
-        $new_salestype = get_term($id, 'casasync_salestype', OBJECT, 'raw');
+        $new_salestype = get_term($id, 'casawp_salestype', OBJECT, 'raw');
 
       }
     }
 
-    $wp_salestype_terms = wp_get_object_terms($wp_post->ID, 'casasync_salestype');
+    $wp_salestype_terms = wp_get_object_terms($wp_post->ID, 'casawp_salestype');
     if ($wp_salestype_terms) {
       $old_salestype = $wp_salestype_terms[0];
     }
     
     if ($old_salestype != $new_salestype) {
-      $this->transcript[$casasync_id]['salestype']['from'] = ($old_salestype ? $old_salestype->name : 'none');
-      $this->transcript[$casasync_id]['salestype']['to'] =   ($new_salestype ? $new_salestype->name : 'none');
-      wp_set_object_terms( $wp_post->ID, ($new_salestype ? $new_salestype->term_id : NULL), 'casasync_salestype' );
+      $this->transcript[$casawp_id]['salestype']['from'] = ($old_salestype ? $old_salestype->name : 'none');
+      $this->transcript[$casawp_id]['salestype']['to'] =   ($new_salestype ? $new_salestype->name : 'none');
+      wp_set_object_terms( $wp_post->ID, ($new_salestype ? $new_salestype->term_id : NULL), 'casawp_salestype' );
     }
     
   }
 
 
-  public function setOfferAvailability($wp_post, $availability, $casasync_id){
+  public function setOfferAvailability($wp_post, $availability, $casawp_id){
     $new_term = null;
     $old_term = null;
 
@@ -843,7 +843,7 @@ class ImportLegacy {
     }
 
     if ($availability) {
-      $new_term = get_term_by('slug', $availability, 'casasync_availability', OBJECT, 'raw' );
+      $new_term = get_term_by('slug', $availability, 'casawp_availability', OBJECT, 'raw' );
       if (!$new_term) {
         $options = array(
           'description' => '',
@@ -851,28 +851,28 @@ class ImportLegacy {
         );
         $id = wp_insert_term(
           $availability,
-          'casasync_availability',
+          'casawp_availability',
           $options
         );
-        $new_term = get_term($id, 'casasync_availability', OBJECT, 'raw');
+        $new_term = get_term($id, 'casawp_availability', OBJECT, 'raw');
 
       }
     }
 
-    $wp_post_terms = wp_get_object_terms($wp_post->ID, 'casasync_availability');
+    $wp_post_terms = wp_get_object_terms($wp_post->ID, 'casawp_availability');
     if ($wp_post_terms) {
       $old_term = $wp_post_terms[0];
     }
     
     if ($old_term != $new_term) {
-      $this->transcript[$casasync_id]['availability']['from'] = ($old_term ? $old_term->name : 'none');
-      $this->transcript[$casasync_id]['availability']['to'] =   ($new_term ? $new_term->name : 'none');
-      wp_set_object_terms( $wp_post->ID, ($new_term ? $new_term->term_id : NULL), 'casasync_availability' );
+      $this->transcript[$casawp_id]['availability']['from'] = ($old_term ? $old_term->name : 'none');
+      $this->transcript[$casawp_id]['availability']['to'] =   ($new_term ? $new_term->name : 'none');
+      wp_set_object_terms( $wp_post->ID, ($new_term ? $new_term->term_id : NULL), 'casawp_availability' );
     }
     
   }
 
-  public function setOfferLocalities($wp_post, $xml_address, $casasync_id){
+  public function setOfferLocalities($wp_post, $xml_address, $casawp_id){
     $country  = strtoupper( $this->simpleXMLget($xml_address->country, 'CH'));
     $region   = $this->simpleXMLget($xml_address->region, false);
     $locality = $this->simpleXMLget($xml_address->locality, false);
@@ -894,7 +894,7 @@ class ImportLegacy {
     //make sure country exists
     $wp_country = false;
     if ($country_arr) {
-      $wp_country = get_term_by('slug', $country_arr[1], 'casasync_location', OBJECT, 'raw' );
+      $wp_country = get_term_by('slug', $country_arr[1], 'casawp_location', OBJECT, 'raw' );
 
       if (!$wp_country || $wp_country instanceof WP_Error) {
         $options = array(
@@ -903,11 +903,11 @@ class ImportLegacy {
         );
         $new_term = wp_insert_term(
           $country_arr[0],
-          'casasync_location',
+          'casawp_location',
           $options
         );
-        delete_option("casasync_location_children");
-        $wp_country = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        delete_option("casawp_location_children");
+        $wp_country = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
         $this->transcript['new_locations'][] = $country_arr;
       }
     }
@@ -915,7 +915,7 @@ class ImportLegacy {
     //make sure lvl1 exists
     $wp_lvl1 = false;
     if ($lvl1_arr) {
-      $wp_lvl1 = get_term_by('slug', $lvl1_arr[1], 'casasync_location', OBJECT, 'raw' );
+      $wp_lvl1 = get_term_by('slug', $lvl1_arr[1], 'casawp_location', OBJECT, 'raw' );
 
       if (!$wp_lvl1 || $wp_lvl1 instanceof WP_Error) {
 
@@ -926,11 +926,11 @@ class ImportLegacy {
         );
         $new_term = wp_insert_term(
           $lvl1_arr[0],
-          'casasync_location',
+          'casawp_location',
           $options
         );
-        delete_option("casasync_location_children");
-        $wp_lvl1 = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        delete_option("casawp_location_children");
+        $wp_lvl1 = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
         $this->transcript['new_locations'][] = $lvl1_arr;
       }
     }
@@ -938,7 +938,7 @@ class ImportLegacy {
     //make sure lvl2 exists
     $wp_lvl2 = false;
     if ($lvl2_arr) {
-      $wp_lvl2 = get_term_by('slug', $lvl2_arr[1], 'casasync_location', OBJECT, 'raw' );
+      $wp_lvl2 = get_term_by('slug', $lvl2_arr[1], 'casawp_location', OBJECT, 'raw' );
       if (!$wp_lvl2 || $wp_lvl2 instanceof WP_Error) {
         $options = array(
           'description' => '',
@@ -947,11 +947,11 @@ class ImportLegacy {
         );
         $new_term = wp_insert_term(
           $lvl2_arr[0],
-          'casasync_location',
+          'casawp_location',
           $options
         );
-        delete_option("casasync_location_children");
-        $wp_lvl2 = get_term($new_term['term_id'], 'casasync_location', OBJECT, 'raw');
+        delete_option("casawp_location_children");
+        $wp_lvl2 = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
         $this->transcript['new_locations'][] = $lvl2_arr;
       }
     }
@@ -970,7 +970,7 @@ class ImportLegacy {
     $new_terms = array_values($new_terms);
 
     $old_terms = array();
-    $old_terms_obj = wp_get_object_terms($wp_post->ID, 'casasync_location');
+    $old_terms_obj = wp_get_object_terms($wp_post->ID, 'casawp_location');
     foreach ($old_terms_obj as $old_term) {
       $old_terms[] = $old_term->term_id;
     }
@@ -978,20 +978,20 @@ class ImportLegacy {
     $old_terms = array_values($old_terms);
 
     if ($new_terms != $old_terms) {
-      $this->transcript[$casasync_id]['locations'][]['from'] = $old_terms;
-      $this->transcript[$casasync_id]['locations'][]['to'] = $new_terms;
-      wp_set_object_terms( $wp_post->ID, $new_terms, 'casasync_location' );
+      $this->transcript[$casawp_id]['locations'][]['from'] = $old_terms;
+      $this->transcript[$casawp_id]['locations'][]['to'] = $new_terms;
+      wp_set_object_terms( $wp_post->ID, $new_terms, 'casawp_location' );
     }
     
   }
 
-  public function setOfferCategories($wp_post, $categories, $publisher_options, $casasync_id){
+  public function setOfferCategories($wp_post, $categories, $publisher_options, $casawp_id){
     $new_categories = array();;
     $old_categories = array();
 
     //set post category
     $old_categories = array();
-    $wp_category_terms = wp_get_object_terms($wp_post->ID, 'casasync_category');
+    $wp_category_terms = wp_get_object_terms($wp_post->ID, 'casawp_category');
     foreach ($wp_category_terms as $term) {
       $old_categories[] = $term->slug;
     }
@@ -1015,8 +1015,8 @@ class ImportLegacy {
     if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
       $slugs_to_remove = array_diff($old_categories, $new_categories);
       $slugs_to_add    = array_diff($new_categories, $old_categories);
-      $this->transcript[$casasync_id]['categories_changed']['removed_category'] = $slugs_to_remove;
-      $this->transcript[$casasync_id]['categories_changed']['added_category'] = $slugs_to_add;
+      $this->transcript[$casawp_id]['categories_changed']['removed_category'] = $slugs_to_remove;
+      $this->transcript[$casawp_id]['categories_changed']['added_category'] = $slugs_to_add;
 
       //get the custom labels they need them
       $custom_categorylabels = array();
@@ -1033,28 +1033,28 @@ class ImportLegacy {
       }
 
       //add the new ones
-      $category_terms = get_terms( array('casasync_category'), array('hide_empty' => false));
+      $category_terms = get_terms( array('casawp_category'), array('hide_empty' => false));
       foreach ($category_terms as $term) {
         if (in_array($term->slug, $new_categories)) {
           $connect_term_ids[] = (int) $term->term_id;
         }
       }
       if ($connect_term_ids) {
-        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casasync_category' );
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_category' );
       }
     }
 
   }
 
   public function addToLog($transcript){
-    $dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/logs';
+    $dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
     if (!file_exists($dir)) {
         mkdir($dir, 0777, true);
     }
     file_put_contents($dir."/".date('Y M').'.log', "\n".json_encode(array(date('Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
-  public function casasyncImport(){
+  public function casawpImport(){
     if ($this->getImportFile()) {
       if (is_admin()) {
         $this->updateOffers();
@@ -1073,7 +1073,7 @@ class ImportLegacy {
 
 
   public function updateOffers(){
-    $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/import/data-done.xml');
+    $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml');
     set_time_limit(300);
     global $wpdb;
     $found_posts = array();
@@ -1100,9 +1100,9 @@ class ImportLegacy {
 
 
         //is it already in db
-        $casasync_id = $property['id'] . $xmloffer['lang'];
+        $casawp_id = $property['id'] . $xmloffer['lang'];
 
-        $the_query = new \WP_Query( 'post_type=casasync_property&suppress_filters=true&meta_key=casasync_id&meta_value=' . $casasync_id );
+        $the_query = new \WP_Query( 'post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
         $wp_post = false;
         while ( $the_query->have_posts() ) :
           $the_query->the_post();
@@ -1113,17 +1113,17 @@ class ImportLegacy {
 
         //if not create a basic property
         if (!$wp_post) {
-          $this->transcript[$casasync_id]['action'] = 'new';
+          $this->transcript[$casawp_id]['action'] = 'new';
           $the_post['post_title'] = 'unsaved property';
           $the_post['post_content'] = 'unsaved property';
           $the_post['post_status'] = 'pending';
-          $the_post['post_type'] = 'casasync_property';
+          $the_post['post_type'] = 'casawp_property';
           $insert_id = wp_insert_post($the_post);
-          update_post_meta($insert_id, 'casasync_id', $casasync_id);
+          update_post_meta($insert_id, 'casawp_id', $casawp_id);
           $wp_post = get_post($insert_id, OBJECT, 'raw');
         }
         $found_posts[] = $wp_post->ID;
-        $this->updateOffer($casasync_id, $offer_pos, $property, $xmloffer, $wp_post);
+        $this->updateOffer($casawp_id, $offer_pos, $property, $xmloffer, $wp_post);
 
       }
     }
@@ -1134,7 +1134,7 @@ class ImportLegacy {
       'language'=>'ALL',
       'numberposts' =>  100,
       'exclude'     =>  $found_posts,
-      'post_type'   =>  'casasync_property',
+      'post_type'   =>  'casawp_property',
       'post_status' =>  'publish'
       )
     );
@@ -1173,11 +1173,11 @@ class ImportLegacy {
   }
 
 
-  public function updateOffer($casasync_id, $offer_pos, $property, $xmloffer, $wp_post){
+  public function updateOffer($casawp_id, $offer_pos, $property, $xmloffer, $wp_post){
     $publisher_options = $this->publisherOptionsXMLtoArray($xmloffer->publisherSettings);
 
     //lang
-    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $xmloffer['lang'], $casasync_id);
+    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $xmloffer['lang'], $casawp_id);
 
     /* main post data */
     $new_main_data = array(
@@ -1185,7 +1185,7 @@ class ImportLegacy {
       'post_title'    => $xmloffer->name->__toString(),
       'post_content'  => $this->extractDescription($xmloffer),
       'post_status'   => 'publish',
-      'post_type'     => 'casasync_property',
+      'post_type'     => 'casawp_property',
       'post_excerpt'  => $xmloffer->excerpt->__toString(),
       'post_date'     => date('Y-m-d H:i:s', strtotime(($property->software->creation->__toString() ? $property->software->creation->__toString() : $property->software->lastUpdate->__toString() ) )),
       //'post_modified' => date('Y-m-d H:i:s', strtotime($property->software->lastUpdate->__toString())),
@@ -1204,8 +1204,8 @@ class ImportLegacy {
     if ($new_main_data != $old_main_data) {
       foreach ($old_main_data as $key => $value) {
         if ($new_main_data[$key] != $old_main_data[$key]) {
-          $this->transcript[$casasync_id]['main_data'][$key]['from'] = $old_main_data[$key];
-          $this->transcript[$casasync_id]['main_data'][$key]['to'] = $new_main_data[$key];
+          $this->transcript[$casawp_id]['main_data'][$key]['from'] = $old_main_data[$key];
+          $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
         }
       }
       //persist change
@@ -1222,20 +1222,20 @@ class ImportLegacy {
     }
 
     $new_meta_data = array();
-    $casasync_visitInformation = $property->visitInformation->__toString();
-    $casasync_property_url = $property->url->__toString();
-    $new_meta_data['casasync_property_address_country']       = $this->simpleXMLget($property->address->country);
-    $new_meta_data['casasync_property_address_locality']      = $this->simpleXMLget($property->address->locality);
-    $new_meta_data['casasync_property_address_region']        = $this->simpleXMLget($property->address->region);
-    $new_meta_data['casasync_property_address_postalcode']    = $this->simpleXMLget($property->address->postalCode);
-    $new_meta_data['casasync_property_address_streetaddress'] = $this->simpleXMLget($property->address->street);
-    $new_meta_data['casasync_property_address_streetnumber']  = $this->simpleXMLget($property->address->streetNumber);
+    $casawp_visitInformation = $property->visitInformation->__toString();
+    $casawp_property_url = $property->url->__toString();
+    $new_meta_data['casawp_property_address_country']       = $this->simpleXMLget($property->address->country);
+    $new_meta_data['casawp_property_address_locality']      = $this->simpleXMLget($property->address->locality);
+    $new_meta_data['casawp_property_address_region']        = $this->simpleXMLget($property->address->region);
+    $new_meta_data['casawp_property_address_postalcode']    = $this->simpleXMLget($property->address->postalCode);
+    $new_meta_data['casawp_property_address_streetaddress'] = $this->simpleXMLget($property->address->street);
+    $new_meta_data['casawp_property_address_streetnumber']  = $this->simpleXMLget($property->address->streetNumber);
     if ($property->geo) {
-      $new_meta_data['casasync_property_geo_latitude']          = $this->simpleXMLget($property->geo->latitude);
-      $new_meta_data['casasync_property_geo_longitude']         = $this->simpleXMLget($property->geo->longitude);
+      $new_meta_data['casawp_property_geo_latitude']          = $this->simpleXMLget($property->geo->latitude);
+      $new_meta_data['casawp_property_geo_longitude']         = $this->simpleXMLget($property->geo->longitude);
     }
-    $new_meta_data['casasync_start']                          = $this->simpleXMLget($xmloffer->start);
-    $new_meta_data['casasync_referenceId']                    = $this->simpleXMLget($property->referenceId);
+    $new_meta_data['casawp_start']                          = $this->simpleXMLget($xmloffer->start);
+    $new_meta_data['casawp_referenceId']                    = $this->simpleXMLget($property->referenceId);
     if ($xmloffer->seller && $xmloffer->seller->organization) {
       foreach ($xmloffer->seller->organization->phone as $number) {
         if ($number['type'] == 'direct') {
@@ -1431,7 +1431,7 @@ class ImportLegacy {
 
 
     //features
-    $new_meta_data['casasync_features'] = $this->featuresXMLtoJson($property->features);
+    $new_meta_data['casawp_features'] = $this->featuresXMLtoJson($property->features);
 
     //clean up arrays   
     foreach ($old_meta_data as $key => $value) {
@@ -1462,8 +1462,8 @@ class ImportLegacy {
         $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
         if (($oldval || $newval) && $oldval != $newval) {
           update_post_meta($wp_post->ID, $key, $newval);
-          $this->transcript[$casasync_id]['meta_data'][$key]['from'] = $oldval;
-          $this->transcript[$casasync_id]['meta_data'][$key]['to'] = $newval;
+          $this->transcript[$casawp_id]['meta_data'][$key]['from'] = $oldval;
+          $this->transcript[$casawp_id]['meta_data'][$key]['to'] = $newval;
         }
       }
 
@@ -1472,17 +1472,17 @@ class ImportLegacy {
         if (!isset($new_meta_data[$key])) {
           //remove
           delete_post_meta($wp_post->ID, $key, $value);
-          $this->transcript[$casasync_id]['meta_data'][$key] = 'removed';
+          $this->transcript[$casawp_id]['meta_data'][$key] = 'removed';
 
         }
       }
     }
 
-    $this->setOfferCategories($wp_post, $property->category, $publisher_options, $casasync_id);
-    $this->setOfferSalestype($wp_post, $this->simpleXMLget($xmloffer->type, false), $casasync_id);
-    $this->setOfferAvailability($wp_post, $this->simpleXMLget($xmloffer->availability, false), $casasync_id);
-    $this->setOfferLocalities($wp_post, $property->address, $casasync_id);
-    $this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casasync_id);
+    $this->setOfferCategories($wp_post, $property->category, $publisher_options, $casawp_id);
+    $this->setOfferSalestype($wp_post, $this->simpleXMLget($xmloffer->type, false), $casawp_id);
+    $this->setOfferAvailability($wp_post, $this->simpleXMLget($xmloffer->availability, false), $casawp_id);
+    $this->setOfferLocalities($wp_post, $property->address, $casawp_id);
+    $this->setOfferAttachments($xmloffer->attachments , $wp_post, $property['id']->__toString(), $casawp_id);
     
 
   }

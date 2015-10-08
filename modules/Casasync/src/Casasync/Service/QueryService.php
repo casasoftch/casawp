@@ -7,12 +7,12 @@ class QueryService{
 
     public function __construct(){
         $this->defaultQuery = array(
-            'post-type' => 'casasync_property',
+            'post-type' => 'casawp_property',
             'posts_per_page' => get_option('posts_per_page', 10),
-            'order' => get_option('casasync_archive_order', 'DESC'),
+            'order' => get_option('casawp_archive_order', 'DESC'),
             'ignore_sticky_posts' => 0,
             'post__not_in' => null,
-            'orderby' => get_option('casasync_archive_orderby', 'date'),
+            'orderby' => get_option('casawp_archive_orderby', 'date'),
             'categories' => array(),
             'locations' => array(),
             'salestypes' => array(),
@@ -47,23 +47,23 @@ class QueryService{
         $query = array();
         foreach ($r_query as $key => $value) {
             switch ($key) {
-                case 'casasync_category_s':
-                case 'casasync_category':
+                case 'casawp_category_s':
+                case 'casawp_category':
                 case 'categories':
                     $query['categories'] = (is_array($value) ? $value : array($value));
                     break;
-                case 'casasync_location_s':
-                case 'casasync_location':
+                case 'casawp_location_s':
+                case 'casawp_location':
                 case 'locations':
                     $query['locations'] = (is_array($value) ? $value : array($value));
                     break;
-                case 'casasync_salestype_s':
-                case 'casasync_salestype':
+                case 'casawp_salestype_s':
+                case 'casawp_salestype':
                 case 'salestypes':
                     $query['salestypes'] = (is_array($value) ? $value : array($value));
                     break;
-                case 'casasync_availability_s':
-                case 'casasync_availability':
+                case 'casawp_availability_s':
+                case 'casawp_availability':
                 case 'availabilities':
                     $query['availabilities'] = (is_array($value) ? $value : array($value));
                     break;
@@ -75,19 +75,19 @@ class QueryService{
         }
 
         //tax_queries override this
-        /*if (is_tax('casasync_category')) {
-            $query['categories'] = array(get_query_var( 'casasync_category' ));
+        /*if (is_tax('casawp_category')) {
+            $query['categories'] = array(get_query_var( 'casawp_category' ));
         }
 */
         /*
-        if (is_tax('casasync_location')) {
-            $query['locations'] = array(get_query_var( 'casasync_location' ));
+        if (is_tax('casawp_location')) {
+            $query['locations'] = array(get_query_var( 'casawp_location' ));
         }
-        if (is_tax('casasync_salestype')) {
-            $query['locations'] = array(get_query_var( 'casasync_salestype' ));
+        if (is_tax('casawp_salestype')) {
+            $query['locations'] = array(get_query_var( 'casawp_salestype' ));
         }
-        if (is_tax('casasync_availability')) {
-            $query['locations'] = array(get_query_var( 'casasync_availability' ));
+        if (is_tax('casawp_availability')) {
+            $query['locations'] = array(get_query_var( 'casawp_availability' ));
         }*/
 
         return $query;
@@ -97,33 +97,33 @@ class QueryService{
     public function applyToWpQuery($query){
 
         //tax pages overides
-        if (is_tax('casasync_category')) {
-            $this->query['categories'] = array(get_query_var( 'casasync_category' ));
+        if (is_tax('casawp_category')) {
+            $this->query['categories'] = array(get_query_var( 'casawp_category' ));
         }
-        if (is_tax('casasync_location')) {
-            $this->query['locations'] = array(get_query_var( 'casasync_location' ));
+        if (is_tax('casawp_location')) {
+            $this->query['locations'] = array(get_query_var( 'casawp_location' ));
         }
-        if (is_tax('casasync_salestype')) {
-            $this->query['salestypes'] = array(get_query_var( 'casasync_salestype' ));
+        if (is_tax('casawp_salestype')) {
+            $this->query['salestypes'] = array(get_query_var( 'casawp_salestype' ));
         }
-        if (is_tax('casasync_availability')) {
-            $this->query['availabilities'] = array(get_query_var( 'casasync_availability' ));
+        if (is_tax('casawp_availability')) {
+            $this->query['availabilities'] = array(get_query_var( 'casawp_availability' ));
         }
-        if (is_tax('casasync_feature')) {
-            $this->query['features'] = array(get_query_var( 'casasync_feature' ));
+        if (is_tax('casawp_feature')) {
+            $this->query['features'] = array(get_query_var( 'casawp_feature' ));
         }
 
         
 
     	if ($query->is_main_query()) {
-            if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_tax('casasync_feature') || is_post_type_archive('casasync_property')) {
+            if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive('casawp_property')) {
                 $query->set('post-type', $this->query['post-type']);
                 $query->set('posts_per_page', $this->query['posts_per_page']);
                 $query->set('order', $this->query['order']);
 
                 $query->set('ignore_sticky_posts',$this->query['ignore_sticky_posts']);
 
-                if (get_option( 'casasync_hide_sticky_properties_in_main')) {
+                if (get_option( 'casawp_hide_sticky_properties_in_main')) {
                     $query->set('post__not_in', get_option( 'sticky_posts' ));
                 }
                 
@@ -132,7 +132,7 @@ class QueryService{
                         $query->set('orderby', 'title');
                         break;
                     case 'location':
-                        $query->set('meta_key', 'casasync_property_address_locality');
+                        $query->set('meta_key', 'casawp_property_address_locality');
                         $query->set('orderby', 'meta_value');
                         break;
                     case 'price':
@@ -142,8 +142,8 @@ class QueryService{
                     case 'menu_order':
                         $query->set('orderby', 'menu_order date');
                         break;
-                    case 'casasync_referenceId':
-                        $query->set('meta_key', 'casasync_referenceId');
+                    case 'casawp_referenceId':
+                        $query->set('meta_key', 'casawp_referenceId');
                         $query->set('orderby', 'meta_value');
                         break;
                     case 'date':
@@ -159,7 +159,7 @@ class QueryService{
 
                 if ($this->query['categories']) {
                     $taxquery_new[] = array(
-                        'taxonomy'         => 'casasync_category',
+                        'taxonomy'         => 'casawp_category',
                         'terms'            => $this->query['categories'],
                         'include_children' => 1,
                         'field'            => 'slug',
@@ -168,7 +168,7 @@ class QueryService{
                 }
                 if ($this->query['locations']) {
                     $taxquery_new[] = array(
-                        'taxonomy' => 'casasync_location',
+                        'taxonomy' => 'casawp_location',
                         'terms' => $this->query['locations'],
                         'include_children' => 1,
                         'field' => 'slug',
@@ -178,7 +178,7 @@ class QueryService{
 
                 if ($this->query['salestypes']) {
                     $taxquery_new[] = array(
-                        'taxonomy' => 'casasync_salestype',
+                        'taxonomy' => 'casawp_salestype',
                         'terms' => $this->query['salestypes'],
                         'include_children' => 1,
                         'field' => 'slug',
@@ -188,7 +188,7 @@ class QueryService{
 
                 if ($this->query['availabilities']) {
                     $taxquery_new[] = array(
-                        'taxonomy' => 'casasync_availability',
+                        'taxonomy' => 'casawp_availability',
                         'terms' => $this->query['availabilities'],
                         'include_children' => 1,
                         'field' => 'slug',
@@ -198,7 +198,7 @@ class QueryService{
 
                 if ($this->query['features']) {
                     $taxquery_new[] = array(
-                        'taxonomy' => 'casasync_feature',
+                        'taxonomy' => 'casawp_feature',
                         'terms' => $this->query['features'],
                         'include_children' => 1,
                         'field' => 'slug',
@@ -241,8 +241,8 @@ class QueryService{
 
     public function nearmejoin($join){
         global $wpdb;
-        $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casasync_property_geo_latitude' ";
-        $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casasync_property_geo_longitude' ";
+        $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casawp_property_geo_latitude' ";
+        $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casawp_property_geo_longitude' ";
         return $join;
     }
 

@@ -2,7 +2,7 @@
 	add_filter( 'gettext', 'plugin_translation', 20, 3 );
 	function plugin_translation( $translated_text, $text, $domain ) {
 	    //echo "<pre>" . $text . "</pre>";
-	    if ( $domain == 'casasync') {
+	    if ( $domain == 'casawp') {
 
 	        switch ( $text ) {
 	        	case 'Buy':$translated_text = 'Acquisto';break;

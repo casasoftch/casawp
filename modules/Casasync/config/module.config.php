@@ -10,7 +10,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'casasync' => __DIR__ . '/../view',
+            'casawp' => __DIR__ . '/../view',
         ),
     )
 );

@@ -1,4 +1,4 @@
-=== CasaSync ===
+=== CasaWp ===
 Contributors: casasoft
 Donate link:http://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx
@@ -13,7 +13,7 @@ Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makle
 
 == Description ==
 
-Synchronisieren Sie Ihre Immobilien Objekte mit CasaSync, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaSync importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+Synchronisieren Sie Ihre Immobilien Objekte mit CasaWp, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaWp importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
 
 == Installation ==
 
@@ -32,7 +32,7 @@ Well, yes and no. Essentialy the plugin activates custom post types and a render
 
 = How can I import properties =
 
-The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory (/wp-content/uploads/casasync/import/data.xml) and activate a import (either this happens automaticaly, or you may activate it manually within WordPress). Essentialy you can keep this file up-to-date to ensure a synchonised state (be aware that the file will be renamed data-done.xml once imported). Currently supported is CasaXML build 5, but build 6 will eventually be prefered as soon it has been blessed.
+The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory (/wp-content/uploads/casawp/import/data.xml) and activate a import (either this happens automaticaly, or you may activate it manually within WordPress). Essentialy you can keep this file up-to-date to ensure a synchonised state (be aware that the file will be renamed data-done.xml once imported). Currently supported is CasaXML build 5, but build 6 will eventually be prefered as soon it has been blessed.
 
 == Changelog ==
 
@@ -41,7 +41,7 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 = 3.0.8 = 
 * fixed: bug with featherlight and bootstrap 2
-* added: page-attributes for post type casasync_property
+* added: page-attributes for post type casawp_property
 * added: thumbnail gallery
 
 = 3.0.7 = 

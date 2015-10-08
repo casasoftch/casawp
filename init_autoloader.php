@@ -29,7 +29,7 @@ if (file_exists(CASASYNC_PLUGIN_DIR . 'vendor/autoload.php')) {
         $loader->add(CASASYNC_PLUGIN_DIR . 'classes/Admin.php');
     }
     $loader->add(CASASYNC_PLUGIN_DIR . 'classes/Import.php');*/
-    //$loader->add('CasaSync\\', CASASYNC_PLUGIN_DIR . 'classes/');
+    //$loader->add('CasaWp\\', CASASYNC_PLUGIN_DIR . 'classes/');
 }
 
 if (class_exists('Zend\Loader\AutoloaderFactory')) {

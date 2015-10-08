@@ -2,30 +2,30 @@
 /*
 Template Name: Property list
 */
-__( 'Property list', 'casasync' );
+__( 'Property list', 'casawp' );
 ?>
 <?php get_header() ?>
 
-<?php echo stripslashes(get_option('casasync_before_content')); ?>
+<?php echo stripslashes(get_option('casawp_before_content')); ?>
 
-<div class="casasync-archive">
+<div class="casawp-archive">
 	<?php if ( have_posts() ): ?>
-		<div class="col-md-8 casasync-archive-list">
+		<div class="col-md-8 casawp-archive-list">
 			<?php while ( have_posts() ) : the_post(); ?>
-				<?= $casasync->renderArchiveSingle($post); ?>
+				<?= $casawp->renderArchiveSingle($post); ?>
 			<?php endwhile; ?>
-			<?= $casasync->renderArchivePagination() ?>
+			<?= $casawp->renderArchivePagination() ?>
 			<?php wp_reset_query(); ?>
 		</div>
 	<?php endif; ?>
-	<div class="col-md-4 casasync-archive-filter">
-		<?php echo $casasync->renderArchiveFilter() ?>
+	<div class="col-md-4 casawp-archive-filter">
+		<?php echo $casawp->renderArchiveFilter() ?>
 		<?php 
-			$tags = wp_tag_cloud(array('taxonomy' => 'casasync_feature')); 
+			$tags = wp_tag_cloud(array('taxonomy' => 'casawp_feature')); 
 		?>
 	</div>
 </div>
 
-<?php echo stripslashes(get_option('casasync_after_content')); ?>
+<?php echo stripslashes(get_option('casawp_after_content')); ?>
 
 <?php get_footer() ?>

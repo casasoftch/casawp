@@ -1,8 +1,6 @@
 #Description
 
-**THIS IS THE RELEASE PRIOR TO RENAMING it to casawp! please use a later version!**
-
-Synchronisieren Sie Ihre Immobilien Objekte mit CasaSync, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaSync importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+Synchronisieren Sie Ihre Immobilien Objekte mit CasaWp, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaWp importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
 
 #Installation
 
@@ -20,7 +18,7 @@ This plugin also works hand-in-hand with the [CasaGateway](https://casasoft.ch/c
 
 #How can I import properties
 
-The plugin is based on the [casaXML](http://github.com/casasoftCH/casaXML) standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory `/wp-content/uploads/casasync/import/data.xml` and activate a import (either this happens automatically, or you may activate it manually within WordPress). Essentially you can keep this file up-to-date to ensure a synchronized state (be aware that the file will be renamed data-done.xml once imported).
+The plugin is based on the [casaXML](http://github.com/casasoftCH/casaXML) standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory `/wp-content/uploads/casawp/import/data.xml` and activate a import (either this happens automatically, or you may activate it manually within WordPress). Essentially you can keep this file up-to-date to ensure a synchronized state (be aware that the file will be renamed data-done.xml once imported).
 
 #How do I change the html markup and add my own view files
 

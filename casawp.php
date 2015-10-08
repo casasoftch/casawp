@@ -1,18 +1,18 @@
 <?php
 /*
- *	Plugin Name: 	CasaSync
+ *	Plugin Name: 	CasaWp
  *  Plugin URI: 	http://immobilien-plugin.ch
  *	Description:    Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
  *	Author:         Casasoft AG
  *	Author URI:     http://casasoft.ch
  *	Version: 		3.0.9
- *	Text Domain: 	casasync
+ *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
  */
 
-define('CASASYNC_PLUGIN_URL', home_url() . '/wp-content/plugins/casasync/');
-define('CASASYNC_PLUGIN_URI', home_url() . '/wp-content/plugins/casasync/');
+define('CASASYNC_PLUGIN_URL', home_url() . '/wp-content/plugins/casawp/');
+define('CASASYNC_PLUGIN_URI', home_url() . '/wp-content/plugins/casawp/');
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 
 $upload = wp_upload_dir();
@@ -46,34 +46,34 @@ $configuration = array(
 use Zend\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
-$casasync = new CasaSync\Plugin($configuration);
+$casawp = new CasaWp\Plugin($configuration);
 
-global $casasync;
+global $casawp;
 
 if (is_admin()) {
-	$casaSyncAdmin = new CasaSync\Admin();
-	register_activation_hook(__FILE__, array($casaSyncAdmin,'casasync_install'));
-	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casasync_remove'));
+	$casaSyncAdmin = new CasaWp\Admin();
+	register_activation_hook(__FILE__, array($casaSyncAdmin,'casawp_install'));
+	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casawp_remove'));
 }
 
-if (get_option('casasync_live_import') || isset($_GET['do_import']) ) {
-	if (get_option('casasync_legacy')) {
-		$import = new CasaSync\ImportLegacy(true, false);	
+if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
+	if (get_option('casawp_legacy')) {
+		$import = new CasaWp\ImportLegacy(true, false);	
 	} else {
-		$import = new CasaSync\Import(true, false);
+		$import = new CasaWp\Import(true, false);
 	}
 	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewayupdate'])) {
-	$import = new CasaSync\Import(false, true);
-	$import = new CasaSync\Import(true, false);
+	$import = new CasaWp\Import(false, true);
+	$import = new CasaWp\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewaypoke'])) {
-	$import = new CasaSync\Import(false, true);
-	$import = new CasaSync\Import(true, false);
+	$import = new CasaWp\Import(false, true);
+	$import = new CasaWp\Import(true, false);
 	$transcript = $import->getLastTranscript();
 }
 

@@ -1,9 +1,9 @@
 {
-    "name": "casasoft/casasync",
+    "name": "casasoft/casawp",
     "description": "Casasync WordPress Plugin",
     "license": "",
     "keywords": [
-        "casasync",
+        "casawp",
         "casasoft"
     ],
     "homepage": "http://framework.zend.com/",
@@ -30,7 +30,7 @@
     },
     "autoload":{
         "psr-4": {
-            "CasaSync\\": "src/"
+            "CasaWp\\": "src/"
         }
     }
 }

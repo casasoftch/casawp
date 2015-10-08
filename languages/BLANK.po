@@ -13,15 +13,15 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
-#: .././casasync-archive.php:31
+#: .././casawp-archive.php:31
 msgid "No image"
 msgstr ""
 
-#: .././casasync-archive.php:46
+#: .././casawp-archive.php:46
 msgid "Nothing Found"
 msgstr ""
 
-#: .././casasync-archive.php:47
+#: .././casawp-archive.php:47
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."

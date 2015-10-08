@@ -35,16 +35,16 @@ msgstr "Mietpreis"
 msgid "Sales price"
 msgstr "Kaufpreis"
 
-#: .././casasync-archive.php:33 .././casasync-archive.php:54
-#: .././casasync-archive.php:56
+#: .././casawp-archive.php:33 .././casawp-archive.php:54
+#: .././casawp-archive.php:56
 msgid "No image"
 msgstr "Kein Bild"
 
-#: .././casasync-archive.php:76
+#: .././casawp-archive.php:76
 msgid "Nothing Found"
 msgstr "Nichts gefunden"
 
-#: .././casasync-archive.php:77
+#: .././casawp-archive.php:77
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."
@@ -52,7 +52,7 @@ msgstr ""
 "Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte "
 "versuchen Sie es mit anderen Suchbegriffen."
 
-#: .././casasync-single.php:37
+#: .././casawp-single.php:37
 msgid "Virtual Tour"
 msgstr "Virtuelle Tour"
 

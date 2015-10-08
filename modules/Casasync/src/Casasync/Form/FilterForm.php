@@ -28,7 +28,7 @@ class FilterForm extends Form
                     'multiple' => 'multiple',
                 ),
                 'options' => array(
-                    'label' => __('Category', 'casasync'),
+                    'label' => __('Category', 'casawp'),
                     'value_options' => $category_options,
                 ),
             ));
@@ -42,7 +42,7 @@ class FilterForm extends Form
                     'multiple' => 'multiple',
                 ),
                 'options' => array(
-                    'label' => __('Sales type', 'casasync'),
+                    'label' => __('Sales type', 'casawp'),
                     'value_options' => $salestype_options,
                 ),
             ));
@@ -56,7 +56,7 @@ class FilterForm extends Form
                     'multiple' => 'multiple',
                 ),
                 'options' => array(
-                    'label' => __('Location', 'casasync'),
+                    'label' => __('Location', 'casawp'),
                     'value_options' => $location_options,
                 ),
             ));

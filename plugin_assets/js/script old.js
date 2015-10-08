@@ -4,8 +4,8 @@ var $ = jQuery.noConflict();
 $(document).ready(function($) {
 
     //google maps
-    if ($('.casasync-map').length && google) {
-        $('.casasync-map').each(function(){
+    if ($('.casawp-map').length && google) {
+        $('.casawp-map').each(function(){
             var $mapwraper = $(this);
             if ($mapwraper.data('address')) {
                 geocoder = new google.maps.Geocoder();
@@ -80,7 +80,7 @@ $(document).ready(function($) {
     };
     
 
-    $('#casasyncCarousel').carousel({
+    $('#casawpCarousel').carousel({
         interval: false
     });
  
@@ -93,7 +93,7 @@ $(document).ready(function($) {
             var id_selector = $(this).attr("id");
             var id = id_selector.substr(id_selector.length -1);
             var id = parseInt(id);
-            $('#casasyncCarousel').carousel(id);
+            $('#casawpCarousel').carousel(id);
 
 
             $('#slider-thumbs .thumbnail-pane li').removeClass('active');
@@ -103,7 +103,7 @@ $(document).ready(function($) {
 
 
     // When the carousel slides, auto update the text
-    $('#casasyncCarousel').on('slid', function (e) {
+    $('#casawpCarousel').on('slid', function (e) {
             var id = $('.item.active').data('slide-number');
             $('#carousel-text').html($('#slide-content-'+id).html());
 
@@ -118,15 +118,15 @@ $(document).ready(function($) {
     }
 
 
-    $('#casasyncKontactAnchor').click(function(event){
+    $('#casawpKontactAnchor').click(function(event){
         event.preventDefault();
 
         $('html, body').animate({
             scrollTop: $( $.attr(this, 'href') ).parent().offset().top - 100
         }, 500);
 
-        $('.casasync-property-contact-form').parent().addClass('casasync-highlight');
-        $('.casasync-property-contact-form').delay(500).find(' input[name="firstname"]').focus();
+        $('.casawp-property-contact-form').parent().addClass('casawp-highlight');
+        $('.casawp-property-contact-form').delay(500).find(' input[name="firstname"]').focus();
 
         //scrollToAnchor($(this).attr('href').split('#')[1]);
 
@@ -135,6 +135,6 @@ $(document).ready(function($) {
 
     });
 
-    $('.casasync-fancybox').fancybox();
+    $('.casawp-fancybox').fancybox();
 
 });

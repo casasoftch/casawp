@@ -13,14 +13,14 @@ class ContactForm extends Form
         parent::__construct('contact');
 
         $this->setAttribute('method', 'POST');
-        $this->setAttribute('id', 'casasyncPropertyContactForm');
+        $this->setAttribute('id', 'casawpPropertyContactForm');
         //$this->setAttribute('action', '/immobilien/');
 
         $this->add(array(
             'name' => 'firstname',
             'type' => 'Text',
             'options' => array(
-                'label' => __('First name', 'casasync'),
+                'label' => __('First name', 'casawp'),
             ),
         ));
 
@@ -28,7 +28,7 @@ class ContactForm extends Form
             'name' => 'lastname',
             'type' => 'Text',
             'options' => array(
-                'label' => __('Last name', 'casasync'),
+                'label' => __('Last name', 'casawp'),
             ),
         ));
 
@@ -36,7 +36,7 @@ class ContactForm extends Form
             'name' => 'street',
             'type' => 'Text',
             'options' => array(
-                'label' => __('Street', 'casasync'),
+                'label' => __('Street', 'casawp'),
             ),
         ));
 
@@ -44,7 +44,7 @@ class ContactForm extends Form
             'name' => 'postal_code',
             'type' => 'Text',
             'options' => array(
-                'label' => __('ZIP', 'casasync'),
+                'label' => __('ZIP', 'casawp'),
             ),
         ));
 
@@ -53,7 +53,7 @@ class ContactForm extends Form
             'name' => 'locality',
             'type' => 'Text',
             'options' => array(
-                'label' => __('Locality', 'casasync'),
+                'label' => __('Locality', 'casawp'),
             ),
         ));
 
@@ -61,7 +61,7 @@ class ContactForm extends Form
             'name' => 'country',
             'type' => 'Select',
             'options' => array(
-                'label' => __('Country', 'casasync'),
+                'label' => __('Country', 'casawp'),
                 'options' => array(
                     'CH' => 'Schweiz'
                 )
@@ -72,7 +72,7 @@ class ContactForm extends Form
             'name' => 'phone',
             'type' => 'Text',
             'options' => array(
-                'label' => __('Phone', 'casasync')
+                'label' => __('Phone', 'casawp')
             ),
         ));
 
@@ -80,7 +80,7 @@ class ContactForm extends Form
             'name' => 'emailreal',
             'type' => 'Text',
             'options' => array(
-                'label' => __('Email', 'casasync')
+                'label' => __('Email', 'casawp')
             ),
         ));
 
@@ -88,7 +88,7 @@ class ContactForm extends Form
             'name' => 'message',
             'type' => 'Textarea',
             'options' => array(
-                'label' => __('Message', 'casasync')
+                'label' => __('Message', 'casawp')
             ),
             'attributes' => array(
                 'rows' => 3

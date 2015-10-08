@@ -14,7 +14,7 @@ class OfferService{
     private $archive_dynamic_fields = null;
     private $salestype = null;
     private $metas = null;
-    private $casasync = null;
+    private $casawp = null;
 
     public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService){
     	$this->utilityService = $utilityService;
@@ -72,7 +72,7 @@ class OfferService{
 
 	public function getCategories(){
 		if ($this->categories === null) {
-			$terms = wp_get_post_terms( $this->post->ID, 'casasync_category', array("fields" => "names"));
+			$terms = wp_get_post_terms( $this->post->ID, 'casawp_category', array("fields" => "names"));
 			foreach ($terms as $termName) {
 				if ($this->categoryService->keyExists($termName)) {
 					$this->categories[] = $this->categoryService->getItem($termName);
@@ -103,7 +103,7 @@ class OfferService{
 
 	public function getAvailablility() {
 		if ($this->availability === null) {
-			$terms = wp_get_post_terms( $this->post->ID, 'casasync_availability', array("fields" => "names"));
+			$terms = wp_get_post_terms( $this->post->ID, 'casawp_availability', array("fields" => "names"));
 			$this->availability = isset($terms[0]) ? $terms[0] : false;
 		}
 		return $this->availability;
@@ -111,7 +111,7 @@ class OfferService{
 
 	public function getSalestype(){
 		if ($this->salestype === null) {
-			$types = get_the_terms( $this->post->ID, 'casasync_salestype' );
+			$types = get_the_terms( $this->post->ID, 'casawp_salestype' );
 			if ($types) {
 				$type = array_pop($types);
 				$this->salestype = $type->slug;
@@ -187,8 +187,8 @@ class OfferService{
 	          'posts_per_page'           => -1,
 	          'post_parent'              => $this->post->ID,
 	          //'exclude'                => get_post_thumbnail_id(),
-              'taxonomy'                 => 'casasync_attachment_type',
-	          //'casasync_attachment_type' => 'image',
+              'taxonomy'                 => 'casawp_attachment_type',
+	          //'casawp_attachment_type' => 'image',
 	          'orderby'                  => 'menu_order',
 	          'order'                    => 'ASC'
 	        ) );
@@ -199,7 +199,7 @@ class OfferService{
 	public function getImages(){
 		$images = array();
 		foreach ($this->getAttachments() as $attachment) {
-			if(has_term( 'image', 'casasync_attachment_type', $attachment )){
+			if(has_term( 'image', 'casawp_attachment_type', $attachment )){
 				$images[] = $attachment;
 			}
 		}
@@ -209,7 +209,7 @@ class OfferService{
 	public function getDocuments(){
 		$docs = array();
 		foreach ($this->getAttachments() as $attachment) {
-			if(has_term( 'document', 'casasync_attachment_type', $attachment )){
+			if(has_term( 'document', 'casawp_attachment_type', $attachment )){
 				$docs[] = $attachment;
 			}
 		}
@@ -219,7 +219,7 @@ class OfferService{
 	public function getSalesBrochures(){
 		$docs = array();
 		foreach ($this->getAttachments() as $attachment) {
-			if(has_term( 'sales-brochure', 'casasync_attachment_type', $attachment )){
+			if(has_term( 'sales-brochure', 'casawp_attachment_type', $attachment )){
 				$docs[] = $attachment;
 			}
 		}
@@ -229,7 +229,7 @@ class OfferService{
 	public function getPlans(){
 		$docs = array();
 		foreach ($this->getAttachments() as $attachment) {
-			if(has_term( 'plan', 'casasync_attachment_type', $attachment )){
+			if(has_term( 'plan', 'casawp_attachment_type', $attachment )){
 				$docs[] = $attachment;
 			}
 		}
@@ -253,15 +253,15 @@ class OfferService{
 	public function getFieldValue($key, $fallback = null){
 		switch (true) {
 			case strpos($key,'address') === 0:
-				$value = $this->getFieldValue('casasync_property_'.$key, $fallback);
+				$value = $this->getFieldValue('casawp_property_'.$key, $fallback);
 				break;
 			default:
 				$value = $this->getMeta($key);
 				break;
 		}
 		if (!$value) {
-			//try with casasync prefix
-			$value = $this->getMeta('casasync_'.$key);
+			//try with casawp prefix
+			$value = $this->getMeta('casawp_'.$key);
 		}
 		if ($value) {
 			return $value;
@@ -272,34 +272,34 @@ class OfferService{
 
     private function getSingleDynamicFields() {
         return array(
-          'casasync_single_show_number_of_rooms',
-          'casasync_single_show_area_sia_nf',
-          'casasync_single_show_area_nwf',
-          'casasync_single_show_area_bwf',
-          'casasync_single_show_surface_property',
-          'casasync_single_show_floor',
-          'casasync_single_show_number_of_floors',
-          'casasync_single_show_year_built',
-          'casasync_single_show_year_renovated',
-          'casasync_single_show_availability'
+          'casawp_single_show_number_of_rooms',
+          'casawp_single_show_area_sia_nf',
+          'casawp_single_show_area_nwf',
+          'casawp_single_show_area_bwf',
+          'casawp_single_show_surface_property',
+          'casawp_single_show_floor',
+          'casawp_single_show_number_of_floors',
+          'casawp_single_show_year_built',
+          'casawp_single_show_year_renovated',
+          'casawp_single_show_availability'
         );
     }
 
     private function getArchiveDynamicFields() {
         return array(
-            'casasync_archive_show_street_and_number',
-            'casasync_archive_show_location',
-            'casasync_archive_show_number_of_rooms',
-            'casasync_archive_show_area_sia_nf',
-            'casasync_archive_show_area_bwf',
-            'casasync_archive_show_surface_property',
-            'casasync_archive_show_floor',
-            'casasync_archive_show_number_of_floors',
-            'casasync_archive_show_year_built',
-            'casasync_archive_show_year_renovated',
-            'casasync_archive_show_price',
-            'casasync_archive_show_excerpt',
-            'casasync_archive_show_availability'
+            'casawp_archive_show_street_and_number',
+            'casawp_archive_show_location',
+            'casawp_archive_show_number_of_rooms',
+            'casawp_archive_show_area_sia_nf',
+            'casawp_archive_show_area_bwf',
+            'casawp_archive_show_surface_property',
+            'casawp_archive_show_floor',
+            'casawp_archive_show_number_of_floors',
+            'casawp_archive_show_year_built',
+            'casawp_archive_show_year_renovated',
+            'casawp_archive_show_price',
+            'casawp_archive_show_excerpt',
+            'casawp_archive_show_availability'
         );
     }
 
@@ -311,16 +311,16 @@ class OfferService{
 	        foreach ($this->getSingleDynamicFields() as $value) {
 	          if(get_option($value, false)) {
 	          	switch ($value) {
-					case 'casasync_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
-		          	case 'casasync_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
-		          	case 'casasync_single_show_area_nwf': $key = 'area_nwf'; break;
-		          	case 'casasync_single_show_area_bwf': $key = 'area_bwf'; break;
-		          	case 'casasync_single_show_surface_property': $key = 'area_sia_angf'; break;
-		          	case 'casasync_single_show_floor': $key = 'floor'; break;
-		          	case 'casasync_single_show_number_of_floors': $key = 'number_of_floors'; break;
-		          	case 'casasync_single_show_year_built': $key = 'year_built'; break;
-		          	case 'casasync_single_show_year_renovated': $key = 'year_last_renovated'; break;
-		          	case 'casasync_single_show_availability': $key = 'special_availability'; break;
+					case 'casawp_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
+		          	case 'casawp_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
+		          	case 'casawp_single_show_area_nwf': $key = 'area_nwf'; break;
+		          	case 'casawp_single_show_area_bwf': $key = 'area_bwf'; break;
+		          	case 'casawp_single_show_surface_property': $key = 'area_sia_angf'; break;
+		          	case 'casawp_single_show_floor': $key = 'floor'; break;
+		          	case 'casawp_single_show_number_of_floors': $key = 'number_of_floors'; break;
+		          	case 'casawp_single_show_year_built': $key = 'year_built'; break;
+		          	case 'casawp_single_show_year_renovated': $key = 'year_last_renovated'; break;
+		          	case 'casawp_single_show_availability': $key = 'special_availability'; break;
 					default: $key='unknown'; break;
 				}
 
@@ -406,11 +406,11 @@ class OfferService{
 		$timeSegment = $this->getFieldValue($meta_prefix.'_timesegment', 'infinite');
 
 		$timesegment_labels = array(
-	        'm' => __('month', 'casasync'),
-	        'w' => __('week', 'casasync'),
-	        'd' => __('day', 'casasync'),
-	        'y' => __('year', 'casasync'),
-	        'h' => __('hour', 'casasync')
+	        'm' => __('month', 'casawp'),
+	        'w' => __('week', 'casawp'),
+	        'd' => __('day', 'casawp'),
+	        'y' => __('year', 'casawp'),
+	        'h' => __('hour', 'casawp')
 	    );
 
 		if ($value) {
@@ -423,7 +423,7 @@ class OfferService{
 			$parts = array_filter($parts);
 			return implode(' ', $parts);
 		} else {
-			return __('On Request', 'casasync');
+			return __('On Request', 'casawp');
 		}
 		
 	}
@@ -442,9 +442,9 @@ class OfferService{
 	    	$datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
 	    	$return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
 	    } else if (!$property_datetime){
-	    	$return = __('On Request', 'casasync');  
+	    	$return = __('On Request', 'casawp');  
 	    } else {
-	    	$return = __('Immediate' ,'casasync');
+	    	$return = __('Immediate' ,'casawp');
 	    }
 	      
 	    return $return;
@@ -464,8 +464,8 @@ class OfferService{
 	======================================*/
 
 	public function render($view, $args = array()){
-		global $casasync;
-		return $casasync->render($view, $args);
+		global $casawp;
+		return $casawp->render($view, $args);
 	}
 
 	public function renderFeatures() {
@@ -590,7 +590,7 @@ class OfferService{
         $sent = false;
         $customerid = get_option('casasoft_customerid');
         $publisherid = get_option('casasoft_publisherid');
-        $email = get_option('casasync_email_fallback');
+        $email = get_option('casawp_email_fallback');
 
         if ($this->getFieldValue('seller_org_customerid', false)) {
         	$customerid = $this->getFieldValue('seller_org_customerid', false);
@@ -599,15 +599,15 @@ class OfferService{
         	$email = $this->getFieldValue('seller_inquiry_person_email', false);
         }
         
-        if (get_option('casasync_inquiry_method') == 'casamail') {
+        if (get_option('casawp_inquiry_method') == 'casamail') {
         	//casamail
         	if (!$customerid || !$publisherid) {
-        		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casasync&tab=contactform">here</a></p>';
+        		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
         	}
         	
         } else {
         	if (!$email) {
-        		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casasync&tab=contactform">here</a></p>';
+        		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
         	}
         }
 
@@ -623,9 +623,9 @@ class OfferService{
 			    } else {
 			    	//add to WP for safekeeping
 			    	$post = array(
-			    		'post_type' => 'casasync_inquiry',
+			    		'post_type' => 'casawp_inquiry',
 			    		'post_content' => $form->get('message')->getValue(),
-			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('reference_id') ? $this->getFieldValue('reference_id') : $this->getFieldValue('casasync_id')) . '] ' . $this->getTitle()),
+			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('reference_id') ? $this->getFieldValue('reference_id') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle()),
 			    		'post_status' => 'private',
 			    		'ping_status' => false
 			    	);
@@ -635,10 +635,10 @@ class OfferService{
 			    			add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
 			    		}
 			    	}
-			    	add_post_meta($inquiry_id, 'casasync_id', $this->getFieldValue('casasync_id'), true );
+			    	add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
 			    	add_post_meta($inquiry_id, 'reference_id', $this->getFieldValue('reference_id'), true );
 
-			    	if (get_option('casasync_inquiry_method') == 'casamail') {
+			    	if (get_option('casawp_inquiry_method') == 'casamail') {
 			        	//casamail
 			        } else {
 			        	
@@ -649,7 +649,7 @@ class OfferService{
 			    $messages = $form->getMessages();
 			}
         } else {
-        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casasync'));
+        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
         }
 
         //$form->bind($this->queryService);

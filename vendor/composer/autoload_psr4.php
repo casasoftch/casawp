@@ -25,5 +25,5 @@ return array(
     'Zend\\EventManager\\' => array($vendorDir . '/zendframework/zend-eventmanager/src'),
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
     'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
-    'CasaSync\\' => array($baseDir . '/src'),
+    'CasaWp\\' => array($baseDir . '/src'),
 );
