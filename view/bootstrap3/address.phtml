@@ -1,0 +1,15 @@
+<?php
+
+$prefix = $type == 'seller' ? 'seller_org_address' : 'address';
+
+$lines = array();
+$lines[] = $this->offer->getFieldValue($prefix.'_streetaddress') . ' ' . $this->offer->getFieldValue($prefix.'_streetnumber');
+$lines[] = $this->offer->getFieldValue($prefix.'_postalcode') . ' ' . $this->offer->getFieldValue($prefix.'_locality');
+if (class_exists('Locale') && $this->offer->getFieldValue($prefix.'_country')) {
+	$lines[] = Locale::getDisplayRegion('-'.$this->offer->getFieldValue($prefix.'_country'), get_bloginfo('language'));
+}
+
+array_walk($lines, function(&$value){$value = trim($value);});
+$lines = array_filter($lines);
+
+echo implode('<br>', $lines);

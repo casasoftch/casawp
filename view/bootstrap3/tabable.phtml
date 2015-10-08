@@ -1,0 +1,27 @@
+<div>
+  <!-- $urls = $this->getUrls(); -->
+  <?php $urls = false ?>
+
+  <ul class="casasync-tabable-nav">
+    <li class="active"><a data-toggle="tab" href="#text_basics"><small><?= __("Base data", 'casasync') ?></small></a></li>
+    <li><a data-toggle="tab" href="#text_description"><small><?= __('Description', 'casasync') ?></small></a></li>
+    <?php if ($urls && array_key_exists('youtube', $urls)) : ?>
+      <li><a data-toggle="tab" href="#tab_videos"><small><?= __('Videos', 'casasync') ?></small></a></li>
+    <?php endif; ?>
+    <li><a data-toggle="tab" href="#text_numbers"><small><?= __("Specifications", 'casasync') ?></small></a></li>
+  </ul>
+  <div class="casasync-tabable-content">
+    <div class="casasync-tabable-pane active in" id="text_basics">
+      <div class="casasync-basic-boxes">
+          <?= $this->offer->renderBasicBoxes(); ?>
+      </div>
+      <?= $this->offer->renderMap() ?>
+    </div>
+    <div class="casasync-tabable-pane" id="text_description">
+      <?= $this->offer->renderContent() ?>
+    </div>
+    <div class="casasync-tabable-pane" id="text_numbers">
+      <?= $this->offer->renderDatatable() ?>
+    </div>
+  </div>
+</div>

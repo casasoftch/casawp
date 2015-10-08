@@ -1,0 +1,49 @@
+<div class="container">
+	<br><br>	
+	<div class="col-md-6 col-md-push-3">
+		<div class="panel panel-signin">
+		    <div class="panel-body">
+		    	<p class="text-center">
+		    		<img src="/img/logo.png" height="48" alt="" /> 
+		    	</p>
+				<h4 class="text-center mb5">Bitte anmelden</h4>
+				<br>
+
+				<?php 
+					if ($this->loginform) {
+						$form = $this->loginform;
+						//echo $this->form()->openTag($form);
+						echo '<form  method="post" name="loginform" id="loginform">';
+						echo $this->formHidden($loginform->get('target'));
+
+						echo '<div class="input-group mb15"><span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>';
+						echo $this->formInput($loginform->get('identity'));
+						echo $this->formElementErrors($loginform->get('identity'));
+						echo "</div>";
+
+						echo '<div class="input-group mb15"><span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>';
+				        echo $this->formInput($loginform->get('credential'));
+				       	echo $this->formElementErrors($loginform->get('credential'));
+				       	echo "</div>";
+
+				        
+						echo $this->formButton($loginform->get('submit')->setAttribute('class', 'btn-primary btn-block btn btn-lg'));
+						
+					}
+				?>
+				
+
+		    </div><!-- panel-body -->
+		    <div class="panel-footer">
+		    	<div class="btn-group btn-group-justified">
+					<a class="btn btn-sm btn-default" href="<?php echo $this->url('user/register', array(), true); ?><?= ($this->loginform->get('target')->getValue() ? '?target=' . urlencode($loginform->get('target')->getValue()) : '') ?>">
+						<i class="glyphicon glyphicon-plus"></i> Neuer Benutzer
+					</a>
+					<a class="btn btn-sm btn-default" href="<?php echo $this->url('user/forgot', array(), true) ?><?= ($this->loginform->get('target')->getValue() ? '?target=' . urlencode($loginform->get('target')->getValue()) : '') ?>">
+						<i class="glyphicon glyphicon-lock"></i> <?= $this->translate('Forgot password') ?>
+					</a>
+				</div>
+		    </div><!-- panel-footer -->
+		</div><!-- panel -->
+	</div>
+</div>

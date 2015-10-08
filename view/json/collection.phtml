@@ -1,0 +1,9 @@
+<?php 
+
+	foreach ($offers_array as $offer_array){
+		$offer_array['rendered']['categoryLabels'] = $this->renderCategoryLabels();
+	}
+
+	echo json_encode($offers_array, true);
+
+?>
