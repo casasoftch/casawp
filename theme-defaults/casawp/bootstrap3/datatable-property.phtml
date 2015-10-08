@@ -1,0 +1,23 @@
+<table class="table">
+    <tr>
+      <td class="width-25"><?= __('Reference','casawp') ?></td>
+      <td class="width-75"><?= $this->offer->getFieldValue('reference_id') 
+        ? $this->offer->getFieldValue('reference_id') 
+        : $this->offer->getFieldValue('casawp_id'); ?></td>
+    </tr>
+  <?php if($this->offer->renderAddress()) : ?>
+    <tr>
+      <td class="width-25"><?= __('Address','casawp') ?></td>
+      <td class="width-75"><?= $this->offer->renderAddress() ?></td>
+    </tr>
+  <?php endif; ?>
+  
+  <?php if ($this->offer->getNumvals()): ?>
+    <?php foreach ($this->offer->getNumvals() as $numval) : ?>
+      <tr>
+        <td class="width-25"><?= $numval->getLabel() ?></td>
+        <td class="width-75"><?= $this->offer->renderNumvalValue($numval) ?></td>
+      </tr>
+    <?php endforeach ?>
+  <?php endif ?>
+</table>

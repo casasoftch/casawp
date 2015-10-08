@@ -6,8 +6,8 @@
     /* --- set defaults --- */
     // 1. input mail, 2. input radio
     var myElements = {
-        "#casasync_remCat_email" : "casasync_request_per_remcat",
-        "#casasync_request_per_mail_fallback_value" : "casasync_request_per_mail_fallback"
+        "#casawp_remCat_email" : "casawp_request_per_remcat",
+        "#casawp_request_per_mail_fallback_value" : "casawp_request_per_mail_fallback"
     };
     $.each(myElements, function(i, val) {
         if($('[name="' + val + '"]:checked').attr('value') == 0) {

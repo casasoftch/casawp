@@ -2,47 +2,47 @@
 "CodeKitInfo": "This is a CodeKit 2.x project configuration file. It is designed to sync project settings across multiple machines. MODIFYING THE CONTENTS OF THIS FILE IS A POOR LIFE DECISION. If you do so, you will likely cause CodeKit to crash. This file is not useful unless accompanied by the project that created it in CodeKit 2. This file is not backwards-compatible with CodeKit 1.x. For more information, see: http:\/\/incident57.com\/codekit",
 "creatorBuild": "19051",
 "files": {
-	"\/css\/casasync-admin.css": {
+	"\/css\/casawp-admin.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/css\/casasync-admin.css",
+		"inputAbbreviatedPath": "\/css\/casawp-admin.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/css\/casasync_ie.css": {
+	"\/css\/casawp_ie.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/css\/casasync_ie.css",
+		"inputAbbreviatedPath": "\/css\/casawp_ie.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/css\/casasync_template_bs2.css": {
+	"\/css\/casawp_template_bs2.css": {
 		"fileType": 16,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/css\/casasync_template_bs2.css",
+		"inputAbbreviatedPath": "\/css\/casawp_template_bs2.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/css\/casasync_template_bs3.css": {
+	"\/css\/casawp_template_bs3.css": {
 		"fileType": 16,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/css\/casasync_template_bs3.css",
+		"inputAbbreviatedPath": "\/css\/casawp_template_bs3.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/css\/casasync_template_bs3_theme.css": {
+	"\/css\/casawp_template_bs3_theme.css": {
 		"fileType": 16,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/css\/casasync_template_bs3_theme.css",
+		"inputAbbreviatedPath": "\/css\/casawp_template_bs3_theme.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
@@ -2558,7 +2558,7 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casasync_template_bs2.less": {
+	"\/less\/casawp_template_bs2.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
@@ -2566,8 +2566,8 @@
 		"ieCompatibility": 1,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casasync_template_bs2.less",
-		"outputAbbreviatedPath": "\/css\/casasync_template_bs2.css",
+		"inputAbbreviatedPath": "\/less\/casawp_template_bs2.less",
+		"outputAbbreviatedPath": "\/css\/casawp_template_bs2.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
@@ -2578,7 +2578,7 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casasync_template_bs3.less": {
+	"\/less\/casawp_template_bs3.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
@@ -2586,8 +2586,8 @@
 		"ieCompatibility": 1,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casasync_template_bs3.less",
-		"outputAbbreviatedPath": "\/css\/casasync_template_bs3.css",
+		"inputAbbreviatedPath": "\/less\/casawp_template_bs3.less",
+		"outputAbbreviatedPath": "\/css\/casawp_template_bs3.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
 		"outputStyle": 0,
@@ -2598,7 +2598,7 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casasync_template_bs3_theme.less": {
+	"\/less\/casawp_template_bs3_theme.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
@@ -2606,8 +2606,8 @@
 		"ieCompatibility": 1,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casasync_template_bs3_theme.less",
-		"outputAbbreviatedPath": "\/css\/casasync_template_bs3_theme.css",
+		"inputAbbreviatedPath": "\/less\/casawp_template_bs3_theme.less",
+		"outputAbbreviatedPath": "\/css\/casawp_template_bs3_theme.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
@@ -2627,29 +2627,29 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casasync_template_bs2.css": {
+	"\/less\/css\/casawp_template_bs2.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs2.css",
+		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs2.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casasync_template_bs3.css": {
+	"\/less\/css\/casawp_template_bs3.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs3.css",
+		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs3.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casasync_template_bs3_theme.css": {
+	"\/less\/css\/casawp_template_bs3_theme.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs3_theme.css",
+		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs3_theme.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0

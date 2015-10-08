@@ -13,15 +13,15 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../.\n"
 
-#: .././casasync-archive.php:31
+#: .././casawp-archive.php:31
 msgid "No image"
 msgstr ""
 
-#: .././casasync-archive.php:46
+#: .././casawp-archive.php:46
 msgid "Nothing Found"
 msgstr ""
 
-#: .././casasync-archive.php:47
+#: .././casawp-archive.php:47
 msgid ""
 "Sorry, but nothing matched your search terms. Please try again with some "
 "different keywords."
@@ -51,312 +51,312 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: .././classes/Casasync.php:215
+#: .././classes/casawp.php:215
 msgid "Custom Text Field"
 msgstr ""
 
-#: .././classes/Casasync.php:219
+#: .././classes/casawp.php:219
 msgid "Original filename"
 msgstr ""
 
-#: .././classes/Casasync.php:425 .././classes/Casasync.php:436
+#: .././classes/casawp.php:425 .././classes/casawp.php:436
 msgid "Properties"
 msgstr ""
 
-#: .././classes/Casasync.php:426 .././classes/Single.php:690
+#: .././classes/casawp.php:426 .././classes/Single.php:690
 msgid "Property"
 msgstr ""
 
-#: .././classes/Casasync.php:427
+#: .././classes/casawp.php:427
 msgid "Add New"
 msgstr ""
 
-#: .././classes/Casasync.php:428
+#: .././classes/casawp.php:428
 msgid "Add New Property"
 msgstr ""
 
-#: .././classes/Casasync.php:429
+#: .././classes/casawp.php:429
 msgid "Edit Property"
 msgstr ""
 
-#: .././classes/Casasync.php:430
+#: .././classes/casawp.php:430
 msgid "New Property"
 msgstr ""
 
-#: .././classes/Casasync.php:431
+#: .././classes/casawp.php:431
 msgid "All Properties"
 msgstr ""
 
-#: .././classes/Casasync.php:432
+#: .././classes/casawp.php:432
 msgid "View Property"
 msgstr ""
 
-#: .././classes/Casasync.php:433
+#: .././classes/casawp.php:433
 msgid "Search Properties"
 msgstr ""
 
-#: .././classes/Casasync.php:434
+#: .././classes/casawp.php:434
 msgid "No properties found"
 msgstr ""
 
-#: .././classes/Casasync.php:435
+#: .././classes/casawp.php:435
 msgid "No properties found in Trash"
 msgstr ""
 
-#: .././classes/Casasync.php:457
+#: .././classes/casawp.php:457
 msgid "Property categories"
 msgstr ""
 
-#: .././classes/Casasync.php:458 .././classes/Casasync.php:467
+#: .././classes/casawp.php:458 .././classes/casawp.php:467
 msgid "Category"
 msgstr ""
 
-#: .././classes/Casasync.php:459
+#: .././classes/casawp.php:459
 msgid "Search Categories"
 msgstr ""
 
-#: .././classes/Casasync.php:460
+#: .././classes/casawp.php:460
 msgid "All Categories"
 msgstr ""
 
-#: .././classes/Casasync.php:461
+#: .././classes/casawp.php:461
 msgid "Parent Category"
 msgstr ""
 
-#: .././classes/Casasync.php:462
+#: .././classes/casawp.php:462
 msgid "Parent Category:"
 msgstr ""
 
-#: .././classes/Casasync.php:463
+#: .././classes/casawp.php:463
 msgid "Edit Category"
 msgstr ""
 
-#: .././classes/Casasync.php:464
+#: .././classes/casawp.php:464
 msgid "Update Category"
 msgstr ""
 
-#: .././classes/Casasync.php:465
+#: .././classes/casawp.php:465
 msgid "Add New Category"
 msgstr ""
 
-#: .././classes/Casasync.php:466
+#: .././classes/casawp.php:466
 msgid "New Category Name"
 msgstr ""
 
-#: .././classes/Casasync.php:480
+#: .././classes/casawp.php:480
 msgid "Property locations"
 msgstr ""
 
-#: .././classes/Casasync.php:481 .././classes/Casasync.php:490
+#: .././classes/casawp.php:481 .././classes/casawp.php:490
 msgid "Location"
 msgstr ""
 
-#: .././classes/Casasync.php:482
+#: .././classes/casawp.php:482
 msgid "Search Locations"
 msgstr ""
 
-#: .././classes/Casasync.php:483
+#: .././classes/casawp.php:483
 msgid "All Locations"
 msgstr ""
 
-#: .././classes/Casasync.php:484
+#: .././classes/casawp.php:484
 msgid "Parent Location"
 msgstr ""
 
-#: .././classes/Casasync.php:485
+#: .././classes/casawp.php:485
 msgid "Parent Location:"
 msgstr ""
 
-#: .././classes/Casasync.php:486
+#: .././classes/casawp.php:486
 msgid "Edit Location"
 msgstr ""
 
-#: .././classes/Casasync.php:487
+#: .././classes/casawp.php:487
 msgid "Update Location"
 msgstr ""
 
-#: .././classes/Casasync.php:488
+#: .././classes/casawp.php:488
 msgid "Add New Location"
 msgstr ""
 
-#: .././classes/Casasync.php:489
+#: .././classes/casawp.php:489
 msgid "New Location Name"
 msgstr ""
 
-#: .././classes/Casasync.php:503
+#: .././classes/casawp.php:503
 msgid "Property salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:504 .././classes/Casasync.php:516
+#: .././classes/casawp.php:504 .././classes/casawp.php:516
 msgid "Salestype"
 msgstr ""
 
-#: .././classes/Casasync.php:505
+#: .././classes/casawp.php:505
 msgid "Search Salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:506
+#: .././classes/casawp.php:506
 msgid "Popular Salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:507
+#: .././classes/casawp.php:507
 msgid "All Salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:508
+#: .././classes/casawp.php:508
 msgid "Edit Salestype"
 msgstr ""
 
-#: .././classes/Casasync.php:509
+#: .././classes/casawp.php:509
 msgid "Update Salestype"
 msgstr ""
 
-#: .././classes/Casasync.php:510
+#: .././classes/casawp.php:510
 msgid "Add New Salestype"
 msgstr ""
 
-#: .././classes/Casasync.php:511
+#: .././classes/casawp.php:511
 msgid "New Salestype Name"
 msgstr ""
 
-#: .././classes/Casasync.php:512
+#: .././classes/casawp.php:512
 msgid "Separate salestypes with commas"
 msgstr ""
 
-#: .././classes/Casasync.php:513
+#: .././classes/casawp.php:513
 msgid "Add or remove salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:514
+#: .././classes/casawp.php:514
 msgid "Choose from the most used salestypes"
 msgstr ""
 
-#: .././classes/Casasync.php:515
+#: .././classes/casawp.php:515
 msgid "No Salestypes found."
 msgstr ""
 
-#: .././classes/Casasync.php:529
+#: .././classes/casawp.php:529
 msgid "Property Attachment Types"
 msgstr ""
 
-#: .././classes/Casasync.php:530 .././classes/Casasync.php:539
+#: .././classes/casawp.php:530 .././classes/casawp.php:539
 msgid "Attachment Type"
 msgstr ""
 
-#: .././classes/Casasync.php:531
+#: .././classes/casawp.php:531
 msgid "Search Attachment Types"
 msgstr ""
 
-#: .././classes/Casasync.php:532
+#: .././classes/casawp.php:532
 msgid "All Attachment Types"
 msgstr ""
 
-#: .././classes/Casasync.php:533
+#: .././classes/casawp.php:533
 msgid "Parent Attachment Type"
 msgstr ""
 
-#: .././classes/Casasync.php:534
+#: .././classes/casawp.php:534
 msgid "Parent Attachment Type:"
 msgstr ""
 
-#: .././classes/Casasync.php:535
+#: .././classes/casawp.php:535
 msgid "Edit Attachment Type"
 msgstr ""
 
-#: .././classes/Casasync.php:536
+#: .././classes/casawp.php:536
 msgid "Update Attachment Type"
 msgstr ""
 
-#: .././classes/Casasync.php:537
+#: .././classes/casawp.php:537
 msgid "Add New Attachment Type"
 msgstr ""
 
-#: .././classes/Casasync.php:538
+#: .././classes/casawp.php:538
 msgid "New Attachment Type Name"
 msgstr ""
 
-#: .././classes/Casasync.php:585 .././classes/Casasync.php:815
-#: .././classes/Casasync.php:896
+#: .././classes/casawp.php:585 .././classes/casawp.php:815
+#: .././classes/casawp.php:896
 msgid "First name"
 msgstr ""
 
-#: .././classes/Casasync.php:586 .././classes/Casasync.php:819
-#: .././classes/Casasync.php:902
+#: .././classes/casawp.php:586 .././classes/casawp.php:819
+#: .././classes/casawp.php:902
 msgid "Last name"
 msgstr ""
 
-#: .././classes/Casasync.php:587 .././classes/Casasync.php:872
-#: .././classes/Casasync.php:970 .././classes/Single.php:1173
+#: .././classes/casawp.php:587 .././classes/casawp.php:872
+#: .././classes/casawp.php:970 .././classes/Single.php:1173
 msgid "Email"
 msgstr ""
 
-#: .././classes/Casasync.php:588
+#: .././classes/casawp.php:588
 msgid "Salutation"
 msgstr ""
 
-#: .././classes/Casasync.php:589
+#: .././classes/casawp.php:589
 msgid "Title"
 msgstr ""
 
-#: .././classes/Casasync.php:590 .././classes/Casasync.php:868
-#: .././classes/Casasync.php:962 .././classes/Single.php:1121
+#: .././classes/casawp.php:590 .././classes/casawp.php:868
+#: .././classes/casawp.php:962 .././classes/Single.php:1121
 msgid "Phone"
 msgstr ""
 
-#: .././classes/Casasync.php:592
+#: .././classes/casawp.php:592
 msgid "Company"
 msgstr ""
 
-#: .././classes/Casasync.php:593 .././classes/Casasync.php:826
-#: .././classes/Casasync.php:910 .././classes/Single.php:784
+#: .././classes/casawp.php:593 .././classes/casawp.php:826
+#: .././classes/casawp.php:910 .././classes/Single.php:784
 msgid "Street"
 msgstr ""
 
-#: .././classes/Casasync.php:594 .././classes/Casasync.php:831
-#: .././classes/Casasync.php:918
+#: .././classes/casawp.php:594 .././classes/casawp.php:831
+#: .././classes/casawp.php:918
 msgid "ZIP"
 msgstr ""
 
-#: .././classes/Casasync.php:595 .././classes/Casasync.php:835
-#: .././classes/Casasync.php:924 .././classes/Single.php:792
+#: .././classes/casawp.php:595 .././classes/casawp.php:835
+#: .././classes/casawp.php:924 .././classes/Single.php:792
 msgid "Locality"
 msgstr ""
 
-#: .././classes/Casasync.php:596 .././classes/Casasync.php:841
-#: .././classes/Casasync.php:932
+#: .././classes/casawp.php:596 .././classes/casawp.php:841
+#: .././classes/casawp.php:932
 msgid "Country"
 msgstr ""
 
-#: .././classes/Casasync.php:597
+#: .././classes/casawp.php:597
 msgid "Kanton"
 msgstr ""
 
-#: .././classes/Casasync.php:598
+#: .././classes/casawp.php:598
 msgid "Subject"
 msgstr ""
 
-#: .././classes/Casasync.php:599 .././classes/Casasync.php:877
-#: .././classes/Casasync.php:978
+#: .././classes/casawp.php:599 .././classes/casawp.php:877
+#: .././classes/casawp.php:978
 msgid "Message"
 msgstr ""
 
-#: .././classes/Casasync.php:600
+#: .././classes/casawp.php:600
 msgid "Recipient"
 msgstr ""
 
-#: .././classes/Casasync.php:637
+#: .././classes/casawp.php:637
 msgid "Required"
 msgstr ""
 
-#: .././classes/Casasync.php:798
+#: .././classes/casawp.php:798
 msgid "Please consider the following errors and try sending it again"
 msgstr ""
 
-#: .././classes/Casasync.php:883 .././classes/Casasync.php:986
+#: .././classes/casawp.php:883 .././classes/casawp.php:986
 msgid "Please fill out all the fields"
 msgstr ""
 
-#: .././classes/Casasync.php:886 .././classes/Casasync.php:989
+#: .././classes/casawp.php:886 .././classes/casawp.php:989
 msgid "Send"
 msgstr ""
 

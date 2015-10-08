@@ -1,0 +1,30 @@
+<div class="casawp-filterform-wrap large">
+	<h3><?= __('Advanced Search', 'casawp') ?></h3>
+	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-filterform')); ?>
+	
+	<?php if ($form->getCategoryOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('categories')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Kategorie wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+
+	<?php if ($form->getLocationOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('locations')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('locations')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Ortschaft wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+
+	<?php if ($form->getSalestypeOptions()): ?>
+		<!-- <div class="form-group"> -->
+		    <!-- <label><?php echo $form->get('salestypes')->getLabel() ?></label> -->
+		    <?php echo $this->formElement($form->get('salestypes')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Vermarktungsart wählen')); ?>
+		<!-- </div> -->
+	<?php endif ?>
+	
+	<input type="submit" class="casawp-filterform-button" value="<?= __('Search') ?>">
+
+	<?= $this->form()->closeTag(); ?>
+	<div class="clearfix"></div>
+</div>

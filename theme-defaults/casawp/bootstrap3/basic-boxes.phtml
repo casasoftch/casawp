@@ -1,0 +1,18 @@
+<div class="casawp-basic-box">
+  <div>
+    <h4><?= $offer->renderCategoryLabels() ?></h4>
+    <?= $offer->renderDatapoints('single') ?>
+  </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+    <h4><?= __("Address", 'casawp') ?></h4>
+    <?= $offer->renderAddress() ?>
+  </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+      <h4><?= ($offer->type == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
+      <?= $this->offer->renderPrice() ?>
+  </div>
+</div>

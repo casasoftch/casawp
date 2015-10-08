@@ -1,0 +1,58 @@
+<h3><?= __('Offer','casawp') ?></h3>
+<?= $this->offer->renderDatatableOffer() ?>
+
+<h3><?= __('Property','casawp') ?></h3>
+<?= $this->offer->renderDatatableProperty() ?>
+
+
+<?php if ($this->offer->getFeatures()) : ?>
+  <div class="casawp-features">
+    <h3><?= __('Features','casawp') ?></h3>
+    <?= $this->offer->renderFeatures() ?>
+  </div>
+<?php endif; ?>
+
+<?php if ($this->offer->getDistances()) : ?>
+  <div class="casawp-distances">
+    <h3><?= __('Distances','casawp') ?></h3>
+    <?= $this->offer->renderDistances() ?>
+  </div>
+<?php endif; ?>
+
+<?php if ($this->offer->getSalesBrochures() || $this->offer->getDocuments() || $this->offer->getPlans()) : ?>
+  <div class="casawp-documents">
+    <h3><?= __('Documents','casawp') ?></h3>
+    <?php foreach ($this->offer->getSalesBrochures() as $document): ?>
+      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+    <?php endforeach ?>
+    <?php foreach ($this->offer->getDocuments() as $document): ?>
+      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+    <?php endforeach ?>
+    <?php foreach ($this->offer->getPlans() as $document): ?>
+      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+    <?php endforeach ?>
+  </div>
+<?php endif; ?>
+
+<?php /* ?>
+<?php if ($this->offer->getAllDistances()) { ?>
+  <div class="casawp_distances">
+    <h3><?= ('Distances','casawp') ?></h3>
+    <?= $this->offer->getAllDistances(); ?>
+  </div>
+<?php endif; ?>
+
+<?php if ($this->offer->getUrls()) : ?>
+  <div class="casawp_provided_url">
+    <h3><?= ('Links','casawp') ?></h3>
+    <ul class="casawp-unstyled casawp-links-list">
+      <?php foreach ($this->getUrls() as $url_wrapper) : ?>
+        <?php foreach ($url_wrapper as $url) :?>
+          <li><a href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : $url['href']) .'</a></li>
+        <?php endforeach; ?>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+<?php endif; ?>
+
+<?php */ ?>

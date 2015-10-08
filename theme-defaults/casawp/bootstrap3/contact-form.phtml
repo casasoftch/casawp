@@ -1,0 +1,43 @@
+<?php if ($sent): ?>
+	<p class="alert alert-success">SENT!!!</p>	
+<?php else: ?>
+
+	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
+	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
+	<div class="casawp-row">
+		<div class="casawp-col-md-5">
+			<?= $this->offer->renderContactFormElement($form->get('firstname')) ?>
+		</div>
+		<div class="casawp-col-md-7">
+			<?= $this->offer->renderContactFormElement($form->get('lastname')) ?>
+		</div>
+	</div>
+	<?= $this->offer->renderContactFormElement($form->get('street')) ?>
+	<div class="casawp-row">
+		<div class="casawp-col-md-5">
+			<?= $this->offer->renderContactFormElement($form->get('postal_code')) ?>
+		</div>
+		<div class="casawp-col-md-7">
+			<?= $this->offer->renderContactFormElement($form->get('locality')) ?>
+		</div>
+	</div>
+	<?= $this->offer->renderContactFormElement($form->get('country')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('phone')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('emailreal')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('message')) ?>
+
+	<div class="casawp-row">
+	    <div class="casawp-form-group">
+	        <div class="casawp-col-md-7">
+	            <p class="casawp-form-control-static casawp-text-muted casawp-small">Bitte alle Felder ausfüllen.</p>
+	        </div>
+	        <div class="casawp-col-md-5">
+	            <input type="submit" class="casawp-contactform-send" value="Senden">
+	        </div>
+	        <div class="clearBoth"></div>
+	    </div>
+	</div>
+
+	<?= $this->form()->closeTag(); ?>
+
+<?php endif ?>

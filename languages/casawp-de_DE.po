@@ -1,0 +1,2447 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-10-08 13:11+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jens Stalder <js@casasoft.ch>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ../.\n"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:23
+msgid "First name"
+msgstr "Vorname"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:31
+msgid "Last name"
+msgstr "Nachname"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:39
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:8
+msgid "Street"
+msgstr "Strasse"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:47
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:74
+msgid "ZIP"
+msgstr "PLZ"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:56
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:82
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:16
+msgid "Locality"
+msgstr "Ort"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:64
+msgid "Country"
+msgstr "Land"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:75
+#: .././theme-defaults/casawp/bootstrap3/seller.phtml:22
+msgid "Phone"
+msgstr "Telefon"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:83
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:50
+#: .././theme-defaults/casawp/bootstrap3/sales-person.phtml:18
+msgid "Email"
+msgstr "E-Mail"
+
+#: .././modules/casawp/src/casawp/Form/ContactForm.php:91
+msgid "Message"
+msgstr "Nachricht"
+
+#: .././modules/casawp/src/casawp/Form/FilterForm.php:31
+#: .././src/Plugin.php:811 .././src/Plugin.php:820
+msgid "Category"
+msgstr "Kategorie"
+
+#: .././modules/casawp/src/casawp/Form/FilterForm.php:45
+msgid "Sales type"
+msgstr "Vermarktungsart"
+
+#: .././modules/casawp/src/casawp/Form/FilterForm.php:59
+#: .././src/Plugin.php:862 .././src/Plugin.php:871
+msgid "Location"
+msgstr "Ortschaft"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:409
+#: .././src/Single.php:814 .././src/Single.php:924
+msgid "month"
+msgstr "Monat"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:410
+#: .././src/Single.php:815 .././src/Single.php:925
+msgid "week"
+msgstr "Woche"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:411
+#: .././src/Single.php:816 .././src/Single.php:926
+msgid "day"
+msgstr "Tag"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:412
+#: .././src/Single.php:817 .././src/Single.php:927
+msgid "year"
+msgstr "Jahr"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:413
+#: .././src/Single.php:818 .././src/Single.php:928
+msgid "hour"
+msgstr "Stunde"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:426
+#: .././modules/casawp/src/casawp/Service/OfferService.php:445
+#: .././src/Conversion.php:476
+msgid "On Request"
+msgstr "Auf Anfrage"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:447
+#: .././src/Conversion.php:478
+msgid "Immediate"
+msgstr "Sofort"
+
+#: .././modules/casawp/src/casawp/Service/OfferService.php:652
+#: .././theme-defaults/casawp/bootstrap3/sales-person.phtml:15
+msgid "I am interested concerning this property. Please contact me."
+msgstr ""
+"Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir "
+"auf."
+
+#: .././options.php:118
+msgid "Einstellungen gespeichert.."
+msgstr "Einstellungen gespeichert.."
+
+#: .././options.php:124
+msgid "Daten wurden importiert.."
+msgstr "Daten wurden importiert.."
+
+#: .././src/Archive.php:451 .././src/Plugin.php:305
+msgid "Buy"
+msgstr "Kaufen"
+
+#: .././src/Archive.php:453 .././src/Plugin.php:304
+msgid "Rent"
+msgstr "Mieten"
+
+#: .././src/Archive.php:473
+msgid "Active"
+msgstr "Aktiv"
+
+#: .././src/Archive.php:475 .././src/Conversion.php:485
+#: .././theme-defaults/casawp/bootstrap3/datatable-property.phtml:3
+msgid "Reference"
+msgstr "Referenz"
+
+#: .././src/Archive.php:477 .././src/Conversion.php:482
+msgid "Reserved"
+msgstr "Reserviert"
+
+#: .././src/Archive.php:479
+msgid "Taken"
+msgstr "Im besitz"
+
+#: .././src/Archive.php:546
+#: .././theme-defaults/casawp/bootstrap3/archive-filter.phtml:2
+msgid "Advanced Search"
+msgstr "Erweiterte Suche"
+
+#: .././src/Archive.php:561
+msgid "Choose offer"
+msgstr "Angebot wählen"
+
+#: .././src/Archive.php:568
+msgid "Choose category"
+msgstr "Kategorie wählen"
+
+#: .././src/Archive.php:578
+msgid "Choose locality"
+msgstr "Ort wählen"
+
+#: .././src/Archive.php:584
+msgid "Choose availability"
+msgstr "Verfügbarkeit wählen"
+
+#: .././src/Archive.php:592
+#: .././theme-defaults/casawp/bootstrap3/archive-filter.phtml:26
+msgid "Search"
+msgstr "Suchen"
+
+#: .././src/Conversion.php:20
+msgid "Andorra"
+msgstr "Andorra"
+
+#: .././src/Conversion.php:21
+msgid "United Arab Emirates"
+msgstr "Vereinigte Arabische Emirate"
+
+#: .././src/Conversion.php:22
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+#: .././src/Conversion.php:23
+msgid "Antigua and Barbuda"
+msgstr "Antigua und Barbuda"
+
+#: .././src/Conversion.php:24
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: .././src/Conversion.php:25
+msgid "Albania"
+msgstr "Albanien"
+
+#: .././src/Conversion.php:26
+msgid "Armenia"
+msgstr "Armenien"
+
+#: .././src/Conversion.php:27
+msgid "Netherlands Antilles"
+msgstr "Niederländische Antillen"
+
+#: .././src/Conversion.php:28
+msgid "Angola"
+msgstr "Angola"
+
+#: .././src/Conversion.php:29
+msgid "Antarctica"
+msgstr "Antarktis"
+
+#: .././src/Conversion.php:30
+msgid "Argentina"
+msgstr "Argentinien"
+
+#: .././src/Conversion.php:31
+msgid "American Samoa"
+msgstr ""
+
+#: .././src/Conversion.php:32
+msgid "Austria"
+msgstr "Österreich"
+
+#: .././src/Conversion.php:33
+msgid "Australia"
+msgstr "Australien"
+
+#: .././src/Conversion.php:34
+msgid "Aruba"
+msgstr "Aruba"
+
+#: .././src/Conversion.php:35
+msgid "Azerbaijan"
+msgstr "Aserbaidschan"
+
+#: .././src/Conversion.php:36
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnien und Herzegowina"
+
+#: .././src/Conversion.php:37
+msgid "Barbados"
+msgstr "Barbados"
+
+#: .././src/Conversion.php:38
+msgid "Bangladesh"
+msgstr "Bangladesch"
+
+#: .././src/Conversion.php:39
+msgid "Belgium"
+msgstr "Belgien"
+
+#: .././src/Conversion.php:40
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#: .././src/Conversion.php:41
+msgid "Bulgaria"
+msgstr "Bulgarien"
+
+#: .././src/Conversion.php:42
+msgid "Bahrain"
+msgstr "Bahrain"
+
+#: .././src/Conversion.php:43
+msgid "Burundi"
+msgstr "Burundi"
+
+#: .././src/Conversion.php:44
+msgid "Benin"
+msgstr "Benin"
+
+#: .././src/Conversion.php:45
+msgid "Bermuda"
+msgstr "Bermuda"
+
+#: .././src/Conversion.php:46
+msgid "Brunei Darussalam"
+msgstr "Brunei"
+
+#: .././src/Conversion.php:47
+msgid "Bolivia"
+msgstr ""
+
+#: .././src/Conversion.php:48
+msgid "Brazil"
+msgstr "Brasilien"
+
+#: .././src/Conversion.php:49
+msgid "Bahamas"
+msgstr "Bahamas"
+
+#: .././src/Conversion.php:50
+msgid "Bhutan"
+msgstr "Bhutan"
+
+#: .././src/Conversion.php:51
+msgid "Bouvet Island"
+msgstr "Bouvetinsel"
+
+#: .././src/Conversion.php:52
+msgid "Botswana"
+msgstr "Botswana"
+
+#: .././src/Conversion.php:53
+msgid "Belarus"
+msgstr "Weißrussland"
+
+#: .././src/Conversion.php:54
+msgid "Belize"
+msgstr "Belize"
+
+#: .././src/Conversion.php:55
+msgid "Canada"
+msgstr "Kanada"
+
+#: .././src/Conversion.php:56
+msgid "Cocos (Keeling) Islands"
+msgstr "Kokosinseln"
+
+#: .././src/Conversion.php:57
+msgid "Congo, The Democratic Republic of the"
+msgstr "Kongo, Demokratische Republik"
+
+#: .././src/Conversion.php:58
+msgid "Central African Republic"
+msgstr "Zentralafrikanische Republik"
+
+#: .././src/Conversion.php:59
+msgid "Congo"
+msgstr "Kongo, Republik"
+
+#: .././src/Conversion.php:60
+msgid "Switzerland"
+msgstr "Schweiz"
+
+#: .././src/Conversion.php:61
+msgid "Cote D'Ivoire"
+msgstr "Cote d'Ivoire"
+
+#: .././src/Conversion.php:62
+msgid "Cook Islands"
+msgstr "Cookinseln"
+
+#: .././src/Conversion.php:63
+msgid "Chile"
+msgstr "Chile"
+
+#: .././src/Conversion.php:64
+msgid "Cameroon"
+msgstr "Kamerun"
+
+#: .././src/Conversion.php:65
+msgid "China"
+msgstr "China, Volksrepublik"
+
+#: .././src/Conversion.php:66
+msgid "Colombia"
+msgstr "Kolumbien"
+
+#: .././src/Conversion.php:67
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#: .././src/Conversion.php:68
+msgid "Cuba"
+msgstr "Kuba"
+
+#: .././src/Conversion.php:69
+msgid "Cape Verde"
+msgstr "Kap Verde, Republik"
+
+#: .././src/Conversion.php:70
+msgid "Christmas Island"
+msgstr "Weihnachtsinsel"
+
+#: .././src/Conversion.php:71
+msgid "Cyprus"
+msgstr "Zypern, Republik"
+
+#: .././src/Conversion.php:72
+msgid "Czech Republic"
+msgstr "Tschechische Republik"
+
+#: .././src/Conversion.php:73
+msgid "Germany"
+msgstr "Deutschland"
+
+#: .././src/Conversion.php:74
+msgid "Djibouti"
+msgstr "Dschibuti"
+
+#: .././src/Conversion.php:75
+msgid "Denmark"
+msgstr "Dänemark"
+
+#: .././src/Conversion.php:76
+msgid "Dominica"
+msgstr "Dominica"
+
+#: .././src/Conversion.php:77
+msgid "Dominican Republic"
+msgstr "Dominikanische Republik"
+
+#: .././src/Conversion.php:78
+msgid "Algeria"
+msgstr "Algerien"
+
+#: .././src/Conversion.php:79
+msgid "Ecuador"
+msgstr "Ecuador"
+
+#: .././src/Conversion.php:80
+msgid "Estonia"
+msgstr "Estland"
+
+#: .././src/Conversion.php:81
+msgid "Egypt"
+msgstr "Ägypten"
+
+#: .././src/Conversion.php:82
+msgid "Western Sahara"
+msgstr "Westsahara"
+
+#: .././src/Conversion.php:83
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#: .././src/Conversion.php:84
+msgid "Spain"
+msgstr "Spanien"
+
+#: .././src/Conversion.php:85
+msgid "Ethiopia"
+msgstr "Äthiopien"
+
+#: .././src/Conversion.php:86
+msgid "Finland"
+msgstr "Finnland"
+
+#: .././src/Conversion.php:87
+msgid "Fiji"
+msgstr "Fidschi"
+
+#: .././src/Conversion.php:88
+msgid "Falkland Islands (Malvinas)"
+msgstr "Falklandinseln"
+
+#: .././src/Conversion.php:89
+msgid "Micronesia, Federated States of"
+msgstr "Mikronesien, Föderierte Staaten von"
+
+#: .././src/Conversion.php:90
+msgid "Faroe Islands"
+msgstr "Färöer"
+
+#: .././src/Conversion.php:91
+msgid "France"
+msgstr "Frankreich"
+
+#: .././src/Conversion.php:92
+msgid "France, Metropolitan"
+msgstr ""
+
+#: .././src/Conversion.php:93
+msgid "Gabon"
+msgstr "Gabun"
+
+#: .././src/Conversion.php:94
+msgid "United Kingdom"
+msgstr "Vereinigtes Königreich von Großbritannien und Nordirland"
+
+#: .././src/Conversion.php:95
+msgid "Grenada"
+msgstr "Grenada"
+
+#: .././src/Conversion.php:96
+msgid "Georgia"
+msgstr "Georgien"
+
+#: .././src/Conversion.php:97
+msgid "French Guiana"
+msgstr "Französisch-Guayana"
+
+#: .././src/Conversion.php:98
+msgid "Ghana"
+msgstr "Ghana, Republik"
+
+#: .././src/Conversion.php:99
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: .././src/Conversion.php:100
+msgid "Greenland"
+msgstr "Grönland"
+
+#: .././src/Conversion.php:101
+msgid "Gambia"
+msgstr "Gambia"
+
+#: .././src/Conversion.php:102
+msgid "Guinea"
+msgstr "Guinea, Republik"
+
+#: .././src/Conversion.php:103
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+#: .././src/Conversion.php:104
+msgid "Equatorial Guinea"
+msgstr "Äquatorialguinea, Republik"
+
+#: .././src/Conversion.php:105
+msgid "Greece"
+msgstr "Griechenland"
+
+#: .././src/Conversion.php:106
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Südgeorgien und die Südlichen Sandwichinseln"
+
+#: .././src/Conversion.php:107
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: .././src/Conversion.php:108
+msgid "Guam"
+msgstr "Guam"
+
+#: .././src/Conversion.php:109
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau, Republik"
+
+#: .././src/Conversion.php:110
+msgid "Guyana"
+msgstr "Guyana"
+
+#: .././src/Conversion.php:111
+msgid "Hong Kong"
+msgstr "Hongkong"
+
+#: .././src/Conversion.php:112
+msgid "Heard Island and McDonald Islands"
+msgstr "Heard und McDonaldinseln"
+
+#: .././src/Conversion.php:113
+msgid "Honduras"
+msgstr "Honduras"
+
+#: .././src/Conversion.php:114
+msgid "Croatia"
+msgstr "Kroatien"
+
+#: .././src/Conversion.php:115
+msgid "Haiti"
+msgstr "Haiti"
+
+#: .././src/Conversion.php:116
+msgid "Hungary"
+msgstr "Ungarn"
+
+#: .././src/Conversion.php:117
+msgid "Indonesia"
+msgstr "Indonesien"
+
+#: .././src/Conversion.php:118
+msgid "Ireland"
+msgstr "Irland, Republik"
+
+#: .././src/Conversion.php:119
+msgid "Israel"
+msgstr "Israel"
+
+#: .././src/Conversion.php:120
+msgid "India"
+msgstr "Indien"
+
+#: .././src/Conversion.php:121
+msgid "British Indian Ocean Territory"
+msgstr "Britisches Territorium im Indischen Ozean"
+
+#: .././src/Conversion.php:122
+msgid "Iraq"
+msgstr "Irak"
+
+#: .././src/Conversion.php:123
+msgid "Iran, Islamic Republic of"
+msgstr "Iran"
+
+#: .././src/Conversion.php:124
+msgid "Iceland"
+msgstr "Island"
+
+#: .././src/Conversion.php:125
+msgid "Italy"
+msgstr "Italien"
+
+#: .././src/Conversion.php:126
+msgid "Jamaica"
+msgstr "Jamaika"
+
+#: .././src/Conversion.php:127
+msgid "Jordan"
+msgstr "Jordanien"
+
+#: .././src/Conversion.php:128
+msgid "Japan"
+msgstr "Japan"
+
+#: .././src/Conversion.php:129
+msgid "Kenya"
+msgstr "Kenia"
+
+#: .././src/Conversion.php:130
+msgid "Kyrgyzstan"
+msgstr "Kirgisistan"
+
+#: .././src/Conversion.php:131
+msgid "Cambodia"
+msgstr "Kambodscha"
+
+#: .././src/Conversion.php:132
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#: .././src/Conversion.php:133
+msgid "Comoros"
+msgstr ""
+
+#: .././src/Conversion.php:134
+msgid "Saint Kitts and Nevis"
+msgstr "St. Kitts und Nevis"
+
+#: .././src/Conversion.php:135
+msgid "Korea, Democratic People's Republic of"
+msgstr "Korea, Demokratische Volkrepublik"
+
+#: .././src/Conversion.php:136
+msgid "Korea, Republic of"
+msgstr "Korea, Republik"
+
+#: .././src/Conversion.php:137
+msgid "Kuwait"
+msgstr "Kuwait"
+
+#: .././src/Conversion.php:138
+msgid "Cayman Islands"
+msgstr "Kaimaninseln"
+
+#: .././src/Conversion.php:139
+msgid "Kazakstan"
+msgstr "Kasachstan"
+
+#: .././src/Conversion.php:140
+msgid "Lao People's Democratic Republic"
+msgstr "Laos"
+
+#: .././src/Conversion.php:141
+msgid "Lebanon"
+msgstr "Libanon"
+
+#: .././src/Conversion.php:142
+msgid "Saint Lucia"
+msgstr "St. Lucia"
+
+#: .././src/Conversion.php:143
+msgid "Liechtenstein"
+msgstr "Liechtenstein, Fürstentum"
+
+#: .././src/Conversion.php:144
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#: .././src/Conversion.php:145
+msgid "Liberia"
+msgstr "Liberia, Republik"
+
+#: .././src/Conversion.php:146
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#: .././src/Conversion.php:147
+msgid "Lithuania"
+msgstr "Litauen"
+
+#: .././src/Conversion.php:148
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#: .././src/Conversion.php:149
+msgid "Latvia"
+msgstr "Lettland"
+
+#: .././src/Conversion.php:150
+msgid "Libyan Arab Jamahiriya"
+msgstr ""
+
+#: .././src/Conversion.php:151
+msgid "Morocco"
+msgstr "Marokko"
+
+#: .././src/Conversion.php:152
+msgid "Monaco"
+msgstr "Monaco"
+
+#: .././src/Conversion.php:153
+msgid "Moldova, Republic of"
+msgstr "Moldawien"
+
+#: .././src/Conversion.php:154
+msgid "Madagascar"
+msgstr "Madagaskar, Republik"
+
+#: .././src/Conversion.php:155
+msgid "Marshall Islands"
+msgstr "Marshallinseln"
+
+#: .././src/Conversion.php:156
+msgid "Macedonia"
+msgstr ""
+
+#: .././src/Conversion.php:157
+msgid "Mali"
+msgstr "Mali, Republik"
+
+#: .././src/Conversion.php:158
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: .././src/Conversion.php:159
+msgid "Mongolia"
+msgstr "Mongolei"
+
+#: .././src/Conversion.php:160
+msgid "Macau"
+msgstr "Macao"
+
+#: .././src/Conversion.php:161
+msgid "Northern Mariana Islands"
+msgstr "Nördliche Marianen"
+
+#: .././src/Conversion.php:162
+msgid "Martinique"
+msgstr "Martinique"
+
+#: .././src/Conversion.php:163
+msgid "Mauritania"
+msgstr "Mauretanien"
+
+#: .././src/Conversion.php:164
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#: .././src/Conversion.php:165
+msgid "Malta"
+msgstr "Malta"
+
+#: .././src/Conversion.php:166
+msgid "Mauritius"
+msgstr "Mauritius, Republik"
+
+#: .././src/Conversion.php:167
+msgid "Maldives"
+msgstr "Malediven"
+
+#: .././src/Conversion.php:168
+msgid "Malawi"
+msgstr "Malawi, Republik"
+
+#: .././src/Conversion.php:169
+msgid "Mexico"
+msgstr "MexikoMalawi, Republik"
+
+#: .././src/Conversion.php:170
+msgid "Malaysia"
+msgstr "Mexiko"
+
+#: .././src/Conversion.php:171
+msgid "Mozambique"
+msgstr "Mosambik"
+
+#: .././src/Conversion.php:172
+msgid "Namibia"
+msgstr "Namibia, Republik"
+
+#: .././src/Conversion.php:173
+msgid "New Caledonia"
+msgstr "Neukaledonien"
+
+#: .././src/Conversion.php:174
+msgid "Niger"
+msgstr "Niger"
+
+#: .././src/Conversion.php:175
+msgid "Norfolk Island"
+msgstr "Norfolkinsel"
+
+#: .././src/Conversion.php:176
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#: .././src/Conversion.php:177
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+#: .././src/Conversion.php:178
+msgid "Netherlands"
+msgstr "Niederlande"
+
+#: .././src/Conversion.php:179
+msgid "Norway"
+msgstr "Norwegen"
+
+#: .././src/Conversion.php:180
+msgid "Nepal"
+msgstr "Nepal"
+
+#: .././src/Conversion.php:181
+msgid "Nauru"
+msgstr "Nauru"
+
+#: .././src/Conversion.php:182
+msgid "Niue"
+msgstr "Niue"
+
+#: .././src/Conversion.php:183
+msgid "New Zealand"
+msgstr "Neuseeland"
+
+#: .././src/Conversion.php:184
+msgid "Oman"
+msgstr "Oman"
+
+#: .././src/Conversion.php:185
+msgid "Panama"
+msgstr "Panama"
+
+#: .././src/Conversion.php:186
+msgid "Peru"
+msgstr "Peru"
+
+#: .././src/Conversion.php:187
+msgid "French Polynesia"
+msgstr "Französisch-Polynesien"
+
+#: .././src/Conversion.php:188
+msgid "Papua New Guinea"
+msgstr "Papua-Neuguinea"
+
+#: .././src/Conversion.php:189
+msgid "Philippines"
+msgstr "Philippinen"
+
+#: .././src/Conversion.php:190
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#: .././src/Conversion.php:191
+msgid "Poland"
+msgstr "Polen"
+
+#: .././src/Conversion.php:192
+msgid "Saint Pierre and Miquelon"
+msgstr "St. Pierre und Miquelon"
+
+#: .././src/Conversion.php:193
+msgid "Pitcairn Islands"
+msgstr "Pitcairninseln"
+
+#: .././src/Conversion.php:194
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#: .././src/Conversion.php:195
+msgid "Palestinian Territory"
+msgstr ""
+
+#: .././src/Conversion.php:196
+msgid "Portugal"
+msgstr "Portugal"
+
+#: .././src/Conversion.php:197
+msgid "Palau"
+msgstr "Palau"
+
+#: .././src/Conversion.php:198
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#: .././src/Conversion.php:199
+msgid "Qatar"
+msgstr "Katar"
+
+#: .././src/Conversion.php:200
+msgid "Reunion"
+msgstr "Réunion"
+
+#: .././src/Conversion.php:201
+msgid "Romania"
+msgstr "Rumänien"
+
+#: .././src/Conversion.php:202
+msgid "Russian Federation"
+msgstr "Russische Föderation"
+
+#: .././src/Conversion.php:203
+msgid "Rwanda"
+msgstr "Ruanda, Republik"
+
+#: .././src/Conversion.php:204
+msgid "Saudi Arabia"
+msgstr "Saudi-Arabien, Königreich"
+
+#: .././src/Conversion.php:205
+msgid "Solomon Islands"
+msgstr "Salomonen"
+
+#: .././src/Conversion.php:206
+msgid "Seychelles"
+msgstr "Seychellen, Republik der"
+
+#: .././src/Conversion.php:207
+msgid "Sudan"
+msgstr "Sudan"
+
+#: .././src/Conversion.php:208
+msgid "Sweden"
+msgstr "Schweden"
+
+#: .././src/Conversion.php:209
+msgid "Singapore"
+msgstr "Singapur"
+
+#: .././src/Conversion.php:210
+msgid "Saint Helena"
+msgstr "Die Kronkolonie St. Helen"
+
+#: .././src/Conversion.php:211
+msgid "Slovenia"
+msgstr "Slowenien"
+
+#: .././src/Conversion.php:212
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard und Jan Mayen"
+
+#: .././src/Conversion.php:213
+msgid "Slovakia"
+msgstr "Slowakei"
+
+#: .././src/Conversion.php:214
+msgid "Sierra Leone"
+msgstr "Sierra Leone, Republik"
+
+#: .././src/Conversion.php:215
+msgid "San Marino"
+msgstr "San Marino"
+
+#: .././src/Conversion.php:216
+msgid "Senegal"
+msgstr "Senegal"
+
+#: .././src/Conversion.php:217
+msgid "Somalia"
+msgstr "Somalia, Demokratische Republik"
+
+#: .././src/Conversion.php:218
+msgid "Suriname"
+msgstr "Suriname"
+
+#: .././src/Conversion.php:219
+msgid "Sao Tome and Principe"
+msgstr "São Tomé und Príncipe"
+
+#: .././src/Conversion.php:220
+msgid "El Salvador"
+msgstr "El Salvador"
+
+#: .././src/Conversion.php:221
+msgid "Syrian Arab Republic"
+msgstr "Syrien"
+
+#: .././src/Conversion.php:222
+msgid "Swaziland"
+msgstr "Swasiland"
+
+#: .././src/Conversion.php:223
+msgid "Turks and Caicos Islands"
+msgstr "Turks- und Caicosinseln"
+
+#: .././src/Conversion.php:224
+msgid "Chad"
+msgstr "Tschad, Republik"
+
+#: .././src/Conversion.php:225
+msgid "French Southern Territories"
+msgstr "Französische Süd- und Antarktisgebiete"
+
+#: .././src/Conversion.php:226
+msgid "Togo"
+msgstr "Togo, Republik"
+
+#: .././src/Conversion.php:227
+msgid "Thailand"
+msgstr "Thailand"
+
+#: .././src/Conversion.php:228
+msgid "Tajikistan"
+msgstr "Tadschikistan"
+
+#: .././src/Conversion.php:229
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#: .././src/Conversion.php:230
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+#: .././src/Conversion.php:231
+msgid "Tunisia"
+msgstr "Tunesien"
+
+#: .././src/Conversion.php:232
+msgid "Tonga"
+msgstr "Tonga"
+
+#: .././src/Conversion.php:233
+msgid "Timor-Leste"
+msgstr "Timor-Leste, Demokratische Republik"
+
+#: .././src/Conversion.php:234
+msgid "Turkey"
+msgstr "Türkei"
+
+#: .././src/Conversion.php:235
+msgid "Trinidad and Tobago"
+msgstr "Trinidad und Tobago"
+
+#: .././src/Conversion.php:236
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#: .././src/Conversion.php:237
+msgid "Taiwan"
+msgstr "Taiwan"
+
+#: .././src/Conversion.php:238
+msgid "Tanzania, United Republic of"
+msgstr "Tansania, Vereinigte Republik"
+
+#: .././src/Conversion.php:239
+msgid "Ukraine"
+msgstr "Ukraine"
+
+#: .././src/Conversion.php:240
+msgid "Uganda"
+msgstr "Uganda, Republik"
+
+#: .././src/Conversion.php:241
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: .././src/Conversion.php:242
+msgid "United States"
+msgstr "Vereinigte Staaten von Amerika"
+
+#: .././src/Conversion.php:243
+msgid "Uruguay"
+msgstr "Uruguay"
+
+#: .././src/Conversion.php:244
+msgid "Uzbekistan"
+msgstr "Usbekistan"
+
+#: .././src/Conversion.php:245
+msgid "Holy See (Vatican City State)"
+msgstr "Vatikanstadt"
+
+#: .././src/Conversion.php:246
+msgid "Saint Vincent and the Grenadines"
+msgstr "St. Vincent und die Grenadinen (GB)"
+
+#: .././src/Conversion.php:247
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#: .././src/Conversion.php:248
+msgid "Virgin Islands, British"
+msgstr "Britische Jungferninseln"
+
+#: .././src/Conversion.php:249
+msgid "Virgin Islands, U.S."
+msgstr "Amerikanische Jungferninseln"
+
+#: .././src/Conversion.php:250
+msgid "Vietnam"
+msgstr "Vietnam"
+
+#: .././src/Conversion.php:251
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#: .././src/Conversion.php:252
+msgid "Wallis and Futuna"
+msgstr "Wallis und Futuna"
+
+#: .././src/Conversion.php:253
+msgid "Samoa"
+msgstr "Amerikanisch-Samoa"
+
+#: .././src/Conversion.php:254
+msgid "Yemen"
+msgstr "Jemen"
+
+#: .././src/Conversion.php:255
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#: .././src/Conversion.php:256
+msgid "Serbia"
+msgstr ""
+
+#: .././src/Conversion.php:257
+msgid "South Africa"
+msgstr "Südafrika, Republik"
+
+#: .././src/Conversion.php:258
+msgid "Zambia"
+msgstr "Sambia, Republik"
+
+#: .././src/Conversion.php:259
+msgid "Montenegro"
+msgstr "Serbien und Montenegro"
+
+#: .././src/Conversion.php:260
+msgid "Zimbabwe"
+msgstr "Simbabwe, Republik"
+
+#: .././src/Conversion.php:261
+msgid "Aland Islands"
+msgstr ""
+
+#: .././src/Conversion.php:262
+msgid "Guernsey"
+msgstr "Guernsey, Vogtei"
+
+#: .././src/Conversion.php:263
+msgid "Isle of Man"
+msgstr "Insel Man"
+
+#: .././src/Conversion.php:264
+msgid "Jersey"
+msgstr "Jersey"
+
+#: .././src/Conversion.php:265
+msgid "Saint Barthelemy"
+msgstr ""
+
+#: .././src/Conversion.php:266
+msgid "Saint Martin"
+msgstr ""
+
+#: .././src/Conversion.php:273
+msgid "Aargau"
+msgstr ""
+
+#: .././src/Conversion.php:274
+msgid "Appenzell Innerrhoden"
+msgstr ""
+
+#: .././src/Conversion.php:275
+msgid "Appenzell Ausserrhoden"
+msgstr ""
+
+#: .././src/Conversion.php:276
+msgid "Bern"
+msgstr ""
+
+#: .././src/Conversion.php:277
+msgid "Basel-Land"
+msgstr ""
+
+#: .././src/Conversion.php:278
+msgid "Basel-Stadt"
+msgstr ""
+
+#: .././src/Conversion.php:279
+msgid "Fribourg"
+msgstr ""
+
+#: .././src/Conversion.php:280
+msgid "Genève"
+msgstr ""
+
+#: .././src/Conversion.php:281
+msgid "Glarus"
+msgstr ""
+
+#: .././src/Conversion.php:282
+msgid "Graubünden"
+msgstr ""
+
+#: .././src/Conversion.php:283
+msgid "Jura"
+msgstr ""
+
+#: .././src/Conversion.php:284
+msgid "Luzern"
+msgstr ""
+
+#: .././src/Conversion.php:285
+msgid "Neuchâtel"
+msgstr ""
+
+#: .././src/Conversion.php:286
+msgid "Nidwalden"
+msgstr ""
+
+#: .././src/Conversion.php:287
+msgid "Obwalden"
+msgstr ""
+
+#: .././src/Conversion.php:288
+msgid "Sankt Gallen"
+msgstr ""
+
+#: .././src/Conversion.php:289
+msgid "Schaffhausen"
+msgstr ""
+
+#: .././src/Conversion.php:290
+msgid "Solothurn"
+msgstr ""
+
+#: .././src/Conversion.php:291
+msgid "Schwyz"
+msgstr ""
+
+#: .././src/Conversion.php:292
+msgid "Thurgau"
+msgstr ""
+
+#: .././src/Conversion.php:293
+msgid "Ticino"
+msgstr ""
+
+#: .././src/Conversion.php:294
+msgid "Uri"
+msgstr ""
+
+#: .././src/Conversion.php:295
+msgid "Valais"
+msgstr ""
+
+#: .././src/Conversion.php:296
+msgid "Vaud"
+msgstr ""
+
+#: .././src/Conversion.php:297
+msgid "Zug"
+msgstr ""
+
+#: .././src/Conversion.php:298
+msgid "Zürich"
+msgstr ""
+
+#: .././src/Conversion.php:307
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:40
+msgid "Property space"
+msgstr "Grundstücksfläche"
+
+#: .././src/Conversion.php:308
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:32
+msgid "Living space"
+msgstr "Bruttowohnfläche"
+
+#: .././src/Conversion.php:309
+msgid "Net living space"
+msgstr "Nettowohnfläche"
+
+#: .././src/Conversion.php:310
+msgid "Gross floor area"
+msgstr "Bruttogeschossfläche"
+
+#: .././src/Conversion.php:311
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:24
+msgid "Surface usable"
+msgstr "Nutzfläche"
+
+#: .././src/Conversion.php:313
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:72
+msgid "Year of renovation"
+msgstr "Letzte Renovation"
+
+#: .././src/Conversion.php:314
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:64
+msgid "Year of construction"
+msgstr "Baujahr"
+
+#: .././src/Conversion.php:315
+msgid "Number of rooms"
+msgstr "Anzahl Zimmer"
+
+#: .././src/Conversion.php:316
+msgid "Number of lavatory"
+msgstr "Anzahl Nasszellen"
+
+#: .././src/Conversion.php:317
+msgid "Number of guest toilets"
+msgstr "Anzahl Gäste WC"
+
+#: .././src/Conversion.php:318
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:56
+msgid "Number of floors"
+msgstr "Anzahl Etagen"
+
+#: .././src/Conversion.php:319 .././src/Single.php:415
+#: .././theme-defaults/casawp/bootstrap3/quick-infos-table.phtml:48
+msgid "Floor"
+msgstr "Etage"
+
+#: .././src/Conversion.php:320
+msgid "Volume"
+msgstr "Kubatur"
+
+#: .././src/Conversion.php:321
+msgid "Number of apartments"
+msgstr "Anzahl Wohnungen"
+
+#: .././src/Conversion.php:322
+msgid "Ceiling height"
+msgstr "Raumhöhe"
+
+#: .././src/Conversion.php:323
+msgid "Hall height"
+msgstr "Hallenhöhe"
+
+#: .././src/Conversion.php:324
+msgid "Maximal floor loading"
+msgstr "Max. Bodenbelastung"
+
+#: .././src/Conversion.php:325
+msgid "Carrying capacity crane"
+msgstr "Max. Gewicht Kran"
+
+#: .././src/Conversion.php:326
+msgid "Carrying capacity elevator"
+msgstr "Max. Gewicht Warenlift"
+
+#: .././src/Conversion.php:358
+msgid "Secondary rooms"
+msgstr "Wohnnebenräume"
+
+#: .././src/Conversion.php:359
+msgid "Garden"
+msgstr "Garten"
+
+#: .././src/Conversion.php:361
+msgid "Apartment"
+msgstr "Wohnung"
+
+#: .././src/Conversion.php:362
+msgid "Attic Flat"
+msgstr "Attikawohnung"
+
+#: .././src/Conversion.php:363
+msgid "Bachelor Flat"
+msgstr "Einliegerwohnung"
+
+#: .././src/Conversion.php:364
+msgid "Bifamiliar House"
+msgstr "Doppeleinfamilienhaus"
+
+#: .././src/Conversion.php:365
+msgid "Building Land"
+msgstr "Bauland"
+
+#: .././src/Conversion.php:366
+msgid "Double Garage"
+msgstr "Doppelgarage"
+
+#: .././src/Conversion.php:367
+msgid "Duplex"
+msgstr "Maisonette / Duplex"
+
+#: .././src/Conversion.php:368
+msgid "Factory"
+msgstr "Fabrik"
+
+#: .././src/Conversion.php:369
+msgid "Farm"
+msgstr "Farm"
+
+#: .././src/Conversion.php:370
+msgid "Farm House"
+msgstr "Bauernhaus"
+
+#: .././src/Conversion.php:371
+msgid "Furnished Flat"
+msgstr "Möbl. Wohnobj."
+
+#: .././src/Conversion.php:372 .././src/Conversion.php:496
+msgid "Garage"
+msgstr "Autogarage"
+
+#: .././src/Conversion.php:373
+msgid "Loft"
+msgstr "Loft"
+
+#: .././src/Conversion.php:374
+msgid "Mountain Farm"
+msgstr "Alpwirtschaft"
+
+#: .././src/Conversion.php:375
+msgid "Multiple Dwelling"
+msgstr "Mehrfamilienhaus"
+
+#: .././src/Conversion.php:376
+msgid "Open Slot"
+msgstr "offener Parkplatz"
+
+#: .././src/Conversion.php:377
+msgid "Parking Space"
+msgstr "Parkplatz"
+
+#: .././src/Conversion.php:378
+msgid "Plot"
+msgstr "Grundstück"
+
+#: .././src/Conversion.php:379
+msgid "Roof Flat"
+msgstr "Dachwohnung"
+
+#: .././src/Conversion.php:380
+msgid "Row House"
+msgstr "Reihenhaus"
+
+#: .././src/Conversion.php:381
+msgid "Single Garage"
+msgstr "Einzelgarage"
+
+#: .././src/Conversion.php:382
+msgid "Single House"
+msgstr "Einfamilienhaus"
+
+#: .././src/Conversion.php:383
+msgid "Single Room"
+msgstr "Einzelzimmer"
+
+#: .././src/Conversion.php:384
+msgid "Terrace Flat"
+msgstr "Terrassenwohnung"
+
+#: .././src/Conversion.php:385
+msgid "Terrace House"
+msgstr "Terrassenhaus"
+
+#: .././src/Conversion.php:386
+msgid "Underground Slot"
+msgstr "Tiefgarage"
+
+#: .././src/Conversion.php:387
+msgid "Villa"
+msgstr "Villa"
+
+#: .././src/Conversion.php:388
+msgid "Chalet"
+msgstr "Chalet"
+
+#: .././src/Conversion.php:389
+msgid "Studio"
+msgstr "Studio"
+
+#: .././src/Conversion.php:390
+msgid "House"
+msgstr "Haus"
+
+#: .././src/Conversion.php:391
+msgid "Covered Slot"
+msgstr "Unterstand"
+
+#: .././src/Conversion.php:393
+msgid "Commercial"
+msgstr "Büro"
+
+#: .././src/Conversion.php:394
+msgid "Gastronomy"
+msgstr "Gastronomie"
+
+#: .././src/Conversion.php:395
+msgid "Vacation"
+msgstr "Ferien"
+
+#: .././src/Conversion.php:396
+msgid "Agriculture"
+msgstr "Landwirtschaft"
+
+#: .././src/Conversion.php:397
+msgid "Industrial"
+msgstr "Gewerbe / Industrie"
+
+#: .././src/Conversion.php:398
+msgid "Residential"
+msgstr "Wohnen"
+
+#: .././src/Conversion.php:399
+msgid "Storage"
+msgstr "Lager"
+
+#: .././src/Conversion.php:400 .././src/Conversion.php:512
+msgid "Parking space"
+msgstr "Parkplatz"
+
+#: .././src/Conversion.php:401
+msgid "Building"
+msgstr "Angeschlossenes Bauland"
+
+#: .././src/Conversion.php:402
+msgid "Advertising Area"
+msgstr "Werbefläche"
+
+#: .././src/Conversion.php:403
+msgid "Arcade"
+msgstr "Arcade"
+
+#: .././src/Conversion.php:404
+msgid "Atelier"
+msgstr "Atelier"
+
+#: .././src/Conversion.php:405
+msgid "Bakery"
+msgstr "Bäckerei"
+
+#: .././src/Conversion.php:406
+msgid "Bar"
+msgstr "Bar"
+
+#: .././src/Conversion.php:407
+msgid "Butcher"
+msgstr "Metzgerei"
+
+#: .././src/Conversion.php:408
+msgid "Café"
+msgstr "Café"
+
+#: .././src/Conversion.php:409
+msgid "Casino"
+msgstr "Casino"
+
+#: .././src/Conversion.php:410
+msgid "Cheese Factory"
+msgstr "Käserei"
+
+#: .././src/Conversion.php:411
+msgid "Club/Disco"
+msgstr "Club/Disco"
+
+#: .././src/Conversion.php:412
+msgid "Fuel Station"
+msgstr "Bergbahn"
+
+#: .././src/Conversion.php:413
+msgid "Gardening"
+msgstr "Garten"
+
+#: .././src/Conversion.php:414
+msgid "Hairdresser"
+msgstr "Coiffeursalon"
+
+#: .././src/Conversion.php:415
+msgid "Kiosk"
+msgstr "Kiosk"
+
+#: .././src/Conversion.php:416
+msgid "Movie Theater"
+msgstr "Kino / Theater"
+
+#: .././src/Conversion.php:417
+msgid "Office"
+msgstr "Büro"
+
+#: .././src/Conversion.php:418
+msgid "Practice"
+msgstr "Praxis"
+
+#: .././src/Conversion.php:419
+msgid "Restaurant"
+msgstr "Restaurant"
+
+#: .././src/Conversion.php:420
+msgid "Shop"
+msgstr "Shoppingcenter"
+
+#: .././src/Conversion.php:421
+msgid "Shopping Centre"
+msgstr "Shoppingcenter"
+
+#: .././src/Conversion.php:422
+msgid "Hotel"
+msgstr "Hotel"
+
+#: .././src/Conversion.php:457
+msgid "Public transportation"
+msgstr "Öffentlicher Verkehr"
+
+#: .././src/Conversion.php:458
+msgid "Shopping"
+msgstr "Shoppingcenter"
+
+#: .././src/Conversion.php:459
+msgid "Kindergarten"
+msgstr "Kindergarten"
+
+#: .././src/Conversion.php:460
+msgid "Motorway"
+msgstr "Autobahnanschluss"
+
+#: .././src/Conversion.php:461
+msgid "Primary school"
+msgstr "Primarschule"
+
+#: .././src/Conversion.php:462
+msgid "Secondary school"
+msgstr "Oberstufe"
+
+#: .././src/Conversion.php:463
+msgid "Bus stop"
+msgstr "Bushaltestelle"
+
+#: .././src/Conversion.php:464
+msgid "Train station"
+msgstr "Bahnhof"
+
+#: .././src/Conversion.php:465
+msgid "Post"
+msgstr "Post"
+
+#: .././src/Conversion.php:466
+msgid "Bank"
+msgstr "Bank"
+
+#: .././src/Conversion.php:467
+msgid "Railway Station"
+msgstr "Bergbahn"
+
+#: .././src/Conversion.php:468
+msgid "Boat dock"
+msgstr "Schiff"
+
+#: .././src/Conversion.php:469
+msgid "Airport"
+msgstr "Flughafen"
+
+#: .././src/Conversion.php:477
+msgid "By Agreement"
+msgstr "Nach Vereinbarung"
+
+#: .././src/Conversion.php:481
+msgid "Available"
+msgstr "Verfügbar"
+
+#: .././src/Conversion.php:483
+msgid "Sold"
+msgstr "Verkauft"
+
+#: .././src/Conversion.php:484
+msgid "Rented"
+msgstr "Vermietet"
+
+#: .././src/Conversion.php:491
+msgid "Child friendly"
+msgstr "Kinderfreundlich"
+
+#: .././src/Conversion.php:494
+#, php-format
+msgid "%d garages"
+msgstr "%d Garagen"
+
+#: .././src/Conversion.php:501
+#, php-format
+msgid "%dx balconies"
+msgstr "%dx Balkone"
+
+#: .././src/Conversion.php:503
+msgid "Balcony"
+msgstr "Balkon"
+
+#: .././src/Conversion.php:506
+msgid "Vista"
+msgstr "Aussicht"
+
+#: .././src/Conversion.php:507
+msgid "Cable TV"
+msgstr "Kabelfernsehen"
+
+#: .././src/Conversion.php:510
+#, php-format
+msgid "%d Parking spaces"
+msgstr "'%d Parkplätze"
+
+#: .././src/Conversion.php:517
+#, php-format
+msgid "%d Pets allowed"
+msgstr "%d Haustiere erlaubt"
+
+#: .././src/Conversion.php:519
+msgid "Pets allowed"
+msgstr "Haustiere erlaubt"
+
+#: .././src/Conversion.php:522
+msgid "ISDN Anschluss"
+msgstr "ISDN Anschluss"
+
+#: .././src/Conversion.php:526
+#, php-format
+msgid "%d Restrooms"
+msgstr "%d Toiletten"
+
+#: .././src/Conversion.php:528
+msgid "Restrooms"
+msgstr "Toiletten"
+
+#: .././src/Conversion.php:533
+#, php-format
+msgid "%d elevators"
+msgstr "%d Lifte / Aufzüge"
+
+#: .././src/Conversion.php:535
+msgid "Elevator"
+msgstr "Lift / Aufzug"
+
+#: .././src/Conversion.php:539
+msgid "Fireplace"
+msgstr "Cheminée"
+
+#: .././src/Conversion.php:540
+msgid "wheelchair accessible"
+msgstr "Rollstuhlgängig"
+
+#: .././src/Conversion.php:541
+msgid "Ramp"
+msgstr "Anfahrrampe"
+
+#: .././src/Conversion.php:542
+msgid "lifting platform"
+msgstr "Hebebühne"
+
+#: .././src/Conversion.php:543
+msgid "Railway terminal"
+msgstr "Bahnanschluss"
+
+#: .././src/Conversion.php:544
+msgid "Water Supply"
+msgstr "Wasseranschluss"
+
+#: .././src/Conversion.php:545
+msgid "Sewage supply"
+msgstr "Abwasseranschluss"
+
+#: .././src/Conversion.php:546
+msgid "Power Supply"
+msgstr "Stromanschluss"
+
+#: .././src/Conversion.php:547
+msgid "Gas supply"
+msgstr "Gasanschluss"
+
+#: .././src/Conversion.php:548
+msgid "Corner house"
+msgstr "Eckhaus"
+
+#: .././src/Conversion.php:549
+msgid "Middle house"
+msgstr "Mittelhaus"
+
+#: .././src/Conversion.php:550
+msgid "Gardenhouse"
+msgstr "Gartenhaus"
+
+#: .././src/Conversion.php:551
+msgid "Raised ground floor"
+msgstr "Hochparterre"
+
+#: .././src/Conversion.php:552
+msgid "New building"
+msgstr "Neubau"
+
+#: .././src/Conversion.php:553
+msgid "Old building"
+msgstr "Altbau"
+
+#: .././src/Conversion.php:554
+msgid "Under roof"
+msgstr "Gedeckt"
+
+#: .././src/Conversion.php:555
+msgid "Swimmingpool"
+msgstr "Swimmingpool"
+
+#: .././src/Conversion.php:556
+msgid "Minergie general"
+msgstr "Minergiebauweise"
+
+#: .././src/Conversion.php:557
+msgid "Minergie certified"
+msgstr "Minergie zertifiziert"
+
+#: .././src/Conversion.php:558
+msgid "Under building laws"
+msgstr "Im Baurecht"
+
+#: .././src/Conversion.php:559
+msgid "Building land connected"
+msgstr "Bauland erschlossen"
+
+#: .././src/Conversion.php:560
+msgid "Flat sharing community"
+msgstr "In Wohngemeinschaft"
+
+#: .././src/Plugin.php:366
+msgid "Custom Text Field"
+msgstr ""
+
+#: .././src/Plugin.php:370
+msgid "Original filename"
+msgstr ""
+
+#: .././src/Plugin.php:565 .././src/Plugin.php:576
+msgid "Properties"
+msgstr "Immobilien"
+
+#: .././src/Plugin.php:566
+#: .././theme-defaults/casawp/bootstrap3/datatable.phtml:4
+msgid "Property"
+msgstr "Immobilie"
+
+#: .././src/Plugin.php:567 .././src/Plugin.php:718
+msgid "Add New"
+msgstr "Erstellen"
+
+#: .././src/Plugin.php:568
+msgid "Add New Property"
+msgstr "Neue Immobilie erstellen"
+
+#: .././src/Plugin.php:569
+msgid "Edit Property"
+msgstr "Immobilie bearbeiten"
+
+#: .././src/Plugin.php:570
+msgid "New Property"
+msgstr "Neue Immobilie"
+
+#: .././src/Plugin.php:571
+msgid "All Properties"
+msgstr "Alle Immobilien"
+
+#: .././src/Plugin.php:572
+msgid "View Property"
+msgstr "Immobilie ansehen"
+
+#: .././src/Plugin.php:573
+msgid "Search Properties"
+msgstr "Immobilien durchsuchen"
+
+#: .././src/Plugin.php:574
+msgid "No properties found"
+msgstr "Keine Immobilien gefunden"
+
+#: .././src/Plugin.php:575
+msgid "No properties found in Trash"
+msgstr "Keine Immobilien im Papierkorb gefunden"
+
+#: .././src/Plugin.php:716 .././src/Plugin.php:727
+msgid "Inquiries"
+msgstr "Anfragen"
+
+#: .././src/Plugin.php:717
+msgid "Inquiry"
+msgstr "Anfrage"
+
+#: .././src/Plugin.php:719
+msgid "Add New inquiry"
+msgstr "Neue Anfrage"
+
+#: .././src/Plugin.php:720
+msgid "Edit Inquiry"
+msgstr "Anfrage bearbeiten"
+
+#: .././src/Plugin.php:721
+msgid "New Inquiry"
+msgstr "Neue Anfrage"
+
+#: .././src/Plugin.php:722
+msgid "All Inquiries"
+msgstr "Alle Anfragen"
+
+#: .././src/Plugin.php:723
+msgid "View Inquiry"
+msgstr "Anfrage anzeigen"
+
+#: .././src/Plugin.php:724
+msgid "Search Inquiries"
+msgstr "Anfragen durchsuchen"
+
+#: .././src/Plugin.php:725
+msgid "No inquiries found"
+msgstr "Keine Anfragen gefunden"
+
+#: .././src/Plugin.php:726
+msgid "No inquiries found in Trash"
+msgstr "Keine Anfragen im Papierkorb gefunden"
+
+#: .././src/Plugin.php:810
+msgid "Property categories"
+msgstr "Immobilien Kategorien"
+
+#: .././src/Plugin.php:812 .././src/Plugin.php:837
+msgid "Search Categories"
+msgstr "Kategorien durchsuchen"
+
+#: .././src/Plugin.php:813 .././src/Plugin.php:838
+msgid "All Categories"
+msgstr "Alle Kategorien"
+
+#: .././src/Plugin.php:814
+msgid "Parent Category"
+msgstr "Übergeordnete Kategorien"
+
+#: .././src/Plugin.php:815
+msgid "Parent Category:"
+msgstr "Übergeordnete Kategorien:"
+
+#: .././src/Plugin.php:816
+msgid "Edit Category"
+msgstr "Kategorie bearbeiten"
+
+#: .././src/Plugin.php:817
+msgid "Update Category"
+msgstr "Aktualisiere Kategorie"
+
+#: .././src/Plugin.php:818
+msgid "Add New Category"
+msgstr "Neue Kategorie erstellen"
+
+#: .././src/Plugin.php:819
+msgid "New Category Name"
+msgstr "Neuer Kategorienamen"
+
+#: .././src/Plugin.php:835
+msgid "Property features"
+msgstr "Immobilien Eigenschaften"
+
+#: .././src/Plugin.php:836 .././src/Plugin.php:845
+msgid "Feature"
+msgstr "Eigenschaft"
+
+#: .././src/Plugin.php:839
+msgid "Parent Feature"
+msgstr "Übergeordnete Eigenschaft"
+
+#: .././src/Plugin.php:840
+msgid "Parent Feature:"
+msgstr "Übergeordnete Eigenschaft:"
+
+#: .././src/Plugin.php:841
+msgid "Edit Feature"
+msgstr "Eigenschaft bearbeiten"
+
+#: .././src/Plugin.php:842
+msgid "Update Feature"
+msgstr "Aktualisiere Eigenschaft"
+
+#: .././src/Plugin.php:843
+msgid "Add New Feature"
+msgstr "Neue Eigenschaft erstellen"
+
+#: .././src/Plugin.php:844
+msgid "New Feature Name"
+msgstr "Neuer Eigenschaftsnamen"
+
+#: .././src/Plugin.php:861
+msgid "Property locations"
+msgstr "Immobilien Ortschaften"
+
+#: .././src/Plugin.php:863
+msgid "Search Locations"
+msgstr "Orteschaften durchsuchen"
+
+#: .././src/Plugin.php:864
+msgid "All Locations"
+msgstr "Alle Ortschaften"
+
+#: .././src/Plugin.php:865
+msgid "Parent Location"
+msgstr "Übergeordnete Ortschaft"
+
+#: .././src/Plugin.php:866
+msgid "Parent Location:"
+msgstr "Übergeordnete Ortschaft:"
+
+#: .././src/Plugin.php:867
+msgid "Edit Location"
+msgstr "Ortschaft bearbeiten"
+
+#: .././src/Plugin.php:868
+msgid "Update Location"
+msgstr "Ortschaft aktualisieren"
+
+#: .././src/Plugin.php:869
+msgid "Add New Location"
+msgstr "Neue Ortschaft erstellen"
+
+#: .././src/Plugin.php:870
+msgid "New Location Name"
+msgstr "Neue Ortschafts-Namen"
+
+#: .././src/Plugin.php:887
+msgid "Property salestypes"
+msgstr "Immobilien Vermarktungsarten"
+
+#: .././src/Plugin.php:888 .././src/Plugin.php:900
+msgid "Salestype"
+msgstr "Vermarktungsart"
+
+#: .././src/Plugin.php:889
+msgid "Search Salestypes"
+msgstr "Vermarktungsarten durchsuchen"
+
+#: .././src/Plugin.php:890
+msgid "Popular Salestypes"
+msgstr ""
+
+#: .././src/Plugin.php:891
+msgid "All Salestypes"
+msgstr "Alle Vermarktungsarten"
+
+#: .././src/Plugin.php:892
+msgid "Edit Salestype"
+msgstr "Vermarktungsart bearbeiten"
+
+#: .././src/Plugin.php:893
+msgid "Update Salestype"
+msgstr "Vermarktungsart aktualisieren"
+
+#: .././src/Plugin.php:894
+msgid "Add New Salestype"
+msgstr "Neue Vermarktungsart erstellen"
+
+#: .././src/Plugin.php:895
+msgid "New Salestype Name"
+msgstr "Neuer Vermarktungsart-Namen"
+
+#: .././src/Plugin.php:896
+msgid "Separate salestypes with commas"
+msgstr "Trenne Vermarktungsarten durch Kommas"
+
+#: .././src/Plugin.php:897
+msgid "Add or remove salestypes"
+msgstr "Vermarktungsarten hinzufügen oder entfernen"
+
+#: .././src/Plugin.php:898
+msgid "Choose from the most used salestypes"
+msgstr "Wähle von den meistbenutzten Vermarktungsarten"
+
+#: .././src/Plugin.php:899
+msgid "No Salestypes found."
+msgstr "Keine Vermarktungsarten gefunden"
+
+#: .././src/Plugin.php:916
+msgid "Property availability"
+msgstr "Immobilien Verfügbarkeit"
+
+#: .././src/Plugin.php:917 .././src/Plugin.php:929
+msgid "Availability"
+msgstr "Verfügbarkeit"
+
+#: .././src/Plugin.php:918
+msgid "Search availabilities"
+msgstr "Suche Verfügbarkeite"
+
+#: .././src/Plugin.php:919
+msgid "Popular Availabilities"
+msgstr ""
+
+#: .././src/Plugin.php:920
+msgid "All Availabilities"
+msgstr "Alle Verfügbarkeiten"
+
+#: .././src/Plugin.php:921
+msgid "Edit Availability"
+msgstr "Verfügbarkeit bearbeiten"
+
+#: .././src/Plugin.php:922
+msgid "Update Availability"
+msgstr "Verfügbarkeit aktualisieren"
+
+#: .././src/Plugin.php:923
+msgid "Add New Availability"
+msgstr "Neue Verfügbarkeit erstellen"
+
+#: .././src/Plugin.php:924
+msgid "New Availability Name"
+msgstr "Neuer Verfügbarkeits-Namen"
+
+#: .././src/Plugin.php:925
+msgid "Separate availabilities with commas"
+msgstr "Trenne Verfügbarkeiten durch Kommas"
+
+#: .././src/Plugin.php:926
+msgid "Add or remove availabilities"
+msgstr "Verfügbarkeiten hinzufügen oder entfernen"
+
+#: .././src/Plugin.php:927
+msgid "Choose from the most used availabilities"
+msgstr "Wähle von den meistbenutzten Verfügbarkeiten"
+
+#: .././src/Plugin.php:928
+msgid "No Availabilities found."
+msgstr "Keine Verfügbarkeiten gefunden"
+
+#: .././src/Plugin.php:946
+msgid "Property Attachment Types"
+msgstr "Immobilien Anhangsart"
+
+#: .././src/Plugin.php:947 .././src/Plugin.php:956
+msgid "Attachment Type"
+msgstr "Immobilien Anhangsart"
+
+#: .././src/Plugin.php:948
+msgid "Search Attachment Types"
+msgstr "Suche Anhangsarten"
+
+#: .././src/Plugin.php:949
+msgid "All Attachment Types"
+msgstr "Alle Anhangsarten"
+
+#: .././src/Plugin.php:950
+msgid "Parent Attachment Type"
+msgstr "Übergeordnete Anhangsart"
+
+#: .././src/Plugin.php:951
+msgid "Parent Attachment Type:"
+msgstr "Übergeordnete Anhangsart:"
+
+#: .././src/Plugin.php:952
+msgid "Edit Attachment Type"
+msgstr "Anhangsart bearbeiten"
+
+#: .././src/Plugin.php:953
+msgid "Update Attachment Type"
+msgstr "Anhangsart aktualisieren"
+
+#: .././src/Plugin.php:954
+msgid "Add New Attachment Type"
+msgstr "Neue Anhangsarten erstellen"
+
+#: .././src/Plugin.php:955
+msgid "New Attachment Type Name"
+msgstr "Neuer Anhangsart-Namen"
+
+#: .././src/Plugin.php:976
+msgid "Additional Meta Fields"
+msgstr "Weitere Felder"
+
+#: .././src/Single.php:413
+msgid "Ground"
+msgstr "EG"
+
+#: .././src/Single.php:671
+msgid "Contact provider directly"
+msgstr "Jetzt Anbieter direkt kontaktieren"
+
+#: .././src/Single.php:727
+#: .././theme-defaults/casawp/bootstrap3/sales-person.phtml:1
+msgid "Contact person"
+msgstr "Kontaktperson"
+
+#: .././src/Single.php:735
+#: .././theme-defaults/casawp/bootstrap3/sales-person.phtml:24
+msgid "Phone direct"
+msgstr "Telefon direkt"
+
+#: .././src/Single.php:764
+msgid "Share"
+msgstr "Empfehlen"
+
+#: .././src/Single.php:985
+msgid "and"
+msgstr "und"
+
+#: .././src/Single.php:1039
+msgid "Document"
+msgstr "Dokument"
+
+#: .././theme-defaults/casasync-archive.php:5
+msgid "Property list"
+msgstr "Immobilienliste"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:58
+msgid "Full name"
+msgstr "Voller Name"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:66
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserLoginForm.php:33
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserLoginForm.php:36
+msgid "Username"
+msgstr "Benutzername"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:90
+msgid "Mobile number"
+msgstr "Mobiltelefonnummer"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:99
+msgid "Language"
+msgstr "Sprache"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:113
+msgid "Role"
+msgstr "Rolle"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserLoginForm.php:44
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserLoginForm.php:47
+msgid "Password"
+msgstr "Passwort"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserLoginForm.php:60
+msgid "Login"
+msgstr "Anmelden"
+
+#: .././vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserRegisterForm.php:39
+msgid "Chosen Password"
+msgstr "Gewünschtes Passwort"
+
+#: .././theme-defaults/casawp/bootstrap3/basic-boxes.phtml:9
+#: .././theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
+msgid "Address"
+msgstr "Adresse"
+
+#: .././theme-defaults/casawp/bootstrap3/basic-boxes.phtml:15
+msgid "rent"
+msgstr "Miete"
+
+#: .././theme-defaults/casawp/bootstrap3/basic-boxes.phtml:15
+msgid "Price"
+msgstr "Preis"
+
+#: .././theme-defaults/casawp/bootstrap3/datapoints.phtml:3
+#: .././theme-defaults/casawp/bootstrap3/datatable-offer.phtml:38
+msgid "Available from:"
+msgstr "Verfügbar ab:"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable-offer.phtml:4
+msgid "Sales price"
+msgstr "Kaufpreis"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable-offer.phtml:13
+msgid "Gross price"
+msgstr "Bruttomiete"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable-offer.phtml:21
+msgid "Net price"
+msgstr "Nettomiete"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable-offer.phtml:32
+msgid "Additional costs"
+msgstr "Nebenkosten"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable.phtml:1
+msgid "Offer"
+msgstr "Angebot"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable.phtml:10
+msgid "Features"
+msgstr "Eigenschaften"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable.phtml:17
+msgid "Distances"
+msgstr "Distanzen"
+
+#: .././theme-defaults/casawp/bootstrap3/datatable.phtml:24
+msgid "Documents"
+msgstr "Dokumente"
+
+#: .././theme-defaults/casawp/bootstrap3/map.phtml:4
+msgid "View lager version"
+msgstr "Grössere Ansicht anzeigen"
+
+#: .././theme-defaults/casawp/bootstrap3/sales-person.phtml:29
+msgid "Mobile"
+msgstr "Mobile"
+
+#: .././theme-defaults/casawp/bootstrap3/seller.phtml:1
+msgid "Provider"
+msgstr "Anbieter"
+
+#: .././theme-defaults/casawp/bootstrap3/seller.phtml:14
+msgid "I am interested concerning this property. Please contact me"
+msgstr ""
+"Ich interessiere mich für dieses Objekt. Bitte nehmen Sie Kontakt mit mir "
+"auf."
+
+#: .././theme-defaults/casawp/bootstrap3/seller.phtml:16
+msgid "E-Mail"
+msgstr "E-Mail"
+
+#: .././theme-defaults/casawp/bootstrap3/seller.phtml:28
+msgid "Fax"
+msgstr "Fax"
+
+#: .././theme-defaults/casawp/bootstrap3/single-archive.phtml:3
+msgid "No image"
+msgstr "Kein Bild"
+
+#: .././theme-defaults/casawp/bootstrap3/single-pagination.phtml:2
+msgid "Previous"
+msgstr "Zurück"
+
+#: .././theme-defaults/casawp/bootstrap3/single-pagination.phtml:3
+msgid "To list"
+msgstr "Zur Liste"
+
+#: .././theme-defaults/casawp/bootstrap3/single-pagination.phtml:4
+msgid "Next"
+msgstr "Weiter"
+
+#: .././theme-defaults/casawp/bootstrap3/single.phtml:27
+msgid "Virtual Tour"
+msgstr "Virtuelle Tour"
+
+#: .././theme-defaults/casawp/bootstrap3/tabable.phtml:6
+msgid "Base data"
+msgstr "Grunddaten"
+
+#: .././theme-defaults/casawp/bootstrap3/tabable.phtml:7
+msgid "Description"
+msgstr "Beschreibung"
+
+#: .././theme-defaults/casawp/bootstrap3/tabable.phtml:9
+msgid "Videos"
+msgstr ""
+
+#: .././theme-defaults/casawp/bootstrap3/tabable.phtml:11
+msgid "Specifications"
+msgstr "Datenblatt"
+
+#~ msgid "Rent price"
+#~ msgstr "Mietpreis"
+
+#~ msgid "Nothing Found"
+#~ msgstr "Nichts gefunden"
+
+#~ msgid ""
+#~ "Sorry, but nothing matched your search terms. Please try again with some "
+#~ "different keywords."
+#~ msgstr ""
+#~ "Es tut uns leid, aber auf ihre Suchanfrage gab es keine Treffer. Bitte "
+#~ "versuchen Sie es mit anderen Suchbegriffen."
+
+#~ msgid "Salutation"
+#~ msgstr "Anrede"
+
+#~ msgid "Title"
+#~ msgstr "Titel"
+
+#~ msgid "Company"
+#~ msgstr "Firma"
+
+#~ msgid "Kanton"
+#~ msgstr "Kanton"
+
+#~ msgid "Subject"
+#~ msgstr "Betreff"
+
+#~ msgid "Recipient"
+#~ msgstr "Rezipient"
+
+#~ msgid "Required"
+#~ msgstr "Erforderlich"
+
+#~ msgid "Show property ..."
+#~ msgstr "Objekt anzeigen ..."
+
+#~ msgid "Inquiry for a property online"
+#~ msgstr "Anfrage für ein Objekt online"
+
+#~ msgid "A new inquiry from %s has been sent"
+#~ msgstr "Auf %s wurde eine neue Anfrage versendet"
+
+#~ msgid "Thank you!"
+#~ msgstr "Vielen Dank!"
+
+#~ msgid "Error!"
+#~ msgstr "Fehler!"
+
+#~ msgid "Please consider the following errors and try sending it again"
+#~ msgstr ""
+#~ "Folgende Fehler sind aufgetreten. Bitte überprüfen Sie die Eingabefelder."
+
+#~ msgid "Please fill out all the fields"
+#~ msgstr "Bitte alle Felder ausfüllen."
+
+#~ msgid "Send"
+#~ msgstr "Senden"
+
+#~ msgid "Number of rooms:"
+#~ msgstr "Anzahl Zimmer:"
+
+#~ msgid "Surface usable:"
+#~ msgstr "Nutzfläche:"
+
+#~ msgid "Living space:"
+#~ msgstr "Bruttowohnfläche:"
+
+#~ msgid "Property space:"
+#~ msgstr "Grundstücksfläche:"
+
+#~ msgid "Floor:"
+#~ msgstr "Etage:"
+
+#~ msgid "Number of floors:"
+#~ msgstr "Anzahl Etagen:"
+
+#~ msgid "Year of construction:"
+#~ msgstr "Baujahr:"
+
+#~ msgid "Year of renovation:"
+#~ msgstr "Letzte Renovation:"
+
+#~ msgid "Sales price:"
+#~ msgstr "Kaufpreis:"
+
+#~ msgid "Gross price:"
+#~ msgstr "Bruttomiete:"
+
+#~ msgid "Net price:"
+#~ msgstr "Nettomiete:"
+
+#~ msgid "Link"
+#~ msgstr "Link"
+
+#~ msgid "Number of Guest WC"
+#~ msgstr "Anzahl Gäste WC"
+
+#~ msgid "per"
+#~ msgstr "pro"

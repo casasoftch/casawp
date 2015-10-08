@@ -1,0 +1,8 @@
+<?php foreach ($this->numvals as $numval): ?>
+	<?php if ($numval == 'special_availability'): ?>
+		<?= __('Available from:','casawp') ?>
+		<?= $this->offer->renderAvailabilityDate() ?><br>
+	<?php else: ?>
+		<?= $numval->getLabel() ?>: <?= $this->offer->renderNumvalValue($numval) ?><br>
+	<?php endif ?>
+<?php endforeach ?>

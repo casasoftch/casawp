@@ -1,5 +1,5 @@
 <?php
-	if(isset($_POST['casasync_submit'])) {
+	if(isset($_POST['casawp_submit'])) {
 		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
 			if (substr($key, 0, 7) == 'custom_') {
@@ -9,105 +9,105 @@
 					$saved_custom_categories[$parts[0]]['show'] = '0';
 				}
 			}
-			if (substr($key, 0, 8) == 'casasync') {
+			if (substr($key, 0, 6) == 'casawp') {
 				update_option( $key, $value );
 			}
 		}
 
 		if (count($saved_custom_categories) > 0) {
-			update_option('casasync_custom_category_translations', $saved_custom_categories);
+			update_option('casawp_custom_category_translations', $saved_custom_categories);
 		}
 
 		$current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 		switch ($current) {
 			case 'appearance':
 				$checkbox_traps = array(
-					'casasync_load_css',
-					'casasync_load_bootstrap_scripts',
-					//'casasync_load_fancybox',
-					'casasync_load_featherlight',
-					'casasync_load_chosen',
-					'casasync_load_googlemaps'
+					'casawp_load_css',
+					'casawp_load_bootstrap_scripts',
+					//'casawp_load_fancybox',
+					'casawp_load_featherlight',
+					'casawp_load_chosen',
+					'casawp_load_googlemaps'
 				);
 				break;
 			case 'singleview':
 				$checkbox_traps = array(
-					'casasync_share_facebook',
-					'casasync_share_googleplus',
-					'casasync_share_twitter',
-					'casasync_single_show_number_of_rooms',
-					#'casasync_single_show_surface_usable',
-					#'casasync_single_show_surface_living',
-					'casasync_single_show_area_bwf',
-					'casasync_single_show_area_sia_nf',
-					'casasync_single_show_surface_property',
-					'casasync_single_show_floor',
-					'casasync_single_show_number_of_floors',
-					'casasync_single_show_year_built',
-					'casasync_single_show_year_renovated',
-					'casasync_single_show_carousel_indicators',
-					'casasync_single_show_availability',
-					'casasync_sellerfallback_show_organization',
-					'casasync_sellerfallback_show_person_view',
+					'casawp_share_facebook',
+					'casawp_share_googleplus',
+					'casawp_share_twitter',
+					'casawp_single_show_number_of_rooms',
+					#'casawp_single_show_surface_usable',
+					#'casawp_single_show_surface_living',
+					'casawp_single_show_area_bwf',
+					'casawp_single_show_area_sia_nf',
+					'casawp_single_show_surface_property',
+					'casawp_single_show_floor',
+					'casawp_single_show_number_of_floors',
+					'casawp_single_show_year_built',
+					'casawp_single_show_year_renovated',
+					'casawp_single_show_carousel_indicators',
+					'casawp_single_show_availability',
+					'casawp_sellerfallback_show_organization',
+					'casawp_sellerfallback_show_person_view',
 				);
 				break;
 			case 'archiveview':
 				$checkbox_traps = array(
-					'casasync_show_sticky_properties',
-					'casasync_hide_sticky_properties_in_main',
-					'casasync_archive_show_street_and_number',
-					'casasync_archive_show_zip',
-					'casasync_archive_show_location',
-					'casasync_archive_show_number_of_rooms',
-					#'casasync_single_show_surface_usable',
-					#'casasync_single_show_surface_living',
-					'casasync_archive_show_area_bwf',
-					'casasync_archive_show_area_sia_nf',
-					'casasync_archive_show_surface_property',
-					'casasync_archive_show_floor',
-					'casasync_archive_show_number_of_floors',
-					'casasync_archive_show_year_built',
-					'casasync_archive_show_year_renovated',
-					'casasync_archive_show_price',
-					'casasync_archive_show_excerpt',
-					'casasync_archive_show_availability',
-					'casasync_archive_show_thumbnail_size_crop'
+					'casawp_show_sticky_properties',
+					'casawp_hide_sticky_properties_in_main',
+					'casawp_archive_show_street_and_number',
+					'casawp_archive_show_zip',
+					'casawp_archive_show_location',
+					'casawp_archive_show_number_of_rooms',
+					#'casawp_single_show_surface_usable',
+					#'casawp_single_show_surface_living',
+					'casawp_archive_show_area_bwf',
+					'casawp_archive_show_area_sia_nf',
+					'casawp_archive_show_surface_property',
+					'casawp_archive_show_floor',
+					'casawp_archive_show_number_of_floors',
+					'casawp_archive_show_year_built',
+					'casawp_archive_show_year_renovated',
+					'casawp_archive_show_price',
+					'casawp_archive_show_excerpt',
+					'casawp_archive_show_availability',
+					'casawp_archive_show_thumbnail_size_crop'
 				);
 				break;
 			case 'contactform':
 				$checkbox_traps = array(
-					'casasync_show_email_organisation',
-					'casasync_show_email_person_view',
-					'casasync_form_firstname_required',
-					'casasync_form_lastname_required',
-					'casasync_form_street_required',
-					'casasync_form_postalcode_required',
-					'casasync_form_locality_required',
-					'casasync_form_phone_required',
-					'casasync_form_email_required',
-					'casasync_form_message_required',
+					'casawp_show_email_organisation',
+					'casawp_show_email_person_view',
+					'casawp_form_firstname_required',
+					'casawp_form_lastname_required',
+					'casawp_form_street_required',
+					'casawp_form_postalcode_required',
+					'casawp_form_locality_required',
+					'casawp_form_phone_required',
+					'casawp_form_email_required',
+					'casawp_form_message_required',
 				);
 				break;
 			case 'general':
 			default:
 				$checkbox_traps = array(
-					'casasync_live_import',
-					'casasync_sellerfallback_email_use',
-					'casasync_remCat',
-					'casasync_remCat_email',
-					'casasync_before_content',
-					'casasync_after_content',
-					'casasync_legacy'
+					'casawp_live_import',
+					'casawp_sellerfallback_email_use',
+					'casawp_remCat',
+					'casawp_remCat_email',
+					'casawp_before_content',
+					'casawp_after_content',
+					'casawp_legacy'
 				);
 				break;
 		}
 
 		//reset
-		if(get_option('casasync_request_per_remcat') == false) {
-			update_option('casasync_remCat_email', '');
+		if(get_option('casawp_request_per_remcat') == false) {
+			update_option('casawp_remCat_email', '');
 		}
-		if(get_option('casasync_request_per_mail_fallback') == false) {
-			update_option('casasync_request_per_mail_fallback_value', '');
+		if(get_option('casawp_request_per_mail_fallback') == false) {
+			update_option('casawp_request_per_mail_fallback_value', '');
 		}
 
 		foreach ($checkbox_traps as $trap) {
@@ -115,13 +115,13 @@
 				update_option( $trap, '0' );
 			}
 		}
-		echo '<div class="updated"><p><strong>' . __('Einstellungen gespeichert..', 'casasync' ) . '</strong></p></div>';
+		echo '<div class="updated"><p><strong>' . __('Einstellungen gespeichert..', 'casawp' ) . '</strong></p></div>';
 	}
 
 
-	if (isset($_GET['do_import']) && !isset($_POST['casasync_submit'])) {
-		if (get_option( 'casasync_live_import') == 0) {
-			?> <div class="updated"><p><strong><?php _e('Daten wurden importiert..', 'casasync' ); ?></strong></p></div> <?php
+	if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
+		if (get_option( 'casawp_live_import') == 0) {
+			?> <div class="updated"><p><strong><?php _e('Daten wurden importiert..', 'casawp' ); ?></strong></p></div> <?php
 		}
 	}
 ?>
@@ -145,7 +145,7 @@
 	    $current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 	    foreach( $tabs as $tab => $name ){
 	        $class = ( $tab == $current ) ? ' nav-tab-active' : '';
-	        echo "<a class='nav-tab$class' href='?page=casasync&tab=$tab'>$name</a>";
+	        echo "<a class='nav-tab$class' href='?page=casawp&tab=$tab'>$name</a>";
 	        
 	    }
 	    echo '</h2>';
@@ -166,7 +166,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Stylesheet</span></legend>
-										<?php $name = 'casasync_load_css'; ?>
+										<?php $name = 'casawp_load_css'; ?>
 										<?php $text = 'Bootstrap Stylesheet auswählen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="radio" value="none" <?php echo (get_option($name) == 'none' ? 'checked="checked"' : ''); ?>> Kein Stylesheet
@@ -187,33 +187,33 @@
 								<th scope="row">Scripts</th>
 								<td class="front-static-pages">
 									<fieldset>
-										<?php $name = 'casasync_load_bootstrap_scripts'; ?>
+										<?php $name = 'casawp_load_bootstrap_scripts'; ?>
 										<?php $text = 'Bootstrap'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php /* ?>
-										<?php $name = 'casasync_load_fancybox'; ?>
+										<?php $name = 'casawp_load_fancybox'; ?>
 										<?php $text = 'Fancybox'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<php */ ?>
-										<?php $name = 'casasync_load_featherlight'; ?>
+										<?php $name = 'casawp_load_featherlight'; ?>
 										<?php $text = 'Feather Light (Lightbox)'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casasync_load_chosen'; ?>
+										<?php $name = 'casawp_load_chosen'; ?>
 										<?php $text = 'Chosen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casasync_load_googlemaps'; ?>
+										<?php $name = 'casawp_load_googlemaps'; ?>
 										<?php $text = 'Google Maps'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
@@ -234,19 +234,19 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Folgende Social Media Plattformen anzeigen</span></legend>
-										<?php $name = 'casasync_share_facebook'; ?>
+										<?php $name = 'casawp_share_facebook'; ?>
 										<?php $text = 'Facebook'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casasync_share_googleplus'; ?>
+										<?php $name = 'casawp_share_googleplus'; ?>
 										<?php $text = 'Google+'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casasync_share_twitter'; ?>
+										<?php $name = 'casawp_share_twitter'; ?>
 										<?php $text = 'Twitter'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
@@ -262,92 +262,92 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Welche Werte sollen angezeigt werden? Das 2. Feld bestimmt die Ordnung der Darstellung.</span></legend>
-										<?php $name = 'casasync_single_show_number_of_rooms'; ?>
+										<?php $name = 'casawp_single_show_number_of_rooms'; ?>
 										<?php $text = 'Anzahl Zimmer'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_number_of_rooms_order'; ?>
+										<?php $name = 'casawp_single_show_number_of_rooms_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_area_sia_nf'; ?>
+										<?php $name = 'casawp_single_show_area_sia_nf'; ?>
 										<?php $text = 'Nutzfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_area_sia_nf_order'; ?>
+										<?php $name = 'casawp_single_show_area_sia_nf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_area_bwf'; ?>
+										<?php $name = 'casawp_single_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_area_bwf_order'; ?>
+										<?php $name = 'casawp_single_show_area_bwf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_surface_property'; ?>
+										<?php $name = 'casawp_single_show_surface_property'; ?>
 										<?php $text = 'Grundstücksfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_surface_property_order'; ?>
+										<?php $name = 'casawp_single_show_surface_property_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_floor'; ?>
+										<?php $name = 'casawp_single_show_floor'; ?>
 										<?php $text = 'Etage'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_floor_order'; ?>
+										<?php $name = 'casawp_single_show_floor_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_number_of_floors'; ?>
+										<?php $name = 'casawp_single_show_number_of_floors'; ?>
 										<?php $text = 'Anzahl Etage'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_number_of_floors_order'; ?>
+										<?php $name = 'casawp_single_show_number_of_floors_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_year_built'; ?>
+										<?php $name = 'casawp_single_show_year_built'; ?>
 										<?php $text = 'Baujahr'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_year_built_order'; ?>
+										<?php $name = 'casawp_single_show_year_built_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_year_renovated'; ?>
+										<?php $name = 'casawp_single_show_year_renovated'; ?>
 										<?php $text = 'Letzte Renovation'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_year_renovated_order'; ?>
+										<?php $name = 'casawp_single_show_year_renovated_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_single_show_availability'; ?>
+										<?php $name = 'casawp_single_show_availability'; ?>
 										<?php $text = 'Verfügbarkeit'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_single_show_availability_order'; ?>
+										<?php $name = 'casawp_single_show_availability_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
@@ -357,7 +357,7 @@
 						<?php echo $table_end; ?>
 						<h3>Karte</h3>
 						<?php echo $table_start; ?>
-							<?php $name = 'casasync_single_use_zoomlevel'; ?>
+							<?php $name = 'casawp_single_use_zoomlevel'; ?>
 							<?php $text = 'Zoomstufe'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
@@ -394,7 +394,7 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Galerienavigation</span></legend>
-										<?php $name = 'casasync_single_show_carousel_indicators'; ?>
+										<?php $name = 'casawp_single_show_carousel_indicators'; ?>
 										<?php $text = 'Navigation mit Kreisen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
@@ -407,7 +407,7 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
-										<?php $name = 'casasync_single_max_thumbnails'; ?>
+										<?php $name = 'casawp_single_max_thumbnails'; ?>
 										<?php $text = 'Maximale Anzahl Thumbnails'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
@@ -415,7 +415,7 @@
 									</fieldset>
 									<fieldset>
 										<legend class="screen-reader-text"><span>Thumbnails</span></legend>
-										<?php $name = 'casasync_single_thumbnail_ideal_width'; ?>
+										<?php $name = 'casawp_single_thumbnail_ideal_width'; ?>
 										<?php $text = 'Ideale Breite der Thumbnails'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
@@ -428,7 +428,7 @@
 						<h3>Standard Daten</h3>
 						<p>Nachfolgend können Sie Standardwerte für die Firma, Kontaktperson und Kontaktemail definieren.</p>
 						<?php echo $table_start; ?>
-							<?php $name = 'casasync_inquiryfallback_person_email'; ?>
+							<?php $name = 'casawp_inquiryfallback_person_email'; ?>
 							<?php $text = 'E-Mail Adresse für Anfragen'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><b><?php echo $text ?></b></label></th>
@@ -444,7 +444,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Organisation</span></legend>
-										<?php $name = 'casasync_sellerfallback_show_organization'; ?>
+										<?php $name = 'casawp_sellerfallback_show_organization'; ?>
 										<?php $text = 'Organisation anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
@@ -452,37 +452,37 @@
 									</fieldset>
 								</td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_legalname'; ?>
+							<?php $name = 'casawp_sellerfallback_legalname'; ?>
 							<?php $text = 'Organisation Name'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_address_street'; ?>
+							<?php $name = 'casawp_sellerfallback_address_street'; ?>
 							<?php $text = 'Strasse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_address_postalcode'; ?>
+							<?php $name = 'casawp_sellerfallback_address_postalcode'; ?>
 							<?php $text = 'PLZ'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_address_locality'; ?>
+							<?php $name = 'casawp_sellerfallback_address_locality'; ?>
 							<?php $text = 'Ort'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_address_region'; ?>
+							<?php $name = 'casawp_sellerfallback_address_region'; ?>
 							<?php $text = 'Kanton'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_address_country'; ?>
+							<?php $name = 'casawp_sellerfallback_address_country'; ?>
 							<?php $text = 'Land'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
@@ -497,19 +497,19 @@
 									</select>
 								</td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_email'; ?>
+							<?php $name = 'casawp_sellerfallback_email'; ?>
 							<?php $text = 'E-Mail Adresse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_phone_central'; ?>
+							<?php $name = 'casawp_sellerfallback_phone_central'; ?>
 							<?php $text = 'Telefon Geschäft'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_sellerfallback_fax'; ?>
+							<?php $name = 'casawp_sellerfallback_fax'; ?>
 							<?php $text = 'Fax'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
@@ -525,7 +525,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Kontaktperson</span></legend>
-										<?php $name = 'casasync_sellerfallback_show_person_view'; ?>
+										<?php $name = 'casawp_sellerfallback_show_person_view'; ?>
 										<?php $text = 'Kontaktperson anzeigen, wenn beim Objekt keine vorhanden ist.'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
@@ -533,7 +533,7 @@
 									</fieldset>
 								</td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_gender'; ?>
+							<?php $name = 'casawp_salesperson_fallback_gender'; ?>
 							<?php $text = 'Geschlecht'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
@@ -544,37 +544,37 @@
 									</select>
 								</td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_givenname'; ?>
+							<?php $name = 'casawp_salesperson_fallback_givenname'; ?>
 							<?php $text = 'Vorname'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_familyname'; ?>
+							<?php $name = 'casawp_salesperson_fallback_familyname'; ?>
 							<?php $text = 'Nachname'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_function'; ?>
+							<?php $name = 'casawp_salesperson_fallback_function'; ?>
 							<?php $text = 'Funktion'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_email'; ?>
+							<?php $name = 'casawp_salesperson_fallback_email'; ?>
 							<?php $text = 'E-Mail Adresse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_phone_direct'; ?>
+							<?php $name = 'casawp_salesperson_fallback_phone_direct'; ?>
 							<?php $text = 'Direktwahl'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
-							<?php $name = 'casasync_salesperson_fallback_phone_mobile'; ?>
+							<?php $name = 'casawp_salesperson_fallback_phone_mobile'; ?>
 							<?php $text = 'Mobile'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
@@ -591,17 +591,17 @@
 							<td>
 
 
-								<?php $name = 'casasync_archive_orderby'; ?>
+								<?php $name = 'casawp_archive_orderby'; ?>
 								<?php $text = 'Sortierung'; ?>
 								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 									<option <?php echo (get_option($name)  == 'date' ? 'selected="selected"' : ''); ?> value="date">Datum</option>
 									<option <?php echo (get_option($name)  == 'title' ? 'selected="selected"' : ''); ?> value="title">Titel</option>
 									<option <?php echo (get_option($name)  == 'price' ? 'selected="selected"' : ''); ?> value="price">Preis</option>
 									<option <?php echo (get_option($name)  == 'location' ? 'selected="selected"' : ''); ?> value="location">Ort</option>
-									<option <?php echo (get_option($name)  == 'casasync_referenceId' ? 'selected="selected"' : ''); ?> value="casasync_referenceId">Referenz-ID</option>
+									<option <?php echo (get_option($name)  == 'casawp_referenceId' ? 'selected="selected"' : ''); ?> value="casawp_referenceId">Referenz-ID</option>
 									<option <?php echo (get_option($name)  == 'menu_order' ? 'selected="selected"' : ''); ?> value="menu_order">Eigene Reihenfolge</option>
 								</select>
-								<?php $name = 'casasync_archive_order'; ?>
+								<?php $name = 'casawp_archive_order'; ?>
 								<?php $text = 'Sortierung'; ?>
 								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 									<option <?php echo (get_option($name)  == 'DESC' ? 'selected="selected"' : ''); ?> value="DESC">Absteigend</option>
@@ -616,11 +616,11 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span></span></legend>
-										<?php $name = 'casasync_show_sticky_properties'; ?>
+										<?php $name = 'casawp_show_sticky_properties'; ?>
 										<?php $text = 'Speziell ausgewiesen'; ?>
 										<p><label>
 											<?php
-												$url = get_admin_url('', 'admin.php?page=casasync');
+												$url = get_admin_url('', 'admin.php?page=casawp');
 												$manually = $url . '&do_import=true';
 												$forced = $manually . '&force_all_properties=true&force_last_import=true';
 											?>
@@ -629,11 +629,11 @@
 									</fieldset>
 									<fieldset>
 										<legend class="screen-reader-text"><span></span></legend>
-										<?php $name = 'casasync_hide_sticky_properties_in_main'; ?>
+										<?php $name = 'casawp_hide_sticky_properties_in_main'; ?>
 										<?php $text = 'in der Hauptliste verstecken'; ?>
 										<p><label>
 											<?php
-												$url = get_admin_url('', 'admin.php?page=casasync');
+												$url = get_admin_url('', 'admin.php?page=casawp');
 												$manually = $url . '&do_import=true';
 												$forced = $manually . '&force_all_properties=true&force_last_import=true';
 											?>
@@ -647,15 +647,15 @@
 						<tr valign="top">
 							<th scope="row">Bildgrösse</th>
 							<td>
-								<?php $name = 'casasync_archive_show_thumbnail_size_w'; ?>
+								<?php $name = 'casawp_archive_show_thumbnail_size_w'; ?>
 								<?php $text = 'Breite'; ?>
 								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
 								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
-								<?php $name = 'casasync_archive_show_thumbnail_size_h'; ?>
+								<?php $name = 'casawp_archive_show_thumbnail_size_h'; ?>
 								<?php $text = 'Höhe'; ?>
 								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
 								<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text"><br>
-								<?php $name = 'casasync_archive_show_thumbnail_size_crop'; ?>
+								<?php $name = 'casawp_archive_show_thumbnail_size_crop'; ?>
 								<?php $text = 'Beschneide das Miniaturbild auf die exakte Größe (Miniaturbilder sind normalerweise proportional)'; ?>
 								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="checkbox" value="1" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?>>
 								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
@@ -669,138 +669,138 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Welche Werte sollen angezeigt werden? Das 2. Feld bestimmt die Ordnung der Darstellung.</span></legend>
-										<?php $name = 'casasync_archive_show_street_and_number'; ?>
+										<?php $name = 'casawp_archive_show_street_and_number'; ?>
 										<?php $text = 'Strasse + Nr'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_street_and_number_order'; ?>
+										<?php $name = 'casawp_archive_show_street_and_number_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_zip'; ?>
+										<?php $name = 'casawp_archive_show_zip'; ?>
 										<?php $text = 'PLZ'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_location'; ?>
+										<?php $name = 'casawp_archive_show_location'; ?>
 										<?php $text = 'Ort'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_location_order'; ?>
+										<?php $name = 'casawp_archive_show_location_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_number_of_rooms'; ?>
+										<?php $name = 'casawp_archive_show_number_of_rooms'; ?>
 										<?php $text = 'Anzahl Zimmer'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_number_of_rooms_order'; ?>
+										<?php $name = 'casawp_archive_show_number_of_rooms_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_area_sia_nf'; ?>
+										<?php $name = 'casawp_archive_show_area_sia_nf'; ?>
 										<?php $text = 'Nutzfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_area_sia_nf_order'; ?>
+										<?php $name = 'casawp_archive_show_area_sia_nf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_area_bwf'; ?>
+										<?php $name = 'casawp_archive_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_area_bwf_order'; ?>
+										<?php $name = 'casawp_archive_show_area_bwf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_surface_property'; ?>
+										<?php $name = 'casawp_archive_show_surface_property'; ?>
 										<?php $text = 'Grundstücksfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_surface_property_order'; ?>
+										<?php $name = 'casawp_archive_show_surface_property_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_floor'; ?>
+										<?php $name = 'casawp_archive_show_floor'; ?>
 										<?php $text = 'Etage'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_floor_order'; ?>
+										<?php $name = 'casawp_archive_show_floor_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_number_of_floors'; ?>
+										<?php $name = 'casawp_archive_show_number_of_floors'; ?>
 										<?php $text = 'Anzahl Etage'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_number_of_floors_order'; ?>
+										<?php $name = 'casawp_archive_show_number_of_floors_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_year_built'; ?>
+										<?php $name = 'casawp_archive_show_year_built'; ?>
 										<?php $text = 'Baujahr'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_year_built_order'; ?>
+										<?php $name = 'casawp_archive_show_year_built_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_year_renovated'; ?>
+										<?php $name = 'casawp_archive_show_year_renovated'; ?>
 										<?php $text = 'Letzte Renovation'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_year_renovated_order'; ?>
+										<?php $name = 'casawp_archive_show_year_renovated_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_availability'; ?>
+										<?php $name = 'casawp_archive_show_availability'; ?>
 										<?php $text = 'Verfügbarkeit'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_availability_order'; ?>
+										<?php $name = 'casawp_archive_show_availability_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_price'; ?>
+										<?php $name = 'casawp_archive_show_price'; ?>
 										<?php $text = 'Preis'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_price_order'; ?>
+										<?php $name = 'casawp_archive_show_price_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casasync_archive_show_excerpt'; ?>
+										<?php $name = 'casawp_archive_show_excerpt'; ?>
 										<?php $text = 'Auszug'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<?php $name = 'casasync_archive_show_excerpt_order'; ?>
+										<?php $name = 'casawp_archive_show_excerpt_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
@@ -817,11 +817,11 @@
 						<h3>Anfrage-Variante</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row"><label><input name="casasync_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casasync_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL</label></th>
+								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casasoft_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casasoft_publisherid') ?>" class="regular-text"> 
-										<input style="width:100%" name="casasoft_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casasoft_customerid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
 									</fieldset>
 								</td>
@@ -829,10 +829,10 @@
 						<?php echo $table_end; ?>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row"><label><input name="casasync_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casasync_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
+								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casasync_email_fallback" type="text" placeholder="EMAIL" value=""> 
+										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value=""> 
 										<small>(Objekte mit deklarierten Anfrage-Emails werden bevorzugt)</small>
 									</fieldset>
 								</td>
@@ -845,7 +845,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>E-Mail des Anbieters anzeigen</span></legend>
-										<?php $name = 'casasync_show_email_organisation'; ?>
+										<?php $name = 'casawp_show_email_organisation'; ?>
 										<?php $text = 'Ja'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
@@ -858,7 +858,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>E-Mail der Kontaktperson anzeigen</span></legend>
-										<?php $name = 'casasync_show_email_person_view'; ?>
+										<?php $name = 'casawp_show_email_person_view'; ?>
 										<?php $text = 'Ja'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
@@ -874,56 +874,56 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Vorname</span></legend>
-										<?php $name = 'casasync_form_firstname_required'; ?>
+										<?php $name = 'casawp_form_firstname_required'; ?>
 										<?php $text = 'Vorname'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>Nachname</span></legend>
-										<?php $name = 'casasync_form_lastname_required'; ?>
+										<?php $name = 'casawp_form_lastname_required'; ?>
 										<?php $text = 'Nachname'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>Strasse</span></legend>
-										<?php $name = 'casasync_form_street_required'; ?>
+										<?php $name = 'casawp_form_street_required'; ?>
 										<?php $text = 'Strasse'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>PLZ</span></legend>
-										<?php $name = 'casasync_form_postalcode_required'; ?>
+										<?php $name = 'casawp_form_postalcode_required'; ?>
 										<?php $text = 'PLZ'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>Ort</span></legend>
-										<?php $name = 'casasync_form_locality_required'; ?>
+										<?php $name = 'casawp_form_locality_required'; ?>
 										<?php $text = 'Ort'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>Telefon</span></legend>
-										<?php $name = 'casasync_form_phone_required'; ?>
+										<?php $name = 'casawp_form_phone_required'; ?>
 										<?php $text = 'Telefon'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>E-Mail</span></legend>
-										<?php $name = 'casasync_form_email_required'; ?>
+										<?php $name = 'casawp_form_email_required'; ?>
 										<?php $text = 'E-Mail'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
 										</label>
 										<br>
 										<legend class="screen-reader-text"><span>Nachricht</span></legend>
-										<?php $name = 'casasync_form_message_required'; ?>
+										<?php $name = 'casawp_form_message_required'; ?>
 										<?php $text = 'Nachricht'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
@@ -939,12 +939,12 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Aktiv</span></legend>
-										<?php $name = 'casasync_form_event_tracking'; ?>
+										<?php $name = 'casawp_form_event_tracking'; ?>
 										<?php $text = 'Aktiv'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
-											<br><span class="description">Beispiel: _gaq.push(['_trackEvent', '%casasync_id%', 'Casasync Kontaktanfrage'])</span>
-											<br><span class="description">Erlaubte Variablen: casasync_id</span>
+											<br><span class="description">Beispiel: _gaq.push(['_trackEvent', '%casawp_id%', 'casawp Kontaktanfrage'])</span>
+											<br><span class="description">Erlaubte Variablen: casawp_id</span>
 										</label>
 									</fieldset>
 								</td>
@@ -953,7 +953,7 @@
 						<?php
 					break;
 				case 'logs':
-					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casasync/logs';
+					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
 					$log = $dir."/".date('Y M').'.log';
 					echo "<h3>" . date('Y M') . "</h3>";
 					echo "<table>";
@@ -992,11 +992,11 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
-										<?php $name = 'casasync_live_import'; ?>
+										<?php $name = 'casawp_live_import'; ?>
 										<?php $text = 'Änderungen automatisch bei jedem Aufruf überprüfen und updaten.'; ?>
 										<p><label>
 											<?php
-												$url = get_admin_url('', 'admin.php?page=casasync');
+												$url = get_admin_url('', 'admin.php?page=casawp');
 												$manually = $url . '&do_import=true';
 												$force_last = $manually . '&force_last_import=true';
 												$forced = $manually . '&force_all_properties=true&force_last_import=true';
@@ -1011,7 +1011,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Vor dem Plugin</span></legend>
-										<?php $name = 'casasync_before_content'; ?>
+										<?php $name = 'casawp_before_content'; ?>
 										<?php $text = 'Vor dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
@@ -1020,7 +1020,7 @@
 									</fieldset>
 									<fieldset>
 										<legend class="screen-reader-text"><span>Nach dem Plugin</span></legend>
-										<?php $name = 'casasync_after_content'; ?>
+										<?php $name = 'casawp_after_content'; ?>
 										<?php $text = 'Nach dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
@@ -1034,7 +1034,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>API Schlüssel</span></legend>
-										<?php $name = 'casasync_api_key'; ?>
+										<?php $name = 'casawp_api_key'; ?>
 										<?php $text = 'API Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
@@ -1043,14 +1043,14 @@
 									</fieldset>
 									<fieldset>
 										<legend class="screen-reader-text"><span>Privater Schlüssel</span></legend>
-										<?php $name = 'casasync_private_key'; ?>
+										<?php $name = 'casawp_private_key'; ?>
 										<?php $text = 'Private Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
 											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
 										</p>
 									</fieldset>
-									<a href="<?php echo  get_admin_url('', 'admin.php?page=casasync&gatewayupdate=1'); ?>">Aktuelles XML von CASAGATEWAY laden</a>
+									<a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Aktuelles XML von CASAGATEWAY laden</a>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1058,7 +1058,7 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Altes Importscript für casaXML "draft" aktivieren.</span></legend>
-										<?php $name = 'casasync_legacy'; ?>
+										<?php $name = 'casawp_legacy'; ?>
 										<?php $text = 'Altes Importscript für casaXML "draft" aktivieren.'; ?>
 										<p><label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> 
@@ -1068,7 +1068,7 @@
 							</tr>
 
 							<?php
-								$all_categories = get_categories(array('taxonomy' => 'casasync_category'));
+								$all_categories = get_categories(array('taxonomy' => 'casawp_category'));
 								$custom_categories = array();
 								$i=0;
 								foreach ($all_categories as $key => $category) {
@@ -1107,7 +1107,7 @@
 																echo '<tr>';
 																echo '<td>' . $value['name'] . '</td>';
 
-																$get_saved_custom_categories = get_option('casasync_custom_category_translations');
+																$get_saved_custom_categories = get_option('casawp_custom_category_translations');
 																foreach ($all_languages as $k => $v) {
 																	$name = $value['name'] . '/' . $k;
 
@@ -1144,5 +1144,5 @@
 					break;
 			}
 		?>
-		<p class="submit"><input type="submit" name="casasync_submit" id="submit" class="button button-primary" value="Änderungen übernehmen"></p>
+		<p class="submit"><input type="submit" name="casawp_submit" id="submit" class="button button-primary" value="Änderungen übernehmen"></p>
 	</form>
