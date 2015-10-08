@@ -24,12 +24,9 @@ class Plugin {
     public function __construct($configuration){  
         $this->conversion = new Conversion;
 
-        add_filter('upload_dir',  array($this, 'setUploadDir'));
-        remove_filter('upload_dir', array($this, 'setUploadDir'));
-
         add_shortcode('casasync_contact', array($this,'contact_shortcode'));
         add_action('init', array($this, 'setPostTypes'));
-        add_action('admin_menu', array($this, 'setMetaBoxes'));
+
         add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
         add_action('wp_enqueue_scripts', array($this, 'setOptionJsVars'));
         add_filter("attachment_fields_to_edit", array($this, "casasync_image_attachment_fields_to_edit"), null, 2);
@@ -61,14 +58,14 @@ class Plugin {
                 $thumb_size_crop
             );
         }
-        $this->setMetaBoxes();
 
-        //add_action( 'load_textdomain', array($this, 'setTranslation'));
-        add_filter('page_template', array($this, 'casasync_page_template'));
         add_action('plugins_loaded', array($this, 'setTranslation'));
             
+        $this->bootstrap($configuration);
 
+    }
 
+    private function bootstrap($configuration){
 
         // setup service manager
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
@@ -114,8 +111,6 @@ class Plugin {
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
         
-
-
     }
 
     public function casasync_queryfilter($query){
@@ -124,15 +119,7 @@ class Plugin {
         return $query;
     }
     
-    function casasync_page_template( $page_template ){
-        global $post;
-        if ( is_page( 'casasync-archive' ) ) {
-            $page_template = dirname( __FILE__ ) . '/casasync-archive.php';
-        }
-        return $page_template;
-    }
-
-
+    
     public function setOptionJsVars(){
         $script_params = array(
            'google_maps'              => get_option('casasync_load_googlemaps', 0),
@@ -161,12 +148,12 @@ class Plugin {
     }
 
     public function renderSingle($post){
-        $offer = $this->getOffer($post);
+        $offer = $this->prepareOffer($post);
         return $offer->render('single', array('offer' => $offer));
     }
 
     public function renderArchiveSingle($post){
-        $offer = $this->getOffer($post);
+        $offer = $this->prepareOffer($post);
         return $offer->render('single-archive', array('offer' => $offer));
     }
 
@@ -209,31 +196,29 @@ class Plugin {
             return '<div class="casasync-pagination ' . (get_option('casasync_load_css', 'bootstrapv3') == 'bootstrapv2' ? 'pagination' : '') . '">' . $links . '</div>';
         }
 
-
-
-      $total_pages = $wp_query->max_num_pages;
-      if ($total_pages > 1) {
-        $current_page = max(1, get_query_var('paged'));
-        if($current_page) {
-            //TODO: prev/next These dont work yet!
-            $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
-            $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
-            $i = 0;
-            $return = '<ul class="casasync-pagination">';
-            $return .= $prev_page;
-            while ($i < $total_pages) {
-                $i++;
-                if ($current_page == $i) {
-                    $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
-                } else {
-                    $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
-              }
+        $total_pages = $wp_query->max_num_pages;
+        if ($total_pages > 1) {
+            $current_page = max(1, get_query_var('paged'));
+            if($current_page) {
+                //TODO: prev/next These dont work yet!
+                $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
+                $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
+                $i = 0;
+                $return = '<ul class="casasync-pagination">';
+                $return .= $prev_page;
+                while ($i < $total_pages) {
+                    $i++;
+                    if ($current_page == $i) {
+                        $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
+                    } else {
+                        $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+                  }
+                }
+                $return .= $next_page;
+                $return .= '</ul>';
+                return $return;
             }
-            $return .= $next_page;
-            $return .= '</ul>';
-            return $return;
         }
-      }
     }
 
     public function render($view, $args){
@@ -283,8 +268,6 @@ class Plugin {
 
         }
         $model->setTemplate($template);
-
-        
 
         $result = $renderer->render($model);
 
@@ -360,7 +343,7 @@ class Plugin {
             }
 
         }
-        if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_post_type_archive( 'casasync_property' )) {
+        if (is_tax('casasync_salestype') || is_tax('casasync_availability') || is_tax('casasync_category') || is_tax('casasync_location') || is_tax('casasync_feature') || is_post_type_archive( 'casasync_property' )) {
             if ($_GET && (isset($_GET['casasync_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
                 header('Content-Type: application/json');
@@ -572,57 +555,6 @@ class Plugin {
         $upload['url']    = $upload['baseurl'] . $upload['subdir'];
         return $upload;
     }
-    
-    public function setMetaBoxes(){
-        //options
-        $textids = array(
-            'casasync_id' => 'CasaSync ID',
-            'casasync_property_address_country' => 'country',
-            'casasync_property_address_locality' => 'locality',
-            'casasync_property_address_region' => 'region',
-            'casasync_property_address_postalcode' => 'postalcode',
-            'casasync_property_address_postofficeboxnumber' => 'postofficeboxnumber',
-            'casasync_property_address_streetaddress' => 'streetaddress',
-            'casasync_property_geo_latitude' => 'lat',
-            'casasync_property_geo_longitude' => 'long',
-            'offer_type' => 'offer_type',
-            'price_currency' => 'price_currency',
-            'price_timesegment' => 'price_timesegment',
-            'price_propertysegment' => 'price_propertysegment',
-            'price' => 'price',
-            'grossPrice_timesegment' => 'grossPrice_timesegment',
-            'grossPrice_propertysegment' => 'grossPrice_propertysegment',
-            'grossPrice' => 'grossPrice',
-            'netPrice_timesegment' => 'netPrice_timesegment',
-            'netPrice_propertysegment' => 'netPrice_propertysegment',
-            'netPrice' => 'netPrice',
-        );
-        $fields = array();
-        foreach ($textids as $id => $label) {
-            $fields[] = array(
-                'name'    => $label,
-                'desc'    => '',
-                'id'      => $id,
-                'type'    => 'text',
-                'default' => ''
-            );
-        }
-        $this->fields = $fields;
-
-        $meta_box['casasync_property'] = array(
-            'id'       => 'property-meta-details',
-            'title'    => 'Property Details',
-            'context'  => 'normal',
-            'priority' => 'high',
-            'fields'   => $fields
-        );
-        $this->meta_box = $meta_box;
-
-        foreach($this->meta_box as $post_type => $value) {
-            //add_meta_box($value['id'], $value['title'], array($this, 'plib_format_box'), $post_type, $value['context'], $value['priority']);
-        }
-    }
-
 
     public function setPostTypes(){
 
@@ -663,6 +595,7 @@ class Plugin {
 
         $used = array();
         if( function_exists('acf_add_local_field_group') ):
+            add_action( 'add_meta_boxes_casasync_property', array($this,'casasync_property_custom_metaboxes'), 10, 2 );
 
             foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
                 $fields = array();
@@ -770,8 +703,6 @@ class Plugin {
                     ),
                 ));
             }
-            
-            add_action( 'add_meta_boxes_casasync_property', array($this,'casasync_property_custom_metaboxes'), 10, 2 );
 
         endif;
 
@@ -969,7 +900,7 @@ class Plugin {
             'menu_name'                  => __( 'Salestype', 'casasync' )
         );
         $args = array(
-            'hierarchical'      => false,
+            'hierarchical'      => true,
             'labels'            => $labels,
             'show_ui'           => true,
             'show_admin_column' => true,
@@ -998,7 +929,7 @@ class Plugin {
             'menu_name'                  => __( 'Availability', 'casasync' )
         );
         $args = array(
-            'hierarchical'      => false,
+            'hierarchical'      => true,
             'labels'            => $labels,
             'show_ui'           => true,
             'show_admin_column' => true,
@@ -1042,7 +973,7 @@ class Plugin {
     }
 
     function casasync_property_custom_metaboxes($post){
-        add_meta_box('unsorted-metas', __('Additional Meta Fields'),  array($this, 'casasync_add_unsorted_metabox'), 'casasync_property', 'normal', 'low');
+        add_meta_box('unsorted-metas', __('Additional Meta Fields'),  array($this, 'casasync_add_unsorted_metabox'), 'casasync_property', 'normal', 'high');
     }
 
     function casasync_add_unsorted_metabox($post) {
@@ -1054,506 +985,6 @@ class Plugin {
             }
         }        
         echo "</table>";
-    }
-
-
-
-    public function contact_shortcode($atts){
-        extract( shortcode_atts( array(
-            'recipients' => 'Casasoft:dev@casasoft.ch',
-            'remcat'     => false,
-            'ccs'        => '',
-            'post_id'    => false
-        ), $atts ) );
-
-        $table = '';
-        $validation = false;
-        $errors = false;
-        $remcat_sended = false;
-        $email_sended = false;
-
-        $rec_ar1 = explode(';', $recipients);
-        $recipientses = array();
-        foreach ($rec_ar1 as $key => $value) {
-            $recipientses[] = explode(':', trim(str_replace('<br />', '', $value)));
-        }
-        $cc_ar1 = explode(';', $ccs);
-        $ccs_arr = array();
-        foreach ($cc_ar1 as $key => $value) {
-            $ccs_arr[] = explode(':', trim(str_replace('<br />', '', $value)));
-        }
-        //labels and whitelist
-        $fieldlabels = array(
-            'firstname'   => __('First name', 'casasync'), //'Vorname',
-            'lastname'    => __('Last name', 'casasync'), //'Nachname',
-            'emailreal'   => __('Email', 'casasync'), //'E-Mail',
-            'salutation'  => __('Salutation', 'casasync'), //'Anrede',
-            'title'       => __('Title', 'casasync'), //'Titel',
-            'phone'       => __('Phone', 'casasync'), //'Telefon',
-            'email'       => 'E-Mail SPAM!',
-            'company'     => __('Company', 'casasync'), //'Firma',
-            'street'      => __('Street', 'casasync'), //'Strasse',
-            'postal_code' => __('ZIP', 'casasync'), //'PLZ',
-            'locality'    => __('Locality', 'casasync'), //'Stadt',
-            'country'     => __('Country', 'casasync'), // Land
-            'state'       => __('Kanton', 'casasync'), //'Kanton',
-            'subject'     => __('Subject', 'casasync'), //'Betreff',
-            'message'     => __('Message', 'casasync'), //'Nachricht',
-            'recipient'   => __('Recipient', 'casasync'), //'Rezipient',
-        );
-
-        if (!empty($_POST)) {
-            $validation = true;
-
-            $required = array();
-            $required[] = get_option('casasync_form_firstname_required',  false) ? 'firstname'   : null;
-            $required[] = get_option('casasync_form_lastname_required',   false) ? 'lastname'    : null;
-            $required[] = get_option('casasync_form_street_required',     false) ? 'street'      : null;
-            $required[] = get_option('casasync_form_postalcode_required', false) ? 'postal_code' : null;
-            $required[] = get_option('casasync_form_locality_required',   false) ? 'locality'    : null;
-            $required[] = get_option('casasync_form_phone_required',      false) ? 'phone'       : null;
-            $required[] = get_option('casasync_form_email_required',      false) ? 'emailreal'   : null;
-            $required[] = get_option('casasync_form_message_required',    false) ? 'message'     : null;
-
-            $companyname = get_bloginfo( 'name' );
-            $companyAddress = '{STREET}
-                <br />
-                CH-{ZIP} {CITY}
-                <br />
-                Tel. {PHONE}
-                <br />
-            Fax {FAX}';
-
-            //not alowed fields!!!
-            foreach($_POST as $key => $value){
-                if (!array_key_exists($key, $fieldlabels)) {
-                    $errors[] = '<b>Form ERROR!</b>: please contact the administrator. Ilegal Field has been posted[' . $key . ']'; //ausfüllen
-                    $validation = false;
-                }
-            }
-
-            //required
-            foreach ($required as $name) {
-                if (array_key_exists($name, $_POST)) {
-                    if (!$_POST[$name]) {
-                        $errors[] = '<b>' . $fieldlabels[$name] . '</b>: ' . __('Required', 'casasync'); //ausfüllen
-                        $validation = false;
-                    }
-                }
-            }
-            //spam
-            if ($_POST['email'] || strpos($_POST['message'], 'http://')) {
-                $validation = false;
-            }
-            if ($validation) {
-                $casa_id = get_post_meta( $post_id, 'casasync_id', $single = true );
-                $casa_id_arr = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $casa_id);
-                $property_id = $casa_id_arr[0];
-                $property_lang = $casa_id_arr[1];
-
-                //REM
-                if ($remcat != '') {
-                    $categories = wp_get_post_terms( get_the_ID(), 'casasync_category'); 
-                    if ($categories) {
-                        $type = $this->conversion->casasync_convert_categoryKeyToLabel($categories[0]->name); 
-                    } else {
-                        $type = '';
-                    }
-                    $remCat = array(
-                        0  => $_SERVER['SERVER_NAME'],
-                        1  => get_post_meta( $post_id, 'seller_org_legalname', true ),
-                        2  => get_post_meta( $post_id, 'seller_org_address_streetaddress', true ),
-                        3  => get_post_meta( $post_id, 'seller_org_address_postalcode', true ),
-                        4  => get_post_meta( $post_id, 'seller_org_address_locality', true ),
-                        5  => get_post_meta( $post_id, 'seller_person_givenname', true ) . ' ' . get_post_meta( $post_id, 'seller_person_familyname', true ),
-                        6  => get_option('casasync_remCat_email', ''),
-                        7  => $property_id,
-                        8  => get_permalink($post_id),
-                        9  => get_post_meta($post_id, 'casasync_property_address_streetaddress', true),
-                        10 => get_post_meta($post_id, 'casasync_property_address_locality', true),
-                        11 => $type,
-                        12 => $property_lang,
-                        13 => '', //anrede
-                        14 => (isset($_POST['firstname']) ? $_POST['firstname'] : ''),
-                        15 => (isset($_POST['lastname']) ? $_POST['lastname'] : ''),
-                        16 => (isset($_POST['company']) ? $_POST['company'] : ''),
-                        17 => (isset($_POST['street']) ? $_POST['street'] : ''),
-                        18 => (isset($_POST['country']) ? $_POST['country'] . '-' : '') . (isset($_POST['postal_code']) ? $_POST['postal_code'] : ''),
-                        19 => (isset($_POST['locality']) ? $_POST['locality'] : ''),
-                        20 => (isset($_POST['phone']) ? $_POST['phone'] : ''),
-                        21 => (isset($_POST['mobile']) ? $_POST['mobile'] : ''),
-                        22 => (isset($_POST['fax']) ? $_POST['fax'] : ''),
-                        23 => filter_input(INPUT_POST, 'emailreal', FILTER_VALIDATE_EMAIL),
-                        24 => (isset($_POST['message']) ? $_POST['message'] : ''),
-                        25 => '',
-                        26 => ''
-                    );
-
-                    $remCat_str = '';
-                    foreach ($remCat as $key => $value) {
-                        $remCat_str .= '#' . $value;
-                    }
-    
-                    $header  = "From: \"\" <remcat@casasync.ch>\r\n";
-                    $header .= "MIME-Version: 1.0\r\n";
-                    $header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-                    
-
-                    wp_mail(get_option('casasync_remCat_email', false), 'Neue Anfrage', utf8_decode($remCat_str), $header);
-                    $remcat_sended = true;
-                }
-    
-                $template = file_get_contents(CASASYNC_PLUGIN_DIR . 'email_templates/message_de.html');
-    
-                $the_thumbnail = '';
-                $thumbnail = get_the_post_thumbnail($post_id, array(250, 250));
-    
-                if ( $thumbnail ) { $the_thumbnail = $thumbnail; }
-    
-                $thumb  = '<table border="0">';
-                $thumb .= '<tr>';
-                $thumb .= '<td><a href="' . get_permalink($post_id) . '">' . $the_thumbnail . '</a></td>';
-                $thumb .= '</tr>';
-                $thumb .= '</table>';
-    
-                $message = '<table width="100%">';
-                foreach($_POST as $key => $value){
-                    if (array_key_exists($key, $fieldlabels)) {
-                        if ($key != 'email') {
-                            if($key != 'country') {
-                                $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($value) . '</td></tr>';
-                            } else {
-                                $countries = $this->conversion->country_arrays();
-                                $country_name = (isset($countries[$value])) ? ($countries[$value]) : ($value);
-                                $message.= '<tr><td align="left" style="padding-right:10px" valign="top"><strong>'.$fieldlabels[$key].'</strong></td><td align="left">' . nl2br($country_name) . '</td></tr>';
-                            }
-                        }
-                    }
-                }
-                if ($post_id) {
-                    $message .= '<tr></td colspan="2">&nbsp;</td></tr>';
-                    $message .= '<tr>';
-                    $message .= '<td colspan="2" class="property"><a href="' . get_permalink($post_id) . '" style="text-decoration: none; color: #969696; font-weight: bold; font-family: Helvetica, Arial, sans-serif;">' . __('Show property ...') .'</a></td>';//Objekt anzeigen ...
-                    $message .= '</tr>';
-                }
-                $message.='</table>';
-
-                $template = str_replace('{:logo_src:}', '#', $template);
-                $template = str_replace('{:logo_url:}', '#', $template);
-                $template = str_replace('{:site_title:}', $_SERVER['SERVER_NAME'], $template);
-                $template = str_replace('{:domain:}', $_SERVER['SERVER_NAME'], $template);
-    
-                $template = str_replace('{:src_social_1:}', '#', $template);
-                $template = str_replace('{:src_social_2:}', '#', $template);
-                $template = str_replace('{:src_social_3:}', '#', $template);
-                $template = str_replace('{:sender_title:}', get_the_title( $post_id ), $template);
-
-                //strings
-                $template = str_replace('{:html_title:}', __('Inquiry for a property online', 'casasync'), $template); //'Anfrage für ein Objekt online'
-                $template = str_replace('{:title:}', __('New inquiry', 'casasync'), $template); //'Neue Anfrage'
-                $p_msg = sprintf(__('A new inquiry from %s has been sent', 'casasync'), '<a style="color:#99CCFF" href="http://' . $_SERVER['SERVER_NAME'] . '">http://' . $_SERVER['SERVER_NAME'] . '</a>');
-                $template = str_replace('{:primary_message:}', $p_msg, $template);
-
-
-                if ($message) {
-                    $template = str_replace('{:message:}', $message, $template);
-                }
-    
-                if ($thumb) {
-                    $template = str_replace('{:thumb:}', $thumb, $template);
-                }
-    
-                $template = str_replace('{:support_email:}', 'support@casasoft.ch', $template);
-                $template = str_replace('{:href_mapify:}', 'http://'. $_SERVER['SERVER_NAME'], $template);
-                $template = str_replace('{:href_casasoft:}', 'http://casasoft.ch', $template);
-    
-                $template = str_replace('{:href_social_1:}', '#', $template);
-                $template = str_replace('{:href_social_2:}', '#', $template);
-                $template = str_replace('{:href_social_3:}', '#', $template);
-    
-                $template = str_replace('{:href_message_archive:}','http://'. $_SERVER['SERVER_NAME'] . '', $template);
-                $template = str_replace('{:href_message_edit:}', '#', $template);
-    
-                $sender_email    = filter_input(INPUT_POST, 'emailreal', FILTER_VALIDATE_EMAIL);
-                $sender_fistname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
-                $sender_lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-    
-                $header  = "From: \"$sender_fistname $sender_lastname\" <info@".$_SERVER['SERVER_NAME'].">\r\n";
-                $header .= "Reply-To: \"$sender_fistname $sender_lastname\" <$sender_email>\r\n";
-
-                $header .= "MIME-Version: 1.0\r\n";
-                $header .= "Content-Type: text/html; charset=UTF-8\r\n";
-    
-                foreach ($recipientses as $recipient2) {
-                    if (isset($recipient2[0])) {
-                        if (wp_mail($recipient2[0], 'Neue Anfrage', $template, $header)) {
-                            $email_sended = true;
-                        }
-                    }
-                }
-                if($remcat_sended === true or $email_sended === true) {
-                    add_action('wp_footer', array('\CasaSync\Single', 'getEventTrackingCode'));
-                   echo '<p class="alert alert-success">' . __('Thank you!', 'casasync') . '</p>'; //Vielen Dank!
-                } else {
-                    echo '<p class="alert alert-danger">' . __('Error!', 'casasync') . '</p>'; //Fehler!
-                }
-            }
-        } else {
-            $validation = false;
-        }
-
-        $form = '';
-        if (!$validation) {
-            ob_start();
-            if ($errors) {
-                echo '<div class="alert alert-danger">';
-                echo "<strong>" . __('Please consider the following errors and try sending it again', 'casasync')  . "</strong>";
-                echo "<ul>";
-                echo "<li>".implode('</li><li>', $errors) . '</li>';
-                echo '</ul>';
-                echo "</div>";
-            }
-            echo $table;
-        ?>
-
-        <?php
-            // Bootstrap 2 Form Layout
-            if (get_option('casasync_load_css') == 'bootstrapv2'):
-        ?>
-            <form class="form casasync-property-contact-form" id="casasyncPropertyContactForm" method="POST" action="">
-                <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
-                <div class="row-fluid">
-                    <div class="span5">
-                        <label for="firstname"><?php echo __('First name', 'casasync') ?></label>
-                        <input name="firstname" class="span12" value="<?php echo (isset($_POST['firstname']) ? $_POST['firstname'] : '') ?>" type="text" id="firstname" />
-                    </div>
-                    <div class="span7">
-                        <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
-                        <input name="lastname" class="span12" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
-                    </div>
-                </div>
-                <div class="row-fluid">
-                </div>
-                <div class="row-fluid">
-                    <label for="street"><?php echo __('Street', 'casasync') ?></label>
-                    <input name="street" class="span12" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
-                </div>
-                <div class="row-fluid">
-                    <div class="span4">
-                        <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
-                        <input name="postal_code" class="span12" value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
-                    </div>
-                    <div class="span8">
-                        <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
-                        <input name="locality" class="span12" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label for="country"><?php echo __('Country', 'casasync') ?></label>
-                        <select name="country" id="country" class="span12" style="margin-bottom:10px;">
-                            <?php
-                                $arr_countries = $this->conversion->country_arrays();
-                                $arr_search   = array("Ä","ä","Ö","ö","Ü","ü");
-                                $arr_replace  = array("Azze","azze","Ozze","ozze","Uzze","uzze");
-                                $arr_modified = array();
-                                foreach($arr_countries as $key => $val) {
-                                    $arr_modified[$key] = str_replace($arr_search, $arr_replace, $val);
-                                }
-                                asort($arr_modified);
-                                $arr_ordered_countries = array();
-                                foreach($arr_modified as $key => $val) {
-                                    $arr_ordered_countries[$key] = str_replace($arr_replace, $arr_search, $val);
-                                }
-                                
-                                foreach($arr_ordered_countries AS $code => $country)
-                                {
-                                    (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
-                                    $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
-                                    echo '<option value="' . $code . '" ' . $selected . '>' . $country . '</option>';
-                                }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
-                    <input name="phone" class="span12" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
-                </div>
-                 <div class="row-fluid">
-                    <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                    <input name="emailreal" class="span12" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
-                </div>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label for="message"><?php echo __('Message', 'casasync') ?></label>
-                        <textarea name="message" class="span12" id="message"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span7"><br>
-                        <small><?php echo __('Please fill out all the fields', 'casasync') ?></small>
-                    </div>
-                    <div class="span5"><br>
-                        <input type="submit" class="btn btn-primary pull-right" value="<?php echo __('Send', 'casasync') ?>" />
-                    </div>
-                </div>
-            </form>
-        <?php else: ?>
-            <form id="casasyncPropertyContactForm" class="casasync-contactform-form" method="POST" action="<?php echo get_permalink(); ?>">
-                <input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN" />
-                <div class="casasync-row">
-                    <div class="casasync-col-md-5">
-                        <div class="casasync-form-group">
-                            <label for="firstname"><?php echo __('First name', 'casasync') ?></label>
-                            <input name="firstname" class="casasync-form-control" value="<?php echo (isset($_POST['firstname']) ? $_POST['firstname'] : '') ?>" type="text" id="firstname" />
-                        </div>
-                    </div>
-                    <div class="casasync-col-md-7">
-                        <div class="casasync-form-group">
-                            <label for="lastname"><?php echo __('Last name', 'casasync') ?></label>
-                            <input name="lastname" class="casasync-form-control" value="<?php echo (isset($_POST['lastname']) ? $_POST['lastname'] : '') ?>" type="text" id="lastname" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="form-group">
-                            <label for="street"><?php echo __('Street', 'casasync') ?></label>
-                            <input name="street" class="casasync-form-control" value="<?php echo (isset($_POST['street']) ? $_POST['street'] : '') ?>"  type="text" id="street" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-4">
-                        <div class="casasync-form-group">
-                            <label for="postal_code"><?php echo __('ZIP', 'casasync') ?></label>
-                            <input name="postal_code" class="casasync-form-control"  value="<?php echo (isset($_POST['postal_code']) ? $_POST['postal_code'] : '') ?>" type="text" id="postal_code" />
-                        </div>
-                    </div>
-                    <div class="casasync-col-md-8">
-                        <div class="form-group">
-                            <label for="locality"><?php echo __('Locality', 'casasync') ?></label>
-                            <input name="locality" class="casasync-form-control" value="<?php echo (isset($_POST['locality']) ? $_POST['locality'] : '') ?>"  type="text" id="locality" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="casasync-form-group">
-                            <label for="country"><?php echo __('Country', 'casasync') ?></label>
-                            <select name="country" id="country" class="casasync-form-control">
-                                <?php
-                                    $arr_countries = $this->conversion->country_arrays();
-                                    $arr_search   = array("Ä","ä","Ö","ö","Ü","ü");
-                                    $arr_replace  = array("Azze","azze","Ozze","ozze","Uzze","uzze");
-                                    $arr_modified = array();
-                                    foreach($arr_countries as $key => $val) {
-                                        $arr_modified[$key] = str_replace($arr_search, $arr_replace, $val);
-                                    }
-                                    asort($arr_modified);
-                                    $arr_ordered_countries = array();
-                                    foreach($arr_modified as $key => $val) {
-                                        $arr_ordered_countries[$key] = str_replace($arr_replace, $arr_search, $val);
-                                    }
-                                    
-                                    foreach($arr_ordered_countries AS $code => $country)
-                                    {
-                                        (!isset($_POST['country'])) ? ($_POST['country'] = 'CH') : ('');
-                                        $selected = ($_POST['country'] == $code ) ? ('selected=selected') : ('');
-                                        echo '<option value="' . $code . '" ' . $selected . '>' . $country . '</option>';
-                                    }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="casasync-form-group">
-                            <label for="phone"><?php echo __('Phone', 'casasync') ?></label>
-                            <input name="phone" class="casasync-form-control" value="<?php echo (isset($_POST['phone']) ? $_POST['phone'] : '') ?>"  type="text" id="phone" />
-                        </div>
-                    </div>
-                </div>
-                 <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="casasync-form-group">
-                            <label for="emailreal"><?php echo __('Email', 'casasync') ?></label>
-                            <input name="emailreal" class="casasync-form-control" value="<?php echo (isset($_POST['emailreal']) ? $_POST['emailreal'] : '') ?>" type="text" id="emailreal" />
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-col-md-12">
-                        <div class="casasync-form-group">
-                            <label for="message"><?php echo __('Message', 'casasync') ?></label>
-                            <textarea name="message" class="casasync-form-control" id="message" rows="3"><?php echo (isset($_POST['message']) ? $_POST['message'] : '') ?></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="casasync-row">
-                    <div class="casasync-form-group">
-                        <div class="casasync-col-md-7">
-                            <p class="casasync-form-control-static casasync-text-muted casasync-small"><?php echo __('Please fill out all the fields', 'casasync') ?></p>
-                        </div>
-                        <div class="casasync-col-md-5">
-                            <input type="submit" class="casasync-contactform-send" value="<?php echo __('Send', 'casasync') ?>" />
-                        </div>
-                        <div class="clearBoth"></div>
-                    </div>
-                </div>
-            </form>
-
-        <?php endif; ?>
-        <?php
-            $form = ob_get_contents();
-            ob_end_clean();
-        } //validation
-        return $form;  
-    }
-
-    //Format meta boxes
-    function plib_format_box() {
-        global $post;
-
-        // Use nonce for verification
-        echo '<input type="hidden" name="plib_meta_box_nonce" value="', wp_create_nonce(basename(__FILE__)), '" />';
-        echo '<table class="form-table">';
-
-        foreach ($this->meta_box[$post->post_type]['fields'] as $field) {
-            // get current post meta data
-            $meta = get_post_meta($post->ID, $field['id'], true);
-
-            echo '<tr>'.
-                '<th style="width:20%"><label for="'. $field['id'] .'">'. $field['name']. '</label></th>'.
-            '<td>';
-            switch ($field['type']) {
-                case 'text':
-                    echo '<input type="text" name="'. $field['id']. '" id="'. $field['id'] .'" value="'. ($meta ? $meta : $field['default']) . '" size="30" style="width:97%" />'. '<br />'. $field['desc'];
-                    break;
-                case 'textarea':
-                    echo '<textarea name="'. $field['id']. '" id="'. $field['id']. '" cols="60" rows="4" style="width:97%">'. ($meta ? $meta : $field['default']) . '</textarea>'. '<br />'. $field['desc'];
-                    break;
-                case 'select':
-                    echo '<select name="'. $field['id'] . '" id="'. $field['id'] . '">';
-                    foreach ($field['options'] as $option) {
-                        echo '<option '. ( $meta == $option ? ' selected="selected"' : '' ) . '>'. $option . '</option>';
-                    }
-                    echo '</select>';
-                    break;
-                case 'radio':
-                    foreach ($field['options'] as $option) {
-                        echo '<input type="radio" name="' . $field['id'] . '" value="' . $option['value'] . '"' . ( $meta == $option['value'] ? ' checked="checked"' : '' ) . ' />' . $option['name'];
-                    }
-                    break;
-                case 'checkbox':
-                    echo '<input type="checkbox" name="' . $field['id'] . '" id="' . $field['id'] . '"' . ( $meta ? ' checked="checked"' : '' ) . ' />';
-                    break;
-            }
-            echo '<td>'.'</tr>';
-        }
-        echo '</table>';
     }
 
     function add_meta_tags() {
@@ -1568,7 +999,7 @@ class Plugin {
         }
     }
 
-    public function getOffer($post){
+    public function prepareOffer($post){
         $offer = $this->serviceManager->get('CasasyncOffer');
         $offer->setPost($post);
         return $offer;

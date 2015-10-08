@@ -14,6 +14,7 @@ class OfferService{
     private $archive_dynamic_fields = null;
     private $salestype = null;
     private $metas = null;
+    private $casasync = null;
 
     public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService){
     	$this->utilityService = $utilityService;
@@ -60,6 +61,11 @@ class OfferService{
 		return $offer_array;
 	}
 
+
+	/*====================================
+	=            Data Getters            =
+	====================================*/
+		
 	public function getTitle(){
 		return $this->post->post_title;
 	}
@@ -137,29 +143,6 @@ class OfferService{
         }
         return $features;
     }
-
-    public function renderFeatures() {
-        $features = $this->getFeatures();
-        return $this->render('features', array(
-            'features' => $features
-        ));
-    }
-
-    public function renderDistances() {
-        $distances = $this->getDistances();
-        return $this->render('distances', array(
-            'distances' => $distances,
-            'offer' => $this
-        ));
-    }
-
-	public function renderCategoryLabels(){
-		$cat_labels = array();
-		foreach ($this->getCategories() as $category) {
-			$cat_labels[] = $category->getLabel();
-		}
-		return implode(', ', $cat_labels);
-	}
 
 	public function getNumval($key){
 		foreach ($this->getNumvals() as $numval) {
@@ -287,12 +270,6 @@ class OfferService{
 		}
 	}
 
-
-	public function render($view, $args = array()){
-		global $casasync;
-		return $casasync->render($view, $args);
-	}
-
     private function getSingleDynamicFields() {
         return array(
           'casasync_single_show_number_of_rooms',
@@ -368,11 +345,6 @@ class OfferService{
         foreach ($this->getArchiveDynamicFields() as $value) {
           if(get_option($value, false)) {
 
-
-                  
-
-
-
             $value_order = get_option($value.'_order', false);
             if($value_order) {
               $value_to_display[$value_order] = $value;
@@ -386,13 +358,16 @@ class OfferService{
         return $value_to_display;
     }
     public function renderQuickInfosTable() {
-        // todo: delete options for achrive-fields. new way is to edit the view file
+        // todo: delete options for archive-fields. new way is to edit the view file
         return $this->render('quick-infos-table', array(
             'offer' => $this
         ));
     }
 
-	//view actions "direct"
+    /*===========================================
+    =          Direct renders actions           =
+    ===========================================*/
+
 	public function renderNumvalValue($numval){
 		switch ($numval->getSi()) {
 			case 'm2': return $numval->getValue() .'m<sup>2</sup>'; break;
@@ -453,10 +428,11 @@ class OfferService{
 		
 	}
 
-
-	public function renderAvailabilityDate(){
+	public function renderAvailabilityDate($start = false){
 		$current_datetime = strtotime(date('c'));
-		$start = $this->getFieldValue('start', false);
+		if (!$start) {
+			$start = $this->getFieldValue('start', false);
+		}
 		$property_datetime = false;
 	    if ($start) {
 	    	$property_datetime = strtotime($this->start);
@@ -474,7 +450,39 @@ class OfferService{
 	    return $return;
 	}
 
-	//view actions
+	public function renderCategoryLabels(){
+		$cat_labels = array();
+		foreach ($this->getCategories() as $category) {
+			$cat_labels[] = $category->getLabel();
+		}
+		return implode(', ', $cat_labels);
+	}
+
+
+	/*======================================
+	=            Render Actions            =
+	======================================*/
+
+	public function render($view, $args = array()){
+		global $casasync;
+		return $casasync->render($view, $args);
+	}
+
+	public function renderFeatures() {
+        $features = $this->getFeatures();
+        return $this->render('features', array(
+            'features' => $features
+        ));
+    }
+
+    public function renderDistances() {
+        $distances = $this->getDistances();
+        return $this->render('distances', array(
+            'distances' => $distances,
+            'offer' => $this
+        ));
+    }
+	
 	public function renderGallery(){
 		$images = $this->getImages();
 		return $this->render('gallery', array(
@@ -551,6 +559,12 @@ class OfferService{
 		return $this->render('map', array(
 			'offer' => $this
 		));	    
+	}
+
+	public function renderDatatable(){
+		return $this->render('datatable', array(
+			'offer' => $this
+		));
 	}
 
 	public function renderDatatableOffer(){

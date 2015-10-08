@@ -20,6 +20,9 @@ __( 'Property list', 'casasync' );
 	<?php endif; ?>
 	<div class="col-md-4 casasync-archive-filter">
 		<?php echo $casasync->renderArchiveFilter() ?>
+		<?php 
+			$tags = wp_tag_cloud(array('taxonomy' => 'casasync_feature')); 
+		?>
 	</div>
 </div>
 
