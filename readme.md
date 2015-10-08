@@ -1,5 +1,7 @@
 #Description
 
+**THIS IS THE RELEASE PRIOR TO RENAMING it to casawp! please use a later version!**
+
 Synchronisieren Sie Ihre Immobilien Objekte mit CasaSync, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaSync importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
 
 #Installation
