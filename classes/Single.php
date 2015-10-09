@@ -951,6 +951,11 @@
 
     public function getNumval($name){
       switch ($name) {
+        case 'surface_property': $name = 'area_sia_gsf'; break;
+      }
+
+
+      switch ($name) {
         case 'floor':
         case 'number_of_floors':
         case 'number_of_rooms':

@@ -1000,7 +1000,7 @@ class Import {
         'region'        => ($property_xml->address->region->__toString() ?:''),
         'postal_code'   => ($property_xml->address->postalCode->__toString() ?:''),
         'street'        => ($property_xml->address->street->__toString() ?:''),
-        'street_number' => ($property_xml->address->street_number->__toString() ?:''),
+        'streetNumber' => ($property_xml->address->streetNumber->__toString() ?:''),
         'subunit'       => ($property_xml->address->subunit->__toString() ?:''),
         'lng'           => ($property_xml->address->geo ? $property_xml->address->geo->longitude->__toString():''),
         'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString():''),
@@ -1423,7 +1423,7 @@ class Import {
     $new_meta_data['property_address_region']        = $property['address']['region'];
     $new_meta_data['property_address_postalcode']    = $property['address']['postal_code'];
     $new_meta_data['property_address_streetaddress'] = $property['address']['street'];
-    $new_meta_data['property_address_streetnumber']  = $property['address']['street_number'];
+    $new_meta_data['property_address_streetnumber']  = $property['address']['streetNumber'];
     $new_meta_data['property_geo_latitude']          = $property['address']['lat'];
     $new_meta_data['property_geo_longitude']         = $property['address']['lng'];
 
@@ -1444,7 +1444,7 @@ class Import {
         $new_meta_data['seller_org_address_region']                = $property['organization']['address']['region'];
         $new_meta_data['seller_org_address_postalcode']            = $property['organization']['address']['postal_code'];
         $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['address']['postofficeboxnumber'];
-        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['address']['street'].' '.$property['organization']['address']['street_number'];
+        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['address']['street'].' '.$property['organization']['address']['streetNumber'];
       }
     }
 
