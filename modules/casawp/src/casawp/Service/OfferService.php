@@ -453,10 +453,14 @@ class OfferService{
 
 	public function renderCategoryLabels(){
 		$cat_labels = array();
-		foreach ($this->getCategories() as $category) {
-			$cat_labels[] = $category->getLabel();
+		$categories = $this->getCategories();
+		if ($categories) {
+			foreach ($categories as $category) {
+				$cat_labels[] = $category->getLabel();
+			}
+			return implode(', ', $cat_labels);
 		}
-		return implode(', ', $cat_labels);
+		return __('Property', 'casawp');
 	}
 
 

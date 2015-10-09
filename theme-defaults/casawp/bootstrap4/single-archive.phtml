@@ -1,0 +1,10 @@
+<div class="casawp-property row">
+	<div class="casawp-thumbnail-wrapper col-sm-5">
+		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casawp-missing-image">' . __('No image', 'casawp') . '</div>'); ?>
+	</div>
+	<div class="casawp-text col-sm-7">
+		<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
+		<?php echo $offer->renderQuickInfosTable(); ?>
+	</div>
+</div>
+<hr class="soften">

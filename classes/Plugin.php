@@ -222,11 +222,9 @@ class Plugin {
             $current_page = max(1, get_query_var('paged'));
             if($current_page) {
                 //TODO: prev/next These dont work yet!
-                $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
-                $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
                 $i = 0;
                 $return = '<ul class="casawp-pagination">';
-                $return .= $prev_page;
+                $return .= '<li class="disabled"><a href="#">&laquo;</span></a></li>';
                 while ($i < $total_pages) {
                     $i++;
                     if ($current_page == $i) {
@@ -235,7 +233,7 @@ class Plugin {
                         $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
                   }
                 }
-                $return .= $next_page;
+                $return .= '<li class="disabled"><a href="#">&raquo;</a></li>';
                 $return .= '</ul>';
                 return $return;
             }
@@ -357,7 +355,11 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php';
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-single.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
+                }
                 if ( $theme_file = locate_template( array( 'casawp-single.php' ) ) ) {
                     $template_path = $theme_file;
                 }
@@ -373,7 +375,11 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php';
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
+                }
                 if ( $theme_file = locate_template(array('casawp-archive.php'))) {
                     $template_path = $theme_file;
                 }
@@ -424,6 +430,14 @@ class Plugin {
                 }
                 break;
             case 'bootstrap4':
+                if (get_option('casawp_load_scripts', false)) {
+                    wp_enqueue_script('casawp_bootstrap4_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/assets.min.js', array( 'jquery' ), false, true );
+                    wp_enqueue_script('casawp_bootstrap4_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/main.min.js', array( 'jquery', 'casawp_bootstrap4_assets' ), false, true );
+                }
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap4_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/css/bs4.css' );
+                    wp_enqueue_style( 'casawp_bootstrap4_css' );
+                }
                 break;
         }
 
