@@ -3,7 +3,7 @@
     $this->offer
 -->
 
-<div id="slider_<?= $this->offer->ID ?>" class="casawp-carousel slide" data-ride="carousel" data-interval="false">
+<div id="slider_<?= $this->offer->ID ?>" class="casawp-carousel carousel slide" data-ride="carousel" data-interval="false">
     <?php $indicators = get_option('casawp_single_show_carousel_indicators' , '0'); ?>
     <?php if($indicators != 0) : ?>
         <ol class="carousel-indicators">
@@ -13,7 +13,7 @@
         </ol>
     <?php endif; ?>
 
-    <div class="casawp-carousel-inner">
+    <div class="casawp-carousel-inner carousel-inner">
         <?php foreach ($this->images as $i => $image): ?>
             <div class="item <?= ($i==0?'active':'') ?>">
                 <?php 
@@ -23,7 +23,7 @@
                 <a class="property-image-gallery" rel="casawp-single-gallery" href="<?= $img_url[0] ?>" title="<?= $image->post_excerpt ?>"><?= $img ?></a>
                 <?php if ($image->post_excerpt) : ?>
                     <?php $class = ($indicators != '0') ? ('hasIndicators') : (null); ?>
-                    <div class="casawp-carousel-caption <?= $class ?>">
+                    <div class="casawp-carousel-caption carousel-caption <?= $class ?>">
                         <p><?= $image->post_excerpt ?></p>
                     </div>
                 <?php endif; ?>
@@ -35,10 +35,10 @@
         <?php endforeach ?>
     </div>
 
-    <a class="left casawp-carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="prev">
+    <a class="left casawp-carousel-control carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left"></span>
     </a>
-    <a class="right casawp-carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="next">
+    <a class="right casawp-carousel-control carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="next">
         <span class="glyphicon glyphicon-chevron-right"></span>
     </a>
 

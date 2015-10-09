@@ -150,8 +150,9 @@ class Plugin {
            'thumbnails_ideal_width'   => get_option('casawp_single_thumbnail_ideal_width', 150),
         );
         //wp_localize_script( 'casawp_bootstrap2_main', 'casawpOptionParams', $script_params );
-        wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
         //wp_localize_script( 'casawp_bootstrap4_main', 'casawpOptionParams', $script_params );
+        wp_localize_script( 'casawp', 'casawpOptionParams', $script_params );
     }
 
 
@@ -403,6 +404,7 @@ class Plugin {
     function registerScriptsAndStyles(){
         wp_register_style( 'casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
         wp_enqueue_style( 'casawp' );
+        wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery' ), false, true );
 
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
             case 'bootstrap2':
@@ -414,7 +416,7 @@ class Plugin {
             case 'bootstrap3':
                 if (get_option('casawp_load_scripts', false)) {
                     wp_enqueue_script('casawp_bootstrap3_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/assets.min.js', array( 'jquery' ), false, true );
-                    wp_enqueue_script('casawp_bootstrap3_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/main.min.js', array( 'jquery', 'casawp_bootstrap3_assets' ), false, true );
+                    //wp_enqueue_script('casawp_bootstrap3_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/main.min.js', array( 'jquery', 'casawp_bootstrap3_assets' ), false, true );
                 }
                 if (get_option('casawp_load_css', false)) {
                     wp_register_style( 'casawp_bootstrap3_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/css/bs3.css' );
@@ -425,146 +427,32 @@ class Plugin {
                 break;
         }
 
-        /*if (get_option( 'casawp_load_bootstrap_scripts', 'none' )) {
-            switch (get_option('casawp_load_css', 'bootstrapv3')) {
-                case 'bootstrapv2':
-                    wp_enqueue_script(
-                        'casawp_bootstrap2',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap.min.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    break;
-                case 'bootstrapv3':
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_transition',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/transition.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_tab',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tab.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_carousel',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/carousel.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_tooltip',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tooltip.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_popover',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/popover.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    break;
-                case 'none':
-                default:
-                    # code...
-                    break;
-            }
-            // Add Bootstrap v2 
-        }*/
+        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin_assets/js/jstorage.js', array( 'jquery' ));
 
-        wp_enqueue_script(
-            'jstorage',
-            CASASYNC_PLUGIN_URL . 'plugin_assets/js/jstorage.js',
-            array( 'jquery' )
-        );
         if(is_singular('casawp_property')) {
-            wp_enqueue_script(
-                'casawp_jquery_eqheight',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.equal-height-columns.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            /*if (get_option( 'casawp_load_fancybox', 1 )) {
-                wp_enqueue_script(
-                    'fancybox',
-                    CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.fancybox.pack.js',
-                    array( 'jquery' ),
-                    false,
-                    true
-                );
-                wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'plugin_assets/css/jquery.fancybox.css' );
-                wp_enqueue_style( 'fancybox' );
-            }*/
+            wp_enqueue_script('casawp_jquery_eqheight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.equal-height-columns.js', array( 'jquery' ), false, true);
         }
 
-
-
-
         if (get_option( 'casawp_load_featherlight', 1 )) {
-            wp_enqueue_script(
-                'featherlight',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            wp_register_style( 'featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.css' );
-            wp_enqueue_style( 'featherlight' );
-
-            wp_enqueue_script(
-                'featherlight-gallery',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.js',
-                array( 'jquery', 'featherlight' ),
-                false,
-                true
-            );
-            wp_register_style( 'featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.css' );
-            wp_enqueue_style( 'featherlight-gallery' );
+            wp_enqueue_script('featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.js', array( 'jquery' ), false, true);
+            wp_register_style('featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.css' );
+            wp_enqueue_style('featherlight' );
+            wp_enqueue_script('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.js', array( 'jquery', 'featherlight' ), false, true );
+            wp_register_style('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.css' );
+            wp_enqueue_style('featherlight-gallery' );
         }
 
 
         if (get_option( 'casawp_load_chosen', 1 )) {
-            wp_enqueue_script(
-                'chosen',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/chosen.jquery.min.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
-            wp_enqueue_style( 'chosen-css' );
+            wp_enqueue_script('chosen', CASASYNC_PLUGIN_URL . 'plugin_assets/js/chosen.jquery.min.js', array( 'jquery' ), false, true);
+            wp_register_style('chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
+            wp_enqueue_style('chosen-css' );
         }
-
 
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
-            wp_enqueue_script(
-                'google_maps_v3',
-                'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false',
-                array(),
-                false,
-                true
-            );
+            wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false', array(), false, true );
         }
 
-
-
-/*        wp_enqueue_script(
-            'casawp_script',
-            CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
-            array( 'jquery' ),
-            false,
-            true
-        );*/
 
     }
 
