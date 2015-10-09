@@ -951,6 +951,20 @@
 
     public function getNumval($name){
       switch ($name) {
+        case 'surface_property': $name = 'area_sia_gsf'; break;
+        case 'volume': $name = 'volume_sia_gv'; break;
+      }
+
+      if ($this->offer->getFieldValue($name, false)) {
+        $numval = $this->offer->getNumval($name);
+        if ($numval) {
+          $val = $this->offer->renderNumvalValue($numval);
+          return $val;   
+        }
+        
+      }
+
+      switch ($name) {
         case 'floor':
         case 'number_of_floors':
         case 'number_of_rooms':

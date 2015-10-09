@@ -9,11 +9,11 @@
     "packages": [
         {
             "name": "casasoft/casamodules",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:CasasoftCH/casamodules.git",
-                "reference": "3fa3c99865e0cd27c5321379ff6ffb7c87d43db7"
+                "reference": "ec912f7a4d51054950777f69b1cb815467172d3c"
             },
             "require": {
                 "php": ">=5.3.2"
@@ -51,7 +51,7 @@
             "keywords": [
                 "zf2"
             ],
-            "time": "2015-10-06 11:26:38"
+            "time": "2015-10-09 15:06:53"
         },
         {
             "name": "container-interop/container-interop",

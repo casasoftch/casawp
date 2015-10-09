@@ -229,54 +229,6 @@
         ]
     },
     {
-        "name": "casasoft/casamodules",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:CasasoftCH/casamodules.git",
-            "reference": "3fa3c99865e0cd27c5321379ff6ffb7c87d43db7"
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "time": "2015-10-06 11:26:38",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "CasaLogService\\": "src/",
-                "CasasoftAuth\\": "src/",
-                "CasasoftEmail\\": "src/",
-                "CasasoftHelpers\\": "src/",
-                "CasasoftThumb\\": "src/",
-                "CasasoftStandards\\": "src/",
-                "DbGenerator\\": "src/",
-                "CasasoftMessenger\\": "src/",
-                "CasasoftGeo\\": "src/"
-            }
-        },
-        "license": [
-            "GPL"
-        ],
-        "authors": [
-            {
-                "name": "Jens Stalder",
-                "email": "jens.stalder@casasoft.ch"
-            }
-        ],
-        "description": "Casasoft Modules for Zend Framework 2 (PSR7) implementations.",
-        "homepage": "http://casasoft.ch/",
-        "keywords": [
-            "zf2"
-        ]
-    },
-    {
         "name": "zendframework/zend-stdlib",
         "version": "2.7.3",
         "version_normalized": "2.7.3.0",
@@ -1210,6 +1162,54 @@
         "homepage": "https://github.com/zendframework/zend-escaper",
         "keywords": [
             "escaper",
+            "zf2"
+        ]
+    },
+    {
+        "name": "casasoft/casamodules",
+        "version": "1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:CasasoftCH/casamodules.git",
+            "reference": "ec912f7a4d51054950777f69b1cb815467172d3c"
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2015-10-09 15:06:53",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "CasaLogService\\": "src/",
+                "CasasoftAuth\\": "src/",
+                "CasasoftEmail\\": "src/",
+                "CasasoftHelpers\\": "src/",
+                "CasasoftThumb\\": "src/",
+                "CasasoftStandards\\": "src/",
+                "DbGenerator\\": "src/",
+                "CasasoftMessenger\\": "src/",
+                "CasasoftGeo\\": "src/"
+            }
+        },
+        "license": [
+            "GPL"
+        ],
+        "authors": [
+            {
+                "name": "Jens Stalder",
+                "email": "jens.stalder@casasoft.ch"
+            }
+        ],
+        "description": "Casasoft Modules for Zend Framework 2 (PSR7) implementations.",
+        "homepage": "http://casasoft.ch/",
+        "keywords": [
             "zf2"
         ]
     }
