@@ -1614,9 +1614,9 @@ class Import {
     ksort($old_meta_data);
     foreach ($new_meta_data as $key => $value) {
       if (!in_array($key, $this->meta_keys)) {
-        $this->transcript['error']['unknown_metakeys'][$key] = $value;
+        //$this->transcript['error']['unknown_metakeys'][$key] = $value;
       }
-      if (!$value || !in_array($key, $this->meta_keys)) {
+      if (!$value) {
         unset($new_meta_data[$key]);
       }
     }

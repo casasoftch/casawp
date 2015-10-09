@@ -954,6 +954,10 @@
         case 'surface_property': $name = 'area_sia_gsf'; break;
       }
 
+      $val = $this->offer->renderNumvalValue($name, false);
+      if (!$val) {
+        return $val;
+      }
 
       switch ($name) {
         case 'floor':
