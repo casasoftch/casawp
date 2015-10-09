@@ -1,103 +1,150 @@
-.casasync-features{
-	.clearfix;
-	.casasync-label{
-		float:left;
-		margin-right: 3px;
-		margin-bottom: 3px;
+/*.casawp-archive,*/
+.casawp-single{
+	//.make-row();
+}
+.casawp-archive-content,
+.casawp-single-content{
+	.make-xs-column(12);
+	.make-sm-column(8);
+	.make-md-column(8);
+	.make-lg-column(8);
+}
+.casawp-archive-aside,
+.casawp-single-aside{
+	.make-xs-column(12);
+  	.make-sm-column(4);
+  	.make-md-column(4);
+  	.make-lg-column(4);
+}
+
+
+.casawp-archive{
+	.casawp-archive-aside {
+		
 	}
-}
-.casasync-label{
-	.label;
-	.label-default;
-}
-.casasync-unstyled{
-	.list-unstyled;
-}
-
-.casasync-form-group {
-	.form-group;
-}
-.casasync-form-control{
-	.form-control;
-}
-
-.casasync-hidden-xs{
-	.hidden-xs;
-}
-.casasync-visible-xs{
-	.visible-xs;
-}
-
-.casasync-single .casasync-contactform-form .casasync-contactform-send,
-.casasync-archive .casasync-filterform-wrap.large .casasync-filterform-button{
-	.btn;
-	.btn-primary;
-}
-
-.casasync-form-control{
-	.form-control;
-}
-
-.casasync-single .casasync-contactform-form input.form-control{
-	.input-sm;
-}
-
-.casasync-single{
-	.casasync-tabable-nav{
-		.nav;
-		.nav-tabs;
-		margin-left:0px; //wp templates
-		margin-bottom:0px; //wp templates
-	}
-	.casasync-tabable-content{
-		background-color: white;
-		border:1px solid #DDD;
-		border-top:0px;
-		padding:@grid-gutter-width/2;
-		margin-bottom: @grid-gutter-width/2;
-		border-bottom-right-radius: @border-radius-base;
-		border-bottom-left-radius: @border-radius-base;
-		.tab-content;
-		> .casasync-tabable-pane {
-	    	display: none;
-	    	.tab-pane;
-			//.fade;
+	.casawp-filterform-wrap{
+		.chosen-container{
+			margin-bottom: 10px;
 		}
-		> .active {
-			display: block;
+		.chosen-container-multi .chosen-choices li.search-field input[type="text"]{
+			height:auto;
 		}
 	}
-	.casasync-basic-boxes{
-		.make-row();
-		margin-left: -@grid-gutter-width/4;
-		margin-right: -@grid-gutter-width/4;
-		.casasync-basic-box{
-			.make-lg-column(4);
-			margin-bottom: @grid-gutter-width/2;
-			padding-left: @grid-gutter-width/4;
-			padding-right: @grid-gutter-width/4;
-			> div{
-				.well;
-				.small;
+	.casawp-filterform-wrap.large{
+		.well;
+		.casawp-filterform-button{
+			.btn;
+			.btn-primary;
+			.pull-right;
+		}
+	}
+	.casawp-filterform-wrap.small{
+		.well;
+		.casawp-filterform-button{
+			.btn;
+			.btn-primary;
+			.pull-right;
+			width: 20%;
+		}
+		.casawp_multiselect,
+		.chosen-container {
+			width: 30% !important;
+			margin-right: 3%;
+			float: left;
+		}
+		.wrap {
+			width: 80%;
+		}
+	}
+	.casawp-nav{
+		.casawp-nav-next,
+		.casawp-nav-previous{
+			.make-lg-column(6);
+		}
+	}
+	.casawp-archive-content{
+		.casawp-text{
+			.table{
 				margin-bottom: 0;
-				overflow: hidden;
-				min-height: 100%;
+			}
+			h3{
+				margin-top:0;
+			}
+		}
+	}
+	.casawp-property{
+		.make-row();
+		.availability-label{
+			position: absolute;
+			top:0px;
+			left:0px;
+			right:0px;
+			height: 36px;
+			line-height: 36px;
+			background-color: black;
+			background-color: rgba(0,0,0,0.7);
+			background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGDYDAAAvQC1UcyxoAAAAABJRU5ErkJggg==);
+			color:white;
+			text-align: center;
+			z-index: 2;
+			display: none;
+		}
+	}
+	.casawp-property-featured{
+		position: relative;
+		&:before{
+			content: "\f005";
+			right:0px;
+			top:0px;
+			box-sizing:content-box;
+			-webkit-box-sizing:content-box;
+			-moz-box-sizing:content-box;
+			display: block;
+			z-index:2;
+			
+			font-size: 20px;
+			line-height: 30px;
+			text-align: center;
+			font-family: FontAwesome;
+			position: absolute;
+			height:30px;
+			width:30px;
+			background-color:white;
+			background-color: rgba(255,255,255,0.8);
+			padding: 4px;
+			margin: 0px;
+			border-radius: 5px;
+			box-shadow: -1px 1px 3px rgba(0,0,0,0.2);
+		}
+	}
+	.casawp-gallery{
+		.make-lg-column(4);
+	}	
+	.casawp-missing-gallery{
+		height: 150px;
+		text-align: center;
+		background-color: #eee;
+		line-height: 150px;
+	}
+	.casawp-text{
+		.make-xs-column(12);
+		.make-sm-column(7);
+		.make-md-column(7);
+		.make-lg-column(7);
+		.table{
 
-			}
-			h4{
-				margin:0px 0px;//wp templates
-				margin-bottom: 5px;
-			}
 		}
 	}
-	.single-property-container{
-		.casasyncContact{
-			.well;
-		}
+	.casawp-thumbnail-wrapper{
+		.make-xs-column(12);
+		.make-sm-column(5);
+		.make-md-column(5);
+		.make-lg-column(5);
 	}
-}
-.casasync-archive{
-	.casasync-pagination{
+	.casawp-thumbnail{
+		.thumbnail;
+	}
+	.casawp-pagination{
 		ul{
 			.pagination;
 			.current{
@@ -114,3 +161,276 @@
 		}
 	}
 }
+
+.casawp-single{
+	.casawp-carousel{
+		.carousel;
+		border-radius: 5px;
+		overflow: hidden;
+		background-color: #eee;
+		.carousel-indicators{
+			bottom:0px;
+		}
+		.casawp-carousel-inner{
+			.carousel-inner;
+			img.carousel-image{
+				max-width: auto;
+				max-height: 425px;
+				width:auto;
+				margin: 0 auto;
+				text-align: center;
+				text-decoration: none;
+				vertical-align: middle;
+			}
+			.casawp-carousel-caption{
+				.carousel-caption;
+				left:0;
+				right:0;
+				bottom:0;
+				background: #333333;
+				background: rgba(0, 0, 0, 0.75);
+				p{
+					margin-bottom: 0;
+				}
+			}
+			.casawp-carousel-caption.hasIndicators {
+				padding-bottom: 40px;
+			}
+			.availability-label{
+				.carousel-caption;
+				top:0;
+				bottom:auto;
+				left:0;
+				right:0;
+				background: #333333;
+				background: rgba(0, 0, 0, 0.75);
+				z-index: 2;
+				display: none;
+			}
+		}
+		.casawp-carousel-control{
+			.carousel-control;
+			outline: 0;
+			opacity: 0;
+			width:10%;
+			position: absolute;
+			top: 35%;
+			bottom: 35%;
+			left: 0px;
+			right: 90%;
+			background-color: black;
+			background-color: rgba(0,0,0,0.7);
+			span{
+				margin-top:-5px;
+			}
+		}
+		.casawp-carousel-control.left span{
+			margin-left: -10px;
+		}
+		.casawp-carousel-control.right span{
+			margin-right: -10px;
+		}
+	}
+	.casawp-carousel:hover{
+		.casawp-carousel-control{
+			opacity: 0.5;
+		}
+		.casawp-carousel-control:hover{
+			opacity: 1;
+		}
+	}
+	.casawp-contactform-form{
+		input.form-control{
+			.input-sm;
+		}
+		.casawp-contactform-send{
+			.btn;
+			.btn-primary;
+			.btn-block;
+		}
+	}
+	.casawp-gallery-thumbnails{
+		margin-left: -8px;
+		margin-right: -8px;
+		a{
+			display: inline-block;
+			padding: 8px;
+			img{
+				height: 100%;
+			}
+		}
+		a[data-col='1']{ width: 100%; }
+		a[data-col='2']{ width: 50%; }
+		a[data-col='3']{ width: 33.33%; }
+		a[data-col='4']{ width: 25%; }
+		a[data-col='5']{ width: 20%; }
+		a[data-col='6']{ width: 16.66%; }
+		a[data-col='7']{ width: 14.285%; }
+		a[data-col='8']{ width: 12.5%; }
+	}
+	.casawp-tabable-nav{
+		.nav;
+		.nav-tabs;
+		//.nav-justified; 
+		margin-left:0px; //wp templates
+		margin-bottom:0px; //wp templates
+	}
+	.casawp-tabable-content{
+		background-color: white;
+		border:1px solid #DDD;
+		border-top:0px;
+		padding:10px;
+		margin-bottom: 20px;
+		border-bottom-right-radius:4px;
+		border-bottom-left-radius: 4px;
+		.tab-content;
+		> .casawp-tabable-pane {
+	    	display: none;
+	    	.tab-pane;
+			//.fade;
+		}
+		> .active {
+			display: block;
+		}
+	}
+	.casawp-basic-boxes{
+		.make-row();
+		.casawp-basic-box{
+			.make-lg-column(4);
+			margin-bottom: 10px;
+			> div{
+				.well;
+				margin-bottom: 0;
+				overflow: hidden;
+				min-height: 100%;
+				//font-size: 13px;
+			}
+			h4{
+				margin:0px 0px;//wp templates
+				margin-bottom: 5px;
+			}
+		}
+	}
+	.single-property-container{
+		.casawpContact{
+			.well;
+			.hidden-xs;
+		}
+	}
+	.casawp-single-aside-container .casawp-single-pagination{
+		margin-bottom:10px;
+		.hidden-xs;
+		span {
+			.hidden-sm;
+		}
+	}
+	.casawp-single-pagination-top .casawp-single-pagination{
+		.visible-xs;
+		.hidden-sm;
+		.hidden-md;
+		.hidden-lg;
+	}
+}
+body .featherlight{
+	z-index: 9999;
+}
+.entry-content{
+	.casawp-slider-thumbnails{
+		.hidden-sm;
+		ul {
+			.make-row();
+			li {
+				.make-lg-column(3);
+				.thumbnail;
+			}
+		}
+	}
+}
+
+
+#theApsoluteRealEmailField{
+	display: none!important;
+}
+
+.casawp-label{
+	.label;
+	.label-default;
+	display: inline-block;
+}
+.casawp-unstyled{
+	.list-unstyled;
+}
+.table{
+	.width-25{
+		width: 25%;
+	}
+	.width-75{
+		width: 75%;
+	}
+}
+
+.casawp-form-group {
+	.form-group;
+}
+.casawp-form-control{
+	.form-control;
+}
+
+.casawp-hidden-xs{
+	.hidden-xs;
+}
+.casawp-visible-xs{
+	.visible-xs;
+}
+/* Grid */
+.casawp-row{
+	.make-row();
+}
+.casawp-col-md-4 {
+	.make-md-column(4);
+}
+.casawp-col-md-5 {
+	.make-md-column(5);
+}
+.casawp-col-md-7 {
+	.make-md-column(7);
+}
+.casawp-col-md-8 {
+	.make-md-column(8);
+}
+.casawp-col-md-12 {
+	.make-md-column(12);
+}
+
+.featherlight .featherlight-previous span{
+	font-size: 0px;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+	.fa;
+	&:before{
+		font-size: 80px;
+		content: @fa-var-chevron-left;
+	}
+}
+
+.featherlight .featherlight-next span{
+	font-size: 0px;
+	.fa;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+	&:before{
+		font-size: 80px;
+		content: @fa-var-chevron-right;	
+
+	}
+}
+
+
+.casawp-virtual-tour-btn{
+	margin-top: 22px;
+	margin-bottom: 22px;
+}
+
+.casawp-youtube-video-wrapper{
+	margin-bottom: @grid-gutter-width/2;
+}
+
+

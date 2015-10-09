@@ -225,22 +225,22 @@
 
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Template</th>
+								<th scope="row">Theme</th>
 								<td class="front-static-pages">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Template</span></legend>
-										<?php $name = 'casawp_template'; ?>
+										<?php $name = 'casawp_viewgroup'; ?>
 										<?php $text = 'Darstellungs-Template auswählen'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrap2" <?php echo (get_option($name) == 'bootstrap2' ? 'checked="checked"' : ''); ?>> Bootstrap Version 2
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap2" <?php echo (get_option($name) == 'bootstrap2' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 2
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrap3" <?php echo (get_option($name) == 'bootstrap3' ? 'checked="checked"' : ''); ?>> Bootstrap Version 3
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap3" <?php echo (get_option($name) == 'bootstrap3' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 3
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrap4" <?php echo (get_option($name) == 'bootstrap4' ? 'checked="checked"' : ''); ?>> Bootstrap Version 4 (coming soon)
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap4" <?php echo (get_option($name) == 'bootstrap4' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 4 (coming soon)
 										</label>
 										<br>
 									</fieldset>
@@ -251,15 +251,13 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<?php $name = 'casawp_load_css'; ?>
-										<?php $text = 'Template CSS laden (verwende "overrides")'; ?>
-										<?php $subtext  = 'Falls nicht – template assets im theme integrieren – casawp overrides.less integrieren' ?>
+										<?php $text = 'Theme CSS laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-											<br><small><?= $subtext?></small>
 										</label>
 										<br>
 										<?php $name = 'casawp_load_scripts'; ?>
-										<?php $text = 'Template JS laden'; ?>
+										<?php $text = 'Theme JS laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>

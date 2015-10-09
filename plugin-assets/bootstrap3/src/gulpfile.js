@@ -3,11 +3,9 @@ var less = require('gulp-less');
 var path = require('path');
 var minifyCSS = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
-var gulpif = require('gulp-if');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
-var imagemin = require('gulp-imagemin');
 var autoprefixer = require('gulp-autoprefixer');
 var gulpIgnore = require('gulp-ignore');
 var rename = require("gulp-rename");
@@ -26,16 +24,7 @@ var paths = {
   ],
   vendor_scripts: [
     'bower_components/bootstrap/dist/js/bootstrap.min.js'
-    //jstorage,
-    //chosen,
-    //featherlight,
-  ],
-  images: [
-    'img/**/*',
-    '!img_bucket/**',
-    '!bower_components/**'
   ]
-
 };
 
 gulp.task('js_assets', function() {
@@ -70,18 +59,10 @@ gulp.task('js', function() {
     .pipe(gulp.dest('./../js'));
 });
 
-gulp.task('images', function() {
-  return gulp.src(paths.images)
-    .pipe(imagemin({optimizationLevel: 5}))
-    .pipe(gulp.dest('./../img'));
-});
-
 gulp.task('watch', function(){
 	gulp.watch(['less/**/*.less'], ['less']);
 	gulp.watch(paths.scripts, ['js']);
-	gulp.watch(paths.images, ['images']);
-	
 });
 
-gulp.task('default', ['watch', 'less', 'js_assets', 'js', 'images', 'fonts']);
+gulp.task('default', ['watch', 'less', 'js_assets', 'js', 'fonts']);
 

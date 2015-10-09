@@ -1,33 +1,160 @@
-(function () {
-	"use strict";
+jQuery.noConflict();
+jQuery(document).ready(function($) {
 
-	var $ = jQuery;
-	$(document).ready(function(){	
+    //archive jstorage persistance
+    if (window.casawpParams) {
+        $.jStorage.set('casawpParams', window.casawpParams);
+    }
 
-		//simple alternative lightbox for casasync (turn off Feather Light within the backend to avoid conflicts)
-		//$('.property-image-gallery').fancybox();
+    $('#casawpContactAnchor').click(function(event){
+        event.preventDefault();
 
-		//fancybox implementation example for all images (you may turn this off and activate the above statement instead if only the plugin should be targeted)
-		jQuery.fn.getTitle = function() { // Copy the title of every IMG tag and add it to its parent A so that fancybox can show titles
-			var arr = jQuery("a.fancybox");
-			jQuery.each(arr, function() {
-				var title = jQuery(this).children("img").attr("title");
-				jQuery(this).attr('title',title);
-			});
-		};
+        $('html, body').animate({
+            scrollTop: $( $.attr(this, 'href') ).parent().offset().top - 100
+        }, 500);
 
-		var thumbnails = jQuery("a:has(img)").not(".nolightbox").filter( function() { return /\.(jpe?g|png|gif|bmp)$/i.test(jQuery(this).attr('href')) });
-		thumbnails.addClass("fancybox").attr("rel","fancybox").getTitle();
-		jQuery("a.fancybox").fancybox();
+        $('.casawp-contactform-form').parent().addClass('casawp-highlight');
+        $('.casawp-contactform-form').delay(500).find(' input[name="firstname"]').focus();
 
-		//mobile header nav click toggles also
-		$('.navbar-header').click(function(event) {
-	    	if ($(event.target).hasClass('navbar-header') || $(event.target).hasClass('navbar-brand')) {
-	    		$(this).find('.navbar-toggle').click();
-	    	}
-	    });
+        //scrollToAnchor($(this).attr('href').split('#')[1]);
+        return false;
+    });
 
+    
+    if (window.casawpOptionParams && window.casawpOptionParams.featherlight == 1) {
+        if($('.property-image-gallery').length){
+            $('.property-image-gallery').featherlightGallery();
+        }
+    }
+    /*if (window.casawpOptionParams && window.casawpOptionParams.fancybox == 1) {
+        if($('.casawp-fancybox').length){
+            $('.casawp-fancybox').fancybox({
+                helpers     : {
+                    title   : { type : 'inside' },
+                }
+            });
+        }
+    }*/
 
-	});
- 
-})(jQuery);
+    if (window.casawpOptionParams && window.casawpOptionParams.chosen == 1) {
+        var config = {
+          '.chosen-select' : {width:"100%"}
+        }
+        for (var selector in config) {
+          $(selector).chosen(config[selector]);
+        }
+    }
+
+    if ($('.casawp-basic-box:visible').length){
+        if (window.casawpOptionParams && window.casawpOptionParams.load_css == 'bootstrapv3') {
+            var selector = '.casawp-basic-box';
+            $(selector).equalHeightColumns({
+                speed : 500
+            });
+        }
+    }
+
+    var casawpParams = $.jStorage.get('casawpParams', false);
+    if (casawpParams && $('.casawp-single-pagination').length) {
+        $('.casawp-single-archivelink').prop('href', casawpParams.archive_link);
+
+        $.ajax({
+            type: 'GET',
+            url: '',
+            data: {
+                'ajax' : 'prevnext',
+                'p' : casawpParams.p,
+                'query' : casawpParams,
+                'post_type' : 'casawp_property'
+            },
+            success: function (json) {
+                if (jQuery.parseJSON(json).nextlink !== 'no') {
+                    $('.casawp-single-next').prop('href', jQuery.parseJSON(json).nextlink);    
+                } else {
+                    $('.casawp-single-next').addClass('disabled');
+                }
+                if (jQuery.parseJSON(json).prevlink !== 'no') {
+                    $('.casawp-single-prev').prop('href', jQuery.parseJSON(json).prevlink);
+                } else {
+                    $('.casawp-single-prev').addClass('disabled');
+                }
+                $('.casawp-single-pagination').css('display','none').removeClass('hidden').show('fast');
+
+                $('.casawp-single').trigger("casawp-pagination-update");
+            }
+        });
+    };
+
+    //google maps
+    if (window.casawpOptionParams && window.casawpOptionParams.google_maps == 1) {
+        if ($('.casawp-map').length && google) {
+            $('.casawp-map').each(function(){
+                var $mapwraper = $(this);
+                if ($mapwraper.data('lat') && $mapwraper.data('lng')) {
+                    
+                    var map;
+                    function initialize() {
+                        var location = new google.maps.LatLng($mapwraper.data('lat'),$mapwraper.data('lng'));
+                        var mapOptions = {
+                          zoom: parseInt(window.casawpOptionParams.google_maps_zoomlevel),
+                          mapTypeId: google.maps.MapTypeId.ROADMAP,
+                          center: location
+                        };
+                        $mapwraper.show();
+                        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: location
+                        });
+                    }
+                    initialize();
+                };
+            });
+        }
+    }
+
+    /**/
+    if($('.casawp-gallery-thumbnails').length && window.casawpOptionParams){
+        function setThumbnailColumns() {
+            var that = '.casawp-gallery-thumbnails';
+            var attachments = $(that).find('a');
+            var width = $(that).width();
+            var idealThumbnailWidth = window.casawpOptionParams.thumbnails_ideal_width;
+
+            if ( width ) {
+                var columns = Math.min( Math.round( width / idealThumbnailWidth ), 8 ) || 1;
+                var imageSize = width / columns;
+                $( attachments ).each(function( index ) {
+                    $(this).attr( 'data-col', columns );
+                });
+            }
+            if (typeof ticker === 'undefined') {
+                var windowWidth = $(window).width();
+                var windowHeight = $(window).height();
+                ticker = setInterval(function () {
+                    if ((width != $(window).width()) || (height != $(window).height())) {
+                        windowWidth = $(window).width();
+                        windowHeight = $(window).height();
+                        setThumbnailColumns();
+                    }
+                }, 300);
+            }
+        }
+        setThumbnailColumns();
+    }
+   
+    // remove attr multiple (safari bug)
+    var userAgent = window.navigator.userAgent;
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+        selector = '.casawp_multiselect';
+        $(selector).removeAttr('multiple');
+        $(selector).each(function( index ) {
+            var hasSelectedItem = $(this).find(':selected');
+            if(hasSelectedItem.length == 0) {
+                var placeholder = $(this).attr('data-placeholder');
+                $(this).append('<option value="" selected disabled style="display:none;">' + placeholder + '</option>');
+            }
+        });
+    }
+});

@@ -149,7 +149,9 @@ class Plugin {
            'load_bootstrap_js'        => get_option('casawp_load_bootstrap_scripts'),
            'thumbnails_ideal_width'   => get_option('casawp_single_thumbnail_ideal_width', 150),
         );
-        wp_localize_script( 'casawp_script', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap2_main', 'casawpOptionParams', $script_params );
+        wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap4_main', 'casawpOptionParams', $script_params );
     }
 
 
@@ -399,21 +401,31 @@ class Plugin {
     }
 
     function registerScriptsAndStyles(){
-        switch (get_option('casawp_load_css', 'bootstrapv3')) {
-            case 'bootstrapv2':
-                wp_register_style( 'casawp-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs2.css' );
-                wp_enqueue_style( 'casawp-css' );
+        wp_register_style( 'casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
+        wp_enqueue_style( 'casawp' );
+
+        switch (get_option('casawp_viewgroup', 'bootstrap3')) {
+            case 'bootstrap2':
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs2.css' );
+                    wp_enqueue_style( 'casawp_bootstrap2' );
+                }
                 break;
-            case 'bootstrapv3':
-                wp_register_style( 'casawp-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs3.css' );
-                wp_enqueue_style( 'casawp-css' );
+            case 'bootstrap3':
+                if (get_option('casawp_load_scripts', false)) {
+                    wp_enqueue_script('casawp_bootstrap3_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/assets.min.js', array( 'jquery' ), false, true );
+                    wp_enqueue_script('casawp_bootstrap3_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/main.min.js', array( 'jquery', 'casawp_bootstrap3_assets' ), false, true );
+                }
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap3_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/css/bs3.css' );
+                    wp_enqueue_style( 'casawp_bootstrap3_css' );
+                }
                 break;
-            case 'none':
-            default:
+            case 'bootstrap4':
                 break;
         }
 
-        if (get_option( 'casawp_load_bootstrap_scripts', 'none' )) {
+        /*if (get_option( 'casawp_load_bootstrap_scripts', 'none' )) {
             switch (get_option('casawp_load_css', 'bootstrapv3')) {
                 case 'bootstrapv2':
                     wp_enqueue_script(
@@ -467,7 +479,7 @@ class Plugin {
                     break;
             }
             // Add Bootstrap v2 
-        }
+        }*/
 
         wp_enqueue_script(
             'jstorage',
@@ -495,6 +507,9 @@ class Plugin {
             }*/
         }
 
+
+
+
         if (get_option( 'casawp_load_featherlight', 1 )) {
             wp_enqueue_script(
                 'featherlight',
@@ -517,6 +532,7 @@ class Plugin {
             wp_enqueue_style( 'featherlight-gallery' );
         }
 
+
         if (get_option( 'casawp_load_chosen', 1 )) {
             wp_enqueue_script(
                 'chosen',
@@ -528,6 +544,8 @@ class Plugin {
             wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
             wp_enqueue_style( 'chosen-css' );
         }
+
+
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
             wp_enqueue_script(
                 'google_maps_v3',
@@ -537,13 +555,16 @@ class Plugin {
                 true
             );
         }
-        wp_enqueue_script(
+
+
+
+/*        wp_enqueue_script(
             'casawp_script',
             CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
             array( 'jquery' ),
             false,
             true
-        );
+        );*/
 
     }
 
