@@ -1,0 +1,116 @@
+.casasync-features{
+	.clearfix;
+	.casasync-label{
+		float:left;
+		margin-right: 3px;
+		margin-bottom: 3px;
+	}
+}
+.casasync-label{
+	.label;
+	.label-default;
+}
+.casasync-unstyled{
+	.list-unstyled;
+}
+
+.casasync-form-group {
+	.form-group;
+}
+.casasync-form-control{
+	.form-control;
+}
+
+.casasync-hidden-xs{
+	.hidden-xs;
+}
+.casasync-visible-xs{
+	.visible-xs;
+}
+
+.casasync-single .casasync-contactform-form .casasync-contactform-send,
+.casasync-archive .casasync-filterform-wrap.large .casasync-filterform-button{
+	.btn;
+	.btn-primary;
+}
+
+.casasync-form-control{
+	.form-control;
+}
+
+.casasync-single .casasync-contactform-form input.form-control{
+	.input-sm;
+}
+
+.casasync-single{
+	.casasync-tabable-nav{
+		.nav;
+		.nav-tabs;
+		margin-left:0px; //wp templates
+		margin-bottom:0px; //wp templates
+	}
+	.casasync-tabable-content{
+		background-color: white;
+		border:1px solid #DDD;
+		border-top:0px;
+		padding:@grid-gutter-width/2;
+		margin-bottom: @grid-gutter-width/2;
+		border-bottom-right-radius: @border-radius-base;
+		border-bottom-left-radius: @border-radius-base;
+		.tab-content;
+		> .casasync-tabable-pane {
+	    	display: none;
+	    	.tab-pane;
+			//.fade;
+		}
+		> .active {
+			display: block;
+		}
+	}
+	.casasync-basic-boxes{
+		.make-row();
+		margin-left: -@grid-gutter-width/4;
+		margin-right: -@grid-gutter-width/4;
+		.casasync-basic-box{
+			.make-lg-column(4);
+			margin-bottom: @grid-gutter-width/2;
+			padding-left: @grid-gutter-width/4;
+			padding-right: @grid-gutter-width/4;
+			> div{
+				.well;
+				.small;
+				margin-bottom: 0;
+				overflow: hidden;
+				min-height: 100%;
+
+			}
+			h4{
+				margin:0px 0px;//wp templates
+				margin-bottom: 5px;
+			}
+		}
+	}
+	.single-property-container{
+		.casasyncContact{
+			.well;
+		}
+	}
+}
+.casasync-archive{
+	.casasync-pagination{
+		ul{
+			.pagination;
+			.current{
+				&,
+				&:hover,
+				&:focus {
+				  z-index: 2;
+				  color: @pagination-active-color;
+				  background-color: @pagination-active-bg;
+				  border-color: @pagination-active-bg;
+				  cursor: default;
+				}
+			}
+		}
+	}
+}
