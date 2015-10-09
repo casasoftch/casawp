@@ -1408,13 +1408,6 @@ class Import {
     }
 
 
-    /* Post Metas */
-    $old_meta_data = array();
-    $meta_values = get_post_meta($wp_post->ID, null, true);
-    foreach ($meta_values as $key => $meta_value) {
-      $old_meta_data[$key] = $meta_value[0];
-    }
-
     $new_meta_data = array();
     //$casawp_visitInformation = $property->visitInformation->__toString();
     //$casawp_property_url = $property->url->__toString();
@@ -1605,32 +1598,23 @@ class Import {
     //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
 
-    //clean up arrays   
-    foreach ($old_meta_data as $key => $value) {
-      if (!in_array($key, $this->meta_keys)) {
-        unset($old_meta_data[$key]);
-      }
+    $old_meta_data = array();
+    $meta_values = get_post_meta($wp_post->ID, null, true);
+    foreach ($meta_values as $key => $meta_value) {
+      $old_meta_data[$key] = $meta_value[0];
     }
     ksort($old_meta_data);
     foreach ($new_meta_data as $key => $value) {
-      if (!in_array($key, $this->meta_keys)) {
-        //$this->transcript['error']['unknown_metakeys'][$key] = $value;
-      }
-      if (!$value) {
+     /* if (!$value) {
         unset($new_meta_data[$key]);
-      }
+      }*/
     }
     ksort($new_meta_data);
 
 
     if ($new_meta_data != $old_meta_data) {
-      foreach ($this->meta_keys as $key) {
-        if (in_array($key, array('the_urls', 'the_url', 'the_tags', 'extraPrice'))) {
-          if (isset($new_meta_data[$key])) {
-            $new_meta_data[$key] = $new_meta_data[$key];
-          }
-        }
-        $newval = (isset($new_meta_data[$key]) ? $new_meta_data[$key] : '');
+      foreach ($new_meta_data as $key => $value) {
+        $newval = $value;
         $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
         if (($oldval || $newval) && $oldval != $newval) {
           update_post_meta($wp_post->ID, $key, $newval);
@@ -1643,9 +1627,8 @@ class Import {
       foreach ($old_meta_data as $key => $value) {
         if (!isset($new_meta_data[$key])) {
           //remove
-          delete_post_meta($wp_post->ID, $key, $value);
-          $this->transcript[$casawp_id]['meta_data'][$key] = 'removed';
-
+          //delete_post_meta($wp_post->ID, $key, $value);
+          //$this->transcript[$casawp_id]['meta_data'][$key] = 'removed';
         }
       }
     }

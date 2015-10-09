@@ -271,7 +271,7 @@
         }
     }
 
-    /*public function getPagination(){
+    public function getPagination(){
         global $wp_query;
 
         if ( $GLOBALS['wp_query']->max_num_pages < 2 ) {
@@ -335,7 +335,7 @@
             return $return;
         }
       }
-    }*/
+    }
 
     public function getOrder(){
         return get_option("casawp_archive_order");
