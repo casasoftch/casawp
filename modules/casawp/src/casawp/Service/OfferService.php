@@ -630,7 +630,7 @@ class OfferService{
 			    	$post = array(
 			    		'post_type' => 'casawp_inquiry',
 			    		'post_content' => $form->get('message')->getValue(),
-			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('reference_id') ? $this->getFieldValue('reference_id') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle()),
+			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle()),
 			    		'post_status' => 'private',
 			    		'ping_status' => false
 			    	);
@@ -641,7 +641,7 @@ class OfferService{
 			    		}
 			    	}
 			    	add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
-			    	add_post_meta($inquiry_id, 'reference_id', $this->getFieldValue('reference_id'), true );
+			    	add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
 
 			    	if (get_option('casawp_inquiry_method') == 'casamail') {
 			        	//casamail
@@ -650,7 +650,7 @@ class OfferService{
 			    		$data['provider'] = $customerid;
 			    		$data['publisher'] = $publisherid;
 			    		$data['lang'] = substr(get_bloginfo('language'), 0, 2);
-			    		$data['property_reference'] = $this->getFieldValue('casawp_id');
+			    		$data['property_reference'] = $this->getFieldValue('referenceId');
 						$data_string = json_encode($data);                                                                                   
 						                                                                                                                     
 						$ch = curl_init('http://onemail.ch/api/msg');
