@@ -34,6 +34,7 @@ class Plugin {
         if (!is_admin()) {
             add_action('pre_get_posts', array($this, 'casawp_queryfilter'));  
         }
+
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
         register_activation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casawp_activation'));
         register_deactivation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casawp_deactivation'));
@@ -65,6 +66,33 @@ class Plugin {
             
         $this->bootstrap($configuration);
 
+        if (isset($_GET['ajax']) && $_GET['ajax'] == 'prevnext' && isset($_GET['base_id']) && $_GET['base_id']) {
+            if (!isset($_GET['query'])) {
+                $query = array();
+            } else {
+                $query = $_GET['query'];
+            }
+            $template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
+            add_action('wp_loaded', array($this, 'returnPrevNext'));
+
+        }
+
+    }
+
+    public function returnPrevNext(){
+        if (!isset($_GET['query'])) {
+            $query = array();
+        } else {
+            $query = $_GET['query'];
+        }
+        $array = $this->getPrevNext($query, $_GET['base_id']);
+        header('Content-Type: application/json');
+        echo json_encode($array, true);
+        die();
+    }
+
+    public function setArchiveParams(){
+        wp_localize_script( 'casawp', 'casawpParams', $this->queryService->getQuery());
     }
 
     private function bootstrap($configuration){
@@ -345,17 +373,42 @@ class Plugin {
         return $this->render('archive-filter', array('form' => $form));
     }
 
+    public function getPrevNext($query, $base_post_id){
+        $lapost = get_post( $base_post_id );
+        $this->queryService->setQuery($query);
+        $args = $this->queryService->getArgs();
+        $the_query = new \WP_Query($args);
+
+        $prev = false;
+        $next = false;
+        while($the_query->have_posts() ) {
+            $the_query->next_post();
+            if ($the_query->post->post_name == $lapost->post_name) {
+                if ($the_query->current_post + 1 < $the_query->post_count ) {
+                    $next_post = $the_query->next_post();
+                    $next = $next_post;
+                    break;
+                }
+            }
+            if ($the_query->post_count-1 != $the_query->current_post) { //because nextpost will fail at the end :-)
+                $prev = $the_query->post;
+            }
+        }
+
+        $prevnext = array(
+          'nextlink' => ($prev ? get_permalink($prev->ID) : 'no'), 
+          'prevlink' => ($next ? get_permalink($next->ID) : 'no')
+        );
+        return $prevnext;
+    }
+
     public function include_template_function( $template_path ) {
         if ( get_post_type() == 'casawp_property' && is_single()) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
-                if ($_GET['ajax'] == 'prevnext') {
-                    $template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
-                } else {
-                    $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
-                    if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
-                        $template_path = $theme_file;
-                    }    
-                }
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
+                if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }    
                 
                 header('Content-Type: application/json');
                 
@@ -380,6 +433,8 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
+                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
                     case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
@@ -413,8 +468,8 @@ class Plugin {
     }
 
     function registerScriptsAndStyles(){
-        wp_register_style( 'casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
-        wp_enqueue_style( 'casawp' );
+        wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
+        wp_enqueue_style( 'casawp_css' );
         wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery' ), false, true );
 
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {

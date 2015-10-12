@@ -39,33 +39,35 @@ jQuery(document).ready(function($) {
 
     var casawpParams = $.jStorage.get('casawpParams', false);
     if (casawpParams && $('.casawp-single-pagination').length) {
+        var post_id = $('.casawp-single-pagination').data('post');
         $('.casawp-single-archivelink').prop('href', casawpParams.archive_link);
+        if (post_id) {
+            $.ajax({
+                type: 'GET',
+                url: '',
+                data: {
+                    'ajax' : 'prevnext',
+                    'base_id' : post_id,
+                    'query' : casawpParams
+                },
+                success: function (json) {
+                    console.log(json);
+                    if (json.nextlink !== 'no') {
+                        $('.casawp-single-next').prop('href', json.nextlink);    
+                    } else {
+                        $('.casawp-single-next').addClass('disabled');
+                    }
+                    if (json.prevlink !== 'no') {
+                        $('.casawp-single-prev').prop('href', json.prevlink);
+                    } else {
+                        $('.casawp-single-prev').addClass('disabled');
+                    }
+                    $('.casawp-single-pagination').css('display','none').removeClass('hidden').show('fast');
 
-        $.ajax({
-            type: 'GET',
-            url: '',
-            data: {
-                'ajax' : 'prevnext',
-                'p' : casawpParams.p,
-                'query' : casawpParams,
-                'post_type' : 'casawp_property'
-            },
-            success: function (json) {
-                if (jQuery.parseJSON(json).nextlink !== 'no') {
-                    $('.casawp-single-next').prop('href', jQuery.parseJSON(json).nextlink);    
-                } else {
-                    $('.casawp-single-next').addClass('disabled');
+                    $('.casawp-single').trigger("casawp-pagination-update");
                 }
-                if (jQuery.parseJSON(json).prevlink !== 'no') {
-                    $('.casawp-single-prev').prop('href', jQuery.parseJSON(json).prevlink);
-                } else {
-                    $('.casawp-single-prev').addClass('disabled');
-                }
-                $('.casawp-single-pagination').css('display','none').removeClass('hidden').show('fast');
-
-                $('.casawp-single').trigger("casawp-pagination-update");
-            }
-        });
+            });
+        }
     }
 
     //google maps

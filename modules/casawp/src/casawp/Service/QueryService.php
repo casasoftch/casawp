@@ -93,127 +93,129 @@ class QueryService{
         return $query;
     }
 
+
+    public function getArgs(){
+        $args = array();
+        $args['post-type'] = $this->query['post-type'];
+        $args['posts_per_page'] = $this->query['posts_per_page'];
+        $args['order'] = $this->query['order'];
+
+        $args['ignore_sticky_posts'] = $this->query['ignore_sticky_posts'];
+
+        if (get_option( 'casawp_hide_sticky_properties_in_main')) {
+            $args['post__not_in'] = get_option( 'sticky_posts' );
+        }
+        
+        switch ($this->query['orderby']) {
+            case 'title':
+                $args['orderby'] = 'title';
+                break;
+            case 'location':
+                $args['meta_key'] = 'casawp_property_address_locality';
+                $args['orderby'] = 'meta_value';
+                break;
+            case 'price':
+                $args['meta_key'] = 'priceForOrder';
+                $args['orderby'] = 'meta_value';
+                break;
+            case 'menu_order':
+                $args['orderby'] = 'menu_order date';
+                break;
+            case 'casawp_referenceId':
+                $args['meta_key'] = 'casawp_referenceId';
+                $args['orderby'] = 'meta_value';
+                break;
+            case 'date':
+            default:
+                $args['orderby'] = 'date';
+                break;
+        }
+
+
+        $taxquery_new = array();
+
+        if ($this->query['categories']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_category',
+                'terms'            => $this->query['categories'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'IN'
+            );
+        }
+        if ($this->query['locations']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_location',
+                'terms' => $this->query['locations'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+            );
+        }
+
+        if ($this->query['salestypes']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_salestype',
+                'terms' => $this->query['salestypes'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+             );
+        }
+
+        if ($this->query['availabilities']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_availability',
+                'terms' => $this->query['availabilities'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+             );
+        }
+
+        if ($this->query['features']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_feature',
+                'terms' => $this->query['features'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+             );
+        }
+
+        if ($taxquery_new) {
+            $args['tax_query'] = $taxquery_new;
+        }
+
+        return $args;
+    }
    
     public function applyToWpQuery($query){
-
         //tax pages overides
-        if (is_tax('casawp_category')) {
-            $this->query['categories'] = array(get_query_var( 'casawp_category' ));
-        }
-        if (is_tax('casawp_location')) {
-            $this->query['locations'] = array(get_query_var( 'casawp_location' ));
-        }
-        if (is_tax('casawp_salestype')) {
-            $this->query['salestypes'] = array(get_query_var( 'casawp_salestype' ));
-        }
-        if (is_tax('casawp_availability')) {
-            $this->query['availabilities'] = array(get_query_var( 'casawp_availability' ));
-        }
-        if (is_tax('casawp_feature')) {
-            $this->query['features'] = array(get_query_var( 'casawp_feature' ));
-        }
-
-        
-
-    	if ($query->is_main_query()) {
-            if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive('casawp_property')) {
-                $query->set('post-type', $this->query['post-type']);
-                $query->set('posts_per_page', $this->query['posts_per_page']);
-                $query->set('order', $this->query['order']);
-
-                $query->set('ignore_sticky_posts',$this->query['ignore_sticky_posts']);
-
-                if (get_option( 'casawp_hide_sticky_properties_in_main')) {
-                    $query->set('post__not_in', get_option( 'sticky_posts' ));
-                }
-                
-                switch ($this->query['orderby']) {
-                    case 'title':
-                        $query->set('orderby', 'title');
-                        break;
-                    case 'location':
-                        $query->set('meta_key', 'casawp_property_address_locality');
-                        $query->set('orderby', 'meta_value');
-                        break;
-                    case 'price':
-                        $query->set('meta_key', 'priceForOrder');
-                        $query->set('orderby', 'meta_value');
-                        break;
-                    case 'menu_order':
-                        $query->set('orderby', 'menu_order date');
-                        break;
-                    case 'casawp_referenceId':
-                        $query->set('meta_key', 'casawp_referenceId');
-                        $query->set('orderby', 'meta_value');
-                        break;
-                    case 'date':
-                    default:
-                        $query->set('orderby', 'date');
-                        break;
-                }
-
-                //$query->set('orderby', 'date');
-                //$query->set('order', 'ASC');
-
-                $taxquery_new = array();
-
-                if ($this->query['categories']) {
-                    $taxquery_new[] = array(
-                        'taxonomy'         => 'casawp_category',
-                        'terms'            => $this->query['categories'],
-                        'include_children' => 1,
-                        'field'            => 'slug',
-                        'operator'         => 'IN'
-                    );
-                }
-                if ($this->query['locations']) {
-                    $taxquery_new[] = array(
-                        'taxonomy' => 'casawp_location',
-                        'terms' => $this->query['locations'],
-                        'include_children' => 1,
-                        'field' => 'slug',
-                        'operator'=> 'IN'
-                    );
-                }
-
-                if ($this->query['salestypes']) {
-                    $taxquery_new[] = array(
-                        'taxonomy' => 'casawp_salestype',
-                        'terms' => $this->query['salestypes'],
-                        'include_children' => 1,
-                        'field' => 'slug',
-                        'operator'=> 'IN'
-                     );
-                }
-
-                if ($this->query['availabilities']) {
-                    $taxquery_new[] = array(
-                        'taxonomy' => 'casawp_availability',
-                        'terms' => $this->query['availabilities'],
-                        'include_children' => 1,
-                        'field' => 'slug',
-                        'operator'=> 'IN'
-                     );
-                }
-
-                if ($this->query['features']) {
-                    $taxquery_new[] = array(
-                        'taxonomy' => 'casawp_feature',
-                        'terms' => $this->query['features'],
-                        'include_children' => 1,
-                        'field' => 'slug',
-                        'operator'=> 'IN'
-                     );
-                }
-
-                if ($taxquery_new) {
-                    $query->set('tax_query', $taxquery_new);
-                }
-
-                add_filter( 'posts_where' , array($this, 'nearmefilter') );    
-
+        if ($query->is_main_query()) {
+            if (is_tax('casawp_category')) {
+                $this->query['categories'] = array(get_query_var( 'casawp_category' ));
+            }
+            if (is_tax('casawp_location')) {
+                $this->query['locations'] = array(get_query_var( 'casawp_location' ));
+            }
+            if (is_tax('casawp_salestype')) {
+                $this->query['salestypes'] = array(get_query_var( 'casawp_salestype' ));
+            }
+            if (is_tax('casawp_availability')) {
+                $this->query['availabilities'] = array(get_query_var( 'casawp_availability' ));
+            }
+            if (is_tax('casawp_feature')) {
+                $this->query['features'] = array(get_query_var( 'casawp_feature' ));
             }
         }
+
+        $args = $this->getArgs();
+        foreach ($args as $key => $value) {
+            $query->set($key, $value);
+        }
+
+        add_filter( 'posts_where' , array($this, 'nearmefilter') );    
 
 	    return $query;
    	}

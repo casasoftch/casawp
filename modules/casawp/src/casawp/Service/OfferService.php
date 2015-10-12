@@ -700,7 +700,9 @@ class OfferService{
     }
 
     public function renderPagination(){
-    	return $this->render('single-pagination', array());
+    	return $this->render('single-pagination', array(
+    		'post_id' => $this->post->ID
+    	));
     }
 
 }

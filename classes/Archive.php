@@ -209,15 +209,15 @@
            'orderby'      => $this->getOrderby()
        );
 
-        wp_enqueue_script(
+        /*wp_enqueue_script(
             'casawp_script',
             CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
             array( 'jquery'),
             false,
             true
-        );
+        );*/
 
-        wp_localize_script( 'casawp_script', 'casawpParams', $script_params );
+        //wp_localize_script( 'casawp_script', 'casawpParams', $script_params );
     }
 
     public function getArchiveLink(){
