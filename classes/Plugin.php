@@ -348,12 +348,17 @@ class Plugin {
     public function include_template_function( $template_path ) {
         if ( get_post_type() == 'casawp_property' && is_single()) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
-                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/prevnext.php';
-                header('Content-Type: application/json');
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
-                if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
-                    $template_path = $theme_file;
+                if ($_GET['ajax'] == 'prevnext') {
+                    $template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
+                } else {
+                    $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
+                    if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
+                        $template_path = $theme_file;
+                    }    
                 }
+                
+                header('Content-Type: application/json');
+                
             } else {
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
