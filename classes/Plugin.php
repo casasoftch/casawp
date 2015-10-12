@@ -92,7 +92,12 @@ class Plugin {
     }
 
     public function setArchiveParams(){
-        wp_localize_script( 'casawp', 'casawpParams', $this->queryService->getQuery());
+        
+        $query = $this->queryService->getQuery();
+        //$url = '/immobilien/?'.http_build_query($query);
+        $url = $_SERVER['REQUEST_URI'];
+        $query['archive_link'] = $url;
+        wp_localize_script( 'casawp', 'casawpParams', $query);
     }
 
     private function bootstrap($configuration){

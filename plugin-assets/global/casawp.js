@@ -41,6 +41,8 @@ jQuery(document).ready(function($) {
     if (casawpParams && $('.casawp-single-pagination').length) {
         var post_id = $('.casawp-single-pagination').data('post');
         $('.casawp-single-archivelink').prop('href', casawpParams.archive_link);
+        var query = casawpParams;
+        delete query.archive_link;
         if (post_id) {
             $.ajax({
                 type: 'GET',
@@ -51,7 +53,6 @@ jQuery(document).ready(function($) {
                     'query' : casawpParams
                 },
                 success: function (json) {
-                    console.log(json);
                     if (json.nextlink !== 'no') {
                         $('.casawp-single-next').prop('href', json.nextlink);    
                     } else {
