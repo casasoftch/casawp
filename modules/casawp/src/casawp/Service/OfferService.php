@@ -591,6 +591,9 @@ class OfferService{
 	}
 
 	public function renderContactForm(){
+		if ($this->getAvailablility() == 'reference') {
+	        return false;
+	    }
         $form = new \casawp\Form\ContactForm();
         $sent = false;
         $customerid = get_option('casawp_customerid');
