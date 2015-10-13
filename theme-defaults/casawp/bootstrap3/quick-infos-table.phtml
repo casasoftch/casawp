@@ -35,7 +35,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = $this->offer->getNumval('sia_nf'); ?>
+        <?php $value = $this->offer->getNumval('area_sia_nf'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Surface usable', 'casawp') ?></th>
@@ -51,7 +51,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = $this->offer->getNumval('surface_property'); ?>
+        <?php $value = $this->offer->getNumval('area_sia_gsf'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Property space', 'casawp') ?></th>
