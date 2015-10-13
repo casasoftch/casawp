@@ -382,6 +382,7 @@ class Plugin {
         $lapost = get_post( $base_post_id );
         $this->queryService->setQuery($query);
         $args = $this->queryService->getArgs();
+        $args['post_type'] = 'casawp_property';
         $the_query = new \WP_Query($args);
 
         $prev = false;
@@ -497,7 +498,7 @@ class Plugin {
             case 'bootstrap4':
                 if (get_option('casawp_load_scripts', false)) {
                     wp_enqueue_script('casawp_bootstrap4_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/assets.min.js', array( 'jquery' ), false, true );
-                    wp_enqueue_script('casawp_bootstrap4_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/main.min.js', array( 'jquery', 'casawp_bootstrap4_assets' ), false, true );
+                    //wp_enqueue_script('casawp_bootstrap4_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/main.min.js', array( 'jquery', 'casawp_bootstrap4_assets' ), false, true );
                 }
                 if (get_option('casawp_load_css', false)) {
                     wp_register_style( 'casawp_bootstrap4_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/css/bs4.css' );
