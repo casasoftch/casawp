@@ -165,7 +165,7 @@ class Plugin {
     }
 
     public function casawp_queryfilter($query){
-        if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' )) {
+        if ($query->is_main_query() && (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' ))) {
             $this->queryService->setQuery();
             $query = $this->queryService->applyToWpQuery($query);
         }
