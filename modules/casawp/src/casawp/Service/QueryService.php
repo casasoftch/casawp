@@ -16,7 +16,7 @@ class QueryService{
             'categories' => array(),
             'locations' => array(),
             'salestypes' => array(),
-            'availabilities' => array(),
+            'availabilities' => array('active'),
             'features' => array(),
             'my_lng' => null,
             'my_lat' => null,

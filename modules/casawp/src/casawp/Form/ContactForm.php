@@ -63,7 +63,11 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Country', 'casawp'),
                 'options' => array(
-                    'CH' => 'Schweiz'
+                    'CH' => 'Schweiz',
+                    'AT' => 'Östereich',
+                    'DE' => 'Deutschland',
+                    'FR' => 'Frankreich',
+                    'IT' => 'Italien'
                 )
             ),
         ));
