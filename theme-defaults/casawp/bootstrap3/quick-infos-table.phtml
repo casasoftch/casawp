@@ -59,7 +59,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = false #floor; ?>
+        <?php $value = $this->offer->getNumval('floor'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Floor', 'casawp') ?></th>
