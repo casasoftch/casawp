@@ -7,7 +7,6 @@ var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 var autoprefixer = require('gulp-autoprefixer');
-var gulpIgnore = require('gulp-ignore');
 var rename = require("gulp-rename");
 
 

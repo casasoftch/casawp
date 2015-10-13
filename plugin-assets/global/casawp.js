@@ -29,14 +29,6 @@ jQuery(document).ready(function($) {
         $('.chosen-select').chosen({width:"100%"});
     }
 
-    if ($('.casawp-basic-box:visible').length){
-        if (window.casawpOptionParams && window.casawpOptionParams.load_css == 'bootstrapv3') {
-            $('.casawp-basic-box').equalHeightColumns({
-                speed : 500
-            });
-        }
-    }
-
     var casawpParams = $.jStorage.get('casawpParams', false);
     if (casawpParams && $('.casawp-single-pagination').length) {
         var post_id = $('.casawp-single-pagination').data('post');

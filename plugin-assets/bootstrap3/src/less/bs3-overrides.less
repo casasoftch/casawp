@@ -289,16 +289,31 @@
 		}
 	}
 	.casawp-basic-boxes{
-		.make-row();
+		//.make-row();
+		
+		@media (min-width: @screen-sm-min) {
+			display: flex;
+	    	flex-flow: row wrap;
+		}
 		.casawp-basic-box{
-			.make-lg-column(4);
-			margin-bottom: 10px;
+			//.make-lg-column(4);
+			@media (min-width: @screen-sm-min) {
+				flex: 1 0 0;
+				display: flex;
+				padding-left: @grid-gutter-width/2;
+				
+				&:first-child{
+					padding-left: 0;
+				}
+			}
+			margin-bottom: @grid-gutter-width/2;
+			overflow: hidden;
 			> div{
+				@media (min-width: @screen-sm-min) {
+					flex: 1;
+				}
 				.well;
-				margin-bottom: 0;
-				overflow: hidden;
-				min-height: 100%;
-				//font-size: 13px;
+				margin-bottom: 0px;
 			}
 			h4{
 				margin:0px 0px;//wp templates
