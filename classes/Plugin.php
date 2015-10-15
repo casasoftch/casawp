@@ -72,7 +72,7 @@ class Plugin {
             } else {
                 $query = $_GET['query'];
             }
-            $template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
+            //$template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
             add_action('wp_loaded', array($this, 'returnPrevNext'));
 
         }
@@ -382,6 +382,7 @@ class Plugin {
 
     public function getPrevNext($query, $base_post_id){
         $lapost = get_post( $base_post_id );
+        $query['posts_per_page'] = 100;
         $this->queryService->setQuery($query);
         $args = $this->queryService->getArgs();
         $args['post_type'] = 'casawp_property';
@@ -596,7 +597,7 @@ class Plugin {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes' ),
+            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes', 'revisions' ),
             'menu_icon'          => 'dashicons-admin-home',
             'show_in_nav_menus'  => true
         );
@@ -651,7 +652,6 @@ class Plugin {
                         0 => 'excerpt',
                         1 => 'discussion',
                         2 => 'comments',
-                        3 => 'revisions',
                         5 => 'author',
                         6 => 'format',
                         10 => 'send-trackbacks',
@@ -704,7 +704,6 @@ class Plugin {
                         0 => 'excerpt',
                         1 => 'discussion',
                         2 => 'comments',
-                        3 => 'revisions',
                         5 => 'author',
                         6 => 'format',
                         10 => 'send-trackbacks',

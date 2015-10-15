@@ -42,13 +42,13 @@ class OfferService{
     }
 
     //deligate all other methods to WP_Post Class
-    function __call($name, $arguments){
-    	if (method_exists($this->post, $name)) {
-    		return $this->post->{$name}($arguments);
-    	}
-    }
+	function __call($name, $arguments){
+		if (method_exists($this->post, $name)) {
+			return $this->post->{$name}($arguments);
+		}
+	}
 
-    public function to_array() {
+	public function to_array() {
 		$offer_array = array(
 			'post' => $this->post->to_array()
 		);
@@ -56,8 +56,8 @@ class OfferService{
 		//basics
 		$offer_array['title'] = $this->getTitle();
 
-    	//if load categories example
-    	$offer_array['categories'] = $this->getCategoriesArray();
+		//if load categories example
+		$offer_array['categories'] = $this->getCategoriesArray();
 
 		return $offer_array;
 	}
@@ -66,7 +66,7 @@ class OfferService{
 	/*====================================
 	=            Data Getters            =
 	====================================*/
-		
+	
 	public function getTitle(){
 		return $this->post->post_title;
 	}
