@@ -1086,6 +1086,7 @@ class Import {
                 $propertydata['organization']['postalAddress']['postal_code'] = $property_xml->seller->organization->address->postalCode->__toString();
                 $propertydata['organization']['postalAddress']['street'] = $property_xml->seller->organization->address->street->__toString();
                 $propertydata['organization']['postalAddress']['street_number'] = $property_xml->seller->organization->address->streetNumber->__toString();
+                $propertydata['organization']['postalAddress']['post_office_box_number'] = $property_xml->seller->organization->address->streetNumber->__toString();
             }
         }
        
@@ -1448,8 +1449,8 @@ class Import {
         $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
         $new_meta_data['seller_org_address_region']                = $property['organization']['postalAddress']['region'];
         $new_meta_data['seller_org_address_postalcode']            = $property['organization']['postalAddress']['postal_code'];
-        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['postofficeboxnumber'];
-        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'].' '.$property['organization']['address']['streetNumber'];
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['post_office_box_number'];
+        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'].' '.$property['organization']['postalAddress']['street_number'];
       }
     }
 
