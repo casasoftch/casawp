@@ -34,6 +34,7 @@ class Plugin {
         if (!is_admin()) {
             add_action('pre_get_posts', array($this, 'casawp_queryfilter'));  
         }
+
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
         register_activation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casawp_activation'));
         register_deactivation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casawp_deactivation'));
@@ -65,6 +66,38 @@ class Plugin {
             
         $this->bootstrap($configuration);
 
+        if (isset($_GET['ajax']) && $_GET['ajax'] == 'prevnext' && isset($_GET['base_id']) && $_GET['base_id']) {
+            if (!isset($_GET['query'])) {
+                $query = array();
+            } else {
+                $query = $_GET['query'];
+            }
+            //$template_path = CASASYNC_PLUGIN_DIR . '/plugin_assets/prevnext.php';
+            add_action('wp_loaded', array($this, 'returnPrevNext'));
+
+        }
+
+    }
+
+    public function returnPrevNext(){
+        if (!isset($_GET['query'])) {
+            $query = array();
+        } else {
+            $query = $_GET['query'];
+        }
+        $array = $this->getPrevNext($query, $_GET['base_id']);
+        header('Content-Type: application/json');
+        echo json_encode($array, true);
+        die();
+    }
+
+    public function setArchiveParams(){
+        
+        $query = $this->queryService->getQuery();
+        //$url = '/immobilien/?'.http_build_query($query);
+        $url = $_SERVER['REQUEST_URI'];
+        $query['archive_link'] = $url;
+        wp_localize_script( 'casawp', 'casawpParams', $query);
     }
 
     private function bootstrap($configuration){
@@ -132,8 +165,10 @@ class Plugin {
     }
 
     public function casawp_queryfilter($query){
-        $this->queryService->setQuery();
-        $query = $this->queryService->applyToWpQuery($query);
+        if ($query->is_main_query() && (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' ))) {
+            $this->queryService->setQuery();
+            $query = $this->queryService->applyToWpQuery($query);
+        }
         return $query;
     }
     
@@ -149,7 +184,10 @@ class Plugin {
            'load_bootstrap_js'        => get_option('casawp_load_bootstrap_scripts'),
            'thumbnails_ideal_width'   => get_option('casawp_single_thumbnail_ideal_width', 150),
         );
-        wp_localize_script( 'casawp_script', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap2_main', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
+        //wp_localize_script( 'casawp_bootstrap4_main', 'casawpOptionParams', $script_params );
+        wp_localize_script( 'casawp', 'casawpOptionParams', $script_params );
     }
 
 
@@ -219,11 +257,9 @@ class Plugin {
             $current_page = max(1, get_query_var('paged'));
             if($current_page) {
                 //TODO: prev/next These dont work yet!
-                $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
-                $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
                 $i = 0;
                 $return = '<ul class="casawp-pagination">';
-                $return .= $prev_page;
+                $return .= '<li class="disabled"><a href="#">&laquo;</span></a></li>';
                 while ($i < $total_pages) {
                     $i++;
                     if ($current_page == $i) {
@@ -232,7 +268,7 @@ class Plugin {
                         $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
                   }
                 }
-                $return .= $next_page;
+                $return .= '<li class="disabled"><a href="#">&raquo;</a></li>';
                 $return .= '</ul>';
                 return $return;
             }
@@ -344,17 +380,53 @@ class Plugin {
         return $this->render('archive-filter', array('form' => $form));
     }
 
+    public function getPrevNext($query, $base_post_id){
+        $lapost = get_post( $base_post_id );
+        $query['posts_per_page'] = 100;
+        $this->queryService->setQuery($query);
+        $args = $this->queryService->getArgs();
+        $args['post_type'] = 'casawp_property';
+        $the_query = new \WP_Query($args);
+
+        $prev = false;
+        $next = false;
+        while($the_query->have_posts() ) {
+            $the_query->next_post();
+            if ($the_query->post->post_name == $lapost->post_name) {
+                if ($the_query->current_post + 1 < $the_query->post_count ) {
+                    $next_post = $the_query->next_post();
+                    $next = $next_post;
+                    break;
+                }
+            }
+            if ($the_query->post_count-1 != $the_query->current_post) { //because nextpost will fail at the end :-)
+                $prev = $the_query->post;
+            }
+        }
+
+        $prevnext = array(
+          'nextlink' => ($prev ? get_permalink($prev->ID) : 'no'), 
+          'prevlink' => ($next ? get_permalink($next->ID) : 'no')
+        );
+        return $prevnext;
+    }
+
     public function include_template_function( $template_path ) {
         if ( get_post_type() == 'casawp_property' && is_single()) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
-                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/prevnext.php';
-                header('Content-Type: application/json');
                 $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
                 if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
                     $template_path = $theme_file;
-                }
+                }    
+                
+                header('Content-Type: application/json');
+                
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php';
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-single.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
+                }
                 if ( $theme_file = locate_template( array( 'casawp-single.php' ) ) ) {
                     $template_path = $theme_file;
                 }
@@ -370,7 +442,13 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php';
+                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
+                }
                 if ( $theme_file = locate_template(array('casawp-archive.php'))) {
                     $template_path = $theme_file;
                 }
@@ -399,151 +477,65 @@ class Plugin {
     }
 
     function registerScriptsAndStyles(){
-        switch (get_option('casawp_load_css', 'bootstrapv3')) {
-            case 'bootstrapv2':
-                wp_register_style( 'casawp-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs2.css' );
-                wp_enqueue_style( 'casawp-css' );
+        wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
+        wp_enqueue_style( 'casawp_css' );
+        wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery' ), false, true );
+
+        switch (get_option('casawp_viewgroup', 'bootstrap3')) {
+            case 'bootstrap2':
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs2.css' );
+                    wp_enqueue_style( 'casawp_bootstrap2' );
+                }
                 break;
-            case 'bootstrapv3':
-                wp_register_style( 'casawp-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs3.css' );
-                wp_enqueue_style( 'casawp-css' );
+            case 'bootstrap3':
+                if (get_option('casawp_load_scripts', false)) {
+                    wp_enqueue_script('casawp_bootstrap3_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/assets.min.js', array( 'jquery' ), false, true );
+                    //wp_enqueue_script('casawp_bootstrap3_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/js/main.min.js', array( 'jquery', 'casawp_bootstrap3_assets' ), false, true );
+                }
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap3_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap3/css/bs3.css' );
+                    wp_enqueue_style( 'casawp_bootstrap3_css' );
+                }
                 break;
-            case 'none':
-            default:
+            case 'bootstrap4':
+                if (get_option('casawp_load_scripts', false)) {
+                    wp_enqueue_script('casawp_bootstrap4_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/assets.min.js', array( 'jquery' ), false, true );
+                    //wp_enqueue_script('casawp_bootstrap4_main', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/js/main.min.js', array( 'jquery', 'casawp_bootstrap4_assets' ), false, true );
+                }
+                if (get_option('casawp_load_css', false)) {
+                    wp_register_style( 'casawp_bootstrap4_css', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap4/css/bs4.css' );
+                    wp_enqueue_style( 'casawp_bootstrap4_css' );
+                }
                 break;
         }
 
-        if (get_option( 'casawp_load_bootstrap_scripts', 'none' )) {
-            switch (get_option('casawp_load_css', 'bootstrapv3')) {
-                case 'bootstrapv2':
-                    wp_enqueue_script(
-                        'casawp_bootstrap2',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap.min.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    break;
-                case 'bootstrapv3':
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_transition',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/transition.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_tab',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tab.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_carousel',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/carousel.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_tooltip',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/tooltip.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    wp_enqueue_script(
-                        'casawp_bootstrap3_popover',
-                        CASASYNC_PLUGIN_URL . 'plugin_assets/js/bootstrap3/popover.js',
-                        array( 'jquery' ),
-                        false,
-                        true
-                    );
-                    break;
-                case 'none':
-                default:
-                    # code...
-                    break;
-            }
-            // Add Bootstrap v2 
-        }
+        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin_assets/js/jstorage.js', array( 'jquery' ));
 
-        wp_enqueue_script(
-            'jstorage',
-            CASASYNC_PLUGIN_URL . 'plugin_assets/js/jstorage.js',
-            array( 'jquery' )
-        );
         if(is_singular('casawp_property')) {
-            wp_enqueue_script(
-                'casawp_jquery_eqheight',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.equal-height-columns.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            /*if (get_option( 'casawp_load_fancybox', 1 )) {
-                wp_enqueue_script(
-                    'fancybox',
-                    CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.fancybox.pack.js',
-                    array( 'jquery' ),
-                    false,
-                    true
-                );
-                wp_register_style( 'fancybox', CASASYNC_PLUGIN_URL . 'plugin_assets/css/jquery.fancybox.css' );
-                wp_enqueue_style( 'fancybox' );
-            }*/
+            wp_enqueue_script('casawp_jquery_eqheight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/jquery.equal-height-columns.js', array( 'jquery' ), false, true);
         }
 
         if (get_option( 'casawp_load_featherlight', 1 )) {
-            wp_enqueue_script(
-                'featherlight',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            wp_register_style( 'featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.css' );
-            wp_enqueue_style( 'featherlight' );
-
-            wp_enqueue_script(
-                'featherlight-gallery',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.js',
-                array( 'jquery', 'featherlight' ),
-                false,
-                true
-            );
-            wp_register_style( 'featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.css' );
-            wp_enqueue_style( 'featherlight-gallery' );
+            wp_enqueue_script('featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.js', array( 'jquery' ), false, true);
+            wp_register_style('featherlight', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.min.css' );
+            wp_enqueue_style('featherlight' );
+            wp_enqueue_script('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.js', array( 'jquery', 'featherlight' ), false, true );
+            wp_register_style('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin_assets/js/featherlight/release/featherlight.gallery.min.css' );
+            wp_enqueue_style('featherlight-gallery' );
         }
+
 
         if (get_option( 'casawp_load_chosen', 1 )) {
-            wp_enqueue_script(
-                'chosen',
-                CASASYNC_PLUGIN_URL . 'plugin_assets/js/chosen.jquery.min.js',
-                array( 'jquery' ),
-                false,
-                true
-            );
-            wp_register_style( 'chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
-            wp_enqueue_style( 'chosen-css' );
+            wp_enqueue_script('chosen', CASASYNC_PLUGIN_URL . 'plugin_assets/js/chosen.jquery.min.js', array( 'jquery' ), false, true);
+            wp_register_style('chosen-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/chosen.css' );
+            wp_enqueue_style('chosen-css' );
         }
+
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
-            wp_enqueue_script(
-                'google_maps_v3',
-                'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false',
-                array(),
-                false,
-                true
-            );
+            wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false', array(), false, true );
         }
-        wp_enqueue_script(
-            'casawp_script',
-            CASASYNC_PLUGIN_URL . 'plugin_assets/js/script.js',
-            array( 'jquery' ),
-            false,
-            true
-        );
+
 
     }
 
@@ -605,7 +597,7 @@ class Plugin {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes' ),
+            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes', 'revisions' ),
             'menu_icon'          => 'dashicons-admin-home',
             'show_in_nav_menus'  => true
         );
@@ -660,7 +652,6 @@ class Plugin {
                         0 => 'excerpt',
                         1 => 'discussion',
                         2 => 'comments',
-                        3 => 'revisions',
                         5 => 'author',
                         6 => 'format',
                         10 => 'send-trackbacks',
@@ -713,7 +704,6 @@ class Plugin {
                         0 => 'excerpt',
                         1 => 'discussion',
                         2 => 'comments',
-                        3 => 'revisions',
                         5 => 'author',
                         6 => 'format',
                         10 => 'send-trackbacks',

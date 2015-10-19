@@ -84,14 +84,7 @@ class Admin {
 	public function registerAdminScriptsAndStyles() {
 		wp_register_style( 'casawp-admin-css', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp-admin.css' );
         wp_enqueue_style( 'casawp-admin-css' );
-
-        wp_enqueue_script(
-            'casawp_admin_scipts',
-            CASASYNC_PLUGIN_URL . 'plugin_assets/js/admin-scripts.js',
-            array( 'jquery' ),
-            false,
-            true
-        );
+        //wp_enqueue_script('casawp_admin_scipts', CASASYNC_PLUGIN_URL . 'plugin_assets/js/admin-scripts.js', array( 'jquery' ), false, true);
 	}
 
 

@@ -11,14 +11,31 @@
             </tr>
         <?php endif; ?>
 
-        <?php if(1==0 && $this->offer->getFieldValue('property_address_streetaddress')): ?>
+        <?php if($this->offer->getFieldValue('address_locality')): ?>
             <tr>
                 <th><?= __('Locality', 'casawp') ?></th>
-                <td><?php /* get adress*/ ?></td>
+                <td>
+                  <?php
+                    $postalcode = $this->offer->getFieldValue('address_postalcode');
+                    $locality = $this->offer->getFieldValue('address_locality');
+                    echo ($postalcode ?  $postalcode . ' ': '') . ($locality ? $locality : '');
+
+                    $country = $this->offer->getFieldValue('address_country');
+                    echo ($country ? ' (' . $country . ')' : '');
+                  ?>
+                </td>
             </tr>
         <?php endif; ?>
 
-        <?php $value = $this->offer->getNumval('sia_nf'); ?>
+        <?php $value = $this->offer->getNumval('number_of_rooms'); ?>
+        <?php if($value): ?>
+            <tr>
+                <th><?= __('Number of rooms', 'casawp') ?></th>
+                <td><?= $this->offer->renderNumvalValue($value) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <?php $value = $this->offer->getNumval('area_sia_nf'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Surface usable', 'casawp') ?></th>
@@ -34,7 +51,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = $this->offer->getNumval('surface_property'); ?>
+        <?php $value = $this->offer->getNumval('area_sia_gsf'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Property space', 'casawp') ?></th>
@@ -42,7 +59,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = false #floor; ?>
+        <?php $value = $this->offer->getNumval('floor'); ?>
         <?php if($value): ?>
             <tr>
                 <th><?= __('Floor', 'casawp') ?></th>
@@ -74,12 +91,31 @@
             </tr>
         <?php endif; ?>
 
-        <?php $value = false #price ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
+        <?php if ($this->offer->getSalestype() == 'buy') : ?>
+          <tr>
+            <th><?= __('Sales price', 'casawp') ?></th>
+            <td>
+              <?= $this->offer->renderPrice() ?>
+            </td>
+          </tr>
+        <?php endif; ?>
+        <?php if ($this->main_basis == 'rent') : ?>
+          <?php if ($this->offer->renderPrice('gross')): ?>
+             <tr>
+                <th><?= __('Gross price','casawp') ?></th>
+                <td>
+                  <?= $this->offer->renderPrice('gross'); ?>
+                </td>
+              </tr>
+          <?php endif ?>
+          <?php if ($this->offer->renderPrice('net')): ?>
+             <tr>
+                <th><?= __('Net price','casawp') ?></th>
+                <td>
+                  <?= $this->offer->renderPrice('net'); ?>
+                </td>
+              </tr>
+          <?php endif ?>
         <?php endif; ?>
 
         <?php /* todo: implement getExcerpt

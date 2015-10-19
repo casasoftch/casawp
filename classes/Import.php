@@ -13,7 +13,7 @@ class Import {
   public $meta_keys = array(
      #'surface_living'              ,
       'surface_property'            ,
-      #'surface_usable'              ,
+      #'surface_usable'             ,
 
       'area_bwf'                    ,
       'area_nwf'                    ,
@@ -1444,7 +1444,7 @@ class Import {
 
     $personType = 'view';
     if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
+      $prefix = 'seller_' . $personType . '_person_';
       $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
       $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
       $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];
@@ -1457,7 +1457,7 @@ class Import {
     
     $personType = 'inquiry';
     if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
+      $prefix = 'seller_' . $personType . '_person_';
       $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
       $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
       $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];
@@ -1470,7 +1470,7 @@ class Import {
 
     $personType = 'visit';
     if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
-      $prefix = 'seller' . ($personType != 'view' ? '_' . $personType : '') . '_person_';
+      $prefix = 'seller_' . $personType . '_person_';
       $new_meta_data[$prefix.'function']      = $property[$personType.'Person']['function'];
       $new_meta_data[$prefix.'givenname']     = $property[$personType.'Person']['firstName'];
       $new_meta_data[$prefix.'familyname']    = $property[$personType.'Person']['lastName'];

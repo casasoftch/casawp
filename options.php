@@ -23,6 +23,7 @@
 			case 'appearance':
 				$checkbox_traps = array(
 					'casawp_load_css',
+					'casawp_load_scripts',
 					'casawp_load_bootstrap_scripts',
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
@@ -162,22 +163,22 @@
 					<?php /******* Appearance *******/ ?>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Stylesheet</th>
+								<th scope="row">Theme</th>
 								<td class="front-static-pages">
 									<fieldset>
-										<legend class="screen-reader-text"><span>Stylesheet</span></legend>
-										<?php $name = 'casawp_load_css'; ?>
-										<?php $text = 'Bootstrap Stylesheet auswählen'; ?>
+										<legend class="screen-reader-text"><span>Template</span></legend>
+										<?php $name = 'casawp_viewgroup'; ?>
+										<?php $text = 'Darstellungs-Template auswählen'; ?>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="none" <?php echo (get_option($name) == 'none' ? 'checked="checked"' : ''); ?>> Kein Stylesheet
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap2" <?php echo (get_option($name) == 'bootstrap2' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 2
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrapv2" <?php echo (get_option($name) == 'bootstrapv2' ? 'checked="checked"' : ''); ?>> Bootstrap Version 2
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap3" <?php echo (get_option($name) == 'bootstrap3' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 3
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrapv3" <?php echo (get_option($name) == 'bootstrapv3' ? 'checked="checked"' : ''); ?>> Bootstrap Version 3
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap4" <?php echo (get_option($name) == 'bootstrap4' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 4 (coming soon)
 										</label>
 										<br>
 									</fieldset>
@@ -187,8 +188,14 @@
 								<th scope="row">Scripts</th>
 								<td class="front-static-pages">
 									<fieldset>
-										<?php $name = 'casawp_load_bootstrap_scripts'; ?>
-										<?php $text = 'Bootstrap'; ?>
+										<?php $name = 'casawp_load_css'; ?>
+										<?php $text = 'CSS laden'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<br>
+										<?php $name = 'casawp_load_scripts'; ?>
+										<?php $text = 'JS laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>

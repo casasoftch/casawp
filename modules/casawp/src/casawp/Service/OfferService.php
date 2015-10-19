@@ -42,13 +42,13 @@ class OfferService{
     }
 
     //deligate all other methods to WP_Post Class
-    function __call($name, $arguments){
-    	if (method_exists($this->post, $name)) {
-    		return $this->post->{$name}($arguments);
-    	}
-    }
+	function __call($name, $arguments){
+		if (method_exists($this->post, $name)) {
+			return $this->post->{$name}($arguments);
+		}
+	}
 
-    public function to_array() {
+	public function to_array() {
 		$offer_array = array(
 			'post' => $this->post->to_array()
 		);
@@ -56,8 +56,8 @@ class OfferService{
 		//basics
 		$offer_array['title'] = $this->getTitle();
 
-    	//if load categories example
-    	$offer_array['categories'] = $this->getCategoriesArray();
+		//if load categories example
+		$offer_array['categories'] = $this->getCategoriesArray();
 
 		return $offer_array;
 	}
@@ -66,7 +66,7 @@ class OfferService{
 	/*====================================
 	=            Data Getters            =
 	====================================*/
-		
+	
 	public function getTitle(){
 		return $this->post->post_title;
 	}
@@ -370,9 +370,9 @@ class OfferService{
 
 	public function renderNumvalValue($numval){
 		switch ($numval->getSi()) {
-			case 'm3': return $numval->getValue() .'m<sup>3</sup>'; break;
-			case 'm2': return $numval->getValue() .'m<sup>2</sup>'; break;
-			case 'm':  return $numval->getValue() .'m'; break;
+			case 'm3': return $numval->getValue() .' m<sup>3</sup>'; break;
+			case 'm2': return $numval->getValue() .' m<sup>2</sup>'; break;
+			case 'm':  return $numval->getValue() .' m'; break;
 			default:   return $numval->getValue(); break;
 		}
 		return null;
@@ -417,7 +417,7 @@ class OfferService{
 		if ($value) {
 			$parts = array();
 			$parts[] = $currency;
-			$parts[] = number_format(round($value), 0, '', '\'');
+			$parts[] = number_format(round($value), 0, '', '\'') . '.–';
 			$parts[] = ($propertySegment != 'all' ? ' / m<sup>2</sup>' : '' );
 			$parts[] = (in_array($timeSegment, array_keys($timesegment_labels)) ? ' / ' . $timesegment_labels[$timeSegment] : '' );
 			array_walk($parts, function(&$value){ $value = trim($value);});
@@ -453,10 +453,14 @@ class OfferService{
 
 	public function renderCategoryLabels(){
 		$cat_labels = array();
-		foreach ($this->getCategories() as $category) {
-			$cat_labels[] = $category->getLabel();
+		$categories = $this->getCategories();
+		if ($categories) {
+			foreach ($categories as $category) {
+				$cat_labels[] = $category->getLabel();
+			}
+			return implode(', ', $cat_labels);
 		}
-		return implode(', ', $cat_labels);
+		return __('Property', 'casawp');
 	}
 
 
@@ -587,6 +591,9 @@ class OfferService{
 	}
 
 	public function renderContactForm(){
+		if ($this->getAvailablility() == 'reference') {
+	        return false;
+	    }
         $form = new \casawp\Form\ContactForm();
         $sent = false;
         $customerid = get_option('casawp_customerid');
@@ -696,7 +703,9 @@ class OfferService{
     }
 
     public function renderPagination(){
-    	return $this->render('single-pagination', array());
+    	return $this->render('single-pagination', array(
+    		'post_id' => $this->post->ID
+    	));
     }
 
 }

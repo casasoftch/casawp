@@ -27,9 +27,23 @@ updates post type prefixes
 UPDATE wp_posts SET `post_type` = replace(`post_type`, 'casasync_', 'casawp_') where instr(`post_type`, 'casasync_'); 
 ```
 
+replaces `casawp_load_css` with `casawp_viewgroup` keys and values
+
+```
+casawp_load_css:bootstrapv2 -> casawp_viewgroup:bootstrap2
+casawp_load_css:none -> casawp_viewgroup:bootstrap3
+casawp_load_css:bootstrapv3 -> casawp_viewgroup:bootstrap3
+
+```
+
+replaces taxonomy term connection names
+
 ```
 UPDATE wp_term_taxonomy SET `taxonomy` = replace(`taxonomy`, 'casasync_', 'casawp_') where instr(`taxonomy`, 'casasync_') > 0;
 ```
+
+
+
 
 ##Template changes
 

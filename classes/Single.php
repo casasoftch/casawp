@@ -95,9 +95,27 @@
       global $casawp;
       $this->offer = $casawp->prepareOffer($post);
 
-
-
       //$this->categoryService = new \CasasoftStandards\Service\CategoryService();
+    }
+
+    function __get($name){
+      switch ($name) {
+        /*case 'attachments':
+          //
+          break;*/
+        case 'address_region':
+            return $this->offer->getFieldValude('address_region');
+          break;
+          
+        default:
+          if ($this->offer->getFieldValude($name, false)) {
+            return $this->offer->getFieldValude($name, false);
+          } else {
+            return $this->{$name};  
+          }
+          
+          break;
+      }
     }
 
     public function getPropertyQuery() {

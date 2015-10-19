@@ -1,6 +1,7 @@
 <?php if ($sent): ?>
-	<p class="alert alert-success">SENT!!!</p>	
+	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>	
 <?php else: ?>
+	<?php $form->setAttribute('action', get_permalink($offer->post)); ?>
 
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
 	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
