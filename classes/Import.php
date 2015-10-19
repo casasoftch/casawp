@@ -1076,6 +1076,17 @@ class Import {
             $propertydata['organization']['website_url']   = ($property_xml->seller->organization ? $property_xml->seller->organization->website->__toString() : '');
             $propertydata['organization']['website_title'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['title']->__toString() : '');
             $propertydata['organization']['website_label'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['label']->__toString() : '');
+
+            //organization address
+            if ($property_xml->seller->organization->address) {
+                $propertydata['organization']['postalAddress'] = array();
+                $propertydata['organization']['postalAddress']['country'] = $property_xml->seller->organization->address->country->__toString();
+                $propertydata['organization']['postalAddress']['locality'] = $property_xml->seller->organization->address->locality->__toString();
+                $propertydata['organization']['postalAddress']['region'] = $property_xml->seller->organization->address->region->__toString();
+                $propertydata['organization']['postalAddress']['postal_code'] = $property_xml->seller->organization->address->postalCode->__toString();
+                $propertydata['organization']['postalAddress']['street'] = $property_xml->seller->organization->address->street->__toString();
+                $propertydata['organization']['postalAddress']['street_number'] = $property_xml->seller->organization->address->streetNumber->__toString();
+            }
         }
        
         //viewPerson
@@ -1432,13 +1443,13 @@ class Import {
       //$new_meta_data['seller_org_phone_mobile'] = $property['organization'][''];
       $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
       $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
-      if (isset($property['organization']['address'])) {
-        $new_meta_data['seller_org_address_country']               = $property['organization']['address']['country'];
-        $new_meta_data['seller_org_address_locality']              = $property['organization']['address']['locality'];
-        $new_meta_data['seller_org_address_region']                = $property['organization']['address']['region'];
-        $new_meta_data['seller_org_address_postalcode']            = $property['organization']['address']['postal_code'];
-        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['address']['postofficeboxnumber'];
-        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['address']['street'].' '.$property['organization']['address']['streetNumber'];
+      if (isset($property['organization']['postalAddress'])) {
+        $new_meta_data['seller_org_address_country']               = $property['organization']['postalAddress']['country'];
+        $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
+        $new_meta_data['seller_org_address_region']                = $property['organization']['postalAddress']['region'];
+        $new_meta_data['seller_org_address_postalcode']            = $property['organization']['postalAddress']['postal_code'];
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['postofficeboxnumber'];
+        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'].' '.$property['organization']['address']['streetNumber'];
       }
     }
 
