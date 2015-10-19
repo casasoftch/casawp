@@ -13,7 +13,7 @@ class Import {
   public $meta_keys = array(
      #'surface_living'              ,
       'surface_property'            ,
-      #'surface_usable'              ,
+      #'surface_usable'             ,
 
       'area_bwf'                    ,
       'area_nwf'                    ,
