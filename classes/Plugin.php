@@ -20,6 +20,7 @@ class Plugin {
     public $conversion = null;
     public $show_sticky = true;
     public $tax_query = array();
+    public $translator = null;
 
     public function __construct($configuration){  
         $this->conversion = new Conversion;
@@ -117,6 +118,7 @@ class Plugin {
         $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
         \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
 
+        $this->translator = $translator;
         
 
         // load modules -- which will provide services, configuration, and more
