@@ -7,8 +7,8 @@
       </td>
     </tr>
   <?php endif; ?>
-  <?php if ($this->main_basis == 'rent') : ?>
-    <?php if ($this->offer->renderPrice('gross')): ?>
+  <?php if ($this->offer->getSalestype() == 'rent') : ?>
+    <?php if ($this->offer->getFieldValue('grossPrice', false)): ?>
        <tr>
           <td class="width-25"><?= __('Gross price','casawp') ?></td>
           <td class="width-75">
@@ -16,7 +16,7 @@
           </td>
         </tr>
     <?php endif ?>
-    <?php if ($this->offer->renderPrice('net')): ?>
+    <?php if ($this->offer->getFieldValue('netPrice', false)): ?>
        <tr>
           <td class="width-25"><?= __('Net price','casawp') ?></td>
           <td class="width-75">
