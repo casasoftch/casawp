@@ -1011,7 +1011,6 @@ class Import {
     $propertydata['referenceId'] = (isset($property_xml->referenceId) ? $property_xml->referenceId->__toString() : '');
     $propertydata['availability'] = ($property_xml->availability->__toString() ? $property_xml->availability->__toString() : 'available');
     $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
-    $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
     $propertydata['net_price'] = $property_xml->netPrice->__toString();
@@ -1499,7 +1498,7 @@ class Import {
    //urls
    $url = null;
    $the_urls = array();
-   if ($offer['urls']) {
+   if (isset($offer['urls'])) {
      foreach ($offer['urls'] as $url) {
        $href = $url['url'];
        if (! (substr( $href, 0, 7 ) === "http://" || substr( $href, 0, 8 ) === "https://") ) {
@@ -1545,18 +1544,18 @@ class Import {
     $new_meta_data['availability'] = $property['availability'];
 
     //prices 
-    if ($property['price']) {
+    if (isset($property['price'])) {
       $new_meta_data['price'] = $property['price'];
       $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
     }
 
-    if ($property['net_price']) {
+    if (isset($property['net_price'])) {
       $new_meta_data['netPrice'] = $property['net_price'];
       $new_meta_data['netPrice_timesegment'] = $property['net_price_time_segment'];
       $new_meta_data['netPrice_propertysegment'] = $property['net_price_property_segment'];
     }
 
-    if ($property['gross_price']) {
+    if (isset($property['gross_price'])) {
       $new_meta_data['netPrice'] = $property['gross_price'];
       $new_meta_data['netPrice_timesegment'] = $property['gross_price_time_segment'];
       $new_meta_data['netPrice_propertysegment'] = $property['gross_price_property_segment'];
