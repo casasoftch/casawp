@@ -1,8 +1,8 @@
 <table class="table">
     <tr>
       <td class="width-25"><?= __('Reference','casawp') ?></td>
-      <td class="width-75"><?= $this->offer->getFieldValue('reference_id') 
-        ? $this->offer->getFieldValue('reference_id') 
+      <td class="width-75"><?= $this->offer->getFieldValue('referenceId') 
+        ? $this->offer->getFieldValue('referenceId') 
         : $this->offer->getFieldValue('casawp_id'); ?></td>
     </tr>
   <?php if($this->offer->renderAddress()) : ?>
