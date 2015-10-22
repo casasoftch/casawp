@@ -330,6 +330,29 @@ class Plugin {
         return $result;
     }
 
+    public function renderPrice($value, $currency, $propertySegment, $timeSegment){
+        $timesegment_labels = array(
+            'm' => __('month', 'casawp'),
+            'w' => __('week', 'casawp'),
+            'd' => __('day', 'casawp'),
+            'y' => __('year', 'casawp'),
+            'h' => __('hour', 'casawp')
+        );
+
+        if ($value) {
+            $parts = array();
+            $parts[] = $currency;
+            $parts[] = number_format(round($value), 0, '', '\'') . '.–';
+            $parts[] = ($propertySegment != 'all' ? ' / m<sup>2</sup>' : '' );
+            $parts[] = (in_array($timeSegment, array_keys($timesegment_labels)) ? ' / ' . $timesegment_labels[$timeSegment] : '' );
+            array_walk($parts, function(&$value){ $value = trim($value);});
+            $parts = array_filter($parts);
+            return implode(' ', $parts);
+        } else {
+            return false;
+        }
+    }
+
     public function getCategories(){
         $categories = array();
         $category_terms = get_terms('casawp_category', array(

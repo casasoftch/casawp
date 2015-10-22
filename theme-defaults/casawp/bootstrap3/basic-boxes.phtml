@@ -12,18 +12,23 @@
 </div>
 <div class="casawp-basic-box">
   <div>
-      <h4><?= ($offer->type == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
+      <h4><?= ($offer->getSalestype() == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
       <?php 
-        if ($offer->type == 'buy') {
+        if ($offer->getSalestype() == 'buy') {
           echo $this->offer->renderPrice();
         } else {
-          echo __('Rent', 'casawp') . '&nbsp;';
           if ($this->offer->getFieldValue('grossPrice', false)) {
             echo $this->offer->renderPrice('gross');
-          } else {
-            echo $this->offer->renderPrice('net');
+          } elseif($this->offer->getFieldValue('netPrice', false)) {
+            echo '(' . __('Net','casawp') . ') '. $this->offer->renderPrice('net');
           }
         }
       ?>
+      <?php global $casawp; ?>
+      <?php foreach ($this->offer->getExtraCosts() as $cost): ?>
+        <br><strong>Nebenkosten:</strong>
+        <br><?= $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']); ?>
+        <?php break; ?>
+      <?php endforeach ?>
   </div>
 </div>

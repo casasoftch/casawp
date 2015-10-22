@@ -364,6 +364,14 @@ class OfferService{
         ));
     }
 
+    public function getExtraCosts(){
+    	$extra_costs = $this->getFieldValue('extraPrice', false);
+    	if ($extra_costs) {
+    		return maybe_unserialize($extra_costs);
+    	}
+    	return array();
+    }
+
     /*===========================================
     =          Direct renders actions           =
     ===========================================*/
@@ -404,30 +412,27 @@ class OfferService{
 		$value = $this->getFieldValue($meta_prefix, false);
 		$currency = $this->getFieldValue('price_currency', 'CHF');
 		$propertySegment = $this->getFieldValue($meta_prefix.'_propertysegment', 'all');
-		$timeSegment = $this->getFieldValue($meta_prefix.'_timesegment', 'infinite');
+		$timeSegment = $this->getFieldValue($meta_prefix.'_timesegment', false);
 
-		$timesegment_labels = array(
-	        'm' => __('month', 'casawp'),
-	        'w' => __('week', 'casawp'),
-	        'd' => __('day', 'casawp'),
-	        'y' => __('year', 'casawp'),
-	        'h' => __('hour', 'casawp')
-	    );
-
-		if ($value) {
-			$parts = array();
-			$parts[] = $currency;
-			$parts[] = number_format(round($value), 0, '', '\'') . '.–';
-			$parts[] = ($propertySegment != 'all' ? ' / m<sup>2</sup>' : '' );
-			$parts[] = (in_array($timeSegment, array_keys($timesegment_labels)) ? ' / ' . $timesegment_labels[$timeSegment] : '' );
-			array_walk($parts, function(&$value){ $value = trim($value);});
-			$parts = array_filter($parts);
-			return implode(' ', $parts);
+		if (!$timeSegment) {
+			if ($type == 'rent') {
+				$timeSegment = 'm';
+			}
 		} else {
-			return __('On Request', 'casawp');
+			$timeSegment = 'infinite';
+		}
+
+		global $casawp;
+		$render = $casawp->renderPrice($value, $currency, $propertySegment, $timeSegment);
+		if ($render) {
+			return $render;
+		} else {
+			return __('On Request', 'casawp');	
 		}
 		
 	}
+
+	
 
 	public function renderAvailabilityDate($start = false){
 		$current_datetime = strtotime(date('c'));
