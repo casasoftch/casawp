@@ -1556,9 +1556,9 @@ class Import {
     }
 
     if (isset($property['gross_price'])) {
-      $new_meta_data['netPrice'] = $property['gross_price'];
-      $new_meta_data['netPrice_timesegment'] = $property['gross_price_time_segment'];
-      $new_meta_data['netPrice_propertysegment'] = $property['gross_price_property_segment'];
+      $new_meta_data['grossPrice'] = $property['gross_price'];
+      $new_meta_data['grossPrice_timesegment'] = $property['gross_price_time_segment'];
+      $new_meta_data['grossPrice_propertysegment'] = $property['gross_price_property_segment'];
     }
 
     /*
