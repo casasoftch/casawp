@@ -26,13 +26,14 @@
     <?php endif ?>
   <?php endif; ?>
 
-  <?php //todo ?>
-  <?php if (0==1&&$this->getExtraCosts('Nebenkosten')) : ?>
+  <?php global $casawp; ?>
+  <?php foreach ($this->offer->getExtraCosts() as $cost): ?>
     <tr>
-      <td class="width-25"><?= __('Additional costs', 'casawp') ?></td>
-      <td class="width-75"><?= $this->getExtraCosts('Nebenkosten') ?></td>
+      <td class="width-25">Nebenkosten:</td>
+      <td class="width-75"><?= $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']); ?></td>
     </tr>
-  <?php endif; ?>
+    <?php break; ?>
+  <?php endforeach ?>
 
   <tr>
     <td class="width-25"><?= __('Available from:','casawp') ?></td>
