@@ -1019,6 +1019,22 @@ class Import {
     $propertydata['gross_price'] = $property_xml->grossPrice->__toString();
     $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtoupper($property_xml->grossPrice['timesegment']->__toString()) : '');
     $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
+
+    if ($property_xml->extraCosts) {
+        $propertydata['extracosts'] = array();
+        foreach ($property_xml->extraCosts->extraCost as $xml_extra_cost) {
+            $cost = $xml_extra_cost->__toString();
+            $propertydata['extracosts'][] = array(
+                'type'             => ($xml_extra_cost['type'] ? $xml_extra_cost['type']->__toString() : ''),
+                'title'            => ($xml_extra_cost['title'] ? $xml_extra_cost['title']->__toString() : ''),
+                'cost'             => $cost,
+                'frequency'        => ($xml_extra_cost['frequency'] ? $xml_extra_cost['frequency']->__toString() : ''),
+                'property_segment' => ($xml_extra_cost['propertysegment'] ? $xml_extra_cost['propertysegment']->__toString() : ''),
+                'time_segment'     => ($xml_extra_cost['timesegment'] ? $xml_extra_cost['timesegment']->__toString() : ''),
+            );
+        }
+    }
+
     $propertydata['status'] = 'active';
     $propertydata['type'] =  $property_xml->type->__toString();
     $propertydata['zoneTypes'] = ($property_xml->zoneTypes ? $property_xml->zoneTypes->__toString() : '');
@@ -1560,6 +1576,21 @@ class Import {
       $new_meta_data['grossPrice_timesegment'] = $property['gross_price_time_segment'];
       $new_meta_data['grossPrice_propertysegment'] = $property['gross_price_property_segment'];
     }
+
+    $extraPrice = array();
+    if (isset($property['extracosts'])) {
+      foreach ($property['extracosts'] as $extra) {
+        $extraPrice[] = array(
+          'price' => $extra['cost'],
+          'title' => $extra['title'],
+          'timesegment' => $extra['time_segment'],
+          'propertysegment' => $extra['property_segment'],
+          'currency' => $new_meta_data['price_currency'],
+          'frequency' => $extra['frequency']
+        );
+      }
+    }
+    $new_meta_data['extraPrice'] = $extraPrice;
 
     /*
     $extraPrice = array();
