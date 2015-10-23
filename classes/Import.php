@@ -2,127 +2,11 @@
 namespace casawp;
 
 class Import {
-  public $lastTranscript = '';
   public $importFile = false;
   public $main_lang = false;
-  public $max_auto_create = 10;
-  public $xmlOffers = array();
   public $WPML = null;
   public $transcript = array();
   public $curtrid = false;
-  public $meta_keys = array(
-     #'surface_living'              ,
-      'surface_property'            ,
-      #'surface_usable'             ,
-
-      'area_bwf'                    ,
-      'area_nwf'                    ,
-      'area_sia_gf'                 ,
-      'area_sia_nf'                 ,
-
-      'volume'                      ,
-      'ceiling_height'              ,
-      'hall_height'                 ,
-      'maximal_floor_loading'       ,
-      'carrying_capacity_crane'     ,
-      'carrying_capacity_elevator'  ,
-      'floor'                       ,
-      'year_built'                  ,
-      'year_renovated'              ,
-      'number_of_rooms'             ,
-      'number_of_apartments'        ,
-      'number_of_floors'            ,
-      'number_of_lavatory'          ,
-      'number_of_guest_wc'          ,
-
-      'visitInformation'                    ,
-      'property_url'                        ,
-      'property_address_country'            ,
-      'property_address_locality'           ,
-      'property_address_region'             ,
-      'property_address_postalcode'         ,
-      'property_address_streetaddress'      ,
-      'property_address_streetnumber'       ,
-      'urls'                                ,
-      'start'                               ,
-      'referenceId'                         ,
-      'availability'                                 ,
-      'availability_label'                           ,
-      'offer_type'                                   ,
-      'price_currency'                               ,
-      'price_timesegment'                            ,
-      'price_propertysegment'                        ,
-      'grossPrice_timesegment'                       ,
-      'grossPrice_propertysegment'                   ,
-      'netPrice_timesegment'                         ,
-      'netPrice_propertysegment'                     ,
-      'priceForOrder'                                ,
-      'parking-exterior-space'                       ,
-      'parking-carport'                              ,
-      'parking-garage-connected'                     ,
-      'parking-garage-box'                           ,
-      'parking-garage-underground'                   ,
-      'parking-house'                                ,
-      'room-workroom'                                ,
-      'room-storage-basement'                        ,
-      'seller_org_address_country'                   ,
-      'seller_org_address_locality'                  ,
-      'seller_org_address_region'                    ,
-      'seller_org_address_postalcode'                ,
-      'seller_org_address_postofficeboxnumber'       ,
-      'seller_org_address_streetaddress'             ,
-      'seller_org_legalname'                         ,
-      'seller_org_email'                             ,
-      'seller_org_fax'                               ,
-      'seller_org_phone_direct'                      ,
-      'seller_org_phone_central'                     ,
-      'seller_org_phone_mobile'                      ,
-      'seller_org_brand'                             ,
-      'seller_person_function'                       ,
-      'seller_person_givenname'                      ,
-      'seller_person_familyname'                     ,
-      'seller_person_email'                          ,
-      'seller_person_fax'                            ,
-      'seller_person_phone_direct'                   ,
-      'seller_person_phone_central'                  ,
-      'seller_person_phone_mobile'                   ,
-      'seller_person_gender'                         ,
-      'seller_inquiry_person_function'               ,
-      'seller_inquiry_person_givenname'              ,
-      'seller_inquiry_person_familyname'             ,
-      'seller_inquiry_person_email'                  ,
-      'seller_inquiry_person_fax'                    ,
-      'seller_inquiry_person_phone_direct'           ,
-      'seller_inquiry_person_phone_central'          ,
-      'seller_inquiry_person_phone_mobile'           ,
-      'seller_inquiry_person_gender'                 ,
-      'seller_visit_person_givenname'              ,
-      'seller_visit_person_phone_direct'           ,
-      'seller_visit_person_note'                 ,
-      'property_geo_latitude'               ,
-      'property_geo_longitude'              ,
-      'price'                                        ,
-      'grossPrice'                                   ,
-      'netPrice'                                     ,
-      'the_url'                                     ,
-      'the_urls'                                     ,
-      'the_tags'                                     ,
-      'extraPrice'                                   ,
-
-      'distance_public_transport'                    ,
-      'distance_shop'                                ,
-      'distance_kindergarten'                        ,
-      'distance_motorway'                            ,
-      'distance_school1'                             ,
-      'distance_school2'                             ,
-      'distance_bus_stop',
-      'distance_train_station',
-      'distance_post',
-      'distance_bank',
-      'distance_cable_railway_station',
-      'distance_boat_dock',
-      'distance_airport',
-  );
 
   public function __construct($doimport = true, $casagatewayupdate = false){
     $this->conversion = new Conversion;
@@ -185,10 +69,6 @@ class Import {
       $the_description .= $description['text'];
     }
     return $the_description;
-  }
-
-  public function getLastTranscript(){
-    return $this->lastTranscript;
   }
 
   public function setcasawpCategoryTerm($term_slug, $label = false) {
@@ -991,9 +871,6 @@ class Import {
   }
 
   public function property2Array($property_xml){
-
-    //$this->addToTranscript("*** CasaXml Conversion start ***");
-
     $propertydata['address'] = array(
         'country'       => ($property_xml->address->country->__toString() ?:''),
         'locality'      => ($property_xml->address->locality->__toString() ?:''),
@@ -1001,6 +878,7 @@ class Import {
         'postal_code'   => ($property_xml->address->postalCode->__toString() ?:''),
         'street'        => ($property_xml->address->street->__toString() ?:''),
         'streetNumber' => ($property_xml->address->streetNumber->__toString() ?:''),
+        'streetAddition' => ($property_xml->address->streetAddition->__toString() ?:''),
         'subunit'       => ($property_xml->address->subunit->__toString() ?:''),
         'lng'           => ($property_xml->address->geo ? $property_xml->address->geo->longitude->__toString():''),
         'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString():''),
@@ -1101,7 +979,8 @@ class Import {
                 $propertydata['organization']['postalAddress']['postal_code'] = $property_xml->seller->organization->address->postalCode->__toString();
                 $propertydata['organization']['postalAddress']['street'] = $property_xml->seller->organization->address->street->__toString();
                 $propertydata['organization']['postalAddress']['street_number'] = $property_xml->seller->organization->address->streetNumber->__toString();
-                $propertydata['organization']['postalAddress']['post_office_box_number'] = $property_xml->seller->organization->address->streetNumber->__toString();
+                $propertydata['organization']['postalAddress']['street_addition'] = $property_xml->seller->organization->address->streetAddition->__toString();
+                $propertydata['organization']['postalAddress']['post_office_box_number'] = $property_xml->seller->organization->address->postOfficeBoxNumber->__toString();
             }
         }
        
@@ -1258,12 +1137,9 @@ class Import {
 
     $propertydata['offers'] = $offerDatas;
 
-
-    //$this->addToTranscript("*** CasaXml Conversion complete ***");
-
     return $propertydata;
 
-}
+  }
 
   public function updateOffers(){
 
@@ -1445,6 +1321,7 @@ class Import {
     $new_meta_data['property_address_postalcode']    = $property['address']['postal_code'];
     $new_meta_data['property_address_streetaddress'] = $property['address']['street'];
     $new_meta_data['property_address_streetnumber']  = $property['address']['streetNumber'];
+    $new_meta_data['property_address_streetaddition']  = $property['address']['streetAddition'];
     $new_meta_data['property_geo_latitude']          = $property['address']['lat'];
     $new_meta_data['property_geo_longitude']         = $property['address']['lng'];
 
@@ -1466,6 +1343,7 @@ class Import {
         $new_meta_data['seller_org_address_postalcode']            = $property['organization']['postalAddress']['postal_code'];
         $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['post_office_box_number'];
         $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'].' '.$property['organization']['postalAddress']['street_number'];
+        $new_meta_data['seller_org_address_streetaddition']         = $property['organization']['postalAddress']['street_addition'];
       }
     }
 
@@ -1480,6 +1358,7 @@ class Import {
       $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
       $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
       $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
+      $new_meta_data[$prefix.'note']          = $property[$personType.'Person']['note'];
     }
     
     $personType = 'inquiry';
@@ -1493,6 +1372,7 @@ class Import {
       $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
       $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
       $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
+      $new_meta_data[$prefix.'note']          = $property[$personType.'Person']['note'];
     }
 
     $personType = 'visit';
@@ -1506,6 +1386,7 @@ class Import {
       $new_meta_data[$prefix.'phone_direct']  = $property[$personType.'Person']['phone'];
       $new_meta_data[$prefix.'phone_mobile']  = $property[$personType.'Person']['mobile'];
       $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
+      $new_meta_data[$prefix.'note']          = $property[$personType.'Person']['note'];
     }
 
 
@@ -1591,37 +1472,6 @@ class Import {
       }
     }
     $new_meta_data['extraPrice'] = $extraPrice;
-
-    /*
-    $extraPrice = array();
-    if($xmloffer->extraCost){
-      foreach ($xmloffer->extraCost as $extraCost) {
-        $propertysegment = '';
-        $timesegment     = $extraCost['timesegment'];
-
-        if (!in_array($timesegment, array('m','w','d','y','h','infinite'))) {
-          $timesegment = ($offer_type == 'rent' ? 'm' : 'infinite');
-        }
-        $propertysegment = $extraCost['propertysegment'];
-        if (!in_array($propertysegment, array('m2','km2','full'))) {
-          $propertysegment = 'full';
-        }
-        if (is_object($propertysegment)) {
-          $propertysegment = $propertysegment->__toString(); 
-        }
-        $the_extraPrice = (float) $extraCost->__toString();
-
-        $extraPrice[] = array(
-          'price' => $the_extraPrice,
-          'title' => (string) $extraCost['title'],
-          'timesegment' => $timesegment->__toString(),
-          'propertysegment' => $propertysegment,
-          'currency' => $new_meta_data['price_currency'],
-          'frequency' => 1
-        );
-      }
-      $new_meta_data['extraPrice'] = $extraPrice;
-    }*/
 
     //price for order
     $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== 0)      ? ($new_meta_data['price'])      :(9999999999);

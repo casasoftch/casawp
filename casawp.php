@@ -27,20 +27,20 @@ chdir(dirname(__DIR__));
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
 $configuration = array(
-		'modules' => array(
-			'CasasoftStandards',
-			'CasasoftMessenger',
-			'casawp'
+	'modules' => array(
+		'CasasoftStandards',
+		'CasasoftMessenger',
+		'casawp'
+	),
+	'module_listener_options' => array(
+		'config_glob_paths'    => array(
+				__DIR__.'/config/autoload/{,*.}{global,local}.php',
 		),
-		'module_listener_options' => array(
-				'config_glob_paths'    => array(
-						__DIR__.'/config/autoload/{,*.}{global,local}.php',
-				),
-				'module_paths' => array(
-						__DIR__.'/module',
-						__DIR__.'/vendor',
-				),
+		'module_paths' => array(
+				__DIR__.'/module',
+				__DIR__.'/vendor',
 		),
+	),
 );
 
 use Zend\Loader\AutoloaderFactory;
@@ -62,19 +62,14 @@ if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 	} else {
 		$import = new casawp\Import(true, false);
 	}
-	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
 	$import = new casawp\Import(true, false);
-	$transcript = $import->getLastTranscript();
 }
 
 if (isset($_GET['gatewaypoke'])) {
 	$import = new casawp\Import(false, true);
 	$import = new casawp\Import(true, false);
-	$transcript = $import->getLastTranscript();
 }
-
-
