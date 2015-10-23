@@ -19,20 +19,6 @@ class FilterForm extends Form
         $this->setAttribute('method', 'GET');
         $this->setAttribute('action', '/immobilien/');
 
-        if ($this->categories) {
-            $category_options = $this->getCategoryOptions();
-            $this->add(array(
-                'name' => 'categories',
-                'type' => 'Select',
-                'attributes' => array(
-                    'multiple' => 'multiple',
-                ),
-                'options' => array(
-                    'label' => __('Category', 'casawp'),
-                    'value_options' => $category_options,
-                ),
-            ));
-        }
         if ($this->salestypes) {
             $salestype_options = $this->getSalestypeOptions();
             $this->add(array(
@@ -44,6 +30,20 @@ class FilterForm extends Form
                 'options' => array(
                     'label' => __('Sales type', 'casawp'),
                     'value_options' => $salestype_options,
+                ),
+            ));
+        }
+        if ($this->categories) {
+            $category_options = $this->getCategoryOptions();
+            $this->add(array(
+                'name' => 'categories',
+                'type' => 'Select',
+                'attributes' => array(
+                    'multiple' => 'multiple',
+                ),
+                'options' => array(
+                    'label' => __('Category', 'casawp'),
+                    'value_options' => $category_options,
                 ),
             ));
         }
