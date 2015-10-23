@@ -69,6 +69,7 @@ class FilterForm extends Form
         foreach ($this->categories as $category) {
             $category_options[$category->getKey()] = $category->getLabel();
         }
+        asort($category_options);
         return $category_options;
     }
 
@@ -78,6 +79,7 @@ class FilterForm extends Form
             $salestype_options[$salestype->getKey()] = $salestype->getLabel();
         }
         return $salestype_options;*/
+        asort($this->salestypes);
         return $this->salestypes;
     }
 
