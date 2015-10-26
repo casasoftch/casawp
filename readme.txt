@@ -141,3 +141,4 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 1. Archiv Übersicht
 2. Einzel Objekt
+

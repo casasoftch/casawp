@@ -1,0 +1,45 @@
+<!-- 
+    $this->images
+    $this->offer
+-->
+
+<div id="slider_<?= $this->offer->ID ?>" class="casasync-carousel slide" data-ride="carousel" data-interval="false">
+    <?php $indicators = get_option('casasync_single_show_carousel_indicators' , '0'); ?>
+    <?php if($indicators != 0) : ?>
+        <ol class="carousel-indicators">
+        <?php foreach ($this->images as $i => $image) : ?>
+            <li data-target="#slider_<?= $this->offer->ID ?>" data-slide-to="<?= $i ?>" class="<?= ($i==0?'active':'') ?>"></li>
+        <?php endforeach; ?>
+        </ol>
+    <?php endif; ?>
+
+    <div class="casasync-carousel-inner">
+        <?php foreach ($this->images as $i => $image): ?>
+            <div class="item <?= ($i==0?'active':'') ?>">
+                <?php 
+                    $img     = wp_get_attachment_image( $image->ID, 'full', true, array('class' => 'carousel-image') );
+                    $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
+                ?>
+                <a class="property-image-gallery" rel="casasync-single-gallery" href="<?= $img_url[0] ?>" title="<?= $image->post_excerpt ?>"><?= $img ?></a>
+                <?php if ($image->post_excerpt) : ?>
+                    <?php $class = ($indicators != '0') ? ('hasIndicators') : (null); ?>
+                    <div class="casasync-carousel-caption <?= $class ?>">
+                        <p><?= $image->post_excerpt ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if ($this->offer->getAvailability()) : ?>
+                    <?= $this->offer->getAvailability(); ?>
+                <?php endif ?>
+              
+            </div>
+        <?php endforeach ?>
+    </div>
+
+    <a class="left casasync-carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right casasync-carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+
+</div>

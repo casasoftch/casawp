@@ -1,0 +1,17 @@
+<div class="text-center">
+	<br><br>
+	<?php if ($message == 'send'): ?>
+		<h2>In wenigen Minuten erhalten Sie ein Bestätigungs-E-Mail</h2>
+		<p>Bitte schliessen Sie dieses Fenster und klicken Sie auf den Link im E-Mail.</p>
+		<a href="<?= $this->url('user/register', array(), true) ?>" class="btn btn-default">Andere Mail-Adresse eintragen</a>
+	<?php endif ?>
+	<?php if ($message == 'no_user'): ?>
+		<h2>Ooops!</h2>
+		<p>Der Benutzer wurde nicht gefunden :-( bitte kontaktieren sie den Administrator info@grottoria.ch</p>
+	<?php endif ?>
+	<?php if ($message == 'already_confirmed'): ?>
+		<h2>Benutzer bereits aktiviert</h2>
+		<p>Dieser Benutzer wurde bereits aktiviert. <a href="/wine/basket-login"> Jetzt anmelden!</a></p>
+	<?php endif ?>
+	<br><br><br><br>
+</div>
