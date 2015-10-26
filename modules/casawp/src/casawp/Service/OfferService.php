@@ -372,6 +372,38 @@ class OfferService{
     	return array();
     }
 
+    public function getIntegratedOffers(){
+    	$offers = $this->getFieldValue('integratedoffers', false);
+    	if ($offers) {
+    		$offers = maybe_unserialize($offers);
+    	}
+    	
+    	//group em
+    	$f_offers = array();
+    	$check_keys = array('type', 'price', 'timesegment', 'propertysegment', 'currency', 'frequency', 'inclusive');
+    	foreach ($offers as $offer) {
+    		$found = false;
+    		foreach ($f_offers as $f_key => $f_offer) {
+    			$check_a = array_intersect_key($f_offer, array_flip($check_keys));
+    			$check_b = array_intersect_key($offer, array_flip($check_keys));
+    			asort($check_a);
+    			asort($check_b);
+    			if ($check_a == $check_b) {
+    				$found = $f_key;
+    			}
+    		}
+    		if ($found) {
+    			$offer['count'] = (isset($offer['count']) ? $offer['count'] : 1) + 1;
+    			$f_offers[$found] = $offer;
+    		} else {
+    			$offer['count'] = 1;
+    			$f_offers[] = $offer;
+    		}
+    	}
+
+    	return $f_offers;
+    }
+
     /*===========================================
     =          Direct renders actions           =
     ===========================================*/
@@ -710,6 +742,12 @@ class OfferService{
     public function renderPagination(){
     	return $this->render('single-pagination', array(
     		'post_id' => $this->post->ID
+    	));
+    }
+
+    public function renderIntegratedOffers(){
+    	return $this->render('integrated-offers', array(
+    		'integratedOffers' => $this->getIntegratedOffers()
     	));
     }
 

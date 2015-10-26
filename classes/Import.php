@@ -899,19 +899,23 @@ class Import {
     $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
 
     if ($property_xml->integratedOffers) {
-          $propertydata['integratedoffers'] = array();
-          foreach ($property_xml->integratedOffers->integratedOffer as $xml_integratedoffer) {
-              $cost = $xml_integratedoffer->__toString();
-              $propertydata['integratedoffers'][] = array(
-                  'type'             => ($xml_integratedoffer['type'] ? $xml_integratedoffer['type']->__toString() : ''),
-                  'cost'             => $cost,
-                  'frequency'        => ($xml_integratedoffer['frequency'] ? $xml_integratedoffer['frequency']->__toString() : ''),
-                  'time_segment'     => ($xml_integratedoffer['timesegment'] ? $xml_integratedoffer['timesegment']->__toString() : ''),
-                  'property_segment' => ($xml_integratedoffer['propertysegment'] ? $xml_integratedoffer['propertysegment']->__toString() : ''),
-                  'inclusive'        => ($xml_integratedoffer['inclusive'] ? $xml_integratedoffer['inclusive']->__toString() : 0)
-              );
-          }
-      }
+        $propertydata['integratedoffers'] = array();
+        foreach ($property_xml->integratedOffers->integratedOffer as $xml_integratedoffer) {
+            $cost = $xml_integratedoffer->__toString();
+            $propertydata['integratedoffers'][] = array(
+                'type'             => ($xml_integratedoffer['type'] ? $xml_integratedoffer['type']->__toString() : ''),
+                'cost'             => $cost,
+                'frequency'        => ($xml_integratedoffer['frequency'] ? $xml_integratedoffer['frequency']->__toString() : ''),
+                'time_segment'     => ($xml_integratedoffer['timesegment'] ? $xml_integratedoffer['timesegment']->__toString() : ''),
+                'property_segment' => ($xml_integratedoffer['propertysegment'] ? $xml_integratedoffer['propertysegment']->__toString() : ''),
+                'inclusive'        => ($xml_integratedoffer['inclusive'] ? $xml_integratedoffer['inclusive']->__toString() : 0)
+            );
+        }
+    } else {
+      echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+      print_r('no');
+      echo "</textarea>";
+    }
 
     if ($property_xml->extraCosts) {
         $propertydata['extracosts'] = array();
@@ -1492,6 +1496,7 @@ class Import {
     if (isset($property['integratedoffers'])) {
       foreach ($property['integratedoffers'] as $integratedoffer) {
         $integratedoffers[] = array(
+          'type' => $integratedoffer['type'],
           'price' => $integratedoffer['cost'],
           'timesegment' => $integratedoffer['time_segment'],
           'propertysegment' => $integratedoffer['property_segment'],
