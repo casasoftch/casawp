@@ -1,16 +1,18 @@
 <?php global $casawp; ?>
 <?php if ($this->integratedOffers): ?>
-  
-  <h2>Weitere Angebote</h2>
-  <div class="casawp-integrated-offers">
+  <section class="casawp-integrated-offers">
+    <h2>Zusatz Angebote</h2>
     <?php foreach ($this->integratedOffers as $offer): ?>
       <article class="casawp-integrated-offer">
         <h3><?= $offer['type'] ?> <?= ($offer['count'] > 1 ? 'x'.$offer['count']: '') ?></h3>
         <strong><?= $casawp->renderPrice($offer['price'], $offer['currency'], $offer['propertysegment'], $offer['timesegment']) ?></strong>
         <?php if ($offer['inclusive']): ?>
-          is inclusive
+          Im Hauptangebot integriert
         <?php endif ?>
       </article>
     <?php endforeach ?>
-  </div>
+  </section>
+  <br>
+  <br>
+  <br>
 <?php endif ?>
