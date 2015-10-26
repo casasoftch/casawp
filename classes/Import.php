@@ -898,6 +898,21 @@ class Import {
     $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtoupper($property_xml->grossPrice['timesegment']->__toString()) : '');
     $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
 
+    if ($property_xml->integratedOffers) {
+          $propertydata['integratedoffers'] = array();
+          foreach ($property_xml->integratedOffers->integratedOffer as $xml_integratedoffer) {
+              $cost = $xml_integratedoffer->__toString();
+              $propertydata['integratedoffers'][] = array(
+                  'type'             => ($xml_integratedoffer['type'] ? $xml_integratedoffer['type']->__toString() : ''),
+                  'cost'             => $cost,
+                  'frequency'        => ($xml_integratedoffer['frequency'] ? $xml_integratedoffer['frequency']->__toString() : ''),
+                  'time_segment'     => ($xml_integratedoffer['timesegment'] ? $xml_integratedoffer['timesegment']->__toString() : ''),
+                  'property_segment' => ($xml_integratedoffer['propertysegment'] ? $xml_integratedoffer['propertysegment']->__toString() : ''),
+                  'inclusive'        => ($xml_integratedoffer['inclusive'] ? $xml_integratedoffer['inclusive']->__toString() : 0)
+              );
+          }
+      }
+
     if ($property_xml->extraCosts) {
         $propertydata['extracosts'] = array();
         foreach ($property_xml->extraCosts->extraCost as $xml_extra_cost) {
@@ -1472,6 +1487,22 @@ class Import {
       }
     }
     $new_meta_data['extraPrice'] = $extraPrice;
+
+    $integratedoffers = array();
+    if (isset($property['integratedoffers'])) {
+      foreach ($property['integratedoffers'] as $integratedoffer) {
+        $integratedoffers[] = array(
+          'price' => $integratedoffer['cost'],
+          'timesegment' => $integratedoffer['time_segment'],
+          'propertysegment' => $integratedoffer['property_segment'],
+          'currency' => $new_meta_data['price_currency'],
+          'frequency' => $integratedoffer['frequency'],
+          'inclusive' => $integratedoffer['inclusive']
+        );
+      }
+    }
+    $new_meta_data['integratedoffers'] = $integratedoffers;
+
 
     //price for order
     $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== 0)      ? ($new_meta_data['price'])      :(9999999999);
