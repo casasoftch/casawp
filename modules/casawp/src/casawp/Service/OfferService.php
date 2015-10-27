@@ -375,6 +375,8 @@ class OfferService{
 
     public function getIntegratedOffers(){
     	$offers = $this->getFieldValue('integratedoffers', false);
+    	if (empty($offers)) return NULL;
+    	
     	if ($offers) {
     		$offers = maybe_unserialize($offers);
     	}
@@ -382,6 +384,7 @@ class OfferService{
     	//group em
     	$f_offers = array();
     	$check_keys = array('type', 'price', 'timesegment', 'propertysegment', 'currency', 'frequency', 'inclusive');
+
     	foreach ($offers as $offer) {
     		$found = false;
     		foreach ($f_offers as $f_key => $f_offer) {
@@ -391,11 +394,12 @@ class OfferService{
     			asort($check_b);
     			if ($check_a == $check_b) {
     				$found = $f_key;
+    				break;
     			}
     		}
+    
     		if ($found) {
-    			$offer['count'] = (isset($offer['count']) ? $offer['count'] : 1) + 1;
-    			$f_offers[$found] = $offer;
+    			$f_offers[$found]['count'] = (isset($f_offers[$found]['count']) ? $f_offers[$found]['count'] : 1) + 1;
     		} else {
     			$offer['count'] = 1;
     			$f_offers[] = $offer;
@@ -411,14 +415,12 @@ class OfferService{
     			$r_offer->setPropertysegment($offer["propertysegment"]);
     			$r_offer->setInclusive($offer["inclusive"]);
     			$r_offer->setCount($offer["count"]);
-
     			$r_offers[] = $r_offer;
-
     		} else {
-    			//$unknown_offer = new \CasasoftStandards\Service\IntegratedOffer();
-    			//$unknown_offer->setKey($offer);
-    			//$unknown_offer->setLabel('?'.$offer);
-    			//$r_offers[] = $unknown_offer;
+    			$unknown_offer = new \CasasoftStandards\Service\IntegratedOffer();
+    			$unknown_offer->setKey($offer["type"]);
+    			$unknown_offer->setLabel('?'.$offer["type"]);
+    			$r_offers[] = $unknown_offer;
     		}
     	}
     	return $r_offers;

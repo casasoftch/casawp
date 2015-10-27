@@ -54,6 +54,10 @@ class IntegratedOfferService implements FactoryInterface {
                 'label' => $this->translator->translate('Garage', 'casasoft-standards'), //Garagenbox
                 'icon' => '',
             ),
+            'parking-duplex' => array(
+                'label' => $this->translator->translate('parking-duplex', 'casasoft-standards'), //Duplex
+                'icon' => '',
+            ),
             'parking-garage-underground' => array(
                 'label' => $this->translator->translate('parking-garage-underground', 'casasoft-standards'), //Tiefgaragenparkplatz
                 'icon' => '',
