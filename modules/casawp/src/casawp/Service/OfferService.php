@@ -419,6 +419,8 @@ class OfferService{
 			case 'm3': return $numval->getValue() .' m<sup>3</sup>'; break;
 			case 'm2': return $numval->getValue() .' m<sup>2</sup>'; break;
 			case 'm':  return $numval->getValue() .' m'; break;
+			case 'kg':  return $numval->getValue() .' kg'; break;
+			case '%':  return $numval->getValue() .' %'; break;
 			default:   return $numval->getValue(); break;
 		}
 		return null;
