@@ -12,14 +12,16 @@
 </div>
 <div class="casawp-basic-box">
   <div>
-      <h4><?= ($offer->getSalestype() == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
       <?php 
         if ($offer->getSalestype() == 'buy') {
+          echo '<h4>' . __('Price', 'casawp') . '</h4>';
           echo $this->offer->renderPrice();
         } else {
           if ($this->offer->getFieldValue('grossPrice', false)) {
+            echo '<h4>' . __('Gross price', 'casawp') . '</h4>';
             echo $this->offer->renderPrice('gross');
           } elseif($this->offer->getFieldValue('netPrice', false)) {
+            echo '<h4>' . __('Net price', 'casawp') . '</h4>';
             echo '(' . __('Net','casawp') . ') '. $this->offer->renderPrice('net');
           }
         }
