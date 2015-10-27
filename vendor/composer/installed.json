@@ -1273,7 +1273,7 @@
         "source": {
             "type": "git",
             "url": "git@github.com:CasasoftCH/casamodules.git",
-            "reference": "4d9399fd04845e5b58338f3caf9d2023d1b9b484"
+            "reference": "7f38c266b99f7c702667316b78e9aff49b575046"
         },
         "require": {
             "php": ">=5.3.2",
@@ -1281,7 +1281,7 @@
             "zendframework/zend-json": "2.*",
             "zendframework/zend-log": "2.*"
         },
-        "time": "2015-10-27 09:51:29",
+        "time": "2015-10-27 12:53:53",
         "type": "library",
         "extra": {
             "branch-alias": {
