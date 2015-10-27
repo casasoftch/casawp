@@ -111,6 +111,20 @@ class OfferService{
 		return $this->availability;
 	}
 
+	public function getAvailabilityLabel(){
+		if ($this->getAvailability()) {
+			switch ($this->getAvailability()) {
+      			case 'reserved': return __('Reserved', 'casawp'); break;
+      			case 'active': return __('Available', 'casawp'); break;
+      			case 'taken': return __('Taken', 'casawp'); break;
+				case 'reference': return __('Reference', 'casawp'); break;
+				case 'private': return __('Private', 'casawp'); break;
+				case 'reference': return __('Reference', 'casawp'); break;
+			}
+		}
+		return '';
+	}
+
 	public function getSalestype(){
 		if ($this->salestype === null) {
 			$types = get_the_terms( $this->post->ID, 'casawp_salestype' );
@@ -360,8 +374,10 @@ class OfferService{
     }
     public function renderQuickInfosTable() {
         // todo: delete options for archive-fields. new way is to edit the view file
+
         return $this->render('quick-infos-table', array(
-            'offer' => $this
+            'offer' => $this,
+            'datapoints' => $this->getPrimaryArchiveDatapoints()
         ));
     }
 
@@ -430,6 +446,10 @@ class OfferService{
     	$value = $this->getFieldValue('the_urls', array());
     	$value = maybe_unserialize($value);
     	return $value;
+    }
+
+    public function getExcerpt(){
+    	return apply_filters( 'get_the_excerpt', $this->post->post_excerpt );
     }
 
     /*===========================================

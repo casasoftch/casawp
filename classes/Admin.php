@@ -69,7 +69,7 @@ class Admin {
 	public function casawp_menu() {
 		add_menu_page(
 			'casawp options page',
-			'casawp',
+			'<strong>CASA</strong><span style="font-weight:100">WP</span>',
 			'administrator',
 			'casawp',
 			array($this,'casawp_add_options_page'),

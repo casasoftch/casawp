@@ -128,9 +128,8 @@
 ?>
 
 
-<hr>
-
 <div class="wrap">
+	<h1><strong>CASA</strong><span style="font-weight:100">WP</span></h1>
 	<?php
 		// Tabs
 		$tabs = array(
@@ -143,6 +142,10 @@
 		); 
 	    echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
+	    echo '<div style="float:right;">
+	        <a href="http://wordpress.org/support/view/plugin-reviews/casawp" target="_blank" class="add-new-h2">Rate this plugin</a>
+	        <a href="http://wordpress.org/plugins/casawp/changelog/" target="_blank" class="add-new-h2">Changelog</a>
+	    </div>';
 	    $current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 	    foreach( $tabs as $tab => $name ){
 	        $class = ( $tab == $current ) ? ' nav-tab-active' : '';
@@ -686,12 +689,6 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
-										<?php $name = 'casawp_archive_show_zip'; ?>
-										<?php $text = 'PLZ'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-										<br>
 										<?php $name = 'casawp_archive_show_location'; ?>
 										<?php $text = 'Ort'; ?>
 										<label>
@@ -995,25 +992,6 @@
 						<?php /******* General *******/ ?>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Synchronisation mit Exporter/Marklersoftware</th>
-								<td class="front-static-pages">
-									<fieldset>
-										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
-										<?php $name = 'casawp_live_import'; ?>
-										<?php $text = 'Änderungen automatisch bei jedem Aufruf überprüfen und updaten.'; ?>
-										<p><label>
-											<?php
-												$url = get_admin_url('', 'admin.php?page=casawp');
-												$manually = $url . '&do_import=true';
-												$force_last = $manually . '&force_last_import=true';
-												$forced = $manually . '&force_all_properties=true&force_last_import=true';
-											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> <a href="<?php echo $manually  ?>">manueller Import</a> ∙ <a href="<?php echo $force_last  ?>">data-done.xml import</a> ∙ <a href="<?php echo $forced  ?>">erzwungener Import</a>
-										</label></p>
-									</fieldset>
-								</td>
-							</tr>
-							<tr valign="top">
 								<th scrope="row">HTML einfügen</th>
 								<td class="front-static-pages">
 									<fieldset>
@@ -1037,30 +1015,82 @@
 								</td>
 							</tr>
 							<tr valign="top">
-								<th scope="row">CASAGATEWAY (Publisher) import (optional)</th>
+								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
 									<fieldset>
-										<legend class="screen-reader-text"><span>API Schlüssel</span></legend>
+										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
+										<?php $name = 'casawp_live_import'; ?>
+										<?php $text = 'Datei <code>/wp-content/uploads/casawp/import/data.xml</code> automatisch bei jedem Seiten-Aufruf überprüfen und importieren.'; ?>
+										<p><label>
+											<?php
+												$url = get_admin_url('', 'admin.php?page=casawp');
+												$manually = $url . '&do_import=true';
+												$force_last = $manually . '&force_last_import=true';
+												$forced = $manually . '&force_all_properties=true&force_last_import=true';
+											?>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
+									
+									<fieldset>
+										<table>
+											<tr>
+												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml'; if (file_exists($file)) : ?>
+													<td style="text-align:right"><code>data.xml</code></td>
+												<?php else: ?>
+													<td style="text-align:right"><strike><code>data.xml</code></strike></td>
+												<?php endif ?>
+												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>	
+											</tr>
+											<tr>
+												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
+													<td style="text-align:right"><code>data-done.xml</code></td>
+												<?php else: ?>
+													<td style="text-align:right"><strike><code>data-done.xml</code></strike></td>
+												<?php endif ?>
+												<td><a href="<?php echo $force_last  ?>">Letzer erfolgreicher Import erneut anstossen</a></td>
+											</tr>
+											<tr>
+												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
+													<td style="text-align:right"><code>data-done.xml</code></td>
+												<?php else: ?>
+													<td style="text-align:right"><strike><code>data-done.xml</code></strike></td>
+												<?php endif ?>
+												<td><a href="<?php echo $forced  ?>">Letzer erfolgreicher Import erneut anstossen und alle Objekte zwingendermasse durchtesten</a></td>
+											</tr>
+											<tr>
+												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
+													<td style="text-align:right"><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>
+												<?php else: ?>
+													<td style="text-align:right"><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
+												<?php endif ?>
+												<td><a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Import Ausführen</a></td>
+											</tr>
+										</table>
+									</fieldset>
+									<hr>
+
+									<fieldset>
+										<legend class="screen-reader-text"><span><strong>CASA</strong><span style="font-weight:100">GATEWAY</span> API Schlüssel</span></legend>
 										<?php $name = 'casawp_api_key'; ?>
-										<?php $text = 'API Key'; ?>
+										<?php $text = '<strong>CASA</strong><span style="font-weight:100">GATEWAY</span> • API Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
 											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
 										</p>
 									</fieldset>
 									<fieldset>
-										<legend class="screen-reader-text"><span>Privater Schlüssel</span></legend>
+										<legend class="screen-reader-text"><span><strong>CASA</strong><span style="font-weight:100">GATEWAY</span> Privater Schlüssel</span></legend>
 										<?php $name = 'casawp_private_key'; ?>
-										<?php $text = 'Private Key'; ?>
+										<?php $text = '<strong>CASA</strong><span style="font-weight:100">GATEWAY</span> • Private Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
 											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
 										</p>
 									</fieldset>
-									<a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Aktuelles XML von CASAGATEWAY laden</a>
 								</td>
 							</tr>
-							<tr valign="top">
+							<!-- <tr valign="top">
 								<th scope="row">Legacy import</th>
 								<td class="front-static-pages">
 									<fieldset>
@@ -1072,7 +1102,7 @@
 										</label></p>
 									</fieldset>
 								</td>
-							</tr>
+							</tr> -->
 
 							<?php
 								$all_categories = get_categories(array('taxonomy' => 'casawp_category'));

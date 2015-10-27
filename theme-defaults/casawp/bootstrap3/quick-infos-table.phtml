@@ -1,312 +1,108 @@
-<?php //todo set default data */ ?>
+<?php $pattern = '<tr>
+  <th>{{label}}</th>
+  <td>{{value}}</td>
+</tr>' ?>
+<?php $pattern_2 = '<tr>
+  <td colspan="2">{{value}}</td>
+</tr>' ?>
 
 <table class="table">
-    <tbody>
-        <?php $value = $this->offer->getFieldValue('property_address_streetaddress') ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Street', 'casawp') ?></th>
-                <td><?= $value . ' ' .
-                $this->offer->getFieldValue('property_address_streetnumber') ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php if($this->offer->getFieldValue('address_locality')): ?>
-            <tr>
-                <th><?= __('Locality', 'casawp') ?></th>
-                <td>
-                  <?php
-                    $postalcode = $this->offer->getFieldValue('address_postalcode');
-                    $locality = $this->offer->getFieldValue('address_locality');
-                    echo ($postalcode ?  $postalcode . ' ': '') . ($locality ? $locality : '');
-
-                    $country = $this->offer->getFieldValue('address_country');
-                    echo ($country ? ' (' . $country . ')' : '');
-                  ?>
-                </td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('number_of_rooms'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Number of rooms', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('area_sia_nf'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Surface usable', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('area_bwf'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Living space', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('area_sia_gsf'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Property space', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('floor'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Floor', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('number_of_floors'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Number of floors', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('year_built'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Year of construction', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php $value = $this->offer->getNumval('year_renovated'); ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('Year of renovation', 'casawp') ?></th>
-                <td><?= $this->offer->renderNumvalValue($value) ?></td>
-            </tr>
-        <?php endif; ?>
-
-        <?php if ($this->offer->getSalestype() == 'buy') : ?>
-          <tr>
-            <th><?= __('Sales price', 'casawp') ?></th>
-            <td>
-              <?= $this->offer->renderPrice() ?>
-            </td>
-          </tr>
-        <?php endif; ?>
-        <?php if ($this->offer->getSalestype() == 'rent') : ?>
-          <?php if ($this->offer->getFieldValue('grossPrice', false)): ?>
-             <tr>
-                <th><?= __('Gross price','casawp') ?></th>
-                <td>
-                  <?= $this->offer->renderPrice('gross'); ?>
-                </td>
-              </tr>
-          <?php endif ?>
-          <?php if ($this->offer->getFieldValue('netPrice', false)): ?>
-             <tr>
-                <th><?= __('Net price','casawp') ?></th>
-                <td>
-                  <?= $this->offer->renderPrice('net'); ?>
-                </td>
-              </tr>
-          <?php endif ?>
-        <?php endif; ?>
-
-        <?php /* todo: implement getExcerpt
-        $value = $this->offer->getExcerpt() ?>
-        <?php if($value): ?>
-            <tr>
-                <td colspan="2"><?= $value ?></td>
-            </tr>
-        <?php endif;*/ ?>
-
-        <?php /* todo: implement availability*/
-        $value = false # ?>
-        <?php if($value): ?>
-            <tr>
-                <th><?= __('', 'casawp') ?></th>
-                <td></td>
-            </tr>
-        <?php endif; ?>
-
-    </tbody>
+  <tbody>
+    <?php 
+      foreach ($datapoints as $datapoint){
+        switch (substr($datapoint, strlen('casawp_archive_show_'))) {
+          case 'street_and_number':
+            $point = str_replace('{{label}}', __('Street', 'casawp'), $pattern);
+            echo str_replace('{{value}}', trim($this->offer->getFieldValue('property_address_streetaddress') . ' ' . $this->offer->getFieldValue('property_address_streetnumber')), $point);
+            break;
+          case 'location':
+            $point = str_replace('{{label}}', __('Locality', 'casawp'), $pattern);
+            echo str_replace('{{value}}', trim($this->offer->getFieldValue('address_postalcode') . ' ' . $this->offer->getFieldValue('address_locality')), $point);
+            break;
+          case 'number_of_rooms':
+            $numval = $this->offer->getNumval('number_of_rooms');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'area_sia_nf':
+            $numval = $this->offer->getNumval('area_sia_nf');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'area_bwf':
+            $numval = $this->offer->getNumval('area_bwf');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'surface_property':
+            $numval = $this->offer->getNumval('area_sia_gsf');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'floor':
+            $numval = $this->offer->getNumval('floor');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'number_of_floors':
+            $numval = $this->offer->getNumval('number_of_floors');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'year_built':
+            $numval = $this->offer->getNumval('year_built');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'year_renovated':
+            $numval = $this->offer->getNumval('year_renovated');
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
+            }
+            break;
+          case 'price':
+            if ($this->offer->getSalestype() == 'buy') {
+              $point = str_replace('{{label}}', __('Sales price', 'casawp'), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderPrice(), $point);
+            }
+            if ($this->offer->getSalestype() == 'rent') {
+              if ($this->offer->getFieldValue('grossPrice', false)) {
+                $point = str_replace('{{label}}', __('Gross price', 'casawp'), $pattern);
+                echo str_replace('{{value}}', $this->offer->renderPrice('gross'), $point);
+              }
+              if ($this->offer->getFieldValue('netPrice', false)) {
+                $point = str_replace('{{label}}', __('Net price', 'casawp'), $pattern);
+                echo str_replace('{{value}}', $this->offer->renderPrice('net'), $point);
+              }
+            }
+            break;
+          case 'excerpt':
+            echo str_replace('{{value}}', $this->offer->getExcerpt(), $pattern_2);
+            break;
+          case 'availability':
+            $value = $this->offer->getAvailabilityLabel();
+            if ($value) {
+              $point = str_replace('{{label}}', __('Availability', 'casawp'), $pattern);
+              echo str_replace('{{value}}', $value, $point); 
+            }
+            break;
+        }
+      } 
+    ?>
+  </tbody>
 </table>
-
-
-<?php
-/*'
-'casawp_archive_show_location',
-'casawp_archive_show_number_of_rooms',
-'casawp_archive_show_area_sia_nf',
-'casawp_archive_show_area_bwf',
-'casawp_archive_show_surface_property',
-'casawp_archive_show_floor',
-'casawp_archive_show_number_of_floors',
-'casawp_archive_show_year_built',
-'casawp_archive_show_year_renovated',
-'casawp_archive_show_price',
-'casawp_archive_show_excerpt',
-'casawp_archive_show_availability'
-
-###################
-  $return .= '<table class="table">';
-  $return .= '<tbody>';
-
-  foreach ($value_to_display as $value) {
-    switch ($value) {
-      case 'casawp_archive_show_street_and_number':
-        if($this->address_street){
-            $return .= '<tr>'
-            .'<th>' . __('Street', 'casawp') . '</th>'
-            .'<td>' . $this->address_street . ' ' . $this->address_streetnumber . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_location':
-        if ($this->getAddress('property')){
-          $return .= '<tr>'
-            .'<th>' . __('Locality', 'casawp') . '</th>'
-            .'<td>' . $this->getAddress('property', true) . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_number_of_rooms':
-        if ($this->getNumval('number_of_rooms')){
-          $return .= '<tr>'
-            .'<th>' .  __('Number of rooms', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('number_of_rooms') . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_area_sia_nf':
-        if ($this->getNumval('area_sia_nf')){
-          $return .= '<tr>'
-            .'<th>' .  __('Surface usable', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('area_sia_nf') . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_area_bwf':
-        if ($this->getNumval('area_bwf')){
-          $return .= '<tr>'
-            .'<th>' . __('Living space', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('area_bwf', true) . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_surface_property':
-        if ($this->getNumval('surface_property')){
-          $return .= '<tr>'
-            .'<th>' . __('Property space', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('surface_property', true) . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_floor':
-        if ($this->floors){
-          $return .= '<tr>'
-            .'<th>' . __('Floor', 'casawp') . '</th>'
-            .'<td>' . $this->floors[0] . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_number_of_floors':
-       if ($this->getNumval('number_of_floors')){
-          $return .= '<tr>'
-            .'<th>' . __('Number of floors', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('number_of_floors', true) . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_year_built':
-        if ($this->getNumval('year_built')){
-              $return .= '<tr>'
-            .'<th>' . __('Year of construction', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('year_built', true) . '</td>'
-          .'</tr>';
-          }
-        break;
-      case 'casawp_archive_show_year_renovated':
-        if ($this->getNumval('year_renovated')){
-          $return .= '<tr>'
-            .'<th>' . __('Year of renovation', 'casawp') . '</th>'
-            .'<td>' . $this->getNumval('year_renovated', true) . '</td>'
-          .'</tr>';
-        }
-        break;
-      case 'casawp_archive_show_price':
-        if ($this->availability != 'reference') {
-          if ($this->main_basis == 'buy') {
-            $return .= '<tr>'
-              .'<th>' . __('Sales price','casawp') . '</th>'
-            .'<td>';
-            $return .= $this->getPrice('sales') ? $this->getPrice('sales', 'full') : __('On Request', 'casawp');
-            $return .= '</td>'
-            .'</tr>';
-          }
-          if ($this->main_basis == 'rent') {
-            if ( $this->getPrice('gross') || $this->getPrice('net')  ) {
-              if ($this->getPrice('gross')) {
-                $return .= '<tr>'
-                  .'<th>' . __('Gross price','casawp') . '</th>'
-                .'<td>';
-                $return .= $this->getPrice('gross', 'full');
-                $return .= '</td>'
-                .'</tr>';
-              }
-              if ($this->getPrice('net')) {
-                $return .= '<tr>'
-                  .'<th>' . __('Net price','casawp') . '</th>'
-                .'<td>';
-                $return .= $this->getPrice('net', 'full');
-                $return .= '</td>'
-                .'</tr>';
-              }
-            } else {
-              $return .= '<tr>'
-                  .'<th>' . __('Rent price','casawp') . '</th>'
-                .'<td>';
-                $return .=  __('On Request', 'casawp');
-                $return .= '</td>'
-                .'</tr>';
-            }
-          }
-        }
-        break;
-        case 'casawp_archive_show_excerpt':
-          if($this->getExcerpt()) {
-            $return .= '<tr><td colspan="2">' . $this->getExcerpt() . '</td></tr>';
-          }
-        break;
-        case 'casawp_archive_show_availability':
-          if ($this->availability != 'reference') {
-            if ($this->getAvailabilityLabel()) {
-              $return .= '<tr>'
-                .'<th>' . __('Available','casawp') . '</th>'
-              .'<td>';
-              $return .= $this->getAvailabilityLabel();
-              $return .= '</td>'
-              .'</tr>';
-            } else {
-              $return .= '<tr>'
-                .'<th>' . __('Available','casawp') . '</th>'
-              .'<td>';
-              $return .= __('On Request', 'casawp');
-              $return .= '</td>'
-              .'</tr>';
-            }
-          }
-        break;
-      default:
-        break;
-    }
-  }
-  $return .= '</tbody>';
-  $return .= '</table>';
-}*/ ?>
