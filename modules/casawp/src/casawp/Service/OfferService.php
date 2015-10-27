@@ -377,7 +377,7 @@ class OfferService{
     	if ($offers) {
     		$offers = maybe_unserialize($offers);
     	}
-    	
+
     	//group em
     	$f_offers = array();
     	$check_keys = array('type', 'price', 'timesegment', 'propertysegment', 'currency', 'frequency', 'inclusive');
@@ -402,6 +402,12 @@ class OfferService{
     	}
 
     	return $f_offers;
+    }
+
+    public function getUrls(){
+    	$value = $this->getFieldValue('the_urls', array());
+    	$value = maybe_unserialize($value);
+    	return $value;
     }
 
     /*===========================================

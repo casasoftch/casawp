@@ -22,6 +22,7 @@ class LogServiceFactory implements FactoryInterface
             'url' => '',
             'username' => '',
             'password' => '',
+            'zend_logger_cap' => 6,
             'shutdown' => [
                 'activate' => true,
                 'report_rogue_entries' => true,

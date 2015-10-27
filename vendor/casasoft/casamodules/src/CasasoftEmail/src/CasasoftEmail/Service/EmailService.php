@@ -39,7 +39,7 @@ class EmailService {
         $this->viewRender = $viewRender;
         $this->resolver = $resolver;
 
-        $this->config['domain'] = $_SERVER['HTTP_HOST'];
+        //$this->config['domain'] = $_SERVER['HTTP_HOST'];
     }
 
     public function setConfig($config){

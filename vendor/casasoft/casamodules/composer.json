@@ -14,7 +14,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "zendframework/zend-http": "2.*",
+        "zendframework/zend-json": "2.*",
+        "zendframework/zend-log": "2.*"
     },
     "require-dev": {
     },
@@ -40,7 +43,8 @@
             "DbGenerator\\": "src/",
             "CasasoftMessenger\\": "src/",
             "CasasoftGeo\\": "src/"
-        }
+        },
+        "classmap" : ["src/CasaLogService/src/CasaLogService/Service/LogService.php"]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

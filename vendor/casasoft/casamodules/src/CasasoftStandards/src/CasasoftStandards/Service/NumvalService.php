@@ -30,7 +30,7 @@ class NumvalService implements FactoryInterface {
             'general' => array(
                 'name' => $this->translator->translate('General', 'casasoft-standards'),
                 'items' => array(
-                    /*'floor' => array(
+                    'floor' => array(
                         'required' => false,
                     ),
                     'year_built' => array(
@@ -38,7 +38,7 @@ class NumvalService implements FactoryInterface {
                     ),
                     'year_last_renovated' => array(
                         'required' => false,
-                    ),*/
+                    ),
                     'ceiling_height' => array(
                         'required' => false,
                     ),
@@ -146,6 +146,9 @@ class NumvalService implements FactoryInterface {
                        'required' => false,
                     ),
                     'distance_motorway' => array(
+                       'required' => false,
+                    ),
+                    'distance_airport'  => array(
                        'required' => false,
                     ),
                 )
@@ -270,6 +273,12 @@ class NumvalService implements FactoryInterface {
             ),
             'distance_motorway' => array(
                 'label' => $this->translator->translate('Distance to freeway', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'm',
+            ),
+            'distance_airport' => array(
+                'label' => $this->translator->translate('Distance to airport', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => 'm',

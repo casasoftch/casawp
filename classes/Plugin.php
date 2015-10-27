@@ -27,6 +27,10 @@ class Plugin {
 
         add_shortcode('casawp_contact', array($this,'contact_shortcode'));
         add_action('init', array($this, 'setPostTypes'));
+        if(function_exists('acf_add_local_field_group') ):
+            add_action('init', array($this, 'setACF'));
+        endif;
+
 
         add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
         add_action('wp_enqueue_scripts', array($this, 'setOptionJsVars'));
@@ -591,6 +595,709 @@ class Plugin {
         return $upload;
     }
 
+    public function setACF(){
+        $used = array();
+        
+        add_action( 'add_meta_boxes_casawp_property', array($this,'casawp_property_custom_metaboxes'), 10, 2 );
+
+        foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
+            $fields = array();
+
+            foreach ($groupsettings['items'] as $key => $settings) {
+                $used[] = $key;
+                $append = '';
+                switch ($this->numvalService->getItem($key)->getSi()) {
+                    case 'm': $append = 'm'; break;
+                    case 'm2': $append = 'm<sup>2</sup>'; break;
+                    case 'm3': $append = 'm<sup>3</sup>'; break;
+                    case '%': $append = '%'; break;
+                }
+                $fields[] = array(
+                    'key' => 'field_casawp_property_'.$key,
+                    'label' => $this->numvalService->getItem($key)->getLabel(),
+                    'name' => $key,
+                    'type' => 'number',
+                    'instructions' => '',
+                    'append' => $append,
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array (
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                );
+            }
+
+            acf_add_local_field_group(array (
+                'key' => 'group_casawp_property_numvals_'.$group,
+                'title' => $groupsettings['name'],
+                'fields' => $fields,
+                'location' => array (
+                    array (
+                        array (
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'casawp_property',
+                        ),
+                    ),
+                ),
+                'menu_order' => 29,
+                'position' => 'normal',
+                'style' => 'default',
+                'label_placement' => 'left',
+                'instruction_placement' => 'label',
+            ));
+        }
+
+        //rest numeric values
+        $fields = array();
+        foreach ($this->numvalService->getItems() as $numval) {
+            if (!in_array($numval->getKey(), $used)) {
+                $fields[] = array(
+                    'key' => 'field_casawp_property_'.$numval->getKey(),
+                    'label' => $numval->getLabel(),
+                    'name' => $numval->getKey(),
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array (
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                );
+            }
+        }
+        if ($fields) {
+            acf_add_local_field_group(array (
+                'key' => 'group_casawp_property_numvals_unsorted',
+                'title' => 'Ungeordnete werte',
+                'fields' => $fields,
+                'location' => array (
+                    array (
+                        array (
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'casawp_property',
+                        ),
+                    ),
+                ),
+                'menu_order' => 30,
+                'position' => 'default',
+                'style' => 'default',
+                'label_placement' => 'left',
+                'instruction_placement' => 'label',
+            ));
+        }
+
+        //identifiers
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'casawp_id',
+            'label' => __('CASAWP ID', 'casawp'),
+            'name' => 'casawp_id',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'referenceId',
+            'label' => __('Reference Nr.', 'casawp'),
+            'name' => 'referenceId',
+            'type' => 'text',
+            'required' => 0
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_identifiers',
+            'title' => __('Identifiers', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                ),
+            ),
+            'menu_order' => 1,
+            'position' => 'side',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+        ));
+
+        //property address
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_streetaddress',
+            'label' => __('Street', 'casawp'),
+            'name' => 'property_address_streetaddress',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_streetnumber',
+            'label' => __('Nr.', 'casawp'),
+            'name' => 'property_address_streetnumber',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_streetaddition',
+            'label' => __('Addition', 'casawp'),
+            'name' => 'property_address_streetaddition',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_postalcode',
+            'label' => __('Postal Code', 'casawp'),
+            'name' => 'property_address_postalcode',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_locality',
+            'label' => __('City', 'casawp'),
+            'name' => 'property_address_locality',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_region',
+            'label' => __('Region', 'casawp'),
+            'name' => 'property_address_region',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_address_country',
+            'label' => __('Country', 'casawp'),
+            'name' => 'property_address_country',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_geo_latitude',
+            'label' => __('Latitude', 'casawp'),
+            'name' => 'property_geo_latitude',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_property_'.'property_geo_longitude',
+            'label' => __('Longitude', 'casawp'),
+            'name' => 'property_geo_longitude',
+            'type' => 'text',
+            'required' => 0
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_property_address',
+            'title' => __('Address', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                ),
+            ),
+            'menu_order' => 1,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+        ));
+
+
+        //Settings
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'start',
+            'label' => __('Start', 'casawp'),
+            'name' => 'start',
+            'type' => 'date_time_picker',
+            'required' => 0,
+            'date_format' => 'yy-mm-dd',
+            'time_format' => 'HH:mm:ss',
+            'first_day' => 1,
+            'save_as_timestamp' => 'false',
+            'get_as_timestamp' => 'false',
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'price_currency',
+            'label' => __('Currency', 'casawp'),
+            'name' => 'price_currency',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'CHF'   => 'CHF',
+                'EUR'   => '€',
+                'GBP'   => '£',
+                'USD'   => '$',
+            ),
+            'layout' => 'horizontal',
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_setting',
+            'title' => __('General settings', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                ),
+            ),
+            'menu_order' => 1,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+        ));
+
+
+        //Buy
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'price',
+            'label' => __('Price', 'casawp'),
+            'name' => 'price',
+            'type' => 'number',
+            'required' => 0,
+            'step' => 1,
+            'min' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'price_propertysegment',
+            'label' => __('Price property segment', 'casawp'),
+            'name' => 'price_propertysegment',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'all'   => __('All', 'casawp'),
+                'm'   => 'm<sup>2</sup>'
+            ),
+            'layout' => 'horizontal',
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_offer_buy',
+            'title' => __('Buy', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                    array (
+                        'param' => 'post_taxonomy',
+                        'operator' => '==',
+                        'value' => 'casawp_salestype:buy',
+                    ),
+                ),
+            ),
+            'menu_order' => 2,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+        ));
+
+
+        //Rent
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'netPrice',
+            'label' => __('Net Price', 'casawp'),
+            'name' => 'netPrice',
+            'type' => 'number',
+            'required' => 0,
+            'step' => 1,
+            'min' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'netPrice_propertysegment',
+            'label' => __('Net price property segment', 'casawp'),
+            'name' => 'netPrice_propertysegment',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'all'   => __('All', 'casawp'),
+                'm'   => 'm<sup>2</sup>'
+            ),
+            'layout' => 'horizontal',
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'netPrice_timesegment',
+            'label' => __('Net price time segment', 'casawp'),
+            'name' => 'netPrice_propertysegment',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'm' => __('month', 'casawp'),
+                'w' => __('week', 'casawp'),
+                'd' => __('day', 'casawp'),
+                'y' => __('year', 'casawp'),
+                'h' => __('hour', 'casawp')
+            ),
+            'layout' => 'horizontal',
+        );
+
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'grossPrice',
+            'label' => __('Gross Price', 'casawp'),
+            'name' => 'grossPrice',
+            'type' => 'number',
+            'required' => 0,
+            'step' => 1,
+            'min' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'grossPrice_propertysegment',
+            'label' => __('Gross price property segment', 'casawp'),
+            'name' => 'grossPrice_propertysegment',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'all'   => __('All', 'casawp'),
+                'm'   => 'm<sup>2</sup>'
+            ),
+            'layout' => 'horizontal',
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_offer_'.'grossPrice_timesegment',
+            'label' => __('Gross price time segment', 'casawp'),
+            'name' => 'grossPrice_propertysegment',
+            'type' => 'radio',
+            'required' => 0,
+            'choices' => array(
+                'm' => __('month', 'casawp'),
+                'w' => __('week', 'casawp'),
+                'd' => __('day', 'casawp'),
+                'y' => __('year', 'casawp'),
+                'h' => __('hour', 'casawp')
+            ),
+            'layout' => 'horizontal',
+        );
+
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_offer_rent',
+            'title' => __('Rent', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                    array (
+                        'param' => 'post_taxonomy',
+                        'operator' => '==',
+                        'value' => 'casawp_salestype:rent',
+                    ),
+                ),
+            ),
+            'menu_order' => 2,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+        ));
+
+        //organization
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_legalname',
+            'label' => __('Legal name', 'casawp'),
+            'name' => 'seller_org_legalname',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_brand',
+            'label' => __('Brand', 'casawp'),
+            'name' => 'seller_org_brand',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_phone_central',
+            'label' => __('Phone', 'casawp'),
+            'name' => 'seller_org_phone_central',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_streetaddress',
+            'label' => __('Street', 'casawp'),
+            'name' => 'seller_org_address_streetaddress',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_streetaddition',
+            'label' => __('Street addition', 'casawp'),
+            'name' => 'seller_org_address_streetaddition',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_postalcode',
+            'label' => __('Postal Code', 'casawp'),
+            'name' => 'seller_org_address_postalcode',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_locality',
+            'label' => __('Locality', 'casawp'),
+            'name' => 'seller_org_address_locality',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_region',
+            'label' => __('Region', 'casawp'),
+            'name' => 'seller_org_address_region',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_country',
+            'label' => __('Country', 'casawp'),
+            'name' => 'seller_org_address_country',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_person_'.'seller_org_address_postofficeboxnumber',
+            'label' => __('P.O. Box', 'casawp'),
+            'name' => 'seller_org_address_postofficeboxnumber',
+            'type' => 'text',
+            'required' => 0
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_organization',
+            'title' => __('Organization', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_property',
+                    ),
+                ),
+            ),
+            'menu_order' => 19,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+        ));
+
+
+        //people
+        $prefixes = array('seller_view_person_', 'seller_inquiry_person_', 'seller_visit_person_');
+        foreach ($prefixes as $prefix) {
+            $fields = array();
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'email',
+                'label' => __('Email', 'casawp'),
+                'name' => $prefix.'email',
+                'type' => 'email',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'function',
+                'label' => __('Function', 'casawp'),
+                'name' => $prefix.'function',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'givenname',
+                'label' => __('Firstname', 'casawp'),
+                'name' => $prefix.'givenname',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'familyname',
+                'label' => __('Lastname', 'casawp'),
+                'name' => $prefix.'familyname',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'fax',
+                'label' => __('Fax', 'casawp'),
+                'name' => $prefix.'fax',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'phone_direct',
+                'label' => __('Direct phone', 'casawp'),
+                'name' => $prefix.'phone_direct',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'phone_mobile',
+                'label' => __('Mobile phone', 'casawp'),
+                'name' => $prefix.'phone_mobile',
+                'type' => 'text',
+                'required' => 0
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'gender',
+                'label' => __('Gender', 'casawp'),
+                'name' => $prefix.'gender',
+                'type' => 'radio',
+                'required' => 0,
+                'choices' => array(
+                    '0'   => __('Unknown', 'casawp'),
+                    '1'   => __('Male', 'casawp'),
+                    '2'   => __('Female', 'casawp'),
+                ),
+                'layout' => 'horizontal',
+    
+            );
+            $fields[] = array(
+                'key' => 'field_casawp_person_'.$prefix.'note',
+                'label' => __('Note', 'casawp'),
+                'name' => $prefix.'note',
+                'type' => 'text',
+                'required' => 0
+            );
+
+            $groupname = 'Person';
+            switch ($prefix) {
+                case 'seller_view_person_': $groupname = __('Display person','casawp');break;
+                case 'seller_inquiry_person_': $groupname = __('Inquiry recipient','casawp');break;
+                case 'seller_visit_person_': $groupname = __('Visit person','casawp');break;
+            }
+
+            acf_add_local_field_group(array (
+                'key' => 'group_casawp_'.$prefix,
+                'title' => $groupname,
+                'fields' => $fields,
+                'location' => array (
+                    array (
+                        array (
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'casawp_property',
+                        ),
+                    ),
+                ),
+                'menu_order' => 20,
+                'position' => 'normal',
+                'style' => 'default',
+                'label_placement' => 'left',
+                'instruction_placement' => 'label',
+            ));
+        }
+
+
+        //INQUIRY POST TYPE
+
+        $fields = array();
+        $form = new \casawp\Form\ContactForm();
+        foreach ($form->getElements() as $element) {
+            if ($element->getName() != 'message') {
+                $fields[] = array(
+                    'key' => 'field_casawp_inquiry_sender_'.$element->getName(),
+                    'label' => $element->getLabel(),
+                    'name' => 'sender_'.$element->getName(),
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => 0,
+                    'conditional_logic' => 0,
+                    'wrapper' => array (
+                        'width' => '',
+                        'class' => '',
+                        'id' => '',
+                    ),
+                    'default_value' => '',
+                    'placeholder' => '',
+                );
+            }
+        }
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_inquiry',
+            'title' => 'Sender',
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_inquiry',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+            'label_placement' => 'left',
+        ));
+
+
+        //identifiers inquiry
+        $fields = array();
+        $fields[] = array(
+            'key' => 'field_casawp_inquiry_'.'casawp_id',
+            'label' => __('CASAWP ID', 'casawp'),
+            'name' => 'casawp_id',
+            'type' => 'text',
+            'required' => 0
+        );
+        $fields[] = array(
+            'key' => 'field_casawp_inquiry_'.'reference_id',
+            'label' => __('Reference Nr.', 'casawp'),
+            'name' => 'reference_id',
+            'type' => 'text',
+            'required' => 0
+        );
+        acf_add_local_field_group(array (
+            'key' => 'group_casawp_inquiry_identifiers',
+            'title' => __('Identifiers', 'casawp'),
+            'fields' => $fields,
+            'location' => array (
+                array (
+                    array (
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'casawp_inquiry',
+                    ),
+                ),
+            ),
+            'menu_order' => 1,
+            'position' => 'side',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+        ));
+        
+    }
+
     public function setPostTypes(){
 
         /*----------  properties  ----------*/
@@ -627,118 +1334,6 @@ class Plugin {
             'show_in_nav_menus'  => true
         );
         register_post_type( 'casawp_property', $args );
-
-        $used = array();
-        if( function_exists('acf_add_local_field_group') ):
-            add_action( 'add_meta_boxes_casawp_property', array($this,'casawp_property_custom_metaboxes'), 10, 2 );
-
-            foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
-                $fields = array();
-
-                foreach ($groupsettings['items'] as $key => $settings) {
-                    $used[] = $key;
-                    $fields[] = array(
-                        'key' => 'field_casawp_property_'.$key,
-                        'label' => $this->numvalService->getItem($key)->getLabel(),
-                        'name' => $key,
-                        'type' => 'text',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array (
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                    );
-                }
-
-                acf_add_local_field_group(array (
-                    'key' => 'group_casawp_property_numvals_'.$group,
-                    'title' => $groupsettings['name'],
-                    'fields' => $fields,
-                    'location' => array (
-                        array (
-                            array (
-                                'param' => 'post_type',
-                                'operator' => '==',
-                                'value' => 'casawp_property',
-                            ),
-                        ),
-                    ),
-                    'menu_order' => 0,
-                    'position' => 'normal',
-                    'style' => 'default',
-                    'label_placement' => 'left',
-                    'instruction_placement' => 'label',
-                    'hide_on_screen' => array (
-                        0 => 'excerpt',
-                        1 => 'discussion',
-                        2 => 'comments',
-                        5 => 'author',
-                        6 => 'format',
-                        10 => 'send-trackbacks',
-                        11 => 'custom_fields'
-                    ),
-                ));
-            }
-
-            $fields = array();
-            foreach ($this->numvalService->getItems() as $numval) {
-                if (!in_array($numval->getKey(), $used)) {
-                    $fields[] = array(
-                        'key' => 'field_casawp_property_'.$numval->getKey(),
-                        'label' => $numval->getLabel(),
-                        'name' => $numval->getKey(),
-                        'type' => 'text',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array (
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                    );
-                }
-            }
-            if ($fields) {
-                acf_add_local_field_group(array (
-                    'key' => 'group_casawp_property_numvals_unsorted',
-                    'title' => 'Ungeordnete werte',
-                    'fields' => $fields,
-                    'location' => array (
-                        array (
-                            array (
-                                'param' => 'post_type',
-                                'operator' => '==',
-                                'value' => 'casawp_property',
-                            ),
-                        ),
-                    ),
-                    'menu_order' => 0,
-                    'position' => 'default',
-                    'style' => 'default',
-                    'label_placement' => 'left',
-                    'instruction_placement' => 'label',
-                    'hide_on_screen' => array (
-                        0 => 'excerpt',
-                        1 => 'discussion',
-                        2 => 'comments',
-                        5 => 'author',
-                        6 => 'format',
-                        10 => 'send-trackbacks',
-                        11 => 'custom_fields'
-                    ),
-                ));
-            }
-
-        endif;
-
         
 
 
@@ -777,64 +1372,6 @@ class Plugin {
         );
         register_post_type( 'casawp_inquiry', $args );
 
-
-        if( function_exists('acf_add_local_field_group') ):
-            $fields = array();
-            $form = new \casawp\Form\ContactForm();
-            foreach ($form->getElements() as $element) {
-                if ($element->getName() != 'message') {
-                    $fields[] = array(
-                        'key' => 'field_casawp_inquiry_sender_'.$element->getName(),
-                        'label' => $element->getLabel(),
-                        'name' => 'sender_'.$element->getName(),
-                        'type' => 'text',
-                        'instructions' => '',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array (
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                    );
-                }
-            }
-            acf_add_local_field_group(array (
-                'key' => 'group_casawp_inquiry',
-                'title' => 'Sender',
-                'fields' => $fields,
-                'location' => array (
-                    array (
-                        array (
-                            'param' => 'post_type',
-                            'operator' => '==',
-                            'value' => 'casawp_inquiry',
-                        ),
-                    ),
-                ),
-                'menu_order' => 0,
-                'position' => 'side',
-                'style' => 'default',
-                'label_placement' => 'left',
-                'instruction_placement' => 'label',
-                'hide_on_screen' => array (
-                    0 => 'excerpt',
-                    1 => 'discussion',
-                    2 => 'comments',
-                    3 => 'revisions',
-                    4 => 'slug',
-                    5 => 'author',
-                    6 => 'format',
-                    7 => 'page_attributes',
-                    8 => 'categories',
-                    9 => 'tags',
-                    10 => 'send-trackbacks',
-                    11 => 'custom_fields'
-                ),
-            ));
-        endif;
 
 
         /*----------  category  ----------*/
@@ -1012,11 +1549,56 @@ class Plugin {
     function casawp_add_unsorted_metabox($post) {
         $meta_keys = get_post_custom_keys($post->ID);
         echo '<table class="acf-table">';
+        $skip = array(
+            'property_address_streetaddress',
+            'property_address_streetnumber',
+            'property_address_streetaddition',
+            'property_address_postalcode',
+            'property_address_locality',
+            'property_address_region',
+            'property_address_country',
+            'property_geo_latitude',
+            'property_geo_longitude',
+            'netPrice',
+            'netPrice_propertysegment',
+            'price_currency',
+            'price_propertysegment',
+            'grossPrice',
+            'grossPrice_propertysegment',
+            'start',
+            'casawp_id',
+            'referenceId'
+        );  
+
+        $old = array(
+            'availability'
+        );
+
+        $json_hide = array(
+            'extraPrice',
+            'integratedoffers',
+            'the_urls'
+        );
+
+        $skip = array_merge($skip, $old, array_keys($this->numvalService->items));
+           
+        
         foreach ($meta_keys as $meta_key) {
-            if (!array_key_exists($meta_key, $this->numvalService->items)) {
-                echo '<tr><td class="acf-label">'.$meta_key . '</td><td class="acf-input">' . implode(', ',get_post_custom_values($meta_key, $post->ID)) . '</td></tr>';
-            }
-        }        
+            if (!in_array($meta_key, $skip) 
+                && strpos($meta_key, 'seller_inquiry_person') !== 0
+                && strpos($meta_key, 'seller_view_person') !== 0
+                && strpos($meta_key, 'seller_visit_person') !== 0
+                && strpos($meta_key, 'seller_org') !== 0
+                && strpos($meta_key, '_') !== 0
+            ) {
+                $value = implode(', ',get_post_custom_values($meta_key, $post->ID));
+                if (strpos($value, '}')) {
+                    $value =  print_r(maybe_unserialize($value), true);
+                }
+                echo '<tr><td class="acf-label">'.$meta_key . '</td><td class="acf-input">' . $value . '</td></tr>';
+            }      
+        }  
+        
         echo "</table>";
     }
 

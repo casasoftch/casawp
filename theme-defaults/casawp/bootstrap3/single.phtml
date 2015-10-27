@@ -23,7 +23,7 @@
 		</div>
 		<div class="casawp-single-aside-container casawp-virtual-tour-btn">
 			<?php 
-				$urls = $offer->renderUrls();
+				$urls = $offer->getUrls();
 				if ($urls && array_key_exists('virtual-tour', $urls)) {
 					foreach ($urls['virtual-tour'] as $key => $url) {
 						echo '<a class="btn btn-default btn-block" href="'.$url['href'].'" tarrender="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : __('Virtual Tour', 'casawp')) .'</a>';

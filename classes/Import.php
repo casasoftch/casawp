@@ -911,10 +911,6 @@ class Import {
                 'inclusive'        => ($xml_integratedoffer['inclusive'] ? $xml_integratedoffer['inclusive']->__toString() : 0)
             );
         }
-    } else {
-      echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-      print_r('no');
-      echo "</textarea>";
     }
 
     if ($property_xml->extraCosts) {
@@ -923,7 +919,6 @@ class Import {
             $cost = $xml_extra_cost->__toString();
             $propertydata['extracosts'][] = array(
                 'type'             => ($xml_extra_cost['type'] ? $xml_extra_cost['type']->__toString() : ''),
-                'title'            => ($xml_extra_cost['title'] ? $xml_extra_cost['title']->__toString() : ''),
                 'cost'             => $cost,
                 'frequency'        => ($xml_extra_cost['frequency'] ? $xml_extra_cost['frequency']->__toString() : ''),
                 'property_segment' => ($xml_extra_cost['propertysegment'] ? $xml_extra_cost['propertysegment']->__toString() : ''),
@@ -1162,6 +1157,7 @@ class Import {
 
   public function updateOffers(){
 
+    
      //make sure dires exist
 
     if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
@@ -1199,11 +1195,11 @@ class Import {
           }
         }
       }
+
       $offer_pos = 0;
       $first_offer_trid = false;
       foreach ($theoffers as $offerData) {
         $offer_pos++;
-
 
         //is it already in db
         $casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
@@ -1291,8 +1287,6 @@ class Import {
         }
       }
     }
-    
-
     //lang
     $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casawp_id);
 
@@ -1411,53 +1405,38 @@ class Import {
 
 
 
-   //urls
-   $url = null;
-   $the_urls = array();
-   if (isset($offer['urls'])) {
-     foreach ($offer['urls'] as $url) {
-       $href = $url['url'];
-       if (! (substr( $href, 0, 7 ) === "http://" || substr( $href, 0, 8 ) === "https://") ) {
-        $href = 'http://'.$href;
-       }
+    //urls
+    $url = null;
+    $the_urls = array();
+    if (isset($offer['urls'])) {
+      foreach ($offer['urls'] as $url) {
+         $href = $url['url'];
+         if (! (substr( $href, 0, 7 ) === "http://" || substr( $href, 0, 8 ) === "https://") ) {
+          $href = 'http://'.$href;
+         }
 
-       $label = (isset($url['label']) ? $url['label'] : false);
-       $title = (isset($url['title']) ? $url['title'] : false);
-       $type =  (isset($url['type'])  ? (string) $url['type'] : false);
-       if ($type ) {
-         $the_urls[$type][] = array(
-           'href' => $href,
-           'label' => $label,
-           'title' => $title
-         );
-       } else {
-         $the_urls[] = array(
-           'href' => $href,
-           'label' => $label,
-           'title' =>  $title
-         );
-       }
-     }
-     ksort($the_urls);
-     $new_meta_data['the_urls'] = $the_urls;
-  }
-
-
-  //tags
-  /*$the_tags = array();
-  if ($xmloffer->tags) {
-    foreach ($xmloffer->tags->tag as $tag) {
-      $the_tags[] = $this->simpleXMLget($tag);
+         $label = (isset($url['label']) ? $url['label'] : false);
+         $title = (isset($url['title']) ? $url['title'] : false);
+         $type =  (isset($url['type'])  ? (string) $url['type'] : false);
+         if ($type ) {
+           $the_urls[$type][] = array(
+             'href' => $href,
+             'label' => $label,
+             'title' => $title
+           );
+         } else {
+           $the_urls[] = array(
+             'href' => $href,
+             'label' => $label,
+             'title' =>  $title
+           );
+         }
+      }
+      ksort($the_urls);
+      $new_meta_data['the_urls'] = $the_urls;
     }
-  }
-  $new_meta_data['the_tags'] = $the_tags;*/
 
-
-
-    $offer_type     = $property['type'];
     $new_meta_data['price_currency'] = $property['price_currency'];
-
-    $new_meta_data['availability'] = $property['availability'];
 
     //prices 
     if (isset($property['price'])) {
@@ -1482,7 +1461,6 @@ class Import {
       foreach ($property['extracosts'] as $extra) {
         $extraPrice[] = array(
           'price' => $extra['cost'],
-          'title' => $extra['title'],
           'timesegment' => $extra['time_segment'],
           'propertysegment' => $extra['property_segment'],
           'currency' => $new_meta_data['price_currency'],
