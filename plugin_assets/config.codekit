@@ -2558,7 +2558,7 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casawp_template_bs2.less": {
+	"\/less\/casasync_template_bs2.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
@@ -2566,8 +2566,8 @@
 		"ieCompatibility": 1,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casawp_template_bs2.less",
-		"outputAbbreviatedPath": "\/css\/casawp_template_bs2.css",
+		"inputAbbreviatedPath": "\/less\/casasync_template_bs2.less",
+		"outputAbbreviatedPath": "\/css\/casasync_template_bs2.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
@@ -2578,16 +2578,16 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casawp_template_bs3.less": {
+	"\/less\/casasync_template_bs3.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
 		"fileType": 1,
 		"ieCompatibility": 1,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casawp_template_bs3.less",
-		"outputAbbreviatedPath": "\/css\/casawp_template_bs3.css",
+		"inputAbbreviatedPath": "\/less\/casasync_template_bs3.less",
+		"outputAbbreviatedPath": "\/css\/casasync_template_bs3.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
 		"outputStyle": 0,
@@ -2598,7 +2598,7 @@
 		"strictMath": 0,
 		"strictUnits": 0
 		},
-	"\/less\/casawp_template_bs3_theme.less": {
+	"\/less\/casasync_template_bs3_theme.less": {
 		"allowInsecureImports": 0,
 		"createSourceMap": 0,
 		"disableJavascript": 0,
@@ -2606,8 +2606,8 @@
 		"ieCompatibility": 1,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/casawp_template_bs3_theme.less",
-		"outputAbbreviatedPath": "\/css\/casawp_template_bs3_theme.css",
+		"inputAbbreviatedPath": "\/less\/casasync_template_bs3_theme.less",
+		"outputAbbreviatedPath": "\/css\/casasync_template_bs3_theme.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 0,
@@ -2627,29 +2627,29 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casawp_template_bs2.css": {
+	"\/less\/css\/casasync_template_bs2.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs2.css",
+		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs2.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casawp_template_bs3.css": {
+	"\/less\/css\/casasync_template_bs3.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs3.css",
+		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs3.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
-	"\/less\/css\/casawp_template_bs3_theme.css": {
+	"\/less\/css\/casasync_template_bs3_theme.css": {
 		"fileType": 16,
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/less\/css\/casawp_template_bs3_theme.css",
+		"inputAbbreviatedPath": "\/less\/css\/casasync_template_bs3_theme.css",
 		"outputAbbreviatedPath": "No Output Path",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0

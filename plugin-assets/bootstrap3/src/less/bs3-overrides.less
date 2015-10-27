@@ -371,7 +371,15 @@ body .featherlight{
 .casawp-label{
 	.label;
 	.label-default;
-	display: inline-block;
+	display: block;
+	float:left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	padding: .5em .6em .3em;
+}
+.casawp-distances{
+	.clearfix();
+	clear:left;
 }
 .casawp-unstyled{
 	.list-unstyled;
@@ -436,10 +444,8 @@ body .featherlight{
 	&:before{
 		font-size: 80px;
 		content: @fa-var-chevron-right;	
-
 	}
 }
-
 
 .casawp-virtual-tour-btn{
 	margin-top: 22px;

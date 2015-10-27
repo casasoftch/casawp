@@ -1,6 +1,6 @@
 <div class="form-group <?php if($this->formElementErrors($element)) echo "has-error has-feedback" ?>">
 	<label class="control-label"><?php echo $element->getLabel() ?></label>
-	<?php echo $this->formElement($element->setAttribute('class', 'form-control')); ?>
+	<?php echo $this->formElement($element->setAttribute('class', 'form-control casawp-form-control')); ?>
 	<?php if ($this->formElementErrors($element)): ?>
 		<span class="help-block"><?php echo $this->formElementErrors($element) ?></span>
 	<?php endif ?>
