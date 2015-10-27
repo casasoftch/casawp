@@ -7,13 +7,13 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Stdlib\Hydrator\Iterator;
+namespace Zend\Http\Client\Adapter\Exception;
 
-use Zend\Hydrator\Iterator\HydratingIteratorInterface as BaseHydratingIteratorInterface;
+use Zend\Http\Client\Exception;
 
 /**
- * @deprecated Use Zend\Hydrator\Iterator\HydratingIteratorInterface from zendframework/zend-hydrator instead.
  */
-interface HydratingIteratorInterface extends BaseHydratingIteratorInterface
+class OutOfRangeException extends Exception\OutOfRangeException implements
+    ExceptionInterface
 {
 }

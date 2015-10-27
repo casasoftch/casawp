@@ -17,12 +17,13 @@ class OfferService{
     private $metas = null;
     private $casawp = null;
 
-    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService){
+    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOffersService){
     	$this->utilityService = $utilityService;
     	$this->categoryService = $categoryService;
     	$this->numvalService = $numvalService;
         $this->featureService = $featureService;
     	$this->messengerService = $messengerService;
+    	$this->integratedOffersService = $integratedOffersService;
     }
 
     private function resetPost(){
@@ -401,7 +402,26 @@ class OfferService{
     		}
     	}
 
-    	return $f_offers;
+    	$r_offers = array();
+    	foreach ($f_offers as $offer) {
+    		if ($this->integratedOffersService->keyExists($offer["type"])) {
+    			$r_offer = $this->integratedOffersService->getItem($offer["type"]);
+    			$r_offer->setCost($offer["price"]);
+    			$r_offer->setTimesegment($offer["timesegment"]);
+    			$r_offer->setPropertysegment($offer["propertysegment"]);
+    			$r_offer->setInclusive($offer["inclusive"]);
+    			$r_offer->setCount($offer["count"]);
+
+    			$r_offers[] = $r_offer;
+
+    		} else {
+    			//$unknown_offer = new \CasasoftStandards\Service\IntegratedOffer();
+    			//$unknown_offer->setKey($offer);
+    			//$unknown_offer->setLabel('?'.$offer);
+    			//$r_offers[] = $unknown_offer;
+    		}
+    	}
+    	return $r_offers;
     }
 
     public function getUrls(){
@@ -755,6 +775,7 @@ class OfferService{
 
     public function renderIntegratedOffers(){
     	return $this->render('integrated-offers', array(
+    		'offer' => $this,
     		'integratedOffers' => $this->getIntegratedOffers()
     	));
     }

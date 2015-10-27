@@ -7,13 +7,13 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Stdlib\Hydrator\Iterator;
+namespace Zend\Http\Client\Exception;
 
-use Zend\Hydrator\Iterator\HydratingIteratorInterface as BaseHydratingIteratorInterface;
+use Zend\Http\Exception;
 
 /**
- * @deprecated Use Zend\Hydrator\Iterator\HydratingIteratorInterface from zendframework/zend-hydrator instead.
  */
-interface HydratingIteratorInterface extends BaseHydratingIteratorInterface
+class RuntimeException extends Exception\RuntimeException implements
+    ExceptionInterface
 {
 }
