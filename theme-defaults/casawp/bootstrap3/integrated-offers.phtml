@@ -1,18 +1,26 @@
 <?php global $casawp; ?>
 <?php if ($this->integratedOffers): ?>
   <section class="casawp-integrated-offers">
-    <h2>Zusatz Angebote</h2>
-    <?php foreach ($this->integratedOffers as $offer): ?>
+    <h2>Zusätzliche Angebote</h2>
+    <?php foreach ($this->integratedOffers as $integratedOffer): ?>
       <article class="casawp-integrated-offer">
-        <h3><?= $offer['type'] ?> <?= ($offer['count'] > 1 ? 'x'.$offer['count']: '') ?></h3>
-        <strong><?= $casawp->renderPrice($offer['price'], $offer['currency'], $offer['propertysegment'], $offer['timesegment']) ?></strong>
-        <?php if ($offer['inclusive']): ?>
-          Im Hauptangebot integriert
-        <?php endif ?>
+        <strong>
+          <?= ($integratedOffer->getCount() > 1 ? $integratedOffer->getCount().'x': '') ?>
+          <?= $integratedOffer->getLabel() ?> 
+        </strong><br>
+          <?= ($integratedOffer->getCount() > 1 ? 'à': '') ?>
+          <?= $casawp->renderPrice($integratedOffer->getCost(), $this->offer->getFieldValue('price_currency', 'CHF'), $integratedOffer->getPropertysegment(), $integratedOffer->getTimesegment()) ?>
+
+        <?php
+          if (!$integratedOffer->getInclusive()) {
+            echo "<br>";
+            echo "<small>Dieser Preis ist im Angebot inklusive.</small>";
+          } else {
+            // no message
+          }
+        ?>
+        <small></small>
       </article>
     <?php endforeach ?>
   </section>
-  <br>
-  <br>
-  <br>
 <?php endif ?>
