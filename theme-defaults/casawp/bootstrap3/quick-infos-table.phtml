@@ -10,7 +10,8 @@
   <tbody>
     <?php 
       foreach ($datapoints as $datapoint){
-        switch (substr($datapoint, strlen('casawp_archive_show_'))) {
+        $field = substr($datapoint, strlen('casawp_archive_show_'));
+        switch ($field) {
           case 'street_and_number':
             $point = str_replace('{{label}}', __('Street', 'casawp'), $pattern);
             echo str_replace('{{value}}', trim($this->offer->getFieldValue('property_address_streetaddress') . ' ' . $this->offer->getFieldValue('property_address_streetnumber')), $point);
@@ -19,57 +20,8 @@
             $point = str_replace('{{label}}', __('Locality', 'casawp'), $pattern);
             echo str_replace('{{value}}', trim($this->offer->getFieldValue('address_postalcode') . ' ' . $this->offer->getFieldValue('address_locality')), $point);
             break;
-          case 'number_of_rooms':
-            $numval = $this->offer->getNumval('number_of_rooms');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'area_sia_nf':
-            $numval = $this->offer->getNumval('area_sia_nf');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'area_bwf':
-            $numval = $this->offer->getNumval('area_bwf');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
           case 'surface_property':
             $numval = $this->offer->getNumval('area_sia_gsf');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'floor':
-            $numval = $this->offer->getNumval('floor');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'number_of_floors':
-            $numval = $this->offer->getNumval('number_of_floors');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'year_built':
-            $numval = $this->offer->getNumval('year_built');
-            if ($numval) {
-              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
-            }
-            break;
-          case 'year_renovated':
-            $numval = $this->offer->getNumval('year_renovated');
             if ($numval) {
               $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
               echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
@@ -95,10 +47,23 @@
             echo str_replace('{{value}}', $this->offer->getExcerpt(), $pattern_2);
             break;
           case 'availability':
-            $value = $this->offer->getAvailabilityLabel();
+            $value = $this->offer->renderAvailabilityDate();
             if ($value) {
-              $point = str_replace('{{label}}', __('Availability', 'casawp'), $pattern);
+              $point = str_replace('{{label}}', __('Available from:','casawp'), $pattern);
               echo str_replace('{{value}}', $value, $point); 
+            }
+            break;
+          case 'number_of_rooms':
+          case 'area_sia_nf':
+          case 'area_bwf':
+          case 'floor':
+          case 'number_of_floors':
+          case 'year_built':
+          case 'year_renovated':
+            $numval = $this->offer->getNumval($field);
+            if ($numval) {
+              $point = str_replace('{{label}}', $numval->getLabel(), $pattern);
+              echo str_replace('{{value}}', $this->offer->renderNumvalValue($numval), $point);
             }
             break;
         }
