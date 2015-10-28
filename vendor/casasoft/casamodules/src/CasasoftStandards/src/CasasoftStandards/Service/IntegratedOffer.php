@@ -23,11 +23,7 @@ class IntegratedOffer {
     private $type;
     public function getType(){return $this->type;}
     public function setType($type){$this->type = $type;}
-
-    private $si;
-    public function getSi(){return $this->si;}
-    public function setSi($si){$this->si = $si;}
-
+    
     private $cost;
     public function getCost(){return $this->cost;}
     public function setCost($cost){$this->cost = $cost;}
