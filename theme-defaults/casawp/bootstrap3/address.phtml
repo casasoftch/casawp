@@ -7,6 +7,15 @@ $lines[] = $this->offer->getFieldValue($prefix.'_streetaddress') . ' ' . $this->
 $lines[] = $this->offer->getFieldValue($prefix.'_postalcode') . ' ' . $this->offer->getFieldValue($prefix.'_locality');
 if (class_exists('Locale') && $this->offer->getFieldValue($prefix.'_country')) {
 	$lines[] = Locale::getDisplayRegion('-'.$this->offer->getFieldValue($prefix.'_country'), get_bloginfo('language'));
+} elseif($this->offer->getFieldValue($prefix.'_country')) {
+	switch ($this->offer->getFieldValue($prefix.'_country')) {
+		case 'CH': $lines[] = __('Switzerland', 'casawp'); break;
+		case 'DE': $lines[] = __('Germany', 'casawp'); break;
+		case 'AT': $lines[] = __('Austria', 'casawp'); break;
+		case 'IT': $lines[] = __('Italy', 'casawp'); break;
+		case 'FR': $lines[] = __('France', 'casawp'); break;
+		default: $lines[] = $this->offer->getFieldValue($prefix.'_country'); break;
+	}
 }
 
 array_walk($lines, function(&$value){$value = trim($value);});

@@ -8,7 +8,7 @@ __( 'Property list', 'casawp' );
 
 <?php echo stripslashes(get_option('casawp_before_content')); ?>
 
-<div class="casawp-archive">
+<div class="casawp-archive casawp-row">
 	<?php if ( have_posts() ): ?>
 		<div class="col-md-8 casawp-archive-list">
 			<?php while ( have_posts() ) : the_post(); ?>

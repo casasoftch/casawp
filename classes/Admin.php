@@ -72,8 +72,8 @@ class Admin {
 			'<strong>CASA</strong><span style="font-weight:100">WP</span>',
 			'administrator',
 			'casawp',
-			array($this,'casawp_add_options_page'),
-			CASASYNC_PLUGIN_URL . 'plugin_assets/img/building.png'
+			array($this,'casawp_add_options_page')
+			//,CASASYNC_PLUGIN_URL . 'plugin_assets/img/building.png'
 		);
 	}
 

@@ -821,7 +821,7 @@
 						<h3>Anfrage-Variante</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL</label></th>
+								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
 										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
@@ -1036,33 +1036,33 @@
 										<table>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml'; if (file_exists($file)) : ?>
-													<td style="text-align:right"><code>data.xml</code></td>
+													<td><code>data.xml</code></td>
 												<?php else: ?>
-													<td style="text-align:right"><strike><code>data.xml</code></strike></td>
+													<td><strike><code>data.xml</code></strike></td>
 												<?php endif ?>
 												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>	
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td style="text-align:right"><code>data-done.xml</code></td>
+													<td><code>data-done.xml</code></td>
 												<?php else: ?>
-													<td style="text-align:right"><strike><code>data-done.xml</code></strike></td>
+													<td><strike><code>data-done.xml</code></strike></td>
 												<?php endif ?>
 												<td><a href="<?php echo $force_last  ?>">Letzer erfolgreicher Import erneut anstossen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td style="text-align:right"><code>data-done.xml</code></td>
+													<td><code>data-done.xml</code></td>
 												<?php else: ?>
-													<td style="text-align:right"><strike><code>data-done.xml</code></strike></td>
+													<td><strike><code>data-done.xml</code></strike></td>
 												<?php endif ?>
 												<td><a href="<?php echo $forced  ?>">Letzer erfolgreicher Import erneut anstossen und alle Objekte zwingendermasse durchtesten</a></td>
 											</tr>
 											<tr>
 												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
-													<td style="text-align:right"><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>
+													<td><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>
 												<?php else: ?>
-													<td style="text-align:right"><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
+													<td><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
 												<?php endif ?>
 												<td><a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Import Ausführen</a></td>
 											</tr>
