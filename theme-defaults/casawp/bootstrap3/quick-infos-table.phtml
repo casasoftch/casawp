@@ -23,18 +23,20 @@
             }
             break;
           case 'price':
-            if ($this->offer->getSalestype() == 'buy') {
-              $point = str_replace('{{label}}', __('Sales price', 'casawp'), $pattern);
-              echo str_replace('{{value}}', $this->offer->renderPrice(), $point);
-            }
-            if ($this->offer->getSalestype() == 'rent') {
-              if ($this->offer->getFieldValue('grossPrice', false)) {
-                $point = str_replace('{{label}}', __('Gross price', 'casawp'), $pattern);
-                echo str_replace('{{value}}', $this->offer->renderPrice('gross'), $point);
+            if ($this->offer->getAvailablility() != 'reference') {
+              if ($this->offer->getSalestype() == 'buy') {
+                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $pattern);
+                echo str_replace('{{value}}', $this->offer->renderPrice(), $point);
               }
-              if ($this->offer->getFieldValue('netPrice', false)) {
-                $point = str_replace('{{label}}', __('Net price', 'casawp'), $pattern);
-                echo str_replace('{{value}}', $this->offer->renderPrice('net'), $point);
+              if ($this->offer->getSalestype() == 'rent') {
+                if ($this->offer->getFieldValue('grossPrice', false)) {
+                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $pattern);
+                  echo str_replace('{{value}}', $this->offer->renderPrice('gross'), $point);
+                }
+                if ($this->offer->getFieldValue('netPrice', false)) {
+                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $pattern);
+                  echo str_replace('{{value}}', $this->offer->renderPrice('net'), $point);
+                }
               }
             }
             break;
@@ -42,10 +44,12 @@
             echo str_replace('{{value}}', $this->offer->getExcerpt(), $pattern_2);
             break;
           case 'availability':
-            $value = $this->offer->renderAvailabilityDate();
-            if ($value) {
-              $point = str_replace('{{label}}', __('Available from:','casawp'), $pattern);
-              echo str_replace('{{value}}', $value, $point); 
+            if ($this->offer->getAvailablility() != 'reference') {
+              $value = $this->offer->renderAvailabilityDate();
+              if ($value) {
+                $point = str_replace('{{label}}', __('Available from:','casawp'), $pattern);
+                echo str_replace('{{value}}', $value, $point); 
+              }
             }
             break;
           case 'number_of_rooms':

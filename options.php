@@ -1110,7 +1110,7 @@
 								$i=0;
 								foreach ($all_categories as $key => $category) {
 									if ( substr($category->slug, 0, 7) == 'custom_') {
-										$custom_categories[$i]['name'] = $category->name;
+										$custom_categories[$i]['name'] = $category->slug;
 										$custom_categories[$i]['term_id'] = $category->term_id;
 										$i++;
 									}

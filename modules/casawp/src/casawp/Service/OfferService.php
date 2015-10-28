@@ -74,16 +74,33 @@ class OfferService{
 
 	public function getCategories(){
 		if ($this->categories === null) {
-			$terms = wp_get_post_terms( $this->post->ID, 'casawp_category', array("fields" => "names"));
-			foreach ($terms as $termName) {
-				if ($this->categoryService->keyExists($termName)) {
-					$this->categories[] = $this->categoryService->getItem($termName);
-				} else if ($this->utilityService->keyExists($termName)) {
-					$this->categories[] = $this->utilityService->getItem($termName);
+			$terms = wp_get_post_terms( $this->post->ID, 'casawp_category', array("fields" => "all"));
+
+			$c_trans = null;
+			$lang = substr(get_bloginfo('language'), 0, 2);
+			foreach ($terms as $term) {
+				$termSlug = $term->slug;
+				$termName = $term->name;
+				if ($this->categoryService->keyExists($termSlug)) {
+					$this->categories[] = $this->categoryService->getItem($termSlug);
+				} else if ($this->utilityService->keyExists($termSlug)) {
+					$this->categories[] = $this->utilityService->getItem($termSlug);
 				} else {
 					$unknown_category = new \CasasoftStandards\Service\Category();
-					$unknown_category->setKey($termName);
-					$unknown_category->setLabel('?'.$termName);
+					$unknown_category->setKey($termSlug);
+					$unknown_category->setLabel($termName);	
+					if ($c_trans === null) {
+						$c_trans = maybe_unserialize(get_option('casawp_custom_category_translations'));
+						if (!$c_trans) {
+							$c_trans = array();
+						}
+					}
+					foreach ($c_trans as $key => $trans) {
+						if ($key == $termName && array_key_exists($lang, $trans)) {
+							$unknown_category->setLabel($trans[$lang]);	
+						}
+					}
+					
 					$this->categories[] = $unknown_category;
 				}
 			}
