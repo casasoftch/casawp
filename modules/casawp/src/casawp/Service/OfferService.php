@@ -163,6 +163,10 @@ class OfferService{
         }
     }
 
+    private function sortByLabel($a, $b){
+    	return strcmp($a->getLabel(), $b->getLabel());
+    }
+
     public function getFeatures(){
     	if ($this->features === null) {
 			$terms = wp_get_post_terms( $this->post->ID, 'casawp_feature', array("fields" => "names"));
@@ -177,6 +181,9 @@ class OfferService{
 				}
 			}
 		}
+
+		usort($this->features, array($this, "sortByLabel"));
+
 		return $this->features;
     }
 
