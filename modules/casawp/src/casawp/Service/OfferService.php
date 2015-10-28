@@ -574,6 +574,88 @@ class OfferService{
 		return __('Property', 'casawp');
 	}
 
+	public function renderDatapoints($context = 'single', $args = array()){
+		if ($context == 'single') {
+			$datapoints = $this->getPrimarySingleDatapoints();
+			$defaults = array(
+				'pattern_1' => '{{label}}: {{value}}<br>',
+				'pattern_2' => '{{value}}<br>'
+			);
+		} else {
+			$datapoints = $this->getPrimaryArchiveDatapoints();
+			$defaults = array(
+				'pattern_1' => '<tr><th>{{label}}</th><td>{{value}}</td></tr>',
+				'pattern_2' => '<tr><td colspan="2">{{value}}</td></tr>'
+			);
+		}
+
+		$args = array_merge($defaults, $args);
+
+		$html = '';
+		foreach ($datapoints as $datapoint){
+	        $field = str_replace('casawp_'.$context.'_show_', '', $datapoint);
+	        switch ($field) {
+	          case 'street_and_number':
+	            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
+	            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
+	            break;
+	          case 'location':
+	            $point = str_replace('{{label}}', __('Locality', 'casawp'), $args['pattern_1']);
+	            $html .= str_replace('{{value}}', trim($this->getFieldValue('address_postalcode') . ' ' . $this->getFieldValue('address_locality')), $point);
+	            break;
+	          case 'surface_property':
+	            $numval = $this->getNumval('area_sia_gsf');
+	            if ($numval) {
+	              $point = str_replace('{{label}}', $numval->getLabel(), $args['pattern_1']);
+	              $html .= str_replace('{{value}}', $this->renderNumvalValue($numval), $point);
+	            }
+	            break;
+	          case 'price':
+	            if ($this->getAvailablility() != 'reference') {
+	              if ($this->getSalestype() == 'buy') {
+	                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	                $html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              }
+	              if ($this->getSalestype() == 'rent') {
+	                if ($this->getFieldValue('grossPrice', false)) {
+	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+	                }
+	                if ($this->getFieldValue('netPrice', false)) {
+	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+	                }
+	              }
+	            }
+	            break;
+	          case 'excerpt':
+	            $html .= str_replace('{{value}}', $this->getExcerpt(), $args['pattern_2']);
+	            break;
+	          case 'availability':
+	          case 'special_availability':
+	            if ($this->getAvailablility() != 'reference') {
+	              $value = $this->renderAvailabilityDate();
+	              if ($value) {
+	                $point = str_replace('{{label}}', __('Available from:','casawp'), $args['pattern_1']);
+	                $html .= str_replace('{{value}}', $value, $point); 
+	              }
+	            }
+	            break;
+	          default:
+	            $numval = $this->getNumval($field);
+	            if ($numval) {
+	              $point = str_replace('{{label}}', $numval->getLabel(), $args['pattern_1']);
+	              $html .= str_replace('{{value}}', $this->renderNumvalValue($numval), $point);
+	            }
+	          
+	            break;
+	        }
+
+	      } 
+
+	    return $html;
+	}
+
 
 	/*======================================
 	=            Render Actions            =
@@ -642,32 +724,6 @@ class OfferService{
 	public function renderSalesPerson(){
 		return $this->render('sales-person', array(
 			'offer' => $this
-		));
-	}
-
-	
-
-	public function renderDatapoints($context = 'single'){
-		if ($context == 'single') {
-			$datapoints = $this->getPrimarySingleDatapoints();
-		} else {
-			$datapoints = array();
-		}
-		$numvals = array();
-		foreach ($datapoints as $key) {
-			if ($key == 'special_availability') {
-				$numval = 'special_availability';
-			} else {
-				$numval = $this->getNumval($key);
-			}
-			if ($numval) {
-				$numvals[] = $numval;
-			}
-		}
-		return $this->render('datapoints', array(
-			'offer' => $this,
-			'context' => $context,
-			'numvals' => $numvals
 		));
 	}
 

@@ -4,7 +4,11 @@
 	</div>
 	<div class="casawp-text">
 		<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
-		<?php echo $offer->renderQuickInfosTable(); ?>
+		<table class="table">
+		  <tbody>
+		    <?php echo $offer->renderDatapoints('archive', array()) ?>
+		  </tbody>
+		</table>
 	</div>
 </div>
 <hr class="soften">
