@@ -17,13 +17,13 @@ class OfferService{
     private $metas = null;
     private $casawp = null;
 
-    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOffersService){
+    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService){
     	$this->utilityService = $utilityService;
     	$this->categoryService = $categoryService;
     	$this->numvalService = $numvalService;
         $this->featureService = $featureService;
     	$this->messengerService = $messengerService;
-    	$this->integratedOffersService = $integratedOffersService;
+    	$this->integratedOfferService = $integratedOfferService;
     }
 
     private function resetPost(){
@@ -441,8 +441,8 @@ class OfferService{
 
     	$r_offers = array();
     	foreach ($f_offers as $offer) {
-    		if ($this->integratedOffersService->keyExists($offer["type"])) {
-    			$r_offer = $this->integratedOffersService->getItem($offer["type"]);
+    		if ($this->integratedOfferService->keyExists($offer["type"])) {
+    			$r_offer = $this->integratedOfferService->getItem($offer["type"]);
     			$r_offer->setCost($offer["price"]);
     			$r_offer->setTimesegment($offer["timesegment"]);
     			$r_offer->setPropertysegment($offer["propertysegment"]);

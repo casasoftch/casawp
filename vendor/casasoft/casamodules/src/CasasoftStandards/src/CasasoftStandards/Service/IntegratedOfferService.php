@@ -47,31 +47,31 @@ class IntegratedOfferService implements FactoryInterface {
                 'icon' => '',
             ),
             'parking-garage-connected' => array(
-                'label' => $this->translator->translate('parking-garage-connected', 'casasoft-standards'),
+                'label' => $this->translator->translate('Connected garage', 'casasoft-standards'),
                 'icon' => '',
             ),
             'parking-garage-box' => array(
-                'label' => $this->translator->translate('Garage', 'casasoft-standards'), //Garagenbox
+                'label' => $this->translator->translate('Garage box', 'casasoft-standards'), //Garagenbox
                 'icon' => '',
             ),
             'parking-duplex' => array(
-                'label' => $this->translator->translate('parking-duplex', 'casasoft-standards'), //Duplex
+                'label' => $this->translator->translate('Duplex garage', 'casasoft-standards'), //Duplex
                 'icon' => '',
             ),
             'parking-garage-underground' => array(
-                'label' => $this->translator->translate('parking-garage-underground', 'casasoft-standards'), //Tiefgaragenparkplatz
+                'label' => $this->translator->translate('Underground parking garage', 'casasoft-standards'), //Tiefgaragenparkplatz
                 'icon' => '',
             ),
             'parking-house' => array(
-                'label' => $this->translator->translate('parking-house', 'casasoft-standards'), //Parkhaus
+                'label' => $this->translator->translate('Parking structure', 'casasoft-standards'), //Parkhaus
                 'icon' => '',
             ),
             'room-workroom' => array(
-                'label' => $this->translator->translate('room-workroom', 'casasoft-standards'),
+                'label' => $this->translator->translate('Workroom', 'casasoft-standards'),
                 'icon' => '',
             ),
             'room-storage-basement' => array(
-                'label' => $this->translator->translate('room-storage-basement', 'casasoft-standards'),
+                'label' => $this->translator->translate('Storage basement', 'casasoft-standards'),
                 'icon' => '',
             )
         );
