@@ -120,7 +120,7 @@ class OfferService{
 		return $arr_categories;
 	}
 
-	public function getAvailablility() {
+	public function getAvailability() {
 		if ($this->availability === null) {
 			$terms = wp_get_post_terms( $this->post->ID, 'casawp_availability', array("fields" => "names"));
 			$this->availability = isset($terms[0]) ? $terms[0] : false;
@@ -611,7 +611,7 @@ class OfferService{
 	            }
 	            break;
 	          case 'price':
-	            if ($this->getAvailablility() != 'reference') {
+	            if ($this->getAvailability() != 'reference') {
 	              if ($this->getSalestype() == 'buy') {
 	                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
 	                $html .= str_replace('{{value}}', $this->renderPrice(), $point);
@@ -633,7 +633,7 @@ class OfferService{
 	            break;
 	          case 'availability':
 	          case 'special_availability':
-	            if ($this->getAvailablility() != 'reference') {
+	            if ($this->getAvailability() != 'reference') {
 	              $value = $this->renderAvailabilityDate();
 	              if ($value) {
 	                $point = str_replace('{{label}}', __('Available from:','casawp'), $args['pattern_1']);
@@ -758,7 +758,7 @@ class OfferService{
 	}
 
 	public function renderContactForm(){
-		if ($this->getAvailablility() == 'reference') {
+		if ($this->getAvailability() == 'reference') {
 	        return false;
 	    }
         $form = new \casawp\Form\ContactForm();
