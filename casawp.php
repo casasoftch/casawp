@@ -57,11 +57,7 @@ if (is_admin()) {
 }
 
 if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
-	if (get_option('casawp_legacy')) {
-		$import = new casawp\ImportLegacy(true, false);	
-	} else {
-		$import = new casawp\Import(true, false);
-	}
+	$import = new casawp\Import(true, false);
 }
 
 if (isset($_GET['gatewayupdate'])) {

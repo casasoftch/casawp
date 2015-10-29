@@ -954,11 +954,11 @@
               ($timesegment != 'infinite' ? '&nbsp;/&nbsp;' . $timesegment_labels[(string) $timesegment] : '')
               . '</span>'
             ,
-            'title' => (string) $extraCost['title']
+            'title' => (isset($extraCost['title']) ? $extraCost['title'] : '')
           );
 
           $return = false;
-          if ($extraCost['title'] == $name) {
+          if (isset($extraCost['title']) && $extraCost['title'] == $name) {
             $return = $extraPrice['value'];
           }
         }
