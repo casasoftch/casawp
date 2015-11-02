@@ -272,69 +272,8 @@
     }
 
     public function getPagination(){
-        global $wp_query;
-
-        if ( $GLOBALS['wp_query']->max_num_pages < 2 ) {
-            return;
-        }
-
-        $paged        = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
-        $pagenum_link = html_entity_decode( get_pagenum_link() );
-        $query_args   = array();
-        $url_parts    = explode( '?', $pagenum_link );
-
-        if ( isset( $url_parts[1] ) ) {
-            wp_parse_str( $url_parts[1], $query_args );
-        }
-
-        $pagenum_link = remove_query_arg( array_keys( $query_args ), $pagenum_link );
-        $pagenum_link = trailingslashit( $pagenum_link ) . '%_%';
-
-        $format  = $GLOBALS['wp_rewrite']->using_index_permalinks() && ! strpos( $pagenum_link, 'index.php' ) ? 'index.php/' : '';
-        $format .= $GLOBALS['wp_rewrite']->using_permalinks() ? user_trailingslashit( 'page/%#%', 'paged' ) : '?paged=%#%';
-
-        // Set up paginated links.
-        $links = paginate_links( array(
-            'base'     => $pagenum_link,
-            'format'   => $format,
-            'total'    => $GLOBALS['wp_query']->max_num_pages,
-            'current'  => $paged,
-            'mid_size' => 1,
-            'add_args' => $query_args,
-            'prev_text' => '&laquo;',
-            'next_text' => '&raquo;',
-            'type' => 'list',
-        ) );
-
-        if ( $links ) {
-            return '<div class="casawp-pagination ' . (get_option('casawp_load_css', 'bootstrapv3') == 'bootstrapv2' ? 'pagination' : '') . '">' . $links . '</div>';
-        }
-
-
-
-      $total_pages = $wp_query->max_num_pages;
-      if ($total_pages > 1) {
-        $current_page = max(1, get_query_var('paged'));
-        if($current_page) {
-            //TODO: prev/next These dont work yet!
-            $prev_page = '<li class="disabled"><a href="#">&laquo;</span></a></li>';
-            $next_page = '<li class="disabled"><a href="#">&raquo;</a></li>';
-            $i = 0;
-            $return = '<ul class="casawp-pagination">';
-            $return .= $prev_page;
-            while ($i < $total_pages) {
-                $i++;
-                if ($current_page == $i) {
-                    $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
-                } else {
-                    $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
-              }
-            }
-            $return .= $next_page;
-            $return .= '</ul>';
-            return $return;
-        }
-      }
+      global $casawp;
+      return $casawp->renderArchivePagination();
     }
 
     public function getOrder(){

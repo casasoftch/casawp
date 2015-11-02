@@ -257,14 +257,14 @@ class Plugin {
         if ( $links ) {
             return '<div class="casawp-pagination pagination">' . $links . '</div>';
         }
-
+/*
         $total_pages = $wp_query->max_num_pages;
         if ($total_pages > 1) {
             $current_page = max(1, get_query_var('paged'));
             if($current_page) {
                 //TODO: prev/next These dont work yet!
                 $i = 0;
-                $return = '<ul class="casawp-pagination">';
+                $return = '<ul class="casawp-pagination pagination">';
                 $return .= '<li class="disabled"><a href="#">&laquo;</span></a></li>';
                 while ($i < $total_pages) {
                     $i++;
@@ -278,7 +278,7 @@ class Plugin {
                 $return .= '</ul>';
                 return $return;
             }
-        }
+        }*/
     }
 
     public function render($view, $args){
