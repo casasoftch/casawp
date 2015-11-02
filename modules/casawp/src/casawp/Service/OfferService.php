@@ -399,7 +399,10 @@ class OfferService{
 
     //depricated: redirected to standard method
     public function renderQuickInfosTable() {
-    	return $this->renderDatapoints('archive', array());
+		$html  = '<table class="table"><tbody>';
+    	$html .=  $this->renderDatapoints('archive', array());
+    	$html .= '</tbody></table>';
+    	return $html;
     }
 
     public function getExtraCosts(){
