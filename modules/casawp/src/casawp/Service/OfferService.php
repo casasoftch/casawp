@@ -636,7 +636,7 @@ class OfferService{
 	            if ($this->getAvailability() != 'reference') {
 	              $value = $this->renderAvailabilityDate();
 	              if ($value) {
-	                $point = str_replace('{{label}}', __('Available from:','casawp'), $args['pattern_1']);
+	                $point = str_replace('{{label}}', __('Available from','casawp'), $args['pattern_1']);
 	                $html .= str_replace('{{value}}', $value, $point); 
 	              }
 	            }
