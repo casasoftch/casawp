@@ -1,0 +1,36 @@
+<div class="casawp-basic-box">
+  <div>
+    <h4><?= $offer->renderCategoryLabels() ?></h4>
+    <?= $offer->renderDatapoints('single', array()) ?>
+  </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+    <h4><?= __("Address", 'casawp') ?></h4>
+    <?= $offer->renderAddress() ?>
+  </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+      <?php 
+        if ($offer->getSalestype() == 'buy') {
+          echo '<h4>' . __('Price', 'casawp') . '</h4>';
+          echo $this->offer->renderPrice();
+        } else {
+          if ($this->offer->getFieldValue('grossPrice', false)) {
+            echo '<h4>' . __('Gross price', 'casawp') . '</h4>';
+            echo $this->offer->renderPrice('gross');
+          } elseif($this->offer->getFieldValue('netPrice', false)) {
+            echo '<h4>' . __('Net price', 'casawp') . '</h4>';
+            echo '(' . __('Net','casawp') . ') '. $this->offer->renderPrice('net');
+          }
+        }
+      ?>
+      <?php global $casawp; ?>
+      <?php foreach ($this->offer->getExtraCosts() as $cost): ?>
+        <br><strong>Nebenkosten:</strong>
+        <br><?= $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']); ?>
+        <?php break; ?>
+      <?php endforeach ?>
+  </div>
+</div>

@@ -396,13 +396,10 @@ class OfferService{
         ksort($value_to_display);
         return $value_to_display;
     }
-    public function renderQuickInfosTable() {
-        // todo: delete options for archive-fields. new way is to edit the view file
 
-        return $this->render('quick-infos-table', array(
-            'offer' => $this,
-            'datapoints' => $this->getPrimaryArchiveDatapoints()
-        ));
+    //depricated: redirected to standard method
+    public function renderQuickInfosTable() {
+    	return $this->renderDatapoints('archive', array());
     }
 
     public function getExtraCosts(){
