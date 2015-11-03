@@ -1232,6 +1232,9 @@ class Import {
         $found_posts[] = $wp_post->ID;
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
 
+
+
+
       }
     }
 
@@ -1264,7 +1267,17 @@ class Import {
       $this->transcript['properties_removed'] = count($properties_to_remove);
     }
 
-    //flush_rewrite_rules();
+    flush_rewrite_rules();
+
+    //WPEngine clear cache hook
+    global $wpe_common;
+    if (isset($wpe_common)) {
+      $this->transcript['wpengine'] = 'cache-cleared';
+      foreach (array('clean_post_cache','trashed_posts','deleted_posts') as $hook){
+        add_action( $hook, array( $wpe_common, 'purge_varnish_cache'));
+      }
+    }
+        
 
     $this->addToLog($this->transcript);
   }
