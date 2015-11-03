@@ -518,6 +518,9 @@ class Plugin {
                     wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin_assets/css/casawp_template_bs2.css' );
                     wp_enqueue_style( 'casawp_bootstrap2' );
                 }
+                if (get_option('casawp_load_scripts', false)) {
+                    wp_enqueue_script('casawp_bootstrap2_assets', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap2/js/bootstrap.min.js', array( 'jquery' ), false, true );
+                }
                 break;
             case 'bootstrap3':
                 if (get_option('casawp_load_scripts', false)) {

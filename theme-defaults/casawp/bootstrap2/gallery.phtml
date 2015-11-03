@@ -3,41 +3,33 @@
     $this->offer
 -->
 
-<div id="slider_<?= $this->offer->ID ?>" class="casawp-carousel carousel slide" data-ride="carousel" data-interval="false">
-    <?php $indicators = get_option('casawp_single_show_carousel_indicators' , '0'); ?>
-    <?php if($indicators != 0) : ?>
-        <ol class="carousel-indicators">
-        <?php foreach ($this->images as $i => $image) : ?>
-            <li data-target="#slider_<?= $this->offer->ID ?>" data-slide-to="<?= $i ?>" class="<?= ($i==0?'active':'') ?>"></li>
-        <?php endforeach; ?>
-        </ol>
-    <?php endif; ?>
 
-    <div class="casawp-carousel-inner carousel-inner">
-        <?php foreach ($this->images as $i => $image): ?>
-            <div class="item <?= ($i==0?'active':'') ?>">
-                <?php 
-                    $img     = wp_get_attachment_image( $image->ID, 'full', true, array('class' => 'carousel-image') );
-                    $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
-                ?>
-                <a class="property-image-gallery" rel="casawp-single-gallery" href="<?= $img_url[0] ?>" title="<?= $image->post_excerpt ?>"><?= $img ?></a>
-                <?php if ($image->post_excerpt) : ?>
-                    <?php $class = ($indicators != '0') ? ('hasIndicators') : (null); ?>
-                    <div class="casawp-carousel-caption carousel-caption <?= $class ?>">
-                        <p><?= $image->post_excerpt ?></p>
-                    </div>
-                <?php endif; ?>
-               
-              
+<div class="casawp-slider-currentimage" id="slider">
+  <div class="row-fluid">
+    <div class="span12" id="carousel-bounding-box">
+      <div id="casawpCarousel" class="carousel slide">
+        <div class="carousel-inner">
+        <?php
+          $i = 0;
+          foreach ($this->images as $i => $image) :
+            $i++;
+        ?>
+            <div class="<?= $i == 1 ? 'active' : ''; ?> item" data-slide-number=" <?= $i-1; ?>">
+              <?php $thumbimgL = wp_get_attachment_image( $image->ID, 'full', true ); ?>
+              <a href="<?= wp_get_attachment_url( $attachment->ID ) ?>" class="casawp-fancybox" data-fancybox-group="casawp-property-images"><?= $thumbimgL; ?></a>
+              <div id="carousel-text" class="carousel-caption" >
+              <?php if ($image->post_excerpt) : ?>
+                <p><?= $image->post_excerpt ?></p>
+              <?php endif; ?>
+              </div>
             </div>
-        <?php endforeach ?>
+          <?php endforeach ?>
+          
+        </div>
+        <a class="casawp-carousel-left" href="#casawpCarousel" data-slide="prev"><i>‹</i></a>
+        <a class="casawp-carousel-right" href="#casawpCarousel" data-slide="next"><i>›</i></a>
+
+      </div>
     </div>
-
-    <a class="left casawp-carousel-control carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-    </a>
-    <a class="right casawp-carousel-control carousel-control" href="#slider_<?= $this->offer->ID ?>" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
-
+  </div>
 </div>
