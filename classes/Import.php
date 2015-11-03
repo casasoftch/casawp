@@ -974,6 +974,11 @@ class Import {
 
         //organization
         if ($property_xml->seller->organization) {
+            if ($property_xml->seller->organization['id']) {
+              $propertydata['organization']['id']    = $property_xml->seller->organization['id']->__toString();
+            } else {
+              $propertydata['organization']['id'] = false;
+            }
             $propertydata['organization']['displayName']    = $property_xml->seller->organization->legalName->__toString();
             $propertydata['organization']['addition']         = $property_xml->seller->organization->brand->__toString();
             $propertydata['organization']['email']         = $property_xml->seller->organization->email->__toString();
@@ -1349,6 +1354,8 @@ class Import {
       //$new_meta_data['seller_org_phone_mobile'] = $property['organization'][''];
       $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
       $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
+      $new_meta_data['seller_org_customerid']                    = $property['organization']['id'];
+
       if (isset($property['organization']['postalAddress'])) {
         $new_meta_data['seller_org_address_country']               = $property['organization']['postalAddress']['country'];
         $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
