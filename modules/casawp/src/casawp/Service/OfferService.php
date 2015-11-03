@@ -476,6 +476,20 @@ class OfferService{
     	return apply_filters( 'get_the_excerpt', $this->post->post_excerpt );
     }
 
+    public function getShareWidgetsScripts() {
+      $return = null;
+      if (get_option( 'casasync_share_facebook', false )) {
+        $return .= '<div id="fb-root"></div><script>(function(d, s, id) {'
+          .'var js, fjs = d.getElementsByTagName(s)[0];'
+          .'if (d.getElementById(id)) return;'
+          .'js = d.createElement(s); js.id = id;'
+          .'js.src = "//connect.facebook.net/' . str_replace('-','_',get_bloginfo('language')) . '/all.js#xfbml=1";'
+          .'fjs.parentNode.insertBefore(js, fjs);'
+        ."}(document, 'script', 'facebook-jssdk'));</script>";
+      }
+      return print_r($return);
+    }
+
     /*===========================================
     =          Direct renders actions           =
     ===========================================*/
@@ -755,6 +769,11 @@ class OfferService{
 		return $this->render('featured-image', array(
 			'offer' => $this
 		));
+	}
+
+	public function renderAllShareWidgets() {
+		add_action('wp_footer', array($this, 'getShareWidgetsScripts'), 30);
+		return $this->render('share-widget');
 	}
 
 	public function renderContactForm(){

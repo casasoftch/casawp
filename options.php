@@ -34,8 +34,8 @@
 			case 'singleview':
 				$checkbox_traps = array(
 					'casawp_share_facebook',
-					'casawp_share_googleplus',
-					'casawp_share_twitter',
+					#'casawp_share_googleplus',
+					#'casawp_share_twitter',
 					'casawp_single_show_number_of_rooms',
 					#'casawp_single_show_surface_usable',
 					#'casawp_single_show_surface_living',
@@ -250,17 +250,17 @@
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
-										<?php $name = 'casawp_share_googleplus'; ?>
-										<?php $text = 'Google+'; ?>
-										<label>
+										<?php #$name = 'casawp_share_googleplus'; ?>
+										<?php #$text = 'Google+'; ?>
+										<?php /*<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<br>
-										<?php $name = 'casawp_share_twitter'; ?>
-										<?php $text = 'Twitter'; ?>
-										<label>
+										<br> */ ?>
+										<?php #$name = 'casawp_share_twitter'; ?>
+										<?php #$text = 'Twitter'; ?>
+										<?php /*<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
+										</label> */ ?>
 									</fieldset>
 								</td>
 							</tr>

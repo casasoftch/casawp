@@ -20,8 +20,8 @@ class Admin {
 		add_option('casawp_load_googlemaps', '1');
 		//single view
 		add_option('casawp_share_facebook', '0');
-		add_option('casawp_share_googleplus', '0');
-		add_option('casawp_share_twitter', '0');
+		//add_option('casawp_share_googleplus', '0'); #DEPRICATED
+		//add_option('casawp_share_twitter', '0');    #DEPRICATED
 		add_option('casawp_use_captcha', '0');
 		add_option('casawp_single_show_number_of_rooms', '1');
 		#add_option('casawp_single_show_surface_usable', '1');
