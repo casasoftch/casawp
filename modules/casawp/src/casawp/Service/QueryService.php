@@ -111,7 +111,7 @@ class QueryService{
                 $args['orderby'] = 'title';
                 break;
             case 'location':
-                $args['meta_key'] = 'casawp_property_address_locality';
+                $args['meta_key'] = 'property_address_locality';
                 $args['orderby'] = 'meta_value';
                 break;
             case 'price':
@@ -122,7 +122,7 @@ class QueryService{
                 $args['orderby'] = 'menu_order date';
                 break;
             case 'casawp_referenceId':
-                $args['meta_key'] = 'casawp_referenceId';
+                $args['meta_key'] = 'referenceId';
                 $args['orderby'] = 'meta_value';
                 break;
             case 'date':

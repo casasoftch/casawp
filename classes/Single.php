@@ -86,16 +86,14 @@
       $this->loadPlans      = $loadPlans;
       $this->loadOfferLogos = $loadOfferLogos;
 
+      //lets invite the new kid (quickly)
+      global $casawp;
+      $this->offer = $casawp->prepareOffer($post);
+
       $this->conversion = new Conversion;
       if (!is_admin()) {
         $this->setProperty($post);
       }
-
-      //lets invite the new kid
-      global $casawp;
-      $this->offer = $casawp->prepareOffer($post);
-
-      //$this->categoryService = new \CasasoftStandards\Service\CategoryService();
     }
 
     function __get($name){
@@ -104,12 +102,12 @@
           //
           break;*/
         case 'address_region':
-            return $this->offer->getFieldValude('address_region');
+            return $this->offer->getFieldValue('address_region');
           break;
           
         default:
-          if ($this->offer->getFieldValude($name, false)) {
-            return $this->offer->getFieldValude($name, false);
+          if ($this->offer->getFieldValue($name, false)) {
+            return $this->offer->getFieldValue($name, false);
           } else {
             return $this->{$name};  
           }
