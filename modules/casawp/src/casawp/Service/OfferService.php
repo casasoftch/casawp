@@ -478,7 +478,7 @@ class OfferService{
 
     public function getShareWidgetsScripts() {
       $return = null;
-      if (get_option( 'casasync_share_facebook', false )) {
+      if (get_option( 'casawp_share_facebook', false )) {
         $return .= '<div id="fb-root"></div><script>(function(d, s, id) {'
           .'var js, fjs = d.getElementsByTagName(s)[0];'
           .'if (d.getElementById(id)) return;'
