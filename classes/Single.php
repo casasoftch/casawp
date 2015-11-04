@@ -553,8 +553,8 @@
 
       $this->seller_inquiry['email'] = get_post_meta(get_the_ID(), 'seller_inquiry_person_email', true);
 
-      $this->availability = get_post_meta( get_the_ID(), 'availability', $single = true );
-      $this->availability_label = get_post_meta( get_the_ID(), 'availability_label', $single = true );
+      $this->availability = $this->offer->getAvailability();
+      $this->availability_label = $this->offer->getAvailabilityLabel();
     }
 
     public function getAvailabilityLabel(){
