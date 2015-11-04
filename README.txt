@@ -2,7 +2,7 @@
 Contributors: casasoft
 Donate link:http://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx
-Requires at least: 3.5.2
+Requires at least: 4.0.0
 Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: http://casasoft.ch
@@ -13,7 +13,9 @@ Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makle
 
 == Description ==
 
-Synchronisieren Sie Ihre Immobilien Objekte mit CasaWp, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CasaWp importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+Synchronisieren Sie Ihre Immobilien Objekte mit CASAWP, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CASAWP importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+
+*** This plugin requires at least PHP 5.5.0
 
 == Installation ==
 
