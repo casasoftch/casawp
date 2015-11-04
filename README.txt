@@ -1,9 +1,9 @@
-=== CasaWp ===
+=== casawp ===
 Contributors: casasoft
 Donate link:http://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx
-Requires at least: 3.0.0
-Tested up to: 4.0.0
+Requires at least: 3.5.2
+Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: http://casasoft.ch
 License: GPL2
@@ -38,10 +38,11 @@ The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standar
 
 = 2.0.0 = 
 
-* The plugin has been rewritten and renamed to CASAWP.
+* The plugin has been rewritten and renamed from casasync to CASAWP.
 
 == Upgrade Notice ==
 
+* Please follow the instructions upgrade-from-casasync.md if you are upgrading from casasync
 
 == Screenshots ==
 
