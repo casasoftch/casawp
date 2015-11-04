@@ -16,7 +16,8 @@
         ?>
             <div class="<?= $i == 1 ? 'active' : ''; ?> item" data-slide-number=" <?= $i-1; ?>">
               <?php $thumbimgL = wp_get_attachment_image( $image->ID, 'full', true ); ?>
-              <a href="<?= wp_get_attachment_url( $attachment->ID ) ?>" class="casawp-fancybox" data-fancybox-group="casawp-property-images"><?= $thumbimgL; ?></a>
+              <?php $img_url = wp_get_attachment_image_src( $image->ID, 'full' ); ?>
+              <a href="<?= $img_url[0] ?>" class="property-image-gallery" rel="casawp-single-gallery"><?= $thumbimgL; ?></a>
               <div id="carousel-text" class="carousel-caption" >
               <?php if ($image->post_excerpt) : ?>
                 <p><?= $image->post_excerpt ?></p>
