@@ -1,6 +1,6 @@
 #readme.txt
 
-Please refer to the ``README.txt`` for general infos concerning the plugin. This readme.md only contains further technical details.
+Please refer to the ``readme.txt`` for general infos concerning the plugin. This readme.md only contains further technical details.
 
 #How do I change the html markup and add my own view files?
 
