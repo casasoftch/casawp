@@ -16,4 +16,4 @@ to override them with your theme.
 
 ##ViewFile Structure
 
-![image](assets/custom-viewfiles-structure.svg)
+![image](assets/custom-viewfiles-structure-ugly.png)
