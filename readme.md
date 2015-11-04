@@ -4,7 +4,7 @@ Please refer to the ``readme.txt`` for general infos concerning the plugin. This
 
 #How do I change the html markup and add my own view files?
 
-Simply copy the relevant view files from the plugin ``/wp-content/plugins/casawp/chosen-viewtype/*.phtml`` ...
+Simply copy the relevant view files from the plugin ``/wp-content/plugins/casawp/theme-defaults/chosen-viewtype/*.phtml`` ...
 
 ![image](assets/custom-viewfiles-plugin.png)
 
