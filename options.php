@@ -87,6 +87,7 @@
 					'casawp_form_phone_required',
 					'casawp_form_email_required',
 					'casawp_form_message_required',
+					'casawp_casamail_direct_recipient'
 				);
 				break;
 			case 'general':
@@ -827,6 +828,8 @@
 										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
 										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
+										<br><br>
+										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte emails an angegebene <code>inquiryPerson</code> E-Mails versenden.
 									</fieldset>
 								</td>
 							</tr>
