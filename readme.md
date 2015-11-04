@@ -13,3 +13,7 @@ into your theme directory ``/wp-content/themes/your-theme/casawp/chosen-viewtype
 ![image](assets/custom-viewfiles-theme.png)
 
 to override them with your theme.
+
+##ViewFile Structure
+
+![image](assets/custom-viewfiles-structure.svg)
