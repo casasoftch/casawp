@@ -825,6 +825,8 @@
     }
 
     public function getPrice($type = 'auto', $format = 'num', $byrequest = true){
+
+
       $price = array();
       $timesegment_labels = array(
         'm' => __('month', 'casawp'),
@@ -897,7 +899,7 @@
                 && $price['propertysegment'] != 'full'
                 && $price['propertysegment'] != 'all'
             ) {
-                $return .= '&nbsp;' . $sep . '&nbsp;' . substr($price['propertysegment'], 0, -1) . '<sup>2</sup>';              
+                $return .= '&nbsp;' . $sep . '&nbsp;' . substr($price['propertysegment'], 0, -1) . 'm<sup>2</sup>';              
             }
             if (
                 array_key_exists('timesegment', $price)     
