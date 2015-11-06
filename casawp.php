@@ -69,6 +69,8 @@ if (isset($_GET['gatewayupdate'])) {
 }
 
 if (isset($_GET['gatewaypoke'])) {
+	echo "<script>console.log('import_start');</script>";
 	$import = new casawp\Import(false, true);
-	$import = new casawp\Import(true, false);
+	echo "<script>console.log('import_end');</script>";
+	//$import = new casawp\Import(true, false);
 }
