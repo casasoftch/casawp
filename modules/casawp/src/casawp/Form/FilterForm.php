@@ -67,7 +67,7 @@ class FilterForm extends Form
         //TODO SORTING!!!
         $category_options = array();
         foreach ($this->categories as $category) {
-            $category_options[$category->getKey()] = $category->getLabel();
+            $category_options[$category->getKey()] = html_entity_decode($category->getLabel());
         }
         asort($category_options);
         return $category_options;

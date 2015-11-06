@@ -14,7 +14,7 @@ class Import {
       add_action( 'init', array($this, 'casawpImport') );  
     }
     if ($casagatewayupdate) {
-      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );  
+      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );
     }
     //$this->casawpImport();
   }
@@ -860,6 +860,14 @@ class Import {
         file_put_contents($file, $response);
       } 
 
+      //UPDATE OFFERS NOW!!!!
+      if ($this->getImportFile()) {
+        $this->addToLog('import start');
+        $this->updateOffers();
+        $this->addToLog('import end');
+      }
+
+
       //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       echo '<div id="message" class="updated"> API Keys missing</div>';
@@ -1162,8 +1170,7 @@ class Import {
 
   public function updateOffers(){
 
-    
-     //make sure dires exist
+    //make sure dires exist
 
     if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
       mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
