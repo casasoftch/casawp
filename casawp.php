@@ -2,7 +2,7 @@
 /*
  *	Plugin Name: 	CASAWP
  *  Plugin URI: 	http://immobilien-plugin.ch
- *	Description:    Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
+ *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
  *	Version: 		2.0.0
@@ -10,6 +10,9 @@
  *	Domain Path: 	languages/
  *	License: 		GPL2
  */
+
+/* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
+$dummy_desc = __( 'Import your properties directly from your real-estate managment software!', 'casawp' );
 
 define('CASASYNC_PLUGIN_URL', home_url() . '/wp-content/plugins/casawp/');
 define('CASASYNC_PLUGIN_URI', home_url() . '/wp-content/plugins/casawp/');

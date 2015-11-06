@@ -1,53 +1,44 @@
-=== casawp ===
+=== CASAWP ===
 Contributors: casasoft
-Donate link:http://immobilien-plugin.ch
+Donate link: http://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx
 Requires at least: 4.0.0
 Tested up to: 4.3.1
 Author: Casasoft AG
-Author URI: http://casasoft.ch
+Author URI: https://casasoft.ch
 License: GPL2
 Stable tag: 2.0.0
 
-Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
+Import your properties directly from your real-estate managment software!
 
 == Description ==
 
-Synchronisieren Sie Ihre Immobilien Objekte mit CASAWP, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CASAWP importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+Synchronize your properties directly to CASAWP, and let them be automaticaly categorized. Adjust the plugin to any theme. CASAWP imports the most common standards with the help of CASAGATEWAY without a hitch.
 
 *** This plugin requires at least PHP 5.5.0
 
 == Installation ==
+1. Upload "casawp" to the "/wp-content/plugins/" directory.
+2. Activate the plugin through the "Plugins" menu in WordPress.
+3. Setup your import method (see "Import Setup" for further instructions).
+4. Check out yourdomain.com/immobilien to verify that it works
+5. Adjust the theme files to your liking
 
-Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
+== Import Setup ==
+The plugin will look for a file in "wp-content/uploads/casawp/import/data.xml" and syncronize this data with your WordPress installation.
+ 
+You can either place that file through FTP/Rsync or something similar.
 
-== Frequently Asked Questions ==
-
-= Does this plugin require a real-estate software? / Benötigt dieses Plugin eine Maklersoftware? =
-
-It makes things alot easier. See casasoft.ch[http://www.casasoft.ch] for more details. There are currently no plans to make this plugin editable/interactive, this can however change.
-Es macht Sachen viel einfacher. Siehe casasoft.ch[http://www.casasoft.ch] bezüglich einer Software. Momentan ist ein Plugin-Bearbeitungsinterface nicht geplant. Allerdings kann dies auch ändern.
-
-= So there is absolutely no way to edit the real-estate listings manualy!? =
-
-Well, yes and no. Essentialy the plugin activates custom post types and a rendering engine for custom meta information. If you are savy enough to enter custom fields yourself, you may go ahead and use this plugin without a export Software. If you wish to build a interface on top of that, we recommend the "Advanced Custom Fields" plugin to make your job easier. However, be aware of changes/additions to fields and behaviors within the future.
-
-= How can I import properties =
-
-The plugin is based on the casaXML[http://github.com/casasoftCH/casaXML] standard. If you can somehow generate this simple xml standard, than you can simply place it in the appropriate directory (/wp-content/uploads/casawp/import/data.xml) and activate a import (either this happens automaticaly, or you may activate it manually within WordPress). Essentialy you can keep this file up-to-date to ensure a synchonised state (be aware that the file will be renamed data-done.xml once imported). Currently supported is CasaXML build 5, but build 6 will eventually be prefered as soon it has been blessed.
+If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly. Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
-
 = 2.0.0 = 
-
 * The plugin has been rewritten and renamed from casasync to CASAWP.
 
 == Upgrade Notice ==
-
 * Please follow the instructions upgrade-from-casasync.md if you are upgrading from casasync
 
 == Screenshots ==
-
-1. Archiv Übersicht
-2. Einzel Objekt
+1. Archive View
+2. Single View
 
