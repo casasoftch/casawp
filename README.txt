@@ -9,13 +9,15 @@ Author URI: https://casasoft.ch
 License: GPL2
 Stable tag: 2.0.0
 
-Import your properties directly from your real-estate managment software!
+Import your properties directly from your real-estate management software!
 
 == Description ==
 
-Synchronize your properties directly to CASAWP, and let them be automaticaly categorized. Adjust the plugin to any theme. CASAWP imports the most common standards with the help of CASAGATEWAY without a hitch.
+Synchronize your properties directly to CASAWP, and let them be automatically categorized. Adjust the plugin to any theme. CASAWP imports the most common standards with the help of CASAGATEWAY without a hitch.
 
 *** This plugin requires at least PHP 5.5.0
+
+*** For further technical infos concerning this plugin refer to the readme.md file included within the plugin files.
 
 == Installation ==
 1. Upload "casawp" to the "/wp-content/plugins/" directory.
@@ -27,9 +29,12 @@ Synchronize your properties directly to CASAWP, and let them be automaticaly cat
 == Import Setup ==
 The plugin will look for a file in "wp-content/uploads/casawp/import/data.xml" and syncronize this data with your WordPress installation.
  
-You can either place that file through FTP/Rsync or something similar.
+You can place the XML file through FTP/Rsync or something similar.
 
-If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly. Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
+If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly. 
+You will then only need to add the API and SECRET keys to the plugin's options.
+
+Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
 = 2.0.0 = 
