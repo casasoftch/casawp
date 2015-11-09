@@ -169,6 +169,7 @@ class OfferService{
 
     public function getFeatures(){
     	if ($this->features === null) {
+    		$this->features = array();
 			$terms = wp_get_post_terms( $this->post->ID, 'casawp_feature', array("fields" => "names"));
 			foreach ($terms as $termName) {
 				if ($this->featureService->keyExists($termName)) {
