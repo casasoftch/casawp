@@ -23,14 +23,30 @@
 <?php if ($this->offer->getSalesBrochures() || $this->offer->getDocuments() || $this->offer->getPlans()) : ?>
   <div class="casawp-documents">
     <h3><?= __('Documents','casawp') ?></h3>
+    <?php $i = 1; $j = 1; $k = 1; ?>
+
     <?php foreach ($this->offer->getSalesBrochures() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Sales Brochure', 'casawp') . ' #' . $i++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
+
     <?php foreach ($this->offer->getDocuments() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Document', 'casawp') . ' #' . $j++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
+
     <?php foreach ($this->offer->getPlans() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Plan', 'casawp') . ' #' . $k++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
   </div>
 <?php endif; ?>
