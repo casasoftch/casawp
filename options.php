@@ -975,9 +975,14 @@
 							if ($arr) {
 						   		foreach ($arr as $datestamp => $properties) {
 						   			echo '<th valign="top"><strong>'.str_replace(' ', "T", $datestamp) .'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
-						   				foreach ($properties as $slug => $property) {
-						   					echo "\n" . $slug . ': ' . json_encode($property);
+						   				if (is_array($properties)) {
+						   					foreach ($properties as $slug => $property) {
+							   					echo "\n" . $slug . ': ' . json_encode($property);
+							   				}
+						   				} else {
+						   					echo $properties;
 						   				}
+						   				
 						   			echo '</pre></td>';
 						   		}
 						  	} else {
