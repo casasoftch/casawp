@@ -174,9 +174,8 @@ class FilterForm extends Form
             } 
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
-                $label = $parent['name'];
                 foreach ($parent['children'] as $child) {
-                    $label .= ' ' . $child['name'];
+                    $label = $parent['name'] . ' ' . $child['name'];
                     $value_options = array();
                     foreach ($child['children'] as $grandchild) {
                         $value_options[$grandchild['slug']] = $grandchild['name'];

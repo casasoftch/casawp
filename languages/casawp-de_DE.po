@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-11-06 09:00+0100\n"
+"POT-Creation-Date: 2015-11-09 11:59+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.8.6\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -2382,6 +2382,7 @@ msgid "and"
 msgstr "und"
 
 #: ../classes/./Single.php:1071
+#: ../theme-defaults/./casawp/bootstrap3/datatable.phtml:39
 msgid "Document"
 msgstr "Dokument"
 
@@ -2559,6 +2560,14 @@ msgstr ""
 #: ../theme-defaults/./casawp/bootstrap4/tabable.phtml:11
 msgid "Specifications"
 msgstr "Datenblatt"
+
+#: ../theme-defaults/./casawp/bootstrap3/datatable.phtml:31
+msgid "Sales Brochure"
+msgstr "Verkaufsbroschüre"
+
+#: ../theme-defaults/./casawp/bootstrap3/datatable.phtml:47
+msgid "Plan"
+msgstr "Plan"
 
 #: ../theme-defaults/./casawp/bootstrap4/basic-boxes.phtml:16
 msgid "rent"
