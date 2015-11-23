@@ -628,19 +628,26 @@ class OfferService{
 	          case 'price':
 	            if ($this->getAvailability() != 'reference') {
 	              if ($this->getSalestype() == 'buy') {
-	                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
-	                $html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	if ($this->getFieldValue('price', false)) {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	} else {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+	              	}
 	              }
 	              if ($this->getSalestype() == 'rent') {
-	                if ($this->getFieldValue('grossPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
-	                }
-	                if ($this->getFieldValue('netPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
-	                }
-	              }
+  	                if ($this->getFieldValue('grossPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+  	                } elseif ($this->getFieldValue('netPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+  	                } else {
+  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+  	                }
+  	              }
 	            }
 	            break;
 	          case 'excerpt':
