@@ -55,7 +55,7 @@ class Import {
   }
 
   public function backupImportFile(){
-    copy ( $this->getImportFile() , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . date('Y_m_d_H_i_s') . '_completed.xml');
+    copy ( $this->getImportFile() , CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . get_date_from_gmt('', 'Y_m_d_H_i_s') . '_completed.xml');
     return true;
   }
 
@@ -767,7 +767,7 @@ class Import {
     if (!file_exists($dir)) {
         mkdir($dir, 0777, true);
     }
-    file_put_contents($dir."/".date('Y M').'.log', "\n".json_encode(array(date('Y-m-d H:i') => $transcript)), FILE_APPEND);
+    file_put_contents($dir."/".get_date_from_gmt('', 'Y M').'.log', "\n".json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
   public function casawpImport(){

@@ -75,3 +75,7 @@ if (isset($_GET['gatewaypoke'])) {
 	echo "<script>console.log('import_end');</script>";
 	//$import = new casawp\Import(true, false);
 }
+
+/*if (function_exists('date_default_timezone_set')) {
+	date_default_timezone_set();
+}*/
