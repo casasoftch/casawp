@@ -1,0 +1,7 @@
+<div class="row-fluid <?php if($this->formElementErrors($element)) echo "has-error has-feedback" ?>">
+	<label class="control-label"><?php echo $element->getLabel() ?></label>
+	<?php echo $this->formElement($element->setAttribute('class', 'span12')); ?>
+	<?php if ($this->formElementErrors($element)): ?>
+		<span class="help-block"><?php echo $this->formElementErrors($element) ?></span>
+	<?php endif ?>
+</div>

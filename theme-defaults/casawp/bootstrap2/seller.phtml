@@ -1,0 +1,33 @@
+<h3><i class="fa fa-briefcase"></i> <?= __('Provider' , 'casawp') ?></h3>
+
+<address>
+  <?= ($this->offer->getFieldValue('seller_org_legalname', false)) ? ('<strong>' . $this->offer->getFieldValue('seller_org_legalname', false) . '</strong><br>') : (''); ?>
+  <?= ($this->offer->getFieldValue('seller_org_brand', false)) ? ($this->offer->getFieldValue('seller_org_brand', false) . '<br>') : (''); ?>
+  <?= $this->offer->renderSellerAddress(); ?>
+
+  <div class="casawp-seller-infos">
+    <?php if(get_option('casawp_show_email_organisation')) : ?>
+      <?php if($this->offer->getFieldValue('seller_org_email', false)) : ?>
+        <?php 
+          $id_number = ($this->offer->getFieldValue('referenceId') ? $this->offer->getFieldValue('referenceId') : $this->offer->getFieldValue('casawp_id'));
+          $mailto = 'mailto:' . $this->offer->getFieldValue('seller_org_email', false) . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
+          .rawurlencode(__('I am interested concerning this property. Please contact me', 'casawp')) . '%0A%0ALink%20' . get_permalink($this->offer->post);
+        ?>
+        <p><span class="casawp-label"><?= __('E-Mail', 'casawp') ?></span> 
+        <span class="value break-word"> <a href="<?= $mailto ?>"><?= $this->offer->getFieldValue('seller_org_email', false) ?></a></span>
+      <?php endif; ?>
+    <?php endif; ?>
+    <?php if($this->offer->getFieldValue('seller_org_phone_central', false)) : ?>
+      <p class="casawp-phone-central">
+        <span class="casawp-label"><?= __('Phone', 'casawp')  ?></span>
+        <span class="value break-word"> <?= $this->offer->getFieldValue('seller_org_phone_central', false) ?></span>
+      </p>
+    <?php endif; ?>
+    <?php if($this->offer->getFieldValue('seller_org_fax', false)) : ?>
+      <p class="casawp-phone-fax">
+        <span class="casawp-label"><?= __('Fax', 'casawp')  ?></span>
+        <span class="value break-word"> <?= $this->offer->getFieldValue('seller_org_fax', false) ?></span>
+      </p>
+    <?php endif; ?>
+  </div>
+</address>

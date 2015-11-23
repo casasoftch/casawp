@@ -6,8 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'casawp\\' => array($baseDir . '/classes'),
     'Zend\\View\\' => array($vendorDir . '/zendframework/zend-view/src'),
     'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+    'Zend\\Uri\\' => array($vendorDir . '/zendframework/zend-uri/src'),
     'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
     'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager/src'),
     'Zend\\Serializer\\' => array($vendorDir . '/zendframework/zend-serializer/src'),
@@ -20,10 +22,10 @@ return array(
     'Zend\\InputFilter\\' => array($vendorDir . '/zendframework/zend-inputfilter/src'),
     'Zend\\I18n\\' => array($vendorDir . '/zendframework/zend-i18n/src'),
     'Zend\\Hydrator\\' => array($vendorDir . '/zendframework/zend-hydrator/src'),
+    'Zend\\Http\\' => array($vendorDir . '/zendframework/zend-http/src'),
     'Zend\\Form\\' => array($vendorDir . '/zendframework/zend-form/src'),
     'Zend\\Filter\\' => array($vendorDir . '/zendframework/zend-filter/src'),
     'Zend\\EventManager\\' => array($vendorDir . '/zendframework/zend-eventmanager/src'),
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
     'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
-    'CasaSync\\' => array($baseDir . '/src'),
 );

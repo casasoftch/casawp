@@ -6,7 +6,9 @@ use Zend\View\Model\ViewModel;
 use Zend\Http\Client as HttpClient;
 use Zend\Json\Json;
 
-class LogService {
+use Zend\Config\Writer;
+
+class LogService implements \Zend\Log\Writer\WriterInterface {
     protected $viewRender;
     protected $config = array();
     protected $stack = array();
@@ -89,7 +91,7 @@ class LogService {
     public function stageException($e, $priority = 4){
         $this->stack[]['create'] = array(
                 'software' => $this->config['software'],
-                'message' => 'PHP-EXCEPTION-'. $e->getCode() . ': '.$e->getMessage() . ' [file:' . $e->getFile() . '] [Line:' . $e->getLine() . ']' . '[Request: ' . $_SERVER['REQUEST_URI'] . ']',
+                'message' => 'PHP-EXCEPTION-'. $e->getCode() . ': '.$e->getMessage() . ' [file:' . $e->getFile() . '] [Line:' . $e->getLine() . ']' . '[Request: ' . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '?' ) . ']',
                 'priority' => $priority,
                 'priorityName' => array_search($priority, $this->priorities),
                 'timestamp' => date('Y-m-dTH:i:s',time())
@@ -194,5 +196,48 @@ class LogService {
         
         return true;
     }
+
+     /**
+     * Add a log filter to the writer
+     *
+     * @param  int|string|Filter $filter
+     * @return WriterInterface
+     */
+    public function addFilter($filter){
+
+    }
+
+    /**
+     * Set a message formatter for the writer
+     *
+     * @param string|Formatter $formatter
+     * @return WriterInterface
+     */
+    public function setFormatter($formatter){
+
+    }
+
+    /**
+     * Write a log message
+     *
+     * @param  array $event
+     * @return WriterInterface
+     */
+    public function write(array $event){
+        if (!$this->config['zend_logger_cap'] || $event['priority'] <= $this->config['zend_logger_cap']) {
+            $this->stageMsg($event['message'], $event['priority']);
+        }
+    }
+
+    /**
+     * Perform shutdown activities
+     *
+     * @return void
+     */
+    public function shutdown(){
+        $this->report();
+    }
+
+
 
 }

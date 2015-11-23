@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shala\n"
 "POT-Creation-Date: 2015-05-12 14:29+0100\n"
-"PO-Revision-Date: 2015-09-29 15:32+0100\n"
+"PO-Revision-Date: 2015-10-27 11:31+0100\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -30,7 +30,7 @@ msgstr "Studio"
 
 #: src/CasasoftStandards/Service/CategoryService.php:46
 msgid "Bifamiliar house"
-msgstr "Doppeleinfamilienhaus"
+msgstr "Doppel&#173;einfamilien&#173;haus"
 
 #: src/CasasoftStandards/Service/CategoryService.php:50
 msgid "Building land"
@@ -81,7 +81,7 @@ msgstr "Alpwirtschaft"
 
 #: src/CasasoftStandards/Service/CategoryService.php:94
 msgid "Multiple dwelling"
-msgstr "Mehrfamilienhaus"
+msgstr "Mehrfamilien&#173;haus"
 
 #: src/CasasoftStandards/Service/CategoryService.php:98
 msgid "Open slot"
@@ -125,7 +125,7 @@ msgstr "Terrassenhaus"
 
 #: src/CasasoftStandards/Service/CategoryService.php:138
 msgid "Underground slot"
-msgstr "Tiefgaragenstellplatz"
+msgstr "Tief&#173;garagen&#173;stellplatz"
 
 #: src/CasasoftStandards/Service/CategoryService.php:142
 msgid "Villa"
@@ -614,7 +614,7 @@ msgstr "Ferien"
 
 #: src/CasasoftStandards/Service/UtilityService.php:46
 msgid "Agricultural"
-msgstr "Landwirtschaftsbetrieb"
+msgstr "Landwirtschafts&#173;betrieb"
 
 #: src/CasasoftStandards/Service/UtilityService.php:50
 msgid "Industrial"

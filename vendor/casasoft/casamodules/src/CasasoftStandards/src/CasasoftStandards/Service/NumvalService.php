@@ -30,7 +30,7 @@ class NumvalService implements FactoryInterface {
             'general' => array(
                 'name' => $this->translator->translate('General', 'casasoft-standards'),
                 'items' => array(
-                    /*'floor' => array(
+                    'floor' => array(
                         'required' => false,
                     ),
                     'year_built' => array(
@@ -38,7 +38,7 @@ class NumvalService implements FactoryInterface {
                     ),
                     'year_last_renovated' => array(
                         'required' => false,
-                    ),*/
+                    ),
                     'ceiling_height' => array(
                         'required' => false,
                     ),
@@ -89,13 +89,19 @@ class NumvalService implements FactoryInterface {
                     'area_nwf' => array(
                         'required' => false,
                     ),
-                    'area_property_land' => array(
+                    /*'area_property_land' => array(
+                        'required' => false,
+                    ),*/
+                    'area_sia_gsf' => array(
                         'required' => false,
                     ),
                     /*'cubature_gva' => array(
                         'required' => false,
                     ),*/
-                    'cubature_sia' => array(
+                    /*'cubature_sia' => array(
+                        'required' => false,
+                    ),*/
+                    'volume_sia_gv' => array(
                         'required' => false,
                     ),
                 )
@@ -140,6 +146,9 @@ class NumvalService implements FactoryInterface {
                        'required' => false,
                     ),
                     'distance_motorway' => array(
+                       'required' => false,
+                    ),
+                    'distance_airport'  => array(
                        'required' => false,
                     ),
                 )
@@ -264,6 +273,12 @@ class NumvalService implements FactoryInterface {
             ),
             'distance_motorway' => array(
                 'label' => $this->translator->translate('Distance to freeway', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'm',
+            ),
+            'distance_airport' => array(
+                'label' => $this->translator->translate('Distance to airport', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => 'm',
@@ -436,31 +451,31 @@ class NumvalService implements FactoryInterface {
             │      ANV      │  AVV  │  AFV  │   Nutzvolumen + Verkehrsvolumen + Funktionsvolumen
             └───────────────┴───────┴───────┘
             */
-            'area_sia_gv' => array(
+            'volume_sia_gv' => array(
                 'label' => $this->translator->translate('SIA-GV', 'casasoft-standards'), //Bruttogeschossvolumen oder Aussen-Geschossvolume
                 'icon' => 'fa fa-retweet',
                 'type' => 'int',
                 'si' => 'm3',
             ),
-                'area_sia_angf' => array(
+                'volume_sia_angf' => array(
                     'label' => $this->translator->translate('SIA-ANGV', 'casasoft-standards'), //Aussen-Nettogeschossvolume
                     'icon' => 'fa fa-retweet',
                     'type' => 'int',
                     'si' => 'm3',
                 ),
-                    'area_sia_anf' => array(
+                    'volume_sia_anf' => array(
                         'label' => $this->translator->translate('SIA-ANV', 'casasoft-standards'), //Aussen-Nutzvolume
                         'icon' => 'fa fa-retweet',
                         'type' => 'int',
                         'si' => 'm3',
                     ),
-                    'area_sia_avf' => array(
+                    'volume_sia_avf' => array(
                         'label' => $this->translator->translate('SIA-AVV', 'casasoft-standards'), //Aussen-Verkehrsvolume
                         'icon' => 'fa fa-retweet',
                         'type' => 'int',
                         'si' => 'm3',
                     ),
-                    'area_sia_aff' => array(
+                    'volume_sia_aff' => array(
                         'label' => $this->translator->translate('SIA-AFV', 'casasoft-standards'), //Aussen-Funktionsvolume
                         'icon' => 'fa fa-retweet',
                         'type' => 'int',
@@ -468,7 +483,7 @@ class NumvalService implements FactoryInterface {
                     ),
 
 
-                'area_sia_akf' => array(
+                'volume_sia_akf' => array(
                     'label' => $this->translator->translate('SIA-AFV', 'casasoft-standards'), //Aussen-Konstruktionsvolume
                     'icon' => 'fa fa-retweet',
                     'type' => 'int',
@@ -551,18 +566,21 @@ class NumvalService implements FactoryInterface {
 
 
             //OLD?
-            'cubature_gva' => array(
+            'volume_gva' => array(
                 'label' => $this->translator->translate('Cubature GVA', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => 'm3',
             ),
-            'cubature_sia' => array( //SIA GV (Nettogebäudevolumen ngv)
+            'volume_sia116_gv' => array(
                 'label' => $this->translator->translate('Cubature SIA', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => 'm3',
             ),
+
+
+            
             'utilization_number' => array(
                 'label' => $this->translator->translate('Utilization number', 'casasoft-standards'),
                 'icon' => '',

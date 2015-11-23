@@ -1,0 +1,42 @@
+<?php if ($sent): ?>
+	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>	
+<?php else: ?>
+	<?php $form->setAttribute('action', get_permalink($offer->post)); ?>
+
+	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
+	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
+	<div class="row-fluid">
+		<div class="span5 casawp-input-left">
+			<?= $this->offer->renderContactFormElement($form->get('firstname')) ?>
+		</div>
+		<div class="span7 casawp-input-right">
+			<?= $this->offer->renderContactFormElement($form->get('lastname')) ?>
+		</div>
+	</div>
+	<?= $this->offer->renderContactFormElement($form->get('street')) ?>
+	<div class="row-fluid">
+		<div class="span4 casawp-input-left">
+			<?= $this->offer->renderContactFormElement($form->get('postal_code')) ?>
+		</div>
+		<div class="span8 casawp-input-right">
+			<?= $this->offer->renderContactFormElement($form->get('locality')) ?>
+		</div>
+	</div>
+	<?= $this->offer->renderContactFormElement($form->get('country')->setAttribute('style', 'margin-bottom: 10px;')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('phone')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('emailreal')) ?>
+	<?= $this->offer->renderContactFormElement($form->get('message')) ?>
+
+	<div class="row-fluid">
+        <div class="span7"><br>
+            <small>Bitte alle Felder ausfüllen.</small>
+        </div>
+        <div class="span5"><br>
+            <input type="submit" class="btn btn-primary pull-right" value="Senden">
+        </div>
+    </div>
+        
+
+	<?= $this->form()->closeTag(); ?>
+
+<?php endif ?>

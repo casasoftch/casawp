@@ -1,0 +1,20 @@
+<div class="card-group">
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title"><?= $offer->renderCategoryLabels() ?></h4>
+      <p class="card-text"><?= $offer->renderDatapoints('single') ?></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title"><?= __("Address", 'casawp') ?></h4>
+      <p class="card-text"><?= $offer->renderAddress() ?></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title"><?= ($offer->type == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
+      <p class="card-text"><?= $this->offer->renderPrice() ?></p>
+    </div>
+  </div>
+</div>
