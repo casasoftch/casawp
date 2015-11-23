@@ -169,6 +169,7 @@ class OfferService{
 
     public function getFeatures(){
     	if ($this->features === null) {
+    		$this->features = array();
 			$terms = wp_get_post_terms( $this->post->ID, 'casawp_feature', array("fields" => "names"));
 			foreach ($terms as $termName) {
 				if ($this->featureService->keyExists($termName)) {
@@ -354,7 +355,7 @@ class OfferService{
 		          	case 'casawp_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
 		          	case 'casawp_single_show_area_nwf': $key = 'area_nwf'; break;
 		          	case 'casawp_single_show_area_bwf': $key = 'area_bwf'; break;
-		          	case 'casawp_single_show_surface_property': $key = 'area_sia_angf'; break;
+		          	case 'casawp_single_show_surface_property': $key = 'area_sia_gsf'; break;
 		          	case 'casawp_single_show_floor': $key = 'floor'; break;
 		          	case 'casawp_single_show_number_of_floors': $key = 'number_of_floors'; break;
 		          	case 'casawp_single_show_year_built': $key = 'year_built'; break;

@@ -14,7 +14,7 @@ class Import {
       add_action( 'init', array($this, 'casawpImport') );  
     }
     if ($casagatewayupdate) {
-      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );  
+      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );
     }
     //$this->casawpImport();
   }
@@ -860,6 +860,14 @@ class Import {
         file_put_contents($file, $response);
       } 
 
+      //UPDATE OFFERS NOW!!!!
+      if ($this->getImportFile()) {
+        $this->addToLog('import start');
+        $this->updateOffers();
+        $this->addToLog('import end');
+      }
+
+
       //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       echo '<div id="message" class="updated"> API Keys missing</div>';
@@ -1162,8 +1170,7 @@ class Import {
 
   public function updateOffers(){
 
-    
-     //make sure dires exist
+    //make sure dires exist
 
     if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
       mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
@@ -1551,10 +1558,14 @@ class Import {
 
       //remove supurflous meta_data
       foreach ($old_meta_data as $key => $value) {
-        if (!isset($new_meta_data[$key])) {
+        if (
+          !isset($new_meta_data[$key]) 
+          && !in_array($key, array('casawp_id'))
+          && strpos($key, '_') !== 0
+        ) {
           //remove
-          //delete_post_meta($wp_post->ID, $key, $value);
-          //$this->transcript[$casawp_id]['meta_data'][$key] = 'removed';
+          delete_post_meta($wp_post->ID, $key, $value);
+          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
         }
       }
     }

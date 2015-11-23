@@ -67,7 +67,7 @@ class FilterForm extends Form
         //TODO SORTING!!!
         $category_options = array();
         foreach ($this->categories as $category) {
-            $category_options[$category->getKey()] = $category->getLabel();
+            $category_options[$category->getKey()] = html_entity_decode($category->getLabel());
         }
         asort($category_options);
         return $category_options;
@@ -174,9 +174,8 @@ class FilterForm extends Form
             } 
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
-                $label = $parent['name'];
                 foreach ($parent['children'] as $child) {
-                    $label .= ' ' . $child['name'];
+                    $label = $parent['name'] . ' ' . $child['name'];
                     $value_options = array();
                     foreach ($child['children'] as $grandchild) {
                         $value_options[$grandchild['slug']] = $grandchild['name'];
