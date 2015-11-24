@@ -640,10 +640,12 @@ class OfferService{
   	                if ($this->getFieldValue('grossPrice', false)) {
   	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
   	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
-  	                } elseif ($this->getFieldValue('netPrice', false)) {
+  	                }
+  	                if ($this->getFieldValue('netPrice', false)) {
   	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
   	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
-  	                } else {
+  	                }
+  	                if (!($this->getFieldValue('grossPrice', false) && $this->getFieldValue('netPrice', false))) {
   	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
   	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
   	                }
@@ -775,7 +777,7 @@ class OfferService{
 
 	public function renderFeaturedImage(){
 		return $this->render('featured-image', array(
-			'offer' => $this
+			'offer' => $this,
 		));
 	}
 
