@@ -1,0 +1,53 @@
+=== CASAWP ===
+Contributors: casasoft
+Donate link:http://immobilien-plugin.ch
+Tags: immobilien, real estate, openimmo, idx
+Requires at least: 4.0.0
+Tested up to: 4.3.1
+Author: Casasoft AG
+Author URI: http://casasoft.ch
+License: GPL2
+Stable tag: 2.0.0
+
+Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software!
+
+== Description ==
+
+Synchronisieren Sie Ihre Immobilien Objekte mit CASAWP, Lassen Sie die Einträge automatisch Kategorisieren und passen Sie das Plugin an jedes Theme an. CASAWP importiert, flexibel, zuverlässig und schnell die üblichsten Standards.
+
+*** This plugin requires at least PHP 5.5.0
+
+== Installation ==
+
+Zur Installation beachten Sie bitte folgende Schritte:
+
+1. Die Plugindateien nach wp-content/plugins/wpshopgermany-handlerbund kopieren, oder über das Wordpress Backend: Plugins > Installieren > Hochladen die ZIP Datei hochladen.
+2. Das Plugin im Plugin Menü von Wordpress aktivieren.
+3. Importieren sie Ihre objekte (wie im "Import Setup" erklährt)
+4. Die URL ihredomain.ch/immobilien zeigt die fundementale Übersichtseite an.
+
+== Import Setup ==
+
+Das Plug-in erstellt sobald es Installiert wurde einen neuen Ordner auf Ihrem Webspace unter „wp-content/uploads/casawp/import/“
+
+Exportieren Sie Ihre Objekte aus Ihrer Immobilien-Software als CasaXML (Weitere Informationen zum CasaXML Standart auf GitHub)
+
+Legen Sie die Export-Daten unter wp-content/uploads/casawp/import als data.xml ab.
+
+Falls Sie keine CasaXML Dateien aus Ihrer Software gennerieren können, bietet CASAGATEWAY die möglichkeit andere Standarten (OpenImmo, Homegate ID usw.) automatisch umzuwandeln. Weitere informationen dazu finden sie auf casasoft.ch[https://casasoft.ch/casagateway] .
+
+== Changelog ==
+
+= 2.0.0 = 
+
+* The plugin has been rewritten and renamed from casasync to CASAWP.
+
+== Upgrade Notice ==
+
+* Please follow the instructions upgrade-from-casasync.md if you are upgrading from casasync
+
+== Screenshots ==
+
+1. Archiv Übersicht
+2. Einzel Objekt
+

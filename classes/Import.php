@@ -14,7 +14,7 @@ class Import {
       add_action( 'init', array($this, 'casawpImport') );  
     }
     if ($casagatewayupdate) {
-      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );  
+      add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );
     }
     //$this->casawpImport();
   }
@@ -860,6 +860,14 @@ class Import {
         file_put_contents($file, $response);
       } 
 
+      //UPDATE OFFERS NOW!!!!
+      if ($this->getImportFile()) {
+        $this->addToLog('import start');
+        $this->updateOffers();
+        $this->addToLog('import end');
+      }
+
+
       //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       echo '<div id="message" class="updated"> API Keys missing</div>';
@@ -974,6 +982,11 @@ class Import {
 
         //organization
         if ($property_xml->seller->organization) {
+            if ($property_xml->seller->organization['id']) {
+              $propertydata['organization']['id']    = $property_xml->seller->organization['id']->__toString();
+            } else {
+              $propertydata['organization']['id'] = false;
+            }
             $propertydata['organization']['displayName']    = $property_xml->seller->organization->legalName->__toString();
             $propertydata['organization']['addition']         = $property_xml->seller->organization->brand->__toString();
             $propertydata['organization']['email']         = $property_xml->seller->organization->email->__toString();
@@ -1157,8 +1170,7 @@ class Import {
 
   public function updateOffers(){
 
-    
-     //make sure dires exist
+    //make sure dires exist
 
     if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
       mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
@@ -1227,6 +1239,9 @@ class Import {
         $found_posts[] = $wp_post->ID;
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
 
+
+
+
       }
     }
 
@@ -1259,7 +1274,17 @@ class Import {
       $this->transcript['properties_removed'] = count($properties_to_remove);
     }
 
-    //flush_rewrite_rules();
+    flush_rewrite_rules();
+
+    //WPEngine clear cache hook
+    global $wpe_common;
+    if (isset($wpe_common)) {
+      $this->transcript['wpengine'] = 'cache-cleared';
+      foreach (array('clean_post_cache','trashed_posts','deleted_posts') as $hook){
+        add_action( $hook, array( $wpe_common, 'purge_varnish_cache'));
+      }
+    }
+        
 
     $this->addToLog($this->transcript);
   }
@@ -1349,6 +1374,8 @@ class Import {
       //$new_meta_data['seller_org_phone_mobile'] = $property['organization'][''];
       $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
       $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
+      $new_meta_data['seller_org_customerid']                    = $property['organization']['id'];
+
       if (isset($property['organization']['postalAddress'])) {
         $new_meta_data['seller_org_address_country']               = $property['organization']['postalAddress']['country'];
         $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
@@ -1531,10 +1558,14 @@ class Import {
 
       //remove supurflous meta_data
       foreach ($old_meta_data as $key => $value) {
-        if (!isset($new_meta_data[$key])) {
+        if (
+          !isset($new_meta_data[$key]) 
+          && !in_array($key, array('casawp_id'))
+          && strpos($key, '_') !== 0
+        ) {
           //remove
-          //delete_post_meta($wp_post->ID, $key, $value);
-          //$this->transcript[$casawp_id]['meta_data'][$key] = 'removed';
+          delete_post_meta($wp_post->ID, $key, $value);
+          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
         }
       }
     }

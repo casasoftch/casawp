@@ -87,6 +87,7 @@
 					'casawp_form_phone_required',
 					'casawp_form_email_required',
 					'casawp_form_message_required',
+					'casawp_casamail_direct_recipient'
 				);
 				break;
 			case 'general':
@@ -435,6 +436,7 @@
 							</tr>
 						<?php echo $table_end; ?>
 						<?php echo $table_start; ?>
+						<?php /* ?>
 						<h3>Standard Daten</h3>
 						<p>Nachfolgend können Sie Standardwerte für die Firma, Kontaktperson und Kontaktemail definieren.</p>
 						<?php echo $table_start; ?>
@@ -591,6 +593,7 @@
 								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 						<?php echo $table_end; ?>
+						<?php */ ?>
 					<?php
 					break;
 				case 'archiveview':
@@ -827,6 +830,8 @@
 										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
 										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
+										<br><br>
+										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte E-Mails an angegebene <code>inquiryPerson</code> E-Mails versenden.
 									</fieldset>
 								</td>
 							</tr>
@@ -970,9 +975,14 @@
 							if ($arr) {
 						   		foreach ($arr as $datestamp => $properties) {
 						   			echo '<th valign="top"><strong>'.str_replace(' ', "T", $datestamp) .'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
-						   				foreach ($properties as $slug => $property) {
-						   					echo "\n" . $slug . ': ' . json_encode($property);
+						   				if (is_array($properties)) {
+						   					foreach ($properties as $slug => $property) {
+							   					echo "\n" . $slug . ': ' . json_encode($property);
+							   				}
+						   				} else {
+						   					echo $properties;
 						   				}
+						   				
 						   			echo '</pre></td>';
 						   		}
 						  	} else {

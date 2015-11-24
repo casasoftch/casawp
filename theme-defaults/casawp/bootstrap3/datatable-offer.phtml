@@ -3,24 +3,36 @@
     <tr>
       <td class="width-25"><?= __('Sales price', 'casawp') ?></td>
       <td class="width-75">
-        <?= $this->offer->renderPrice() ?>
+        <?php
+          if ($this->offer->getFieldValue('price', false)) {
+            echo $this->offer->renderPrice();
+          } else {
+            echo __('On Request', 'casawp');
+          }
+        ?>
       </td>
     </tr>
   <?php endif; ?>
   <?php if ($this->offer->getSalestype() == 'rent') : ?>
     <?php if ($this->offer->getFieldValue('grossPrice', false)): ?>
-       <tr>
+        <tr>
           <td class="width-25"><?= __('Gross price','casawp') ?></td>
           <td class="width-75">
             <?= $this->offer->renderPrice('gross'); ?>
           </td>
         </tr>
-    <?php endif ?>
-    <?php if ($this->offer->getFieldValue('netPrice', false)): ?>
-       <tr>
+    <?php elseif ($this->offer->getFieldValue('netPrice', false)): ?>
+        <tr>
           <td class="width-25"><?= __('Net price','casawp') ?></td>
           <td class="width-75">
             <?= $this->offer->renderPrice('net'); ?>
+          </td>
+        </tr>
+    <?php else: ?>
+        <tr>
+          <td class="width-25"><?= __('Rent price','casawp') ?></td>
+          <td class="width-75">
+            <?= __('On Request', 'casawp'); ?>
           </td>
         </tr>
     <?php endif ?>

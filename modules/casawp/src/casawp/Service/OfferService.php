@@ -169,6 +169,7 @@ class OfferService{
 
     public function getFeatures(){
     	if ($this->features === null) {
+    		$this->features = array();
 			$terms = wp_get_post_terms( $this->post->ID, 'casawp_feature', array("fields" => "names"));
 			foreach ($terms as $termName) {
 				if ($this->featureService->keyExists($termName)) {
@@ -354,7 +355,7 @@ class OfferService{
 		          	case 'casawp_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
 		          	case 'casawp_single_show_area_nwf': $key = 'area_nwf'; break;
 		          	case 'casawp_single_show_area_bwf': $key = 'area_bwf'; break;
-		          	case 'casawp_single_show_surface_property': $key = 'area_sia_angf'; break;
+		          	case 'casawp_single_show_surface_property': $key = 'area_sia_gsf'; break;
 		          	case 'casawp_single_show_floor': $key = 'floor'; break;
 		          	case 'casawp_single_show_number_of_floors': $key = 'number_of_floors'; break;
 		          	case 'casawp_single_show_year_built': $key = 'year_built'; break;
@@ -478,7 +479,7 @@ class OfferService{
 
     public function getShareWidgetsScripts() {
       $return = null;
-      if (get_option( 'casasync_share_facebook', false )) {
+      if (get_option( 'casawp_share_facebook', false )) {
         $return .= '<div id="fb-root"></div><script>(function(d, s, id) {'
           .'var js, fjs = d.getElementsByTagName(s)[0];'
           .'if (d.getElementById(id)) return;'
@@ -627,19 +628,26 @@ class OfferService{
 	          case 'price':
 	            if ($this->getAvailability() != 'reference') {
 	              if ($this->getSalestype() == 'buy') {
-	                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
-	                $html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	if ($this->getFieldValue('price', false)) {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	} else {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+	              	}
 	              }
 	              if ($this->getSalestype() == 'rent') {
-	                if ($this->getFieldValue('grossPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
-	                }
-	                if ($this->getFieldValue('netPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
-	                }
-	              }
+  	                if ($this->getFieldValue('grossPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+  	                } elseif ($this->getFieldValue('netPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+  	                } else {
+  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+  	                }
+  	              }
 	            }
 	            break;
 	          case 'excerpt':
@@ -806,6 +814,7 @@ class OfferService{
         }
 
         if ($_POST) {
+	
         	$filter = $form->getFilter();
 	        $form->setInputFilter($filter);
         	$form->setData($_POST);
@@ -832,14 +841,21 @@ class OfferService{
 			    	add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
 			    	add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
 
-			    	if (get_option('casawp_inquiry_method') == 'casamail') {
-			        	//casamail
-			    		$data = $_POST;
-			    		$data['email'] = $_POST['emailreal'];
-			    		$data['provider'] = $customerid;
-			    		$data['publisher'] = $publisherid;
-			    		$data['lang'] = substr(get_bloginfo('language'), 0, 2);
-			    		$data['property_reference'] = $this->getFieldValue('referenceId');
+
+
+					if (get_option('casawp_inquiry_method') == 'casamail') {
+						//casamail
+						$data = $_POST;
+						$data['email'] = $_POST['emailreal'];
+						$data['provider'] = $customerid;
+						$data['publisher'] = $publisherid;
+						$data['lang'] = substr(get_bloginfo('language'), 0, 2);
+						$data['property_reference'] = $this->getFieldValue('referenceId');
+
+						//direct recipient emails
+						if (get_option('casawp_casamail_direct_recipient') && $this->getFieldValue('seller_inquiry_person_email', false)) {
+							$data['direct_recipient_email'] = $this->getFieldValue('seller_inquiry_person_email', false);
+						}
 						$data_string = json_encode($data);                                                                                   
 						                                                                                                                     
 						$ch = curl_init('http://onemail.ch/api/msg');

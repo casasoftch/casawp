@@ -23,37 +23,44 @@
 <?php if ($this->offer->getSalesBrochures() || $this->offer->getDocuments() || $this->offer->getPlans()) : ?>
   <div class="casawp-documents">
     <h3><?= __('Documents','casawp') ?></h3>
-    <?php foreach ($this->offer->getSalesBrochures() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
-    <?php endforeach ?>
-    <?php foreach ($this->offer->getDocuments() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
-    <?php endforeach ?>
-    <?php foreach ($this->offer->getPlans() as $document): ?>
-      <?= wp_get_attachment_link($document->ID, '', false, false, false); ?><br>
-    <?php endforeach ?>
-  </div>
-<?php endif; ?>
+    <?php $i = 1; $j = 1; $k = 1; ?>
 
-<?php /* ?>
-<?php if ($this->offer->getAllDistances()) { ?>
-  <div class="casawp_distances">
-    <h3><?= ('Distances','casawp') ?></h3>
-    <?= $this->offer->getAllDistances(); ?>
+    <?php foreach ($this->offer->getSalesBrochures() as $document): ?>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Sales Brochure', 'casawp') . ' #' . $i++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+    <?php endforeach ?>
+
+    <?php foreach ($this->offer->getDocuments() as $document): ?>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Document', 'casawp') . ' #' . $j++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+    <?php endforeach ?>
+
+    <?php foreach ($this->offer->getPlans() as $document): ?>
+      <?php
+        $url = wp_get_attachment_url( $document->ID );
+        $title = (is_numeric($document->post_title)) ? (__('Plan', 'casawp') . ' #' . $k++) : ($document->post_title);
+      ?>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+    <?php endforeach ?>
+  </ul>
   </div>
 <?php endif; ?>
 
 <?php if ($this->offer->getUrls()) : ?>
   <div class="casawp_provided_url">
-    <h3><?= ('Links','casawp') ?></h3>
-    <ul class="casawp-unstyled casawp-links-list">
-      <?php foreach ($this->getUrls() as $url_wrapper) : ?>
+    <h3><?= __('Links','casawp') ?></h3>
+      <?php foreach ($this->offer->getUrls() as $url_wrapper) : ?>
         <?php foreach ($url_wrapper as $url) :?>
-          <li><a href="'.$url['href'].'" target="_blank" title="'.$url['title'].'">'. ($url['label'] ? $url['label'] : $url['href']) .'</a></li>
+          <a href="<?= $url['href'] ?>" target="_blank" title="<?= $url['title'] ?>"><?= ($url['label'] ? $url['label'] : $url['href']) ?></a>
         <?php endforeach; ?>
       <?php endforeach; ?>
-    </ul>
   </div>
 <?php endif; ?>
 
-<?php */ ?>
+<?php  ?>

@@ -15,7 +15,11 @@
       <?php 
         if ($offer->getSalestype() == 'buy') {
           echo '<h4>' . __('Price', 'casawp') . '</h4>';
-          echo $this->offer->renderPrice();
+          if ($this->offer->getFieldValue('price', false)) {
+            echo $this->offer->renderPrice();
+          } else {
+            echo __('On Request','casawp');
+          }
         } else {
           if ($this->offer->getFieldValue('grossPrice', false)) {
             echo '<h4>' . __('Gross price', 'casawp') . '</h4>';
@@ -23,6 +27,9 @@
           } elseif($this->offer->getFieldValue('netPrice', false)) {
             echo '<h4>' . __('Net price', 'casawp') . '</h4>';
             echo '(' . __('Net','casawp') . ') '. $this->offer->renderPrice('net');
+          } else {
+            echo '<h4>' . __('Rent price', 'casawp') . '</h4>';
+            echo __('On Request','casawp');
           }
         }
       ?>
