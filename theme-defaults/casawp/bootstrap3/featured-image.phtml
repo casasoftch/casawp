@@ -4,3 +4,36 @@
    		<?= get_the_post_thumbnail($offer->post->ID, 'casawp-thumb'); ?>
    <?php endif ?>
 </a>
+
+
+
+<?php 
+
+	/* For References Gallery Fancybox
+		
+		<?php if ($offer->getAvailability() == "reference"): ?>
+			<?php $images = $offer->getImages(); ?>
+		    <?php foreach ($images as $i => $image): ?>
+		            <?php 
+		                $img     = wp_get_attachment_image( $image->ID, 'casawp-thumb', true, array('class' => 'carousel-image') );
+		                $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
+		            ?>
+		            <a class="property-image-gallery casawp-thumbnail" rel="casawp-reference-gallery-<?php echo $offer->ID ?>" href="<?= $img_url[0] ?>" title="<?= $offer->getTitle(); ?>">
+		        		<?php if ($i == 0): ?>
+		        			<?= $img ?>
+		        		<?php else: ?>
+		        			<img src="<?php echo get_template_directory_uri() ?>/img/blank.gif" alt="">
+		        		<?php endif ?>
+		            </a>
+		    <?php endforeach ?>
+		<?php else: ?>
+			<a href ="<?= get_permalink($offer->post) ?>" class="casawp-thumbnail" style="position:relative;">
+			   <?php //echo $offer->getAvailability() ?>
+			   <?php if (has_post_thumbnail( $offer->post->ID )): ?>
+			   		<?= get_the_post_thumbnail($offer->post->ID, 'casawp-thumb'); ?>
+			   <?php endif ?>
+			</a>
+		<?php endif ?>
+
+	*/
+?>
