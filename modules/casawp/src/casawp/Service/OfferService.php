@@ -854,6 +854,17 @@ class OfferService{
 						$data['lang'] = substr(get_bloginfo('language'), 0, 2);
 						$data['property_reference'] = $this->getFieldValue('referenceId');
 
+
+						$data['property_street'] = $this->getFieldValue('address_streetaddress');
+						$data['property_postal_code'] = $this->getFieldValue('address_postalcode');
+						$data['property_locality'] = $this->getFieldValue('address_locality');
+						//$data['property_category'] = $this->getFieldValue('referenceId');
+						$data['property_country'] = $this->getFieldValue('address_country');
+						//$data['property_rooms'] = $this->getFieldValue('referenceId');
+						//$data['property_type'] = $this->getFieldValue('referenceId');
+						//$data['property_price'] = $this->getFieldValue('referenceId');
+
+
 						//direct recipient emails
 						if (get_option('casawp_casamail_direct_recipient') && $this->getFieldValue('seller_inquiry_person_email', false)) {
 							$data['direct_recipient_email'] = $this->getFieldValue('seller_inquiry_person_email', false);
