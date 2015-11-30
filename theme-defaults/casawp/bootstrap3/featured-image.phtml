@@ -1,5 +1,5 @@
 <a href ="<?= get_permalink($offer->post) ?>" class="casawp-thumbnail" style="position:relative;">
-   <?php //echo $this->offer->getAvailability() ?>
+   <?= $this->offer->renderAvailabilityLabel(); ?>
    <?php if (has_post_thumbnail( $offer->post->ID )): ?>
    		<?= get_the_post_thumbnail($offer->post->ID, 'casawp-thumb'); ?>
    <?php endif ?>

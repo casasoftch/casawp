@@ -133,10 +133,16 @@ class OfferService{
 			switch ($this->getAvailability()) {
       			case 'reserved': return __('Reserved', 'casawp'); break;
       			case 'active': return __('Available', 'casawp'); break;
-      			case 'taken': return __('Taken', 'casawp'); break;
 				case 'reference': return __('Reference', 'casawp'); break;
 				case 'private': return __('Private', 'casawp'); break;
 				case 'reference': return __('Reference', 'casawp'); break;
+      			case 'taken':
+      				if ($this->getSalestype() == 'rent')
+      					return __('Rented', 'casawp');
+      				if ($this->getSalestype() == 'buy')
+      					return __('Sold', 'casawp');
+      				break;
+				
 			}
 		}
 		return '';
@@ -777,6 +783,12 @@ class OfferService{
 
 	public function renderFeaturedImage(){
 		return $this->render('featured-image', array(
+			'offer' => $this,
+		));
+	}
+
+	public function renderAvailabilityLabel(){
+		return $this->render('availability-label', array(
 			'offer' => $this,
 		));
 	}
