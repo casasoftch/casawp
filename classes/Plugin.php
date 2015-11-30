@@ -514,7 +514,7 @@ class Plugin {
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
             case 'bootstrap2':
                 if (get_option('casawp_load_css', false)) {
-                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp_template_bs2.css' );
+                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap2/css/casawp_template_bs2.css' );
                     wp_enqueue_style( 'casawp_bootstrap2' );
                 }
                 if (get_option('casawp_load_scripts', false)) {
