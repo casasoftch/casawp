@@ -1168,6 +1168,70 @@ class Import {
 
   }
 
+  public function findLangKey($lang, $array){
+    foreach ($array as $key => $value) {
+      if ($lang == $value['lang']) {
+        if ($value) {
+          return $key;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
+  }
+
+  public function fillMissingTranslations($theoffers){
+    $translations = array();
+    $languages = icl_get_languages('skip_missing=0&orderby=code');
+    //build wish list
+    foreach ($languages as $lang) {
+      $translations[$lang['language_code']] = false;
+    }
+
+    //complete that which is available
+    foreach ($theoffers as $offerData) {
+      $translations[$offerData['lang']] = $offerData;
+    }
+
+    $mainLangKey = $this->findLangKey($this->getMainLang(), $translations);
+    if ($mainLangKey) {
+      $carbon = $translations[$mainLangKey];
+    } else {
+      //first
+      foreach ($translations as $translation) {
+        if ($translation) {
+          $carbon = $translation;
+          break;
+        }
+      }
+    }
+
+    //copy main language to missing translations
+    foreach ($languages as $language) {
+      if (!$translations[$language['language_code']]) {
+        $copy = $carbon;
+        $copy['lang'] = $language['language_code'];
+        $translations[$language['language_code']] = $copy;
+      }
+    }
+
+    //find main key and move it to the front key=0
+    $key = 0;
+    $theoffers = array();
+    foreach ($translations as $value) {
+      $key++;
+      if ($value['lang'] == $this->getMainLang()) {
+        $theoffers[0] = $value;
+      } else {
+        $theoffers[$key] = $value;
+      }
+    }
+    ksort($theoffers);
+
+    return $theoffers;
+  }
+
   public function updateOffers(){
 
     //make sure dires exist
@@ -1194,7 +1258,7 @@ class Import {
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
     foreach ($xml->properties->property as $property) {
       $propertyData = $this->property2Array($property);
-      //make main language first and single out if not multilingual
+      //make main language first and "single out" if not multilingual
       $theoffers = array();
       $i = 0;
       foreach ($propertyData['offers'] as $offer) {
@@ -1206,6 +1270,11 @@ class Import {
             $theoffers[$i] = $offer;
           }
         }
+      }
+
+      //complete missing translations if multilingual
+      if ($this->hasWPML()) {
+        $theoffers = $this->fillMissingTranslations($theoffers);
       }
 
       $offer_pos = 0;
@@ -1237,6 +1306,9 @@ class Import {
           $wp_post = get_post($insert_id, OBJECT, 'raw');
         }
         $found_posts[] = $wp_post->ID;
+
+
+        $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offerData['lang'], $casawp_id);
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
 
 
@@ -1312,8 +1384,6 @@ class Import {
         }
       }
     }
-    //lang
-    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casawp_id);
 
     /* main post data */
     $new_main_data = array(
