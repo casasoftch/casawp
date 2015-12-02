@@ -62,22 +62,24 @@ class UtilityService implements FactoryInterface {
                 'label' => $this->translator->translate('Parking'),
                 'icon' => '',
             ),
-            /*'building' => array(
+            'building' => array(
                 'label' => $this->translator->translate('Building'),
                 'icon' => '',
-            ),*/
+            ),
+            'investment' => array(
+                'label' => $this->translator->translate('Investment'),
+                'icon' => '',
+            ),
         );
     }
 
     public function addItem($obj, $key = null) {
         if ($key == null) {
             $this->items[] = $obj;
-        }
-        else {
+        } else {
             if (isset($this->items[$key])) {
                 throw new KeyHasUseException("Key $key already in use.");
-            }
-            else {
+            } else {
                 $this->items[$key] = $obj;
             }
         }
@@ -86,8 +88,7 @@ class UtilityService implements FactoryInterface {
     public function deleteItem($key) {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);
-        }
-        else {            
+        } else {
             throw new \Exception("Invalid key $key.");
         }
     }
@@ -95,8 +96,7 @@ class UtilityService implements FactoryInterface {
     public function getItem($key) {
         if (isset($this->items[$key])) {
             return $this->items[$key];
-        }
-        else {
+        } else {
             throw new \Exception("Invalid key $key.");
         }
     }

@@ -3,10 +3,10 @@
 return array(
     'view_helpers' => array(
         'factories' => array(
-            'casasoftCategory' => 'CasasoftStandards\View\Helper\Category',
-            'casasoftFeature'  => 'CasasoftStandards\View\Helper\Feature',
-            'casasoftNumval'   => 'CasasoftStandards\View\Helper\Numval',
-            'casasoftUtility'  => 'CasasoftStandards\View\Helper\Utility',
+            'casasoftCategory' => 'CasasoftStandards\View\Helper\CategoryFactory',
+            'casasoftFeature'  => 'CasasoftStandards\View\Helper\FeatureFactory',
+            'casasoftNumval'   => 'CasasoftStandards\View\Helper\NumvalFactory',
+            'casasoftUtility'  => 'CasasoftStandards\View\Helper\UtilityFactory',
         ),
     ),
     'service_manager' => array(

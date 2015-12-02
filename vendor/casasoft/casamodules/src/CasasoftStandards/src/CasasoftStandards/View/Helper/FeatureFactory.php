@@ -9,7 +9,7 @@ class FeatureFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $viewHelperManager)
     {
         $serviceLocator = $viewHelperManager->getServiceLocator();
-        $featureService = $serviceLocator->get('FeatureService');
+        $featureService = $serviceLocator->get('CasasoftFeature');
         
         $helper = new Feature($featureService);
         

@@ -164,7 +164,71 @@ class CategoryService implements FactoryInterface {
             'building-project' => array(
                 'label' => $this->translator->translate('Construction project', 'casasoft-standards'),
                 'icon' => '',
-            )
+            ),
+
+
+            //new new
+            'flat' => array(
+                'label' => $this->translator->translate('Flat', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'ground-floor-flat' => array(
+                'label' => $this->translator->translate('Ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'office' => array(
+                'label' => $this->translator->translate('Office', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'exhibition-space' => array(
+                'label' => $this->translator->translate('Exihition space', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'retail' => array(
+                'label' => $this->translator->translate('Retail', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'bed-and-breakfast' => array(
+                'label' => $this->translator->translate('Bed and breakfast', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'hotel' => array(
+                'label' => $this->translator->translate('Hotel', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'warehouse' => array(
+                'label' => $this->translator->translate('Warehouse', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'workshop' => array(
+                'label' => $this->translator->translate('Workshop', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'car-park' => array(
+                'label' => $this->translator->translate('Car park', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'bungalow' => array(
+                'label' => $this->translator->translate('Bungalow', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'castle' => array(
+                'label' => $this->translator->translate('Castle', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'fuel-station' => array(
+                'label' => $this->translator->translate('Fuel station', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'cafe-bar' => array(
+                'label' => $this->translator->translate('Café / Bar', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
+            'maisonette' => array(
+                'label' => $this->translator->translate('Maisonette', 'casasoft-standards'),
+                'icon' => '',
+            ),
         );
     }
 
@@ -185,8 +249,7 @@ class CategoryService implements FactoryInterface {
     public function deleteItem($key) {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);
-        }
-        else {            
+        } else {
             throw new \Exception("Invalid key $key.");
         }
     }

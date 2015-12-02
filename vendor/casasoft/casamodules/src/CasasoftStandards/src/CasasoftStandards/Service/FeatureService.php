@@ -34,7 +34,7 @@ class FeatureService implements FactoryInterface {
         return array(
             //disable?
             'has-fireplace' => array(
-                'label' => $this->translator->translate('Fireplace', 'casasoft-standards'),
+                'label' => $this->translator->translate('Chimney fireplace', 'casasoft-standards'),
                 'icon' => 'glyphicon glyphicon-fire'
             ),
             'has-cabletv' => array(
@@ -49,8 +49,16 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Has lifting platform', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-cable-railway-terminal' => array(
+                'label' => $this->translator->translate('Cable railway terminal', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-train-station' => array(
+                'label' => $this->translator->translate('Train station', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'has-railway-terminal' => array(
-                'label' => $this->translator->translate('Railway terminal', 'casasoft-standards'),
+                'label' => $this->translator->translate('Train station', 'casasoft-standards'),
                 'icon' => '',
             ),
             'has-flat-sharing-community' => array(

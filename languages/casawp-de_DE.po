@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-12-02 08:46+0100\n"
+"POT-Creation-Date: 2015-12-02 09:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -48,12 +48,11 @@ msgid "Reference"
 msgstr "Referenz"
 
 #: ../classes/./Archive.php:406 ../classes/./Conversion.php:482
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:134
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:135
 msgid "Reserved"
 msgstr "Reserviert"
 
 #: ../classes/./Archive.php:408
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:136
 msgid "Taken"
 msgstr "Im besitz"
 
@@ -1571,8 +1570,14 @@ msgid "Airport"
 msgstr "Flughafen"
 
 #: ../classes/./Conversion.php:476
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:551
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:572
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:587
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:608
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:682
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:696
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:31
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:42
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:10
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:35
 msgid "On Request"
 msgstr "Auf Anfrage"
 
@@ -1581,20 +1586,22 @@ msgid "By Agreement"
 msgstr "Nach Vereinbarung"
 
 #: ../classes/./Conversion.php:478
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:574
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:610
 msgid "Immediate"
 msgstr "Sofort"
 
 #: ../classes/./Conversion.php:481
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:135
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:136
 msgid "Available"
 msgstr "Verfügbar"
 
 #: ../classes/./Conversion.php:483
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:144
 msgid "Sold"
 msgstr "Verkauft"
 
 #: ../classes/./Conversion.php:484
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:142
 msgid "Rented"
 msgstr "Vermietet"
 
@@ -1801,7 +1808,7 @@ msgstr ""
 
 #: ../classes/./Plugin.php:743 ../classes/./Plugin.php:1049
 #: ../modules/./casawp/src/casawp/Form/ContactForm.php:39
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:614
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:660
 msgid "Street"
 msgstr "Strasse"
 
@@ -1844,9 +1851,9 @@ msgid "Longitude"
 msgstr "Longitude"
 
 #: ../classes/./Plugin.php:806
-#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:9
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:19
 #: ../theme-defaults/./casawp/bootstrap2/datatable-property.phtml:10
-#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:9
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:19
 #: ../theme-defaults/./casawp/bootstrap3/datatable-property.phtml:10
 #: ../theme-defaults/./casawp/bootstrap4/basic-boxes.phtml:10
 msgid "Address"
@@ -1865,8 +1872,8 @@ msgid "General settings"
 msgstr ""
 
 #: ../classes/./Plugin.php:878
-#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:17
-#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:17
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:27
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:27
 #: ../theme-defaults/./casawp/bootstrap4/basic-boxes.phtml:16
 msgid "Price"
 msgstr "Preis"
@@ -1925,7 +1932,7 @@ msgstr "Strassenzusatz"
 
 #: ../classes/./Plugin.php:1070
 #: ../modules/./casawp/src/casawp/Form/ContactForm.php:56
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:618
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:664
 msgid "Locality"
 msgstr "Ort"
 
@@ -2007,8 +2014,9 @@ msgid "Properties"
 msgstr "Immobilien"
 
 #: ../classes/./Plugin.php:1312
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:589
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:10
 #: ../theme-defaults/./casawp/bootstrap2/datatable.phtml:4
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:10
 #: ../theme-defaults/./casawp/bootstrap3/datatable.phtml:4
 msgid "Property"
 msgstr "Immobilie"
@@ -2450,33 +2458,40 @@ msgstr "Vermarktungsart"
 msgid "Private"
 msgstr ""
 
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:631
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:678
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:681
 #: ../theme-defaults/./casawp/bootstrap2/datatable-offer.phtml:4
 #: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:4
 msgid "Sales price"
 msgstr "Kaufpreis"
 
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:636
-#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:21
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:687
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:31
 #: ../theme-defaults/./casawp/bootstrap2/datatable-offer.phtml:13
-#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:21
-#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:13
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:35
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:19
 msgid "Gross price"
 msgstr "Bruttomiete"
 
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:640
-#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:24
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:691
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:34
 #: ../theme-defaults/./casawp/bootstrap2/datatable-offer.phtml:21
-#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:24
-#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:21
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:38
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:26
 msgid "Net price"
 msgstr "Nettomiete"
 
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:654
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:695
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:41
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:33
+msgid "Rent price"
+msgstr "Mietpreis"
+
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:709
 msgid "Available from"
 msgstr "Verfügbar ab"
 
-#: ../modules/./casawp/src/casawp/Service/OfferService.php:885
+#: ../modules/./casawp/src/casawp/Service/OfferService.php:957
 #: ../theme-defaults/./casawp/bootstrap2/sales-person.phtml:15
 #: ../theme-defaults/./casawp/bootstrap3/sales-person.phtml:15
 msgid "I am interested concerning this property. Please contact me."
@@ -2490,13 +2505,13 @@ msgstr ""
 msgid "Property list"
 msgstr "Immobilienliste"
 
-#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:25
-#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:25
+#: ../theme-defaults/./casawp/bootstrap2/basic-boxes.phtml:35
+#: ../theme-defaults/./casawp/bootstrap3/basic-boxes.phtml:39
 msgid "Net"
 msgstr "Nettomiete"
 
 #: ../theme-defaults/./casawp/bootstrap2/datatable-offer.phtml:38
-#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:38
+#: ../theme-defaults/./casawp/bootstrap3/datatable-offer.phtml:50
 msgid "Available from:"
 msgstr "Verfügbar ab:"
 
@@ -2643,9 +2658,6 @@ msgstr "Miete"
 
 #~ msgid "Chosen Password"
 #~ msgstr "Gewünschtes Passwort"
-
-#~ msgid "Rent price"
-#~ msgstr "Mietpreis"
 
 #~ msgid "Nothing Found"
 #~ msgstr "Nichts gefunden"

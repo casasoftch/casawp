@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2015-05-12 14:35+0100\n"
-"PO-Revision-Date: 2015-05-12 14:35+0100\n"
+"PO-Revision-Date: 2015-11-24 18:08+0100\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: en\n"
@@ -165,7 +165,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:52
 msgid "Railway terminal"
-msgstr ""
+msgstr "Train station"
 
 #: src/CasasoftStandards/Service/FeatureService.php:56
 msgid "Flat sharing community"

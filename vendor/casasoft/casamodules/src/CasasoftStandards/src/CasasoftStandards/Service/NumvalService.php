@@ -296,7 +296,7 @@ class NumvalService implements FactoryInterface {
                 'si' => 'kg',
             ),
 
-            'area_property_land' => array( //is this not SIA-AGF?!
+            'area_property_land' => array( //is this not SIA-AGF / GSF ?!
                 'label' => $this->translator->translate('Property land area', 'casasoft-standards'),
                 'icon' => 'fa fa-retweet',
                 'type' => 'int',
