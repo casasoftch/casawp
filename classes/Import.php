@@ -129,6 +129,35 @@ class Import {
     }
   }
 
+  public function setcasawpUtilityTerm($term_slug, $label = false) {
+    $label = (!$label ? $term_slug : $label);
+    $term = get_term_by('slug', $term_slug, 'casawp_utility', OBJECT, 'raw' );
+    //$existing_term_id = term_exists( $label, 'casawp_utility');
+    $existing_term_id = false;
+    if ($term) {
+      if (
+        $term->slug != $term_slug
+        || $term->name != $label
+      ) {
+        wp_update_term($term->term_id, 'casawp_utility', array(
+          'name' => $label,
+          'slug' => $term_slug
+        ));
+      }
+    } else {
+      $options = array(
+        'description' => '',
+        'slug' => $term_slug
+      );
+      $id = wp_insert_term(
+        $label,
+        'casawp_utility',
+        $options
+      );
+      return $id;
+    }
+  }
+
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
@@ -759,7 +788,50 @@ class Import {
         wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_feature' );
       }
     }
+  }
 
+  public function setOfferUtilities($wp_post, $utilities, $casawp_id){
+    $new_utilities = array();
+    $old_utilities = array();
+
+    //set post feature
+    $old_utilities = array();
+    $wp_utility_terms = wp_get_object_terms($wp_post->ID, 'casawp_utility');
+    foreach ($wp_utility_terms as $term) {
+      $old_utilities[] = $term->slug;
+    }
+
+    //supported
+    if ($utilities) {
+      foreach ($utilities as $utility) {
+        $new_utilities[] = $utility;
+      }
+    }
+
+    //have utilities changed?
+    if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
+      $slugs_to_remove = array_diff($old_utilities, $new_utilities);
+      $slugs_to_add    = array_diff($new_utilities, $old_utilities);
+      $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
+      $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
+
+      //make sure the utilities exist first
+      foreach ($slugs_to_add as $new_term_slug) {
+        $label = false;
+        $this->setcasawputilityTerm($new_term_slug, $label);
+      }
+
+      //add the new ones
+      $utility_terms = get_terms( array('casawp_utility'), array('hide_empty' => false));
+      foreach ($utility_terms as $term) {
+        if (in_array($term->slug, $new_utilities)) {
+          $connect_term_ids[] = (int) $term->term_id;
+        }
+      }
+      if ($connect_term_ids) {
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_utility' );
+      }
+    }
   }
 
   public function addToLog($transcript){
@@ -1660,6 +1732,7 @@ class Import {
     }
     
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
+    $this->setOfferUtilities($wp_post, $property['property_utilities'], $casawp_id);
     $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
     $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);

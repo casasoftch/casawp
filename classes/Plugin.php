@@ -1427,6 +1427,32 @@ class Plugin {
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
         register_taxonomy( 'casawp_feature', array( 'casawp_property' ), $args );
+        
+
+        /*----------  utilities  ----------*/
+        
+        $labels = array(
+            'name'              => __( 'Property utilities', 'casawp'),
+            'singular_name'     => __( 'Utility', 'casawp'),
+            'search_items'      => __( 'Search Utilities', 'casawp'),
+            'all_items'         => __( 'All Utilities', 'casawp'),
+            'parent_item'       => __( 'Parent Utility', 'casawp'),
+            'parent_item_colon' => __( 'Parent Utility:', 'casawp'),
+            'edit_item'         => __( 'Edit Utility', 'casawp'),
+            'update_item'       => __( 'Update Utility', 'casawp'),
+            'add_new_item'      => __( 'Add New Utility', 'casawp'),
+            'new_item_name'     => __( 'New Utility Name', 'casawp'),
+            'menu_name'         => __( 'Utility', 'casawp')
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-nutzung' )
+        );
+        register_taxonomy( 'casawp_utility', array( 'casawp_property' ), $args );
 
 
         /*----------  location  ----------*/

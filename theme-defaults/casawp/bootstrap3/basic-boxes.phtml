@@ -1,6 +1,16 @@
 <div class="casawp-basic-box">
   <div>
-    <h4><?= $offer->renderCategoryLabels() ?></h4>
+    <h4>
+      <?php
+        if ($offer->renderCategoryLabels()) {
+          echo $offer->renderCategoryLabels();
+        } elseif ($offer->renderUtilityLabels()) {
+          echo $offer->renderUtilityLabels();
+        } else {
+          echo __('Property', 'casawp');
+        }
+      ?>
+    </h4>
     <?= $offer->renderDatapoints('single', array()) ?>
   </div>
 </div>
