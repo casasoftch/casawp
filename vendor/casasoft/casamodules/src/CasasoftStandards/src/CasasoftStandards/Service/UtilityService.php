@@ -31,43 +31,43 @@ class UtilityService implements FactoryInterface {
     public function getDefaultOptions(){
         return array(
             'commercial' => array(
-                'label' => $this->translator->translate('Commercial'),
+                'label' => $this->translator->translate('Commercial', 'casasoft-standards'),
                 'icon' => '',
             ),
             'gastronomy' => array(
-                'label' => $this->translator->translate('Gastronomy'),
+                'label' => $this->translator->translate('Gastronomy', 'casasoft-standards'),
                 'icon' => '',
             ),
             'vacation' => array(
-                'label' => $this->translator->translate('Vacation'),
+                'label' => $this->translator->translate('Vacation', 'casasoft-standards'),
                 'icon' => '',
             ),
             'agricultural' => array(
-                'label' => $this->translator->translate('Agricultural'),
+                'label' => $this->translator->translate('Agricultural', 'casasoft-standards'),
                 'icon' => '',
             ),
             'industrial' => array(
-                'label' => $this->translator->translate('Industrial'),
+                'label' => $this->translator->translate('Industrial', 'casasoft-standards'),
                 'icon' => '',
             ),
             'residential' => array(
-                'label' => $this->translator->translate('Residential'),
+                'label' => $this->translator->translate('Residential', 'casasoft-standards'),
                 'icon' => '',
             ),
             'storage' => array(
-                'label' => $this->translator->translate('Storage'),
+                'label' => $this->translator->translate('Storage', 'casasoft-standards'),
                 'icon' => '',
             ),
             'parking' => array(
-                'label' => $this->translator->translate('Parking'),
+                'label' => $this->translator->translate('Parking', 'casasoft-standards'),
                 'icon' => '',
             ),
             'building' => array(
-                'label' => $this->translator->translate('Building'),
+                'label' => $this->translator->translate('Building', 'casasoft-standards'),
                 'icon' => '',
             ),
             'investment' => array(
-                'label' => $this->translator->translate('Investment'),
+                'label' => $this->translator->translate('Investment', 'casasoft-standards'),
                 'icon' => '',
             ),
         );

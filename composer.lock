@@ -4,16 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3924f7bd0f31b2c0ff6faa6f32f0fe77",
-    "content-hash": "d030cd6eee55bff05d2ad9d6e775d334",
+    "hash": "a0e44289328aeff81bd1ed9e70679b2b",
+    "content-hash": "54bd8cb466e3fe775f33eacd139a98ac",
     "packages": [
         {
             "name": "casasoft/casamodules",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "git@github.com:CasasoftCH/casamodules.git",
-                "reference": "59a79929a74122921fc2856be44e3580b053e849"
+                "reference": "29e8cdf752933d826c361ae49d7dddb9c9284003"
             },
             "require": {
                 "php": ">=5.3.2",
@@ -57,7 +57,7 @@
             "keywords": [
                 "zf2"
             ],
-            "time": "2015-12-02 08:19:09"
+            "time": "2015-12-02 09:16:57"
         },
         {
             "name": "container-interop/container-interop",
