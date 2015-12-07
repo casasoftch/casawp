@@ -691,7 +691,7 @@ class OfferService{
   	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
   	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
   	                }
-  	                if (!($this->getFieldValue('grossPrice', false) && $this->getFieldValue('netPrice', false))) {
+  	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
   	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
   	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
   	                }
