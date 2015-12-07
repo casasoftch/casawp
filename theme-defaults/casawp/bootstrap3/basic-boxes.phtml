@@ -36,7 +36,7 @@
             echo $this->offer->renderPrice('gross');
           } elseif($this->offer->getFieldValue('netPrice', false)) {
             echo '<h4>' . __('Net price', 'casawp') . '</h4>';
-            echo '(' . __('Net','casawp') . ') '. $this->offer->renderPrice('net');
+            echo $this->offer->renderPrice('net');
           } else {
             echo '<h4>' . __('Rent price', 'casawp') . '</h4>';
             echo __('On Request','casawp');
