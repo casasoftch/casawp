@@ -1507,6 +1507,8 @@ class Import {
 
     if ($offer['start']) {
       $new_meta_data['start']                          = $offer['start']->format('Y-m-d H:i:s');
+    } else {
+      $new_meta_data['start']                          = null;
     }
     
     $new_meta_data['referenceId']                    = $property['referenceId'];
