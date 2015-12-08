@@ -575,8 +575,6 @@ class OfferService{
 			if ($type == 'rent') {
 				$timeSegment = 'm';
 			}
-		} else {
-			$timeSegment = 'infinite';
 		}
 
 		global $casawp;

@@ -972,10 +972,10 @@ class Import {
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
     $propertydata['net_price'] = $property_xml->netPrice->__toString();
-    $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtoupper($property_xml->netPrice['timesegment']->__toString()) : '');
+    $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtolower($property_xml->netPrice['timesegment']->__toString()) : '');
     $propertydata['net_price_property_segment'] = (!$property_xml->netPrice['propertysegment']?: str_replace('2', '', $property_xml->netPrice['propertysegment']->__toString()));
     $propertydata['gross_price'] = $property_xml->grossPrice->__toString();
-    $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtoupper($property_xml->grossPrice['timesegment']->__toString()) : '');
+    $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtolower($property_xml->grossPrice['timesegment']->__toString()) : '');
     $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
 
     if ($property_xml->integratedOffers) {
