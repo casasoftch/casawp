@@ -149,6 +149,7 @@ class Plugin {
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get('casawpQuery');
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
+        $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
         
     }
@@ -365,7 +366,7 @@ class Plugin {
             if ($this->categoryService->keyExists($category_term->slug)) {
                 $categories[] = $this->categoryService->getItem($category_term->slug);
             } else if ($this->utilityService->keyExists($category_term->slug)) {
-                $categories[] = $this->utilityService->getItem($category_term->slug);
+                //$categories[] = $this->utilityService->getItem($category_term->slug);
             } else {
                 $unknown_category = new \CasasoftStandards\Service\Category();
                 $unknown_category->setKey($category_term->slug);
