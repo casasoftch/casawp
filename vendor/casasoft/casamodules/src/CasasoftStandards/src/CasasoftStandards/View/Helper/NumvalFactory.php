@@ -6,10 +6,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class NumvalFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $viewHelperManager)
+    public function createService(ServiceLocatorInterface $sl)
     {
-        $serviceLocator = $viewHelperManager->getServiceLocator();
-        $numvalService = $serviceLocator->get('numvalService');
+        $serviceLocator = $sl->getServiceLocator();
+        $numvalService = $serviceLocator->get('CasasoftNumval');
         
         $helper = new Numval($numvalService);
         

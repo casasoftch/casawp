@@ -8,6 +8,7 @@ class OfferService{
     public $post = null;
     private $categories = null;
     private $features = null;
+    private $utilities = null;
     private $availability = null;
     private $attachments = null;
     private $documents = null;
@@ -133,10 +134,16 @@ class OfferService{
 			switch ($this->getAvailability()) {
       			case 'reserved': return __('Reserved', 'casawp'); break;
       			case 'active': return __('Available', 'casawp'); break;
-      			case 'taken': return __('Taken', 'casawp'); break;
 				case 'reference': return __('Reference', 'casawp'); break;
 				case 'private': return __('Private', 'casawp'); break;
 				case 'reference': return __('Reference', 'casawp'); break;
+      			case 'taken':
+      				if ($this->getSalestype() == 'rent')
+      					return __('Rented', 'casawp');
+      				if ($this->getSalestype() == 'buy')
+      					return __('Sold', 'casawp');
+      				break;
+				
 			}
 		}
 		return '';
@@ -154,6 +161,35 @@ class OfferService{
 		}
 		return $this->salestype;
 	}
+
+    public function getUtility($key){
+        foreach ($this->getUtilities() as $utility) {
+            if ($utility->getKey() == $key) {
+                return $utility;
+            }
+        }
+    }
+
+    public function getUtilities(){
+    	if ($this->utilities === null) {
+    		$this->utilities = array();
+			$terms = wp_get_post_terms( $this->post->ID, 'casawp_utility', array("fields" => "names"));
+			foreach ($terms as $termName) {
+				if ($this->utilityService->keyExists($termName)) {
+					$this->utilities[] = $this->utilityService->getItem($termName);
+				} else {
+					$unknown_utility = new \CasasoftStandards\Service\Utility();
+					$unknown_utility->setKey($termName);
+					$unknown_utility->setLabel('?'.$termName);
+					$this->utilities[] = $unknown_utility;
+				}
+			}
+		}
+
+		usort($this->utilities, array($this, "sortByLabel"));
+
+		return $this->utilities;
+    }
 
     public function getFeature($key){
         foreach ($this->getFeatures() as $numval) {
@@ -539,8 +575,6 @@ class OfferService{
 			if ($type == 'rent') {
 				$timeSegment = 'm';
 			}
-		} else {
-			$timeSegment = 'infinite';
 		}
 
 		global $casawp;
@@ -586,7 +620,17 @@ class OfferService{
 			}
 			return implode(', ', $cat_labels);
 		}
-		return __('Property', 'casawp');
+	}
+
+	public function renderUtilityLabels(){
+		$util_labels = array();
+		$utilities = $this->getUtilities();
+		if ($utilities) {
+			foreach ($utilities as $utility) {
+				$util_labels[] = $utility->getLabel();
+			}
+			return implode(', ', $util_labels);
+		}
 	}
 
 	public function renderDatapoints($context = 'single', $args = array()){
@@ -628,19 +672,28 @@ class OfferService{
 	          case 'price':
 	            if ($this->getAvailability() != 'reference') {
 	              if ($this->getSalestype() == 'buy') {
-	                $point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
-	                $html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	if ($this->getFieldValue('price', false)) {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
+	              	} else {
+	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+	              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+	              	}
 	              }
 	              if ($this->getSalestype() == 'rent') {
-	                if ($this->getFieldValue('grossPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
-	                }
-	                if ($this->getFieldValue('netPrice', false)) {
-	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
-	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
-	                }
-	              }
+  	                if ($this->getFieldValue('grossPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+  	                }
+  	                if ($this->getFieldValue('netPrice', false)) {
+  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+  	                }
+  	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
+  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+  	                }
+  	              }
 	            }
 	            break;
 	          case 'excerpt':
@@ -768,7 +821,13 @@ class OfferService{
 
 	public function renderFeaturedImage(){
 		return $this->render('featured-image', array(
-			'offer' => $this
+			'offer' => $this,
+		));
+	}
+
+	public function renderAvailabilityLabel(){
+		return $this->render('availability-label', array(
+			'offer' => $this,
 		));
 	}
 
@@ -844,6 +903,17 @@ class OfferService{
 						$data['publisher'] = $publisherid;
 						$data['lang'] = substr(get_bloginfo('language'), 0, 2);
 						$data['property_reference'] = $this->getFieldValue('referenceId');
+
+
+						$data['property_street'] = $this->getFieldValue('address_streetaddress');
+						$data['property_postal_code'] = $this->getFieldValue('address_postalcode');
+						$data['property_locality'] = $this->getFieldValue('address_locality');
+						//$data['property_category'] = $this->getFieldValue('referenceId');
+						$data['property_country'] = $this->getFieldValue('address_country');
+						//$data['property_rooms'] = $this->getFieldValue('referenceId');
+						//$data['property_type'] = $this->getFieldValue('referenceId');
+						//$data['property_price'] = $this->getFieldValue('referenceId');
+
 
 						//direct recipient emails
 						if (get_option('casawp_casamail_direct_recipient') && $this->getFieldValue('seller_inquiry_person_email', false)) {

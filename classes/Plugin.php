@@ -149,6 +149,7 @@ class Plugin {
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get('casawpQuery');
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
+        $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
         
     }
@@ -365,7 +366,7 @@ class Plugin {
             if ($this->categoryService->keyExists($category_term->slug)) {
                 $categories[] = $this->categoryService->getItem($category_term->slug);
             } else if ($this->utilityService->keyExists($category_term->slug)) {
-                $categories[] = $this->utilityService->getItem($category_term->slug);
+                //$categories[] = $this->utilityService->getItem($category_term->slug);
             } else {
                 $unknown_category = new \CasasoftStandards\Service\Category();
                 $unknown_category->setKey($category_term->slug);
@@ -514,7 +515,7 @@ class Plugin {
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
             case 'bootstrap2':
                 if (get_option('casawp_load_css', false)) {
-                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp_template_bs2.css' );
+                    wp_register_style( 'casawp_bootstrap2', CASASYNC_PLUGIN_URL . 'plugin-assets/bootstrap2/css/casawp_template_bs2.css' );
                     wp_enqueue_style( 'casawp_bootstrap2' );
                 }
                 if (get_option('casawp_load_scripts', false)) {
@@ -1427,6 +1428,32 @@ class Plugin {
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
         register_taxonomy( 'casawp_feature', array( 'casawp_property' ), $args );
+        
+
+        /*----------  utilities  ----------*/
+        
+        $labels = array(
+            'name'              => __( 'Property utilities', 'casawp'),
+            'singular_name'     => __( 'Utility', 'casawp'),
+            'search_items'      => __( 'Search Utilities', 'casawp'),
+            'all_items'         => __( 'All Utilities', 'casawp'),
+            'parent_item'       => __( 'Parent Utility', 'casawp'),
+            'parent_item_colon' => __( 'Parent Utility:', 'casawp'),
+            'edit_item'         => __( 'Edit Utility', 'casawp'),
+            'update_item'       => __( 'Update Utility', 'casawp'),
+            'add_new_item'      => __( 'Add New Utility', 'casawp'),
+            'new_item_name'     => __( 'New Utility Name', 'casawp'),
+            'menu_name'         => __( 'Utility', 'casawp')
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-nutzung' )
+        );
+        register_taxonomy( 'casawp_utility', array( 'casawp_property' ), $args );
 
 
         /*----------  location  ----------*/

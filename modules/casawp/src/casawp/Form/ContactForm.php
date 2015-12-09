@@ -109,12 +109,12 @@ class ContactForm extends Form
                 array(
                     'name' => 'not_empty',
                 ),
-                array(
+                /*array(
                     'name' => 'string_length',
                     'options' => array(
                         'min' => 2
                     ),
-                ),
+                ),*/
             ),
         ));
         $filter->add(array(
@@ -124,12 +124,12 @@ class ContactForm extends Form
                 array(
                     'name' => 'not_empty',
                 ),
-                array(
+                /*array(
                     'name' => 'string_length',
                     'options' => array(
                         'min' => 2
                     ),
-                ),
+                ),*/
             ),
         ));
         $filter->add(array(
@@ -139,12 +139,12 @@ class ContactForm extends Form
                 array(
                     'name' => 'not_empty',
                 ),
-                array(
+                /*array(
                     'name' => 'string_length',
                     'options' => array(
                         'min' => 2
                     ),
-                ),
+                ),*/
             ),
         ));
         $filter->add(array(
@@ -169,12 +169,12 @@ class ContactForm extends Form
                 array(
                     'name' => 'not_empty',
                 ),
-                array(
+                /*array(
                     'name' => 'string_length',
                     'options' => array(
                         'min' => 2
                     ),
-                ),
+                ),*/
             ),
         ));
         $filter->add(array(
@@ -184,12 +184,12 @@ class ContactForm extends Form
                 array(
                     'name' => 'not_empty',
                 ),
-                array(
+                /*array(
                     'name' => 'string_length',
                     'options' => array(
                         'min' => 2
                     ),
-                ),
+                ),*/
             ),
         ));
         $filter->add(array(

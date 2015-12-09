@@ -16,7 +16,8 @@ class Category extends AbstractHelper{
         try {
             $item = $this->categoryService->getItem($key);
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return $key;
+            //return $e->getMessage();
         }
         switch ($seek) {
             case 'label':

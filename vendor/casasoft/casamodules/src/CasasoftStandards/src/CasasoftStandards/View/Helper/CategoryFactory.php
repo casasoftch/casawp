@@ -9,7 +9,7 @@ class CategoryFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $viewHelperManager)
     {
         $serviceLocator = $viewHelperManager->getServiceLocator();
-        $categoryService = $serviceLocator->get('CategoryService');
+        $categoryService = $serviceLocator->get('CasasoftCategory');
         
         $helper = new Category($categoryService);
         

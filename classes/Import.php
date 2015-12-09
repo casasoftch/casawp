@@ -129,6 +129,35 @@ class Import {
     }
   }
 
+  public function setcasawpUtilityTerm($term_slug, $label = false) {
+    $label = (!$label ? $term_slug : $label);
+    $term = get_term_by('slug', $term_slug, 'casawp_utility', OBJECT, 'raw' );
+    //$existing_term_id = term_exists( $label, 'casawp_utility');
+    $existing_term_id = false;
+    if ($term) {
+      if (
+        $term->slug != $term_slug
+        || $term->name != $label
+      ) {
+        wp_update_term($term->term_id, 'casawp_utility', array(
+          'name' => $label,
+          'slug' => $term_slug
+        ));
+      }
+    } else {
+      $options = array(
+        'description' => '',
+        'slug' => $term_slug
+      );
+      $id = wp_insert_term(
+        $label,
+        'casawp_utility',
+        $options
+      );
+      return $id;
+    }
+  }
+
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
@@ -759,7 +788,50 @@ class Import {
         wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_feature' );
       }
     }
+  }
 
+  public function setOfferUtilities($wp_post, $utilities, $casawp_id){
+    $new_utilities = array();
+    $old_utilities = array();
+
+    //set post feature
+    $old_utilities = array();
+    $wp_utility_terms = wp_get_object_terms($wp_post->ID, 'casawp_utility');
+    foreach ($wp_utility_terms as $term) {
+      $old_utilities[] = $term->slug;
+    }
+
+    //supported
+    if ($utilities) {
+      foreach ($utilities as $utility) {
+        $new_utilities[] = $utility;
+      }
+    }
+
+    //have utilities changed?
+    if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
+      $slugs_to_remove = array_diff($old_utilities, $new_utilities);
+      $slugs_to_add    = array_diff($new_utilities, $old_utilities);
+      $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
+      $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
+
+      //make sure the utilities exist first
+      foreach ($slugs_to_add as $new_term_slug) {
+        $label = false;
+        $this->setcasawputilityTerm($new_term_slug, $label);
+      }
+
+      //add the new ones
+      $utility_terms = get_terms( array('casawp_utility'), array('hide_empty' => false));
+      foreach ($utility_terms as $term) {
+        if (in_array($term->slug, $new_utilities)) {
+          $connect_term_ids[] = (int) $term->term_id;
+        }
+      }
+      if ($connect_term_ids) {
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_utility' );
+      }
+    }
   }
 
   public function addToLog($transcript){
@@ -900,10 +972,10 @@ class Import {
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
     $propertydata['net_price'] = $property_xml->netPrice->__toString();
-    $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtoupper($property_xml->netPrice['timesegment']->__toString()) : '');
+    $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtolower($property_xml->netPrice['timesegment']->__toString()) : '');
     $propertydata['net_price_property_segment'] = (!$property_xml->netPrice['propertysegment']?: str_replace('2', '', $property_xml->netPrice['propertysegment']->__toString()));
     $propertydata['gross_price'] = $property_xml->grossPrice->__toString();
-    $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtoupper($property_xml->grossPrice['timesegment']->__toString()) : '');
+    $propertydata['gross_price_time_segment'] = ($property_xml->grossPrice['timesegment'] ? strtolower($property_xml->grossPrice['timesegment']->__toString()) : '');
     $propertydata['gross_price_property_segment'] = (!$property_xml->grossPrice['propertysegment']?:str_replace('2', '', $property_xml->grossPrice['propertysegment']->__toString()));
 
     if ($property_xml->integratedOffers) {
@@ -1168,6 +1240,70 @@ class Import {
 
   }
 
+  public function findLangKey($lang, $array){
+    foreach ($array as $key => $value) {
+      if ($lang == $value['lang']) {
+        if ($value) {
+          return $key;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
+  }
+
+  public function fillMissingTranslations($theoffers){
+    $translations = array();
+    $languages = icl_get_languages('skip_missing=0&orderby=code');
+    //build wish list
+    foreach ($languages as $lang) {
+      $translations[$lang['language_code']] = false;
+    }
+
+    //complete that which is available
+    foreach ($theoffers as $offerData) {
+      $translations[$offerData['lang']] = $offerData;
+    }
+
+    $mainLangKey = $this->findLangKey($this->getMainLang(), $translations);
+    if ($mainLangKey) {
+      $carbon = $translations[$mainLangKey];
+    } else {
+      //first
+      foreach ($translations as $translation) {
+        if ($translation) {
+          $carbon = $translation;
+          break;
+        }
+      }
+    }
+
+    //copy main language to missing translations
+    foreach ($languages as $language) {
+      if (!$translations[$language['language_code']]) {
+        $copy = $carbon;
+        $copy['lang'] = $language['language_code'];
+        $translations[$language['language_code']] = $copy;
+      }
+    }
+
+    //find main key and move it to the front key=0
+    $key = 0;
+    $theoffers = array();
+    foreach ($translations as $value) {
+      $key++;
+      if ($value['lang'] == $this->getMainLang()) {
+        $theoffers[0] = $value;
+      } else {
+        $theoffers[$key] = $value;
+      }
+    }
+    ksort($theoffers);
+
+    return $theoffers;
+  }
+
   public function updateOffers(){
 
     //make sure dires exist
@@ -1194,7 +1330,7 @@ class Import {
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
     foreach ($xml->properties->property as $property) {
       $propertyData = $this->property2Array($property);
-      //make main language first and single out if not multilingual
+      //make main language first and "single out" if not multilingual
       $theoffers = array();
       $i = 0;
       foreach ($propertyData['offers'] as $offer) {
@@ -1206,6 +1342,11 @@ class Import {
             $theoffers[$i] = $offer;
           }
         }
+      }
+
+      //complete missing translations if multilingual
+      if ($this->hasWPML()) {
+        $theoffers = $this->fillMissingTranslations($theoffers);
       }
 
       $offer_pos = 0;
@@ -1237,6 +1378,9 @@ class Import {
           $wp_post = get_post($insert_id, OBJECT, 'raw');
         }
         $found_posts[] = $wp_post->ID;
+
+
+        $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offerData['lang'], $casawp_id);
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
 
 
@@ -1312,8 +1456,6 @@ class Import {
         }
       }
     }
-    //lang
-    $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offer['lang'], $casawp_id);
 
     /* main post data */
     $new_main_data = array(
@@ -1365,6 +1507,8 @@ class Import {
 
     if ($offer['start']) {
       $new_meta_data['start']                          = $offer['start']->format('Y-m-d H:i:s');
+    } else {
+      $new_meta_data['start']                          = null;
     }
     
     $new_meta_data['referenceId']                    = $property['referenceId'];
@@ -1590,6 +1734,7 @@ class Import {
     }
     
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
+    $this->setOfferUtilities($wp_post, $property['property_utilities'], $casawp_id);
     $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
     $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
