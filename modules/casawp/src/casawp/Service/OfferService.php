@@ -655,8 +655,10 @@ class OfferService{
 	        $field = str_replace('casawp_'.$context.'_show_', '', $datapoint);
 	        switch ($field) {
 	          case 'street_and_number':
-	            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
-	            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
+	            if ($this->getFieldValue('property_address_streetaddress')):
+		            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
+		            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
+	            endif;
 	            break;
 	          case 'location':
 	            $point = str_replace('{{label}}', __('Locality', 'casawp'), $args['pattern_1']);
