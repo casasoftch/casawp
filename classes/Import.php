@@ -1486,6 +1486,15 @@ class Import {
           $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
         }
       }
+      
+
+      //manage post_name (if new)
+      if (!$wp_post->post_name) {
+        $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offer['name'],'','save');
+      } else {
+        $new_main_data['post_name'] = $wp_post->post_name;
+      }
+
       //persist change
       $newPostID = wp_insert_post($new_main_data);
 
