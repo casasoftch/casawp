@@ -1369,10 +1369,11 @@ class Import {
         //if not create a basic property
         if (!$wp_post) {
           $this->transcript[$casawp_id]['action'] = 'new';
-          $the_post['post_title'] = 'unsaved property';
+          $the_post['post_title'] = $offerData['name'];
           $the_post['post_content'] = 'unsaved property';
           $the_post['post_status'] = 'pending';
           $the_post['post_type'] = 'casawp_property';
+          $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
           $insert_id = wp_insert_post($the_post);
           update_post_meta($insert_id, 'casawp_id', $casawp_id);
           $wp_post = get_post($insert_id, OBJECT, 'raw');
