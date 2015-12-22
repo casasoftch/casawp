@@ -185,8 +185,10 @@ class OfferService{
 				}
 			}
 		}
-
-		usort($this->utilities, array($this, "sortByLabel"));
+		if ($this->utilities != null) {
+			usort($this->utilities, array($this, "sortByLabel"));
+		}
+		
 
 		return $this->utilities;
     }
