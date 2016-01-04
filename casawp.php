@@ -11,11 +11,12 @@
  *	License: 		GPL2
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
 $dummy_desc = __( 'Import your properties directly from your real-estate managment software!', 'casawp' );
 
-define('CASASYNC_PLUGIN_URL', home_url() . '/wp-content/plugins/casawp/');
-define('CASASYNC_PLUGIN_URI', home_url() . '/wp-content/plugins/casawp/');
+define('CASASYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 
 $upload = wp_upload_dir();

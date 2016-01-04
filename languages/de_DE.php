@@ -1,4 +1,7 @@
 <?php 
+    
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
     add_filter( 'gettext', 'plugin_translation', 20, 3 );
     function plugin_translation( $translated_text, $text, $domain ) {
         //echo "<pre>" . $text . "</pre>";
