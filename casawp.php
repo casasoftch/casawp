@@ -5,7 +5,7 @@
  *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
- *	Version: 		2.0.1
+ *	Version: 		2.0.2
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
