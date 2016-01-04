@@ -38,7 +38,7 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 = 2.0.2 = 
-* Further security Preparations for WordPress.org publishing
+* Further security preparations for WordPress.org publishing
 
 = 2.0.1 = 
 * Preparations for WordPress.org publishing
