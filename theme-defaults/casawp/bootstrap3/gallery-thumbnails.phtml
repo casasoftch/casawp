@@ -1,0 +1,21 @@
+<!-- 
+    $this->images
+-->
+
+<?php if ($this->images): ?>
+    <div class="casawp-gallery-thumbnails">
+        <?php
+            $max_thumbnail = get_option('casawp_single_max_thumbnails', 15);
+            $count = 0;
+        ?>
+        <?php foreach ( $this->images as $image ) : ?>
+            <?php if ($count < $max_thumbnail) : ?>
+            <?php
+                $thumbImgMeidum = wp_get_attachment_image( $image->ID, 'thumbnail', true );
+                $thumbImgFull = wp_get_attachment_image_src( $image->ID, 'full', true );
+            ?>
+                <a class="property-image-gallery" rel="casawp-thumbnail-gallery" href="<?= $thumbImgFull[0] ?>" title="<?= $image->post_excerpt ?>"><?= $thumbImgMeidum ?></a>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

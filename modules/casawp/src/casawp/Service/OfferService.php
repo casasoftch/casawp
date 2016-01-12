@@ -761,6 +761,13 @@ class OfferService{
 		));
 	}
 
+	public function renderGalleryThumbnails(){
+		$images = $this->getImages();
+		return $this->render('gallery-thumbnails', array(
+			'images' => $images,
+		));
+	}
+
 	public function renderTabable(){
 		return $this->render('tabable', array(
 			'offer' => $this
