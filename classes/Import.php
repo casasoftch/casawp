@@ -904,7 +904,7 @@ class Import {
       ) + $options;
 
       //build url
-      $url = $apiurl . '?' . http_build_query($query);
+      $url = $apiurl . '?' . http_build_query($query, '', '&');
 
       $response = false;
       try {
