@@ -21,9 +21,14 @@ class Plugin {
     public $show_sticky = true;
     public $tax_query = array();
     public $translator = null;
+    public $locale = 'de';
+    public $configuration = array();
 
     public function __construct($configuration){  
+        $this->configuration = $configuration;
         $this->conversion = new Conversion;
+        $this->locale = substr(get_bloginfo('language'), 0, 2);
+        add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
 
         add_shortcode('casawp_contact', array($this,'contact_shortcode'));
         add_action('init', array($this, 'setPostTypes'));
@@ -68,7 +73,7 @@ class Plugin {
         }
 
         add_action('plugins_loaded', array($this, 'setTranslation'));
-            
+
         $this->bootstrap($configuration);
 
         if (isset($_GET['ajax']) && $_GET['ajax'] == 'prevnext' && isset($_GET['base_id']) && $_GET['base_id']) {
@@ -78,9 +83,16 @@ class Plugin {
                 $query = $_GET['query'];
             }
             add_action('wp_loaded', array($this, 'returnPrevNext'));
-
         }
 
+    }
+
+    public function wpmlLanguageSwitchedTo($lang) {
+        if ($this->locale != substr($lang, 0, 2)) {
+            $this->locale = substr($lang, 0, 2);
+            $this->bootstrap($this->configuration);
+        }
+        return $lang;
     }
 
     public function returnPrevNext(){
@@ -96,7 +108,6 @@ class Plugin {
     }
 
     public function setArchiveParams(){
-        
         $query = $this->queryService->getQuery();
         //$url = '/immobilien/?'.http_build_query($query);
         $url = $_SERVER['REQUEST_URI'];
@@ -104,8 +115,9 @@ class Plugin {
         wp_localize_script( 'casawp', 'casawpParams', $query);
     }
 
+    
     private function bootstrap($configuration){
-
+        
         // setup service manager
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $configuration);
@@ -113,26 +125,25 @@ class Plugin {
         // set translator
         $translator = new Translator();
         $translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
-        $translator->setLocale(substr(get_bloginfo('language'), 0, 2));
-        $serviceManager->setService('Translator', $translator);
+        $translator->setLocale($this->locale);
+        $serviceManager->setService('translator', $translator);
 
         // mvc translator
-        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
+        /*$MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
         $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
         \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
+        $this->MVCtranslator = $MVCtranslator;*/
 
         $this->translator = $translator;
-        
 
         // load modules -- which will provide services, configuration, and more
         $serviceManager->get('ModuleManager')->loadModules();
-
        
         //renderer
         $this->renderer = new PhpRenderer();
         $pluginManager = $this->renderer->getHelperPluginManager();
 
-         //view helper plugins
+        //view helper plugins
         $defaultHelperMapClasses = [
             'Zend\Form\View\HelperConfig',
             'Zend\I18n\View\HelperConfig',
@@ -142,7 +153,6 @@ class Plugin {
             if (is_string($configClass) && class_exists($configClass)) {
                 $config = new $configClass;
                 $config->configureServiceManager($pluginManager);
-
             }
         }
 
@@ -151,8 +161,11 @@ class Plugin {
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
         $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
-        
+
     }
+
+    
+
 
     public function casawp_right_now() {
         $num = wp_count_posts( 'casawp_property' );
@@ -586,7 +599,7 @@ class Plugin {
 
 
         //$locale_file = get_template_directory_uri() . "/includes/languages/$locale.php";
-       /* $locale_file = CASASYNC_PLUGIN_DIR . "languages/$locale.php";
+        /* $locale_file = CASASYNC_PLUGIN_DIR . "languages/$locale.php";
         if ( is_readable( $locale_file ) ) {
             require_once( $locale_file );
         }*/
@@ -1647,6 +1660,7 @@ class Plugin {
 
     public function prepareOffer($post){
         $offer = $this->serviceManager->get('casawpOffer');
+
         $offer->setPost($post);
         return $offer;
     }

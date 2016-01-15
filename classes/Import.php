@@ -9,7 +9,6 @@ class Import {
   public $curtrid = false;
 
   public function __construct($doimport = true, $casagatewayupdate = false){
-    $this->conversion = new Conversion;
     if ($doimport) {
       add_action( 'init', array($this, 'casawpImport') );  
     }
