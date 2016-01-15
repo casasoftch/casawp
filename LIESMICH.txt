@@ -35,23 +35,3 @@ Exportieren Sie Ihre Objekte aus Ihrer Immobilien-Software als CasaXML (Weitere 
 Legen Sie die Export-Daten unter wp-content/uploads/casawp/import als data.xml ab.
 
 Falls Sie keine CasaXML Dateien aus Ihrer Software gennerieren können, bietet CASAGATEWAY die möglichkeit andere Standarten (OpenImmo, Homegate ID usw.) automatisch umzuwandeln. Weitere informationen dazu finden sie auf casasoft.ch[https://casasoft.ch/casagateway] .
-
-== Changelog ==
-
-= 2.0.1 = 
-
-* Preparations for WordPress.org publishing
-
-= 2.0.0 = 
-
-* The plugin has been rewritten and renamed from casasync to CASAWP.
-
-== Upgrade Notice ==
-
-* Please follow the instructions upgrade-from-casasync.md if you are upgrading from casasync
-
-== Screenshots ==
-
-1. Archiv Übersicht
-2. Einzel Objekt
-

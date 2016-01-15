@@ -1,7 +1,10 @@
 <?php
+	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+	
 	if(isset($_POST['casawp_submit'])) {
 		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
+			$value = sanitize_text_field($value);
 			if (substr($key, 0, 7) == 'custom_') {
 				$parts = explode('/', $key);
 				$saved_custom_categories[$parts[0]][$parts[1]] = $value;

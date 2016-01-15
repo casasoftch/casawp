@@ -185,8 +185,10 @@ class OfferService{
 				}
 			}
 		}
-
-		usort($this->utilities, array($this, "sortByLabel"));
+		if ($this->utilities != null) {
+			usort($this->utilities, array($this, "sortByLabel"));
+		}
+		
 
 		return $this->utilities;
     }
@@ -655,8 +657,10 @@ class OfferService{
 	        $field = str_replace('casawp_'.$context.'_show_', '', $datapoint);
 	        switch ($field) {
 	          case 'street_and_number':
-	            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
-	            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
+	            if ($this->getFieldValue('property_address_streetaddress')):
+		            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
+		            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
+	            endif;
 	            break;
 	          case 'location':
 	            $point = str_replace('{{label}}', __('Locality', 'casawp'), $args['pattern_1']);
@@ -836,6 +840,18 @@ class OfferService{
 		return $this->render('share-widget');
 	}
 
+	public function sanitizeContactFormPost($post){
+		$data = array();
+		foreach ($post as $key => $value) {
+			switch ($key) {
+				default:
+					$data[$key] = sanitize_text_field($value);
+					break;
+			}
+		}
+		return $data;
+	}
+
 	public function renderContactForm(){
 		if ($this->getAvailability() == 'reference') {
 	        return false;
@@ -866,21 +882,27 @@ class OfferService{
         }
 
         if ($_POST) {
-	
+        	$postdata = $this->sanitizeContactFormPost($_POST);
         	$filter = $form->getFilter();
 	        $form->setInputFilter($filter);
-        	$form->setData($_POST);
+        	$form->setData($postdata);
         	if ($form->isValid()) {
 			    $validatedData = $form->getData();
 			    $sent = true;
-			    if (isset($_POST['email']) && $_POST['email']) {
+			    if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'send-inquiry')) {
+			    	echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+			    	print_r('NONCE ISSUE BITTE MELDEN');
+			    	echo "</textarea>";
+			    	//SPAM
+			    } else if (isset($postdata['email']) && $postdata['email']) {
 			    	//SPAM
 			    } else {
 			    	//add to WP for safekeeping
+			    	$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle());
 			    	$post = array(
 			    		'post_type' => 'casawp_inquiry',
 			    		'post_content' => $form->get('message')->getValue(),
-			    		'post_title' => wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle()),
+			    		'post_title' => $post_title,
 			    		'post_status' => 'private',
 			    		'ping_status' => false
 			    	);
@@ -897,8 +919,8 @@ class OfferService{
 
 					if (get_option('casawp_inquiry_method') == 'casamail') {
 						//casamail
-						$data = $_POST;
-						$data['email'] = $_POST['emailreal'];
+						$data = $postdata;
+						$data['email'] = $postdata['emailreal'];
 						$data['provider'] = $customerid;
 						$data['publisher'] = $publisherid;
 						$data['lang'] = substr(get_bloginfo('language'), 0, 2);

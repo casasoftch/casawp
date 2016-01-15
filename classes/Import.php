@@ -904,7 +904,7 @@ class Import {
       ) + $options;
 
       //build url
-      $url = $apiurl . '?' . http_build_query($query);
+      $url = $apiurl . '?' . http_build_query($query, '', '&');
 
       $response = false;
       try {
@@ -1369,10 +1369,11 @@ class Import {
         //if not create a basic property
         if (!$wp_post) {
           $this->transcript[$casawp_id]['action'] = 'new';
-          $the_post['post_title'] = 'unsaved property';
+          $the_post['post_title'] = $offerData['name'];
           $the_post['post_content'] = 'unsaved property';
           $the_post['post_status'] = 'pending';
           $the_post['post_type'] = 'casawp_property';
+          $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
           $insert_id = wp_insert_post($the_post);
           update_post_meta($insert_id, 'casawp_id', $casawp_id);
           $wp_post = get_post($insert_id, OBJECT, 'raw');
@@ -1486,6 +1487,15 @@ class Import {
           $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
         }
       }
+      
+
+      //manage post_name (if new)
+      if (!$wp_post->post_name) {
+        $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offer['name'],'','save');
+      } else {
+        $new_main_data['post_name'] = $wp_post->post_name;
+      }
+
       //persist change
       $newPostID = wp_insert_post($new_main_data);
 
@@ -1659,9 +1669,9 @@ class Import {
 
 
     //price for order
-    $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== 0)      ? ($new_meta_data['price'])      :(9999999999);
-    $tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== 0) ? ($new_meta_data['grossPrice']) :(9999999999);
-    $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== 0)   ? ($new_meta_data['netPrice'])   :(9999999999);
+    $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== "")      ? ($new_meta_data['price'])      :(9999999999);
+    $tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") ? ($new_meta_data['grossPrice']) :(9999999999);
+    $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== "")   ? ($new_meta_data['netPrice'])   :(9999999999);
     $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
     //nuvals    
