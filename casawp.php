@@ -5,13 +5,23 @@
  *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
- *	Version: 		2.0.1
+ *	Version: 		2.0.2
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+//update system
+require_once ( 'wp_autoupdate.php' );
+$plugin_current_version = '2.0.2';
+$plugin_slug = plugin_basename( __FILE__ );
+$plugin_remote_path = 'http://wp.casasoft.ch/casawp/update.php';	
+$license_user = 'user';
+$license_key = 'abcd';
+new WP_AutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );	
+
 
 /* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
 $dummy_desc = __( 'Import your properties directly from your real-estate managment software!', 'casawp' );
