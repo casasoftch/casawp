@@ -30,7 +30,7 @@
         $url = wp_get_attachment_url( $document->ID );
         $title = (is_numeric($document->post_title)) ? (__('Sales Brochure', 'casawp') . ' #' . $i++) : ($document->post_title);
       ?>
-      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
 
     <?php foreach ($this->offer->getDocuments() as $document): ?>
@@ -38,7 +38,7 @@
         $url = wp_get_attachment_url( $document->ID );
         $title = (is_numeric($document->post_title)) ? (__('Document', 'casawp') . ' #' . $j++) : ($document->post_title);
       ?>
-      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
 
     <?php foreach ($this->offer->getPlans() as $document): ?>
@@ -46,7 +46,7 @@
         $url = wp_get_attachment_url( $document->ID );
         $title = (is_numeric($document->post_title)) ? (__('Plan', 'casawp') . ' #' . $k++) : ($document->post_title);
       ?>
-      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a>
+      <a href="<?= $url ?>" title="<?= $title ?>" target="_blank" ><?= $title ?></a><br>
     <?php endforeach ?>
   </div>
 <?php endif; ?>
@@ -56,7 +56,7 @@
     <h3><?= __('Links','casawp') ?></h3>
       <?php foreach ($this->offer->getUrls() as $url_wrapper) : ?>
         <?php foreach ($url_wrapper as $url) :?>
-          <a href="<?= $url['href'] ?>" target="_blank" title="<?= $url['title'] ?>"><?= ($url['label'] ? $url['label'] : $url['href']) ?></a>
+          <a href="<?= $url['href'] ?>" target="_blank" title="<?= $url['title'] ?>"><?= ($url['label'] ? $url['label'] : $url['href']) ?></a><br>
         <?php endforeach; ?>
       <?php endforeach; ?>
   </div>
