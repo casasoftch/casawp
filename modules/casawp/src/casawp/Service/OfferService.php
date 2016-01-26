@@ -89,6 +89,7 @@ class OfferService{
 			);
 		}
 
+		//essential relations
 		$offer_array['categories'] = $this->getCategoriesArray();
 		$offer_array['numvals'] = $this->getNumvalsArray();
 		$offer_array['features'] = $this->getFeaturesArray();
@@ -117,8 +118,8 @@ class OfferService{
 			}
 		}
 
-		$address['lng'] = $this->getFieldValue($prefix.'_geo_longitude');
-		$address['lat'] = $this->getFieldValue($prefix.'_geo_latitude');
+		$address['lng'] = $this->getFieldValue('property_geo_longitude');
+		$address['lat'] = $this->getFieldValue('property_geo_latitude');
 
 		array_walk($address, function(&$value){$value = trim($value);});
 		$address = array_filter($address);
