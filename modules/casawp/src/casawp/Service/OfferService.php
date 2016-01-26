@@ -57,11 +57,42 @@ class OfferService{
 
 		//basics
 		$offer_array['title'] = $this->getTitle();
+		$offer_array['address'] = $this->address_to_array();
 
 		//if load categories example
 		$offer_array['categories'] = $this->getCategoriesArray();
 
+
 		return $offer_array;
+	}
+
+	public function address_to_array(){
+		//address
+		$prefix = 'address';
+		$address = array();
+		$address['street'] = $this->getFieldValue($prefix.'_streetaddress') . ' ' . $this->getFieldValue($prefix.'_streetnumber');
+		$address['postalcode'] = $this->getFieldValue($prefix.'_postalcode') . ' ' . $this->getFieldValue($prefix.'_locality');
+		$address['country'] = $this->getFieldValue($prefix.'_country');
+
+		if (class_exists('Locale') && $this->getFieldValue($prefix.'_country')) {
+			$address['country_locale'] = \Locale::getDisplayRegion('-'.$this->getFieldValue($prefix.'_country'), get_bloginfo('language'));
+		} elseif($this->getFieldValue($prefix.'_country')) {
+			switch ($this->getFieldValue($prefix.'_country')) {
+				case 'CH': $address['country_locale'] = __('Switzerland', 'casawp'); break;
+				case 'DE': $address['country_locale'] = __('Germany', 'casawp'); break;
+				case 'AT': $address['country_locale'] = __('Austria', 'casawp'); break;
+				case 'IT': $address['country_locale'] = __('Italy', 'casawp'); break;
+				case 'FR': $address['country_locale'] = __('France', 'casawp'); break;
+				default: $address['country_locale'] = $this->getFieldValue($prefix.'_country'); break;
+			}
+		}
+
+		$address['lng'] = $this->getFieldValue($prefix.'_geo_longitude');
+		$address['lat'] = $this->getFieldValue($prefix.'_geo_latitude');
+
+		array_walk($address, function(&$value){$value = trim($value);});
+		$address = array_filter($address);
+		return $address;
 	}
 
 
