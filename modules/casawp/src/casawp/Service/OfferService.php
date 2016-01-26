@@ -6,16 +6,16 @@ use Zend\View\Resolver;
 
 class OfferService{
     public $post = null;
-    private $categories = null;
-    private $features = null;
-    private $utilities = null;
-    private $availability = null;
-    private $attachments = null;
-    private $documents = null;
-    private $single_dynamic_fields = null;
-    private $archive_dynamic_fields = null;
-    private $salestype = null;
-    private $metas = null;
+    private $categories = null; //lazy
+    private $features = null; //lazy
+    private $utilities = null; //lazy
+    private $availability = null; //lazy
+    private $attachments = null; //lazy
+    private $documents = null; //lazy
+    private $single_dynamic_fields = null;  //lazy
+    private $archive_dynamic_fields = null;  //lazy
+    private $salestype = null;  //lazy
+    private $metas = null;  //lazy
     private $casawp = null;
 
     public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService){
@@ -50,18 +50,48 @@ class OfferService{
 		}
 	}
 
+
+	/*=======================================
+	=            Array Functions            =
+	========================================*/
+
 	public function to_array() {
 		$offer_array = array(
 			'post' => $this->post->to_array()
 		);
 
 		//basics
-		$offer_array['title'] = $this->getTitle();
 		$offer_array['address'] = $this->address_to_array();
+		$offer_array['salestype'] = $this->getSalestype();
+		if ($this->getSalestype() == 'buy'){
+			$price = $this->getFieldValue('price', false);
+			$offer_array['price'] = array(
+				'value' => ($price ? $price : 0),
+				'rendered' => ($price ? $this->renderPrice() : __('On Request', 'casawp')),
+				'propertySegment' => $this->getFieldValue('price_propertysegment', false),
+				'label' => __('Sales price', 'casawp')
+			);
+		} elseif($this->getSalestype() == 'rent') {
+			$price = $this->getFieldValue('grossPrice', false);
+			$offer_array['grossPrice'] = array(
+				'value' =>  ($price ? $price : 0),
+				'rendered' => ($price ? $this->renderPrice('gross') : __('On Request', 'casawp')),
+				'timeSegment' => $this->getFieldValue('grossPrice_timesegment', false),
+				'label' => __('Gross price', 'casawp')
+			);
 
-		//if load categories example
+			$price = $this->getFieldValue('netPrice', false);
+			$offer_array['netPrice'] = array(
+				'value' =>  ($price ? $price : 0),
+				'rendered' => ($price ? $this->renderPrice('net') : __('On Request', 'casawp')),
+				'timeSegment' => $this->getFieldValue('netPrice_timesegment', false),
+				'label' => __('Net price', 'casawp')
+			);
+		}
+
 		$offer_array['categories'] = $this->getCategoriesArray();
-
+		$offer_array['numvals'] = $this->getNumvalsArray();
+		$offer_array['features'] = $this->getFeaturesArray();
 
 		return $offer_array;
 	}
@@ -257,6 +287,18 @@ class OfferService{
 		return $this->features;
     }
 
+    public function getFeaturesArray(){
+		$features = $this->getFeatures();
+		$arr_features = array();
+		foreach ($features as $feature) {
+			$arr_features[] = array(
+				'key' => $feature->getKey(),
+				'label' => $feature->getLabel()
+			);
+		}
+		return $arr_features;
+	}
+
 	public function getNumval($key){
 		foreach ($this->getNumvals() as $numval) {
 			if ($numval->getKey() == $key) {
@@ -277,6 +319,19 @@ class OfferService{
             }
 		}
 		return $numvals;
+	}
+
+	public function getNumvalsArray(){
+		$numvals = $this->getNumvals();
+		$arr_numvals = array();
+		foreach ($numvals as $numval) {
+			$arr_numvals[] = array(
+				'key' => $numval->getKey(),
+				'label' => $numval->getLabel(),
+				'value' => $numval->getValue(),
+			);
+		}
+		return $arr_numvals;
 	}
 
     public function getDistances(){
