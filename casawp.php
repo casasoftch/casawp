@@ -109,7 +109,7 @@ if (isset($_GET['gatewaypoke'])) {
 }
 
 
-function this_plugin_after_wmpl() {
+function this_plugin_after_wpml() {
 	// ensure path to this file is via main wp plugin path
 	$wp_path_to_this_file = preg_replace('/(.*)plugins\/(.*)$/', WP_PLUGIN_DIR."/$2", __FILE__);
 	$this_plugin = plugin_basename(trim($wp_path_to_this_file));
@@ -126,7 +126,7 @@ function this_plugin_after_wmpl() {
 		update_option('active_plugins', $active_plugins);
 	}
 }
-add_action("activated_plugin", "this_plugin_after_wmpl");
+add_action("activated_plugin", "this_plugin_after_wpml");
 
 /*if (function_exists('date_default_timezone_set')) {
 	date_default_timezone_set();
