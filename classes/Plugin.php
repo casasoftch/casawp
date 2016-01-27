@@ -1651,8 +1651,8 @@ class Plugin {
         if ( is_singular('casawp_property') ) {
             echo '<meta property="og:url"          content="' . get_the_permalink() . '" />' . "\n";
             echo '<meta property="og:type"         content="article" />' . "\n";
-            echo '<meta property="og:title"        content="' . get_the_title() . '" />' . "\n";
-            echo '<meta property="og:description"  content="' . strip_tags($post->post_content) . '" />' . "\n";
+            echo '<meta property="og:title"        content="' . htmlspecialchars(get_the_title()) . '" />' . "\n";
+            echo '<meta property="og:description"  content="' . htmlspecialchars(strip_tags($post->post_content)) . '" />' . "\n";
             echo '<meta property="og:image"        content="' . wp_get_attachment_url( get_post_thumbnail_id() ) . '">' . "\n";
             echo '<meta property="og:locale"       content="' . get_locale() . '" />' . "\n";
         }
