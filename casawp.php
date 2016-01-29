@@ -126,6 +126,12 @@ function this_plugin_after_wpml() {
 		}
 	}
 
+	if (!in_array($this_plugin, $new_sort)) {
+		$new_sort[] = $this_plugin;
+	}
+
+	$new_sort = array_values($new_sort);
+
 	update_option('active_plugins', $new_sort);
 }
 add_action("activated_plugin", "this_plugin_after_wpml");

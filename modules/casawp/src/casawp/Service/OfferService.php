@@ -61,6 +61,7 @@ class OfferService{
 		);
 
 		//basics
+		$offer_array['permalink'] = get_permalink($this->post);
 		$offer_array['address'] = $this->address_to_array();
 		$offer_array['salestype'] = $this->getSalestype();
 		if ($this->getSalestype() == 'buy'){
@@ -94,6 +95,8 @@ class OfferService{
 		$offer_array['numvals'] = $this->getNumvalsArray();
 		$offer_array['features'] = $this->getFeaturesArray();
 
+		$offer_array['images'] = $this->getImagesArray();
+
 		return $offer_array;
 	}
 
@@ -102,7 +105,8 @@ class OfferService{
 		$prefix = 'address';
 		$address = array();
 		$address['street'] = $this->getFieldValue($prefix.'_streetaddress') . ' ' . $this->getFieldValue($prefix.'_streetnumber');
-		$address['postalcode'] = $this->getFieldValue($prefix.'_postalcode') . ' ' . $this->getFieldValue($prefix.'_locality');
+		$address['postalcode'] = $this->getFieldValue($prefix.'_postalcode');
+		$address['locality'] = $this->getFieldValue($prefix.'_locality');
 		$address['country'] = $this->getFieldValue($prefix.'_country');
 
 		if (class_exists('Locale') && $this->getFieldValue($prefix.'_country')) {
@@ -330,6 +334,7 @@ class OfferService{
 				'key' => $numval->getKey(),
 				'label' => $numval->getLabel(),
 				'value' => $numval->getValue(),
+				'rendered' => $this->renderNumvalValue($numval)
 			);
 		}
 		return $arr_numvals;
@@ -373,6 +378,28 @@ class OfferService{
 			}
 		}
 		return $images;
+	}
+
+	public function getImagesArray(){
+		$images = $this->getImages();
+		$images_array = array();
+		foreach ($images as $i => $image){
+			$image_array = array();
+            $img     = wp_get_attachment_image( $image->ID, 'full', true, array('class' => 'casawp-image') );
+            $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
+            $img_medium     = wp_get_attachment_image( $image->ID, 'medium', true, array('class' => 'casawp-image casawp-image-medium') );
+            $img_medium_url = wp_get_attachment_image_src( $image->ID, 'medium' );
+        	
+        	$image_array['full_src'] = $img_url[0];
+        	$image_array['full_html'] = $img;
+        	$image_array['medium_src'] = $img_medium_url[0];
+        	$image_array['medium_html'] = $img_medium;
+        	$image_array['caption'] = $image->post_excerpt;
+        	
+        	$images_array[] = $image_array;
+        }
+
+        return $images_array;
 	}
 
 	public function getDocuments(){
