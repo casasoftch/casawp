@@ -1145,7 +1145,7 @@ class Import {
             }
             $offerData['status'] = 'active';
             $offerData['name'] = $offer_xml->name->__toString();
-            $offerData['excerpt'] = $property_xml->excerpt->__toString();
+            $offerData['excerpt'] = $offer_xml->excerpt->__toString();
             
             //publisher settings
             $publishingDatas = array();
