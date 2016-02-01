@@ -5,7 +5,7 @@
  *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
- *	Version: 		2.0.2
+ *	Version: 		2.0.3
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
@@ -15,12 +15,33 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 //update system
 require_once ( 'wp_autoupdate.php' );
-$plugin_current_version = '2.0.2';
+$plugin_current_version = '2.0.3';
 $plugin_slug = plugin_basename( __FILE__ );
 $plugin_remote_path = 'http://wp.casasoft.ch/casawp/update.php';	
 $license_user = 'user';
 $license_key = 'abcd';
 new WP_AutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );	
+
+function casawpPostInstall( $true, $hook_extra, $result ) {
+    // Remember if our plugin was previously activated
+    $wasActivated = is_plugin_active( 'casawp' );
+
+    // Since we are hosted in GitHub, our plugin folder would have a dirname of
+    // reponame-tagname change it to our original one:
+    global $wp_filesystem;
+    $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname( 'casawp' );
+    $wp_filesystem->move( $result['destination'], $pluginFolder );
+    $result['destination'] = $pluginFolder;
+
+    // Re-activate plugin if needed
+    if ( $wasActivated ) {
+        $activate = activate_plugin( 'casawp'  );
+    }
+
+    return $result;
+}
+
+add_filter( "upgrader_post_install", "casawpPostInstall", 10, 3 );
 
 
 /* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
@@ -87,6 +108,24 @@ if (isset($_GET['gatewaypoke'])) {
 	//$import = new casawp\Import(true, false);
 }
 
-/*if (function_exists('date_default_timezone_set')) {
-	date_default_timezone_set();
-}*/
+
+function this_plugin_after_wpml() {
+	// ensure path to this file is via main wp plugin path
+	$wp_path_to_this_file = preg_replace('/(.*)plugins\/(.*)$/', WP_PLUGIN_DIR."/$2", __FILE__);
+	$this_plugin = plugin_basename(trim($wp_path_to_this_file));
+	$active_plugins = get_option('active_plugins');
+	$this_plugin_key = array_search($this_plugin, $active_plugins);
+	
+	$dependency = 'sitepress-multilingual-cms/sitepress.php';
+	unset($active_plugins[$this_plugin_key]);
+	$new_sort = array();
+	foreach ($active_plugins as $active_plugin) {
+		$new_sort[] = $active_plugin;
+		if ($active_plugin == $dependency) {
+			$new_sort[] = $this_plugin;
+		}
+	}
+
+	update_option('active_plugins', $new_sort);
+}
+add_action("activated_plugin", "this_plugin_after_wpml");
