@@ -195,6 +195,11 @@ class OfferService{
 		return $this->availability;
 	}
 
+	public function isReference() {
+		if ($this->getAvailability() == "reference") return true;
+		return false;
+	}
+
 	public function getAvailabilityLabel(){
 		if ($this->getAvailability()) {
 			switch ($this->getAvailability()) {
