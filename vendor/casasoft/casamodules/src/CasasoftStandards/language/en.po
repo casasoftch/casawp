@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2015-05-12 14:35+0100\n"
-"PO-Revision-Date: 2015-11-24 18:08+0100\n"
+"PO-Revision-Date: 2016-02-04 14:57+0100\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: en\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:34
 msgid "Apartment"
-msgstr "Appartamento"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:38
 msgid "Attic flat"
@@ -43,37 +43,37 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:58
 msgid "Duplex"
-msgstr "Casa bifamiliare"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:62
 msgid "Factory"
-msgstr "Fabbrica"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:66
 msgid "Farm"
-msgstr "Fattoria"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:70
 msgid "Farm house"
-msgstr "cascina"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:74
 msgid "Furnished flat"
-msgstr "Appartamento ammobiliato"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:78
 #: src/CasasoftStandards/Service/FeatureService.php:136
 msgid "Garage"
-msgstr "Box auto"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:82
 #: src/CasasoftStandards/Service/CategoryService.php:154
 msgid "House"
-msgstr "Casa"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:86
 msgid "Loft"
-msgstr "Loft"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:90
 msgid "Mountain farm"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:114
 msgid "Row house"
-msgstr "Casa a schiera"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:118
 msgid "Single garage"
@@ -129,7 +129,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:142
 msgid "Villa"
-msgstr "Villa"
+msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:146
 msgid "Chalet"
@@ -149,7 +149,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:36
 msgid "Fireplace"
-msgstr "Caminetto"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:40
 msgid "Cable TV"
@@ -165,7 +165,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:52
 msgid "Railway terminal"
-msgstr "Train station"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:56
 msgid "Flat sharing community"
@@ -266,7 +266,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:195
 msgid "Restrooms"
-msgstr "Servizi igienici"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:199
 msgid "Water supply"
@@ -294,11 +294,11 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:227
 msgid "New"
-msgstr "Nuovo"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:231
 msgid "Old"
-msgstr "Vecchio"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:235
 msgid "has building law restrictions"
@@ -306,7 +306,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
 msgid "Swimmingpool"
-msgstr "Piscina"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:244
 msgid "Minergie general"
@@ -321,9 +321,8 @@ msgid "General"
 msgstr ""
 
 #: src/CasasoftStandards/Service/NumvalService.php:61
-#, fuzzy
 msgid "Number of"
-msgstr "Reference number"
+msgstr ""
 
 #: src/CasasoftStandards/Service/NumvalService.php:75
 msgid "Areas"
@@ -611,7 +610,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/UtilityService.php:42
 msgid "Vacation"
-msgstr "Vacanza"
+msgstr ""
 
 #: src/CasasoftStandards/Service/UtilityService.php:46
 msgid "Agricultural"
@@ -623,7 +622,7 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/UtilityService.php:54
 msgid "Residential"
-msgstr "Residenziale"
+msgstr ""
 
 #: src/CasasoftStandards/Service/UtilityService.php:58
 msgid "Storage"
