@@ -37,6 +37,16 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+= 2.0.4 = 
+* Cleaned up plugin activation hooks for dependency ordering
+* Added IE compatibility for Basicboxes
+* Translated Contactform Labels
+* htmlspecialchars for og:metas
+* Added JSON API items
+* Fixed excerpt imports
+* Fixed gallery thumbnail rendering
+* Replaced default arrows
+
 = 2.0.3 = 
 * Update system
 
