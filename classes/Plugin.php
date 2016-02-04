@@ -455,7 +455,7 @@ class Plugin {
 
     public function include_template_function( $template_path ) {
         if ( get_post_type() == 'casawp_property' && is_single()) {
-            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json'])  || isset($_GET['casawp_map']))) {
                 $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
                 if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
                     $template_path = $theme_file;
