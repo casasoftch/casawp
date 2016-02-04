@@ -229,6 +229,23 @@ class CategoryService implements FactoryInterface {
                 'label' => $this->translator->translate('Maisonette', 'casasoft-standards'),
                 'icon' => '',
             ),
+
+            'penthouse' => array(
+                'label' => $this->translator->translate('Penthouse', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
+            'hobby-room' => array(
+                'label' => $this->translator->translate('Atelier', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
+            'covered-bike-space' => array(
+                'label' => $this->translator->translate('Covered bike space', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
+            
         );
     }
 
