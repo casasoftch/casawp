@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.7.5 - 2016-02-02
+
+### Added
+
+- [#81](https://github.com/zendframework/zend-servicemanager/pull/81) adds a
+  test covering forwards-compatibility features for plugin manager
+  implementations.
+- [#96](https://github.com/zendframework/zend-servicemanager/pull/96) adds
+  `Zend\ServiceManager\Test\CommonPluginManagerTrait`, which allows you to test
+  that your plugin manager is forwards compatible with v3.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#91](https://github.com/zendframework/zend-servicemanager/pull/91) updates
+  the `InvokableFactory` to add the `setCreationOptions()` method, allowing
+  the `InvokableFactory` to accept `$options` when triggered.
+
+## 2.7.4 - 2015-01-19
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#71](https://github.com/zendframework/zend-servicemanager/pull/71) fixes an edge case
+  with alias usage, whereby an alias of an alias was not being resolved to the
+  final service name.
+
+## 2.7.3 - 2016-01-13
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#69](https://github.com/zendframework/zend-servicemanager/pull/69) fixes the
+  way aliases are resolved to ensure that the original alias target, without
+  canonicalization is passed to factories and abstract factories, ensuring that
+  features such as the `InvokableFactory` implementation can work.
+
 ## 2.7.2 - 2016-01-11
 
 ### Added
