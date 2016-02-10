@@ -14,8 +14,10 @@ class OfferService{
     private $documents = null; //lazy
     private $single_dynamic_fields = null;  //lazy
     private $archive_dynamic_fields = null;  //lazy
-    private $salestype = null;  //lazy
-    private $metas = null;  //lazy
+    private $salestype = null; //lazy
+    private $metas = null; //lazy
+    private $similar_properties_by_price = null; //lazy
+    private $similar_properties_by_location = null; //lazy
     private $casawp = null;
 
     public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService){
@@ -846,6 +848,78 @@ class OfferService{
 
 	    return $html;
 	}
+
+
+
+
+
+	/*****/
+
+	public function getSimilarPropertiesByPrice($ppp = 4) {
+		if ($this->similar_properties_by_location == null) {
+			
+			$args = array(
+				'posts_per_page' => -1,
+				'offset'         => 0,
+				'post_type'      => 'casawp_property',
+				'post_status'    => 'publish',
+				'meta_key'       => 'priceForOrder',
+				'orderby'        => 'meta_value_num',
+				'order'          => 'DESC'
+			);
+			$posts = get_posts( $args );
+
+			$current_property_key = 0;
+
+			
+
+			foreach ($posts as $key => $value) {
+				if ($value->ID == $this->post->ID) {
+					$current_property_key = $key;
+				}
+			}
+
+			$l = $current_property_key--;
+			$r = $current_property_key++;
+
+			$i = 0;
+			$result = array();
+			for($i < count($posts)*2) {
+				if (array_key_exists($l, $posts) && $i < $ppp) {
+					$result[] = $posts[$l];
+					$i++;
+				}
+				if (array_key_exists($r, $posts) && $i < $ppp) {
+					$result[] = $posts[$r];
+					$i++;
+				}
+			}
+
+
+			echo '<pre>';
+			print_r($posts);
+			echo '</pre><hr>';
+
+			echo '<pre>';
+			print_r($result);
+			echo '</pre>';
+
+			// order by price
+
+			//$this->similar_properties_by_location = $result;
+		}
+		return $this->similar_properties_by_location;
+	}
+	public function getSimilarPropertiesByLocation($ppp = 4) {
+		
+	}
+
+	public function renderSimilarProperties(){
+		return $this->render('similar-properties', array(
+			'offer' => $this
+		));
+	}
+	/*****/
 
 
 	/*======================================
