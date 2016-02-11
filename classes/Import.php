@@ -1521,6 +1521,9 @@ class Import {
     }
     
     $new_meta_data['referenceId']                    = $property['referenceId'];
+    if (!$new_meta_data['referenceId']) {
+      echo '<div id="message" class="error">Warning! no referenceId found. for:'.$casawp_id.' This could cause problems when sending inquiries</div>';
+    }
     if (isset($property['organization'])) {
       //$new_meta_data['seller_org_phone_direct'] = $property['organization'][''];
       $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
