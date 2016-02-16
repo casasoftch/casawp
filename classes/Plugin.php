@@ -1659,9 +1659,8 @@ class Plugin {
     }
 
     public function prepareOffer($post){
-        $offer = $this->serviceManager->get('casawpOffer');
-
-        $offer->setPost($post);
-        return $offer;
+        $offerService = $this->serviceManager->get('casawpOffer');
+        $offerService->setPost($post);
+        return $offerService->getCurrent();
     }
 }
