@@ -16,8 +16,9 @@
 			<?php //echo $offer->contactSellerByMailBox(); ?>
 			<br>
 			<?php //echo $offer->renderIntegratedOffers(); ?>
-
-			<?php echo $offer->renderSimilarProperties(); ?>
+			<hr>
+			<?php echo $offer->getTitle(); ?>
+			<?php echo $offer->renderSimilarPropertiesByPrice(); ?>
 		</div>
 	</div>
 	<aside class="casawp-single-aside">
@@ -35,6 +36,7 @@
 			?>
 		</div>
 		<div class="casawp-single-aside-container">
+			<?php echo $offer->getTitle(); ?>
 			<?php echo $offer->renderContactform(); ?>
 		</div>
 		<div class="casawp-single-aside-container">

@@ -856,7 +856,7 @@ class OfferService{
 	/*****/
 
 	public function getSimilarPropertiesByPrice($ppp = 4) {
-		if ($this->similar_properties_by_location == null) {
+		if ($this->similar_properties_by_price == null) {
 			
 			$args = array(
 				'posts_per_page' => -1,
@@ -869,55 +869,85 @@ class OfferService{
 			);
 			$posts = get_posts( $args );
 
-			$current_property_key = 0;
+			// pointers
+			$current_property_key = $this->post->ID;
+			$l = $current_property_key - 1;
+			$r = $current_property_key + 1;
 
-			
-
-			foreach ($posts as $key => $value) {
-				if ($value->ID == $this->post->ID) {
-					$current_property_key = $key;
-				}
-			}
-
-			$l = $current_property_key--;
-			$r = $current_property_key++;
-
+			$number_of_properties = count($posts);
 			$i = 0;
-			$result = array();
-			for($i < count($posts)*2) {
-				if (array_key_exists($l, $posts) && $i < $ppp) {
-					$result[] = $posts[$l];
-					$i++;
+			$ordered = array();
+			while ($i < ($number_of_properties-1)) {
+				if (array_key_exists($l, $posts) && array_key_exists($r, $posts)) {
+					if (abs($posts[$current_property_key] - $posts[$l]) < abs($posts[$current_property_key] - $posts[$r])) {
+						$ordered[] = $posts[$l];
+						$ordered[] = $posts[$r];
+					} else {
+						$ordered[] = $posts[$r];
+						$ordered[] = $posts[$l];
+					}
+					$i+=2;
+				} else {
+					if (array_key_exists($l, $posts)) {
+						$ordered[] = $posts[$l];
+						$i++;
+					}
+					if (array_key_exists($r, $posts)) {
+						$ordered[] = $posts[$r];
+						$i++;
+					}
 				}
-				if (array_key_exists($r, $posts) && $i < $ppp) {
-					$result[] = $posts[$r];
-					$i++;
-				}
+				$l--;
+				$r++;
 			}
-
-
-			echo '<pre>';
-			print_r($posts);
-			echo '</pre><hr>';
-
-			echo '<pre>';
-			print_r($result);
-			echo '</pre>';
-
-			// order by price
-
-			//$this->similar_properties_by_location = $result;
+			$this->similar_properties_by_price = $ordered;
 		}
-		return $this->similar_properties_by_location;
+		return $this->similar_properties_by_price;
 	}
+
 	public function getSimilarPropertiesByLocation($ppp = 4) {
 		
 	}
 
-	public function renderSimilarProperties(){
-		return $this->render('similar-properties', array(
-			'offer' => $this
+	public function renderSimilarPropertiesByPrice(){
+		$original_post = clone $this->post;
+		$html = $this->render('similar-properties', array(
+			'offer' => $this,
+			'offers' => $this->getSimilarPropertiesByPrice()
 		));
+		$this->setPost($original_post);
+		
+		return $html;
+	}
+
+	public function renderPrice2($id, $scope = 'gross'){
+		$type = $this->getSalestype();
+
+		$meta_prefix = 'price';
+		if ($type == 'rent') {
+			$meta_prefix = 'grossPrice';
+			if ($scope == 'net') { $meta_prefix = 'netPrice';}	
+		}
+		
+		$value = $this->get_post_meta($id, $meta_prefix, true);
+		$currency = $this->get_post_meta($id, 'price_currency', true);
+		$propertySegment = $this->get_post_meta($id, $meta_prefix.'_propertysegment', true);
+		$timeSegment = $this->get_post_meta($id, $meta_prefix.'_timesegment', true);
+
+		if (!$timeSegment) {
+			if ($type == 'rent') {
+				$timeSegment = 'm';
+			}
+		}
+
+		global $casawp;
+		$render = $casawp->renderPrice($value, $currency, $propertySegment, $timeSegment);
+		if ($render) {
+			return $render;
+		} else {
+			return __('On Request', 'casawp');	
+		}
+		
 	}
 	/*****/
 
