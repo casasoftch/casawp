@@ -1,4 +1,4 @@
-<h3><i class="fa fa-briefcase"></i> <?= __('Contact person' , 'casawp') ?></h3><address>
+<h3><i class="fa fa-briefcase fa-fw"></i> <?= __('Contact person' , 'casawp') ?></h3><address>
 <p>
 <?php if ($this->offer->getFieldValue('seller_view_person_givenname', false) && $this->offer->getFieldValue('seller_view_person_familyname', false)) : ?>
   <strong><?= $this->offer->getFieldValue('seller_view_person_givenname') . ' ' . $this->offer->getFieldValue('seller_view_person_familyname') ?></strong>

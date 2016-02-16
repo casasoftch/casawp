@@ -940,7 +940,7 @@ class Offer{
 			'offer' => $this
 		));
 	}
-	public function rendervisitPerson(){
+	public function renderVisitPerson(){
 		return $this->render('visit-person', array(
 			'offer' => $this
 		));

@@ -1,4 +1,9 @@
-<h3><i class="fa fa-briefcase"></i> <?= __('Contact person' , 'casawp') ?></h3><address>
+<?php if (
+  $this->offer->getFieldValue('seller_visit_person_givenname', false)
+  || $this->offer->getFieldValue('seller_visit_person_familyname', false)
+) : ?>
+
+<h3><i class="fa fa-comment-o fa-fw"></i><?= __('Visit person' , 'casawp') ?></h3><address>
 <p>
 <?php if ($this->offer->getFieldValue('seller_visit_person_givenname', false) && $this->offer->getFieldValue('seller_visit_person_familyname', false)) : ?>
   <strong><?= $this->offer->getFieldValue('seller_visit_person_givenname') . ' ' . $this->offer->getFieldValue('seller_visit_person_familyname') ?></strong>
@@ -30,3 +35,5 @@
     <span class="value break-word"> <?= $this->offer->getFieldValue('seller_visit_person_phone_mobile') ?></span></p>
 <?php endif; ?>
 </address>
+
+<?php endif; ?>
