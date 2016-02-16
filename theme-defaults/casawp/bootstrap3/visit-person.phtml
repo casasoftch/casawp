@@ -3,37 +3,42 @@
   || $this->offer->getFieldValue('seller_visit_person_familyname', false)
 ) : ?>
 
-<h3><i class="fa fa-comment-o fa-fw"></i><?= __('Visit person' , 'casawp') ?></h3><address>
-<p>
-<?php if ($this->offer->getFieldValue('seller_visit_person_givenname', false) && $this->offer->getFieldValue('seller_visit_person_familyname', false)) : ?>
-  <strong><?= $this->offer->getFieldValue('seller_visit_person_givenname') . ' ' . $this->offer->getFieldValue('seller_visit_person_familyname') ?></strong>
-<?php endif; ?>
-<?php if ($this->offer->getFieldValue('seller_visit_person_function', false)) : ?>
-  <br><i> <?= $this->offer->getFieldValue('seller_visit_person_function') ?></i>
-<?php endif; ?>
-</p>
-<?php if(get_option('casawp_show_email_person_visit')) : ?>
-  <?php if ($this->offer->getFieldValue('seller_visit_person_email', false)) : ?>
-  <?php 
-    $id_number = ($this->offer->getFieldValue('referenceId')) ? ($this->offer->getFieldValue('referenceId')) : ($this->offer->getFieldValue('casawp_id'));
-    $mailto = 'mailto:' . $this->offer->getFieldValue('seller_visit_person_email') . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
-      . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casawp'))
-    .'%0A%0ALink:%20' .  get_permalink();
-  ?>
-  <?= '<p><span class="casawp-label">' . __('Email', 'casawp') . '</span>'
-    .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->offer->getFieldValue('seller_visit_person_email') . '</a></span></p>'; ?>
+  <h3><i class="fa fa-comment-o fa-fw"></i><?= __('Visit person' , 'casawp') ?></h3><address>
+  <p>
+  <?php if ($this->offer->getFieldValue('seller_visit_person_givenname', false) && $this->offer->getFieldValue('seller_visit_person_familyname', false)) : ?>
+    <strong><?= $this->offer->getFieldValue('seller_visit_person_givenname') . ' ' . $this->offer->getFieldValue('seller_visit_person_familyname') ?></strong>
   <?php endif; ?>
-<?php endif; ?>
-<?php if($this->offer->getFieldValue('seller_visit_person_phone_direct', false)) : ?>
-  <p class="casawp-phone-direct">
-    <span class="casawp-label"><?= __('Phone direct', 'casawp') ?></span>
-    <span class="value break-word"> <?= $this->offer->getFieldValue('seller_visit_person_phone_direct') ?></span></p>
-<?php endif; ?>
-<?php if($this->offer->getFieldValue('seller_visit_person_phone_mobile', false)) : ?>
-  <p class="casawp-phone-mobile">
-    <span class="casawp-label"><?= __('Mobile', 'casawp') ?></span>
-    <span class="value break-word"> <?= $this->offer->getFieldValue('seller_visit_person_phone_mobile') ?></span></p>
-<?php endif; ?>
-</address>
+  <?php if ($this->offer->getFieldValue('seller_visit_person_function', false)) : ?>
+    <br><i> <?= $this->offer->getFieldValue('seller_visit_person_function') ?></i>
+  <?php endif; ?>
+  </p>
+  <?php if(get_option('casawp_show_email_person_visit')) : ?>
+    <?php if ($this->offer->getFieldValue('seller_visit_person_email', false)) : ?>
+    <?php 
+      $id_number = ($this->offer->getFieldValue('referenceId')) ? ($this->offer->getFieldValue('referenceId')) : ($this->offer->getFieldValue('casawp_id'));
+      $mailto = 'mailto:' . $this->offer->getFieldValue('seller_visit_person_email') . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
+        . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casawp'))
+      .'%0A%0ALink:%20' .  get_permalink();
+    ?>
+    <?= '<p><span class="casawp-label">' . __('Email', 'casawp') . '</span>'
+      .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->offer->getFieldValue('seller_visit_person_email') . '</a></span></p>'; ?>
+    <?php endif; ?>
+  <?php endif; ?>
+  <?php if($this->offer->getFieldValue('seller_visit_person_phone_direct', false)) : ?>
+    <p class="casawp-phone-direct">
+      <span class="casawp-label"><?= __('Phone direct', 'casawp') ?></span>
+      <span class="value break-word"> <?= $this->offer->getFieldValue('seller_visit_person_phone_direct') ?></span></p>
+  <?php endif; ?>
+  <?php if($this->offer->getFieldValue('seller_visit_person_phone_mobile', false)) : ?>
+    <p class="casawp-phone-mobile">
+      <span class="casawp-label"><?= __('Mobile', 'casawp') ?></span>
+      <span class="value break-word"> <?= $this->offer->getFieldValue('seller_visit_person_phone_mobile') ?></span></p>
+  <?php endif; ?>
+  <?php if($this->offer->getFieldValue('seller_visit_person_note', false)) : ?>
+    <p class="casawp-person-note">
+      <?php echo $this->offer->getFieldValue('seller_visit_person_note', false) ?>
+    </p>
+  <?php endif; ?>
+  </address>
 
 <?php endif; ?>
