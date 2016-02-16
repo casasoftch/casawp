@@ -11,7 +11,6 @@
         $this->setRequestParams($_GET);
         $this->setArchiveJsVars();
       }
-      
       //add_action( 'wp_enqueue_scripts', array($this, 'setArchiveJsVars') );
     }
 

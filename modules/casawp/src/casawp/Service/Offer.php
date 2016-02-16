@@ -940,6 +940,11 @@ class Offer{
 			'offer' => $this
 		));
 	}
+	public function rendervisitPerson(){
+		return $this->render('visit-person', array(
+			'offer' => $this
+		));
+	}
 
 	public function renderMap(){
 		return $this->render('map', array(
