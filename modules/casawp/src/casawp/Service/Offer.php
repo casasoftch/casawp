@@ -672,10 +672,14 @@ class Offer{
 
     /*****/
 
-    public function getSimilarPropertiesByPrice($ppp = 4) {
+    public function getSimilarPropertiesByPrice($args = array()) {
+    	$args = array_merge(array(
+			'ppp' => 3
+		), $args);
+
     	if ($this->similar_properties_by_price == null) {
     		
-    		$args = array(
+    		$wpargs = array(
     			'posts_per_page' => -1,
     			'offset'         => 0,
     			'post_type'      => 'casawp_property',
@@ -684,7 +688,7 @@ class Offer{
     			'orderby'        => 'meta_value_num',
     			'order'          => 'DESC'
     		);
-    		$posts = get_posts( $args );
+    		$posts = get_posts( $wpargs );
 
     		// pointers
     		$current_property_key = $this->post->ID;
@@ -716,8 +720,11 @@ class Offer{
     			}
     			$l--;
     			$r++;
+
+    			if ($args['ppp'] == $i) break;
     		}
-    		$this->similar_properties_by_price = $ordered;
+    		// what happens if $ordered is smaller dann ppp? array slice? maybe count on $ordered
+    		$this->similar_properties_by_price = array_slice($ordered, 0, $args['ppp']);
     	}
     	return $this->similar_properties_by_price;
     }
@@ -726,11 +733,11 @@ class Offer{
     	
     }
 
-    public function renderSimilarPropertiesByPrice(){
+    public function renderSimilarPropertiesByPrice($args = array()){
     	$original_post = clone $this->post;
     	$html = $this->render('similar-properties', array(
     		'offer' => $this,
-    		'offers' => $this->getSimilarPropertiesByPrice()
+    		'offers' => $this->getSimilarPropertiesByPrice($args)
     	));
     	$this->setPost($original_post);
     	
