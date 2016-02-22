@@ -966,6 +966,7 @@ class Import {
     $propertydata['last_update'] = new \DateTime((isset($property_xml->softwareInformation->lastUpdate) ? $property_xml->softwareInformation->lastUpdate->__toString() : ''));
     $propertydata['exportproperty_id'] = (isset($property_xml['id']) ? $property_xml['id']->__toString() : '');
     $propertydata['referenceId'] = (isset($property_xml->referenceId) ? $property_xml->referenceId->__toString() : '');
+    $propertydata['visualReferenceId'] = (isset($property_xml->visualReferenceId) ? $property_xml->visualReferenceId->__toString() : '');
     $propertydata['availability'] = ($property_xml->availability->__toString() ? $property_xml->availability->__toString() : 'available');
     $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
     $propertydata['price'] = $property_xml->price->__toString();
@@ -1521,6 +1522,7 @@ class Import {
     }
     
     $new_meta_data['referenceId']                    = $property['referenceId'];
+    $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
     if (!$new_meta_data['referenceId']) {
       echo '<div id="message" class="error">Warning! no referenceId found. for:'.$casawp_id.' This could cause problems when sending inquiries</div>';
     }
