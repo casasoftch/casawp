@@ -376,6 +376,17 @@ class Plugin {
             'hide_empty'        => true, 
         ));
         $c_trans = null;
+
+        $locale = get_locale();
+        $lang = "de";
+        switch (substr($locale, 0, 2)) {
+            case 'de': $lang = 'de'; break;
+            case 'en': $lang = 'en'; break;
+            case 'it': $lang = 'it'; break;
+            case 'fr': $lang = 'fr'; break;
+            default: $lang = 'de'; break;
+        }
+
         foreach ($category_terms as $category_term) {
             if ($this->categoryService->keyExists($category_term->slug)) {
                 $categories[] = $this->categoryService->getItem($category_term->slug);
@@ -394,8 +405,11 @@ class Plugin {
                         $c_trans = array();
                     }
                 }
+
+                $unknown_category->setLabel($unknown_category->getKey()); 
+
                 foreach ($c_trans as $key => $trans) {
-                    if ($key == $termName && array_key_exists($lang, $trans)) {
+                    if ($key == $category_term->slug && array_key_exists($lang, $trans)) {
                         $unknown_category->setLabel($trans[$lang]); 
                     }
                 }
