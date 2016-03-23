@@ -379,15 +379,45 @@ class Plugin {
         $category_terms = get_terms('casawp_category', array(
             'hide_empty'        => true, 
         ));
+        $c_trans = null;
+
+        $locale = get_locale();
+        $lang = "de";
+        switch (substr($locale, 0, 2)) {
+            case 'de': $lang = 'de'; break;
+            case 'en': $lang = 'en'; break;
+            case 'it': $lang = 'it'; break;
+            case 'fr': $lang = 'fr'; break;
+            default: $lang = 'de'; break;
+        }
+
         foreach ($category_terms as $category_term) {
             if ($this->categoryService->keyExists($category_term->slug)) {
                 $categories[] = $this->categoryService->getItem($category_term->slug);
             } else if ($this->utilityService->keyExists($category_term->slug)) {
                 //$categories[] = $this->utilityService->getItem($category_term->slug);
             } else {
+                //needs to check for custom categories
+
+
                 $unknown_category = new \CasasoftStandards\Service\Category();
                 $unknown_category->setKey($category_term->slug);
-                $unknown_category->setLabel('?'.$category_term->slug);
+
+                if ($c_trans === null) {
+                    $c_trans = maybe_unserialize(get_option('casawp_custom_category_translations'));
+                    if (!$c_trans) {
+                        $c_trans = array();
+                    }
+                }
+
+                $unknown_category->setLabel($unknown_category->getKey()); 
+
+                foreach ($c_trans as $key => $trans) {
+                    if ($key == $category_term->slug && array_key_exists($lang, $trans)) {
+                        $unknown_category->setLabel($trans[$lang]); 
+                    }
+                }
+
                 $categories[] = $unknown_category;
             }
         }

@@ -4,7 +4,17 @@
 	if(isset($_POST['casawp_submit'])) {
 		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
-			$value = sanitize_text_field($value);
+			if ($key == 'casawp_before_content' || $key == 'casawp_after_content') {
+				$allowed_html = array(
+					'div' => array(
+						'id' => array(),
+						'class' => array()
+					)
+				);
+				$value = wp_kses( $value, $allowed_html );
+			} else {
+				$value = sanitize_text_field($value);
+			}
 			if (substr($key, 0, 7) == 'custom_') {
 				$parts = explode('/', $key);
 				$saved_custom_categories[$parts[0]][$parts[1]] = $value;
@@ -1024,6 +1034,7 @@
 										<p><label>
 											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
 										</label></p>
+										<p class="description" id="tagline-description">Erlaubt ist nur der div-Tag mit den Attributen id und class.</p>
 									</fieldset>
 								</td>
 							</tr>

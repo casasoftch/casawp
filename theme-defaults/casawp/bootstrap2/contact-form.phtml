@@ -4,7 +4,7 @@
 	<?php $form->setAttribute('action', get_permalink($offer->post)); ?>
 
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
-	<?php echo wp_nonce_field( 'send-inquiry' ); ?>
+	<?php wp_nonce_field( 'send-inquiry' ); ?>
 	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
 	<div class="row-fluid">
 		<div class="span5 casawp-input-left">
