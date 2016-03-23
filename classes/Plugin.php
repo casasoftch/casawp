@@ -164,6 +164,10 @@ class Plugin {
 
     }
 
+    public function getQueryService(){
+        return $this->queryService;
+    }
+
     
 
 
@@ -405,14 +409,54 @@ class Plugin {
         return $salestypes;
     }
 
+    public function isReferenceArchive(){
+        $query = $this->queryService->getQuery();
+        $reference = false;
+        if ($query && isset($query['availabilities']) && in_array('reference', $query['availabilities'])) {
+            $reference = true;
+        }
+        return $reference;
+    }
+
+    public function getQueriedSingularAvailability(){
+        $query = $this->queryService->getQuery();
+        if (isset($query['availabilities']) && count($query['availabilities']) == 1) {
+            return $query['availabilities'][0];
+        }
+        return false;
+    }
+
     public function getLocations(){
-        $localities = get_terms('casawp_location',array('hierarchical'      => true));
+        $localities = get_terms('casawp_location',array(
+            'hierarchical'      => true
+        ));
+        $availability = $this->getQueriedSingularAvailability();
+        if ($availability) {
+            global $wpdb;
+            /*filters the result with reference context in mind (WPML IGNORANT) */
+            $query = "SELECT wp_terms.term_id FROM wp_terms 
+                INNER JOIN wp_term_taxonomy ON wp_term_taxonomy.term_id = wp_terms.term_id AND wp_term_taxonomy.taxonomy = 'casawp_location'
+                INNER JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id 
+                INNER JOIN wp_posts ON wp_term_relationships.object_id = wp_posts.ID AND wp_posts.post_status = 'publish'
+
+                INNER JOIN wp_term_relationships AS referenceCheck ON referenceCheck.object_id = wp_posts.ID
+                INNER JOIN wp_term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+                INNER JOIN wp_terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+                GROUP BY wp_terms.term_id";
+            $location_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+            $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
+
+            foreach ($localities as $key => $locality) {
+                if (!in_array($locality->term_id, $location_id_array)) {
+                    unset($localities[$key]);
+                }
+            }
+        }
         return $localities;
     }
 
     public function renderArchiveFilter(){
-        $this->getLocations();
-
         $form = new \casawp\Form\FilterForm(
             $this->getCategories(),
             $this->getSalestypes(),

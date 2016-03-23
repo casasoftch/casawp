@@ -42,6 +42,22 @@ class QueryService{
         //$this->applyToWpQuery();
         return $query;
     }
+    public function setCustomQuery($query){
+        foreach ($query as $key => $value) {
+            if (!array_key_exists($key, $this->defaultQuery)) {
+                unset($query[$key]);
+            }
+        }
+        $this->query = array_merge($this->query, $query);
+    }
+
+    public function createWpQuery($args = false){
+        if ($args) {
+            $this->setCustomQuery($args);
+        }
+        return new \WP_Query( $this->getArgs());
+    }
+
     public function getQuery(){
         return $this->query;
     }
@@ -251,6 +267,8 @@ class QueryService{
 
         return $args;
     }
+
+    
    
     public function applyToWpQuery($query){
         //tax pages overides
