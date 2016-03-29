@@ -219,6 +219,11 @@ class Offer{
 		return false;
 	}
 
+	public function isReserved() {
+		if ($this->getAvailability() == "reserved") return true;
+		return false;
+	}
+
 	public function getAvailabilityLabel(){
 		if ($this->getAvailability()) {
 			switch ($this->getAvailability()) {
