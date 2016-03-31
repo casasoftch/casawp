@@ -963,6 +963,7 @@ class Import {
         'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString():''),
     );
 
+    $propertydata['creation'] = new \DateTime((isset($property_xml->softwareInformation->creation) ? $property_xml->softwareInformation->creation->__toString() : ''));
     $propertydata['last_update'] = new \DateTime((isset($property_xml->softwareInformation->lastUpdate) ? $property_xml->softwareInformation->lastUpdate->__toString() : ''));
     $propertydata['exportproperty_id'] = (isset($property_xml['id']) ? $property_xml['id']->__toString() : '');
     $propertydata['referenceId'] = (isset($property_xml->referenceId) ? $property_xml->referenceId->__toString() : '');
@@ -1466,7 +1467,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      'post_date'     => $property['last_update']->format('Y-m-d H:i:s'),
+      'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       //'post_modified' => date('Y-m-d H:i:s', strtotime($property->software->lastUpdate->__toString())),
     );
 
