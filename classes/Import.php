@@ -1468,7 +1468,7 @@ class Import {
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
       'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
-      //'post_modified' => date('Y-m-d H:i:s', strtotime($property->software->lastUpdate->__toString())),
+      'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),
     );
 
     $old_main_data = array(
@@ -1479,7 +1479,7 @@ class Import {
       'post_type'     => $wp_post->post_type    ,
       'post_excerpt'  => $wp_post->post_excerpt ,
       'post_date'     => $wp_post->post_date    ,
-      //'post_modified' => $wp_post->post_modified,
+      'post_modified' => $wp_post->post_modified,
     );
     if ($new_main_data != $old_main_data) {
       foreach ($old_main_data as $key => $value) {
