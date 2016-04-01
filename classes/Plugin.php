@@ -439,6 +439,21 @@ class Plugin {
         return $salestypes;
     }
 
+    public function getAvailabilities(){
+        $availabilities = array();
+        $availability_terms = get_terms('casawp_availability', array(
+            'hide_empty'        => true, 
+        ));
+        foreach ($availability_terms as $availability_term) {
+            switch ($availability_term->slug) {
+                case 'active': $availabilities[$availability_term->slug] = __('Active', 'casawp'); break;
+                case 'reference': $availabilities[$availability_term->slug] = __('Reference', 'casawp'); break;
+                default: $availabilities[$availability_term->slug] = $availability_term->slug; break;
+            }
+        }
+        return $availabilities;
+    }
+
     public function isReferenceArchive(){
         $query = $this->queryService->getQuery();
         $reference = false;
@@ -490,7 +505,8 @@ class Plugin {
         $form = new \casawp\Form\FilterForm(
             $this->getCategories(),
             $this->getSalestypes(),
-            $this->getLocations()
+            $this->getLocations(),
+            $this->getAvailabilities()
         );
         $form->bind($this->queryService);
         return $this->render('archive-filter', array('form' => $form));
