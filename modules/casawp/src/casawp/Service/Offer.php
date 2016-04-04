@@ -224,6 +224,16 @@ class Offer{
 		return false;
 	}
 
+	public function isTaken() {
+		if ($this->getAvailability() == "taken") return true;
+		return false;
+	}
+
+	public function isActive() {
+		if ($this->getAvailability() == "active") return true;
+		return false;
+	}
+
 	public function getAvailabilityLabel(){
 		if ($this->getAvailability()) {
 			switch ($this->getAvailability()) {
