@@ -326,7 +326,7 @@ class Import {
       }
     }
 
-    if (0 == 0 && $property['availability'] == 'reference') {
+    if (get_option('casawp_limit_reference_images') && $property['availability'] == 'reference') {
       $title_image = false;
       foreach ($the_casawp_attachments as $key => $attachment) {
         if ($attachment['type'] == 'image') {
