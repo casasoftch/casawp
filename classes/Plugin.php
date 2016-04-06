@@ -1410,7 +1410,6 @@ class Plugin {
 
         /*----------  properties  ----------*/
         
-
         $labels = array(
             'name'               => __('Properties', 'casawp'),
             'singular_name'      => __('Property', 'casawp'),

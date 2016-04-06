@@ -301,7 +301,7 @@ class Import {
   }
 
 
-  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id){
+  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property){
     ### future task: for better performace compare new and old data ###
 
     
@@ -323,6 +323,19 @@ class Import {
             'order'   => $o
           );
         }
+      }
+    }
+
+    if (0 == 0 && $property['availability'] == 'reference') {
+      $title_image = false;
+      foreach ($the_casawp_attachments as $key => $attachment) {
+        if ($attachment['type'] == 'image') {
+          $title_image = $attachment;
+          break;
+        }
+      }
+      if ($title_image) {
+        $the_casawp_attachments = array(0 => $title_image);
       }
     }
 
@@ -1753,7 +1766,7 @@ class Import {
     $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
     $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
     $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
-    $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casawp_id);
+    $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casawp_id, $property);
     
 
   }
