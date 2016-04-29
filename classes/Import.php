@@ -1460,6 +1460,41 @@ class Import {
 
 
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post){
+
+    $new_meta_data = array();
+
+    //load meta data
+    $old_meta_data = array();
+    $meta_values = get_post_meta($wp_post->ID, null, true);
+    foreach ($meta_values as $key => $meta_value) {
+      $old_meta_data[$key] = $meta_value[0];
+    }
+    ksort($old_meta_data);
+
+    //generate import hash
+    $cleanProjectData = $property;
+    //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
+    unset($cleanProjectData['last_update']);
+    if (isset($cleanProjectData['modified'])) {
+        unset($cleanProjectData['modified']);
+    }
+    $curImportHash = md5(serialize($cleanProjectData));
+
+    //skip if is the same as before
+
+
+    if (isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
+      if ($curImportHash == $old_meta_data['last_import_hash']) {
+        return 'skiped';
+      }
+    }
+
+    //set new hash;
+    $new_meta_data['last_import_hash'] = $curImportHash;
+
+
+
+
     //$publisher_options = $offer->publish;
     $publisher_options = array();
     if (isset($offer['publish'])) {
@@ -1480,7 +1515,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
+      //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
 
@@ -1491,7 +1526,7 @@ class Import {
       'post_status'   => $wp_post->post_status  ,
       'post_type'     => $wp_post->post_type    ,
       'post_excerpt'  => $wp_post->post_excerpt ,
-      'post_date'     => $wp_post->post_date    ,
+      //'post_date'     => $wp_post->post_date    ,
       /*'post_modified' => $wp_post->post_modified,*/
     );
     if ($new_main_data != $old_main_data) {
@@ -1503,9 +1538,10 @@ class Import {
       }
       
 
-      //manage post_name (if new)
+      //manage post_name and post_date (if new)
       if (!$wp_post->post_name) {
         $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offer['name'],'','save');
+        $new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
       } else {
         $new_main_data['post_name'] = $wp_post->post_name;
       }
@@ -1516,7 +1552,7 @@ class Import {
     }
 
 
-    $new_meta_data = array();
+    
     //$casawp_visitInformation = $property->visitInformation->__toString();
     //$casawp_property_url = $property->url->__toString();
     $new_meta_data['property_address_country']       = $property['address']['country'];
@@ -1704,12 +1740,7 @@ class Import {
     //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
 
-    $old_meta_data = array();
-    $meta_values = get_post_meta($wp_post->ID, null, true);
-    foreach ($meta_values as $key => $meta_value) {
-      $old_meta_data[$key] = $meta_value[0];
-    }
-    ksort($old_meta_data);
+    
     foreach ($new_meta_data as $key => $value) {
      /* if (!$value) {
         unset($new_meta_data[$key]);
