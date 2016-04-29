@@ -97,12 +97,13 @@ if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
-	//$import = new casawp\Import(true, false);
+	//]\$import = new casawp\Import(true, false);
 }
 
 if (isset($_GET['gatewaypoke'])) {
 	echo "<script>console.log('import_start');</script>";
-	$import = new casawp\Import(false, true);
+	//$import = new casawp\Import(false, true);
+	$import = new casawp\Import(true, false);
 	$import->addToLog('Poke from casagateway caused import');
 	echo "<script>console.log('import_end');</script>";
 	//$import = new casawp\Import(true, false);

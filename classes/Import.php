@@ -1394,11 +1394,8 @@ class Import {
         }
         $found_posts[] = $wp_post->ID;
 
-
         $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offerData['lang'], $casawp_id);
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
-
-
 
 
       }
@@ -1481,8 +1478,6 @@ class Import {
     $curImportHash = md5(serialize($cleanProjectData));
 
     //skip if is the same as before
-
-
     if (isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
       if ($curImportHash == $old_meta_data['last_import_hash']) {
         return 'skiped';
@@ -1491,8 +1486,6 @@ class Import {
 
     //set new hash;
     $new_meta_data['last_import_hash'] = $curImportHash;
-
-
 
 
     //$publisher_options = $offer->publish;
