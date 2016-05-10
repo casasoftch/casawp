@@ -860,9 +860,11 @@ class Import {
         $this->updateOffers();
         echo '<div id="message" class="updated"><p>casawp <strong>updated</strong>.</p><pre>' . print_r($this->transcript, true) . '</pre></div>';
       } else {
+        $this->updateOffers();
+        //echo '<div id="message" class="updated"><p>casawp <strong>updated</strong>.</p><pre>' . print_r($this->transcript, true) . '</pre></div>';
         //do task in the background
-        add_action('asynchronous_import', array($this,'updateOffers'));
-        wp_schedule_single_event(time(), 'asynchronous_import');
+        //add_action('asynchronous_import', array($this,'updateOffers'));
+        //wp_schedule_single_event(time(), 'asynchronous_import');
       }
     }
   }
