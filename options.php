@@ -106,6 +106,7 @@
 			case 'general':
 			default:
 				$checkbox_traps = array(
+					'casawp_limit_reference_images',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
 					'casawp_remCat',
@@ -1041,6 +1042,16 @@
 							<tr valign="top">
 								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
+									
+									<fieldset>
+										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>
+										<?php $name = 'casawp_limit_reference_images'; ?>
+										<?php $text = 'Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.'; ?>
+										<p><label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
+
 									<fieldset>
 										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
 										<?php $name = 'casawp_live_import'; ?>
@@ -1055,6 +1066,8 @@
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label></p>
 									</fieldset>
+
+									
 									
 									<fieldset>
 										<table>

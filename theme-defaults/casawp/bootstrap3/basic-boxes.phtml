@@ -45,7 +45,7 @@
       ?>
       <?php global $casawp; ?>
       <?php foreach ($this->offer->getExtraCosts() as $cost): ?>
-        <br><strong>Nebenkosten:</strong>
+        <br><strong><?= __('Extra Costs:', 'casawp') ?></strong>
         <br><?= $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']); ?>
         <?php break; ?>
       <?php endforeach ?>

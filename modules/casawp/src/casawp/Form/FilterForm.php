@@ -8,19 +8,35 @@ class FilterForm extends Form
     public $categories = array();
     public $salestypes = array();
     public $locations = array();
+    public $availabilities = array();
 
-    public function __construct($categories = array(), $salestypes = array(), $locations = array()){
+    public function __construct($categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
         $this->categories = $categories;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
+        $this->availabilities = $availabilities;
 
         parent::__construct('filter');
 
         $this->setAttribute('method', 'GET');
         $this->setAttribute('action', '/immobilien/');
 
+
+        if ($this->availabilities) {
+            $this->add(array(
+                'name' => 'availabilities',
+                'type' => 'Select',
+                'attributes' => array(
+                    'multiple' => 'multiple',
+                ),
+                'options' => array(
+                    'label' => __('Sales type', 'casawp'),
+                    'value_options' => $this->getAvailabilityOptions(),
+                ),
+            ));
+        }
+
         if ($this->salestypes) {
-            $salestype_options = $this->getSalestypeOptions();
             $this->add(array(
                 'name' => 'salestypes',
                 'type' => 'Select',
@@ -29,12 +45,11 @@ class FilterForm extends Form
                 ),
                 'options' => array(
                     'label' => __('Sales type', 'casawp'),
-                    'value_options' => $salestype_options,
+                    'value_options' => $this->getSalestypeOptions(),
                 ),
             ));
         }
         if ($this->categories) {
-            $category_options = $this->getCategoryOptions();
             $this->add(array(
                 'name' => 'categories',
                 'type' => 'Select',
@@ -43,7 +58,7 @@ class FilterForm extends Form
                 ),
                 'options' => array(
                     'label' => __('Category', 'casawp'),
-                    'value_options' => $category_options,
+                    'value_options' => $this->getCategoryOptions(),
                 ),
             ));
         }
@@ -81,6 +96,12 @@ class FilterForm extends Form
         return $salestype_options;*/
         asort($this->salestypes);
         return $this->salestypes;
+    }
+
+
+    public function getAvailabilityOptions(){
+        asort($this->availabilities);
+        return $this->availabilities;
     }
 
     public function getLocationOptions(){

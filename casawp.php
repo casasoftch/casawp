@@ -5,7 +5,7 @@
  *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
- *	Version: 		2.1.0
+ *	Version: 		2.1.1
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 //update system
 require_once ( 'wp_autoupdate.php' );
-$plugin_current_version = '2.1.0';
+$plugin_current_version = '2.1.1';
 $plugin_slug = plugin_basename( __FILE__ );
 $plugin_remote_path = 'http://wp.casasoft.ch/casawp/update.php';	
 $license_user = 'user';
@@ -97,14 +97,14 @@ if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
-	//$import = new casawp\Import(true, false);
+	//]\$import = new casawp\Import(true, false);
 }
 
 if (isset($_GET['gatewaypoke'])) {
-	echo "<script>console.log('import_start');</script>";
+	//$import = new casawp\Import(false, true);
 	$import = new casawp\Import(false, true);
 	$import->addToLog('Poke from casagateway caused import');
-	echo "<script>console.log('import_end');</script>";
+
 	//$import = new casawp\Import(true, false);
 }
 
