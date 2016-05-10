@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,15 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+= 2.1.1 =
+* Now ignores modification dates during imports.
+* Availability reemerges as hidden field so that requests can creeps back into the query
+* isTaken and isActive methods
+* Option for limiting image/media imports for reference properties.
+* Some translations from Steven
+* Hash checking and persistence checks during imports improve subsequent import speeds now
+* Some alterations to the poke hook
+
 = 2.1.0 =
 * Added categories_not, locations_not, salestypes_not, availabilities_not to query service
 * Initial work on similar property system
