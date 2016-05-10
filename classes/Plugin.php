@@ -232,12 +232,13 @@ class Plugin {
     }
 
     public function renderArchiveSingle($post){
-        $project = $this->prepareProject($post);
-        return $project->render('single-archive', array('project' => $project));
+        $offer = $this->prepareOffer($post);
+        return $offer->render('single-archive', array('offer' => $offer));
     }
 
     public function renderProjectArchiveSingle($post){
-        return $offer->render('project-archive-single', array('post' => $post));
+        $project = $this->prepareOffer($post);
+        return $project->render('project-archive-single', array('project' => $project));
     }
 
     public function renderArchivePagination(){
@@ -581,7 +582,7 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+                //add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
 
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {

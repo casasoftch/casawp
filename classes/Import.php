@@ -1735,7 +1735,6 @@ class Import {
     //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
 
-    
     foreach ($new_meta_data as $key => $value) {
      /* if (!$value) {
         unset($new_meta_data[$key]);
