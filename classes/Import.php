@@ -7,6 +7,7 @@ class Import {
   public $WPML = null;
   public $transcript = array();
   public $curtrid = false;
+  public $trid_store = array();
 
   public function __construct($doimport = true, $casagatewayupdate = false){
     if ($doimport) {
@@ -262,21 +263,48 @@ class Import {
     return false;
   }
 
-  public function updateInsertWPMLconnection($offer_pos, $wp_post, $lang, $casawp_id){
+  public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier){
     if ($this->hasWPML()) {
-
       if ($this->getMainLang() == $lang) {
-        $this->curtrid = wpml_get_content_trid('post_casawp_property', $wp_post->ID);
+        $trid = wpml_get_content_trid('post_'.$wp_post->post_type, $wp_post->ID);
+        if (!$trid) {
+          $trid = ($wp_post->post_type == 'casawp_property' ? 1000 : 2000) . $wp_post->ID;
+        }
+        $this->trid_store[$trid_identifier] = $trid;
+      } else {
+        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
+      }
+      if ($trid) {
+        $_POST['icl_post_language'] = $lang; 
+
+        global $wpdb;
+        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE 
+          element_id = ' . $wp_post->ID . ' 
+          AND language_code = \'' . $lang . '\' 
+          ', OBJECT );
+        
+          $new = array(
+            'trid' => $trid,
+            'element_id' => $wp_post->ID, 
+            'element_type' => 'post_'.$wp_post->post_type, 
+            'language_code' => $lang
+          );
+          if ($this->getMainLang() != $lang) {
+            $new['source_language_code'] = $this->getMainLang();
+            $this->transcript['wpml_'.$wp_post->post_type][] = 'set alternate language for trid:' . $trid . '(' . $lang . ')';
+          } else {
+            $this->transcript['wpml_'.$wp_post->post_type][] = 'set main language for trid:' . $trid . '(' . $lang . ')';
+          }
+        if (!$existing) {
+          $wpdb->insert( $wpdb->prefix . 'icl_translations', $new );
+        } else {
+          $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
+        }
+
+      } else {
+        $this->transcript['wpml_'.$wp_post->post_type][] = 'unable to find trid for ' . $trid_identifier;
       }
 
-      $_POST['icl_post_language'] = $lang; 
-      
-      global $sitepress;
-      if ($this->getMainLang() != $lang) {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
-      } else {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, NULL, true);
-      }
     }
   }
 
@@ -977,9 +1005,8 @@ class Import {
         'lng'           => ($property_xml->address->geo ? $property_xml->address->geo->longitude->__toString():''),
         'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString():''),
     );
-
-    $propertydata['creation'] = new \DateTime((isset($property_xml->softwareInformation->creation) ? $property_xml->softwareInformation->creation->__toString() : ''));
-    $propertydata['last_update'] = new \DateTime((isset($property_xml->softwareInformation->lastUpdate) ? $property_xml->softwareInformation->lastUpdate->__toString() : ''));
+    $propertydata['creation'] = (isset($property_xml->softwareInformation->creation) ? new \DateTime($property_xml->softwareInformation->creation->__toString()) : '');
+    $propertydata['last_update'] = (isset($property_xml->softwareInformation->lastUpdate) ? new \DateTime($property_xml->softwareInformation->lastUpdate->__toString()) : '');
     $propertydata['exportproperty_id'] = (isset($property_xml['id']) ? $property_xml['id']->__toString() : '');
     $propertydata['referenceId'] = (isset($property_xml->referenceId) ? $property_xml->referenceId->__toString() : '');
     $propertydata['visualReferenceId'] = (isset($property_xml->visualReferenceId) ? $property_xml->visualReferenceId->__toString() : '');
@@ -1256,6 +1283,111 @@ class Import {
 
   }
 
+  public function project2Array($project_xml){
+    $data['ref'] = (isset($project_xml['id']) ? $project_xml['id']->__toString() : '');
+
+    $di = 0;
+    if ($project_xml->details) {
+      foreach ($project_xml->details->detail as $xml_detail) {
+        $di++;
+        $data['details'][$di]['lang'] = (isset($xml_detail['lang']) ? $xml_detail['lang']->__toString() : '');
+        $data['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
+
+        $dd = 0;
+        if ($xml_detail->descriptions) {
+          foreach ($xml_detail->descriptions->description as $xml_description) {
+            $dd++;
+            $data['details'][$di]['descriptions'][$dd]['title'] = (isset($xml_description['title']) ? $xml_description['title']->__toString() : '');
+            $data['details'][$di]['descriptions'][$dd]['text'] = $xml_description->__toString();
+          }
+        }
+
+      }
+    }
+
+    $ui = 0;
+    if ($project_xml->units) {
+        $data['units'] = array();
+        foreach ($project_xml->units->unit as $xml_unit) {
+          $ui++;
+          $data['units'][$ui]['ref'] = (isset($xml_unit['id']) ? $xml_unit['id']->__toString() : '');
+          $data['units'][$ui]['name'] = (isset($xml_unit->name) ? $xml_unit->name->__toString() : '');
+          if ($xml_unit->details) {
+            foreach ($xml_unit->details->detail as $xml_detail) {
+              $di++;
+              $data['units'][$ui]['details'][$di]['lang'] = (isset($xml_detail['lang']) ? $xml_detail['lang']->__toString() : '');
+              $data['units'][$ui]['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
+
+              $dd = 0;
+              if ($xml_detail->descriptions) {
+                foreach ($xml_detail->descriptions->description as $xml_description) {
+                  $dd++;
+                  $data['units'][$ui]['details'][$di]['descriptions'][$dd]['title'] = (isset($xml_description['title']) ? $xml_description['title']->__toString() : '');
+                  $data['units'][$ui]['details'][$di]['descriptions'][$dd]['text'] = $xml_description->__toString();
+                }
+              }
+
+            }
+          }
+
+          $data['units'][$ui]['property_links'] = array();
+          $pri = 0;
+          foreach ($xml_unit->properties->propertyRef as $propertyRef) {
+              $pri++;
+              $data['units'][$ui]['property_links'][$pri]['ref'] = $propertyRef->__toString();
+          }
+        }
+    }
+
+    return $data;
+
+  }
+
+  public function langifyProject($projectData){
+    //complete missing translations if multilingual
+
+    $languages = array(0 => array(
+      'language_code' => $this->getMainLang()
+    ));
+
+    if ($this->hasWPML()) {
+      $languages = icl_get_languages('skip_missing=0&orderby=code');    
+    }
+
+    $li = 0;
+    foreach ($languages as $lang) {
+      $li++;
+      $translation = $projectData;
+      $translation['lang'] = $lang['language_code'];
+      $translation['detail'] = array('name' => '', 'descriptions' => array());
+      foreach ($projectData['details'] as $key => $detail) { 
+        if ($detail['lang'] == $lang['language_code']) {
+          $translation['detail'] = $detail;
+        }
+      }
+      unset($translation['details']);
+
+      foreach ($translation['units'] as $ukey => $unit) {
+        $translation['units'][$ukey]['detail'] = array('name' => '', 'descriptions' => array());
+        foreach ($unit['details'] as $key => $detail) {
+          if ($detail['lang'] == $lang['language_code']) {
+            $translation['units'][$ukey]['detail'] = $detail;
+          }
+        }
+        unset($translation['units'][$ukey]['details']);
+      }
+      if ($lang['language_code'] == $this->getMainLang()) {
+        $translations[0] = $translation;  
+      } else {
+        $translations[$li] = $translation;
+      }        
+    }
+
+    ksort($translations);
+    return $translations;
+
+  }
+
   public function findLangKey($lang, $array){
     foreach ($array as $key => $value) {
       if ($lang == $value['lang']) {
@@ -1341,9 +1473,9 @@ class Import {
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml');
     set_time_limit(300);
     global $wpdb;
-    $found_posts = array();
-
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
+
+    $found_posts = array();
     foreach ($xml->properties->property as $property) {
       $propertyData = $this->property2Array($property);
       //make main language first and "single out" if not multilingual
@@ -1366,7 +1498,6 @@ class Import {
       }
 
       $offer_pos = 0;
-      $first_offer_trid = false;
       foreach ($theoffers as $offerData) {
         $offer_pos++;
 
@@ -1390,14 +1521,15 @@ class Import {
           $the_post['post_status'] = 'pending';
           $the_post['post_type'] = 'casawp_property';
           $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
+          $_POST['icl_post_language'] = $offerData['lang']; 
           $insert_id = wp_insert_post($the_post);
           update_post_meta($insert_id, 'casawp_id', $casawp_id);
           $wp_post = get_post($insert_id, OBJECT, 'raw');
         }
         $found_posts[] = $wp_post->ID;
 
-        $this->updateInsertWPMLconnection($offer_pos, $wp_post, $offerData['lang'], $casawp_id);
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
+        $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $propertyData['exportproperty_id']);
 
 
       }
@@ -1432,6 +1564,87 @@ class Import {
       $this->transcript['properties_removed'] = count($properties_to_remove);
     }
 
+
+
+
+
+
+    //projects
+    $found_posts = array();
+    foreach ($xml->projects->project as $project) {
+      $projectData = $this->project2Array($project);
+      $projectDataLangified = $this->langifyProject($projectData);
+
+      foreach ($projectDataLangified as $sorti => $projectData) {
+        $lang = $projectData['lang'];
+        //is project already in db
+        $casawp_id = 'project_'.$projectData['ref'] . $projectData['lang'];
+
+        $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+        $wp_post = false;
+        while ( $the_query->have_posts() ) :
+          $the_query->the_post();
+          global $post;
+          $wp_post = $post;
+        endwhile;
+        wp_reset_postdata();
+
+        //if not create a basic project
+        if (!$wp_post) {
+          $this->transcript[$casawp_id]['action'] = 'new';
+          $the_post['post_title'] = $projectData['detail']['name'];
+          $the_post['post_content'] = 'unsaved project';
+          $the_post['post_status'] = 'pending';
+          $the_post['post_type'] = 'casawp_project';
+          $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
+          $_POST['icl_post_language'] = $lang;
+          $insert_id = wp_insert_post($the_post);
+
+          update_post_meta($insert_id, 'casawp_id', $casawp_id);
+          $wp_post = get_post($insert_id, OBJECT, 'raw');
+
+        }
+        $found_posts[] = $wp_post->ID;
+
+        
+        $found_posts = $this->updateProject($sorti, $casawp_id, $projectData, $wp_post, false, $found_posts);
+        $this->updateInsertWPMLconnection($wp_post, $lang, 'project_'.$projectData['ref']);
+        
+
+      }
+    }
+
+
+    //3. remove all the unused projects
+    $projects_to_remove = get_posts(  array(
+      'suppress_filters' => true,
+      'language' => 'ALL',
+      'numberposts' =>  100,
+      'exclude'     =>  $found_posts,
+      'post_type'   =>  'casawp_project',
+      'post_status' =>  'publish'
+      )
+    );
+    foreach ($projects_to_remove as $prop_to_rm) {
+      //remove the attachments
+      /*$attachments = get_posts( array(
+        'suppress_filters'=>true,
+        'language'=>'ALL',
+        'post_type'      => 'attachment',
+        'posts_per_page' => -1,
+        'post_parent'    => $prop_to_rm->ID,
+        'exclude'        => get_post_thumbnail_id()
+      ) );
+      if ( $attachments ) {
+        foreach ( $attachments as $attachment ) {
+          $attachment_id = $attachment->ID;
+        }
+      }*/
+      wp_trash_post($prop_to_rm->ID);
+      $this->transcript['projects_removed'] = count($projects_to_remove);
+    }
+
+
     flush_rewrite_rules();
 
     //WPEngine clear cache hook
@@ -1457,6 +1670,199 @@ class Import {
     return $fallback;
   }
 
+  public function updateProject($sort, $casawp_id, $projectData, $wp_post, $parent_post = false, $found_posts = array()){
+    $new_meta_data = array();
+
+    //load meta data
+    $old_meta_data = array();
+    $meta_values = get_post_meta($wp_post->ID, null, true);
+    foreach ($meta_values as $key => $meta_value) {
+      $old_meta_data[$key] = $meta_value[0];
+    }
+    ksort($old_meta_data);
+
+    //generate import hash
+    $cleanProjectData = $projectData;
+    //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
+    unset($cleanProjectData['last_update']);
+    if (isset($cleanProjectData['modified'])) {
+        unset($cleanProjectData['modified']);
+    }
+    $curImportHash = md5(serialize($cleanProjectData));
+
+    //skip if is the same as before
+    $update = false;
+    if (
+      !isset($old_meta_data['last_import_hash']) 
+      || isset($_GET['force_all_properties'])
+      || $curImportHash != $old_meta_data['last_import_hash']
+    ) {
+        $update = true;
+    }
+
+    if ($update) {
+      $this->transcript[$casawp_id]['action'] = 'update';
+      if (!isset($old_meta_data['last_import_hash']) ) {
+        $this->transcript[$casawp_id]['action'] = 'new';
+      }
+
+      //set new hash;
+      $new_meta_data['last_import_hash'] = $curImportHash;
+
+
+
+      /* main post data */
+      $new_main_data = array(
+        'ID'            => $wp_post->ID,
+        'post_title'    => ($projectData['detail']['name'] ? $projectData['detail']['name'] : $casawp_id),
+        'post_content'  => $this->extractDescription($projectData['detail']),
+        'post_status'   => 'publish',
+        'post_type'     => 'casawp_project',
+        'post_excerpt'  => '',
+        'menu_order'    => $sort
+      );
+
+      $old_main_data = array(
+        'ID'            => $wp_post->ID,
+        'post_title'    => $wp_post->post_title   ,
+        'post_content'  => $wp_post->post_content ,
+        'post_status'   => $wp_post->post_status  ,
+        'post_type'     => $wp_post->post_type    ,
+        'post_excerpt'  => '',
+        'menu_order'    => $wp_post->menu_order
+      );
+
+      if ($parent_post) {
+        $new_main_data['post_parent'] = $parent_post->ID;
+        $old_main_data['post_parent'] = $parent_post->ID;
+      }
+
+      if ($new_main_data != $old_main_data) {
+        foreach ($old_main_data as $key => $value) {
+          if ($new_main_data[$key] != $old_main_data[$key]) {
+            $this->transcript[$casawp_id]['main_data'][$key]['from'] = $old_main_data[$key];
+            $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
+          }
+        }
+        
+
+        //manage post_name and post_date (if new)
+        if (!$wp_post->post_name) {
+          $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
+          //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
+        } else {
+          $new_main_data['post_name'] = $wp_post->post_name;
+        }
+
+        //persist change
+        $newPostID = wp_insert_post($new_main_data);
+      }
+
+
+      ksort($new_meta_data);
+
+      if ($new_meta_data != $old_meta_data) {
+        foreach ($new_meta_data as $key => $value) {
+          $newval = $value;
+          $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
+          if (($oldval || $newval) && $oldval != $newval) {
+            update_post_meta($wp_post->ID, $key, $newval);
+            $this->transcript[$casawp_id]['meta_data'][$key]['from'] = $oldval;
+            $this->transcript[$casawp_id]['meta_data'][$key]['to'] = $newval;
+          }
+        }
+
+        //remove supurflous meta_data
+        foreach ($old_meta_data as $key => $value) {
+          if (
+            !isset($new_meta_data[$key]) 
+            && !in_array($key, array('casawp_id'))
+            && strpos($key, '_') !== 0
+          ) {
+            //remove
+            delete_post_meta($wp_post->ID, $key, $value);
+            $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
+          }
+        }
+      }
+    } //end update
+
+
+
+    if (isset($projectData['units'])) {
+      foreach ($projectData['units'] as $sortu => $unitData) {
+
+        $lang = $projectData['lang'];
+        //is unit already in db
+        $unit_casawp_id = 'unit_'.$unitData['ref'] . $lang;
+
+        $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
+        $wp_unit_post = false;
+        while ( $the_query->have_posts() ) :
+          $the_query->the_post();
+          global $post;
+          $wp_unit_post = $post;
+        endwhile;
+        wp_reset_postdata();
+
+        //if not create a basic project
+        if (!$wp_unit_post) {
+          $this->transcript[$unit_casawp_id]['action'] = 'new';
+          $the_post['post_title'] = $unitData['detail']['name'];
+          $the_post['post_content'] = 'unsaved unit';
+          $the_post['post_status'] = 'pending';
+          $the_post['post_type'] = 'casawp_project';
+          $the_post['post_name'] = sanitize_title_with_dashes($unit_casawp_id . '-' . $unitData['detail']['name'],'','save');
+          $_POST['icl_post_language'] = $lang;
+          $insert_id = wp_insert_post($the_post);
+          update_post_meta($insert_id, 'casawp_id', $unit_casawp_id);
+          $wp_unit_post = get_post($insert_id, OBJECT, 'raw');
+        }
+
+        $found_posts[] = $wp_unit_post->ID;
+
+        
+        $found_posts = $this->updateProject($sortu, $unit_casawp_id, $unitData, $wp_unit_post, $wp_post, $found_posts);
+        $this->updateInsertWPMLconnection($wp_unit_post, $lang, 'unit_'.$unitData['ref']);
+
+
+      }
+    }
+    
+
+    return $found_posts;
+
+
+    //create links to properties
+    /*foreach ($unitData['property_links'] as $sort => $propertyLink) {
+      //1. find property by casawp_id
+      //is it already in db
+      $casawp_id = $propertyLink['ref'] . $lang;
+
+      $the_query = new \WP_Query( 'post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+      $wp_post = false;
+      while ( $the_query->have_posts() ) :
+        $the_query->the_post();
+        global $post;
+        $wp_post = $post;
+      endwhile;
+      wp_reset_postdata();
+
+      if ($wp_post) {
+        //create link and sort
+        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+        print_r('found');
+        echo "</textarea>";
+      } else {
+        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+        print_r('not found!!!');
+        echo "</textarea>";
+      }
+
+      //$casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
+    }*/
+
+  }
 
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post){
 
@@ -1471,18 +1877,19 @@ class Import {
     ksort($old_meta_data);
 
     //generate import hash
-    $cleanProjectData = $property;
+    $cleanPropertyData = $property;
     //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
-    unset($cleanProjectData['last_update']);
-    if (isset($cleanProjectData['modified'])) {
-        unset($cleanProjectData['modified']);
+    unset($cleanPropertyData['last_update']);
+    unset($cleanPropertyData['last_import_hash']);
+    if (isset($cleanPropertyData['modified'])) {
+        unset($cleanPropertyData['modified']);
     }
-    $curImportHash = md5(serialize($cleanProjectData));
+    $curImportHash = md5(serialize($cleanPropertyData));
 
     //skip if is the same as before
     if (isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
       if ($curImportHash == $old_meta_data['last_import_hash']) {
-        return 'skiped';
+        return 'skipped';
       }
     }
 
