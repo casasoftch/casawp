@@ -279,7 +279,7 @@ class Import {
 
         global $wpdb;
         $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE 
-          element_id = ' . $wp_post->ID . ' 
+          trid = ' . $trid . ' 
           AND language_code = \'' . $lang . '\' 
           ', OBJECT );
         
@@ -298,7 +298,19 @@ class Import {
         if (!$existing) {
           $wpdb->insert( $wpdb->prefix . 'icl_translations', $new );
         } else {
-          $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
+          $old = array(
+            'trid'          => $existing[0]->trid,
+            'element_id'    => $existing[0]->element_id, 
+            'element_type'  => $existing[0]->element_type, 
+            'language_code' => $existing[0]->language_code
+          );
+          if ($this->getMainLang() != $lang) {
+            $old['source_language_code'] = $existing[0]->source_language_code;
+          }
+          if ($new != $old) {
+            $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
+          }
+          
         }
 
       } else {
