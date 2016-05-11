@@ -19,6 +19,7 @@
 	</section>
 	<?php if ( have_posts() ): ?>
 		<?php while ( have_posts() ) : the_post(); ?>
+			<?= $casawp->renderProjectSingle($post); ?>
 			<section class="section text-image-section light">
 				<div class="container">
 					<div class="row">

@@ -236,6 +236,11 @@ class Plugin {
         return $offer->render('single', array('offer' => $offer));
     }
 
+    public function renderProjectSingle($post){
+        $project = $this->prepareProject($post);
+        return $project->render('project-single', array('project' => $project));
+    }
+
     public function renderArchiveSingle($post){
         $offer = $this->prepareOffer($post);
         return $offer->render('single-archive', array('offer' => $offer));

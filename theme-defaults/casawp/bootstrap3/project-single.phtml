@@ -1,0 +1,7 @@
+<?php 
+	echo '<h1>'.$this->project->getTitle().'</h1>';
+	echo "<h2>Units</h2>";
+	foreach ($this->project->getUnits() as $unit) {
+		echo $unit->getTitle() . '<br>';
+	}
+ ?>

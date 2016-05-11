@@ -3,16 +3,11 @@ namespace casawp\Service;
 
 class Project{
 	public $post = null;
-    private $categories = null; //lazy
-    private $features = null; //lazy
-    private $utilities = null; //lazy
     private $availability = null; //lazy
     private $attachments = null; //lazy
     private $documents = null; //lazy
-    private $single_dynamic_fields = null;  //lazy
-    private $archive_dynamic_fields = null;  //lazy
-    private $salestype = null;  //lazy
     private $metas = null;  //lazy
+    private $units = null; //lazy
 
     private $projectService = null;
 
@@ -334,8 +329,8 @@ class Project{
 
 	public function getContentParts(){
 		$content = apply_filters('the_content', $this->post->post_content);
-     	$content_parts = explode('<hr class="property-separator" />', $content);
-     	return $content_parts;
+		$content_parts = explode('<hr class="property-separator" />', $content);
+		return $content_parts;
 	}
 
 
@@ -343,8 +338,6 @@ class Project{
 	=            Render Actions            =
 	======================================*/
 
-	
-	
 	public function renderGallery(){
 		$images = $this->getImages();
 		return $this->render('gallery', array(
@@ -359,7 +352,6 @@ class Project{
 			'images' => $images,
 		));
 	}
-
 
 	public function renderAddress(){
 		return $this->render('address', array(
@@ -385,6 +377,28 @@ class Project{
 			}
 		}
 		return $data;
+	}
+
+	public function getUnits(){
+		if (!$this->units) {
+			$unit_posts = get_children( array(
+				'post_parent' => $this->post->ID,
+				'post_type'   => 'casawp_project', 
+				'numberposts' => -1,
+				'post_status' => 'any'
+			), OBJECT );
+			$units = array();
+			foreach ($unit_posts as $post) {
+				$project = new Project($this);
+				$project->setPost($post);
+				$units[] = $project;
+			}
+
+			$this->units = $units;
+
+		}
+
+		return $this->units;
 	}
 
 	public function renderContactForm(){
