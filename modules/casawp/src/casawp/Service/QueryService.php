@@ -171,6 +171,7 @@ class QueryService{
                 break;
         }
 
+
         /*$meta_query_items_new = array();
         if ($this->query['projectunit_id']) {
             $meta_query_items_new[] = array(
