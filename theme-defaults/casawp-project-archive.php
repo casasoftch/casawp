@@ -25,8 +25,9 @@ __( 'Project list', 'casawp' );
 	</section>
 	<?php if ( have_posts() ): ?>
 	<?php while ( have_posts() ) : the_post(); ?>
-	<?= $casawp->renderProjectArchiveSingle($post); ?>
-<?php endwhile; ?>
+	
+		<?= $casawp->renderProjectArchiveSingle($post); ?>
+	<?php endwhile; ?>
 <?= $casawp->renderArchivePagination() ?>
 <?php wp_reset_query(); ?>
 <?php endif; ?>

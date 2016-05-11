@@ -8,8 +8,9 @@
 					</div>
 				</div>
 				<div class="col-lg-8 col-md-10 col-sm-20 spacing-sm spacing-xs-small reveal animated fadeIn" data-delay="800">
+					
 					<h2 class="section-title limited" style="border-color: #fcc41e;">
-						Bannäbni Süd, Baar
+						<a href="<?= get_permalink($project->post) ?>"><?= $project->getTitle(); ?></a>
 					</h2>
 					<p>Projektenwicklung und Vermarktung.</p>
 					<h4>Ausgangslage:</h4>
@@ -33,9 +34,13 @@
 </div>
 <hr class="soften">
 
-<div class="casawp-thumbnail-wrapper">
-	<?php echo (has_post_thumbnail( $project->post->ID ) ? $project->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
-</div>
-<div class="casawp-text">
-	<h3><a href="<?= get_permalink($project->post) ?>"><?php echo $project->getTitle(); ?></a></h3>
-</div>
+<?php 
+	/*
+		<div class="casawp-thumbnail-wrapper">
+			<?php echo (has_post_thumbnail( $project->post->ID ) ? $project->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
+		</div>
+		<div class="casawp-text">
+			<h3><a href="<?= get_permalink($project->post) ?>"><?php echo $project->getTitle(); ?></a></h3>
+		</div>
+	*/
+?>
