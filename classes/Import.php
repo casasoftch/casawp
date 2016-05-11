@@ -1802,12 +1802,21 @@ class Import {
       }
     } //end update
 
-
+    $lang = $this->getMainLang();
+    if ($this->hasWPML()) {
+      if ($parent_post) {
+        $my_post_language_details = apply_filters( 'wpml_post_language_details', NULL, $parent_post->ID );
+        if ($my_post_language_details) {
+          $lang = $my_post_language_details['language_code'];
+        }
+      } else {
+        $lang = $projectData['lang'];  
+      }
+    }
 
     if (isset($projectData['units'])) {
       foreach ($projectData['units'] as $sortu => $unitData) {
 
-        $lang = $projectData['lang'];
         //is unit already in db
         $unit_casawp_id = 'unit_'.$unitData['ref'] . $lang;
 
@@ -1843,39 +1852,40 @@ class Import {
 
       }
     }
+
+
+    if ($parent_post && isset($projectData['property_links'])) {
+      //create links to properties
+      $sort = 0;
+      foreach ($projectData['property_links'] as $sort => $propertyLink) {
+        $sort++;
+        //1. find property by casawp_id
+        //is it already in db
+        $casawp_id = $propertyLink['ref'] . $lang;
+
+        $the_query = new \WP_Query( 'post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+        $wp_property_post = false;
+        while ( $the_query->have_posts() ) :
+          $the_query->the_post();
+          global $post;
+          $wp_property_post = $post;
+        endwhile;
+        wp_reset_postdata();
+
+        if ($wp_property_post) {
+          update_post_meta($wp_property_post->ID, 'projectunit_id', $wp_post->ID);
+          update_post_meta($wp_property_post->ID, 'projectunit_sort', $sort);
+
+        } else {
+        }
+
+        //$casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
+      }
+    }
     
 
     return $found_posts;
 
-
-    //create links to properties
-    /*foreach ($unitData['property_links'] as $sort => $propertyLink) {
-      //1. find property by casawp_id
-      //is it already in db
-      $casawp_id = $propertyLink['ref'] . $lang;
-
-      $the_query = new \WP_Query( 'post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
-      $wp_post = false;
-      while ( $the_query->have_posts() ) :
-        $the_query->the_post();
-        global $post;
-        $wp_post = $post;
-      endwhile;
-      wp_reset_postdata();
-
-      if ($wp_post) {
-        //create link and sort
-        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-        print_r('found');
-        echo "</textarea>";
-      } else {
-        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-        print_r('not found!!!');
-        echo "</textarea>";
-      }
-
-      //$casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
-    }*/
 
   }
 
@@ -2179,7 +2189,7 @@ class Import {
       foreach ($old_meta_data as $key => $value) {
         if (
           !isset($new_meta_data[$key]) 
-          && !in_array($key, array('casawp_id'))
+          && !in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort'))
           && strpos($key, '_') !== 0
         ) {
           //remove
