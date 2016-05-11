@@ -282,7 +282,7 @@ class Import {
           trid = ' . $trid . ' 
           AND language_code = \'' . $lang . '\' 
           ', OBJECT );
-        
+
           $new = array(
             'trid' => $trid,
             'element_id' => $wp_post->ID, 
@@ -1583,11 +1583,14 @@ class Import {
 
     //projects
     $found_posts = array();
+    $sorti = 0;
     foreach ($xml->projects->project as $project) {
+      $sorti++;
+      
       $projectData = $this->project2Array($project);
       $projectDataLangified = $this->langifyProject($projectData);
 
-      foreach ($projectDataLangified as $sorti => $projectData) {
+      foreach ($projectDataLangified as $projectData) {
         $lang = $projectData['lang'];
         //is project already in db
         $casawp_id = 'project_'.$projectData['ref'] . $projectData['lang'];
