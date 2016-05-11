@@ -3,5 +3,10 @@
 	echo "<h2>Units</h2>";
 	foreach ($this->project->getUnits() as $unit) {
 		echo $unit->getTitle() . '<br>';
+		if ($unit->getProperties()) {
+			foreach ($unit->getProperties() as $property) {
+				echo '--PROP<br>';
+			}
+		}
 	}
- ?>
+?>

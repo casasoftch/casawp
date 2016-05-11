@@ -8,6 +8,7 @@ class Project{
     private $documents = null; //lazy
     private $metas = null;  //lazy
     private $units = null; //lazy
+    private $properties = null; //lazy
 
     private $projectService = null;
 
@@ -379,6 +380,7 @@ class Project{
 		return $data;
 	}
 
+	//only for top level projects
 	public function getUnits(){
 		if (!$this->units) {
 			$unit_posts = get_children( array(
@@ -399,6 +401,27 @@ class Project{
 		}
 
 		return $this->units;
+	}
+
+	//only for sublevel projects/units
+	public function getProperties(){
+		if (!$this->properties) {
+			$properties = array();
+			$queryService = new \casawp\Service\QueryService;
+
+			$the_query = $queryService->createWpQuery(array(
+				'projectunit_id' => $this->post->ID
+			));
+
+			if ( $the_query->have_posts() ) {
+				while ( $the_query->have_posts() ) {
+					$the_query->the_post();
+					$properties[] = 'foo';
+				}
+			}
+			$this->properties = $properties;
+		}
+		return $this->properties;
 	}
 
 	public function renderContactForm(){
