@@ -192,6 +192,11 @@ class Plugin {
             $this->queryService->setQuery();
             $query = $this->queryService->applyToWpQuery($query);
         }
+        if ($query->is_main_query() && is_post_type_archive( 'casawp_project' )){
+            /*$this->queryService->setQuery();
+            $query = $this->queryService->applyToWpQuery($query);*/
+            $query->set('post_parent', 0);
+        }
         return $query;
     }
     
