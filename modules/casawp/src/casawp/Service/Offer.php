@@ -1059,6 +1059,9 @@ class Offer{
 			    } else if (isset($postdata['email']) && $postdata['email']) {
 			    	//SPAM
 			    } else {
+
+			    	do_action('casawp_before_inquirystore', $postdata);
+
 			    	//add to WP for safekeeping
 			    	$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle());
 			    	$post = array(
@@ -1078,6 +1081,7 @@ class Offer{
 			    	add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
 
 
+			    	do_action('casawp_before_inquirysend', $postdata);
 
 					if (get_option('casawp_inquiry_method') == 'casamail') {
 						//casamail
@@ -1130,6 +1134,8 @@ class Offer{
 			        } else {
 			        	
 			        }
+
+			        do_action('casawp_after_inquirysend', $postdata);
 			    }
 
 			} else {
