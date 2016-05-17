@@ -97,6 +97,7 @@ if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
+	$import->addToLog('Update from casagateway caused import');;
 	//]\$import = new casawp\Import(true, false);
 }
 

@@ -979,7 +979,9 @@
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
 					$log = $dir."/".date('Y M').'.log';
 
-					echo "<h3>" . date('Y M') . "</h3>";
+					echo $log;
+
+					/*echo "<h3>" . date('Y M') . "</h3>";
 					echo "<dl>";
 				    if (is_file($log)) {
 				    	$file_handle = fopen($log, "r");
@@ -1006,7 +1008,7 @@
 						}
 						fclose($file_handle);	
 				    }
-				    echo "</dl>";
+				    echo "</dl>";*/
 
 					break;
 				case 'general':
