@@ -1734,7 +1734,17 @@ class Import {
     //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
     //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
-
+    //publisher options (without custom categories)
+    $publisher_options_temp = array();
+    if (isset($publisher_options)) {
+      foreach ($publisher_options as $key => $option) {
+        if (strpos($key, 'custom_category') === 0) {
+        } else {
+          $new_meta_data[$key] = $option[0];
+        }
+      }
+    }
+    
     
     foreach ($new_meta_data as $key => $value) {
      /* if (!$value) {
