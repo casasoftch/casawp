@@ -1738,9 +1738,13 @@ class Import {
     $publisher_options_temp = array();
     if (isset($publisher_options)) {
       foreach ($publisher_options as $key => $option) {
-        if (strpos($key, 'custom_category') === 0) {
-        } else {
-          $new_meta_data[$key] = $option[0];
+        switch ($key) {
+          case 'alternate_title':
+          case 'alternate_description':
+            $new_meta_data[$key] = $option[0];
+            break;
+          default:
+            break;
         }
       }
     }
