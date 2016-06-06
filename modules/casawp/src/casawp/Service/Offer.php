@@ -149,6 +149,18 @@ class Offer{
 		return $address;
 	}
 
+	/*====================================
+	=            Conditionals            =
+	====================================*/
+
+	public function hasCategory($slug){
+		foreach ($this->getCategoriesArray() as $item) {
+			if ($item["key"] == $slug) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/*====================================
 	=            Data Getters            =

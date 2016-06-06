@@ -67,7 +67,8 @@ class ContactForm extends Form
                     'AT' => 'Östereich',
                     'DE' => 'Deutschland',
                     'FR' => 'Frankreich',
-                    'IT' => 'Italien'
+                    'IT' => 'Italien',
+                    'other' => 'Sonstige'
                 )
             ),
         ));
