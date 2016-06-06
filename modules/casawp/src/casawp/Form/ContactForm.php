@@ -164,10 +164,6 @@ class ContactForm extends Form
             ),
         ));
         $filter->add(array(
-            'name' => 'country',
-            'required' => false,
-        ));
-        $filter->add(array(
             'name' => 'locality',
             'required' => true,
             'validators' => array(
