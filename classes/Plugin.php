@@ -129,10 +129,10 @@ class Plugin {
         $serviceManager->setService('translator', $translator);
 
         // mvc translator
-        /*$MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
+        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
         $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
         \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
-        $this->MVCtranslator = $MVCtranslator;*/
+        $this->MVCtranslator = $MVCtranslator;
 
         $this->translator = $translator;
 
