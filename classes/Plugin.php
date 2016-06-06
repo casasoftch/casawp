@@ -571,8 +571,6 @@ class Plugin {
                 header('Content-Type: application/json');
                 
             } else {
-                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
-
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
                     case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-single.php'; break;
@@ -585,7 +583,7 @@ class Plugin {
             }
 
         }
-        if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' )) {
+        if (is_post_type_archive( 'casawp_property' ) || is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature')) {
             if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
                 header('Content-Type: application/json');
@@ -594,7 +592,7 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-                //add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
 
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
@@ -619,7 +617,7 @@ class Plugin {
 
             } else {
                 add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
-                
+
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
                     case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-single.php'; break;
