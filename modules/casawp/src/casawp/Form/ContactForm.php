@@ -67,7 +67,8 @@ class ContactForm extends Form
                     'AT' => 'Östereich',
                     'DE' => 'Deutschland',
                     'FR' => 'Frankreich',
-                    'IT' => 'Italien'
+                    'IT' => 'Italien',
+                    'other' => 'Sonstige'
                 )
             ),
         ));
@@ -161,6 +162,10 @@ class ContactForm extends Form
                     ),
                 ),
             ),
+        ));
+        $filter->add(array(
+            'name' => 'country',
+            'required' => false,
         ));
         $filter->add(array(
             'name' => 'locality',
