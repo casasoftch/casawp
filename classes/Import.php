@@ -2044,7 +2044,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
+      'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
 
@@ -2055,7 +2055,7 @@ class Import {
       'post_status'   => $wp_post->post_status  ,
       'post_type'     => $wp_post->post_type    ,
       'post_excerpt'  => $wp_post->post_excerpt ,
-      //'post_date'     => $wp_post->post_date    ,
+      'post_date'     => $wp_post->post_date    ,
       /*'post_modified' => $wp_post->post_modified,*/
     );
     if ($new_main_data != $old_main_data) {
@@ -2063,6 +2063,7 @@ class Import {
         if ($new_main_data[$key] != $old_main_data[$key]) {
           $this->transcript[$casawp_id]['main_data'][$key]['from'] = $old_main_data[$key];
           $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
+          $this->addToLog('updating main data (' . $key . '): ' . $old_main_data[$key] . ' -> ' . $new_main_data[$key]);
         }
       }
       
@@ -2070,9 +2071,10 @@ class Import {
       //manage post_name and post_date (if new)
       if (!$wp_post->post_name) {
         $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offer['name'],'','save');
-        $new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
+        //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
       } else {
         $new_main_data['post_name'] = $wp_post->post_name;
+        //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
       }
 
       //persist change
