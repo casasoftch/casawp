@@ -7,18 +7,18 @@
 	<?php endif ?>	
 
 	<?php if ($form->getSalestypeOptions()): ?>
-		<?php echo $this->formElement($form->get('salestypes')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Vermarktungsart wählen')); ?>
+		<?php echo $this->formElement($form->get('salestypes')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose offer','casawp'))); ?>
 	<?php endif ?>
 	
 	<?php if ($form->getCategoryOptions()): ?>
-		<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Kategorie wählen')); ?>
+		<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
 	<?php endif ?>
 
 	<?php if ($form->getLocationOptions()): ?>
-		<?php echo $this->formElement($form->get('locations')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', 'Ortschaft wählen')); ?>
+		<?php echo $this->formElement($form->get('locations')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose locality','casawp'))); ?>
 	<?php endif ?>
 	
-	<input type="submit" class="casawp-filterform-button" value="<?= __('Search') ?>">
+	<input type="submit" class="casawp-filterform-button" value="<?= __('Search', 'casawp') ?>">
 
 	<?= $this->form()->closeTag(); ?>
 	<div class="clearfix"></div>
