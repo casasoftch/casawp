@@ -978,36 +978,37 @@
 				case 'logs':
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
 					$log = $dir."/".date('Y M').'.log';
-					echo "<h3>" . date('Y M') . "</h3>";
-					echo "<table>";
+
+					echo $log;
+
+					/*echo "<h3>" . date('Y M') . "</h3>";
+					echo "<dl>";
 				    if (is_file($log)) {
 				    	$file_handle = fopen($log, "r");
 						while (!feof($file_handle)) {
-							echo "<tr>";
 							$line = fgets($file_handle);
 							$arr = json_decode($line, true);
 							if ($arr) {
 						   		foreach ($arr as $datestamp => $properties) {
-						   			echo '<th valign="top"><strong>'.str_replace(' ', "T", $datestamp) .'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
+						   			echo '<dt>'.str_replace(' ', "T", $datestamp) .'</dt><dd><pre style="margin-top:0px;padding-left:10px;">';
 						   				if (is_array($properties)) {
 						   					foreach ($properties as $slug => $property) {
-							   					echo "\n" . $slug . ': ' . json_encode($property);
+							   					echo "\n" . $slug . ': ' . htmlentities(json_encode($property));
 							   				}
 						   				} else {
 						   					echo $properties;
 						   				}
 						   				
-						   			echo '</pre></td>';
+						   			echo '</pre></dd>';
 						   		}
 						  	} else {
-								echo '<th valign="top"></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></td>';	
+								echo '<dt></dt><dd><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></dd>';	
 							}
-							echo "</tr>";
 						   
 						}
 						fclose($file_handle);	
 				    }
-				    echo "</table>";
+				    echo "</dl>";*/
 
 					break;
 				case 'general':

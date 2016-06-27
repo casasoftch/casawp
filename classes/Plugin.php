@@ -129,10 +129,10 @@ class Plugin {
         $serviceManager->setService('translator', $translator);
 
         // mvc translator
-        /*$MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
+        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
         $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
         \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
-        $this->MVCtranslator = $MVCtranslator;*/
+        $this->MVCtranslator = $MVCtranslator;
 
         $this->translator = $translator;
 
@@ -192,6 +192,11 @@ class Plugin {
             $this->queryService->setQuery();
             $query = $this->queryService->applyToWpQuery($query);
         }
+        if ($query->is_main_query() && is_post_type_archive( 'casawp_project' )){
+            /*$this->queryService->setQuery();
+            $query = $this->queryService->applyToWpQuery($query);*/
+            $query->set('post_parent', 0);
+        }
         return $query;
     }
     
@@ -231,9 +236,19 @@ class Plugin {
         return $offer->render('single', array('offer' => $offer));
     }
 
+    public function renderProjectSingle($post){
+        $project = $this->prepareProject($post);
+        return $project->render('project-single', array('project' => $project));
+    }
+
     public function renderArchiveSingle($post){
         $offer = $this->prepareOffer($post);
         return $offer->render('single-archive', array('offer' => $offer));
+    }
+
+    public function renderProjectArchiveSingle($post){
+        $project = $this->prepareOffer($post);
+        return $project->render('project-archive-single', array('project' => $project));
     }
 
     public function renderArchivePagination(){
@@ -544,6 +559,8 @@ class Plugin {
     }
 
     public function include_template_function( $template_path ) {
+
+        //project main view files
         if ( get_post_type() == 'casawp_property' && is_single()) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json'])  || isset($_GET['casawp_map']))) {
                 $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
@@ -566,7 +583,7 @@ class Plugin {
             }
 
         }
-        if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' )) {
+        if (is_post_type_archive( 'casawp_property' ) || is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature')) {
             if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
                 header('Content-Type: application/json');
@@ -584,6 +601,53 @@ class Plugin {
                     default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
                 }
                 if ( $theme_file = locate_template(array('casawp-archive.php'))) {
+                    $template_path = $theme_file;
+                }
+            }
+        }
+
+        //project main view files
+        if ( get_post_type() == 'casawp_project' && is_single()) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-single-json.php';
+                if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+                header('Content-Type: application/json');
+
+            } else {
+                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-single.php'; break;
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-project-single.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-single.php'; break;
+                }
+                if ( $theme_file = locate_template( array( 'casawp-project-single.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            }
+
+        }
+        if (is_post_type_archive( 'casawp_project' )) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']) )) {
+                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
+                header('Content-Type: application/json');
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-archive-json.php';
+                if ( $theme_file = locate_template( array( 'casawp-project-archive-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            } else {
+
+
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-archive.php'; break;
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-project-archive.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-archive.php'; break;
+                }
+                if ( $theme_file = locate_template(array('casawp-project-archive.php'))) {
                     $template_path = $theme_file;
                 }
             }
@@ -1441,6 +1505,41 @@ class Plugin {
             'show_in_nav_menus'  => true
         );
         register_post_type( 'casawp_property', $args );
+
+
+        /*----------  projects  ----------*/
+        
+        $labels = array(
+            'name'               => __('Projects', 'casawp'),
+            'singular_name'      => __('Project', 'casawp'),
+            'add_new'            => __('Add New', 'casawp'),
+            'add_new_item'       => __('Add New Project', 'casawp'),
+            'edit_item'          => __('Edit Project', 'casawp'),
+            'new_item'           => __('New Project', 'casawp'),
+            'all_items'          => __('All Projects', 'casawp'),
+            'view_item'          => __('View Project', 'casawp'),
+            'search_items'       => __('Search Projects', 'casawp'),
+            'not_found'          => __('No properties found', 'casawp'),
+            'not_found_in_trash' => __('No properties found in Trash', 'casawp'),
+            'menu_name'          => __('Projects', 'casawp')
+        );
+        $args = array(
+            'labels'             => $labels,
+            'public'             => true,
+            'publicly_queryable' => true,
+            'show_ui'            => true,
+            'show_in_menu'       => true,
+            'query_var'          => true,
+            'rewrite'            => array( 'slug' => 'projekte' ),
+            'capability_type'    => 'post',
+            'has_archive'        => true,
+            'hierarchical'       => true,
+            'menu_position'      => null,
+            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes', 'revisions' ),
+            'menu_icon'          => 'dashicons-admin-tools',
+            'show_in_nav_menus'  => true
+        );
+        register_post_type( 'casawp_project', $args );
         
 
 
@@ -1751,5 +1850,11 @@ class Plugin {
         $offerService = $this->serviceManager->get('casawpOffer');
         $offerService->setPost($post);
         return $offerService->getCurrent();
+    }
+
+    public function prepareProject($post){
+        $service = $this->serviceManager->get('casawpProject');
+        $service->setPost($post);
+        return $service->getCurrent();
     }
 }

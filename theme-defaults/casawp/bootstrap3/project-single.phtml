@@ -1,0 +1,10 @@
+<?php 
+	foreach ($this->project->getUnits() as $unit) {
+		echo $unit->getTitle() . '<br>';
+		if ($unit->getProperties()) {
+			foreach ($unit->getProperties() as $property) {
+				echo '--PROP<br>';
+			}
+		}
+	}
+?>

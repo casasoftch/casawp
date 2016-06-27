@@ -149,6 +149,18 @@ class Offer{
 		return $address;
 	}
 
+	/*====================================
+	=            Conditionals            =
+	====================================*/
+
+	public function hasCategory($slug){
+		foreach ($this->getCategoriesArray() as $item) {
+			if ($item["key"] == $slug) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/*====================================
 	=            Data Getters            =
@@ -1044,49 +1056,49 @@ class Offer{
         }
 
         if ($_POST) {
-        	$postdata = $this->sanitizeContactFormPost($_POST);
-        	$filter = $form->getFilter();
-	        $form->setInputFilter($filter);
-        	$form->setData($postdata);
-        	if ($form->isValid()) {
-			    $validatedData = $form->getData();
-			    $sent = true;
-			    if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'send-inquiry')) {
-			    	echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-			    	print_r('NONCE ISSUE BITTE MELDEN');
-			    	echo "</textarea>";
-			    	//SPAM
-			    } else if (isset($postdata['email']) && $postdata['email']) {
-			    	//SPAM
-			    } else {
-			    	do_action('casawp_before_inquirystore', array(
-			    		'postdata' => $postdata,
-			    		'offer' => $this
-			    	));
+			$postdata = $this->sanitizeContactFormPost($_POST);
+			$filter = $form->getFilter();
+			$form->setInputFilter($filter);
+			$form->setData($postdata);
+			if ($form->isValid()) {
+				$validatedData = $form->getData();
+				$sent = true;
+				if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'send-inquiry')) {
+					echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+					print_r('NONCE ISSUE BITTE MELDEN');
+					echo "</textarea>";
+					//SPAM
+				} else if (isset($postdata['email']) && $postdata['email']) {
+					//SPAM
+				} else {
+					do_action('casawp_before_inquirystore', array(
+						'postdata' => $postdata,
+						'offer' => $this
+					));
 
-			    	//add to WP for safekeeping
-			    	$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle());
-			    	$post = array(
-			    		'post_type' => 'casawp_inquiry',
-			    		'post_content' => $form->get('message')->getValue(),
-			    		'post_title' => $post_title,
-			    		'post_status' => 'private',
-			    		'ping_status' => false
-			    	);
-			    	$inquiry_id = wp_insert_post($post);
-			    	foreach ($form->getElements() as $element) {
-			    		if (!in_array($element->getName(), array('message')) ) {
-			    			add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
-			    		}
-			    	}
-			    	add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
-			    	add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
+					//add to WP for safekeeping
+					$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle());
+					$post = array(
+						'post_type' => 'casawp_inquiry',
+						'post_content' => $form->get('message')->getValue(),
+						'post_title' => $post_title,
+						'post_status' => 'private',
+						'ping_status' => false
+					);
+					$inquiry_id = wp_insert_post($post);
+					foreach ($form->getElements() as $element) {
+						if (!in_array($element->getName(), array('message')) ) {
+							add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
+						}
+					}
+					add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
+					add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
 
 
-			    	do_action('casawp_before_inquirysend', array(
-			    		'postdata' => $postdata,
-			    		'offer' => $this
-			    	));
+					do_action('casawp_before_inquirysend', array(
+						'postdata' => $postdata,
+						'offer' => $this
+					));
 
 
 					if (get_option('casawp_inquiry_method') == 'casamail') {

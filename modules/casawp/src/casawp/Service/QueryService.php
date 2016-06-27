@@ -25,6 +25,7 @@ class QueryService{
             'my_lng' => null,
             'my_lat' => null,
             'radius_km' => 10,
+            'projectunit_id' => null
         );
         $this->setQuery();
     }
@@ -169,6 +170,20 @@ class QueryService{
                 $args['orderby'] = 'date';
                 break;
         }
+
+
+        /*$meta_query_items_new = array();
+        if ($this->query['projectunit_id']) {
+            $meta_query_items_new[] = array(
+                'key' => 'projectunit_id',
+                'value' => $this->query['projectunit_id'],
+                'compare'   => '='
+            );
+        }
+        if ($meta_query_items_new) {
+            $meta_query_items_new['relation'] = 'AND';
+            $args['meta_query'] = $meta_query_items_new;
+        }*/
 
 
         $taxquery_new = array();
