@@ -326,8 +326,7 @@ class QueryService{
             $where .= " AND $wpdb->posts.ID IN (SELECT post_id FROM $wpdb->postmeta WHERE
                  ( 6371 * acos( cos( radians(" . $mylat . ") ) 
                                 * cos( radians( latitude.meta_value ) ) 
-                                * cos( radians( longitude.meta_value ) 
-                                - radians(" . $mylng . ") ) 
+                                * cos( radians( longitude.meta_value ) - radians(" . $mylng . ") ) 
                                 + sin( radians(" . $mylat . ") ) 
                                 * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";  
               
@@ -338,8 +337,10 @@ class QueryService{
 
     public function nearmejoin($join){
         global $wpdb;
-        $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casawp_property_geo_latitude' ";
-        $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casawp_property_geo_longitude' ";
+        // THE SPACE IS NEEDED!!!!!!!!!!!!!!!
+        $join .= " LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'property_geo_latitude' ";
+        $join .= " LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'property_geo_longitude' ";
+
         return $join;
     }
 
