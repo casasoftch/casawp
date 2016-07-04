@@ -26,7 +26,7 @@ Displays properties anywhere shortcodes are accepted.
 
 The correspondig view file `shortcode-properties.phtml` is responsible for the looks.
 
-Accepted Params:
+Accepted Query Params:
 
 * 'post-type'
 * 'posts_per_page'
@@ -47,3 +47,7 @@ Accepted Params:
 * 'my_lat'
 * 'radius_km'
 * 'projectunit_id'
+
+Accepted pass-through variables
+
+* col_count

@@ -111,7 +111,13 @@ class Plugin {
 
         $the_query = $this->queryService->createWpQuery($args);
 
-        return $this->render('shortcode-properties', array('casawp' => $this, 'the_query' => $the_query));
+        $col_count = (isset($args['col_count']) && is_numeric($args['col_count']) ? $args['col_count'] : 3);
+
+        return $this->render('shortcode-properties', array(
+            'casawp' => $this, 
+            'the_query' => $the_query,
+            'col_count' => $col_count
+        ));
         /*echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
         print_r($store);
         echo "</textarea>";*/
