@@ -805,20 +805,27 @@ class Offer{
 			$datapoints = $this->getPrimarySingleDatapoints();
 			$defaults = array(
 				'pattern_1' => '{{label}}: {{value}}<br>',
-				'pattern_2' => '{{value}}<br>'
+				'pattern_2' => '{{value}}<br>',
+				'max' => 99
 			);
 		} else {
 			$datapoints = $this->getPrimaryArchiveDatapoints();
 			$defaults = array(
 				'pattern_1' => '<tr><th>{{label}}</th><td>{{value}}</td></tr>',
-				'pattern_2' => '<tr><td colspan="2">{{value}}</td></tr>'
+				'pattern_2' => '<tr><td colspan="2">{{value}}</td></tr>',
+				'max' => 99
 			);
 		}
 
 		$args = array_merge($defaults, $args);
 
 		$html = '';
+		$i = 0;
 		foreach ($datapoints as $datapoint){
+			$i++;
+			if ($i > $args['max']) {
+				break;
+			}
 	        $field = str_replace('casawp_'.$context.'_show_', '', $datapoint);
 	        switch ($field) {
 	          case 'street_and_number':

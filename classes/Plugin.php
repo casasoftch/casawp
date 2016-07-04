@@ -30,7 +30,11 @@ class Plugin {
         $this->locale = substr(get_bloginfo('language'), 0, 2);
         add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
 
+        //what is this?
         add_shortcode('casawp_contact', array($this,'contact_shortcode'));
+
+        add_shortcode('casawp_properties', array($this,'properties_shortcode'));
+
         add_action('init', array($this, 'setPostTypes'));
         if(function_exists('acf_add_local_field_group') ):
             add_action('init', array($this, 'setACF'));
@@ -84,6 +88,37 @@ class Plugin {
             }
             add_action('wp_loaded', array($this, 'returnPrevNext'));
         }
+
+    }
+
+    public function properties_shortcode($args = array()){
+        
+        
+        add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+        $template_path = false;
+
+        $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+        switch ($viewgroup) {
+            case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-shortcode-properties.php'; break;
+            case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-shortcode-properties.php'; break;
+            default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-shortcode-properties.php'; break;
+        }
+        if ( $theme_file = locate_template(array('casawp-shortcode-properties.php'))) {
+            $template_path = $theme_file;
+        }
+
+
+        $the_query = $this->queryService->createWpQuery($args);
+
+        return $this->render('shortcode-properties', array('casawp' => $this, 'the_query' => $the_query));
+        /*echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+        print_r($store);
+        echo "</textarea>";*/
+
+        //require_once($template_path);
+
+
 
     }
 

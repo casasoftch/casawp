@@ -17,3 +17,33 @@ to override them with your theme.
 ##ViewFile Structure
 
 ![image](assets/custom-viewfiles-structure-ugly.png)
+
+##shortcodes
+
+`[casawp_properties categories="apartment" order="ASC" posts_per_page="15"]`
+
+Displays properties anywhere shortcodes are accepted.
+
+The correspondig view file `shortcode-properties.phtml` is responsible for the looks.
+
+Accepted Params:
+
+* 'post-type'
+* 'posts_per_page'
+* 'order'
+* 'ignore_sticky_posts'
+* 'post__not_in'
+* 'orderby'
+* 'categories'
+* 'locations'
+* 'salestypes'
+* 'availabilities'
+* 'categories_not'
+* 'locations_not'
+* 'salestypes_not'
+* 'availabilities_not'
+* 'features'
+* 'my_lng'
+* 'my_lat'
+* 'radius_km'
+* 'projectunit_id'
