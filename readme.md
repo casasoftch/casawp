@@ -18,7 +18,7 @@ to override them with your theme.
 
 ![image](assets/custom-viewfiles-structure-ugly.png)
 
-##shortcodes
+#Shortcodes
 
 `[casawp_properties categories="apartment" order="ASC" posts_per_page="15"]`
 
