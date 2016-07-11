@@ -3,18 +3,21 @@
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-filterform')); ?>
 		
 	<?php if ($form->getAvailabilityOptions()): ?>
-		    <?php echo $this->formElement($form->get('availabilities')->setAttribute('style', 'display:none')); ?>
+		<?php echo $this->formElement($form->get('availabilities')->setAttribute('style', 'display:none')); ?>
 	<?php endif ?>	
 
 	<?php if ($form->getSalestypeOptions()): ?>
+		<?php echo $this->formLabel($form->get('salestypes')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
 		<?php echo $this->formElement($form->get('salestypes')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose offer','casawp'))); ?>
 	<?php endif ?>
 	
 	<?php if ($form->getCategoryOptions()): ?>
+		<?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
 		<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
 	<?php endif ?>
 
 	<?php if ($form->getLocationOptions()): ?>
+		<?php echo $this->formLabel($form->get('locations')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
 		<?php echo $this->formElement($form->get('locations')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose locality','casawp'))); ?>
 	<?php endif ?>
 	
