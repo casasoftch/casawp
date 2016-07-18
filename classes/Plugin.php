@@ -560,7 +560,12 @@ class Plugin {
     public function renderArchiveFilter(){
         $form = new \casawp\Form\FilterForm(
             array(
-                'casawp_filter_categories_as_checkboxes' => get_option('casawp_filter_categories_as_checkboxes', false)
+                'casawp_filter_categories_elementtype' => get_option('casawp_filter_categories_elementtype', false),
+                'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
+                'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
+                'chosen_categories' => $this->queryService->getQueryValue('categories'),
+                'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
+                'chosen_locations' => $this->queryService->getQueryValue('locations'),
             ),
             $this->getCategories(),
             $this->getSalestypes(),

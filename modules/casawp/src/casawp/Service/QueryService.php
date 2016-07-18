@@ -63,6 +63,14 @@ class QueryService{
         return $this->query;
     }
 
+    public function getQueryValue($key){
+        if (array_key_exists($key, $this->query)) {
+            return $this->query[$key];
+        } else {
+            return false;
+        }
+    }
+
     private function interpretRequest(){
         $r_query = $_GET;
         $query = array();
@@ -71,42 +79,29 @@ class QueryService{
                 case 'casawp_category_s':
                 case 'casawp_category':
                 case 'categories':
-                    $query['categories'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_location_s':
                 case 'casawp_location':
                 case 'locations':
-                    $query['locations'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_salestype_s':
                 case 'casawp_salestype':
                 case 'salestypes':
-                    $query['salestypes'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_availability_s':
                 case 'casawp_availability':
                 case 'availabilities':
-                    $query['availabilities'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_category_not_s':
                 case 'casawp_category_not':
                 case 'categories_not':
-                    $query['categories_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_location_not_s':
                 case 'casawp_location_not':
                 case 'locations_not':
-                    $query['locations_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_salestype_not_s':
                 case 'casawp_salestype_not':
                 case 'salestypes_not':
-                    $query['salestypes_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_availability_s_not':
                 case 'casawp_availability_not':
                 case 'availabilities_not':
-                    $query['availabilities_not'] = (is_array($value) ? $value : array($value));
+                    $query[$key] = (is_array($value) ? $value : array($value));
+                    $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
                     break;
                 default:
                     $query[$key] = $value;
@@ -344,6 +339,7 @@ class QueryService{
         return $join;
     }
 
+    //for form only
     public function getArrayCopy(){
         return $this->getQuery();
     }

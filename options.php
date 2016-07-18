@@ -690,14 +690,46 @@
 							</td>
 						</tr>
 					<?php echo $table_end; ?>
+
+					<h3>Filter Formular Einstellungen</h3>
 					<?php echo $table_start; ?>
 						<tr valign="top">
-							<th scope="row">Filter Einstellungen</th>
+							<?php $name = 'casawp_filter_categories_elementtype'; ?>
+							<?php $text = 'Kategorie-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 							<td>
-								<?php $name = 'casawp_filter_categories_as_checkboxes'; ?>
-								<?php $text = 'Kategorien als Checkboxen anzeigen'; ?>
-								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="checkbox" value="1" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?>>
-								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
+							<?php $name = 'casawp_filter_salestypes_elementtype'; ?>
+							<?php $text = 'Vermarktungs-Art-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
+							<?php $name = 'casawp_filter_locations_elementtype'; ?>
+							<?php $text = 'Ortschaften-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
 							</td>
 						</tr>
 					<?php echo $table_end; ?>
