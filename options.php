@@ -41,8 +41,7 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
-					'casawp_load_googlemaps',
-					'casawp_filter_categories_as_checkboxes'
+					'casawp_load_googlemaps'
 				);
 				break;
 			case 'singleview':
@@ -86,7 +85,8 @@
 					'casawp_archive_show_price',
 					'casawp_archive_show_excerpt',
 					'casawp_archive_show_availability',
-					'casawp_archive_show_thumbnail_size_crop'
+					'casawp_archive_show_thumbnail_size_crop',
+					'casawp_filter_categories_as_checkboxes'
 				);
 				break;
 			case 'contactform':
