@@ -12,10 +12,11 @@
 	<?php endif ?>
 	
 	<?php if ($form->getCategoryOptions()): ?>
-		<?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
-			<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control form-control-multicheckbox')); ?>
 		<?php if (get_option('casawp_filter_categories_as_checkboxes', false)): ?>
+			<?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'casawp-filterform-checkbox-label checkbox')))); ?>
+			<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control form-control-multicheckbox')); ?>
 		<?php else: ?>
+			<?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
 			<?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
 		<?php endif ?>
 		
