@@ -405,6 +405,7 @@ class Project{
 
 	//only for sublevel projects/units
 	public function getProperties(){
+		global $casawp;
 		if (!$this->properties) {
 			$properties = array();
 			$queryService = new \casawp\Service\QueryService;
@@ -414,10 +415,12 @@ class Project{
 			));
 
 			if ( $the_query->have_posts() ) {
-				while ( $the_query->have_posts() ) {
+				while ( $the_query->have_posts() ) {	 
 					$the_query->the_post();
-					$properties[] = 'foo';
+					$offer = $casawp->prepareOffer($the_query->post);
+					$properties[] = $offer;
 				}
+				wp_reset_query();
 			}
 			$this->properties = $properties;
 		}
