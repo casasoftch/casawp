@@ -559,6 +559,9 @@ class Plugin {
 
     public function renderArchiveFilter(){
         $form = new \casawp\Form\FilterForm(
+            array(
+                'casawp_filter_categories_as_checkboxes' => get_option('casawp_filter_categories_as_checkboxes', false)
+            ),
             $this->getCategories(),
             $this->getSalestypes(),
             $this->getLocations(),

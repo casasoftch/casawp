@@ -10,7 +10,7 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+    public function __construct($options, $categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
         $this->categories = $categories;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
@@ -50,17 +50,31 @@ class FilterForm extends Form
             ));
         }
         if ($this->categories) {
-            $this->add(array(
-                'name' => 'categories',
-                'type' => 'Select',
-                'attributes' => array(
-                    'multiple' => 'multiple',
-                ),
-                'options' => array(
-                    'label' => __('Category', 'casawp'),
-                    'value_options' => $this->getCategoryOptions(),
-                ),
-            ));
+            if ($options['casawp_filter_categories_as_checkboxes']) {
+                $this->add(array(
+                    'name' => 'categories',
+                    'type' => 'Zend\Form\Element\MultiCheckbox',
+                    /*'attributes' => array(
+                        'multiple' => 'multiple',
+                    ),*/
+                    'options' => array(
+                        'label' => __('Category', 'casawp'),
+                        'value_options' => $this->getCategoryOptions(),
+                    ),
+                ));
+            } else {
+                $this->add(array(
+                    'name' => 'categories',
+                    'type' => 'Select',
+                    'attributes' => array(
+                        'multiple' => 'multiple',
+                    ),
+                    'options' => array(
+                        'label' => __('Category', 'casawp'),
+                        'value_options' => $this->getCategoryOptions(),
+                    ),
+                ));
+            }
         }
         if ($this->locations) {
             $location_options = $this->getLocationOptions();

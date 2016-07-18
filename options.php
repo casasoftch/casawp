@@ -41,7 +41,8 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
-					'casawp_load_googlemaps'
+					'casawp_load_googlemaps',
+					'casawp_filter_categories_as_checkboxes'
 				);
 				break;
 			case 'singleview':
@@ -689,6 +690,19 @@
 							</td>
 						</tr>
 					<?php echo $table_end; ?>
+					<?php echo $table_start; ?>
+						<tr valign="top">
+							<th scope="row">Filter Einstellungen</th>
+							<td>
+								<?php $name = 'casawp_filter_categories_as_checkboxes'; ?>
+								<?php $text = 'Kategorien als Checkboxen anzeigen'; ?>
+								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="checkbox" value="1" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?>>
+								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
+							</td>
+						</tr>
+					<?php echo $table_end; ?>
+
+
 					<h3>Dynamische Felder</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
