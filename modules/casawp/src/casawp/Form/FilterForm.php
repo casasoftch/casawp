@@ -61,7 +61,7 @@ class FilterForm extends Form
             $this->addSelector(
                 'locations', 
                 __('Location', 'casawp'), 
-                __('Choose location','casawp'),
+                __('Choose locality','casawp'),
                 $this->getLocationOptions(),
                 $this->options['chosen_locations']
             );
