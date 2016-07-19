@@ -108,6 +108,15 @@ class FilterForm extends Form
                 ));
                 break;
             case 'multicheckbox':
+                if (isset($value_options[0]['options'])) {
+                    $flat_value_options = array();
+                    foreach ($value_options as $group) {
+                        foreach ($group['options'] as $key => $value) {
+                            $flat_value_options[$key] = $value;
+                        }
+                    }
+                    $value_options = $flat_value_options;
+                }
                 $this->add(array(
                     'name' => $name,
                     'type' => 'Zend\Form\Element\MultiCheckbox',
@@ -122,6 +131,15 @@ class FilterForm extends Form
                 ));
                 break;
             case 'radio':
+                if (isset($value_options[0]['options'])) {
+                    $flat_value_options = array();
+                    foreach ($value_options as $group) {
+                        foreach ($group['options'] as $key => $value) {
+                            $flat_value_options[$key] = $value;
+                        }
+                    }
+                    $value_options = $flat_value_options;
+                }
                 $this->add(array(
                     'name' => $name,
                     'type' => 'Zend\Form\Element\Radio',
