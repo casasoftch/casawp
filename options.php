@@ -86,7 +86,7 @@
 					'casawp_archive_show_excerpt',
 					'casawp_archive_show_availability',
 					'casawp_archive_show_thumbnail_size_crop',
-					'casawp_filter_categories_as_checkboxes'
+					'casawp_filter_hide'
 				);
 				break;
 			case 'contactform':
@@ -694,6 +694,18 @@
 					<h3>Filter Formular Einstellungen</h3>
 					<?php echo $table_start; ?>
 						<tr valign="top">
+							<th scope="row">Filter ausblenden</th>
+							<td id="front-static-padges">
+								<fieldset>
+									<?php $name = 'casawp_filter_hide'; ?>
+									<?php $text = 'Filter ausblenden'; ?>
+									<label>
+										<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+									</label>
+								</fieldset>
+							</td>
+						</tr>
+						<tr valign="top">
 							<?php $name = 'casawp_filter_categories_elementtype'; ?>
 							<?php $text = 'Kategorie-Auswahl'; ?>
 							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
@@ -706,7 +718,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr  valign="top">
+						<tr valign="top">
 							<?php $name = 'casawp_filter_salestypes_elementtype'; ?>
 							<?php $text = 'Vermarktungs-Art-Auswahl'; ?>
 							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>

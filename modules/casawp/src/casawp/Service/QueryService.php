@@ -167,7 +167,7 @@ class QueryService{
         }
 
 
-        /*$meta_query_items_new = array();
+        $meta_query_items_new = array();
         if ($this->query['projectunit_id']) {
             $meta_query_items_new[] = array(
                 'key' => 'projectunit_id',
@@ -178,7 +178,7 @@ class QueryService{
         if ($meta_query_items_new) {
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
-        }*/
+        }
 
 
         $taxquery_new = array();
