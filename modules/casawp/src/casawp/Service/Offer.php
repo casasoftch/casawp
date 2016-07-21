@@ -708,7 +708,6 @@ class Offer{
 	    	if (!$post) {
 	    		$this->projectunit_post = false;
 	    	}
-
     	}
     	return $this->projectunit_post;
     }
