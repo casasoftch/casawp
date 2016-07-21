@@ -983,6 +983,8 @@ class Import {
   }
 
   public function casawpImport(){
+    
+
     if ($this->getImportFile()) {
       if (is_admin()) {
         $this->updateOffers();
@@ -1676,6 +1678,7 @@ class Import {
 
     //projects
     if ($xml->projects) {
+
       $found_posts = array();
       $sorti = 0;
       foreach ($xml->projects->project as $project) {
@@ -1799,6 +1802,9 @@ class Import {
     }
     $curImportHash = md5(serialize($cleanProjectData));
 
+
+
+
     //skip if is the same as before
     $update = false;
     if (
@@ -1807,6 +1813,9 @@ class Import {
       || $curImportHash != $old_meta_data['last_import_hash']
     ) {
         $update = true;
+    } else {
+      //skip if is the same as before
+      $this->addToLog('skipped project: '. $casawp_id);
     }
 
     if ($update) {
