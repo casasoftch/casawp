@@ -5,6 +5,12 @@
 
 		<!-- Unit has multiple Properties (offers): -->
 	 	<?php foreach ($unit->getProperties() as $property): ?>
+			<?php 
+				echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+				print_r($property->getProjectUnit());
+				echo "</textarea>";
+
+			 ?>
 		 	<a class="casawp-property reveal" href="<?= get_permalink($property->post) ?>">
 		 		
 		 		<div class="realestate-text">

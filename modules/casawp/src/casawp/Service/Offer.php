@@ -713,6 +713,17 @@ class Offer{
     	return $this->projectunit_post;
     }
 
+    public function getProjectUnit(){
+    	if ($this->getProjectUnitPost()) {
+    		global $casawp;
+    		$offer = $casawp->prepareOffer($this->getProjectUnitPost());
+    		if ($offer) {
+    			return $offer;
+    		}
+    	}
+    	return false;
+    }
+
     /*===========================================
     =          Direct renders actions           =
     ===========================================*/
