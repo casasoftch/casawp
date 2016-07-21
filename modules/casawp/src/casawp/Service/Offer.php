@@ -15,6 +15,7 @@ class Offer{
     private $metas = null;  //lazy
 
     private $offerService = null;
+    private $projectunit_post = null;
 
     public function __construct($service){
     	$this->offerService = $service;
@@ -692,6 +693,24 @@ class Offer{
         ."}(document, 'script', 'facebook-jssdk'));</script>";
       }
       return print_r($return);
+    }
+
+    public function getProjectUnitPost(){
+    	if ($this->projectunit_post === null) {
+    		$post = false;
+	    	$projectunitid = $this->getFieldValue('projectunit_id', false);
+	    	if ($projectunitid) {
+	    		$post = get_post($projectunitid);
+	    		if ($post) {
+	    			$this->projectunit_post = $post;
+	    		}
+	    	}
+	    	if (!$post) {
+	    		$this->projectunit_post = false;
+	    	}
+
+    	}
+    	return $this->projectunit_post;
     }
 
     /*===========================================
