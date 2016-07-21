@@ -8,8 +8,8 @@
 					</div>
 				</div>
 				<div class="col-lg-8 col-md-10 col-sm-20 spacing-sm spacing-xs-small reveal animated fadeIn" data-delay="800">
-					
-					<h2 class="section-title limited" style="border-color: #fcc41e;">
+					<h2 class="section-title limited" style="border-color: <?= get_field('color-code', $project->post->ID); ?>;">
+						
 						<a href="<?= get_permalink($project->post) ?>"><?= $project->getTitle(); ?></a>
 					</h2>
 					<p>Projektenwicklung und Vermarktung.</p>
