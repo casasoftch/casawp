@@ -1690,7 +1690,7 @@ class Import {
         foreach ($projectDataLangified as $projectData) {
           $lang = $projectData['lang'];
           //is project already in db
-          $casawp_id = 'project_'.$projectData['ref'] . $projectData['lang'];
+          $casawp_id = $projectData['ref'] . $projectData['lang'];
 
           $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
           $wp_post = false;
@@ -1921,7 +1921,7 @@ class Import {
       foreach ($projectData['units'] as $sortu => $unitData) {
 
         //is unit already in db
-        $unit_casawp_id = 'unit_'.$unitData['ref'] . $lang;
+        $unit_casawp_id = 'subunit_' . $unitData['ref'] . $lang;
 
         $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
         $wp_unit_post = false;

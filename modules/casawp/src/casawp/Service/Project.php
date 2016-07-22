@@ -427,6 +427,10 @@ class Project{
 		return $this->properties;
 	}
 
+	public function getProject(){
+		
+	}
+
 	public function renderContactForm(){
 		if ($this->getAvailability() == 'reference') {
 	        return false;
