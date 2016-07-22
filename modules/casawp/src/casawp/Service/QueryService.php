@@ -139,6 +139,13 @@ class QueryService{
 
         if (get_option( 'casawp_hide_sticky_properties_in_main')) {
             $args['post__not_in'] = get_option( 'sticky_posts' );
+        } else {
+            if (is_array($this->query["post__not_in"])) {
+                $args['post__not_in'] = $this->query["post__not_in"];
+            } else {
+                $args['post__not_in'] = array($this->query["post__not_in"]);
+            }
+            
         }
         
         switch ($this->query['orderby']) {
