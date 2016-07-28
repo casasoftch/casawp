@@ -1584,7 +1584,7 @@ class Plugin {
             'has_archive'        => true,
             'hierarchical'       => true,
             'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'thumbnail'),
+            'supports'           => array( 'title', 'editor', 'thumbnail', 'custom-fields'),
             'menu_icon'          => 'dashicons-admin-tools',
             'show_in_nav_menus'  => true
         );
