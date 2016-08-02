@@ -97,7 +97,7 @@ class Plugin {
         ), $args);
 
         $offer = false;
-        $projectunit = false;
+        $project = false;
         if (isset($args['offer_id']) && !$args['id']) {
             $args['id'] = $args['offer_id'];
         }
@@ -551,6 +551,10 @@ class Plugin {
         }*/
     }
 
+    public function renderContactFormElement($element){
+        return $this->render('contact-form-element', array('element' => $element));
+    }
+
     public function render($view, $args){
         $renderer = $this->renderer;
         $resolver = new Resolver\AggregateResolver();
@@ -564,6 +568,11 @@ class Plugin {
             )
         ));
         $resolver->attach($stack);
+
+        //add plugin to view model
+        $args['casawp'] = $this;
+
+
         $model = new ViewModel($args);
 
         $stack = array(
