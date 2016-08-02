@@ -91,6 +91,18 @@ class Plugin {
 
     }
 
+    public function sanitizeContactFormPost($post){
+        $data = array();
+        foreach ($post as $key => $value) {
+            switch ($key) {
+                default:
+                    $data[$key] = sanitize_text_field($value);
+                    break;
+            }
+        }
+        return $data;
+    }
+
     public function contactform_shortcode($args = array()){
         $args = array_merge(array(
             'id' => false
