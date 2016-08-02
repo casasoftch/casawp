@@ -91,19 +91,38 @@ class Plugin {
 
     }
 
-    public function contactform_shortcode($args = array('offer_id' => false)){
+    public function contactform_shortcode($args = array()){
+        $args = array_merge(array(
+            'id' => false
+        ), $args);
+
         $offer = false;
-        if ($args['offer_id']) {
-            $post = get_post($args['offer_id']);
+        $projectunit = false;
+        if (isset($args['offer_id']) && !$args['id']) {
+            $args['id'] = $args['offer_id'];
+        }
+        if (isset($args['project_id']) && !$args['id']) {
+            $args['id'] = $args['project_id'];
+        }
+        if ($args['id']) {
+            $post = get_post($args['id']);
             if ($post) {
-                $offer = $this->prepareOffer($post);
+                switch ($post->post_type) {
+                    case 'casawp_property':
+                        $offer = $this->prepareOffer($post);
+                        break;
+                    case 'casawp_project':
+                        $project = $this->prepareProject($post);
+                        break;
+                }
+                
             }
             
         }
-        if (!$offer) {
-            return '<p class="alert alert-danger">offer_id [' . $args['offer_id'] . '] not found</p>';
+        if (!$offer && !$project) {
+            return '<p class="alert alert-danger">offer or project with id [' . $args['offer_id'] . '] not found</p>';
         }
-        if ($offer->getAvailability() == 'reference') {
+        if ($offer && $offer->getAvailability() == 'reference') {
             return false;
         }
         $form = new \casawp\Form\ContactForm();
@@ -112,12 +131,15 @@ class Plugin {
         $publisherid = get_option('casawp_publisherid');
         $email = get_option('casawp_email_fallback');
 
-        if ($offer->getFieldValue('seller_org_customerid', false)) {
-            $customerid = $offer->getFieldValue('seller_org_customerid', false);
+        if ($offer) {
+            if ($offer->getFieldValue('seller_org_customerid', false)) {
+                $customerid = $offer->getFieldValue('seller_org_customerid', false);
+            }
+            if ($offer->getFieldValue('seller_inquiry_person_email', false)) {
+                $email = $offer->getFieldValue('seller_inquiry_person_email', false);
+            }
         }
-        if ($offer->getFieldValue('seller_inquiry_person_email', false)) {
-            $email = $offer->getFieldValue('seller_inquiry_person_email', false);
-        }
+        
         
         if (get_option('casawp_inquiry_method') == 'casamail') {
             //casamail
@@ -149,7 +171,8 @@ class Plugin {
                 } else {
                     do_action('casawp_before_inquirystore', array(
                         'postdata' => $postdata,
-                        'offer' => $this
+                        'offer' => $offer,
+                        'project' => $project
                     ));
 
                     //add to WP for safekeeping
@@ -167,13 +190,21 @@ class Plugin {
                             add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
                         }
                     }
-                    add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
-                    add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
+                    if ($offer) {
+                        add_post_meta($inquiry_id, 'casawp_id', $offer->getFieldValue('casawp_id'), true );
+                        add_post_meta($inquiry_id, 'referenceId', $offer->getFieldValue('referenceId'), true );
+                    }
+                    if ($project) {
+                        add_post_meta($inquiry_id, 'casawp_id', $offer->getFieldValue('casawp_id'), true );
+                        add_post_meta($inquiry_id, 'referenceId', $offer->getFieldValue('referenceId'), true );
+                    }
+                    
 
 
                     do_action('casawp_before_inquirysend', array(
                         'postdata' => $postdata,
-                        'offer' => $this
+                        'offer' => $offer,
+                        'project' => $project
                     ));
 
 
@@ -184,22 +215,25 @@ class Plugin {
                         $data['provider'] = $customerid;
                         $data['publisher'] = $publisherid;
                         $data['lang'] = substr(get_bloginfo('language'), 0, 2);
-                        $data['property_reference'] = $this->getFieldValue('referenceId');
+                        $data['property_reference'] = $offer->getFieldValue('referenceId');
 
-
-                        $data['property_street'] = $this->getFieldValue('address_streetaddress');
-                        $data['property_postal_code'] = $this->getFieldValue('address_postalcode');
-                        $data['property_locality'] = $this->getFieldValue('address_locality');
-                        //$data['property_category'] = $this->getFieldValue('referenceId');
-                        $data['property_country'] = $this->getFieldValue('address_country');
-                        //$data['property_rooms'] = $this->getFieldValue('referenceId');
-                        //$data['property_type'] = $this->getFieldValue('referenceId');
-                        //$data['property_price'] = $this->getFieldValue('referenceId');
+                        if ($offer) {
+                            $data['property_street'] = $offer->getFieldValue('address_streetaddress');
+                            $data['property_postal_code'] = $offer->getFieldValue('address_postalcode');
+                            $data['property_locality'] = $offer->getFieldValue('address_locality');
+                            //$data['property_category'] = $offer->getFieldValue('referenceId');
+                            $data['property_country'] = $offer->getFieldValue('address_country');
+                            //$data['property_rooms'] = $offer->getFieldValue('referenceId');
+                            //$data['property_type'] = $offer->getFieldValue('referenceId');
+                            //$data['property_price'] = $offer->getFieldValue('referenceId');
+                        }
 
 
                         //direct recipient emails
-                        if (get_option('casawp_casamail_direct_recipient') && $this->getFieldValue('seller_inquiry_person_email', false)) {
-                            $data['direct_recipient_email'] = $this->getFieldValue('seller_inquiry_person_email', false);
+                        if ($offer) {
+                            if (get_option('casawp_casamail_direct_recipient') && $offer->getFieldValue('seller_inquiry_person_email', false)) {
+                                $data['direct_recipient_email'] = $offer->getFieldValue('seller_inquiry_person_email', false);
+                            }
                         }
                         $data_string = json_encode($data);                                                                                   
                                                                                                                                              
@@ -231,7 +265,8 @@ class Plugin {
 
                     do_action('casawp_after_inquirysend', array(
                         'postdata' => $postdata,
-                        'offer' => $this
+                        'offer' => $offer,
+                        'project' => $project
                     ));
 
                 }
@@ -244,11 +279,13 @@ class Plugin {
         }
 
         //$form->bind($this->queryService);
-        return $this->render('contact-form', array(
+        $result = $this->render('contact-form', array(
             'form' => $form,
             'offer' => $offer,
+            'project' => $project,
             'sent' => $sent
         ));
+        return $result;
     }
 
     public function properties_shortcode($args = array()){
