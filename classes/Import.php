@@ -1891,7 +1891,7 @@ class Import {
         }
 
         //remove supurflous meta_data
-        foreach ($old_meta_data as $key => $value) {
+        /*foreach ($old_meta_data as $key => $value) {
           if (
             !isset($new_meta_data[$key]) 
             && !in_array($key, array('casawp_id'))
@@ -1901,7 +1901,7 @@ class Import {
             delete_post_meta($wp_post->ID, $key, $value);
             $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
           }
-        }
+        }*/
       }
     } //end update
 
