@@ -431,7 +431,7 @@ class Project{
 		
 	}
 
-	//active or reserved properties (maybi this should be done during import for PERFORMANCE reasons)
+	//active or reserved properties (maybe this should be done during import for PERFORMANCE reasons)
 	public function hasAvailableProperties(){
 		if (!$this->post->post_parent) {
 			//its a project
