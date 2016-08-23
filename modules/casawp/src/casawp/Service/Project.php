@@ -435,7 +435,7 @@ class Project{
 	public function hasAvailableProperties(){
 		if (!$this->post->post_parent) {
 			//its a project
-			foreach (getUnits() as $unit) {
+			foreach ($this->getUnits() as $unit) {
 				foreach ($unit->getProperties() as $offer) {
 					if ($offer->getAvailability() == 'active' || $offer->getAvailability() == 'reserved') {
 						return true;
