@@ -497,7 +497,7 @@ class Plugin {
     }
 
     public function renderProjectArchiveSingle($post){
-        $project = $this->prepareOffer($post);
+        $project = $this->prepareProject($post);
         return $project->render('project-archive-single', array('project' => $project));
     }
 

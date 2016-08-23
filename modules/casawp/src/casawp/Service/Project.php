@@ -433,9 +433,18 @@ class Project{
 
 	//active or reserved properties (maybe this should be done during import for PERFORMANCE reasons)
 	public function hasAvailableProperties(){
+		echo '<pre>';
+			print_r("sssss");
+		echo '</pre>';
 		if (!$this->post->post_parent) {
 			//its a project
+			
+			
+			
 			foreach (getUnits() as $unit) {
+				echo '<pre>';
+					print_r($unit);
+				echo '</pre>';
 				foreach ($unit->getProperties() as $offer) {
 					if ($offer->getAvailability() == 'active' || $offer->getAvailability() == 'reserved') {
 						return true;
@@ -443,6 +452,9 @@ class Project{
 				}
 			}
 		} else {
+			echo '<pre>';
+				print_r($unit);
+			echo '</pre>';
 			//its a unit
 			foreach ($this->getProperties() as $offer) {
 				if ($offer->getAvailability() == 'active' || $offer->getAvailability() == 'reserved') {
