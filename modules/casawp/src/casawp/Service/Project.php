@@ -431,6 +431,28 @@ class Project{
 		
 	}
 
+	//active or reserved properties
+	public function hasAvailableProperties(){
+		if ($this->post_parent) {
+			//its a project
+			foreach (getUnits() as $unit) {
+				foreach ($unit->getProperties() as $offer) {
+					if ($offer->getAvailability() == 'active' || $offer->getAvailability() == 'reserved') {
+						return true;
+					}
+				}
+			}
+		} else {
+			//its a unit
+			foreach ($this->getProperties() as $offer) {
+				if ($offer->getAvailability() == 'active' || $offer->getAvailability() == 'reserved') {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public function renderContactForm(){
 		if ($this->getAvailability() == 'reference') {
 	        return false;
