@@ -431,9 +431,9 @@ class Project{
 		
 	}
 
-	//active or reserved properties
+	//active or reserved properties (maibe this should be done durring import for PERFORMANCE reasons)
 	public function hasAvailableProperties(){
-		if ($this->post_parent) {
+		if ($this->post->post_parent) {
 			//its a project
 			foreach (getUnits() as $unit) {
 				foreach ($unit->getProperties() as $offer) {
