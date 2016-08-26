@@ -677,6 +677,7 @@ class Import {
       'active',
       'taken',
       'reserved',
+      'private',
       'reference'
     ))) {
       $availability = null;
