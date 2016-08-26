@@ -464,6 +464,7 @@ class Plugin {
                         setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), '/', '*'); // 86400 = 1 day
                     }
 
+
                     //authenticate                    
                     //$userstring = openssl_decrypt($cookie_cipher, 'aes-256-cbc', $keypass, 0, $iv);
                     $userstring = $cookie_cipher;
