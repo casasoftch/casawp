@@ -437,54 +437,57 @@ class Plugin {
         echo '</tr>';
     }
 
+    public function privateAuth(){
+        $authenticated = false;
+
+        $keypass = '53A5AFBD7CF37';
+        $cookie_cipher = (array_key_exists('casawp_private_user', $_COOKIE) ? $_COOKIE['casawp_private_user'] : null);
+        
+        //$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        //$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+        //check if is post then set ciphercookie
+        if ($_POST && isset($_POST['username']) && isset($_POST['password'])) {
+            //$cookie_cipher = openssl_encrypt($_POST['username'] . '[:]' . $_POST['password'], 'aes-256-cbc', $keypass, 0, $iv);
+            $cookie_cipher = $_POST['username'] . '[:]' . $_POST['password'];
+            setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), '/', '*'); // 86400 = 1 day
+        }
+
+
+        //authenticate                    
+        //$userstring = openssl_decrypt($cookie_cipher, 'aes-256-cbc', $keypass, 0, $iv);
+        $userstring = $cookie_cipher;
+        $userdata = explode('[:]', $userstring);
+        $username = $userdata[0];
+        $password = $userdata[1];
+
+        //get usernames
+        $t_username = 'testuser';
+        $t_password = 'testpassword';
+        if ($username == $t_username && $password == $t_password) {
+            $authenticated = true;
+        }
+
+
+        if ($authenticated) {
+            //die('hello '. $username);
+        } else {
+            die('access denied');
+        }
+    }
+
     public function casawp_queryfilter($query){
         if ($query->is_main_query() && (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' ))) {
             $this->queryService->setQuery();
 
             
-
             $query = $this->queryService->applyToWpQuery($query);
 
             $availabilities = array();
             $availabilities = $this->queryService->getQueryValue('availabilities');
             if ($availabilities) {
                 if (in_array('private', $availabilities)) {
-                    $authenticated = false;
-
-                    $keypass = '53A5AFBD7CF37';
-                    $cookie_cipher = (array_key_exists('casawp_private_user', $_COOKIE) ? $_COOKIE['casawp_private_user'] : null);
-                    
-                    //$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-                    //$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-
-                    //check if is post then set ciphercookie
-                    if ($_POST && isset($_POST['username']) && isset($_POST['password'])) {
-                        //$cookie_cipher = openssl_encrypt($_POST['username'] . '[:]' . $_POST['password'], 'aes-256-cbc', $keypass, 0, $iv);
-                        $cookie_cipher = $_POST['username'] . '[:]' . $_POST['password'];
-                        setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), '/', '*'); // 86400 = 1 day
-                    }
-
-
-                    //authenticate                    
-                    //$userstring = openssl_decrypt($cookie_cipher, 'aes-256-cbc', $keypass, 0, $iv);
-                    $userstring = $cookie_cipher;
-                    $userdata = explode('[:]', $userstring);
-                    $username = $userdata[0];
-                    $password = $userdata[1];
-
-                    //get usernames
-                    $t_username = 'testuser';
-                    $t_password = 'testpassword';
-                    if ($username == $t_username && $password == $t_password) {
-                        $authenticated = true;
-                    }
-
-
-                    if ($authenticated) {
-                        //die('hello '. $username);
-                    } else {
-                        die('access denied');
-                    }
+                    $this->privateAuth();
                 }
             }
 
@@ -531,6 +534,11 @@ class Plugin {
 
     public function renderSingle($post){
         $offer = $this->prepareOffer($post);
+
+        if ($offer->getAvailability() == 'private') {
+            $this->privateAuth();
+        }
+
         return $offer->render('single', array('offer' => $offer));
     }
 
