@@ -14,7 +14,8 @@ class OfferServiceFactory implements FactoryInterface
     	$messenger = $serviceLocator->get('CasasoftMessenger');
     	$us = $serviceLocator->get('CasasoftUtility');
         $ios = $serviceLocator->get('CasasoftIntegratedOffer');
-        $service = new OfferService($cs, $ns, $messenger, $us, $fs, $ios);
+        $formService = $serviceLocator->get('casawpFormService');
+        $service = new OfferService($cs, $ns, $messenger, $us, $fs, $ios, $formService);
         return $service;
     }
 }

@@ -6,6 +6,7 @@ return array(
             'casawpOffer'   => 'casawp\Service\OfferServiceFactory',
             'casawpProject'   => 'casawp\Service\ProjectServiceFactory',
             'casawpQuery'   => 'casawp\Service\QueryServiceFactory',
+            'casawpFormService' => 'casawp\Service\FormServiceFactory',
             //'casawpCollection' => 'casawp\Service\OfferCollectionServiceFactory',
         )
     ),

@@ -154,6 +154,7 @@
 			'singleview'  => 'Einzelansicht',
 			'archiveview' => 'Archivansicht',
 			'contactform' => 'Kontaktformular',
+			'private'     => 'Geschützte Objekte',
 			'logs' => 'Logs'
 		); 
 	    echo screen_icon('options-general');
@@ -1068,6 +1069,32 @@
 				    }
 				    echo "</dl>";*/
 
+					break;
+				case 'private':
+					?>
+						<h3>Geschütze Objekte</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Globaler Benutzer</th>
+								<td id="front-static-padges">
+									<fieldset>
+										<?php $name = 'casawp_private_globalusername'; ?>
+										<?php $text = 'Aktiv'; ?>
+										<label>
+											<input placeholder="username" name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
+										</label>
+
+										<?php $name = 'casawp_private_globalpassword'; ?>
+										<?php $text = 'Aktiv'; ?>
+										<label>
+											<input placeholder="password" name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
+										</label>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+
+					<?php
 					break;
 				case 'general':
 				default:

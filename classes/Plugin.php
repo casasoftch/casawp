@@ -450,7 +450,10 @@ class Plugin {
         if ($_POST && isset($_POST['username']) && isset($_POST['password'])) {
             //$cookie_cipher = openssl_encrypt($_POST['username'] . '[:]' . $_POST['password'], 'aes-256-cbc', $keypass, 0, $iv);
             $cookie_cipher = $_POST['username'] . '[:]' . $_POST['password'];
-            setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), '/', '*'); // 86400 = 1 day
+
+            setcookie( 'pagename', $_POST['username'], $expire, COOKIEPATH );
+            
+            setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), COOKIEPATH); // 86400 = 1 day
         }
 
 
@@ -462,9 +465,9 @@ class Plugin {
         $password = $userdata[1];
 
         //get usernames
-        $t_username = 'testuser';
-        $t_password = 'testpassword';
-        if ($username == $t_username && $password == $t_password) {
+        $t_username = get_option('casawp_private_globalusername', 0);
+        $t_password = get_option('casawp_private_globalpassword', 0);
+        if ($t_username && $t_password && $username == $t_username && $password == $t_password) {
             $authenticated = true;
         }
 

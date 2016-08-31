@@ -17,13 +17,14 @@ class OfferService{
     private $currentOffer = null;
     private $collection = array();
 
-    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService){
+    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService, $formService){
     	$this->utilityService = $utilityService;
     	$this->categoryService = $categoryService;
     	$this->numvalService = $numvalService;
         $this->featureService = $featureService;
     	$this->messengerService = $messengerService;
     	$this->integratedOfferService = $integratedOfferService;
+        $this->formService = $formService;
     }
 
 

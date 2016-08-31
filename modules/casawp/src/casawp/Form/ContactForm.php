@@ -82,6 +82,14 @@ class ContactForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'mobile',
+            'type' => 'Text',
+            'options' => array(
+                'label' => __('Mobile', 'casawp')
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'emailreal',
             'type' => 'Text',
             'options' => array(
@@ -181,6 +189,21 @@ class ContactForm extends Form
         $filter->add(array(
             'name' => 'phone',
             'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                /*array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),*/
+            ),
+        ));
+        $filter->add(array(
+            'name' => 'mobile',
+            'required' => false,
             'validators' => array(
                 array(
                     'name' => 'not_empty',

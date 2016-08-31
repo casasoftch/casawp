@@ -28,6 +28,7 @@ class Offer{
     		case 'numvalService': 
     		case 'featureService':
     		case 'messengerService':
+    		case 'formService':
     			return $this->offerService->{$name};
     		break;
     			
@@ -1066,164 +1067,13 @@ class Offer{
 		return $this->render('share-widget');
 	}
 
-	public function sanitizeContactFormPost($post){
-		$data = array();
-		foreach ($post as $key => $value) {
-			switch ($key) {
-				default:
-					$data[$key] = sanitize_text_field($value);
-					break;
-			}
-		}
-		return $data;
-	}
 
 	public function renderContactForm(){
-		if ($this->getAvailability() == 'reference') {
-	        return false;
-	    }
-        $form = new \casawp\Form\ContactForm();
-        $sent = false;
-        $customerid = get_option('casawp_customerid');
-        $publisherid = get_option('casawp_publisherid');
-        $email = get_option('casawp_email_fallback');
-
-        if ($this->getFieldValue('seller_org_customerid', false)) {
-        	$customerid = $this->getFieldValue('seller_org_customerid', false);
-        }
-        if ($this->getFieldValue('seller_inquiry_person_email', false)) {
-        	$email = $this->getFieldValue('seller_inquiry_person_email', false);
-        }
-        
-        if (get_option('casawp_inquiry_method') == 'casamail') {
-        	//casamail
-        	if (!$customerid || !$publisherid) {
-        		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
-        	}
-        	
-        } else {
-        	if (!$email) {
-        		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
-        	}
-        }
-
-        if ($_POST) {
-			$postdata = $this->sanitizeContactFormPost($_POST);
-			$filter = $form->getFilter();
-			$form->setInputFilter($filter);
-			$form->setData($postdata);
-			if ($form->isValid()) {
-				$validatedData = $form->getData();
-				$sent = true;
-				if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'send-inquiry')) {
-					echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-					print_r('NONCE ISSUE BITTE MELDEN');
-					echo "</textarea>";
-					//SPAM
-				} else if (isset($postdata['email']) && $postdata['email']) {
-					//SPAM
-				} else {
-					do_action('casawp_before_inquirystore', array(
-						'postdata' => $postdata,
-						'offer' => $this
-					));
-
-					//add to WP for safekeeping
-					$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue() . ': [' . ($this->getFieldValue('referenceId') ? $this->getFieldValue('referenceId') : $this->getFieldValue('casawp_id')) . '] ' . $this->getTitle());
-					$post = array(
-						'post_type' => 'casawp_inquiry',
-						'post_content' => $form->get('message')->getValue(),
-						'post_title' => $post_title,
-						'post_status' => 'private',
-						'ping_status' => false
-					);
-					$inquiry_id = wp_insert_post($post);
-					foreach ($form->getElements() as $element) {
-						if (!in_array($element->getName(), array('message')) ) {
-							add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
-						}
-					}
-					add_post_meta($inquiry_id, 'casawp_id', $this->getFieldValue('casawp_id'), true );
-					add_post_meta($inquiry_id, 'referenceId', $this->getFieldValue('referenceId'), true );
-
-
-					do_action('casawp_before_inquirysend', array(
-						'postdata' => $postdata,
-						'offer' => $this
-					));
-
-
-					if (get_option('casawp_inquiry_method') == 'casamail') {
-						//casamail
-						$data = $postdata;
-						$data['email'] = $postdata['emailreal'];
-						$data['provider'] = $customerid;
-						$data['publisher'] = $publisherid;
-						$data['lang'] = substr(get_bloginfo('language'), 0, 2);
-						$data['property_reference'] = $this->getFieldValue('referenceId');
-
-
-						$data['property_street'] = $this->getFieldValue('address_streetaddress');
-						$data['property_postal_code'] = $this->getFieldValue('address_postalcode');
-						$data['property_locality'] = $this->getFieldValue('address_locality');
-						//$data['property_category'] = $this->getFieldValue('referenceId');
-						$data['property_country'] = $this->getFieldValue('address_country');
-						//$data['property_rooms'] = $this->getFieldValue('referenceId');
-						//$data['property_type'] = $this->getFieldValue('referenceId');
-						//$data['property_price'] = $this->getFieldValue('referenceId');
-
-
-						//direct recipient emails
-						if (get_option('casawp_casamail_direct_recipient') && $this->getFieldValue('seller_inquiry_person_email', false)) {
-							$data['direct_recipient_email'] = $this->getFieldValue('seller_inquiry_person_email', false);
-						}
-						$data_string = json_encode($data);                                                                                   
-						                                                                                                                     
-						$ch = curl_init('http://onemail.ch/api/msg');
-						curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-						curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-						curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-						    'Content-Type: application/json',                                                                                
-						    'Content-Length: ' . strlen($data_string))                                                                       
-						);
-
-						curl_setopt($ch, CURLOPT_USERPWD,  "casawp:MQX-2C2-Hrh-zUu");
-						                                                                                                                     
-						$result = curl_exec($ch);
-						$json = json_decode($result, true);
-						if (isset($json['validation_messages'])) {
-							wp_mail( 'js@casasoft.ch', 'casawp casamail issue', print_r($json['validation_messages'], true));
-							return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
-						}
-
-						//header("Location: /anfrage-erfolg/");
-						//die('SUCCESS');
-
-
-			        } else {
-			        	
-			        }
-
-					do_action('casawp_after_inquirysend', array(
-			    		'postdata' => $postdata,
-			    		'offer' => $this
-			    	));
-
-			    }
-
-			} else {
-			    $messages = $form->getMessages();
-			}
-        } else {
-        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
-        }
-
-        //$form->bind($this->queryService);
+		$form = $this->formService->buildAndValidateContactForm($this);
         return $this->render('contact-form', array(
         	'form' => $form,
         	'offer' => $this,
-        	'sent' => $sent
+        	'sent' => ($_POST && $form->isValid() ? true : false )
         ));
     }
 
