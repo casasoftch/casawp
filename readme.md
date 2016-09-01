@@ -74,7 +74,7 @@ Register additional forms in your theme by adding the following to your function
 <?php
 
     //create a new class that extends DefaultFormSettings to create a new form id.
-    class GratisBewertungFormSetting extends \casawp\Form\DefaultFormSetting {
+    class MyCustomFormSetting extends \casawp\Form\DefaultFormSetting {
         public $id = 'my-custom-form';
 
         function __construct(){
@@ -124,6 +124,6 @@ Register additional forms in your theme by adding the following to your function
     //make sure the plugin knows about it by informing the formSettingService from the plugin
     add_action( 'casawp_register_forms', 'casawp_register_forms_func', 10, 1 );
     function casawp_register_forms_func( $formSettingService ) {
-        $formSettingService->addFormSetting(new GratisBewertungFormSetting());
+        $formSettingService->addFormSetting(new MyCustomFormSetting());
     }
 ```
