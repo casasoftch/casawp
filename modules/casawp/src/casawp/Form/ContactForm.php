@@ -8,6 +8,7 @@ class ContactForm extends Form
     public $categories = array();
     public $salestypes = array();
     public $locations = array();
+    public $customFilters = array();
 
     public function __construct(){
         parent::__construct('contact');
@@ -107,6 +108,10 @@ class ContactForm extends Form
                 'rows' => 3
             )
         ));
+    }
+
+    public function setCustomFilters($filters){
+        $this->customFilters = $filters;
     }
 
     public function getFilter(){
@@ -232,6 +237,10 @@ class ContactForm extends Form
                 )
             ),
         ));
+
+        foreach ($this->customFilters as $custom_filter_array) {
+            $filter->add($custom_filter_array);
+        }
 
         
 

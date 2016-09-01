@@ -18,11 +18,17 @@ class FormService{
 		return $data;
 	}
 
-    public function buildAndValidateContactForm($subjectItem){
+    public function buildAndValidateContactForm($subjectItem, $formSetting = null){
     	if ($subjectItem instanceof Offer && $subjectItem->getAvailability() == 'reference') {
 	        return false;
 	    }
         $form = new \casawp\Form\ContactForm();
+        if (!$formSetting) {
+        	$formSetting = new \casawp\Form\DefaultFormSetting();
+        }
+        
+        $formSetting->setAdditionalFields($form);
+
         $customerid = get_option('casawp_customerid');
         $publisherid = get_option('casawp_publisherid');
         $email = get_option('casawp_email_fallback');
@@ -103,6 +109,9 @@ class FormService{
 
 					//send to casamail
 					if (get_option('casawp_inquiry_method') == 'casamail') {
+
+						$data = $formSetting->preCasaMailFilter($data);
+
 						//casamail
 						$data = $postdata;
 						$data['email'] = $postdata['emailreal'];
@@ -179,4 +188,5 @@ class FormService{
         	'sent' => ($_POST && $form->isValid() ? true : false )
         ));
     }
+
 }
