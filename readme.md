@@ -20,6 +20,8 @@ to override them with your theme.
 
 #Shortcodes
 
+## casawp_properties
+
 `[casawp_properties categories="apartment" order="ASC" posts_per_page="15"]`
 
 Displays properties anywhere shortcodes are accepted.
@@ -51,3 +53,77 @@ Accepted Query Params:
 Accepted pass-through variables
 
 * col_count
+
+## casawp_contactform
+
+`[casawp_contactform offer_id="12" id="my-custom-form"]`
+
+Displays a form for inquiry submissions
+
+Accepted Query Params:
+
+* id – Form ID registered to formSettingService (optional)
+* offer_id
+* project_id
+
+#Custom Forms
+
+Register additional forms in your theme by adding the following to your functions.php
+
+```php
+<?php
+
+    //create a new class that extends DefaultFormSettings to create a new form id.
+    class GratisBewertungFormSetting extends \casawp\Form\DefaultFormSetting {
+        public $id = 'my-custom-form';
+
+        function __construct(){
+            //name the view file you wish to use (defaults to contact-form) make sure you create the file in `wp-content/themes/your-theme/casawp/bootstrap3/{viewFileName}.phtml`
+            $this->viewFile = 'custom-form-' . $this->id;
+        }
+
+        public function setAdditionalFields($form){
+            // set additional fields here
+            $form->add(array(
+                'name' => 'customfield',
+                'type' => 'Text',
+                'options' => array(
+                    'label' => __('Custom Field here', 'casawp'),
+                ),
+            ));
+
+            //add validation filters here
+            $form->setCustomFilters(array(
+                array(
+                    'name' => 'customfield',
+                    'required' => true,
+                    'validators' => array(
+                        array(
+                            'name' => 'not_empty',
+                        ),
+                        array(
+                            'name' => 'string_length',
+                            'options' => array(
+                                'min' => 2
+                            ),
+                        ),
+                    ),
+                )
+            ));
+
+            return $form;
+        }
+        public function preCasaMailFilter($data, $postdata){
+            //manipulate the data before it is sent to casamail after the visitor posts the form and it's valid.
+            $data['extra_data'] = array_merge($data['extra_data'], array('customfield' => $postdata['customfield']));
+
+            return $data;
+        }
+    }
+
+    //make sure the plugin knows about it by informing the formSettingService from the plugin
+    add_action( 'casawp_register_forms', 'casawp_register_forms_func', 10, 1 );
+    function casawp_register_forms_func( $formSettingService ) {
+        $formSettingService->addFormSetting(new GratisBewertungFormSetting());
+    }
+```
