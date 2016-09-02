@@ -37,6 +37,23 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= dev =
+* optimized: WPML optimizations
+* new: (alpha) Project integration
+* new: action hooks casawp_before_inquirystore
+* new: Support for additional publisher custom values
+* fix: Translations for MVC modules
+* fix: Filter labels are now translatable and previewable
+* new: [casawp_properties] shortcode
+* new: max restriction for archive datapoints
+* new: Adjustable filter UI preferenzes
+* new: [casawp_contactform] shortcode
+* fix: added google maps api key
+* new: (alpha) basic private property support with global login
+* fix: refactored contact form logic
+* new: Custom contact forms
+
 = 2.1.1 =
 * Now ignores modification dates during imports.
 * Availability reemerges as hidden field so that requests can creeps back into the query
