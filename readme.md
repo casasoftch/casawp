@@ -127,3 +127,40 @@ Register additional forms in your theme by adding the following to your function
         $formSettingService->addFormSetting(new MyCustomFormSetting());
     }
 ```
+
+
+# Custom automatic E-Mail Response
+
+An example of how to enable an extra E-Mail when a customer posts a inquiry.
+
+```
+function casawp_after_inquirysend($payload) {
+	//(array) $postdata
+	//(object) $offer
+	extract($payload);
+
+	if ($offer->getFieldValue('seller_org_customerid') == "bento") {
+		
+		$subject = "Info-Meldung bezüglich einer Objekt-Anfrage von zueriimmo.ch: " . $offer->getTitle();
+
+		$message = 'Eine Anfrage wurde von zueriimmo.ch an die Bento AG gesendet.';
+		$message .= "\n";
+		$message .= "\n";
+		$message .= "Objekt:\n";
+		$message .= $offer->getTitle(). "\n";
+		$message .= 'ref: ' . $offer->getFieldValue('visualReferenceId') 
+        ? $offer->getFieldValue('visualReferenceId') 
+        : $offer->getFieldValue('referenceId') . "\n";
+
+        $message .= "\n";
+		$message .= "\n";
+		$message .= "Anfragender:\n";
+		foreach ($postdata as $key => $value) {
+			$message .= $key . ": " . $value . "\n";
+		}
+
+		wp_mail( 'jstalder@icloud.com, info@zueriimmo.ch', $subject, $message);
+	}
+}
+add_action( 'casawp_after_inquirysend', 'casawp_after_inquirysend' );
+``` 
