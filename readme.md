@@ -133,7 +133,7 @@ Register additional forms in your theme by adding the following to your function
 
 An example of how to enable an extra E-Mail when a customer posts a inquiry.
 
-```
+```php
 function casawp_after_inquirysend($payload) {
 	//(array) $postdata
 	//(object) $offer
