@@ -689,7 +689,7 @@ class Plugin {
         if ($availability) {
             global $wpdb;
             /*filters the result with reference context in mind (WPML IGNORANT) */
-            $query = "SELECT wp_terms.term_id FROM wp_terms
+            $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
                 INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casa". $wpdb->prefix . "location'
                 INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
                 INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
