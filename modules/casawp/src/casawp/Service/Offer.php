@@ -23,21 +23,21 @@ class Offer{
 
     function __get($name){
     	switch ($name) {
-    		case 'utilityService': 
+    		case 'utilityService':
     		case 'categoryService':
-    		case 'numvalService': 
+    		case 'numvalService':
     		case 'featureService':
     		case 'messengerService':
     		case 'formService':
     			return $this->offerService->{$name};
     		break;
-    			
-    		//deligate the rest to the Offer Object 
+
+    		//deligate the rest to the Offer Object
     		default:
     			return $this->post->{$name};
     			break;
     	}
-    	
+
     }
 
     //deligate all other methods to Offer Object
@@ -167,7 +167,7 @@ class Offer{
 	/*====================================
 	=            Data Getters            =
 	====================================*/
-	
+
 	public function getTitle(){
 		return $this->post->post_title;
 	}
@@ -188,7 +188,7 @@ class Offer{
 				} else {
 					$unknown_category = new \CasasoftStandards\Service\Category();
 					$unknown_category->setKey($termSlug);
-					$unknown_category->setLabel($termName);	
+					$unknown_category->setLabel($termName);
 					if ($c_trans === null) {
 						$c_trans = maybe_unserialize(get_option('casawp_custom_category_translations'));
 						if (!$c_trans) {
@@ -197,10 +197,10 @@ class Offer{
 					}
 					foreach ($c_trans as $key => $trans) {
 						if ($key == $termName && array_key_exists($lang, $trans)) {
-							$unknown_category->setLabel($trans[$lang]);	
+							$unknown_category->setLabel($trans[$lang]);
 						}
 					}
-					
+
 					$this->categories[] = $unknown_category;
 				}
 			}
@@ -262,7 +262,7 @@ class Offer{
       				if ($this->getSalestype() == 'buy')
       					return __('Sold', 'casawp');
       				break;
-				
+
 			}
 		}
 		return '';
@@ -307,7 +307,7 @@ class Offer{
 		if ($this->utilities != null) {
 			usort($this->utilities, array($this, "sortByLabel"));
 		}
-		
+
 
 		return $this->utilities;
     }
@@ -442,13 +442,13 @@ class Offer{
             $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
             $img_medium     = wp_get_attachment_image( $image->ID, 'medium', true, array('class' => 'casawp-image casawp-image-medium') );
             $img_medium_url = wp_get_attachment_image_src( $image->ID, 'medium' );
-        	
+
         	$image_array['full_src'] = $img_url[0];
         	$image_array['full_html'] = $img;
         	$image_array['medium_src'] = $img_medium_url[0];
         	$image_array['medium_html'] = $img_medium;
         	$image_array['caption'] = $image->post_excerpt;
-        	
+
         	$images_array[] = $image_array;
         }
 
@@ -536,6 +536,7 @@ class Offer{
             'casawp_archive_show_location',
             'casawp_archive_show_number_of_rooms',
             'casawp_archive_show_area_sia_nf',
+						'casawp_archive_show_area_sia_gf',
             'casawp_archive_show_area_bwf',
             'casawp_archive_show_surface_property',
             'casawp_archive_show_floor',
@@ -550,13 +551,13 @@ class Offer{
 
 	public function getPrimarySingleDatapoints(){
 		if ($this->single_dynamic_fields === null) {
-			
+
 	        $values_to_display = array();
 	        $i = 1000;
 	        foreach ($this->getSingleDynamicFields() as $value) {
 	          if(get_option($value, false)) {
 	          	switch ($value) {
-					case 'casawp_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
+								case 'casawp_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
 		          	case 'casawp_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
 		          	case 'casawp_single_show_area_nwf': $key = 'area_nwf'; break;
 		          	case 'casawp_single_show_area_bwf': $key = 'area_bwf'; break;
@@ -622,7 +623,7 @@ class Offer{
     public function getIntegratedOffers(){
     	$offers = $this->getFieldValue('integratedoffers', false);
     	if (empty($offers)) return NULL;
-    	
+
     	if ($offers) {
     		$offers = maybe_unserialize($offers);
     	}
@@ -643,7 +644,7 @@ class Offer{
     				break;
     			}
     		}
-    
+
     		if ($found) {
     			$f_offers[$found]['count'] = (isset($f_offers[$found]['count']) ? $f_offers[$found]['count'] : 1) + 1;
     		} else {
@@ -760,9 +761,9 @@ class Offer{
 		$meta_prefix = 'price';
 		if ($type == 'rent') {
 			$meta_prefix = 'grossPrice';
-			if ($scope == 'net') { $meta_prefix = 'netPrice';}	
+			if ($scope == 'net') { $meta_prefix = 'netPrice';}
 		}
-		
+
 		$value = $this->getFieldValue($meta_prefix, false);
 		$currency = $this->getFieldValue('price_currency', 'CHF');
 		$propertySegment = $this->getFieldValue($meta_prefix.'_propertysegment', 'all');
@@ -779,12 +780,12 @@ class Offer{
 		if ($render) {
 			return $render;
 		} else {
-			return __('On Request', 'casawp');	
+			return __('On Request', 'casawp');
 		}
-		
+
 	}
 
-	
+
 
 	public function renderAvailabilityDate($start = false){
 		$current_datetime = strtotime(date('c'));
@@ -795,16 +796,16 @@ class Offer{
 	    if ($start) {
 	    	$property_datetime = strtotime($this->start);
 	    }
-	    
+
 	    if ($property_datetime && $property_datetime > $current_datetime) {
 	    	$datetime = new \DateTime(str_replace(array("+02:00", "+01:00"), "", $this->start));
 	    	$return = date_i18n(get_option('date_format'), $datetime->getTimestamp());
 	    } else if (!$property_datetime){
-	    	$return = __('On Request', 'casawp');  
+	    	$return = __('On Request', 'casawp');
 	    } else {
 	    	$return = __('Immediate' ,'casawp');
 	    }
-	      
+
 	    return $return;
 	}
 
@@ -918,7 +919,7 @@ class Offer{
 	              $value = $this->renderAvailabilityDate();
 	              if ($value) {
 	                $point = str_replace('{{label}}', __('Available from','casawp'), $args['pattern_1']);
-	                $html .= str_replace('{{value}}', $value, $point); 
+	                $html .= str_replace('{{value}}', $value, $point);
 	                $empty = false;
 	              }
 	            }
@@ -930,7 +931,7 @@ class Offer{
 	              $html .= str_replace('{{value}}', $this->renderNumvalValue($numval), $point);
 	              $empty = false;
 	            }
-	          
+
 	            break;
 	        }
 
@@ -941,7 +942,7 @@ class Offer{
 				}
 			}
 
-	      } 
+	      }
 
 	    return $html;
 	}
@@ -951,7 +952,7 @@ class Offer{
 	=            Render Actions            =
 	======================================*/
 
-	
+
 
 	public function renderFeatures() {
         $features = $this->getFeatures();
@@ -967,7 +968,7 @@ class Offer{
             'offer' => $this
         ));
     }
-	
+
 	public function renderGallery(){
 		$images = $this->getImages();
 		return $this->render('gallery', array(
@@ -1029,7 +1030,7 @@ class Offer{
 	public function renderMap(){
 		return $this->render('map', array(
 			'offer' => $this
-		));	    
+		));
 	}
 
 	public function renderDatatable(){

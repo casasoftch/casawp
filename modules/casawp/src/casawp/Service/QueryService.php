@@ -2,7 +2,7 @@
 namespace casawp\Service;
 
 class QueryService{
-   
+
     private $defaultQuery = array();
 
     public function __construct(){
@@ -145,9 +145,9 @@ class QueryService{
             } else {
                 $args['post__not_in'] = array($this->query["post__not_in"]);
             }
-            
+
         }
-        
+
         switch ($this->query['orderby']) {
             case 'title':
                 $args['orderby'] = 'title';
@@ -285,8 +285,8 @@ class QueryService{
         return $args;
     }
 
-    
-   
+
+
     public function applyToWpQuery($query){
         //tax pages overides
         if ($query->is_main_query()) {
@@ -312,7 +312,7 @@ class QueryService{
             $query->set($key, $value);
         }
 
-        add_filter( 'posts_where' , array($this, 'nearmefilter') );    
+        add_filter( 'posts_where' , array($this, 'nearmefilter') );
 
 	    return $query;
    	}
@@ -326,15 +326,15 @@ class QueryService{
             add_filter( 'posts_join' , array($this, 'nearmejoin') );
 
             $where .= " AND $wpdb->posts.ID IN (SELECT post_id FROM $wpdb->postmeta WHERE
-                 ( 6371 * acos( cos( radians(" . $mylat . ") ) 
-                                * cos( radians( latitude.meta_value ) ) 
-                                * cos( radians( longitude.meta_value ) - radians(" . $mylng . ") ) 
-                                + sin( radians(" . $mylat . ") ) 
-                                * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";  
-              
+                 ( 6371 * acos( cos( radians(" . $mylat . ") )
+                                * cos( radians( latitude.meta_value ) )
+                                * cos( radians( longitude.meta_value ) - radians(" . $mylng . ") )
+                                + sin( radians(" . $mylat . ") )
+                                * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";
+
         }
 
-        return $where;  
+        return $where;
     }
 
     public function nearmejoin($join){

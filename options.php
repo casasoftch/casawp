@@ -1,6 +1,6 @@
 <?php
 	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-	
+
 	if(isset($_POST['casawp_submit'])) {
 		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
@@ -77,6 +77,7 @@
 					#'casawp_single_show_surface_living',
 					'casawp_archive_show_area_bwf',
 					'casawp_archive_show_area_sia_nf',
+					'casawp_archive_show_area_sia_gf',
 					'casawp_archive_show_surface_property',
 					'casawp_archive_show_floor',
 					'casawp_archive_show_number_of_floors',
@@ -156,7 +157,7 @@
 			'contactform' => 'Kontaktformular',
 			'private'     => 'Geschützte Objekte',
 			'logs' => 'Logs'
-		); 
+		);
 	    echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
 	    echo '<div style="float:right;">
@@ -167,7 +168,7 @@
 	    foreach( $tabs as $tab => $name ){
 	        $class = ( $tab == $current ) ? ' nav-tab-active' : '';
 	        echo "<a class='nav-tab$class' href='?page=casawp&tab=$tab'>$name</a>";
-	        
+
 	    }
 	    echo '</h2>';
 	?>
@@ -795,6 +796,16 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
+										<?php $name = 'casawp_archive_show_area_sia_gf'; ?>
+										<?php $text = 'Bruttogeschossfläche'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casawp_archive_show_area_sia_gf_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
 										<?php $name = 'casawp_archive_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
@@ -900,8 +911,8 @@
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
-										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
 										<br><br>
 										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte E-Mails an angegebene <code>inquiryPerson</code> E-Mails versenden.
@@ -914,7 +925,7 @@
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value=""> 
+										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value="">
 										<small>(Objekte mit deklarierten Anfrage-Emails werden bevorzugt)</small>
 									</fieldset>
 								</td>
@@ -1057,15 +1068,15 @@
 						   				} else {
 						   					echo $properties;
 						   				}
-						   				
+
 						   			echo '</pre></dd>';
 						   		}
 						  	} else {
-								echo '<dt></dt><dd><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></dd>';	
+								echo '<dt></dt><dd><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></dd>';
 							}
-						   
+
 						}
-						fclose($file_handle);	
+						fclose($file_handle);
 				    }
 				    echo "</dl>";*/
 
@@ -1110,7 +1121,7 @@
 										<?php $text = 'Vor dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
-											<textarea placeholder="<div id='content'>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
+											<textarea placeholder="<div id='content'>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 										</label></p>
 									</fieldset>
 									<fieldset>
@@ -1119,7 +1130,7 @@
 										<?php $text = 'Nach dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
-											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
+											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 										</label></p>
 										<p class="description" id="tagline-description">Erlaubt ist nur der div-Tag mit den Attributen id und class.</p>
 									</fieldset>
@@ -1128,7 +1139,7 @@
 							<tr valign="top">
 								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
-									
+
 									<fieldset>
 										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>
 										<?php $name = 'casawp_limit_reference_images'; ?>
@@ -1153,8 +1164,8 @@
 										</label></p>
 									</fieldset>
 
-									
-									
+
+
 									<fieldset>
 										<table>
 											<tr>
@@ -1163,7 +1174,7 @@
 												<?php else: ?>
 													<td><strike><code>data.xml</code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>	
+												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
@@ -1221,7 +1232,7 @@
 										<?php $name = 'casawp_legacy'; ?>
 										<?php $text = 'Altes Importscript für casaXML "draft" aktivieren.'; ?>
 										<p><label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> 
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label></p>
 									</fieldset>
 								</td>
