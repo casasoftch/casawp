@@ -11,7 +11,11 @@ class FormService{
 		foreach ($post as $key => $value) {
 			switch ($key) {
 				default:
-					$data[$key] = sanitize_text_field($value);
+					if(is_array($value)){
+						$data[$key] = $value;
+					} else {
+						$data[$key] = sanitize_text_field($value);
+					}
 					break;
 			}
 		}
@@ -110,10 +114,10 @@ class FormService{
 					//send to casamail
 					if (get_option('casawp_inquiry_method') == 'casamail') {
 
-						$data = $formSetting->preCasaMailFilter($data);
+						$data = $formSetting->preCasaMailFilter($data, $postdata);
 
 						//casamail
-						$data = $postdata;
+						//$data = $postdata;
 						$data['email'] = $postdata['emailreal'];
 						$data['provider'] = $customerid;
 						$data['publisher'] = $publisherid;
