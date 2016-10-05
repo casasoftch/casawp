@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
                 },
                 success: function (json) {
                     if (json.nextlink !== 'no') {
-                        $('.casawp-single-next').prop('href', json.nextlink);    
+                        $('.casawp-single-next').prop('href', json.nextlink);
                     } else {
                         $('.casawp-single-next').addClass('disabled');
                     }
@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
             .prepend("<option value='' disabled selected hidden>"+($(el).data('placeholder'))+"</option>");
         });
     }
-   
+
     // remove attr multiple (safari bug)
     /*var userAgent = window.navigator.userAgent;
     console.log(userAgent);

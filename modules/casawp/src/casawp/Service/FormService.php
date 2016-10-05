@@ -114,10 +114,7 @@ class FormService{
 						//send to casamail
 						if (get_option('casawp_inquiry_method') == 'casamail') {
 
-							$data = $formSetting->preCasaMailFilter($data, $postdata);
-
-							//casamail
-							//$data = $postdata;
+							$data = $postdata;
 							$data['email'] = $postdata['emailreal'];
 							$data['provider'] = $customerid;
 							$data['publisher'] = $publisherid;
@@ -139,6 +136,8 @@ class FormService{
 								}
 							}
 
+
+							$data = $formSetting->preCasaMailFilter($data, $postdata);
 
 							$data_string = json_encode($data);
 
