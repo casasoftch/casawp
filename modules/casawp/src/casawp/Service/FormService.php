@@ -2,7 +2,7 @@
 namespace casawp\Service;
 
 class FormService{
-	
+
     public function __construct(){
     }
 
@@ -22,37 +22,37 @@ class FormService{
     	if ($subjectItem instanceof Offer && $subjectItem->getAvailability() == 'reference') {
 	        return false;
 	    }
-        $form = new \casawp\Form\ContactForm();
-        if (!$formSetting) {
-        	$formSetting = new \casawp\Form\DefaultFormSetting();
-        }
-        
-        $formSetting->setAdditionalFields($form);
+      $form = new \casawp\Form\ContactForm();
+      if (!$formSetting) {
+      	$formSetting = new \casawp\Form\DefaultFormSetting();
+      }
 
-        $customerid = get_option('casawp_customerid');
-        $publisherid = get_option('casawp_publisherid');
-        $email = get_option('casawp_email_fallback');
+      $formSetting->setAdditionalFields($form);
 
-        if ($subjectItem instanceof Offer && $subjectItem->getFieldValue('seller_org_customerid', false)) {
-        	$customerid = $subjectItem->getFieldValue('seller_org_customerid', false);
-        }
-        if ($subjectItem instanceof Offer && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
-        	$email = $subjectItem->getFieldValue('seller_inquiry_person_email', false);
-        }
-        
-        if (get_option('casawp_inquiry_method') == 'casamail') {
-        	//casamail
-        	if (!$customerid || !$publisherid) {
-        		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
-        	}
-        	
-        } else {
-        	if (!$email) {
-        		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
-        	}
-        }
+      $customerid = get_option('casawp_customerid');
+      $publisherid = get_option('casawp_publisherid');
+      $email = get_option('casawp_email_fallback');
 
-        if ($_POST) {
+      if ($subjectItem instanceof Offer && $subjectItem->getFieldValue('seller_org_customerid', false)) {
+      	$customerid = $subjectItem->getFieldValue('seller_org_customerid', false);
+      }
+      if ($subjectItem instanceof Offer && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
+      	$email = $subjectItem->getFieldValue('seller_inquiry_person_email', false);
+      }
+
+      if (get_option('casawp_inquiry_method') == 'casamail') {
+      	//casamail
+      	if (!$customerid || !$publisherid) {
+      		return '<p class="alert alert-danger">CASAMAIL MISCONFIGURED: please define a provider and publisher id <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
+      	}
+
+      } else {
+      	if (!$email) {
+      		return '<p class="alert alert-danger">EMAIL MISCONFIGURED: please define a email address <a href="/wp-admin/admin.php?page=casawp&tab=contactform">here</a></p>';
+      	}
+      }
+
+      if ($_POST) {
 			$postdata = $this->sanitizeContactFormPost($_POST);
 			$filter = $form->getFilter();
 			$form->setInputFilter($filter);
@@ -81,7 +81,7 @@ class FormService{
 					$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue());
 					$post = array(
 						'post_type' => 'casawp_inquiry',
-						'post_content' => $form->get('message')->getValue(),
+						'post_content' => ($form->get('message')->getValue() ? $form->get('message')->getValue() : 'NO MESSAGE'),
 						'post_title' => $post_title,
 						'post_status' => 'private',
 						'ping_status' => false
@@ -96,8 +96,8 @@ class FormService{
 						add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
 						add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
 					}
-					
-					
+
+
 
 
 					do_action('casawp_before_inquirysend', array(
@@ -136,19 +136,19 @@ class FormService{
 						}
 
 
-						$data_string = json_encode($data);                                                                                   
-						                                                                                                                     
+						$data_string = json_encode($data);
+
 						$ch = curl_init('http://onemail.ch/api/msg');
-						curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-						curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
-						curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-						    'Content-Type: application/json',                                                                                
-						    'Content-Length: ' . strlen($data_string))                                                                       
+						curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+						curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+						curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+						    'Content-Type: application/json',
+						    'Content-Length: ' . strlen($data_string))
 						);
 
 						curl_setopt($ch, CURLOPT_USERPWD,  "casawp:MQX-2C2-Hrh-zUu");
-						                                                                                                                     
+
 						$result = curl_exec($ch);
 						$json = json_decode($result, true);
 						if (isset($json['validation_messages'])) {
@@ -156,7 +156,7 @@ class FormService{
 							return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
 						}
 
-			        } 
+			        }
 
 					do_action('casawp_after_inquirysend', array(
 			    		'postdata' => $postdata,
