@@ -1,12 +1,15 @@
 <?php if ($sent): ?>
-	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>	
+	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>
 <?php else: ?>
-	
+
 	<?php $renderobject = ($this->offer ? $this->offer : $this->casawp); ?>
 
 	<?php $form->setAttribute('action', get_permalink(($offer ? $offer->post : $project->post))); ?>
 
+
+
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
+	<?= $this->formElement($form->get('form_id')) ?>
 	<?php wp_nonce_field( 'send-inquiry' ); ?>
 	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
 	<div class="casawp-row">

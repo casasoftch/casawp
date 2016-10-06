@@ -18,6 +18,11 @@ class ContactForm extends Form
         //$this->setAttribute('action', '/immobilien/');
 
         $this->add(array(
+          'name' => 'form_id',
+          'type' => 'hidden'
+        ));
+
+        $this->add(array(
             'name' => 'firstname',
             'type' => 'Text',
             'options' => array(
@@ -242,7 +247,7 @@ class ContactForm extends Form
             $filter->add($custom_filter_array);
         }
 
-        
+
 
         return $filter;
     }

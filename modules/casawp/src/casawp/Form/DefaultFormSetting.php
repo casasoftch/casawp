@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace casawp\Form;
 
 class DefaultFormSetting {
-	public $id = 'gratis-bewertung';
+	public $id = 'contact';
 	public $viewFile = 'contact-form';
 
 	public function setAdditionalFields($form){
