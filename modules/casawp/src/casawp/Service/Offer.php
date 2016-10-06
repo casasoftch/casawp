@@ -1070,11 +1070,11 @@ class Offer{
 
 
 	public function renderContactForm(){
-		$form = $this->formService->buildAndValidateContactForm($this);
+		$formResult = $this->formService->buildAndValidateContactForm($this);
         return $this->render('contact-form', array(
-        	'form' => $form,
+        	'form' => $formResult['form'],
         	'offer' => $this,
-        	'sent' => ($_POST && $form->isValid() ? true : false )
+        	'sent' => $formResult['sent']
         ));
     }
 

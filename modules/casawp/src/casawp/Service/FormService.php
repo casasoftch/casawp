@@ -58,7 +58,7 @@ class FormService{
 
 
 			$form->get('form_id')->setValue($formSetting->getId());
-
+      $sent = false;
       if ($_POST) {
 				$id = (isset($_POST['form_id']) ? $_POST['form_id'] : false);
 				if (!$id || $id === $formSetting->getId()) {
@@ -67,6 +67,7 @@ class FormService{
 					$form->setInputFilter($filter);
 					$form->setData($postdata);
 					if ($form->isValid()) {
+            $sent = true;
 						$validatedData = $form->getData();
 						if (!wp_verify_nonce( $_REQUEST['_wpnonce'], 'send-inquiry')) {
 							echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
@@ -181,7 +182,7 @@ class FormService{
 	        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
 	        }
 				}
-        return $form;
+        return array('form' => $form, 'sent' => $sent);
     }
 
     private function render($view, $args = array()){
@@ -190,11 +191,11 @@ class FormService{
 	}
 
     public function renderContactForm($subjectItem = false, $viewfile = 'contact-form'){
-    	$form = $this->buildAndValidateContactForm($subjectItem);
-        return $this->render($viewfile, array(
-        	'form' => $form,
-        	'sent' => ($_POST && $form->isValid() ? true : false )
-        ));
-    }
+    	$formResult = $this->buildAndValidateContactForm($subjectItem);
+      return $this->render($viewfile, array(
+      	'form' => $formResult['form'],
+      	'sent' => $formResult['sent']
+      ));
+  }
 
 }

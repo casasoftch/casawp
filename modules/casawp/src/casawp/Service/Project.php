@@ -18,20 +18,20 @@ class Project{
 
     function __get($name){
     	switch ($name) {
-    		case 'utilityService': 
+    		case 'utilityService':
     		case 'categoryService':
-    		case 'numvalService': 
+    		case 'numvalService':
     		case 'featureService':
     		case 'messengerService':
     			return $this->projectService->{$name};
     		break;
-    			
-    		//deligate the rest to the Project Object 
+
+    		//deligate the rest to the Project Object
     		default:
     			return $this->post->{$name};
     			break;
     	}
-    	
+
     }
 
     //deligate all other methods to Project Object
@@ -149,7 +149,7 @@ class Project{
 	/*====================================
 	=            Data Getters            =
 	====================================*/
-	
+
 	public function getTitle(){
 		return $this->post->post_title;
 	}
@@ -196,7 +196,7 @@ class Project{
       				if ($this->getSalestype() == 'buy')
       					return __('Sold', 'casawp');
       				break;
-				
+
 			}
 		}
 		return '';
@@ -237,13 +237,13 @@ class Project{
             $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
             $img_medium     = wp_get_attachment_image( $image->ID, 'medium', true, array('class' => 'casawp-image casawp-image-medium') );
             $img_medium_url = wp_get_attachment_image_src( $image->ID, 'medium' );
-        	
+
         	$image_array['full_src'] = $img_url[0];
         	$image_array['full_html'] = $img;
         	$image_array['medium_src'] = $img_medium_url[0];
         	$image_array['medium_html'] = $img_medium;
         	$image_array['caption'] = $image->post_excerpt;
-        	
+
         	$images_array[] = $image_array;
         }
 
@@ -385,7 +385,7 @@ class Project{
 		if (!$this->units) {
 			$unit_posts = get_children( array(
 				'post_parent' => $this->post->ID,
-				'post_type'   => 'casawp_project', 
+				'post_type'   => 'casawp_project',
 				'numberposts' => -1,
 				'post_status' => 'any'
 			), OBJECT );
@@ -415,7 +415,7 @@ class Project{
 			));
 
 			if ( $the_query->have_posts() ) {
-				while ( $the_query->have_posts() ) {	 
+				while ( $the_query->have_posts() ) {
 					$the_query->the_post();
 					$offer = $casawp->prepareOffer($the_query->post);
 					$properties[] = $offer;
@@ -428,7 +428,7 @@ class Project{
 	}
 
 	public function getProject(){
-		
+
 	}
 
 	//active or reserved properties (maybe this should be done during import for PERFORMANCE reasons)
@@ -454,14 +454,14 @@ class Project{
 	}
 
 	public function renderContactForm(){
-		$form = $this->formService->buildAndValidateContactForm($this);
+		$formResult = $this->formService->buildAndValidateContactForm($this);
         return $this->render('contact-form', array(
-        	'form' => $form,
+        	'form' => $formResult['form'],
         	'offer' => $this,
-        	'sent' => $sent
+        	'sent' => $formResult['sent']
         ));
     }
-    
+
     public function renderContactFormElement($element){
     	return $this->render('contact-form-element', array('element' => $element));
     }

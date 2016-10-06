@@ -141,16 +141,16 @@ class Plugin {
         if (!$setting) {
             $setting = new \casawp\Form\DefaultFormSetting();
         }
-        $form = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting);
-        if (is_string($form)) {
-            return $form;
+        $formResult = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting);
+        if (is_string($formResult['form'])) {
+            return $formResult['form'];
         }
 
         $result = $this->render($setting->getView(), array(
-            'form' => $form,
+            'form' => $formResult['form'],
             'offer' => $offer,
             'project' => $project,
-            'sent' => ($_POST && $form->isValid() ? true : false )
+            'sent' => $formResult['sent']
         ));
         return $result;
     }
