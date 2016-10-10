@@ -16,7 +16,9 @@
     <?php foreach ($this->offer->getNumvals() as $numval) : ?>
       <tr>
         <td class="width-25"><?= $numval->getLabel() ?></td>
-        <td class="width-75"><?= $this->offer->renderNumvalValue($numval) ?></td>
+        <td class="width-75">
+          <?php $this->offer->renderNumvalValue($numval) ?>
+        </td>
       </tr>
     <?php endforeach ?>
   <?php endif ?>
