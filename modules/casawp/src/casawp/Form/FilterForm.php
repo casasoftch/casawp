@@ -39,8 +39,8 @@ class FilterForm extends Form
 
         if ($this->salestypes) {
             $this->addSelector(
-                'salestypes', 
-                __('Sales type', 'casawp'), 
+                'salestypes',
+                __('Sales type', 'casawp'),
                 __('Choose offer','casawp'),
                 $this->getSalestypeOptions(),
                 $this->options['chosen_salestypes']
@@ -50,8 +50,8 @@ class FilterForm extends Form
 
         if ($this->categories) {
             $this->addSelector(
-                'categories', 
-                __('Category', 'casawp'), 
+                'categories',
+                __('Category', 'casawp'),
                 __('Choose category','casawp'),
                 $this->getCategoryOptions(),
                 $this->options['chosen_categories']
@@ -59,8 +59,8 @@ class FilterForm extends Form
         }
         if ($this->locations) {
             $this->addSelector(
-                'locations', 
-                __('Location', 'casawp'), 
+                'locations',
+                __('Location', 'casawp'),
                 __('Choose locality','casawp'),
                 $this->getLocationOptions(),
                 $this->options['chosen_locations']
@@ -95,7 +95,7 @@ class FilterForm extends Form
                     'options' => array(
                         'label' => $label,
                         'empty_option' => $emptyLabel,
-                        'value_options' => $value_options,                        
+                        'value_options' => $value_options,
                         'label_attributes' => array(
                             'class' => 'visible-xs casawp-filterform-label'
                         )
@@ -104,7 +104,7 @@ class FilterForm extends Form
                         'class' => 'form-control form-control-singleselect chosen-select',
                         'data-placeholder' => $emptyLabel
                     )
-                    
+
                 ));
                 break;
             case 'multicheckbox':
@@ -148,6 +148,18 @@ class FilterForm extends Form
                         'value_options' => $value_options,
                         'label_attributes' => array(
                             'class' => 'casawp-radio-label'
+                        )
+                    )
+                ));
+                break;
+            case 'hidden':
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Zend\Form\Element\Hidden',
+                    'options' => array(
+                        'label' => $label,
+                        'label_attributes' => array(
+                            'class' => 'casawp-hidden'
                         )
                     )
                 ));
@@ -218,7 +230,7 @@ class FilterForm extends Form
                 unset($locations_workload[$i]);
             }
         }
-        
+
         if ($depth == 1) {
             foreach ($parents as $u => $parent) {
                 $children = array();
@@ -277,7 +289,7 @@ class FilterForm extends Form
         if ($depth == 1) {
             foreach ($parents as $parent) {
                 $options[$parent['slug']] = $parent['name'];
-            } 
+            }
         } elseif ($depth == 2) {
             foreach ($parents as $parent) {
                 $value_options = array();
@@ -288,7 +300,7 @@ class FilterForm extends Form
                     'label' => $parent['name'],
                     'options' => $value_options
                 );
-            } 
+            }
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
                 foreach ($parent['children'] as $child) {
@@ -302,7 +314,7 @@ class FilterForm extends Form
                         'options' => $value_options
                     );
                 }
-            } 
+            }
         }
 
         return $options;
@@ -324,11 +336,11 @@ class FilterForm extends Form
             if ($valueExists) {
                 $value = $data[$name];
                 if (
-                    $name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio'])
+                    $name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
-                    $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio'])
+                    $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
-                    $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio'])
+                    $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
                 ) {
                     if ($data[$name] && is_array($data[$name])) {
                         $value = $data[$name][0];
@@ -336,7 +348,7 @@ class FilterForm extends Form
                         $value = '';
                     }
                 }
-                
+
 
                 $elementOrFieldset->setValue($value);
             }
@@ -351,9 +363,9 @@ class FilterForm extends Form
                 if ($name == 'categories' && $options['casawp_filter_categories_elementtype'] == 'singleselect') {
                     $this->baseFieldset->populateValues($data[$name][0]);
                 } else {
-                    $this->baseFieldset->populateValues($data[$name]);    
+                    $this->baseFieldset->populateValues($data[$name]);
                 }
-                
+
             }
         } else {
             parent::populateValues($data);

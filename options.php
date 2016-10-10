@@ -710,7 +710,7 @@
 						<tr valign="top">
 							<?php $name = 'casawp_filter_categories_elementtype'; ?>
 							<?php $text = 'Kategorie-Auswahl'; ?>
-							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
 							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 							<td>
 								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
@@ -723,7 +723,7 @@
 						<tr valign="top">
 							<?php $name = 'casawp_filter_salestypes_elementtype'; ?>
 							<?php $text = 'Vermarktungs-Art-Auswahl'; ?>
-							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
 							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 							<td>
 								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
@@ -736,7 +736,7 @@
 						<tr  valign="top">
 							<?php $name = 'casawp_filter_locations_elementtype'; ?>
 							<?php $text = 'Ortschaften-Auswahl'; ?>
-							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
 							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 							<td>
 								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
