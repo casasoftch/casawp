@@ -2292,8 +2292,19 @@ class Import {
       $this->addToLog('updating metadata');
       foreach ($new_meta_data as $key => $value) {
         $newval = $value;
+
+        if ($newval === true) {
+          $newval = "1";
+        }
+        if (is_numeric($value)) {
+          $newval = (string) $value;
+        }
+        if ($key == "floor" && $newval == 0) {
+          $newval = "EG"; // TODO Translate
+        }
+
         $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
-        if (($oldval || $newval) && $oldval != $newval) {
+        if (($oldval || $newval || $newval === 0) && $oldval !== $newval) {
           update_post_meta($wp_post->ID, $key, $newval);
           $this->transcript[$casawp_id]['meta_data'][$key]['from'] = $oldval;
           $this->transcript[$casawp_id]['meta_data'][$key]['to'] = $newval;
