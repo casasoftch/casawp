@@ -842,8 +842,8 @@ class Offer{
 		} else {
 			$datapoints = $this->getPrimaryArchiveDatapoints();
 			$defaults = array(
-				'pattern_1' => '<tr><th>{{label}}</th><td>{{value}}</td></tr>',
-				'pattern_2' => '<tr><td colspan="2">{{value}}</td></tr>',
+				'pattern_1' => '<tr class="datapoint-{{field}}"><th>{{label}}</th><td>{{value}}</td></tr>',
+				'pattern_2' => '<tr class="datapoint-{{field}}"><td colspan="2">{{value}}</td></tr>',
 				'max' => 99
 			);
 		}
@@ -859,12 +859,14 @@ class Offer{
 	          case 'street_and_number':
 	            if ($this->getFieldValue('property_address_streetaddress')):
 		            $point = str_replace('{{label}}', __('Street', 'casawp'), $args['pattern_1']);
+								$point = str_replace('{{field}}', $field, $point);
 		            $html .= str_replace('{{value}}', trim($this->getFieldValue('property_address_streetaddress') . ' ' . $this->getFieldValue('property_address_streetnumber')), $point);
 		            $empty = false;
 	            endif;
 	            break;
 	          case 'location':
 	            $point = str_replace('{{label}}', __('Locality', 'casawp'), $args['pattern_1']);
+							$point = str_replace('{{field}}', $field, $point);
 	            $html .= str_replace('{{value}}', trim($this->getFieldValue('address_postalcode') . ' ' . $this->getFieldValue('address_locality')), $point);
 	            $empty = false;
 	            break;
@@ -872,6 +874,7 @@ class Offer{
 	            $numval = $this->getNumval('area_sia_gsf');
 	            if ($numval) {
 	              $point = str_replace('{{label}}', $numval->getLabel(), $args['pattern_1']);
+								$point = str_replace('{{field}}', $field, $point);
 	              $html .= str_replace('{{value}}', $this->renderNumvalValue($numval), $point);
 	              $empty = false;
 	            }
@@ -881,9 +884,11 @@ class Offer{
 	              if ($this->getSalestype() == 'buy') {
 	              	if ($this->getFieldValue('price', false)) {
 	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+										$point = str_replace('{{field}}', $field, $point);
 	              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
 	              	} else {
 	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
+										$point = str_replace('{{field}}', $field, $point);
 	              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
 	              	}
 	              	$empty = false;
@@ -891,16 +896,19 @@ class Offer{
 	              if ($this->getSalestype() == 'rent') {
   	                if ($this->getFieldValue('grossPrice', false)) {
   	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+											$point = str_replace('{{field}}', $field, $point);
   	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
   	                  $empty = false;
   	                }
   	                if ($this->getFieldValue('netPrice', false)) {
   	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+											$point = str_replace('{{field}}', $field, $point);
   	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
   	                  $empty = false;
   	                }
   	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
   	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+											$point = str_replace('{{field}}', $field, $point );
   	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
   	                	$empty = false;
   	                }
@@ -908,7 +916,7 @@ class Offer{
 	            }
 	            break;
 	          case 'excerpt':
-	            $html .= str_replace('{{value}}', $this->getExcerpt(), $args['pattern_2']);
+	            $html .= str_replace('{{field}}', $field, str_replace('{{value}}', $this->getExcerpt(), $args['pattern_2']));
 	            if ($this->getExcerpt()) {
 	            	$empty = false;
 	            }
@@ -919,6 +927,7 @@ class Offer{
 	              $value = $this->renderAvailabilityDate();
 	              if ($value) {
 	                $point = str_replace('{{label}}', __('Available from','casawp'), $args['pattern_1']);
+									$point = str_replace('{{field}}', $field, $point);
 	                $html .= str_replace('{{value}}', $value, $point);
 	                $empty = false;
 	              }
@@ -928,6 +937,7 @@ class Offer{
 	            $numval = $this->getNumval($field);
 	            if ($numval) {
 	              $point = str_replace('{{label}}', $numval->getLabel(), $args['pattern_1']);
+								$point = str_replace('{{field}}', $field, $point);
 	              $html .= str_replace('{{value}}', $this->renderNumvalValue($numval), $point);
 	              $empty = false;
 	            }

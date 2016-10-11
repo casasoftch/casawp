@@ -16,8 +16,8 @@
 								<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
 								<div class="datapoint-items">
 								    <?php echo $offer->renderDatapoints('archive', array(
-								    	'pattern_1' => '<div class="datapoint-item"><span class="datapoint-label"><strong>{{label}}:</strong></span> <span class="datapoint-value">{{value}}</span></div>',
-								    	'pattern_2' => '<div class="datapoint-item datapoint-item-alt"><span class="datapoint-value">{{value}}</span></div>',
+								    	'pattern_1' => '<div class="datapoint-item datapoint-{{field}}"><span class="datapoint-label"><strong>{{label}}:</strong></span> <span class="datapoint-value">{{value}}</span></div>',
+								    	'pattern_2' => '<div class="datapoint-item datapoint-{{field}} datapoint-item-alt"><span class="datapoint-value">{{value}}</span></div>',
 								    	'max' => 3
 								    )) ?>
 								</div>
