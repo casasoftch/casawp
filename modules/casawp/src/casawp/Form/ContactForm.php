@@ -23,6 +23,21 @@ class ContactForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'gender',
+            'type' => 'radio',
+            'options' => array(
+              'label' => __('Anrede', 'casawp'),
+              'options' => array(
+                '2' => 'Frau',
+                '1' => 'Herr'
+              )
+            ),
+            'attributes' => array(
+              'value' => '2'
+            )
+        ));
+
+        $this->add(array(
             'name' => 'firstname',
             'type' => 'Text',
             'options' => array(

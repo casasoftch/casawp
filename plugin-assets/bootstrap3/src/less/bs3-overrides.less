@@ -553,3 +553,70 @@ body .featherlight{
 		}
 	}
 }
+
+
+
+
+//contact radio replacer
+.casawp-single .casawp-contactform-form .casawp-gender-radios{
+	.control-label{
+		display: none;
+	}
+	.form-group {
+		height: 20px;
+	}
+	label{
+		line-height: 20px;
+		width: 50%;
+		float: left;
+		display: block;
+		margin-bottom: 0px;
+		cursor: pointer;
+		input{
+			float: left;
+			width: auto;
+			margin-top: 0px;
+			padding: 0px;
+			height: auto;
+			height: 20px;
+			width: 20px;
+			line-height: 20px;
+			margin-right: 5px;
+		}
+	}
+}
+.js{
+	.casawp-single .casawp-contactform-form .casawp-gender-radios{
+		label{
+			input{
+				display: none;
+				&:checked + .checkreplacer{
+					background-color: @brand-primary;
+					border: 4px solid white;
+					box-shadow: 0px 0px 2px #333;
+
+				}
+			}
+			.checkreplacer{
+				box-shadow: 0px 0px 0px #333;
+				transition: 0.2s all;
+				content: "";
+				display: block;
+				float: left;
+				width: auto;
+				margin-top: 0px;
+				padding: 0px;
+				height: auto;
+				height: 20px;
+				width: 20px;
+				line-height: 20px;
+				margin-right: 10px;
+				background-color: white;
+				border-radius: 50%;
+				border: 1px solid #ddd;
+				cursor: pointer;
+			}
+
+		}
+	}
+}

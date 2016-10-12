@@ -12,6 +12,10 @@
 	<?= $this->formElement($form->get('form_id')) ?>
 	<?php wp_nonce_field( 'send-inquiry' ); ?>
 	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
+
+	<div class="casawp-gender-radios">
+		<?= $renderobject->renderContactFormElement($form->get('gender')) ?>
+	</div>
 	<div class="casawp-row">
 		<div class="casawp-col-md-5 casawp-input-left">
 			<?= $renderobject->renderContactFormElement($form->get('firstname')) ?>
@@ -35,13 +39,13 @@
 	<?= $renderobject->renderContactFormElement($form->get('message')) ?>
 
 	<div class="casawp-row">
-        <div class="casawp-col-md-7 casawp-input-left">
-            <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>
-        </div>
-        <div class="casawp-col-md-5 casawp-input-right">
-            <input type="submit" class="casawp-contactform-send" value="<?= __("Send", "casawp") ?>">
-        </div>
-        <div class="clearBoth"></div>
+    <div class="casawp-col-md-7 casawp-input-left">
+        <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>
+    </div>
+    <div class="casawp-col-md-5 casawp-input-right">
+        <input type="submit" class="casawp-contactform-send" value="<?= __("Send", "casawp") ?>">
+    </div>
+    <div class="clearBoth"></div>
 	</div>
 
 	<?= $this->form()->closeTag(); ?>
