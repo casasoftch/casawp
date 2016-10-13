@@ -136,6 +136,14 @@ jQuery(document).ready(function($) {
         });
     }
 
+
+    //replace radios with a controllable one
+    if($('.casawp-gender-radios').length){
+        $('.casawp-gender-radios .form-group label:not(.control-label)').append($('<span class="checkreplacer"></span>'));
+    }
+
+
+
     // remove attr multiple (safari bug)
     /*var userAgent = window.navigator.userAgent;
     console.log(userAgent);
