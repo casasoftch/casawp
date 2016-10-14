@@ -11,7 +11,7 @@ class Import {
 
   public function __construct($doimport = true, $casagatewayupdate = false){
     if ($doimport) {
-      add_action( 'init', array($this, 'casawpImport') );  
+      add_action( 'init', array($this, 'casawpImport') );
     }
     if ($casagatewayupdate) {
       add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );
@@ -73,7 +73,7 @@ class Import {
     } else {
       return '...';
     }
-    
+
   }
 
   public function setcasawpCategoryTerm($term_slug, $label = false) {
@@ -188,7 +188,7 @@ class Import {
           }
         }
 
-        
+
       }
     } else { //missing
       $filename = false;
@@ -243,7 +243,7 @@ class Import {
       } else {
         if (get_bloginfo('language')) {
           $main_lang = substr(get_bloginfo('language'), 0, 2);
-        } 
+        }
       }
       $this->main_lang = $main_lang;
     }
@@ -281,18 +281,18 @@ class Import {
         $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
       }
       if ($trid) {
-        $_POST['icl_post_language'] = $lang; 
+        $_POST['icl_post_language'] = $lang;
 
         global $wpdb;
-        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE 
-          trid = ' . $trid . ' 
-          AND language_code = \'' . $lang . '\' 
+        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE
+          trid = ' . $trid . '
+          AND language_code = \'' . $lang . '\'
           ', OBJECT );
 
           $new = array(
             'trid' => $trid,
-            'element_id' => $wp_post->ID, 
-            'element_type' => 'post_'.$wp_post->post_type, 
+            'element_id' => $wp_post->ID,
+            'element_type' => 'post_'.$wp_post->post_type,
             'language_code' => $lang
           );
           if ($this->getMainLang() != $lang) {
@@ -306,8 +306,8 @@ class Import {
         } else {
           $old = array(
             'trid'          => $existing[0]->trid,
-            'element_id'    => $existing[0]->element_id, 
-            'element_type'  => $existing[0]->element_type, 
+            'element_id'    => $existing[0]->element_id,
+            'element_type'  => $existing[0]->element_type,
             'language_code' => $existing[0]->language_code
           );
           if ($this->getMainLang() != $lang) {
@@ -316,7 +316,7 @@ class Import {
           if ($new != $old) {
             $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
           }
-          
+
         }
 
       } else {
@@ -326,13 +326,13 @@ class Import {
   }*/
 
   //OLD WAY
-  /*public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier){
+  /*public function bhjkfwInsertWPMLconnection($wp_post, $lang, $trid_identifier){
     if ($this->hasWPML()) {
       if ($this->getMainLang() == $lang) {
         $this->curtrid = wpml_get_content_trid('post_casawp_property', $wp_post->ID);
       }
-      $_POST['icl_post_language'] = $lang; 
-      
+      $_POST['icl_post_language'] = $lang;
+
       global $sitepress;
       if ($this->getMainLang() != $lang) {
         $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
@@ -355,8 +355,8 @@ class Import {
         $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
       }
       if ($trid) {
-        $_POST['icl_post_language'] = $lang; 
-      
+        $_POST['icl_post_language'] = $lang;
+
         global $sitepress;
         if ($this->getMainLang() != $lang) {
           $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
@@ -365,18 +365,18 @@ class Import {
         }
 
         /*
-        $_POST['icl_post_language'] = $lang; 
+        $_POST['icl_post_language'] = $lang;
 
         global $wpdb;
-        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE 
-          trid = ' . $trid . ' 
-          AND language_code = \'' . $lang . '\' 
+        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE
+          trid = ' . $trid . '
+          AND language_code = \'' . $lang . '\'
           ', OBJECT );
 
           $new = array(
             'trid' => $trid,
-            'element_id' => $wp_post->ID, 
-            'element_type' => 'post_'.$wp_post->post_type, 
+            'element_id' => $wp_post->ID,
+            'element_type' => 'post_'.$wp_post->post_type,
             'language_code' => $lang
           );
           if ($this->getMainLang() != $lang) {
@@ -390,8 +390,8 @@ class Import {
         } else {
           $old = array(
             'trid'          => $existing[0]->trid,
-            'element_id'    => $existing[0]->element_id, 
-            'element_type'  => $existing[0]->element_type, 
+            'element_id'    => $existing[0]->element_id,
+            'element_type'  => $existing[0]->element_type,
             'language_code' => $existing[0]->language_code
           );
           if ($this->getMainLang() != $lang) {
@@ -400,7 +400,7 @@ class Import {
           if ($new != $old) {
             $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
           }
-          
+
         }*/
 
       } else {
@@ -432,7 +432,7 @@ class Import {
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property){
     ### future task: for better performace compare new and old data ###
 
-    
+
     //get xml media files
     $the_casawp_attachments = array();
     if ($offer_medias) {
@@ -551,7 +551,7 @@ class Import {
             }
           }
 
-          
+
         }
 
         if (!$existing) {
@@ -563,7 +563,7 @@ class Import {
             $this->transcript[$casawp_id]['attachments']["failed_to_create"] = $new_id;
           }
         }
-        
+
 
       } //foreach ($the_casawp_attachments as $the_mediaitem) {
 
@@ -626,7 +626,7 @@ class Import {
 
     } //(isset($the_casawp_attachments)
 
-   
+
   }
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id){
@@ -654,13 +654,13 @@ class Import {
     if ($wp_salestype_terms) {
       $old_salestype = $wp_salestype_terms[0];
     }
-    
+
     if ($old_salestype != $new_salestype) {
       $this->transcript[$casawp_id]['salestype']['from'] = ($old_salestype ? $old_salestype->name : 'none');
       $this->transcript[$casawp_id]['salestype']['to'] =   ($new_salestype ? $new_salestype->name : 'none');
       wp_set_object_terms( $wp_post->ID, ($new_salestype ? $new_salestype->term_id : NULL), 'casawp_salestype' );
     }
-    
+
   }
 
 
@@ -704,13 +704,13 @@ class Import {
     if ($wp_post_terms) {
       $old_term = $wp_post_terms[0];
     }
-    
+
     if ($old_term != $new_term) {
       $this->transcript[$casawp_id]['availability']['from'] = ($old_term ? $old_term->name : 'none');
       $this->transcript[$casawp_id]['availability']['to'] =   ($new_term ? $new_term->name : 'none');
       wp_set_object_terms( $wp_post->ID, ($new_term ? $new_term->term_id : NULL), 'casawp_availability' );
     }
-    
+
   }
 
   public function setOfferLocalities($wp_post, $address, $casawp_id){
@@ -731,7 +731,7 @@ class Import {
       $lvl2_arr = false;
     }
 
-    
+
     //make sure country exists
     $wp_country = false;
     if ($country_arr) {
@@ -752,7 +752,7 @@ class Import {
         $this->transcript['new_locations'][] = $country_arr;
       }
     }
-    
+
     //make sure lvl1 exists
     $wp_lvl1 = false;
     if ($lvl1_arr) {
@@ -823,7 +823,7 @@ class Import {
       $this->transcript[$casawp_id]['locations'][]['to'] = $new_terms;
       wp_set_object_terms( $wp_post->ID, $new_terms, 'casawp_location' );
     }
-    
+
   }
 
   public function setOfferCategories($wp_post, $categories, $customCategories, $casawp_id){
@@ -984,7 +984,7 @@ class Import {
   }
 
   public function casawpImport(){
-    
+
 
     if ($this->getImportFile()) {
       if (is_admin()) {
@@ -1035,7 +1035,7 @@ class Import {
       foreach ($options as $key => $value) {
           $checkstring .= $key . $value;
       }
-      
+
       //add private key at end of the checkstring
       $checkstring .= $privatekey;
 
@@ -1058,16 +1058,16 @@ class Import {
       $response = false;
       try {
           //$url = 'http://casacloud.cloudcontrolapp.com' . '/rest/provider-properties?' . http_build_query($query);
-          $ch = curl_init(); 
-          curl_setopt($ch, CURLOPT_URL, $url); 
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-          $response = curl_exec($ch); 
+          $response = curl_exec($ch);
           $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
           if($httpCode == 404) {
               $response = $httpCode;
           }
-          curl_close($ch); 
+          curl_close($ch);
       } catch (Exception $e) {
           $response =  $e->getMessage() ;
       }
@@ -1079,7 +1079,7 @@ class Import {
         $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
 
         file_put_contents($file, $response);
-      } 
+      }
 
       $this->addToLog('gateway start update: ' . time());
       //UPDATE OFFERS NOW!!!!
@@ -1233,7 +1233,7 @@ class Import {
                 $propertydata['organization']['postalAddress']['post_office_box_number'] = $property_xml->seller->organization->address->postOfficeBoxNumber->__toString();
             }
         }
-       
+
         //viewPerson
         $propertydata['viewPerson'] = array();
         if ($property_xml->seller->viewPerson) {
@@ -1287,7 +1287,7 @@ class Import {
     //offers
     $offerDatas = array();
     if ($property_xml->offers) {
-        foreach ($property_xml->offers->offer as $offer_xml) { 
+        foreach ($property_xml->offers->offer as $offer_xml) {
             $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
             $offerData['type'] =  $property_xml->type->__toString();
             if ($property_xml->start) {
@@ -1298,7 +1298,7 @@ class Import {
             $offerData['status'] = 'active';
             $offerData['name'] = $offer_xml->name->__toString();
             $offerData['excerpt'] = $offer_xml->excerpt->__toString();
-            
+
             //publisher settings
             $publishingDatas = array();
             if ($offer_xml->publishers) {
@@ -1325,7 +1325,7 @@ class Import {
                     $type = (isset($xml_url['type']) ? $xml_url['type']->__toString() : false);
                     $label = (isset($xml_url['label']) ? $xml_url['label']->__toString() : false);
                     $url = $xml_url->__toString();
-                    
+
                     $urlDatas[] = array(
                         'title' => $title,
                         'type' => $type,
@@ -1336,14 +1336,14 @@ class Import {
                 }
             }
             $offerData['urls'] = $urlDatas;
-                
+
             //descriptions
             $descriptionDatas = array();
             if ($offer_xml->descriptions) {
                 foreach ($offer_xml->descriptions->description as $xml_description) {
                     $title = (isset($xml_description['title']) ? $xml_description['title']->__toString() : false);
                     $text = $xml_description->__toString();
-                    
+
                     $descriptionDatas[] = array(
                         'title' => $title,
                         'text' => $text,
@@ -1362,7 +1362,7 @@ class Import {
                         $source = $xml_media->url->__toString();
                         $source = implode('/', array_map('rawurlencode', explode('/', $source)));
                         $source = str_replace('http%3A//', 'http://', $source);
-                        $source = str_replace('https%3A//', 'https://', $source);                        
+                        $source = str_replace('https%3A//', 'https://', $source);
                     } else {
                         $this->addToTranscript("file or url missing from attachment media!");
                         continue;
@@ -1382,8 +1382,8 @@ class Import {
 
             $offerDatas[] = $offerData;
 
-        }            
-    }        
+        }
+    }
 
     $propertydata['offers'] = $offerDatas;
 
@@ -1459,7 +1459,7 @@ class Import {
     ));
 
     if ($this->hasWPML()) {
-      $languages = icl_get_languages('skip_missing=0&orderby=code');    
+      $languages = icl_get_languages('skip_missing=0&orderby=code');
     }
 
     $li = 0;
@@ -1468,7 +1468,7 @@ class Import {
       $translation = $projectData;
       $translation['lang'] = $lang['language_code'];
       $translation['detail'] = array('name' => '', 'descriptions' => array());
-      foreach ($projectData['details'] as $key => $detail) { 
+      foreach ($projectData['details'] as $key => $detail) {
         if ($detail['lang'] == $lang['language_code']) {
           $translation['detail'] = $detail;
         }
@@ -1485,10 +1485,10 @@ class Import {
         unset($translation['units'][$ukey]['details']);
       }
       if ($lang['language_code'] == $this->getMainLang()) {
-        $translations[0] = $translation;  
+        $translations[0] = $translation;
       } else {
         $translations[$li] = $translation;
-      }        
+      }
     }
 
     ksort($translations);
@@ -1629,7 +1629,11 @@ class Import {
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_property';
           $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
-          $_POST['icl_post_language'] = $offerData['lang']; 
+
+          //use the casagateway creation date if its new
+          $the_post['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
+
+          $_POST['icl_post_language'] = $offerData['lang'];
           $insert_id = wp_insert_post($the_post);
           update_post_meta($insert_id, 'casawp_id', $casawp_id);
           $wp_post = get_post($insert_id, OBJECT, 'raw');
@@ -1684,7 +1688,7 @@ class Import {
       $sorti = 0;
       foreach ($xml->projects->project as $project) {
         $sorti++;
-        
+
         $projectData = $this->project2Array($project);
         $projectDataLangified = $this->langifyProject($projectData);
 
@@ -1719,10 +1723,10 @@ class Import {
           }
           $found_posts[] = $wp_post->ID;
 
-          
+
           $found_posts = $this->updateProject($sorti, $casawp_id, $projectData, $wp_post, false, $found_posts);
           $this->updateInsertWPMLconnection($wp_post, $lang, 'project_'.$projectData['ref']);
-          
+
 
         }
       }
@@ -1768,7 +1772,7 @@ class Import {
         add_action( $hook, array( $wpe_common, 'purge_varnish_cache'));
       }
     }
-        
+
 
     $this->addToLog($this->transcript);
   }
@@ -1809,7 +1813,7 @@ class Import {
     //skip if is the same as before
     $update = false;
     if (
-      !isset($old_meta_data['last_import_hash']) 
+      !isset($old_meta_data['last_import_hash'])
       || isset($_GET['force_all_properties'])
       || $curImportHash != $old_meta_data['last_import_hash']
     ) {
@@ -1863,7 +1867,7 @@ class Import {
             $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
           }
         }
-        
+
 
         //manage post_name and post_date (if new)
         if (!$wp_post->post_name) {
@@ -1894,7 +1898,7 @@ class Import {
         //remove supurflous meta_data
         /*foreach ($old_meta_data as $key => $value) {
           if (
-            !isset($new_meta_data[$key]) 
+            !isset($new_meta_data[$key])
             && !in_array($key, array('casawp_id'))
             && strpos($key, '_') !== 0
           ) {
@@ -1914,7 +1918,7 @@ class Import {
           $lang = $my_post_language_details['language_code'];
         }
       } else {
-        $lang = $projectData['lang'];  
+        $lang = $projectData['lang'];
       }
     }
 
@@ -1949,7 +1953,7 @@ class Import {
 
         $found_posts[] = $wp_unit_post->ID;
 
-        
+
         $found_posts = $this->updateProject($sortu, $unit_casawp_id, $unitData, $wp_unit_post, $wp_post, $found_posts);
         $this->updateInsertWPMLconnection($wp_unit_post, $lang, 'unit_'.$unitData['ref']);
 
@@ -1986,7 +1990,7 @@ class Import {
         //$casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
       }
     }
-    
+
 
     return $found_posts;
 
@@ -2054,7 +2058,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
+      //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
 
@@ -2065,7 +2069,7 @@ class Import {
       'post_status'   => $wp_post->post_status  ,
       'post_type'     => $wp_post->post_type    ,
       'post_excerpt'  => $wp_post->post_excerpt ,
-      'post_date'     => $wp_post->post_date    ,
+      //'post_date'     => $wp_post->post_date    ,
       /*'post_modified' => $wp_post->post_modified,*/
     );
     if ($new_main_data != $old_main_data) {
@@ -2076,7 +2080,7 @@ class Import {
           $this->addToLog('updating main data (' . $key . '): ' . $old_main_data[$key] . ' -> ' . $new_main_data[$key]);
         }
       }
-      
+
 
       //manage post_name and post_date (if new)
       if (!$wp_post->post_name) {
@@ -2093,7 +2097,7 @@ class Import {
     }
 
 
-    
+
     //$casawp_visitInformation = $property->visitInformation->__toString();
     //$casawp_property_url = $property->url->__toString();
     $new_meta_data['property_address_country']       = $property['address']['country'];
@@ -2111,7 +2115,7 @@ class Import {
     } else {
       $new_meta_data['start']                          = null;
     }
-    
+
     $new_meta_data['referenceId']                    = $property['referenceId'];
     $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
     if (!$new_meta_data['referenceId']) {
@@ -2149,7 +2153,7 @@ class Import {
       $new_meta_data[$prefix.'gender']        = $property[$personType.'Person']['gender'];
       $new_meta_data[$prefix.'note']          = $property[$personType.'Person']['note'];
     }
-    
+
     $personType = 'inquiry';
     if (isset($property[$personType.'Person']) && $property[$personType.'Person']) {
       $prefix = 'seller_' . $personType . '_person_';
@@ -2214,7 +2218,7 @@ class Import {
 
     $new_meta_data['price_currency'] = $property['price_currency'];
 
-    //prices 
+    //prices
     if (isset($property['price'])) {
       $new_meta_data['price'] = $property['price'];
       $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
@@ -2269,7 +2273,7 @@ class Import {
     $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== "")   ? ($new_meta_data['netPrice'])   :(9999999999);
     $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
-    //nuvals    
+    //nuvals
     $numericValues = array();
     foreach ($property['numeric_values'] as $numval) {
       $numericValues[$numval['key']] = $numval['value'];
@@ -2315,7 +2319,7 @@ class Import {
       $this->addToLog('removing supurflous metadata');
       foreach ($old_meta_data as $key => $value) {
         if (
-          !isset($new_meta_data[$key]) 
+          !isset($new_meta_data[$key])
           && !in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort'))
           && strpos($key, '_') !== 0
         ) {
@@ -2340,12 +2344,12 @@ class Import {
           } elseif ($label) {
             $custom_categories[$label]['label'] = $values[0];
           }
-          
+
         }
       }
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
     }
-    
+
     $this->addToLog('updating features');
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
 
@@ -2363,7 +2367,7 @@ class Import {
 
     $this->addToLog('updating attachments');
     $this->setOfferAttachments($offer['offer_medias'] , $wp_post, $property['exportproperty_id'], $casawp_id, $property);
-    
+
     $this->addToLog('finish property update: [' . $casawp_id . ']' . time());
 
   }
