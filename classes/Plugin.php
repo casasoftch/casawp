@@ -209,7 +209,7 @@ class Plugin {
               //'value_username' => '',
               //'value_remember' => false
             );
-            $content .= wp_login_form( $args );
+            $content .= '<div class="casawp-private-login-form">'.wp_login_form( $args ).'</div>';
           }
           break;
       }
