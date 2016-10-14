@@ -209,6 +209,9 @@ class Plugin {
               //'value_username' => '',
               //'value_remember' => false
             );
+            if (isset($_GET['login']) && $_GET['login'] == 'failed') {
+              $content .= '<div class="alert alert-danger" role="alert">Login fehlgeschlagen.</div>';
+            }
             $content .= '<div class="casawp-private-login-form">'.wp_login_form( $args ).'</div>';
           }
           break;
