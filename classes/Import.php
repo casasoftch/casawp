@@ -1631,7 +1631,7 @@ class Import {
           $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
 
           //use the casagateway creation date if its new
-          $the_post['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
+          $the_post['post_date'] = ($propertyData['creation'] ? $propertyData['creation']->format('Y-m-d H:i:s') : $propertyData['last_update']->format('Y-m-d H:i:s'));
 
           $_POST['icl_post_language'] = $offerData['lang'];
           $insert_id = wp_insert_post($the_post);
