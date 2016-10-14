@@ -1,8 +1,10 @@
-#readme.txt
+readme.txt
+===============================
 
 Please refer to the ``readme.txt`` for general infos concerning the plugin. This readme.md only contains further technical details.
 
-#How do I change the html markup and add my own view files?
+How do I change the html markup and add my own view files?
+-------------------------------
 
 Simply copy the relevant view files from the plugin ``/wp-content/plugins/casawp/theme-defaults/chosen-viewtype/*.phtml`` ...
 
@@ -14,13 +16,16 @@ into your theme directory ``/wp-content/themes/your-theme/casawp/chosen-viewtype
 
 to override them with your theme.
 
-##ViewFile Structure
+ViewFile Structure
+-------------------------------
 
 ![image](assets/custom-viewfiles-structure-ugly.png)
 
-#Shortcodes
+Shortcodes
+===============================
 
-## casawp_properties
+casawp_properties
+-------------------------------
 
 `[casawp_properties categories="apartment" order="ASC" posts_per_page="15"]`
 
@@ -54,7 +59,8 @@ Accepted pass-through variables
 
 * col_count
 
-## casawp_contactform
+casawp_contactform
+-------------------------------
 
 `[casawp_contactform offer_id="12" id="my-custom-form"]`
 
@@ -66,7 +72,8 @@ Accepted Query Params:
 * offer_id
 * project_id
 
-#Custom Forms
+Custom Forms
+===============================
 
 Register additional forms in your theme by adding the following to your functions.php
 
@@ -129,7 +136,8 @@ Register additional forms in your theme by adding the following to your function
 ```
 
 
-# Custom automatic E-Mail Response
+Custom automatic E-Mail Response
+===============================
 
 An example of how to enable an extra E-Mail when a customer posts a inquiry.
 
@@ -140,7 +148,7 @@ function casawp_after_inquirysend($payload) {
 	extract($payload);
 
 	if ($offer->getFieldValue('seller_org_customerid') == "bento") {
-		
+
 		$subject = "Info-Meldung bezüglich einer Objekt-Anfrage von zueriimmo.ch: " . $offer->getTitle();
 
 		$message = 'Eine Anfrage wurde von zueriimmo.ch an die Bento AG gesendet.';
@@ -148,8 +156,8 @@ function casawp_after_inquirysend($payload) {
 		$message .= "\n";
 		$message .= "Objekt:\n";
 		$message .= $offer->getTitle(). "\n";
-		$message .= 'ref: ' . $offer->getFieldValue('visualReferenceId') 
-        ? $offer->getFieldValue('visualReferenceId') 
+		$message .= 'ref: ' . $offer->getFieldValue('visualReferenceId')
+        ? $offer->getFieldValue('visualReferenceId')
         : $offer->getFieldValue('referenceId') . "\n";
 
         $message .= "\n";
@@ -163,4 +171,41 @@ function casawp_after_inquirysend($payload) {
 	}
 }
 add_action( 'casawp_after_inquirysend', 'casawp_after_inquirysend' );
-``` 
+```
+
+
+Exclusive Properties with login
+===============================
+
+The Plugin uses the default WordPress user interface for registration and authentication for users that have access to special unpublished properties. These properties `if availability = private` and the corresponding filter `if availability contains private`, will only be viewable if the user is registered to at least a `subscription` level and will be redirected to the defined login page.
+
+CASAWP will generate 2 Pages directly and will define the pages within the casawp->settings->PrivateArea login and logout pages.
+
+Custom Login form at arbitrary entry location
+-------------------------------
+
+Use the default WordPress login form `wp_login_form()` or copy the sample code below. (adjust the redirect url to an appropriate one)
+
+```php
+<?php if (isset($_GET['login']) && $_GET['login'] == 'failed') : ?>
+  <div class="alert alert-danger" role="alert">Login fehlgeschlagen.</div>
+<?php endif; ?>
+<div class="casawp-private-login-form">
+  <form name="loginform" id="loginform" action="http://domain.com/wp-login.php" method="post">
+    <p class="login-username">
+      <label for="user_login">Benutzername oder E-Mail-Adresse</label>
+      <input type="text" name="log" id="user_login" class="input" value="" size="20">
+    </p>
+    <p class="login-password">
+      <label for="user_pass">Passwort</label>
+      <input type="password" name="pwd" id="user_pass" class="input" value="" size="20">
+    </p>
+
+    <p class="login-remember"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever"> Angemeldet bleiben</label></p>
+    <p class="login-submit">
+      <input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="Anmelden">
+      <input type="hidden" name="redirect_to" value="http://domain.com/exklusiv-login/">
+    </p>
+  </form>
+</div>
+```
