@@ -4,8 +4,9 @@
 
 	<?php $renderobject = ($this->offer ? $this->offer : $this->casawp); ?>
 
-	<?php $form->setAttribute('action', get_permalink(($offer ? $offer->post : $project->post))); ?>
-
+	<?php if ($offer || $project): ?>
+			<?php $form->setAttribute('action', get_permalink(($offer ? $offer->post : $project->post))); ?>
+	<?php endif; ?>
 
 
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
