@@ -89,6 +89,133 @@ class Plugin {
             add_action('wp_loaded', array($this, 'returnPrevNext'));
         }
 
+        // auto add pages if missing for private users
+        add_action('after_setup_theme', array($this, 'privateUserMakeSurePagesExist') );
+
+        // remove adminbar for registered users
+        add_action('after_setup_theme', array($this, 'privateUserHideAdminBarForRegisteredUsers') );
+
+        // hook failed login
+        add_action( 'wp_login_failed', array($this, 'privateUserRedirectToOrigin') );
+
+        // pages for private user login area
+        add_filter('the_content', array($this, 'privateUserPageRenders'));
+
+        // logout page
+        add_action ('template_redirect', array($this, 'privateUserLogOutOnLogoutPage'));
+
+
+    }
+
+    public function privateUserMakeSurePagesExist(){
+      $loginpage = get_option('casawp_private_loginpage', false);
+      if ( 'publish' != get_post_status ( $loginpage ) ) {
+        $loginpage = false;
+      }
+      if (!$loginpage) {
+        $page = get_page_by_title('Exklusiv Login');
+        if (!$page) {
+          $pageId = wp_insert_post(array(
+            'post_title' => 'Exklusiv Login',
+            'post_status' => 'publish',
+            'post_author'   => 1,
+            'post_content'  => '<p><strong>Melden Sie sich hier an um Zugang zu den exklusiven Objekten zu erhalten.</strong></p>',
+            'post_type' => 'page'
+          ));
+          if (is_admin()) {
+            echo '<div class="updated"><p><strong>' . __('Gennerated login page', 'casawp' ) . ' ' .$pageId . '</strong></p></div>';
+          }
+        } else {
+          $pageId = $page->ID;
+        }
+        update_option('casawp_private_loginpage', $pageId);
+      }
+
+      $logoutpage = get_option('casawp_private_logoutpage', false);
+      if ( 'publish' != get_post_status ( $logoutpage ) ) {
+        $logoutpage = false;
+      }
+      if (!$logoutpage) {
+        $page = get_page_by_title('Exklusiv Abmeldung');
+        if (!$page) {
+          $pageId = wp_insert_post(array(
+            'post_title' => 'Exklusiv Logout',
+            'post_status' => 'publish',
+            'post_author'   => 1,
+            'post_content'  => '<p>Sie haben sich erfolgreich abgemeldet.</p>',
+            'post_type' => 'page'
+          ));
+          if (is_admin()) {
+            echo '<div class="updated"><p><strong>' . __('Gennerated logout page', 'casawp' ) . ' ' .$pageId . '</strong></p></div>';
+          }
+        } else {
+          $pageId = $page->ID;
+        }
+        update_option('casawp_private_logoutpage', $pageId);
+      }
+
+    }
+
+    public function privateUserLogOutOnLogoutPage(){
+      if (get_the_ID() == get_option('casawp_private_logoutpage', false) ) {
+        if (is_user_logged_in()) {
+          wp_logout();
+        } else {
+          wp_redirect(get_permalink(get_option('casawp_private_loginpage', false)));
+        }
+      }
+    }
+
+    public function privateUserHideAdminBarForRegisteredUsers(){
+      if (!current_user_can('edit_posts')) {
+        show_admin_bar(false);
+      }
+    }
+
+    public function privateUserRedirectToOrigin( $username ) {
+       $referrer = $_SERVER['HTTP_REFERER'];  // where did the post submission come from?
+       // if there's a valid referrer, and it's not the default log-in screen
+       if ( !empty($referrer) && !strstr($referrer,'wp-login') && !strstr($referrer,'wp-admin') ) {
+          wp_redirect( $referrer . '?login=failed' );  // let's append some information (login=failed) to the URL for the theme to use
+          exit;
+       }
+    }
+
+    public function privateUserPageRenders($content){
+      switch (get_the_ID()) {
+        case get_option('casawp_private_loginpage', false):
+          if (is_user_logged_in()) {
+            $content .= 'Sie sind bereits Angemeldet. ' . '<a href="/?p=' . get_option('casawp_private_logoutpage', false) . '">Jetzt Abmelden</a>';
+          } else {
+            $target = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'];
+            if (isset($_GET['target'])) {
+              $target = $_GET['target'];
+            } else {
+              $target = $target . urldecode($_SERVER['REQUEST_URI']);
+            }
+            $args = array(
+              'echo'           => false,
+              'remember'       => true,
+              'redirect'       => $target,
+              //'form_id'        => 'loginform',
+              //'id_username'    => 'user_login',
+              //'id_password'    => 'user_pass',
+              //'id_remember'    => 'rememberme',
+              //'id_submit'      => 'wp-submit',
+              //'label_username' => __( 'Username' ),
+              //'label_password' => __( 'Password' ),
+              //'label_remember' => __( 'Remember Me' ),
+              //'label_log_in'   => __( 'Log In' ),
+              //'value_username' => '',
+              //'value_remember' => false
+            );
+            $content .= wp_login_form( $args );
+          }
+          break;
+      }
+
+
+      return $content;
     }
 
     public function sanitizeContactFormPost($post){
@@ -305,49 +432,17 @@ class Plugin {
         return $this->privateAuth(false);
     }
 
+
+
     public function privateAuth($checkpost = true){
-        $authenticated = false;
+        return is_user_logged_in();
+    }
 
-        $keypass = '53A5AFBD7CF37';
-        $cookie_cipher = (array_key_exists('casawp_private_user', $_COOKIE) ? $_COOKIE['casawp_private_user'] : null);
-
-        //$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-        //$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-
-        //check if is post then set ciphercookie
-        if ($checkpost && $_POST && isset($_POST['username']) && isset($_POST['password'])) {
-            //$cookie_cipher = openssl_encrypt($_POST['username'] . '[:]' . $_POST['password'], 'aes-256-cbc', $keypass, 0, $iv);
-            $cookie_cipher = $_POST['username'] . '[:]' . $_POST['password'];
-
-            setcookie('casawp_private_user', $cookie_cipher , time() + (86400 * 30), COOKIEPATH); // 86400 = 1 day
-        }
-
-        if (!$cookie_cipher) {
-            return false;
-        }
-
-        //authenticate
-        //$userstring = openssl_decrypt($cookie_cipher, 'aes-256-cbc', $keypass, 0, $iv);
-        $userstring = $cookie_cipher;
-        $userdata = explode('[:]', $userstring);
-        $username = $userdata[0];
-        $password = $userdata[1];
-
-        //get usernames
-        $t_username = get_option('casawp_private_globalusername', 0);
-        $t_password = get_option('casawp_private_globalpassword', 0);
-        if ($t_username && $t_password && $username == $t_username && $password == $t_password) {
-            $authenticated = true;
-        }
-
-
-        if ($authenticated) {
-            return true;
-            //die('hello '. $username);
-        } else {
-            return false;
-            //die('access denied');
-        }
+    public function privateRedirectToLogin(){
+      $url = get_permalink(get_option('casawp_private_loginpage', false)) . (strpos($_SERVER['REQUEST_URI'], '?') === false ? '?' : '&') . 'target=' . urlencode($_SERVER['REQUEST_URI']);
+      wp_redirect($url);
+      echo '<script>window.location.replace("' . $url . '");</script>';
+      die();
     }
 
     public function casawp_queryfilter($query){
@@ -363,7 +458,7 @@ class Plugin {
                 if (in_array('private', $availabilities)) {
                     $loggedin = $this->privateAuth();
                     if (!$loggedin) {
-                        die('permission denied!!');
+                        $this->privateRedirectToLogin();
                     }
                 }
             }
@@ -415,7 +510,7 @@ class Plugin {
         if ($offer->getAvailability() == 'private') {
             $loggedin = $this->privateAuth();
             if (!$loggedin) {
-                die('permission denied!!');
+                $this->privateRedirectToLogin();
             }
         }
 

@@ -1086,20 +1086,36 @@
 						<h3>Geschütze Objekte</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Globaler Benutzer</th>
-								<td id="front-static-padges">
+								<th scope="row">Anmelde Seite</th>
+								<td>
 									<fieldset>
-										<?php $name = 'casawp_private_globalusername'; ?>
-										<?php $text = 'Aktiv'; ?>
-										<label>
-											<input placeholder="username" name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
-										</label>
-
-										<?php $name = 'casawp_private_globalpassword'; ?>
-										<?php $text = 'Aktiv'; ?>
-										<label>
-											<input placeholder="password" name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
-										</label>
+										<?php $name = 'casawp_private_loginpage'; ?>
+										<?php $args = array(
+											 'selected'              => get_option($name),
+											 'echo'                  => 1,
+											 'name'                  => $name,
+											 'show_option_none'      => 'Auswählen',
+											 'option_none_value'     => null,
+											);
+											wp_dropdown_pages( $args );
+										?>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Abmelde Seite</th>
+								<td>
+									<fieldset>
+										<?php $name = 'casawp_private_logoutpage'; ?>
+										<?php $args = array(
+											 'selected'              => get_option($name),
+											 'echo'                  => 1,
+											 'name'                  => $name,
+											 'show_option_none'      => 'Auswählen',
+											 'option_none_value'     => null,
+											);
+											wp_dropdown_pages( $args );
+										?>
 									</fieldset>
 								</td>
 							</tr>
