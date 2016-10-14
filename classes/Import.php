@@ -1632,6 +1632,7 @@ class Import {
 
           //use the casagateway creation date if its new
           $the_post['post_date'] = ($propertyData['creation'] ? $propertyData['creation']->format('Y-m-d H:i:s') : $propertyData['last_update']->format('Y-m-d H:i:s'));
+          //die($the_post['post_date']);
 
           $_POST['icl_post_language'] = $offerData['lang'];
           $insert_id = wp_insert_post($the_post);
@@ -2058,6 +2059,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
+      'post_date' => $wp_post->post_date
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
@@ -2069,6 +2071,7 @@ class Import {
       'post_status'   => $wp_post->post_status  ,
       'post_type'     => $wp_post->post_type    ,
       'post_excerpt'  => $wp_post->post_excerpt ,
+      'post_date' => $wp_post->post_date
       //'post_date'     => $wp_post->post_date    ,
       /*'post_modified' => $wp_post->post_modified,*/
     );
