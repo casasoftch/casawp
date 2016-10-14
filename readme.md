@@ -191,21 +191,13 @@ Use the default WordPress login form `wp_login_form()` or copy the sample code b
   <div class="alert alert-danger" role="alert">Login fehlgeschlagen.</div>
 <?php endif; ?>
 <div class="casawp-private-login-form">
-  <form name="loginform" id="loginform" action="http://domain.com/wp-login.php" method="post">
-    <p class="login-username">
-      <label for="user_login">Benutzername oder E-Mail-Adresse</label>
-      <input type="text" name="log" id="user_login" class="input" value="" size="20">
-    </p>
-    <p class="login-password">
-      <label for="user_pass">Passwort</label>
-      <input type="password" name="pwd" id="user_pass" class="input" value="" size="20">
-    </p>
-
-    <p class="login-remember"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever"> Angemeldet bleiben</label></p>
-    <p class="login-submit">
-      <input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="Anmelden">
-      <input type="hidden" name="redirect_to" value="http://domain.com/exklusiv-login/">
-    </p>
-  </form>
+  <?php
+    $args = array(
+      'echo'           => true,
+      'remember'       => true,
+      'redirect'       => 'http://where-should-i-go.com',
+    );
+    wp_login_form($args);
+  ?>
 </div>
 ```
