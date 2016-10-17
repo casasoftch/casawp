@@ -1019,7 +1019,7 @@ class Import {
 
     $apikey = get_option('casawp_api_key');
     $privatekey = get_option('casawp_private_key');
-    $apiurl = 'http://immobilien-gateway.ch/rest/publisher-properties';
+    $apiurl = 'https://casagateway.ch/rest/publisher-properties';
     $options = array(
       'format' => 'casa-xml',
       'debug' => 1
