@@ -630,6 +630,7 @@
 									<option <?php echo (get_option($name)  == 'location' ? 'selected="selected"' : ''); ?> value="location">Ort</option>
 									<option <?php echo (get_option($name)  == 'casawp_referenceId' ? 'selected="selected"' : ''); ?> value="casawp_referenceId">Referenz-ID</option>
 									<option <?php echo (get_option($name)  == 'menu_order' ? 'selected="selected"' : ''); ?> value="menu_order">Eigene Reihenfolge</option>
+									<option <?php echo (get_option($name)  == 'start' ? 'selected="selected"' : ''); ?> value="start">Verfügbar ab</option>
 								</select>
 								<?php $name = 'casawp_archive_order'; ?>
 								<?php $text = 'Sortierung'; ?>
