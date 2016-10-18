@@ -192,12 +192,12 @@ class FormService{
 		return $casawp->render($view, $args);
 	}
 
-    public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null){
-    	$formResult = $this->buildAndValidateContactForm($subjectItem, null, $directRecipientEmail);
-      return $this->render($viewfile, array(
-      	'form' => $formResult['form'],
-      	'sent' => $formResult['sent']
-      ));
+  public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null){
+  	$formResult = $this->buildAndValidateContactForm($subjectItem, null, $directRecipientEmail);
+    return $this->render($viewfile, array(
+    	'form' => $formResult['form'],
+    	'sent' => $formResult['sent']
+    ));
   }
 
 }
