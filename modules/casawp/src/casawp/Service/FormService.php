@@ -22,7 +22,7 @@ class FormService{
 		return $data;
 	}
 
-    public function buildAndValidateContactForm($subjectItem, $formSetting = null){
+    public function buildAndValidateContactForm($subjectItem, $formSetting = null, $directRecipientEmail = null){
     	if ($subjectItem instanceof Offer && $subjectItem->getAvailability() == 'reference') {
 	        return false;
 	    }
@@ -137,7 +137,9 @@ class FormService{
 									//$data['property_type'] = $subjectItem->getFieldValue('referenceId');
 									//$data['property_price'] = $subjectItem->getFieldValue('referenceId');
 									//direct recipient emails
-									if (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
+                  if($directRecipientEmail){
+                    $data['direct_recipient_email'] = $directRecipientEmail;
+                  } else if (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
 										$data['direct_recipient_email'] = $subjectItem->getFieldValue('seller_inquiry_person_email', false);
 									}
 								}
@@ -190,8 +192,8 @@ class FormService{
 		return $casawp->render($view, $args);
 	}
 
-    public function renderContactForm($subjectItem = false, $viewfile = 'contact-form'){
-    	$formResult = $this->buildAndValidateContactForm($subjectItem);
+    public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null){
+    	$formResult = $this->buildAndValidateContactForm($subjectItem, null, $directRecipientEmail);
       return $this->render($viewfile, array(
       	'form' => $formResult['form'],
       	'sent' => $formResult['sent']

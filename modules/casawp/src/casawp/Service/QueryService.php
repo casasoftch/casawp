@@ -161,7 +161,7 @@ class QueryService{
                 $args['orderby'] = 'meta_value';
                 break;
             case 'start':
-                $args['meta_key'] = 'start';
+                $args['meta_key'] = 'priceForOrder';
                 $args['orderby'] = 'meta_value';
                 break;
             case 'menu_order':

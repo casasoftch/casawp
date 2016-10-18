@@ -71,6 +71,7 @@ Accepted Query Params:
 * id – Form ID registered to formSettingService (optional)
 * offer_id
 * project_id
+* direct_recipient_email (Will override any setting and will force CASAMAIL to send an E-Mail)
 
 Custom Forms
 ===============================
