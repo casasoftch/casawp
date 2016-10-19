@@ -126,8 +126,12 @@ class FormService{
 								$data['publisher'] = $publisherid;
 								$data['lang'] = substr(get_bloginfo('language'), 0, 2);
 
+                if($directRecipientEmail){
+                  $data['direct_recipient_email'] = $directRecipientEmail;
+                }
+
 								if ($subjectItem instanceof Offer) {
-									$data['property_reference'] = $subjectItem->getFieldValue('referenceId');
+									$data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . ' . ' . $subjectItem->getFieldValue('referenceId');
 									$data['property_street'] = $subjectItem->getFieldValue('address_streetaddress');
 									$data['property_postal_code'] = $subjectItem->getFieldValue('address_postalcode');
 									$data['property_locality'] = $subjectItem->getFieldValue('address_locality');
@@ -137,15 +141,13 @@ class FormService{
 									//$data['property_type'] = $subjectItem->getFieldValue('referenceId');
 									//$data['property_price'] = $subjectItem->getFieldValue('referenceId');
 									//direct recipient emails
-                  if($directRecipientEmail){
-                    $data['direct_recipient_email'] = $directRecipientEmail;
-                  } else if (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
+                  if (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
 										$data['direct_recipient_email'] = $subjectItem->getFieldValue('seller_inquiry_person_email', false);
 									}
 								}
 
+  							$data = $formSetting->preCasaMailFilter($data, $postdata);
 
-								$data = $formSetting->preCasaMailFilter($data, $postdata);
 
 								$data_string = json_encode($data);
 

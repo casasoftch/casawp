@@ -241,6 +241,7 @@ class Plugin {
             'direct_recipient_email' => false
         ), ($args ? $args : array()));
 
+
         $offer = false;
         $project = false;
         if ($args['project_id'] || $args['offer_id'] ) {
