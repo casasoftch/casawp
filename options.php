@@ -76,6 +76,7 @@
 					#'casawp_single_show_surface_usable',
 					#'casawp_single_show_surface_living',
 					'casawp_archive_show_area_bwf',
+					'casawp_archive_show_area_nwf',
 					'casawp_archive_show_area_sia_nf',
 					'casawp_archive_show_area_sia_gf',
 					'casawp_archive_show_surface_property',
@@ -817,6 +818,16 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
+										<?php $name = 'casawp_archive_show_area_nwf'; ?>
+										<?php $text = 'Nettwowohnfläche'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casawp_archive_show_area_nwf_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
 										<?php $name = 'casawp_archive_show_surface_property'; ?>
 										<?php $text = 'Grundstücksfläche'; ?>
 										<label>
@@ -903,7 +914,6 @@
 						<?php
 					break;
 				case 'contactform':
-				default:
 					?>
 						<?php /******* Kontaktformular *******/ ?>
 						<h3>Anfrage-Variante</h3>

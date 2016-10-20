@@ -38,6 +38,7 @@ class Admin {
 		#add_option('casawp_archive_show_surface_usable', '1');
 		#add_option('casawp_archive_show_surface_living', '1');
 		add_option('casawp_archive_show_area_bwf', '1');
+		add_option('casawp_archive_show_area_nwf', '1');
 		add_option('casawp_archive_show_area_sia_nf', '1');
 		add_option('casawp_archive_show_surface_property', '1');
 		add_option('casawp_archive_show_year_built', '1');
