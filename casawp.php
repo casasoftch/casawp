@@ -5,7 +5,7 @@
  *	Description:    Import your properties directly from your real-estate managment software!
  *	Author:         Casasoft AG
  *	Author URI:     https://casasoft.ch
- *	Version: 		2.1.1
+ *	Version: 		2.2.0
  *	Text Domain: 	casawp
  *	Domain Path: 	languages/
  *	License: 		GPL2
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 //update system
 require_once ( 'wp_autoupdate.php' );
-$plugin_current_version = '2.1.1';
+$plugin_current_version = '2.2.0';
 $plugin_slug = plugin_basename( __FILE__ );
 $plugin_remote_path = 'http://wp.casasoft.ch/casawp/update.php';	
 $license_user = 'user';
