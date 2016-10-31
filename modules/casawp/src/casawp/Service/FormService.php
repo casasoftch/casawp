@@ -131,7 +131,7 @@ class FormService{
                 }
 
 								if ($subjectItem instanceof Offer) {
-									$data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . ' . ' . $subjectItem->getFieldValue('referenceId');
+									$data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
 									$data['property_street'] = $subjectItem->getFieldValue('address_streetaddress');
 									$data['property_postal_code'] = $subjectItem->getFieldValue('address_postalcode');
 									$data['property_locality'] = $subjectItem->getFieldValue('address_locality');

@@ -1674,8 +1674,11 @@ class Import {
         }
       }
       wp_trash_post($prop_to_rm->ID);
-      $this->transcript['properties_removed'] = count($properties_to_remove);
+
     }
+
+    $this->transcript['properties_found_in_xml'] = count($found_posts);
+    $this->transcript['properties_removed'] = count($properties_to_remove);
 
 
 
