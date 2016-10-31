@@ -53,6 +53,16 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 * new: (alpha) basic private property support with global login
 * fix: refactored contact form logic
 * new: Custom contact forms
+* new: Archive-Filters are now hidable
+* optimized: datapoints are more adjustable
+* new: Salutation for Contact-Forms are now enabled
+* new: private login system through WP User management
+* optimized: post_date should now be imported correctly
+* optimized: api endpoint is now https://casagateway.ch
+* new: Order By start
+* new: contactform shortcode now accepts custom direct_recipient_email option
+* optimizations: CASAMAILs property_reference now includes the visualReferenceID
+* new: datapoint nwf now available for archive views
 
 = 2.1.1 =
 * Now ignores modification dates during imports.
