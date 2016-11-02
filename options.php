@@ -1,6 +1,6 @@
 <?php
 	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-	
+
 	if(isset($_POST['casawp_submit'])) {
 		$saved_custom_categories = array();
 		foreach ($_POST AS $key => $value) {
@@ -76,7 +76,9 @@
 					#'casawp_single_show_surface_usable',
 					#'casawp_single_show_surface_living',
 					'casawp_archive_show_area_bwf',
+					'casawp_archive_show_area_nwf',
 					'casawp_archive_show_area_sia_nf',
+					'casawp_archive_show_area_sia_gf',
 					'casawp_archive_show_surface_property',
 					'casawp_archive_show_floor',
 					'casawp_archive_show_number_of_floors',
@@ -85,7 +87,8 @@
 					'casawp_archive_show_price',
 					'casawp_archive_show_excerpt',
 					'casawp_archive_show_availability',
-					'casawp_archive_show_thumbnail_size_crop'
+					'casawp_archive_show_thumbnail_size_crop',
+					'casawp_filter_hide'
 				);
 				break;
 			case 'contactform':
@@ -153,8 +156,9 @@
 			'singleview'  => 'Einzelansicht',
 			'archiveview' => 'Archivansicht',
 			'contactform' => 'Kontaktformular',
+			'private'     => 'Geschützte Objekte',
 			'logs' => 'Logs'
-		); 
+		);
 	    echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
 	    echo '<div style="float:right;">
@@ -165,7 +169,7 @@
 	    foreach( $tabs as $tab => $name ){
 	        $class = ( $tab == $current ) ? ' nav-tab-active' : '';
 	        echo "<a class='nav-tab$class' href='?page=casawp&tab=$tab'>$name</a>";
-	        
+
 	    }
 	    echo '</h2>';
 	?>
@@ -627,6 +631,7 @@
 									<option <?php echo (get_option($name)  == 'location' ? 'selected="selected"' : ''); ?> value="location">Ort</option>
 									<option <?php echo (get_option($name)  == 'casawp_referenceId' ? 'selected="selected"' : ''); ?> value="casawp_referenceId">Referenz-ID</option>
 									<option <?php echo (get_option($name)  == 'menu_order' ? 'selected="selected"' : ''); ?> value="menu_order">Eigene Reihenfolge</option>
+									<option <?php echo (get_option($name)  == 'start' ? 'selected="selected"' : ''); ?> value="start">Verfügbar ab</option>
 								</select>
 								<?php $name = 'casawp_archive_order'; ?>
 								<?php $text = 'Sortierung'; ?>
@@ -689,6 +694,63 @@
 							</td>
 						</tr>
 					<?php echo $table_end; ?>
+
+					<h3>Filter Formular Einstellungen</h3>
+					<?php echo $table_start; ?>
+						<tr valign="top">
+							<th scope="row">Filter ausblenden</th>
+							<td id="front-static-padges">
+								<fieldset>
+									<?php $name = 'casawp_filter_hide'; ?>
+									<?php $text = 'Filter ausblenden'; ?>
+									<label>
+										<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+									</label>
+								</fieldset>
+							</td>
+						</tr>
+						<tr valign="top">
+							<?php $name = 'casawp_filter_categories_elementtype'; ?>
+							<?php $text = 'Kategorie-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr valign="top">
+							<?php $name = 'casawp_filter_salestypes_elementtype'; ?>
+							<?php $text = 'Vermarktungs-Art-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
+							<?php $name = 'casawp_filter_locations_elementtype'; ?>
+							<?php $text = 'Ortschaften-Auswahl'; ?>
+							<?php $options = ['multiselect' => 'Mehrfach-Auswahl', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+					<?php echo $table_end; ?>
+
+
 					<h3>Dynamische Felder</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
@@ -736,12 +798,32 @@
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
 										<br>
+										<?php $name = 'casawp_archive_show_area_sia_gf'; ?>
+										<?php $text = 'Bruttogeschossfläche'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casawp_archive_show_area_sia_gf_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
 										<?php $name = 'casawp_archive_show_area_bwf'; ?>
 										<?php $text = 'Wohnfläche'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<?php $name = 'casawp_archive_show_area_bwf_order'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+										</label>
+										<br>
+										<?php $name = 'casawp_archive_show_area_nwf'; ?>
+										<?php $text = 'Nettwowohnfläche'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<?php $name = 'casawp_archive_show_area_nwf_order'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
 										</label>
@@ -832,7 +914,6 @@
 						<?php
 					break;
 				case 'contactform':
-				default:
 					?>
 						<?php /******* Kontaktformular *******/ ?>
 						<h3>Anfrage-Variante</h3>
@@ -841,8 +922,8 @@
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text"> 
-										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text"> 
+										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
 										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
 										<br><br>
 										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte E-Mails an angegebene <code>inquiryPerson</code> E-Mails versenden.
@@ -855,7 +936,7 @@
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value=""> 
+										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value="">
 										<small>(Objekte mit deklarierten Anfrage-Emails werden bevorzugt)</small>
 									</fieldset>
 								</td>
@@ -978,37 +1059,80 @@
 				case 'logs':
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
 					$log = $dir."/".date('Y M').'.log';
-					echo "<h3>" . date('Y M') . "</h3>";
-					echo "<table>";
+
+					echo $log;
+
+					/*echo "<h3>" . date('Y M') . "</h3>";
+					echo "<dl>";
 				    if (is_file($log)) {
 				    	$file_handle = fopen($log, "r");
 						while (!feof($file_handle)) {
-							echo "<tr>";
 							$line = fgets($file_handle);
 							$arr = json_decode($line, true);
 							if ($arr) {
 						   		foreach ($arr as $datestamp => $properties) {
-						   			echo '<th valign="top"><strong>'.str_replace(' ', "T", $datestamp) .'</strong></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">';
+						   			echo '<dt>'.str_replace(' ', "T", $datestamp) .'</dt><dd><pre style="margin-top:0px;padding-left:10px;">';
 						   				if (is_array($properties)) {
 						   					foreach ($properties as $slug => $property) {
-							   					echo "\n" . $slug . ': ' . json_encode($property);
+							   					echo "\n" . $slug . ': ' . htmlentities(json_encode($property));
 							   				}
 						   				} else {
 						   					echo $properties;
 						   				}
-						   				
-						   			echo '</pre></td>';
+
+						   			echo '</pre></dd>';
 						   		}
 						  	} else {
-								echo '<th valign="top"></th><td valign="top"><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></td>';	
+								echo '<dt></dt><dd><pre style="margin-top:0px;padding-left:10px;">'.$line.'</pre></dd>';
 							}
-							echo "</tr>";
-						   
-						}
-						fclose($file_handle);	
-				    }
-				    echo "</table>";
 
+						}
+						fclose($file_handle);
+				    }
+				    echo "</dl>";*/
+
+					break;
+				case 'private':
+					?>
+						<h3>Geschütze Objekte</h3>
+						<?php echo $table_start; ?>
+							<tr valign="top">
+								<th scope="row">Anmelde Seite</th>
+								<td>
+									<fieldset>
+										<?php $name = 'casawp_private_loginpage'; ?>
+										<?php $args = array(
+											 'selected'              => get_option($name),
+											 'echo'                  => 1,
+											 'name'                  => $name,
+											 'show_option_none'      => 'Auswählen',
+											 'option_none_value'     => null,
+											);
+											wp_dropdown_pages( $args );
+										?>
+									</fieldset>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Abmelde Seite</th>
+								<td>
+									<fieldset>
+										<?php $name = 'casawp_private_logoutpage'; ?>
+										<?php $args = array(
+											 'selected'              => get_option($name),
+											 'echo'                  => 1,
+											 'name'                  => $name,
+											 'show_option_none'      => 'Auswählen',
+											 'option_none_value'     => null,
+											);
+											wp_dropdown_pages( $args );
+										?>
+									</fieldset>
+								</td>
+							</tr>
+						<?php echo $table_end; ?>
+
+					<?php
 					break;
 				case 'general':
 				default:
@@ -1024,7 +1148,7 @@
 										<?php $text = 'Vor dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
-											<textarea placeholder="<div id='content'>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
+											<textarea placeholder="<div id='content'>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 										</label></p>
 									</fieldset>
 									<fieldset>
@@ -1033,7 +1157,7 @@
 										<?php $text = 'Nach dem Inhalt'; ?>
 										<p><?php echo $text; ?></p>
 										<p><label>
-											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea> 
+											<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 										</label></p>
 										<p class="description" id="tagline-description">Erlaubt ist nur der div-Tag mit den Attributen id und class.</p>
 									</fieldset>
@@ -1042,7 +1166,7 @@
 							<tr valign="top">
 								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
-									
+
 									<fieldset>
 										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>
 										<?php $name = 'casawp_limit_reference_images'; ?>
@@ -1067,8 +1191,8 @@
 										</label></p>
 									</fieldset>
 
-									
-									
+
+
 									<fieldset>
 										<table>
 											<tr>
@@ -1077,7 +1201,7 @@
 												<?php else: ?>
 													<td><strike><code>data.xml</code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>	
+												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
@@ -1135,7 +1259,7 @@
 										<?php $name = 'casawp_legacy'; ?>
 										<?php $text = 'Altes Importscript für casaXML "draft" aktivieren.'; ?>
 										<p><label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?> 
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label></p>
 									</fieldset>
 								</td>

@@ -1,0 +1,40 @@
+
+<div class="casawp-shortcode-properties casawp-shortcode-<?= $col_count ?>-col">
+	<?php if ( $the_query->have_posts() ) : ?>
+		<div class="row">
+			<?php $cur_col = 0; ?>
+			<?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
+				<?php $cur_col++; ?>
+				<?php $offer = $casawp->prepareOffer($the_query->post); ?>
+				<div class="col-md-<?= (12/$col_count) ?>">
+					<div class="casawp-shortcode-properties-shortcode-list">
+						<div class="casawp-property">
+							<div class="casawp-thumbnail-wrapper">
+								<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
+							</div>
+							<div class="casawp-text">
+								<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
+								<div class="datapoint-items">
+								    <?php echo $offer->renderDatapoints('archive', array(
+								    	'pattern_1' => '<div class="datapoint-item datapoint-{{field}}"><span class="datapoint-label"><strong>{{label}}:</strong></span> <span class="datapoint-value">{{value}}</span></div>',
+								    	'pattern_2' => '<div class="datapoint-item datapoint-{{field}} datapoint-item-alt"><span class="datapoint-value">{{value}}</span></div>',
+								    	'max' => 3
+								    )) ?>
+								</div>
+							</div>
+						</div>
+						<hr class="soften">
+					</div>
+				</div>
+				<?php if ($cur_col % $col_count === 0): ?>
+					</div>
+					<div class="row">
+				<?php endif ?>
+			<?php endwhile; ?>
+		</div>
+		<?php wp_reset_postdata(); ?>
+
+	<?php else : ?>
+		<p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
+	<?php endif; ?>
+</div>

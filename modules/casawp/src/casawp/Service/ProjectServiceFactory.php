@@ -4,7 +4,7 @@ namespace casawp\Service;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class OfferServiceFactory implements FactoryInterface
+class ProjectServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -14,8 +14,7 @@ class OfferServiceFactory implements FactoryInterface
     	$messenger = $serviceLocator->get('CasasoftMessenger');
     	$us = $serviceLocator->get('CasasoftUtility');
         $ios = $serviceLocator->get('CasasoftIntegratedOffer');
-        $formService = $serviceLocator->get('casawpFormService');
-        $service = new OfferService($cs, $ns, $messenger, $us, $fs, $ios, $formService);
+        $service = new ProjectService($cs, $ns, $messenger, $us, $fs, $ios);
         return $service;
     }
 }

@@ -8,6 +8,7 @@ class ContactForm extends Form
     public $categories = array();
     public $salestypes = array();
     public $locations = array();
+    public $customFilters = array();
 
     public function __construct(){
         parent::__construct('contact');
@@ -15,6 +16,26 @@ class ContactForm extends Form
         $this->setAttribute('method', 'POST');
         $this->setAttribute('id', 'casawpPropertyContactForm');
         //$this->setAttribute('action', '/immobilien/');
+
+        $this->add(array(
+          'name' => 'form_id',
+          'type' => 'hidden'
+        ));
+
+        $this->add(array(
+            'name' => 'gender',
+            'type' => 'radio',
+            'options' => array(
+              'label' => __('Anrede', 'casawp'),
+              'options' => array(
+                '2' => 'Frau',
+                '1' => 'Herr'
+              )
+            ),
+            'attributes' => array(
+              'value' => '2'
+            )
+        ));
 
         $this->add(array(
             'name' => 'firstname',
@@ -67,7 +88,8 @@ class ContactForm extends Form
                     'AT' => 'Östereich',
                     'DE' => 'Deutschland',
                     'FR' => 'Frankreich',
-                    'IT' => 'Italien'
+                    'IT' => 'Italien',
+                    'other' => 'Sonstige'
                 )
             ),
         ));
@@ -77,6 +99,14 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Phone', 'casawp')
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'mobile',
+            'type' => 'Text',
+            'options' => array(
+                'label' => __('Mobile', 'casawp')
             ),
         ));
 
@@ -98,6 +128,10 @@ class ContactForm extends Form
                 'rows' => 3
             )
         ));
+    }
+
+    public function setCustomFilters($filters){
+        $this->customFilters = $filters;
     }
 
     public function getFilter(){
@@ -193,6 +227,21 @@ class ContactForm extends Form
             ),
         ));
         $filter->add(array(
+            'name' => 'mobile',
+            'required' => false,
+            'validators' => array(
+                array(
+                    'name' => 'not_empty',
+                ),
+                /*array(
+                    'name' => 'string_length',
+                    'options' => array(
+                        'min' => 2
+                    ),
+                ),*/
+            ),
+        ));
+        $filter->add(array(
             'name' => 'emailreal',
             'required' => true,
             'validators' => array(
@@ -209,7 +258,11 @@ class ContactForm extends Form
             ),
         ));
 
-        
+        foreach ($this->customFilters as $custom_filter_array) {
+            $filter->add($custom_filter_array);
+        }
+
+
 
         return $filter;
     }

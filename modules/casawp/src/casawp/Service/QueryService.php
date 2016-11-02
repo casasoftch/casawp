@@ -2,7 +2,7 @@
 namespace casawp\Service;
 
 class QueryService{
-   
+
     private $defaultQuery = array();
 
     public function __construct(){
@@ -25,6 +25,7 @@ class QueryService{
             'my_lng' => null,
             'my_lat' => null,
             'radius_km' => 10,
+            'projectunit_id' => null
         );
         $this->setQuery();
     }
@@ -62,6 +63,14 @@ class QueryService{
         return $this->query;
     }
 
+    public function getQueryValue($key){
+        if (array_key_exists($key, $this->query)) {
+            return $this->query[$key];
+        } else {
+            return false;
+        }
+    }
+
     private function interpretRequest(){
         $r_query = $_GET;
         $query = array();
@@ -70,42 +79,29 @@ class QueryService{
                 case 'casawp_category_s':
                 case 'casawp_category':
                 case 'categories':
-                    $query['categories'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_location_s':
                 case 'casawp_location':
                 case 'locations':
-                    $query['locations'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_salestype_s':
                 case 'casawp_salestype':
                 case 'salestypes':
-                    $query['salestypes'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_availability_s':
                 case 'casawp_availability':
                 case 'availabilities':
-                    $query['availabilities'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_category_not_s':
                 case 'casawp_category_not':
                 case 'categories_not':
-                    $query['categories_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_location_not_s':
                 case 'casawp_location_not':
                 case 'locations_not':
-                    $query['locations_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_salestype_not_s':
                 case 'casawp_salestype_not':
                 case 'salestypes_not':
-                    $query['salestypes_not'] = (is_array($value) ? $value : array($value));
-                    break;
                 case 'casawp_availability_s_not':
                 case 'casawp_availability_not':
                 case 'availabilities_not':
-                    $query['availabilities_not'] = (is_array($value) ? $value : array($value));
+                    $query[$key] = (is_array($value) ? $value : array($value));
+                    $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
                     break;
                 default:
                     $query[$key] = $value;
@@ -143,8 +139,15 @@ class QueryService{
 
         if (get_option( 'casawp_hide_sticky_properties_in_main')) {
             $args['post__not_in'] = get_option( 'sticky_posts' );
+        } else {
+            if (is_array($this->query["post__not_in"])) {
+                $args['post__not_in'] = $this->query["post__not_in"];
+            } else {
+                $args['post__not_in'] = array($this->query["post__not_in"]);
+            }
+
         }
-        
+
         switch ($this->query['orderby']) {
             case 'title':
                 $args['orderby'] = 'title';
@@ -154,6 +157,10 @@ class QueryService{
                 $args['orderby'] = 'meta_value';
                 break;
             case 'price':
+                $args['meta_key'] = 'priceForOrder';
+                $args['orderby'] = 'meta_value';
+                break;
+            case 'start':
                 $args['meta_key'] = 'priceForOrder';
                 $args['orderby'] = 'meta_value';
                 break;
@@ -168,6 +175,20 @@ class QueryService{
             default:
                 $args['orderby'] = 'date';
                 break;
+        }
+
+
+        $meta_query_items_new = array();
+        if ($this->query['projectunit_id']) {
+            $meta_query_items_new[] = array(
+                'key' => 'projectunit_id',
+                'value' => $this->query['projectunit_id'],
+                'compare'   => '='
+            );
+        }
+        if ($meta_query_items_new) {
+            $meta_query_items_new['relation'] = 'AND';
+            $args['meta_query'] = $meta_query_items_new;
         }
 
 
@@ -268,8 +289,8 @@ class QueryService{
         return $args;
     }
 
-    
-   
+
+
     public function applyToWpQuery($query){
         //tax pages overides
         if ($query->is_main_query()) {
@@ -295,7 +316,7 @@ class QueryService{
             $query->set($key, $value);
         }
 
-        add_filter( 'posts_where' , array($this, 'nearmefilter') );    
+        add_filter( 'posts_where' , array($this, 'nearmefilter') );
 
 	    return $query;
    	}
@@ -309,25 +330,27 @@ class QueryService{
             add_filter( 'posts_join' , array($this, 'nearmejoin') );
 
             $where .= " AND $wpdb->posts.ID IN (SELECT post_id FROM $wpdb->postmeta WHERE
-                 ( 6371 * acos( cos( radians(" . $mylat . ") ) 
-                                * cos( radians( latitude.meta_value ) ) 
-                                * cos( radians( longitude.meta_value ) 
-                                - radians(" . $mylng . ") ) 
-                                + sin( radians(" . $mylat . ") ) 
-                                * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";  
-              
+                 ( 6371 * acos( cos( radians(" . $mylat . ") )
+                                * cos( radians( latitude.meta_value ) )
+                                * cos( radians( longitude.meta_value ) - radians(" . $mylng . ") )
+                                + sin( radians(" . $mylat . ") )
+                                * sin( radians( latitude.meta_value ) ) ) ) <= " . $radiusKm . ") ";
+
         }
 
-        return $where;  
+        return $where;
     }
 
     public function nearmejoin($join){
         global $wpdb;
-        $join .= "LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'casawp_property_geo_latitude' ";
-        $join .= "LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'casawp_property_geo_longitude' ";
+        // THE SPACE IS NEEDED!!!!!!!!!!!!!!!
+        $join .= " LEFT JOIN $wpdb->postmeta AS latitude ON $wpdb->posts.ID = latitude.post_id AND latitude.meta_key = 'property_geo_latitude' ";
+        $join .= " LEFT JOIN $wpdb->postmeta AS longitude ON $wpdb->posts.ID = longitude.post_id AND longitude.meta_key = 'property_geo_longitude' ";
+
         return $join;
     }
 
+    //for form only
     public function getArrayCopy(){
         return $this->getQuery();
     }

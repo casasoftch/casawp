@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\I18n\Translator\Translator;
 
-class Plugin {  
+class Plugin {
     public $textids = false;
     public $fields = false;
     public $meta_box = false;
@@ -24,13 +24,17 @@ class Plugin {
     public $locale = 'de';
     public $configuration = array();
 
-    public function __construct($configuration){  
+    public function __construct($configuration){
         $this->configuration = $configuration;
         $this->conversion = new Conversion;
         $this->locale = substr(get_bloginfo('language'), 0, 2);
         add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
 
-        add_shortcode('casawp_contact', array($this,'contact_shortcode'));
+        //what is this?
+        add_shortcode('casawp_contactform', array($this,'contactform_shortcode'));
+
+        add_shortcode('casawp_properties', array($this,'properties_shortcode'));
+
         add_action('init', array($this, 'setPostTypes'));
         if(function_exists('acf_add_local_field_group') ):
             add_action('init', array($this, 'setACF'));
@@ -42,7 +46,7 @@ class Plugin {
         add_filter("attachment_fields_to_edit", array($this, "casawp_image_attachment_fields_to_edit"), null, 2);
         add_filter("attachment_fields_to_save", array($this, "casawp_image_attachment_fields_to_save"), null, 2);
         if (!is_admin()) {
-            add_action('pre_get_posts', array($this, 'casawp_queryfilter'));  
+            add_action('pre_get_posts', array($this, 'casawp_queryfilter'));
         }
 
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
@@ -52,7 +56,7 @@ class Plugin {
         add_action('wp_head', array($this, 'add_meta_tags'));
 
         add_action( 'right_now_content_table_end', array($this, 'casawp_right_now') );
-    
+
         if ( function_exists( 'add_theme_support' ) ) {
             add_theme_support( 'post-thumbnails' );
             set_post_thumbnail_size( 150, 150 ); // default Post Thumbnail dimensions
@@ -85,6 +89,242 @@ class Plugin {
             add_action('wp_loaded', array($this, 'returnPrevNext'));
         }
 
+        // auto add pages if missing for private users
+        add_action('after_setup_theme', array($this, 'privateUserMakeSurePagesExist') );
+
+        // remove adminbar for registered users
+        add_action('after_setup_theme', array($this, 'privateUserHideAdminBarForRegisteredUsers') );
+
+        // hook failed login
+        add_action( 'wp_login_failed', array($this, 'privateUserRedirectToOrigin') );
+
+        // pages for private user login area
+        add_filter('the_content', array($this, 'privateUserPageRenders'));
+
+        // logout page
+        add_action ('template_redirect', array($this, 'privateUserLogOutOnLogoutPage'));
+
+
+    }
+
+    public function privateUserMakeSurePagesExist(){
+      $loginpage = get_option('casawp_private_loginpage', false);
+      if ( 'publish' != get_post_status ( $loginpage ) ) {
+        $loginpage = false;
+      }
+      if (!$loginpage) {
+        $page = get_page_by_title('Exklusiv Login');
+        if (!$page) {
+          $pageId = wp_insert_post(array(
+            'post_title' => 'Exklusiv Login',
+            'post_status' => 'publish',
+            'post_author'   => 1,
+            'post_content'  => '<p><strong>Melden Sie sich hier an um Zugang zu den exklusiven Objekten zu erhalten.</strong></p>',
+            'post_type' => 'page'
+          ));
+          if (is_admin()) {
+            echo '<div class="updated"><p><strong>' . __('Gennerated login page', 'casawp' ) . ' ' .$pageId . '</strong></p></div>';
+          }
+        } else {
+          $pageId = $page->ID;
+        }
+        update_option('casawp_private_loginpage', $pageId);
+      }
+
+      $logoutpage = get_option('casawp_private_logoutpage', false);
+      if ( 'publish' != get_post_status ( $logoutpage ) ) {
+        $logoutpage = false;
+      }
+      if (!$logoutpage) {
+        $page = get_page_by_title('Exklusiv Abmeldung');
+        if (!$page) {
+          $pageId = wp_insert_post(array(
+            'post_title' => 'Exklusiv Logout',
+            'post_status' => 'publish',
+            'post_author'   => 1,
+            'post_content'  => '<p>Sie haben sich erfolgreich abgemeldet.</p>',
+            'post_type' => 'page'
+          ));
+          if (is_admin()) {
+            echo '<div class="updated"><p><strong>' . __('Gennerated logout page', 'casawp' ) . ' ' .$pageId . '</strong></p></div>';
+          }
+        } else {
+          $pageId = $page->ID;
+        }
+        update_option('casawp_private_logoutpage', $pageId);
+      }
+
+    }
+
+    public function privateUserLogOutOnLogoutPage(){
+      if (get_the_ID() == get_option('casawp_private_logoutpage', false) ) {
+        if (is_user_logged_in()) {
+          wp_logout();
+        } else {
+          wp_redirect(get_permalink(get_option('casawp_private_loginpage', false)));
+        }
+      }
+    }
+
+    public function privateUserHideAdminBarForRegisteredUsers(){
+      if (!current_user_can('edit_posts')) {
+        show_admin_bar(false);
+      }
+    }
+
+    public function privateUserRedirectToOrigin( $username ) {
+       $referrer = $_SERVER['HTTP_REFERER'];  // where did the post submission come from?
+       // if there's a valid referrer, and it's not the default log-in screen
+       if ( !empty($referrer) && !strstr($referrer,'wp-login') && !strstr($referrer,'wp-admin') ) {
+          wp_redirect( $referrer . '?login=failed' );  // let's append some information (login=failed) to the URL for the theme to use
+          exit;
+       }
+    }
+
+    public function privateUserPageRenders($content){
+      switch (get_the_ID()) {
+        case get_option('casawp_private_loginpage', false):
+          if (is_user_logged_in()) {
+            $content .= 'Sie sind bereits Angemeldet. ' . '<a href="/?p=' . get_option('casawp_private_logoutpage', false) . '">Jetzt Abmelden</a>';
+          } else {
+            $target = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'];
+            if (isset($_GET['target'])) {
+              $target = $_GET['target'];
+            } else {
+              $target = $target . urldecode($_SERVER['REQUEST_URI']);
+            }
+            $args = array(
+              'echo'           => false,
+              'remember'       => true,
+              'redirect'       => $target,
+              //'form_id'        => 'loginform',
+              //'id_username'    => 'user_login',
+              //'id_password'    => 'user_pass',
+              //'id_remember'    => 'rememberme',
+              //'id_submit'      => 'wp-submit',
+              //'label_username' => __( 'Username' ),
+              //'label_password' => __( 'Password' ),
+              //'label_remember' => __( 'Remember Me' ),
+              //'label_log_in'   => __( 'Log In' ),
+              //'value_username' => '',
+              //'value_remember' => false
+            );
+            if (isset($_GET['login']) && $_GET['login'] == 'failed') {
+              $content .= '<div class="alert alert-danger" role="alert">Login fehlgeschlagen.</div>';
+            }
+            $content .= '<div class="casawp-private-login-form">'.wp_login_form( $args ).'</div>';
+          }
+          break;
+      }
+
+
+      return $content;
+    }
+
+    public function sanitizeContactFormPost($post){
+        $data = array();
+        foreach ($post as $key => $value) {
+            switch ($key) {
+                default:
+                    $data[$key] = sanitize_text_field($value);
+                    break;
+            }
+        }
+        return $data;
+    }
+
+    public function contactform_shortcode($args = array()){
+        $args = array_merge(array(
+            'id' => false,
+            'offer_id' => false,
+            'project_id' => false,
+            'direct_recipient_email' => false
+        ), ($args ? $args : array()));
+
+
+        $offer = false;
+        $project = false;
+        if ($args['project_id'] || $args['offer_id'] ) {
+            $post = get_post(($args['offer_id'] ? $args['offer_id'] : $args['project_id'] ));
+            if ($post) {
+                switch ($post->post_type) {
+                    case 'casawp_property':
+                        $offer = $this->prepareOffer($post);
+                        break;
+                    case 'casawp_project':
+                        $project = $this->prepareProject($post);
+                        break;
+                }
+
+            }
+
+        }
+        /*if (!$offer && !$project) {
+            return '<p class="alert alert-danger">offer or project with id [' . $args['offer_id'] . '] not found</p>';
+        }*/
+        if ($offer && $offer->getAvailability() == 'reference') {
+            return false;
+        }
+
+        $setting = false;
+        if ($args['id']) {
+            $setting = $this->formSettingService->getFormSetting($args['id']);
+        }
+        if (!$setting) {
+            $setting = new \casawp\Form\DefaultFormSetting();
+        }
+        $formResult = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting, $args['direct_recipient_email']);
+        if (is_string($formResult['form'])) {
+            return $formResult['form'];
+        }
+
+        $result = $this->render($setting->getView(), array(
+            'form' => $formResult['form'],
+            'offer' => $offer,
+            'project' => $project,
+            'sent' => $formResult['sent']
+        ));
+        return $result;
+    }
+
+    public function properties_shortcode($args = array()){
+
+
+        add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+        $template_path = false;
+
+        $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+        switch ($viewgroup) {
+            case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-shortcode-properties.php'; break;
+            case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-shortcode-properties.php'; break;
+            default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-shortcode-properties.php'; break;
+        }
+        if ( $theme_file = locate_template(array('casawp-shortcode-properties.php'))) {
+            $template_path = $theme_file;
+        }
+
+
+        $the_query = $this->queryService->createWpQuery($args);
+
+        $col_count = (isset($args['col_count']) && is_numeric($args['col_count']) ? $args['col_count'] : 3);
+
+        return $this->render('shortcode-properties', array(
+            'casawp' => $this,
+            'the_query' => $the_query,
+            'col_count' => $col_count
+        ));
+
+
+
+        /*echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+        print_r($store);
+        echo "</textarea>";*/
+
+        //require_once($template_path);
+
+
+
     }
 
     public function wpmlLanguageSwitchedTo($lang) {
@@ -115,9 +355,9 @@ class Plugin {
         wp_localize_script( 'casawp', 'casawpParams', $query);
     }
 
-    
+
     private function bootstrap($configuration){
-        
+
         // setup service manager
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $configuration);
@@ -129,16 +369,16 @@ class Plugin {
         $serviceManager->setService('translator', $translator);
 
         // mvc translator
-        /*$MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
+        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
         $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
         \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
-        $this->MVCtranslator = $MVCtranslator;*/
+        $this->MVCtranslator = $MVCtranslator;
 
         $this->translator = $translator;
 
         // load modules -- which will provide services, configuration, and more
         $serviceManager->get('ModuleManager')->loadModules();
-       
+
         //renderer
         $this->renderer = new PhpRenderer();
         $pluginManager = $this->renderer->getHelperPluginManager();
@@ -161,6 +401,12 @@ class Plugin {
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
         $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
+        $this->formSettingService = $this->serviceManager->get('casawpFormSettingService');
+        $this->formService = $this->serviceManager->get('casawpFormService');
+
+        add_action('after_setup_theme', function(){
+            do_action('casawp_register_forms', $this->formSettingService);
+        });
 
     }
 
@@ -168,7 +414,7 @@ class Plugin {
         return $this->queryService;
     }
 
-    
+
 
 
     public function casawp_right_now() {
@@ -176,10 +422,10 @@ class Plugin {
 
         $num = number_format_i18n( $num->publish );
         $text = _n( 'Property', 'Properties', $num->publish, 'casawp' );
-        if ( current_user_can( 'edit_pages' ) ) { 
+        if ( current_user_can( 'edit_pages' ) ) {
             $num = "<a href='edit.php?post_type=widget'>$num</a>";
             $text = "<a href='edit.php?post_type=widget'>$text</a>";
-        }   
+        }
 
         echo '<tr>';
         echo '<td class="first b b_pages">' . $num . '</td>';
@@ -187,15 +433,52 @@ class Plugin {
         echo '</tr>';
     }
 
+    public function isLoggedInToPrivateArea(){
+        return $this->privateAuth(false);
+    }
+
+
+
+    public function privateAuth($checkpost = true){
+        return is_user_logged_in();
+    }
+
+    public function privateRedirectToLogin(){
+      $url = get_permalink(get_option('casawp_private_loginpage', false)) . (strpos($_SERVER['REQUEST_URI'], '?') === false ? '?' : '&') . 'target=' . urlencode($_SERVER['REQUEST_URI']);
+      wp_redirect($url);
+      echo '<script>window.location.replace("' . $url . '");</script>';
+      die();
+    }
+
     public function casawp_queryfilter($query){
         if ($query->is_main_query() && (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' ))) {
             $this->queryService->setQuery();
+
+
             $query = $this->queryService->applyToWpQuery($query);
+
+            $availabilities = array();
+            $availabilities = $this->queryService->getQueryValue('availabilities');
+            if ($availabilities) {
+                if (in_array('private', $availabilities)) {
+                    $loggedin = $this->privateAuth();
+                    if (!$loggedin) {
+                        $this->privateRedirectToLogin();
+                    }
+                }
+            }
+
+
+        }
+        if ($query->is_main_query() && is_post_type_archive( 'casawp_project' )){
+            /*$this->queryService->setQuery();
+            $query = $this->queryService->applyToWpQuery($query);*/
+            $query->set('post_parent', 0);
         }
         return $query;
     }
-    
-    
+
+
     public function setOptionJsVars(){
         $script_params = array(
            'google_maps'              => get_option('casawp_load_googlemaps', 0),
@@ -228,12 +511,30 @@ class Plugin {
 
     public function renderSingle($post){
         $offer = $this->prepareOffer($post);
+
+        if ($offer->getAvailability() == 'private') {
+            $loggedin = $this->privateAuth();
+            if (!$loggedin) {
+                $this->privateRedirectToLogin();
+            }
+        }
+
         return $offer->render('single', array('offer' => $offer));
+    }
+
+    public function renderProjectSingle($post){
+        $project = $this->prepareProject($post);
+        return $project->render('project-single', array('project' => $project));
     }
 
     public function renderArchiveSingle($post){
         $offer = $this->prepareOffer($post);
         return $offer->render('single-archive', array('offer' => $offer));
+    }
+
+    public function renderProjectArchiveSingle($post){
+        $project = $this->prepareProject($post);
+        return $project->render('project-archive-single', array('project' => $project));
     }
 
     public function renderArchivePagination(){
@@ -298,6 +599,10 @@ class Plugin {
         }*/
     }
 
+    public function renderContactFormElement($element){
+        return $this->render('contact-form-element', array('element' => $element));
+    }
+
     public function render($view, $args){
         $renderer = $this->renderer;
         $resolver = new Resolver\AggregateResolver();
@@ -311,6 +616,11 @@ class Plugin {
             )
         ));
         $resolver->attach($stack);
+
+        //add plugin to view model
+        $args['casawp'] = $this;
+
+
         $model = new ViewModel($args);
 
         $stack = array(
@@ -325,8 +635,8 @@ class Plugin {
             $template = false;
 
             //try up the stack
-            for ($i=1; $i < 5; $i++) { 
-                $ancestor = array_search($viewgroup, $stack)-$i;    
+            for ($i=1; $i < 5; $i++) {
+                $ancestor = array_search($viewgroup, $stack)-$i;
                 if (isset($stack[$ancestor])) {
                     if (false === $resolver->resolve($stack[$ancestor].'/'.$view)) {
                         continue;
@@ -336,7 +646,7 @@ class Plugin {
                     }
                 } else {
                     break;
-                }   
+                }
             }
 
             if (!$template) {
@@ -377,7 +687,7 @@ class Plugin {
     public function getCategories(){
         $categories = array();
         $category_terms = get_terms('casawp_category', array(
-            'hide_empty'        => true, 
+            'hide_empty'        => true,
         ));
         $c_trans = null;
 
@@ -410,11 +720,11 @@ class Plugin {
                     }
                 }
 
-                $unknown_category->setLabel($unknown_category->getKey()); 
+                $unknown_category->setLabel($unknown_category->getKey());
 
                 foreach ($c_trans as $key => $trans) {
                     if ($key == $category_term->slug && array_key_exists($lang, $trans)) {
-                        $unknown_category->setLabel($trans[$lang]); 
+                        $unknown_category->setLabel($trans[$lang]);
                     }
                 }
 
@@ -427,7 +737,7 @@ class Plugin {
     public function getSalestypes(){
         $salestypes = array();
         $salestype_terms = get_terms('casawp_salestype', array(
-            'hide_empty'        => true, 
+            'hide_empty'        => true,
         ));
         foreach ($salestype_terms as $salestype_term) {
             switch ($salestype_term->slug) {
@@ -442,7 +752,7 @@ class Plugin {
     public function getAvailabilities(){
         $availabilities = array();
         $availability_terms = get_terms('casawp_availability', array(
-            'hide_empty'        => true, 
+            'hide_empty'        => true,
         ));
         foreach ($availability_terms as $availability_term) {
             switch ($availability_term->slug) {
@@ -479,15 +789,15 @@ class Plugin {
         if ($availability) {
             global $wpdb;
             /*filters the result with reference context in mind (WPML IGNORANT) */
-            $query = "SELECT wp_terms.term_id FROM wp_terms 
-                INNER JOIN wp_term_taxonomy ON wp_term_taxonomy.term_id = wp_terms.term_id AND wp_term_taxonomy.taxonomy = 'casawp_location'
-                INNER JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id 
-                INNER JOIN wp_posts ON wp_term_relationships.object_id = wp_posts.ID AND wp_posts.post_status = 'publish'
+            $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+                INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
+                INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+                INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
 
-                INNER JOIN wp_term_relationships AS referenceCheck ON referenceCheck.object_id = wp_posts.ID
-                INNER JOIN wp_term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
-                INNER JOIN wp_terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
-                GROUP BY wp_terms.term_id";
+                INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+                INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+                INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+                GROUP BY ". $wpdb->prefix . "terms.term_id";
             $location_property_count = $wpdb->get_results( $query, ARRAY_A );
 
             $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
@@ -503,6 +813,14 @@ class Plugin {
 
     public function renderArchiveFilter(){
         $form = new \casawp\Form\FilterForm(
+            array(
+                'casawp_filter_categories_elementtype' => get_option('casawp_filter_categories_elementtype', false),
+                'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
+                'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
+                'chosen_categories' => $this->queryService->getQueryValue('categories'),
+                'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
+                'chosen_locations' => $this->queryService->getQueryValue('locations'),
+            ),
             $this->getCategories(),
             $this->getSalestypes(),
             $this->getLocations(),
@@ -537,22 +855,24 @@ class Plugin {
         }
 
         $prevnext = array(
-          'nextlink' => ($prev ? get_permalink($prev->ID) : 'no'), 
+          'nextlink' => ($prev ? get_permalink($prev->ID) : 'no'),
           'prevlink' => ($next ? get_permalink($next->ID) : 'no')
         );
         return $prevnext;
     }
 
     public function include_template_function( $template_path ) {
+
+        //project main view files
         if ( get_post_type() == 'casawp_property' && is_single()) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json'])  || isset($_GET['casawp_map']))) {
                 $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
                 if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
                     $template_path = $theme_file;
-                }    
-                
+                }
+
                 header('Content-Type: application/json');
-                
+
             } else {
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
@@ -566,7 +886,7 @@ class Plugin {
             }
 
         }
-        if (is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature') || is_post_type_archive( 'casawp_property' )) {
+        if (is_post_type_archive( 'casawp_property' ) || is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature')) {
             if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
                 header('Content-Type: application/json');
@@ -584,6 +904,53 @@ class Plugin {
                     default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
                 }
                 if ( $theme_file = locate_template(array('casawp-archive.php'))) {
+                    $template_path = $theme_file;
+                }
+            }
+        }
+
+        //project main view files
+        if ( get_post_type() == 'casawp_project' && is_single()) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']))) {
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-single-json.php';
+                if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+                header('Content-Type: application/json');
+
+            } else {
+                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-single.php'; break;
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-project-single.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-single.php'; break;
+                }
+                if ( $theme_file = locate_template( array( 'casawp-project-single.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            }
+
+        }
+        if (is_post_type_archive( 'casawp_project' )) {
+            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']) )) {
+                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
+                header('Content-Type: application/json');
+                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-archive-json.php';
+                if ( $theme_file = locate_template( array( 'casawp-project-archive-json.php' ) ) ) {
+                    $template_path = $theme_file;
+                }
+            } else {
+
+
+                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+                switch ($viewgroup) {
+                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-archive.php'; break;
+                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-project-archive.php'; break;
+                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-project-archive.php'; break;
+                }
+                if ( $theme_file = locate_template(array('casawp-project-archive.php'))) {
                     $template_path = $theme_file;
                 }
             }
@@ -670,7 +1037,7 @@ class Plugin {
         }
 
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
-            wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false', array(), false, true );
+            wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY', array(), false, true );
         }
 
 
@@ -705,7 +1072,7 @@ class Plugin {
 
     public function setACF(){
         $used = array();
-        
+
         add_action( 'add_meta_boxes_casawp_property', array($this,'casawp_property_custom_metaboxes'), 10, 2 );
 
         foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
@@ -1283,7 +1650,7 @@ class Plugin {
                     '2'   => __('Female', 'casawp'),
                 ),
                 'layout' => 'horizontal',
-    
+
             );
             $fields[] = array(
                 'key' => 'field_casawp_person_'.$prefix.'note',
@@ -1403,13 +1770,13 @@ class Plugin {
             'label_placement' => 'top',
             'instruction_placement' => 'label',
         ));
-        
+
     }
 
     public function setPostTypes(){
 
         /*----------  properties  ----------*/
-        
+
         $labels = array(
             'name'               => __('Properties', 'casawp'),
             'singular_name'      => __('Property', 'casawp'),
@@ -1441,12 +1808,47 @@ class Plugin {
             'show_in_nav_menus'  => true
         );
         register_post_type( 'casawp_property', $args );
-        
+
+
+        /*----------  projects  ----------*/
+
+        $labels = array(
+            'name'               => __('Projects', 'casawp'),
+            'singular_name'      => __('Project', 'casawp'),
+            'add_new'            => __('Add New', 'casawp'),
+            'add_new_item'       => __('Add New Project', 'casawp'),
+            'edit_item'          => __('Edit Project', 'casawp'),
+            'new_item'           => __('New Project', 'casawp'),
+            'all_items'          => __('All Projects', 'casawp'),
+            'view_item'          => __('View Project', 'casawp'),
+            'search_items'       => __('Search Projects', 'casawp'),
+            'not_found'          => __('No properties found', 'casawp'),
+            'not_found_in_trash' => __('No properties found in Trash', 'casawp'),
+            'menu_name'          => __('Projects', 'casawp')
+        );
+        $args = array(
+            'labels'             => $labels,
+            'public'             => true,
+            'publicly_queryable' => true,
+            'show_ui'            => true,
+            'show_in_menu'       => true,
+            'query_var'          => true,
+            'rewrite'            => array( 'slug' => 'projekte' ),
+            'capability_type'    => 'post',
+            'has_archive'        => true,
+            'hierarchical'       => true,
+            'menu_position'      => null,
+            'supports'           => array( 'title', 'editor', 'thumbnail', 'custom-fields'),
+            'menu_icon'          => 'dashicons-admin-tools',
+            'show_in_nav_menus'  => true
+        );
+        register_post_type( 'casawp_project', $args );
+
 
 
 
         /*----------  Inquiry  ----------*/
-    
+
         $labels = array(
             'name'               => __('Inquiries', 'casawp'),
             'singular_name'      => __('Inquiry', 'casawp'),
@@ -1482,7 +1884,7 @@ class Plugin {
 
 
         /*----------  category  ----------*/
-        
+
         $labels = array(
             'name'              => __( 'Property categories', 'casawp'),
             'singular_name'     => __( 'Category', 'casawp'),
@@ -1507,7 +1909,7 @@ class Plugin {
         register_taxonomy( 'casawp_category', array( 'casawp_property' ), $args );
 
         /*----------  features  ----------*/
-        
+
         $labels = array(
             'name'              => __( 'Property features', 'casawp'),
             'singular_name'     => __( 'Feature', 'casawp'),
@@ -1530,10 +1932,10 @@ class Plugin {
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
         register_taxonomy( 'casawp_feature', array( 'casawp_property' ), $args );
-        
+
 
         /*----------  utilities  ----------*/
-        
+
         $labels = array(
             'name'              => __( 'Property utilities', 'casawp'),
             'singular_name'     => __( 'Utility', 'casawp'),
@@ -1559,7 +1961,7 @@ class Plugin {
 
 
         /*----------  location  ----------*/
-        
+
         $labels = array(
             'name'              => __( 'Property locations', 'casawp' ),
             'singular_name'     => __( 'Location', 'casawp' ),
@@ -1585,7 +1987,7 @@ class Plugin {
 
 
         /*----------  salestypes  ----------*/
-        
+
         $labels = array(
             'name'                       => __( 'Property salestypes', 'casawp' ),
             'singular_name'              => __( 'Salestype', 'casawp' ),
@@ -1614,7 +2016,7 @@ class Plugin {
 
 
         /*----------  availability  ----------*/
-        
+
         $labels = array(
             'name'                       => __( 'Property availability', 'casawp' ),
             'singular_name'              => __( 'Availability', 'casawp' ),
@@ -1643,7 +2045,7 @@ class Plugin {
 
 
 
-        /*----------  attachments  ----------*/        
+        /*----------  attachments  ----------*/
 
         $labels = array(
           'name'              => __( 'Property Attachment Types', 'casawp' ),
@@ -1701,7 +2103,7 @@ class Plugin {
             'start',
             'casawp_id',
             'referenceId'
-        );  
+        );
 
         $old = array(
             'availability'
@@ -1714,10 +2116,10 @@ class Plugin {
         );
 
         $skip = array_merge($skip, $old, array_keys($this->numvalService->items));
-           
-        
+
+
         foreach ($meta_keys as $meta_key) {
-            if (!in_array($meta_key, $skip) 
+            if (!in_array($meta_key, $skip)
                 && strpos($meta_key, 'seller_inquiry_person') !== 0
                 && strpos($meta_key, 'seller_view_person') !== 0
                 && strpos($meta_key, 'seller_visit_person') !== 0
@@ -1729,9 +2131,9 @@ class Plugin {
                     $value =  print_r(maybe_unserialize($value), true);
                 }
                 echo '<tr><td class="acf-label">'.$meta_key . '</td><td class="acf-input">' . $value . '</td></tr>';
-            }      
-        }  
-        
+            }
+        }
+
         echo "</table>";
     }
 
@@ -1751,5 +2153,11 @@ class Plugin {
         $offerService = $this->serviceManager->get('casawpOffer');
         $offerService->setPost($post);
         return $offerService->getCurrent();
+    }
+
+    public function prepareProject($post){
+        $service = $this->serviceManager->get('casawpProject');
+        $service->setPost($post);
+        return $service->getCurrent();
     }
 }

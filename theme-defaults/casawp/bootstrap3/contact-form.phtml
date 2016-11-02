@@ -1,41 +1,52 @@
 <?php if ($sent): ?>
-	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>	
+	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>
 <?php else: ?>
-	<?php $form->setAttribute('action', get_permalink($offer->post)); ?>
+
+	<?php $renderobject = ($this->offer ? $this->offer : $this->casawp); ?>
+
+	<?php if ($offer || $project): ?>
+			<?php $form->setAttribute('action', get_permalink(($offer ? $offer->post : $project->post))); ?>
+	<?php endif; ?>
+
 
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-contactform-form')); ?>
+	<?= $this->formElement($form->get('form_id')) ?>
 	<?php wp_nonce_field( 'send-inquiry' ); ?>
 	<input id="theApsoluteRealEmailField" type="text" name="email" value="" placeholder="NlChT8 AuSf$lLeN">
+
+	<div class="casawp-gender-radios">
+		<?= $renderobject->renderContactFormElement($form->get('gender')) ?>
+	</div>
 	<div class="casawp-row">
 		<div class="casawp-col-md-5 casawp-input-left">
-			<?= $this->offer->renderContactFormElement($form->get('firstname')) ?>
+			<?= $renderobject->renderContactFormElement($form->get('firstname')) ?>
 		</div>
 		<div class="casawp-col-md-7 casawp-input-right">
-			<?= $this->offer->renderContactFormElement($form->get('lastname')) ?>
+			<?= $renderobject->renderContactFormElement($form->get('lastname')) ?>
 		</div>
 	</div>
-	<?= $this->offer->renderContactFormElement($form->get('street')) ?>
+	<?= $renderobject->renderContactFormElement($form->get('street')) ?>
 	<div class="casawp-row">
 		<div class="casawp-col-md-5 casawp-input-left">
-			<?= $this->offer->renderContactFormElement($form->get('postal_code')) ?>
+			<?= $renderobject->renderContactFormElement($form->get('postal_code')) ?>
 		</div>
 		<div class="casawp-col-md-7 casawp-input-right">
-			<?= $this->offer->renderContactFormElement($form->get('locality')) ?>
+			<?= $renderobject->renderContactFormElement($form->get('locality')) ?>
 		</div>
 	</div>
-	<?= $this->offer->renderContactFormElement($form->get('country')) ?>
-	<?= $this->offer->renderContactFormElement($form->get('phone')) ?>
-	<?= $this->offer->renderContactFormElement($form->get('emailreal')) ?>
-	<?= $this->offer->renderContactFormElement($form->get('message')) ?>
+	<?= $renderobject->renderContactFormElement($form->get('country')) ?>
+	<?= $renderobject->renderContactFormElement($form->get('phone')) ?>
+	<?= $renderobject->renderContactFormElement($form->get('emailreal')) ?>
+	<?= $renderobject->renderContactFormElement($form->get('message')) ?>
 
 	<div class="casawp-row">
-        <div class="casawp-col-md-7 casawp-input-left">
-            <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>
-        </div>
-        <div class="casawp-col-md-5 casawp-input-right">
-            <input type="submit" class="casawp-contactform-send" value="<?= __("Send", "casawp") ?>">
-        </div>
-        <div class="clearBoth"></div>
+    <div class="casawp-col-md-7 casawp-input-left">
+        <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>
+    </div>
+    <div class="casawp-col-md-5 casawp-input-right">
+        <input type="submit" class="casawp-contactform-send" value="<?= __("Send", "casawp") ?>">
+    </div>
+    <div class="clearBoth"></div>
 	</div>
 
 	<?= $this->form()->closeTag(); ?>

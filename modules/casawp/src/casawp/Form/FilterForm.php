@@ -10,7 +10,8 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+    public function __construct($options, $categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+        $this->options = $options;
         $this->categories = $categories;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
@@ -37,46 +38,153 @@ class FilterForm extends Form
         }
 
         if ($this->salestypes) {
-            $this->add(array(
-                'name' => 'salestypes',
-                'type' => 'Select',
-                'attributes' => array(
-                    'multiple' => 'multiple',
-                ),
-                'options' => array(
-                    'label' => __('Sales type', 'casawp'),
-                    'value_options' => $this->getSalestypeOptions(),
-                ),
-            ));
+            $this->addSelector(
+                'salestypes',
+                __('Sales type', 'casawp'),
+                __('Choose offer','casawp'),
+                $this->getSalestypeOptions(),
+                $this->options['chosen_salestypes']
+            );
+
         }
+
         if ($this->categories) {
-            $this->add(array(
-                'name' => 'categories',
-                'type' => 'Select',
-                'attributes' => array(
-                    'multiple' => 'multiple',
-                ),
-                'options' => array(
-                    'label' => __('Category', 'casawp'),
-                    'value_options' => $this->getCategoryOptions(),
-                ),
-            ));
+            $this->addSelector(
+                'categories',
+                __('Category', 'casawp'),
+                __('Choose category','casawp'),
+                $this->getCategoryOptions(),
+                $this->options['chosen_categories']
+            );
         }
         if ($this->locations) {
-            $location_options = $this->getLocationOptions();
-            $this->add(array(
-                'name' => 'locations',
-                'type' => 'Select',
-                'attributes' => array(
-                    'multiple' => 'multiple',
-                ),
-                'options' => array(
-                    'label' => __('Location', 'casawp'),
-                    'value_options' => $location_options,
-                ),
-            ));
+            $this->addSelector(
+                'locations',
+                __('Location', 'casawp'),
+                __('Choose locality','casawp'),
+                $this->getLocationOptions(),
+                $this->options['chosen_locations']
+            );
         }
     }
+
+    private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
+
+        /*<?php if (in_array(get_option('casawp_filter_categories_elementtype', false), ['multicheckbox', 'radio'])): ?>
+            <?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'casawp-filterform-checkbox-label checkbox')))); ?>
+            <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control form-control-multicheckbox')); ?>
+        <?php else: ?>
+            <?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
+            <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
+        <?php endif ?>*/
+
+        if (count($chosen_values) > 1) {
+            if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'singleselect') {
+                $this->options['casawp_filter_'.$name.'_elementtype'] = 'multiselect';
+            }
+            if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'radio') {
+                $this->options['casawp_filter_'.$name.'_elementtype'] = 'multicheckbox';
+            }
+        }
+
+        switch ($this->options['casawp_filter_' . $name . '_elementtype']) {
+            case 'singleselect':
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Select',
+                    'options' => array(
+                        'label' => $label,
+                        'empty_option' => $emptyLabel,
+                        'value_options' => $value_options,
+                        'label_attributes' => array(
+                            'class' => 'visible-xs casawp-filterform-label'
+                        )
+                    ),
+                    'attributes' => array(
+                        'class' => 'form-control form-control-singleselect chosen-select',
+                        'data-placeholder' => $emptyLabel
+                    )
+
+                ));
+                break;
+            case 'multicheckbox':
+                if (isset($value_options[0]['options'])) {
+                    $flat_value_options = array();
+                    foreach ($value_options as $group) {
+                        foreach ($group['options'] as $key => $value) {
+                            $flat_value_options[$key] = $value;
+                        }
+                    }
+                    $value_options = $flat_value_options;
+                }
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Zend\Form\Element\MultiCheckbox',
+                    'options' => array(
+                        'label' => $label,
+                        'value_options' => $value_options,
+                        'label_attributes' => array(
+                            'class' => 'casawp-multicheckbox-label'
+                        ),
+                        'separator' => 'hello'
+                    )
+                ));
+                break;
+            case 'radio':
+                if (isset($value_options[0]['options'])) {
+                    $flat_value_options = array();
+                    foreach ($value_options as $group) {
+                        foreach ($group['options'] as $key => $value) {
+                            $flat_value_options[$key] = $value;
+                        }
+                    }
+                    $value_options = $flat_value_options;
+                }
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Zend\Form\Element\Radio',
+                    'options' => array(
+                        'label' => $label,
+                        'value_options' => $value_options,
+                        'label_attributes' => array(
+                            'class' => 'casawp-radio-label'
+                        )
+                    )
+                ));
+                break;
+            case 'hidden':
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Zend\Form\Element\Hidden',
+                    'options' => array(
+                        'label' => $label,
+                        'label_attributes' => array(
+                            'class' => 'casawp-hidden'
+                        )
+                    )
+                ));
+                break;
+            default: //case 'multiselect':
+                $this->add(array(
+                    'name' => $name,
+                    'type' => 'Select',
+                    'options' => array(
+                        'label' => $label,
+                        'value_options' => $value_options,
+                        'label_attributes' => array(
+                            'class' => 'visible-xs casawp-filterform-label'
+                        )
+                    ),
+                    'attributes' => array(
+                        'multiple' => 'multiple',
+                        'class' => 'form-control form-control-multiselect chosen-select',
+                        'data-placeholder' => $emptyLabel
+                    )
+                ));
+                break;
+        }
+    }
+
 
     public function getCategoryOptions(){
         //TODO SORTING!!!
@@ -122,7 +230,7 @@ class FilterForm extends Form
                 unset($locations_workload[$i]);
             }
         }
-        
+
         if ($depth == 1) {
             foreach ($parents as $u => $parent) {
                 $children = array();
@@ -181,7 +289,7 @@ class FilterForm extends Form
         if ($depth == 1) {
             foreach ($parents as $parent) {
                 $options[$parent['slug']] = $parent['name'];
-            } 
+            }
         } elseif ($depth == 2) {
             foreach ($parents as $parent) {
                 $value_options = array();
@@ -192,7 +300,7 @@ class FilterForm extends Form
                     'label' => $parent['name'],
                     'options' => $value_options
                 );
-            } 
+            }
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
                 foreach ($parent['children'] as $child) {
@@ -206,9 +314,61 @@ class FilterForm extends Form
                         'options' => $value_options
                     );
                 }
-            } 
+            }
         }
 
         return $options;
     }
+
+    public function populateValues($data)
+    {
+        if (!is_array($data) && !$data instanceof Traversable) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of data; received "%s"',
+                __METHOD__,
+                (is_object($data) ? get_class($data) : gettype($data))
+            ));
+        }
+
+        foreach ($this->iterator as $name => $elementOrFieldset) {
+            $valueExists = array_key_exists($name, $data);
+
+            if ($valueExists) {
+                $value = $data[$name];
+                if (
+                    $name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
+                ) {
+                    if ($data[$name] && is_array($data[$name])) {
+                        $value = $data[$name][0];
+                    } else {
+                        $value = '';
+                    }
+                }
+
+
+                $elementOrFieldset->setValue($value);
+            }
+        }
+    }
+
+    /*public function populateValues($data, $onlyBase = false)
+    {
+        if ($onlyBase && $this->baseFieldset !== null) {
+            $name = $this->baseFieldset->getName();
+            if (array_key_exists($name, $data)) {
+                if ($name == 'categories' && $options['casawp_filter_categories_elementtype'] == 'singleselect') {
+                    $this->baseFieldset->populateValues($data[$name][0]);
+                } else {
+                    $this->baseFieldset->populateValues($data[$name]);
+                }
+
+            }
+        } else {
+            parent::populateValues($data);
+        }
+    }*/
 }

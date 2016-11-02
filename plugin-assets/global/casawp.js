@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
                 },
                 success: function (json) {
                     if (json.nextlink !== 'no') {
-                        $('.casawp-single-next').prop('href', json.nextlink);    
+                        $('.casawp-single-next').prop('href', json.nextlink);
                     } else {
                         $('.casawp-single-next').addClass('disabled');
                     }
@@ -102,7 +102,7 @@ jQuery(document).ready(function($) {
             var columns = Math.min( Math.round( width / idealThumbnailWidth ), 8 ) || 1;
             var imageSize = width / columns;
             $( attachments ).each(function( index ) {
-                $(this).attr( 'data-col', columns );
+                $(this).attr( 'data-col', (columns*2) );
             });
         }
         if (typeof ticker === 'undefined') {
@@ -120,9 +120,33 @@ jQuery(document).ready(function($) {
     if($('.casawp-gallery-thumbnails').length && window.casawpOptionParams){
         setThumbnailColumns();
     }
-   
-    // remove attr multiple (safari bug)
+
+
+    //<option value="" disabled selected hidden>Please Choose...</option>
+
+
+
     var userAgent = window.navigator.userAgent;
+    console.log(userAgent);
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+        $('.chosen-select').each(function(index, el) {
+            $(el).removeAttr('multiple')
+            .prop('placeholder', $(this).data('placeholder'))
+            .prepend("<option value='' disabled selected hidden>"+($(el).data('placeholder'))+"</option>");
+        });
+    }
+
+
+    //replace radios with a controllable one
+    if($('.casawp-gender-radios').length){
+        $('.casawp-gender-radios .form-group label:not(.control-label)').append($('<span class="checkreplacer"></span>'));
+    }
+
+
+
+    // remove attr multiple (safari bug)
+    /*var userAgent = window.navigator.userAgent;
+    console.log(userAgent);
     if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
         selector = '.casawp_multiselect';
         $(selector).removeAttr('multiple');
@@ -133,5 +157,5 @@ jQuery(document).ready(function($) {
                 $(this).append('<option value="" selected disabled style="display:none;">' + placeholder + '</option>');
             }
         });
-    }
+    }*/
 });

@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.1.1
+Stable tag: 2.2.0
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,33 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.2.0 =
+* optimized: WPML optimizations
+* new: (alpha) Project integration
+* new: action hooks casawp_before_inquirystore
+* new: Support for additional publisher custom values
+* fix: Translations for MVC modules
+* fix: Filter labels are now translatable and previewable
+* new: [casawp_properties] shortcode
+* new: max restriction for archive datapoints
+* new: Adjustable filter UI preferenzes
+* new: [casawp_contactform] shortcode
+* fix: added google maps api key
+* new: (alpha) basic private property support with global login
+* fix: refactored contact form logic
+* new: Custom contact forms
+* new: Archive-Filters are now hidable
+* optimized: datapoints are more adjustable
+* new: Salutation for Contact-Forms are now enabled
+* new: private login system through WP User management
+* optimized: post_date should now be imported correctly
+* optimized: api endpoint is now https://casagateway.ch
+* new: Order By start
+* new: contactform shortcode now accepts custom direct_recipient_email option
+* optimizations: CASAMAILs property_reference now includes the visualReferenceID
+* new: datapoint nwf now available for archive views
+
 = 2.1.1 =
 * Now ignores modification dates during imports.
 * Availability reemerges as hidden field so that requests can creeps back into the query
