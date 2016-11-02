@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.1.1
+Stable tag: 2.2.0
 
 Import your properties directly from your real-estate management software!
 
@@ -38,7 +38,7 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 
-= dev =
+= 2.2.0 =
 * optimized: WPML optimizations
 * new: (alpha) Project integration
 * new: action hooks casawp_before_inquirystore

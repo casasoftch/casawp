@@ -1612,7 +1612,7 @@ class Import {
         //is it already in db
         $casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
 
-        $the_query = new \WP_Query( 'post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+        $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
         $wp_post = false;
         while ( $the_query->have_posts() ) :
           $the_query->the_post();
@@ -1649,37 +1649,42 @@ class Import {
     }
 
     //3. remove all the unused properties
-    $properties_to_remove = get_posts(  array(
-      'suppress_filters'=>true,
-      'language'=>'ALL',
-      'numberposts' =>  100,
-      'exclude'     =>  $found_posts,
-      'post_type'   =>  'casawp_property',
-      'post_status' =>  'publish'
-      )
-    );
-    foreach ($properties_to_remove as $prop_to_rm) {
-      //remove the attachments
-      $attachments = get_posts( array(
+    if ($found_posts) {
+      
+    
+      $properties_to_remove = get_posts(  array(
         'suppress_filters'=>true,
         'language'=>'ALL',
-        'post_type'      => 'attachment',
-        'posts_per_page' => -1,
-        'post_parent'    => $prop_to_rm->ID,
-        'exclude'        => get_post_thumbnail_id()
-      ) );
-      if ( $attachments ) {
-        foreach ( $attachments as $attachment ) {
-          $attachment_id = $attachment->ID;
+        'numberposts' =>  100,
+        'exclude'     =>  $found_posts,
+        'post_type'   =>  'casawp_property',
+        'post_status' =>  'publish'
+        )
+      );
+      foreach ($properties_to_remove as $prop_to_rm) {
+        //remove the attachments
+        $attachments = get_posts( array(
+          'suppress_filters'=>true,
+          'language'=>'ALL',
+          'post_type'      => 'attachment',
+          'posts_per_page' => -1,
+          'post_parent'    => $prop_to_rm->ID,
+          'exclude'        => get_post_thumbnail_id()
+        ) );
+        if ( $attachments ) {
+          foreach ( $attachments as $attachment ) {
+            $attachment_id = $attachment->ID;
+          }
         }
+        wp_trash_post($prop_to_rm->ID);
+
       }
-      wp_trash_post($prop_to_rm->ID);
 
+      $this->transcript['properties_found_in_xml'] = count($found_posts);
+      $this->transcript['properties_removed'] = count($properties_to_remove);
+    } else{
+      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML';
     }
-
-    $this->transcript['properties_found_in_xml'] = count($found_posts);
-    $this->transcript['properties_removed'] = count($properties_to_remove);
-
 
 
 
@@ -2027,8 +2032,8 @@ class Import {
       $old_meta_data['last_import_hash'] = 'no_hash';
     }
 
-    //skip if is the same as before
-    if (isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
+    //skip if is the same as before (accept if was trashed (reactivation))
+    if ($wp_post->post_status == 'publish' && isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
       if ($curImportHash == $old_meta_data['last_import_hash']) {
         $this->addToLog('skipped property: '. $casawp_id);
         return 'skipped';
