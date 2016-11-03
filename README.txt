@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 
 Import your properties directly from your real-estate management software!
 
@@ -28,16 +28,19 @@ Synchronize your properties directly to CASAWP, and let them be automatically ca
 
 == Import Setup ==
 The plugin will look for a file in "wp-content/uploads/casawp/import/data.xml" and syncronize this data with your WordPress installation.
- 
+
 You can place the XML file through FTP/Rsync or something similar.
 
-If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly. 
+If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly.
 You will then only need to add the API and SECRET keys to the plugin's options.
 
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
 
+= 2.2.1 =
+* fix: imports now consider trashed objects as candidates for update
+* fix: if the xml contains 0 properties it will be ignored instead (to prevent false deletion) This will be considered in the future.
 = 2.2.0 =
 * optimized: WPML optimizations
 * new: (alpha) Project integration
@@ -89,7 +92,7 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 * Added isReserved method to the offer object
 * Creation/Modification dates are now respected during XML imports
 
-= 2.0.4 = 
+= 2.0.4 =
 * Cleaned up plugin activation hooks for dependency ordering
 * Added IE compatibility for Basicboxes
 * Translated Contactform Labels
@@ -99,16 +102,16 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 * Fixed gallery thumbnail rendering
 * Replaced default arrows
 
-= 2.0.3 = 
+= 2.0.3 =
 * Update system
 
-= 2.0.2 = 
+= 2.0.2 =
 * Further security preparations for WordPress.org publishing
 
-= 2.0.1 = 
+= 2.0.1 =
 * Preparations for WordPress.org publishing
 
-= 2.0.0 = 
+= 2.0.0 =
 * The plugin has been rewritten and renamed from casasync to CASAWP.
 
 == Upgrade Notice ==
@@ -117,4 +120,3 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 == Screenshots ==
 1. Archive View
 2. Single View
-
