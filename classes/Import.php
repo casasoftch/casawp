@@ -16,7 +16,6 @@ class Import {
     if ($casagatewayupdate) {
       add_action( 'init', array($this, 'updateImportFileThroughCasaGateway') );
     }
-    //$this->casawpImport();
   }
 
   public function getImportFile(){
@@ -1650,8 +1649,8 @@ class Import {
 
     //3. remove all the unused properties
     if ($found_posts) {
-      
-    
+
+
       $properties_to_remove = get_posts(  array(
         'suppress_filters'=>true,
         'language'=>'ALL',
