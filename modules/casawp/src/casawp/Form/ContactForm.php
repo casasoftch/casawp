@@ -257,6 +257,10 @@ class ContactForm extends Form
                 )
             ),
         ));
+        $filter->add(array(
+            'name' => 'gender',
+            'required' => false
+        ));
 
         foreach ($this->customFilters as $custom_filter_array) {
             $filter->add($custom_filter_array);
