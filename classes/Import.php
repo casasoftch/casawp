@@ -162,33 +162,41 @@ class Import {
     }
   }
 
+  public function casawpUploadAttachmentFromGateway($property_id, $fileurl){
+    $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
+
+    //extention is required
+    $file_parts = pathinfo($filename);
+    if (!isset($file_parts['extension'])) {
+        $filename = $filename . '.jpg';
+    }
+    if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
+      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync')) {
+        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync');
+      }
+      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id)) {
+        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id);
+      }
+      if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
+        if (!isset($this->transcript['attachments'][$property_id]["uploaded_from_gateway"])) {
+          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
+        }
+        $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
+        $could_copy = copy($fileurl, CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
+        if (!$could_copy) {
+          $filename = false;
+          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' .$filename;
+        }
+      }
+    }
+    return $filename;
+  }
+
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id) {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
     } elseif ($the_mediaitem['url']) { //external
-      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($the_mediaitem['url']);
-
-      //extention is required
-      $file_parts = pathinfo($filename);
-      if (!isset($file_parts['extension'])) {
-          $filename = $filename . '.jpg';
-      }
-      if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
-        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync')) {
-          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync');
-        }
-        if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id)) {
-          mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id);
-        }
-        if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename )) {
-          $could_copy = copy($the_mediaitem['url'], CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
-          if (!$could_copy) {
-            $filename = false;
-          }
-        }
-
-
-      }
+      $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
     } else { //missing
       $filename = false;
     }
@@ -516,6 +524,7 @@ class Import {
                 'alt'     => $alt,
                 'title'   => $wp_mediaitem->post_title,
                 'file'    => $the_mediaitem['file'],
+                //'file'    => maibe? -> (is_file($the_mediaitem['file']) ? $the_mediaitem['file'] : '')
                 'url'     => $the_mediaitem['url'],
                 'caption' => $wp_mediaitem->post_excerpt,
                 'order'   => $wp_mediaitem->menu_order
@@ -561,6 +570,11 @@ class Import {
           } else {
             $this->transcript[$casawp_id]['attachments']["failed_to_create"] = $new_id;
           }
+        }
+
+        //tries to fix missing files
+        if (isset($the_mediaitem['url'])) {
+          $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
         }
 
 
