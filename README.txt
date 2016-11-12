@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 
 Import your properties directly from your real-estate management software!
 
@@ -38,9 +38,11 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 
+= 2.2.3 =
+* fix: new CASMAIL domain service@casamail.com
 
 = 2.2.2 =
-$ fix: Salutation should not be a required field. This caused some legacy forms to not post.
+* fix: Salutation should not be a required field. This caused some legacy forms to not post.
 
 = 2.2.1 =
 * fix: imports now consider trashed objects as candidates for update
