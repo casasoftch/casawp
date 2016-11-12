@@ -151,7 +151,7 @@ class FormService{
 
 								$data_string = json_encode($data);
 
-								$ch = curl_init('http://casamail.com/api/msg');
+								$ch = curl_init('https://casamail.com/api/msg');
 								curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 								curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 								curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
