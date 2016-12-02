@@ -561,12 +561,7 @@ class Plugin {
         $format  = $GLOBALS['wp_rewrite']->using_index_permalinks() && ! strpos( $pagenum_link, 'index.php' ) ? 'index.php/' : '';
         $format .= $GLOBALS['wp_rewrite']->using_permalinks() ? user_trailingslashit( 'page/%#%', 'paged' ) : '?paged=%#%';
         unset($query_args['ajax']);
-        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-         print_r($pagenum_link);
-         echo "</textarea>";
-        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
-         print_r($query_args);
-         echo "</textarea>";
+        
         // Set up paginated links.
         $links = paginate_links( array(
             'base'     => $pagenum_link,
