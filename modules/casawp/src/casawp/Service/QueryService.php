@@ -46,9 +46,14 @@ class QueryService{
     public function setCustomQuery($query){
         foreach ($query as $key => $value) {
             if (!array_key_exists($key, $this->defaultQuery)) {
-                unset($query[$key]);
+              unset($query[$key]);
+            } else {
+              if (strpos($value, ',')) {
+                $query[$key] = array_map('trim', explode(',', $value));
+              }
             }
         }
+
         $this->query = array_merge($this->query, $query);
     }
 
