@@ -158,4 +158,84 @@ jQuery(document).ready(function($) {
             }
         });
     }*/
+
+    //ajax based archive filter
+
+    function addParameterAndReturn(url, paramName, paramValue)
+    {
+        if (url.indexOf(paramName + "=") >= 0)
+        {
+            var prefix = url.substring(0, url.indexOf(paramName));
+            var suffix = url.substring(url.indexOf(paramName));
+            suffix = suffix.substring(suffix.indexOf("=") + 1);
+            suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+            url = prefix + paramName + "=" + paramValue + suffix;
+        }
+        else
+        {
+        if (url.indexOf("?") < 0)
+            url += "?" + paramName + "=" + paramValue;
+        else
+            url += "&" + paramName + "=" + paramValue;
+        }
+        return url;
+    }
+
+    //if (window.casawpOptionParams && window.casawpOptionParams.ajaxify_archive == 1) {
+      var $archiveList = $('.casawp-ajax-archive-list');
+      if ($archiveList.length) {
+
+        $('.casawp-filterform-button').hide();
+
+        $('.casawp-filterform').change(function(event){
+          $(this).submit();
+        });
+        $('.casawp-filterform').submit(function(event){
+          var $form = $(this);
+          event.preventDefault();
+          var filteredParams = $form.serialize();
+          var url = $form.prop('action');
+          url = url.replace(window.location.protocol + "//" + window.location.host, '');
+
+          //update filter form
+          $form.addClass('casawp-filterform-loading');
+
+          var filteredUrl = addParameterAndReturn(url + '?' + filteredParams, 'ajax', 'archive-filter');
+          $.ajax({
+            url: filteredUrl,
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+              $form.removeClass('casawp-filterform-loading');
+              $form.html($(data).find('form').html());
+              if (window.casawpOptionParams && window.casawpOptionParams.chosen == 1) {
+                  $form.find('.chosen-select').chosen({width:"100%"});
+              }
+              $('.casawp-filterform-button').hide();
+            }
+          });
+
+          //update property list
+          $archiveList.addClass('casawp-archive-list-loading');
+          var filteredArchiveUrl = addParameterAndReturn(url + '?' + filteredParams, 'ajax', 'archive');
+          $.ajax({
+            url: filteredArchiveUrl,
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+              $archiveList.removeClass('casawp-archive-list-loading');
+              $archiveList.html($(data).html());
+            },
+            always: function() {
+              console.log('HEEELLLLOOO??????');
+            }
+          });
+
+        });
+      }
+    //}
+
+
+
+
 });

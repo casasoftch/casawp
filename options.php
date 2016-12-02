@@ -88,7 +88,9 @@
 					'casawp_archive_show_excerpt',
 					'casawp_archive_show_availability',
 					'casawp_archive_show_thumbnail_size_crop',
-					'casawp_filter_hide'
+					'casawp_filter_hide',
+					'casawp_ajaxify_archive',
+					'casawp_load_googlemaps'
 				);
 				break;
 			case 'contactform':
@@ -698,11 +700,18 @@
 					<h3>Filter Formular Einstellungen</h3>
 					<?php echo $table_start; ?>
 						<tr valign="top">
-							<th scope="row">Filter ausblenden</th>
+							<th scope="row">Filter</th>
 							<td id="front-static-padges">
 								<fieldset>
 									<?php $name = 'casawp_filter_hide'; ?>
 									<?php $text = 'Filter ausblenden'; ?>
+									<label>
+										<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+									</label>
+								</fieldset>
+								<fieldset>
+									<?php $name = 'casawp_ajaxify_archive'; ?>
+									<?php $text = 'Archiv Ajax'; ?>
 									<label>
 										<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 									</label>

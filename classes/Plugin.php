@@ -489,6 +489,7 @@ class Plugin {
            'load_css'                 => get_option('casawp_load_css', 'bootstrapv3'),
            'load_bootstrap_js'        => get_option('casawp_load_bootstrap_scripts'),
            'thumbnails_ideal_width'   => get_option('casawp_single_thumbnail_ideal_width', 150),
+           'ajaxify_archive'          => get_option('casawp_ajaxify_archive', 0),
         );
         //wp_localize_script( 'casawp_bootstrap2_main', 'casawpOptionParams', $script_params );
         //wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
@@ -731,6 +732,32 @@ class Plugin {
                 $categories[] = $unknown_category;
             }
         }
+
+
+        //salestype reduces categories
+        $salestype = $this->getQueriedSingularSalestype();
+        if ($salestype) {
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_category'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $category_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+          $category_slug_array = array_map(function($item){return $item['slug'];}, $category_property_count);
+          foreach ($categories as $key => $category) {
+              if (!in_array($category->getKey(), $category_slug_array)) {
+                  unset($categories[$key]);
+              }
+          }
+        }
+
         return $categories;
     }
 
@@ -781,33 +808,98 @@ class Plugin {
         return false;
     }
 
+    public function getQueriedSingularSalestype(){
+        $query = $this->queryService->getQuery();
+        if (isset($query['salestypes']) && count($query['salestypes']) == 1) {
+            return $query['salestypes'][0];
+        }
+        return false;
+    }
+
+    public function getQueriedSingularCategory(){
+        $query = $this->queryService->getQuery();
+        if (isset($query['categories']) && count($query['categories']) == 1) {
+            return $query['categories'][0];
+        }
+        return false;
+    }
+
     public function getLocations(){
         $localities = get_terms('casawp_location',array(
             'hierarchical'      => true
         ));
         $availability = $this->getQueriedSingularAvailability();
         if ($availability) {
-            global $wpdb;
-            /*filters the result with reference context in mind (WPML IGNORANT) */
-            $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
-                INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
-                INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
-                INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
 
-                INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
-                INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
-                INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
-                GROUP BY ". $wpdb->prefix . "terms.term_id";
-            $location_property_count = $wpdb->get_results( $query, ARRAY_A );
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $location_property_count = $wpdb->get_results( $query, ARRAY_A );
 
-            $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
+          $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
 
-            foreach ($localities as $key => $locality) {
-                if (!in_array($locality->term_id, $location_id_array)) {
-                    unset($localities[$key]);
-                }
-            }
+          foreach ($localities as $key => $locality) {
+              if (!in_array($locality->term_id, $location_id_array)) {
+                  unset($localities[$key]);
+              }
+          }
         }
+
+        //salestype reduces locations
+        $salestype = $this->getQueriedSingularSalestype();
+        if ($salestype) {
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $location_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+          $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
+          foreach ($localities as $key => $locality) {
+              if (!in_array($locality->term_id, $location_id_array)) {
+                  unset($localities[$key]);
+              }
+          }
+        }
+
+        //categories reduces locations
+        $category = $this->getQueriedSingularCategory();
+        if ($category) {
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_category'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$category'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $location_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+          $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
+          foreach ($localities as $key => $locality) {
+              if (!in_array($locality->term_id, $location_id_array)) {
+                  unset($localities[$key]);
+              }
+          }
+        }
+
         return $localities;
     }
 
@@ -890,9 +982,22 @@ class Plugin {
             if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
                 header('Content-Type: application/json');
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-json.php';
-                if ( $theme_file = locate_template( array( 'casawp-archive-json.php' ) ) ) {
-                    $template_path = $theme_file;
+                if ($_GET['ajax'] === 'archive-filter') {
+                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-filter-ajax.php';
+                  if ( $theme_file = locate_template( array($template_path ) ) ) {
+                      $template_path = $theme_file;
+                  }
+                } else if ($_GET['ajax'] === 'archive') {
+                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-ajax.php';
+
+                  if ( $theme_file = locate_template( array($template_path ) ) ) {
+                      $template_path = $theme_file;
+                  }
+                } else {
+                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-json.php';
+                  if ( $theme_file = locate_template( array( 'casawp-archive-json.php' ) ) ) {
+                      $template_path = $theme_file;
+                  }
                 }
             } else {
                 add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
