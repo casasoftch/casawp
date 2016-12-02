@@ -554,12 +554,19 @@ class Plugin {
             wp_parse_str( $url_parts[1], $query_args );
         }
 
+
         $pagenum_link = remove_query_arg( array_keys( $query_args ), $pagenum_link );
         $pagenum_link = trailingslashit( $pagenum_link ) . '%_%';
 
         $format  = $GLOBALS['wp_rewrite']->using_index_permalinks() && ! strpos( $pagenum_link, 'index.php' ) ? 'index.php/' : '';
         $format .= $GLOBALS['wp_rewrite']->using_permalinks() ? user_trailingslashit( 'page/%#%', 'paged' ) : '?paged=%#%';
-
+        unset($query_args['ajax']);
+        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+         print_r($pagenum_link);
+         echo "</textarea>";
+        echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+         print_r($query_args);
+         echo "</textarea>";
         // Set up paginated links.
         $links = paginate_links( array(
             'base'     => $pagenum_link,
@@ -572,32 +579,10 @@ class Plugin {
             'next_text' => '&raquo;',
             'type' => 'list',
         ) );
-
+        $links = str_replace("ajax", "ajaxno", $links);
         if ( $links ) {
-            return '<div class="casawp-pagination pagination">' . $links . '</div>';
+          return '<div class="casawp-pagination pagination">' . $links . '</div>';
         }
-/*
-        $total_pages = $wp_query->max_num_pages;
-        if ($total_pages > 1) {
-            $current_page = max(1, get_query_var('paged'));
-            if($current_page) {
-                //TODO: prev/next These dont work yet!
-                $i = 0;
-                $return = '<ul class="casawp-pagination pagination">';
-                $return .= '<li class="disabled"><a href="#">&laquo;</span></a></li>';
-                while ($i < $total_pages) {
-                    $i++;
-                    if ($current_page == $i) {
-                        $return .= '<li><a href="#"><span>' . $i . '<span class="sr-only">(current)</span></span></a></li>';
-                    } else {
-                        $return .= '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
-                  }
-                }
-                $return .= '<li class="disabled"><a href="#">&raquo;</a></li>';
-                $return .= '</ul>';
-                return $return;
-            }
-        }*/
     }
 
     public function renderContactFormElement($element){
@@ -844,7 +829,6 @@ class Plugin {
           $location_property_count = $wpdb->get_results( $query, ARRAY_A );
 
           $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
-
           foreach ($localities as $key => $locality) {
               if (!in_array($locality->term_id, $location_id_array)) {
                   unset($localities[$key]);
