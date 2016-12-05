@@ -105,6 +105,12 @@ class QueryService{
                 case 'casawp_availability_s_not':
                 case 'casawp_availability_not':
                 case 'availabilities_not':
+                    if (strpos($key, 'casawp_') === 0) {
+                        $key = str_replace('casawp_', '', $key);
+                    }
+                    if (strpos($key, '_s') != -1) {
+                        $key = str_replace('_s', '', $key);
+                    }
                     $query[$key] = (is_array($value) ? $value : array($value));
                     $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
                     break;
