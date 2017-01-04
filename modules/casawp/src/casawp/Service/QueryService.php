@@ -80,37 +80,49 @@ class QueryService{
         $r_query = $_GET;
         $query = array();
         foreach ($r_query as $key => $value) {
+
+            if ($key == 'casawp_salestype_s') {
+              $key = 'salestypes';
+            }
+
+            //fix singles
+            if (strpos($key, 'category') !== -1) {
+                $key = str_replace('category', 'categories', $key);
+            }
+            if (strpos($key, 'locations') === -1 && strpos($key, 'location') !== -1) {
+                $key = str_replace('location', 'locations', $key);
+            }
+            if (strpos($key, 'salestypes') === -1 && strpos($key, 'salestype') !== -1) {
+                $key = str_replace('salestype', 'salestypes', $key);
+            }
+            if (strpos($key, 'availability') !== -1) {
+                $key = str_replace('availability', 'availabilities', $key);
+            }
+
+            //remove legacy prefixes
+            if (strpos($key, 'casawp_') === 0) {
+                $key = str_replace('casawp_', '', $key);
+            }
+
+            //remove legacy postfixes
+            if (strpos($key, '_not_s') !== -1) {
+                $key = str_replace('_not_s', 'not', $key);
+            }
+            if (strpos($key, '_s') !== -1) {
+                $key = str_replace('_s', '', $key);
+            }
+
+
+
             switch ($key) {
-                case 'casawp_category_s':
-                case 'casawp_category':
                 case 'categories':
-                case 'casawp_location_s':
-                case 'casawp_location':
                 case 'locations':
-                case 'casawp_salestype_s':
-                case 'casawp_salestype':
                 case 'salestypes':
-                case 'casawp_availability_s':
-                case 'casawp_availability':
                 case 'availabilities':
-                case 'casawp_category_not_s':
-                case 'casawp_category_not':
                 case 'categories_not':
-                case 'casawp_location_not_s':
-                case 'casawp_location_not':
                 case 'locations_not':
-                case 'casawp_salestype_not_s':
-                case 'casawp_salestype_not':
                 case 'salestypes_not':
-                case 'casawp_availability_s_not':
-                case 'casawp_availability_not':
                 case 'availabilities_not':
-                    if (strpos($key, 'casawp_') === 0) {
-                        $key = str_replace('casawp_', '', $key);
-                    }
-                    if (strpos($key, '_s') != -1) {
-                        $key = str_replace('_s', '', $key);
-                    }
                     $query[$key] = (is_array($value) ? $value : array($value));
                     $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
                     break;

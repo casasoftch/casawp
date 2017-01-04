@@ -933,63 +933,61 @@ class Plugin {
 
     public function include_template_function( $template_path ) {
 
-        //project main view files
+        //property main view files
         if ( get_post_type() == 'casawp_property' && is_single()) {
-            if ($_GET && (isset($_GET['ajax']) || isset($_GET['json'])  || isset($_GET['casawp_map']))) {
-                $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
-                if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
-                    $template_path = $theme_file;
-                }
-
-                header('Content-Type: application/json');
-
-            } else {
-                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
-                switch ($viewgroup) {
-                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-single.php'; break;
-                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-single.php'; break;
-                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
-                }
-                if ( $theme_file = locate_template( array( 'casawp-single.php' ) ) ) {
-                    $template_path = $theme_file;
-                }
+          if ($_GET && (isset($_GET['ajax']) || isset($_GET['json'])  || isset($_GET['casawp_map']))) {
+            $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single-json.php';
+            if ( $theme_file = locate_template( array( 'casawp-single-json.php' ) ) ) {
+              $template_path = $theme_file;
             }
-
+            header('Content-Type: application/json');
+          } else {
+            $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+            switch ($viewgroup) {
+              case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-single.php'; break;
+              case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-single.php'; break;
+              default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
+            }
+            if ( $theme_file = locate_template( array( 'casawp-single.php' ) ) ) {
+              $template_path = $theme_file;
+            }
+          }
         }
+        //property archive view files
         if (is_post_type_archive( 'casawp_property' ) || is_tax('casawp_salestype') || is_tax('casawp_availability') || is_tax('casawp_category') || is_tax('casawp_location') || is_tax('casawp_feature')) {
-            if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
-                //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
-                header('Content-Type: application/json');
-                if ($_GET['ajax'] === 'archive-filter') {
-                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-filter-ajax.php';
-                  if ( $theme_file = locate_template( array($template_path ) ) ) {
-                      $template_path = $theme_file;
-                  }
-                } else if ($_GET['ajax'] === 'archive') {
-                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-ajax.php';
+          if ($_GET && (isset($_GET['casawp_map']) || isset($_GET['ajax']) || isset($_GET['json']) )) {
+            //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
+            header('Content-Type: application/json');
+            if ($_GET['ajax'] === 'archive-filter') {
+              $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-filter-ajax.php';
+              if ( $theme_file = locate_template( array($template_path ) ) ) {
+                $template_path = $theme_file;
+              }
+            } else if ($_GET['ajax'] === 'archive') {
+              $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-ajax.php';
 
-                  if ( $theme_file = locate_template( array($template_path ) ) ) {
-                      $template_path = $theme_file;
-                  }
-                } else {
-                  $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-json.php';
-                  if ( $theme_file = locate_template( array( 'casawp-archive-json.php' ) ) ) {
-                      $template_path = $theme_file;
-                  }
-                }
+              if ( $theme_file = locate_template( array($template_path ) ) ) {
+                $template_path = $theme_file;
+              }
             } else {
-                add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
-
-                $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
-                switch ($viewgroup) {
-                    case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-archive.php'; break;
-                    case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
-                    default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
-                }
-                if ( $theme_file = locate_template(array('casawp-archive.php'))) {
-                    $template_path = $theme_file;
-                }
+              $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-json.php';
+              if ( $theme_file = locate_template( array( 'casawp-archive-json.php' ) ) ) {
+                $template_path = $theme_file;
+              }
             }
+          } else {
+            add_action('wp_enqueue_scripts', array($this, 'setArchiveParams'));
+
+            $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
+            switch ($viewgroup) {
+                case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-archive.php'; break;
+                case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
+                default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
+            }
+            if ( $theme_file = locate_template(array('casawp-archive.php'))) {
+                $template_path = $theme_file;
+            }
+          }
         }
 
         //project main view files
@@ -1016,6 +1014,7 @@ class Plugin {
             }
 
         }
+        //project archive files
         if (is_post_type_archive( 'casawp_project' )) {
             if ($_GET && (isset($_GET['ajax']) || isset($_GET['json']) )) {
                 //$template_path = CASASYNC_PLUGIN_DIR . '/ajax/properties.php';
@@ -1025,8 +1024,6 @@ class Plugin {
                     $template_path = $theme_file;
                 }
             } else {
-
-
                 $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
                 switch ($viewgroup) {
                     case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-project-archive.php'; break;

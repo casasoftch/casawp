@@ -106,6 +106,10 @@ class FormService{
 								add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
 								add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
 							}
+              if ($subjectItem instanceof Project) {
+								add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
+								add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
+							}
 
 
 
@@ -130,8 +134,13 @@ class FormService{
                   $data['direct_recipient_email'] = $directRecipientEmail;
                 }
 
+                if ($subjectItem instanceof Project) {
+                  $data['project_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
+                } else {
+                  $data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
+                }
+
 								if ($subjectItem instanceof Offer) {
-									$data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
 									$data['property_street'] = $subjectItem->getFieldValue('address_streetaddress');
 									$data['property_postal_code'] = $subjectItem->getFieldValue('address_postalcode');
 									$data['property_locality'] = $subjectItem->getFieldValue('address_locality');
