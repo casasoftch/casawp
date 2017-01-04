@@ -1854,6 +1854,9 @@ class Import {
       //set new hash;
       $new_meta_data['last_import_hash'] = $curImportHash;
 
+      //set referenceId
+      $new_meta_data['last_import_hash'] = $projectData['referenceId'];
+
 
 
       /* main post data */
