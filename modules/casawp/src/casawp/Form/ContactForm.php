@@ -134,133 +134,160 @@ class ContactForm extends Form
         $this->customFilters = $filters;
     }
 
+    private function isInCustomFilters($field){
+        foreach ($this->customFilters as $filter) {
+            if ($filter['name'] == $field) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getFilter(){
         $filter = new \Zend\InputFilter\InputFilter();
-        $filter->add(array(
-            'name' => 'firstname',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
-                ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+        if (!$this->isInCustomFilters('firstname')) {
+            $filter->add(array(
+                'name' => 'firstname',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'lastname',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
                 ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+            ));
+        }
+        if (!$this->isInCustomFilters('lastname')) {
+            $filter->add(array(
+                'name' => 'lastname',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'street',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
                 ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+            ));
+        }
+        if (!$this->isInCustomFilters('street')) {
+            $filter->add(array(
+                'name' => 'street',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'postal_code',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
                 ),
-                array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 4
+            ));
+        }
+        if (!$this->isInCustomFilters('postal_code')) {
+            $filter->add(array(
+                'name' => 'postal_code',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
+                    ),
+                    array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 4
+                        ),
                     ),
                 ),
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'locality',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
-                ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+            ));
+        }
+        if (!$this->isInCustomFilters('locality')) {
+            $filter->add(array(
+                'name' => 'locality',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'phone',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
                 ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+            ));
+        }
+        if (!$this->isInCustomFilters('locality')) {
+            $filter->add(array(
+                'name' => 'phone',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'mobile',
-            'required' => false,
-            'validators' => array(
-                array(
-                    'name' => 'not_empty',
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
                 ),
-                /*array(
-                    'name' => 'string_length',
-                    'options' => array(
-                        'min' => 2
+            ));
+        }
+        if (!$this->isInCustomFilters('mobile')) {
+            $filter->add(array(
+                'name' => 'mobile',
+                'required' => false,
+                'validators' => array(
+                    array(
+                        'name' => 'not_empty',
                     ),
-                ),*/
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'emailreal',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'email_address',
-                    'options' => array(
-                        //'allow' => ALLOW_DNS,
-                        'deep' => true,
-                        'domain' => true,
-                        'hostname' => '',
-                        'mx' => true
+                    /*array(
+                        'name' => 'string_length',
+                        'options' => array(
+                            'min' => 2
+                        ),
+                    ),*/
+                ),
+            ));
+        }
+        if (!$this->isInCustomFilters('emailreal')) {
+            $filter->add(array(
+                'name' => 'emailreal',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'email_address',
+                        'options' => array(
+                            //'allow' => ALLOW_DNS,
+                            'deep' => true,
+                            'domain' => true,
+                            'hostname' => '',
+                            'mx' => true
+                        )
                     )
-                )
-            ),
-        ));
-        $filter->add(array(
-            'name' => 'gender',
-            'required' => false
-        ));
+                ),
+            ));
+        }
+        if (!$this->isInCustomFilters('gender')) {
+            $filter->add(array(
+                'name' => 'gender',
+                'required' => false
+            ));
+        }
 
         foreach ($this->customFilters as $custom_filter_array) {
             $filter->add($custom_filter_array);
@@ -271,3 +298,4 @@ class ContactForm extends Form
         return $filter;
     }
 }
+
