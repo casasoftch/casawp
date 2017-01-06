@@ -136,7 +136,7 @@ class FormService{
 
                 if ($subjectItem instanceof Project) {
                   $data['project_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
-                } else {
+                } elseif ($subjectItem instanceof Offer) {
                   $data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
                 }
 
