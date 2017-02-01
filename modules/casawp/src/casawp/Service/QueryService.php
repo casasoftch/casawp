@@ -194,6 +194,9 @@ class QueryService{
                 $args['meta_key'] = 'referenceId';
                 $args['orderby'] = 'meta_value';
                 break;
+            case 'modified':
+                $args['orderby'] = 'modified';
+                break;
             case 'date':
             default:
                 $args['orderby'] = 'date';
