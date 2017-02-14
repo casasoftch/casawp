@@ -1068,9 +1068,10 @@
 					break;
 				case 'logs':
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
-					$log = $dir."/".date('Y M').'.log';
 
-					echo $log;
+					$log = '/wp-content/uploads/casawp/logs'."/".date('Y M').'.log';
+
+					echo '<a href="'.$log.'" target="_blank">'.$log.'</a>';
 
 					/*echo "<h3>" . date('Y M') . "</h3>";
 					echo "<dl>";
