@@ -199,15 +199,10 @@ jQuery(document).ready(function($) {
           var url = $form.prop('action');
           url = url.replace(window.location.protocol + "//" + window.location.host, '');
 
-
-
           //update filter form
           $form.addClass('casawp-filterform-loading');
 
           var filteredUrl = addParameterAndReturn(url + '?' + filteredParams, 'ajax', 'archive-filter');
-
-
-          $form.trigger( "casawp-ajaxfilter:filter-submit", [url, filteredUrl] );
 
           $.ajax({
             url: filteredUrl,
@@ -241,6 +236,8 @@ jQuery(document).ready(function($) {
             }
           });
 
+          $form.trigger( "casawp-ajaxfilter:filter-submit", [url, filteredUrl] );
+
         });
       }
     }
@@ -252,7 +249,7 @@ jQuery(document).ready(function($) {
 
       });
 
-      $('.casawp-filterform').on( "casawp-ajaxfilter:filter-submit", function(event){
+      $('.casawp-filterform').on( "casawp-ajaxfilter:filter-submit", function(event, url, filteredUrl){
 
       });
 

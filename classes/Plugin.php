@@ -702,13 +702,24 @@ class Plugin {
 
                 $unknown_category->setLabel($unknown_category->getKey());
 
+                $hidden = true;
+
                 foreach ($c_trans as $key => $trans) {
-                    if ($key == $category_term->slug && array_key_exists($lang, $trans)) {
-                        $unknown_category->setLabel($trans[$lang]);
+
+                    if ($key == $category_term->slug) {
+                        if (array_key_exists($lang, $trans)) {
+                          $unknown_category->setLabel($trans[$lang]);
+                        }
+                        
+                        if (isset($c_trans[$category_term->slug]['show']) && $c_trans[$category_term->slug]['show']) {
+
+                          $hidden = false;
+                        }
                     }
                 }
-
-                $categories[] = $unknown_category;
+                if (!$hidden) {
+                  $categories[] = $unknown_category;
+                }
             }
         }
 
