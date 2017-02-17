@@ -876,7 +876,12 @@ class Import {
       $custom_categorylabels = array();
       if (isset($customCategories)) {
         foreach ($customCategories as $custom) {
-          $custom_categorylabels[$custom['slug']] = $custom['label'];
+          if (isset($custom['label'])) {
+            $custom_categorylabels[$custom['slug']] = $custom['label'];
+          } else {
+            $custom_categorylabels[$custom['slug']] = $custom['slug'];
+          }
+          
         }
       }
 
@@ -887,6 +892,7 @@ class Import {
       }
 
       //add the new ones
+      $connect_term_ids = array();
       $category_terms = get_terms( array('casawp_category'), array('hide_empty' => false));
       foreach ($category_terms as $term) {
         if (in_array($term->slug, $new_categories)) {
