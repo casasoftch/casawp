@@ -710,7 +710,7 @@ class Plugin {
                         if (array_key_exists($lang, $trans)) {
                           $unknown_category->setLabel($trans[$lang]);
                         }
-                        
+
                         if (isset($c_trans[$category_term->slug]['show']) && $c_trans[$category_term->slug]['show']) {
 
                           $hidden = false;

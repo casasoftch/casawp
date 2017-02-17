@@ -1301,7 +1301,9 @@
 								if (function_exists('icl_get_home_url')) {
 									$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
 								} else {
-									$all_languages = array('de' => array('translated_name' => 'Deutsch'));
+                  $cur_locale = get_locale();
+                  $cur_lang = substr($cur_locale, 0, 2);
+									$all_languages = array($cur_lang => array('translated_name' => 'Label'));
 								}
 							?>
 
