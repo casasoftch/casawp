@@ -1597,7 +1597,12 @@ class Import {
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
 
     $found_posts = array();
+    //key is id value is rank!!!!
+    $ranksort = array();
+    $curRank = 0;
     foreach ($xml->properties->property as $property) {
+      $curRank++;
+
       $propertyData = $this->property2Array($property);
       //make main language first and "single out" if not multilingual
       $theoffers = array();
@@ -1641,6 +1646,7 @@ class Import {
           $the_post['post_content'] = 'unsaved property';
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_property';
+          $the_post['menu_order'] = $curRank;
           $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
 
           //use the casagateway creation date if its new
@@ -1653,6 +1659,9 @@ class Import {
           $wp_post = get_post($insert_id, OBJECT, 'raw');
           $this->addToLog('new property: '. $casawp_id);
         }
+
+        $ranksort[$wp_post->ID] = $curRank;
+
         $found_posts[] = $wp_post->ID;
 
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
@@ -1661,10 +1670,10 @@ class Import {
       }
     }
 
-    //3. remove all the unused properties
+
     if ($found_posts) {
 
-
+      //3. remove all the unused properties
       $properties_to_remove = get_posts(  array(
         'suppress_filters'=>true,
         'language'=>'ALL',
@@ -1693,6 +1702,33 @@ class Import {
 
       }
 
+      //4. set property menu_order
+      $properties_to_sort = get_posts(  array(
+        'suppress_filters'=>true,
+        'language'=>'ALL',
+        'numberposts' =>  100,
+        'include'     =>  $found_posts,
+        'post_type'   =>  'casawp_property',
+        'post_status' =>  'publish'
+        )
+      );
+      $sortsUpdated = 0;
+      foreach ($properties_to_sort as $prop_to_sort) {
+        if (array_key_exists($prop_to_sort->ID, $ranksort)) {
+          if ($prop_to_sort->menu_order != $ranksort[$prop_to_sort->ID]) {
+            $sortsUpdated++;
+            $newPostID = wp_update_post(array(
+              'ID' => $prop_to_sort->ID,
+              'menu_order' => $ranksort[$prop_to_sort->ID]
+            ));
+
+          }
+
+        }
+
+      }
+
+      $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
       $this->transcript['properties_removed'] = count($properties_to_remove);
     } else{
@@ -2083,7 +2119,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      'post_date' => $wp_post->post_date
+      'post_date' => $wp_post->post_date,
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );

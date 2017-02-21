@@ -1892,7 +1892,7 @@ class Plugin {
             'rewrite'            => array( 'slug' => 'immobilien' ),
             'capability_type'    => 'post',
             'has_archive'        => true,
-            'hierarchical'       => false,
+            'hierarchical'       => true,
             'menu_position'      => null,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes', 'revisions' ),
             'menu_icon'          => 'dashicons-admin-home',
