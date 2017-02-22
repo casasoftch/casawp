@@ -19,13 +19,15 @@ class Category extends AbstractHelper{
             return $key;
             //return $e->getMessage();
         }
-        switch ($seek) {
-            case 'label':
-                return $item->getLabel();
-                break;
-            case 'icon':
-                return $item->getIcon();
-                break;
+        if ($item) {
+            switch ($seek) {
+                case 'label':
+                    return $item->getLabel();
+                    break;
+                case 'icon':
+                    return $item->getIcon();
+                    break;
+            }
         }
         return '';
     }
