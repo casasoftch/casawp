@@ -46,7 +46,7 @@ class Plugin {
         add_filter("attachment_fields_to_edit", array($this, "casawp_image_attachment_fields_to_edit"), null, 2);
         add_filter("attachment_fields_to_save", array($this, "casawp_image_attachment_fields_to_save"), null, 2);
         if (!is_admin()) {
-            add_action('pre_get_posts', array($this, 'casawp_queryfilter'));
+            add_action('pre_get_posts', array($this, 'casawp_queryfilter'), 10);
         }
 
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
