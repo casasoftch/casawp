@@ -16,11 +16,15 @@
 				$value = sanitize_text_field($value);
 			}
 			if (substr($key, 0, 7) == 'custom_') {
-				$parts = explode('/', $key);
+				$parts = explode('/', $key); //firstpart [0] is slug the second [1] is either the langcode or if it should be shown
 				$saved_custom_categories[$parts[0]][$parts[1]] = $value;
-				if (!array_key_exists('show', $saved_custom_categories[$parts[0]])) {
-					$saved_custom_categories[$parts[0]]['show'] = '0';
-				}
+        // array('custom_bauland' => array(
+        //  'show' => 1,
+        //  'de' => 'Deutscher text'
+        // ))
+				// if (!array_key_exists('show', $saved_custom_categories[$parts[0]])) {
+				// 	$saved_custom_categories[$parts[0]]['show'] = '0';
+				// }
 			}
 			if (substr($key, 0, 6) == 'casawp') {
 				update_option( $key, $value );
@@ -28,6 +32,13 @@
 		}
 
 		if (count($saved_custom_categories) > 0) {
+
+      //set empty shows to 0
+      foreach ($saved_custom_categories as $key => $cat) {
+        if (!array_key_exists('show', $cat)) {
+					$saved_custom_categories[$key]['show'] = '0';
+				}
+      }
 			update_option('casawp_custom_category_translations', $saved_custom_categories);
 		}
 
@@ -634,6 +645,7 @@
 									<option <?php echo (get_option($name)  == 'casawp_referenceId' ? 'selected="selected"' : ''); ?> value="casawp_referenceId">Referenz-ID</option>
 									<option <?php echo (get_option($name)  == 'menu_order' ? 'selected="selected"' : ''); ?> value="menu_order">Eigene Reihenfolge</option>
 									<option <?php echo (get_option($name)  == 'start' ? 'selected="selected"' : ''); ?> value="start">Verfügbar ab</option>
+                  <option <?php echo (get_option($name)  == 'modified' ? 'selected="selected"' : ''); ?> value="modified">Bearbeitungsdatum</option>
 								</select>
 								<?php $name = 'casawp_archive_order'; ?>
 								<?php $text = 'Sortierung'; ?>
@@ -1067,9 +1079,10 @@
 					break;
 				case 'logs':
 					$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
-					$log = $dir."/".date('Y M').'.log';
 
-					echo $log;
+					$log = '/wp-content/uploads/casawp/logs'."/".date('Y M').'.log';
+
+					echo '<a href="'.$log.'" target="_blank">'.$log.'</a>';
 
 					/*echo "<h3>" . date('Y M') . "</h3>";
 					echo "<dl>";
@@ -1288,7 +1301,9 @@
 								if (function_exists('icl_get_home_url')) {
 									$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
 								} else {
-									$all_languages = array('de' => array('translated_name' => 'Deutsch'));
+                  $cur_locale = get_locale();
+                  $cur_lang = substr($cur_locale, 0, 2);
+									$all_languages = array($cur_lang => array('translated_name' => 'Label'));
 								}
 							?>
 

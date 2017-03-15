@@ -876,7 +876,12 @@ class Import {
       $custom_categorylabels = array();
       if (isset($customCategories)) {
         foreach ($customCategories as $custom) {
-          $custom_categorylabels[$custom['slug']] = $custom['label'];
+          if (isset($custom['label'])) {
+            $custom_categorylabels[$custom['slug']] = $custom['label'];
+          } else {
+            $custom_categorylabels[$custom['slug']] = $custom['slug'];
+          }
+
         }
       }
 
@@ -887,6 +892,7 @@ class Import {
       }
 
       //add the new ones
+      $connect_term_ids = array();
       $category_terms = get_terms( array('casawp_category'), array('hide_empty' => false));
       foreach ($category_terms as $term) {
         if (in_array($term->slug, $new_categories)) {
@@ -1597,7 +1603,12 @@ class Import {
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
 
     $found_posts = array();
+    //key is id value is rank!!!!
+    $ranksort = array();
+    $curRank = 0;
     foreach ($xml->properties->property as $property) {
+      $curRank++;
+
       $propertyData = $this->property2Array($property);
       //make main language first and "single out" if not multilingual
       $theoffers = array();
@@ -1641,6 +1652,7 @@ class Import {
           $the_post['post_content'] = 'unsaved property';
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_property';
+          $the_post['menu_order'] = $curRank;
           $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
 
           //use the casagateway creation date if its new
@@ -1653,6 +1665,9 @@ class Import {
           $wp_post = get_post($insert_id, OBJECT, 'raw');
           $this->addToLog('new property: '. $casawp_id);
         }
+
+        $ranksort[$wp_post->ID] = $curRank;
+
         $found_posts[] = $wp_post->ID;
 
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
@@ -1661,10 +1676,10 @@ class Import {
       }
     }
 
-    //3. remove all the unused properties
+
     if ($found_posts) {
 
-
+      //3. remove all the unused properties
       $properties_to_remove = get_posts(  array(
         'suppress_filters'=>true,
         'language'=>'ALL',
@@ -1693,6 +1708,33 @@ class Import {
 
       }
 
+      //4. set property menu_order
+      $properties_to_sort = get_posts(  array(
+        'suppress_filters'=>true,
+        'language'=>'ALL',
+        'numberposts' =>  100,
+        'include'     =>  $found_posts,
+        'post_type'   =>  'casawp_property',
+        'post_status' =>  'publish'
+        )
+      );
+      $sortsUpdated = 0;
+      foreach ($properties_to_sort as $prop_to_sort) {
+        if (array_key_exists($prop_to_sort->ID, $ranksort)) {
+          if ($prop_to_sort->menu_order != $ranksort[$prop_to_sort->ID]) {
+            $sortsUpdated++;
+            $newPostID = wp_update_post(array(
+              'ID' => $prop_to_sort->ID,
+              'menu_order' => $ranksort[$prop_to_sort->ID]
+            ));
+
+          }
+
+        }
+
+      }
+
+      $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
       $this->transcript['properties_removed'] = count($properties_to_remove);
     } else{
@@ -1853,6 +1895,9 @@ class Import {
 
       //set new hash;
       $new_meta_data['last_import_hash'] = $curImportHash;
+
+      //set referenceId
+      $new_meta_data['last_import_hash'] = $projectData['referenceId'];
 
 
 
@@ -2080,7 +2125,7 @@ class Import {
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $offer['excerpt'],
-      'post_date' => $wp_post->post_date
+      'post_date' => $wp_post->post_date,
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
@@ -2308,6 +2353,55 @@ class Import {
     //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
     //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
 
+
+    //custom option metas
+    $custom_metas = array();
+    foreach ($publisher_options as $key => $value) {
+      if (strpos($key, 'custom_option') === 0) {
+        $parts = explode('_', $key);
+        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+        $meta_key = (isset($parts[3]) && $parts[3] == 'key' ? true : false);
+        $meta_value = (isset($parts[3]) && $parts[3] == 'value' ? true : false);
+
+        if ($meta_key) {
+          foreach ($publisher_options as $key2 => $value2) {
+            if (strpos($key2, 'custom_option') === 0) {
+              $parts2 = explode('_', $key2);
+              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
+              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
+              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
+              if ($meta_value2 && $sort2 == $sort) {
+                $custom_metas[$value[0]] = $value2[0];
+                break;
+              }
+            }
+          }
+        } elseif ($meta_value) {
+          foreach ($publisher_options as $key2 => $value2) {
+            if (strpos($key2, 'custom_option') === 0) {
+              $parts2 = explode('_', $key2);
+              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
+              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
+              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
+              if ($meta_key2 && $sort2 == $sort) {
+                $custom_metas[$value2[0]] = $value[0];
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if ($custom_metas) {
+      $this->addToLog('_options_================HERE====================');
+      $this->addToLog('_options_' . print_r($custom_metas, true));
+    }
+
+    foreach ($custom_metas as $key => $value) {
+      $new_meta_data['custom_option_'.$key] = $value;
+      $this->addToLog('custom_option_'.$key);
+    }
 
     foreach ($new_meta_data as $key => $value) {
      /* if (!$value) {

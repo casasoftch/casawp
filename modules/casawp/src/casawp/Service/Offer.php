@@ -211,11 +211,13 @@ class Offer{
 	public function getCategoriesArray(){
 		$categories = $this->getCategories();
 		$arr_categories = array();
-		foreach ($categories as $category) {
-			$arr_categories[] = array(
-				'key' => $category->getKey(),
-				'label' => $category->getLabel()
-			);
+		if ($categories) {
+			foreach ($categories as $category) {
+				$arr_categories[] = array(
+					'key' => $category->getKey(),
+					'label' => $category->getLabel()
+				);
+			}
 		}
 		return $arr_categories;
 	}

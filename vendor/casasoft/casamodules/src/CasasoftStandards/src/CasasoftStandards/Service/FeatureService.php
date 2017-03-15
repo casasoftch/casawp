@@ -79,7 +79,10 @@ class FeatureService implements FactoryInterface {
             ),
 
 
-            
+            'has-rental-deposit-guarantee' => array(
+                'label' => $this->translator->translate('Rental deposit guarantee', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
             'has-raised-ground-floor' => array(
                 'label' => $this->translator->translate('Raised ground floor', 'casasoft-standards'),
