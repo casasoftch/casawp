@@ -41,6 +41,27 @@
 		<?php endif ?>
 	<?php endif ?>
 
+  <?php if ($form->getUtilityOptions()): ?>
+		<?php echo $this->formLabel($form->get('utilities')); ?>
+		<?php if (get_option('casawp_filter_utilities_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('utilities');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
+				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_utilities_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('utilities');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('utilities')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
 	<?php if ($form->getCategoryOptions()): ?>
 		<?php echo $this->formLabel($form->get('categories')); ?>
 		<?php if (get_option('casawp_filter_categories_elementtype', false) == 'multicheckbox'): ?>
@@ -119,6 +140,48 @@
       		 ?>
       	<?php else: ?>
       		<?php echo $this->formElement($form->get('rooms_to')); ?>
+      	<?php endif ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+
+  <?php if ($form->getPriceOptions()): ?>
+    <?php
+      $priceelect_count = 0;
+      $pricefrom_et = get_option('casawp_filter_price_from_elementtype', false);
+      $priceto_et = get_option('casawp_filter_price_to_elementtype', false);
+      if ($pricefrom_et && $pricefrom_et !== 'hidden'){$priceelect_count++;}
+      if ($priceto_et && $pricefrom_et !== 'hidden'){$priceelect_count++;}
+    ?>
+    <div class="casawp-filterform-duo casawp-filterform-price <?= ($priceelect_count ? 'casawp-filterform-pricecount-' . $priceelect_count : '')?>">
+      <div class="casawp-filterform-duo-label">
+        Price
+      </div>
+      <div class="casawp-filterform-duo-item">
+      	<?php echo $this->formLabel($form->get('price_from')); ?>
+      	<?php if ($pricefrom_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('price_from');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('price_from')); ?>
+      	<?php endif ?>
+      </div>
+      <div class="casawp-filterform-duo-item">
+        <?php echo $this->formLabel($form->get('price_to')); ?>
+      	<?php if ($priceto_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('price_to');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('price_to')); ?>
       	<?php endif ?>
       </div>
     </div>

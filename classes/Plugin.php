@@ -751,6 +751,93 @@ class Plugin {
         return $categories;
     }
 
+    public function getUtilities(){
+      $utilities = array();
+      $utility_terms = get_terms('casawp_utility', array(
+          'hide_empty'        => true,
+      ));
+      $c_trans = null;
+
+      $locale = get_locale();
+      $lang = "de";
+      switch (substr($locale, 0, 2)) {
+          case 'de': $lang = 'de'; break;
+          case 'en': $lang = 'en'; break;
+          case 'it': $lang = 'it'; break;
+          case 'fr': $lang = 'fr'; break;
+          default: $lang = 'de'; break;
+      }
+
+      foreach ($utility_terms as $utility_term) {
+          if ($this->utilityService->keyExists($utility_term->slug)) {
+              $utilities[] = $this->utilityService->getItem($utility_term->slug);
+          } else if ($this->utilityService->keyExists($utility_term->slug)) {
+              //$utilities[] = $this->utilityService->getItem($utility_term->slug);
+          } else {
+              //needs to check for custom utilities
+
+
+              $unknown_utility = new \CasasoftStandards\Service\Utility();
+              $unknown_utility->setKey($utility_term->slug);
+
+              if ($c_trans === null) {
+                  $c_trans = maybe_unserialize(get_option('casawp_custom_utility_translations'));
+                  if (!$c_trans) {
+                      $c_trans = array();
+                  }
+              }
+
+              $unknown_utility->setLabel($unknown_utility->getKey());
+
+              $hidden = true;
+
+              foreach ($c_trans as $key => $trans) {
+
+                  if ($key == $utility_term->slug) {
+                      if (array_key_exists($lang, $trans)) {
+                        $unknown_utility->setLabel($trans[$lang]);
+                      }
+
+                      if (isset($c_trans[$utility_term->slug]['show']) && $c_trans[$utility_term->slug]['show']) {
+
+                        $hidden = false;
+                      }
+                  }
+              }
+              if (!$hidden) {
+                $utilities[] = $unknown_utility;
+              }
+          }
+      }
+
+
+      //salestype reduces utilities
+      $salestype = $this->getQueriedSingularSalestype();
+      if ($salestype) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_utility'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $utility_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $utility_slug_array = array_map(function($item){return $item['slug'];}, $utility_property_count);
+        foreach ($utilities as $key => $utility) {
+            if (!in_array($utility->getKey(), $utility_slug_array)) {
+                unset($utilities[$key]);
+            }
+        }
+      }
+
+      return $utilities;
+    }
+
     public function getSalestypes(){
         $salestypes = array();
         $salestype_terms = get_terms('casawp_salestype', array(
@@ -896,10 +983,13 @@ class Plugin {
         $form = new \casawp\Form\FilterForm(
             array(
                 'casawp_filter_categories_elementtype' => get_option('casawp_filter_categories_elementtype', false),
+                'casawp_filter_utilities_elementtype' => get_option('casawp_filter_utilities_elementtype', false),
                 'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
                 'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
                 'casawp_filter_rooms_from_elementtype' => get_option('casawp_filter_rooms_from_elementtype', false),
                 'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
+                'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
+                'casawp_filter_price_to_elementtype' => get_option('casawp_filter_price_to_elementtype', false),
                 'chosen_categories' => $this->queryService->getQueryValue('categories'),
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
@@ -907,6 +997,7 @@ class Plugin {
                 'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to'),
             ),
             $this->getCategories(),
+            $this->getUtilities(),
             $this->getSalestypes(),
             $this->getLocations(),
             $this->getAvailabilities()

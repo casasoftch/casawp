@@ -14,6 +14,7 @@ class QueryService{
             'post__not_in' => null,
             'orderby' => get_option('casawp_archive_orderby', 'date'),
             'categories' => array(),
+            'utilities' => array(),
             'locations' => array(),
             'salestypes' => array(),
             'availabilities' => array('active'),
@@ -27,7 +28,9 @@ class QueryService{
             'radius_km' => 10,
             'projectunit_id' => null,
             'rooms_from' => null,
-            'rooms_to' => null
+            'rooms_to' => null,
+            'price_from' => null,
+            'price_to' => null
         );
         $this->setQuery();
     }
@@ -91,6 +94,9 @@ class QueryService{
             if (strpos($key, 'category') !== -1) {
                 $key = str_replace('category', 'categories', $key);
             }
+            if (strpos($key, 'utility') !== -1) {
+                $key = str_replace('utility', 'utilities', $key);
+            }
             if (strpos($key, 'locations') === -1 && strpos($key, 'location') !== -1) {
                 $key = str_replace('location', 'locations', $key);
             }
@@ -118,10 +124,12 @@ class QueryService{
 
             switch ($key) {
                 case 'categories':
+                case 'utilities':
                 case 'locations':
                 case 'salestypes':
                 case 'availabilities':
                 case 'categories_not':
+                case 'utilities_not':
                 case 'locations_not':
                 case 'salestypes_not':
                 case 'availabilities_not':
@@ -228,6 +236,37 @@ class QueryService{
                 'compare'   => '<='
             );
         }
+        if (in_array('rent', $this->query['salestypes'])) {
+          if ($this->query['price_from']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'grossPrice',
+                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                  'compare'   => '>='
+              );
+          }
+          if ($this->query['price_to']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'grossPrice',
+                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                  'compare'   => '<='
+              );
+          }
+        } else if(in_array('buy', $this->query['salestypes'])){
+          if ($this->query['price_from']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'price',
+                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                  'compare'   => '>='
+              );
+          }
+          if ($this->query['price_to']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'price',
+                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                  'compare'   => '<='
+              );
+          }
+        }
         if ($meta_query_items_new) {
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
@@ -240,6 +279,15 @@ class QueryService{
             $taxquery_new[] = array(
                 'taxonomy'         => 'casawp_category',
                 'terms'            => $this->query['categories'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'IN'
+            );
+        }
+        if ($this->query['utilities']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => $this->query['utilities'],
                 'include_children' => 1,
                 'field'            => 'slug',
                 'operator'         => 'IN'
@@ -279,6 +327,15 @@ class QueryService{
             $taxquery_new[] = array(
                 'taxonomy'         => 'casawp_category',
                 'terms'            => $this->query['categories_not'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'NOT IN'
+            );
+        }
+        if ($this->query['utilities_not']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => $this->query['utilities_not'],
                 'include_children' => 1,
                 'field'            => 'slug',
                 'operator'         => 'NOT IN'
@@ -338,6 +395,9 @@ class QueryService{
         if ($query->is_main_query()) {
             if (is_tax('casawp_category')) {
                 $this->query['categories'] = array(get_query_var( 'casawp_category' ));
+            }
+            if (is_tax('casawp_utility')) {
+                $this->query['utilities'] = array(get_query_var( 'casawp_utility' ));
             }
             if (is_tax('casawp_location')) {
                 $this->query['locations'] = array(get_query_var( 'casawp_location' ));

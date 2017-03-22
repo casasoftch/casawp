@@ -10,19 +10,29 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($options, $categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
         $this->options = $options;
         $this->categories = $categories;
+        $this->utilities = $utilities;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
         $this->availabilities = $availabilities;
 
         //set default options
-        if (!$options['casawp_filter_rooms_from_elementtype']) {
-          $options['casawp_filter_rooms_from_elementtype'] = 'hidden';
+        if (!$this->options['casawp_filter_rooms_from_elementtype']) {
+          $this->options['casawp_filter_rooms_from_elementtype'] = 'hidden';
         }
-        if (!$options['casawp_filter_rooms_to_elementtype']) {
-          $options['casawp_filter_rooms_to_elementtype'] = 'hidden';
+        if (!$this->options['casawp_filter_rooms_to_elementtype']) {
+          $this->options['casawp_filter_rooms_to_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_price_from_elementtype']) {
+          $this->options['casawp_filter_price_from_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_price_to_elementtype']) {
+          $this->options['casawp_filter_price_to_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_utilities_elementtype']) {
+          $this->options['casawp_filter_utilities_elementtype'] = 'hidden';
         }
 
         parent::__construct('filter');
@@ -65,6 +75,15 @@ class FilterForm extends Form
                 $this->options['chosen_categories']
             );
         }
+        if ($this->utilities) {
+            $this->addSelector(
+                'utilities',
+                __('Utility', 'casawp'),
+                __('Choose utility','casawp'),
+                $this->getUtilityOptions(),
+                $this->options['chosen_utilities']
+            );
+        }
         if ($this->locations) {
             $this->addSelector(
                 'locations',
@@ -78,16 +97,33 @@ class FilterForm extends Form
             $this->addSelector(
                 'rooms_from',
                 __('Rooms from', 'casawp'),
-                __('Choose Rooms from','casawp'),
+                __('Rooms from','casawp'),
                 $this->getRoomOptions(),
                 $this->options['chosen_rooms_from']
             );
             $this->addSelector(
                 'rooms_to',
                 __('Rooms to', 'casawp'),
-                __('Choose Rooms to','casawp'),
+                __('Rooms to','casawp'),
                 $this->getRoomOptions(),
                 $this->options['chosen_rooms_to']
+            );
+        //}
+
+        //if ($this->price_from) {
+            $this->addSelector(
+                'price_from',
+                __('Price from', 'casawp'),
+                __('Price from','casawp'),
+                $this->getPriceOptions(),
+                $this->options['chosen_price_from']
+            );
+            $this->addSelector(
+                'price_to',
+                __('Price to', 'casawp'),
+                __('Price to','casawp'),
+                $this->getPriceOptions(),
+                $this->options['chosen_price_to']
             );
         //}
     }
@@ -218,6 +254,16 @@ class FilterForm extends Form
         }
         asort($category_options);
         return $category_options;
+    }
+
+    public function getUtilityOptions(){
+        //TODO SORTING!!!
+        $utility_options = array();
+        foreach ($this->utilities as $utility) {
+            $utility_options[$utility->getKey()] = html_entity_decode($utility->getLabel());
+        }
+        asort($utility_options);
+        return $utility_options;
     }
 
     public function getSalestypeOptions(){
@@ -352,6 +398,67 @@ class FilterForm extends Form
         return $options;
     }
 
+    public function getPriceOptions(){
+      $options = array();
+      if (in_array('rent', $this->options['chosen_salestypes'])) {
+        $options = array(
+          500 => '500',
+          600 => '600',
+          700 => '700',
+          800 => '800',
+          900 => '900',
+          1000 => '1\'000',
+          1100 => '1\'100',
+          1200 => '1\'200',
+          1300 => '1\'300',
+          1400 => '1\'400',
+          1500 => '1\'500',
+          1600 => '1\'600',
+          1700 => '1\'700',
+          1800 => '1\'800',
+          1900 => '1\'800',
+          2000 => '2\'000',
+          2200 => '2\'200',
+          2400 => '2\'400',
+          2600 => '2\'600',
+          2800 => '2\'800',
+          3000 => '3\'000',
+          3500 => '3\'500',
+          4000 => '4\'000',
+          4500 => '4\'500',
+          5000 => '5\'000',
+          5500 => '5\'500',
+          6000 => '6\'000',
+          7000 => '7\'000',
+          8000 => '8\'000',
+          9000 => '9\'000',
+          10000 => '10\'000',
+        );
+      } else if (in_array('buy', $this->options['chosen_salestypes'])) {
+        $options = array(
+          50000 => '50\'000',
+          100000 => '100\'000',
+          150000 => '150\'000',
+          200000 => '200\'000',
+          300000 => '300\'000',
+          400000 => '400\'000',
+          500000 => '500\'000',
+          600000 => '600\'000',
+          700000 => '700\'000',
+          800000 => '800\'000',
+          900000 => '900\'000',
+          1000000 => '1\'000\'000',
+          1250000 => '1\'250\'000',
+          2000000 => '2\'000\'000',
+          2500000 => '2\'500\'000',
+          3000000 => '3\'000\'000',
+          4000000 => '4\'000\'000',
+          5000000 => '5\'000\'000',
+        );
+      }
+      return $options;
+    }
+
     public function populateValues($data)
     {
         if (!is_array($data) && !$data instanceof Traversable) {
@@ -371,6 +478,8 @@ class FilterForm extends Form
                     $name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
