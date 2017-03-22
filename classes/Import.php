@@ -894,6 +894,7 @@ class Import {
       //add the new ones
       $connect_term_ids = array();
       $category_terms = get_terms( array('casawp_category'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($category_terms as $term) {
         if (in_array($term->slug, $new_categories)) {
           $connect_term_ids[] = (int) $term->term_id;
@@ -939,6 +940,7 @@ class Import {
 
       //add the new ones
       $feature_terms = get_terms( array('casawp_feature'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($feature_terms as $term) {
         if (in_array($term->slug, $new_features)) {
           $connect_term_ids[] = (int) $term->term_id;
@@ -983,6 +985,7 @@ class Import {
 
       //add the new ones
       $utility_terms = get_terms( array('casawp_utility'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($utility_terms as $term) {
         if (in_array($term->slug, $new_utilities)) {
           $connect_term_ids[] = (int) $term->term_id;
