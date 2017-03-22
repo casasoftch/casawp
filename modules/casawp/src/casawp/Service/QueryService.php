@@ -25,7 +25,9 @@ class QueryService{
             'my_lng' => null,
             'my_lat' => null,
             'radius_km' => 10,
-            'projectunit_id' => null
+            'projectunit_id' => null,
+            'rooms_from' => null,
+            'rooms_to' => null
         );
         $this->setQuery();
     }
@@ -210,6 +212,20 @@ class QueryService{
                 'key' => 'projectunit_id',
                 'value' => $this->query['projectunit_id'],
                 'compare'   => '='
+            );
+        }
+        if ($this->query['rooms_from']) {
+            $meta_query_items_new[] = array(
+                'key' => 'number_of_rooms',
+                'value' => (is_array($this->query['rooms_from']) ? $this->query['rooms_from'][0] : $this->query['rooms_from']),
+                'compare'   => '>='
+            );
+        }
+        if ($this->query['rooms_to']) {
+            $meta_query_items_new[] = array(
+                'key' => 'number_of_rooms',
+                'value' => (is_array($this->query['rooms_to']) ? $this->query['rooms_to'][0] : $this->query['rooms_to']),
+                'compare'   => '<='
             );
         }
         if ($meta_query_items_new) {

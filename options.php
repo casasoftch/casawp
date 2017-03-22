@@ -769,6 +769,32 @@
 								</select>
 							</td>
 						</tr>
+            <tr  valign="top">
+							<?php $name = 'casawp_filter_rooms_from_elementtype'; ?>
+							<?php $text = 'Zimmer-Auswahl von'; ?>
+							<?php $options = ['singleselect' => 'Einfache Auswahl', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+            <tr  valign="top">
+							<?php $name = 'casawp_filter_rooms_to_elementtype'; ?>
+							<?php $text = 'Zimmer-Auswahl zu'; ?>
+							<?php $options = ['singleselect' => 'Einfache Auswahl', 'radio' => 'Radio', 'hidden' => 'Ausblenden' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
 					<?php echo $table_end; ?>
 
 

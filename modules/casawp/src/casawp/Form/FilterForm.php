@@ -17,6 +17,14 @@ class FilterForm extends Form
         $this->locations = $locations;
         $this->availabilities = $availabilities;
 
+        //set default options
+        if (!$options['casawp_filter_rooms_from_elementtype']) {
+          $options['casawp_filter_rooms_from_elementtype'] = 'hidden';
+        }
+        if (!$options['casawp_filter_rooms_to_elementtype']) {
+          $options['casawp_filter_rooms_to_elementtype'] = 'hidden';
+        }
+
         parent::__construct('filter');
 
         $this->setAttribute('method', 'GET');
@@ -66,6 +74,22 @@ class FilterForm extends Form
                 $this->options['chosen_locations']
             );
         }
+        //if ($this->rooms_from) {
+            $this->addSelector(
+                'rooms_from',
+                __('Rooms from', 'casawp'),
+                __('Choose Rooms from','casawp'),
+                $this->getRoomOptions(),
+                $this->options['chosen_rooms_from']
+            );
+            $this->addSelector(
+                'rooms_to',
+                __('Rooms to', 'casawp'),
+                __('Choose Rooms to','casawp'),
+                $this->getRoomOptions(),
+                $this->options['chosen_rooms_to']
+            );
+        //}
     }
 
     private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
@@ -320,6 +344,14 @@ class FilterForm extends Form
         return $options;
     }
 
+    public function getRoomOptions(){
+        $options = array();
+        for ($i=0; $i < 8.5; $i = $i+0.5) {
+            $options[(string) $i] = $i;
+        }
+        return $options;
+    }
+
     public function populateValues($data)
     {
         if (!is_array($data) && !$data instanceof Traversable) {
@@ -341,9 +373,15 @@ class FilterForm extends Form
                     $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'rooms_from'
+                    ||
+                    $name == 'rooms_to'
                 ) {
                     if ($data[$name] && is_array($data[$name])) {
                         $value = $data[$name][0];
+                    } else if($data[$name]){
+                      $value = $data[$name];
                     } else {
                         $value = '';
                     }
