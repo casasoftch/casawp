@@ -392,7 +392,7 @@ class FilterForm extends Form
 
     public function getRoomOptions(){
         $options = array();
-        for ($i=0; $i < 8.5; $i = $i+0.5) {
+        for ($i=1; $i < 8.5; $i = $i+0.5) {
             $options[(string) $i] = $i;
         }
         return $options;
