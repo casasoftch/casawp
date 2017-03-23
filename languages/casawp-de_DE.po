@@ -2553,7 +2553,7 @@ msgstr "Preis von"
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:123
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:124
 msgid "Price to"
-msgstr "Preis zu"
+msgstr "Preis bis"
 
 #: ../modules/./casawp/src/casawp/Service/FormService.php:195
 #: ../theme-defaults/./casawp/bootstrap2/sales-person.phtml:15
