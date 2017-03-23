@@ -2543,7 +2543,7 @@ msgstr "Zimmer von"
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:106
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:107
 msgid "Rooms to"
-msgstr "Zimmer zu"
+msgstr "Zimmer bis"
 
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:116
 #: ../modules/./casawp/src/casawp/Form/FilterForm.php:117
