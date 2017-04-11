@@ -28,7 +28,7 @@ msgstr "Adresse "
 #: .././theme-defaults/casawp/bootstrap3/contact-form.phtml:44
 #: .././theme-defaults/casawp/bootstrap4/contact-form.phtml:32
 msgid "Please fill out all the fields."
-msgstr "Champs obligatoires"
+msgstr "* Champs obligatoires"
 
 #: .././theme-defaults/casawp/bootstrap2/tabable.phtml:3
 #: .././theme-defaults/casawp/bootstrap3/tabable.phtml:3
