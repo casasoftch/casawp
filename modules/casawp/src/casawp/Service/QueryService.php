@@ -332,13 +332,14 @@ class QueryService{
                 'operator'         => 'NOT IN'
             );
         }
-        if ($this->query['utilities_not']) {
+        if ((isset($this->options['utilities_not']) ? $this->options['utilities_not'] : null)) {
             $taxquery_new[] = array(
                 'taxonomy'         => 'casawp_utility',
-                'terms'            => $this->query['utilities_not'],
+                'terms'            => (isset($this->options['utilities_not']) ? $this->options['utilities_not'] : null),
                 'include_children' => 1,
                 'field'            => 'slug',
                 'operator'         => 'NOT IN'
+                
             );
         }
         if ($this->query['locations_not']) {

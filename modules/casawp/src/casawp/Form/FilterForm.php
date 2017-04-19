@@ -81,7 +81,7 @@ class FilterForm extends Form
                 __('Utility', 'casawp'),
                 __('Choose utility','casawp'),
                 $this->getUtilityOptions(),
-                $this->options['chosen_utilities']
+                (isset($this->options['chosen_utilities']) ? $this->options['chosen_utilities'] : null)
             );
         }
         if ($this->locations) {
@@ -116,14 +116,14 @@ class FilterForm extends Form
                 __('Price from', 'casawp'),
                 __('Price from','casawp'),
                 $this->getPriceOptions(),
-                $this->options['chosen_price_from']
+                (isset($this->options['chosen_price_from']) ? $this->options['chosen_price_from'] : null)
             );
             $this->addSelector(
                 'price_to',
                 __('Price to', 'casawp'),
                 __('Price to','casawp'),
                 $this->getPriceOptions(),
-                $this->options['chosen_price_to']
+                (isset($this->options['chosen_price_to']) ? $this->options['chosen_price_to'] : null)
             );
         //}
     }
