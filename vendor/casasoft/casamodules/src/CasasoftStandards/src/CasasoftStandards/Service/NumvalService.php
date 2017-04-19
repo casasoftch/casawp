@@ -330,7 +330,7 @@ class NumvalService implements FactoryInterface {
             └───────┴───────┘
             */
             'area_sia_gf' => array( //ngf + kf
-                'label' => $this->translator->translate('Total living area', 'casasoft-standards'), //Bruttogeschossfläche oder Geschossfläche
+                'label' => $this->translator->translate('Total floor area', 'casasoft-standards'), //Bruttogeschossfläche oder Geschossfläche
                 'icon' => 'fa fa-retweet',
                 'type' => 'int',
                 'si' => 'm2',

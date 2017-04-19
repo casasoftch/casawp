@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Shala\n"
-"POT-Creation-Date: 2017-02-22 13:08+0100\n"
-"PO-Revision-Date: 2017-03-17 14:10+0100\n"
+"POT-Creation-Date: 2017-04-19 12:00+0200\n"
+"PO-Revision-Date: 2017-04-19 13:35+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;translatePlural:1,2\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -560,9 +560,8 @@ msgid "Property land area"
 msgstr "Grundstücksfläche"
 
 #: src/CasasoftStandards/Service/NumvalService.php:333
-#: src/CasasoftStandards/Service/NumvalService.php:609
-msgid "Total living area"
-msgstr "Bruttowohnfläche"
+msgid "Total floor area"
+msgstr "Bruttogeschossfläche"
 
 #: src/CasasoftStandards/Service/NumvalService.php:339
 msgid "Net floor area"
@@ -702,6 +701,10 @@ msgstr "Ausnützungsziffer"
 #: src/CasasoftStandards/Service/NumvalService.php:603
 msgid "Construction utilization number"
 msgstr "Ausnützungsziffer (Bau)"
+
+#: src/CasasoftStandards/Service/NumvalService.php:609
+msgid "Total living area"
+msgstr "Bruttowohnfläche"
 
 #: src/CasasoftStandards/Service/NumvalService.php:615
 msgid "Net living area"
