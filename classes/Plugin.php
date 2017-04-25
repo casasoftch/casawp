@@ -1002,6 +1002,7 @@ class Plugin {
             $this->getLocations(),
             $this->getAvailabilities()
         );
+        $form->setAction(get_post_type_archive_link( 'casawp_property' ));
         $form->bind($this->queryService);
         return $this->render('archive-filter', array('form' => $form));
     }
