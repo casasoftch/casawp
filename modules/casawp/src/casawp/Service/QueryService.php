@@ -260,11 +260,32 @@ class QueryService{
               );
           }
           if ($this->query['price_to']) {
+
+            if (strpos($this->query['price_to'], '-') >= 0) {
+              $price_parts = explode('-', $this->query['price_to']);
+              if ($price_parts[0]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => $price_parts[0],
+                    'compare'   => '>='
+                );
+              }
+              if ($price_parts[1]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => $price_parts[1],
+                    'compare'   => '<='
+                );
+              }
+            } else {
               $meta_query_items_new[] = array(
                   'key' => 'price',
                   'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
                   'compare'   => '<='
               );
+            }
+
+
           }
         }
         if ($meta_query_items_new) {
@@ -339,7 +360,7 @@ class QueryService{
                 'include_children' => 1,
                 'field'            => 'slug',
                 'operator'         => 'NOT IN'
-                
+
             );
         }
         if ($this->query['locations_not']) {
