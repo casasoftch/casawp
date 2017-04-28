@@ -261,7 +261,7 @@ class QueryService{
           }
           if ($this->query['price_to']) {
 
-            if (strpos($this->query['price_to'], '-') >= 0) {
+            if (strpos($this->query['price_to'], '-') !== false) {
               $price_parts = explode('-', $this->query['price_to']);
               if ($price_parts[0]) {
                 $meta_query_items_new[] = array(
