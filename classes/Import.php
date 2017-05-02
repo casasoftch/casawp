@@ -23,16 +23,21 @@ class Import {
       $good_to_go = false;
       if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
         mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
+        $this->addToLog('directory casawp was missing: ' . time());
       }
       if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
         mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import');
+        $this->addToLog('directory casawp/import was missing: ' . time());
       }
       $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
       if (file_exists($file)) {
         $good_to_go = true;
+        $this->addToLog('file found lets go: ' . time());
       } else {
         //if force last check for last
+        $this->addToLog('file was missing ' . time());
         if (isset($_GET['force_last_import'])) {
+          $this->addToLog('importing last file based on force_last_import: ' . time());
           $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml';
           if (file_exists($file)) {
             $good_to_go = true;
@@ -42,7 +47,10 @@ class Import {
       if ($good_to_go) {
         $this->importFile = $file;
       }
+    } else {
+        $this->addToLog('importfile already set: ' . time());
     }
+
     return $this->importFile;
   }
 
@@ -1078,9 +1086,16 @@ class Import {
       $url = $apiurl . '?' . http_build_query($query, '', '&');
 
       $response = false;
+
+
+      if (!function_exists('curl_version')) {
+        $this->addToLog('gateway ERR (CURL MISSING!!!): ' . time());
+        echo '<div id="message" class="updated"> CURL MISSING!!!</div>';
+      }
+
+      $ch = curl_init();
       try {
           //$url = 'http://casacloud.cloudcontrolapp.com' . '/rest/provider-properties?' . http_build_query($query);
-          $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $url);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -1089,9 +1104,9 @@ class Import {
           if($httpCode == 404) {
               $response = $httpCode;
           }
-          curl_close($ch);
       } catch (Exception $e) {
           $response =  $e->getMessage() ;
+          $this->addToLog('gateway ERR (' . $response . '): ' . time());
       }
 
       if ($response) {
@@ -1101,7 +1116,11 @@ class Import {
         $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
 
         file_put_contents($file, $response);
+      } else {
+        $this->addToLog('ERR no response from gateway: ' . time());
+        $this->addToLog(curl_error($ch));
       }
+      curl_close($ch);
 
       $this->addToLog('gateway start update: ' . time());
       //UPDATE OFFERS NOW!!!!
@@ -1114,6 +1133,7 @@ class Import {
 
       //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
+      $this->addToLog('gateway keys missing: ' . time());
       echo '<div id="message" class="updated"> API Keys missing</div>';
     }
   }
@@ -1144,14 +1164,11 @@ class Import {
     $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
-    if ($property_xml->priceRangeFrom) {
-      $propertydata['price_range_from'] = $property_xml->priceRangeFrom->__toString();
+    if ($property_xml->priceRange) {
+      $propertydata['price_range_from'] = $property_xml->priceRange->from->__toString();
+      $propertydata['price_range_to'] = $property_xml->priceRange->to->__toString();
     } else {
       $propertydata['price_range_from'] = null;
-    }
-    if ($property_xml->priceRangeTo) {
-      $propertydata['price_range_to'] = $property_xml->priceRangeTo->__toString();
-    } else {
       $propertydata['price_range_to'] = null;
     }
     $propertydata['net_price'] = $property_xml->netPrice->__toString();

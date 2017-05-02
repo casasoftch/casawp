@@ -30,7 +30,9 @@ class QueryService{
             'rooms_from' => null,
             'rooms_to' => null,
             'price_from' => null,
-            'price_to' => null
+            'price_to' => null,
+            'price_range_from' => null,
+            'price_range_to' => null
         );
         $this->setQuery();
     }
@@ -260,7 +262,6 @@ class QueryService{
               );
           }
           if ($this->query['price_to']) {
-
             if (strpos($this->query['price_to'], '-') !== false) {
               $price_parts = explode('-', $this->query['price_to']);
               if ($price_parts[0]) {
@@ -284,9 +285,25 @@ class QueryService{
                   'compare'   => '<='
               );
             }
-
-
           }
+
+
+
+
+          if ($this->query['price_range_from']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'price',
+                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                  'compare'   => '>='
+              );
+          }
+
+
+
+
+
+
+
         }
         if ($meta_query_items_new) {
             $meta_query_items_new['relation'] = 'AND';
