@@ -298,7 +298,7 @@ class QueryService{
                 $meta_query_items_new[] = array(
                   //array(
                     //'relation' => 'OR',
-                    array(
+                    //array(
                       'relation' => 'AND',
                       array(
                         'key' => 'price_range_from',
@@ -310,7 +310,7 @@ class QueryService{
                         'value' => $range_seek_from,
                         'compare'   => '>='
                       ),
-                    ),
+                    //),
                   //   array(
                   //     'relation' => 'AND',
                   //     array(

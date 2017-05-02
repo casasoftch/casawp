@@ -127,7 +127,7 @@ class FilterForm extends Form
             );
         //}
 
-        
+
         $this->options['casawp_filter_price_range_elementtype'] = 'singleselect';
         $this->addSelector(
             'price_range',
