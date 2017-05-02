@@ -1144,6 +1144,16 @@ class Import {
     $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
+    if ($property_xml->priceRangeFrom) {
+      $propertydata['price_range_from'] = $property_xml->priceRangeFrom->__toString();
+    } else {
+      $propertydata['price_range_from'] = null;
+    }
+    if ($property_xml->priceRangeTo) {
+      $propertydata['price_range_to'] = $property_xml->priceRangeTo->__toString();
+    } else {
+      $propertydata['price_range_to'] = null;
+    }
     $propertydata['net_price'] = $property_xml->netPrice->__toString();
     $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtolower($property_xml->netPrice['timesegment']->__toString()) : '');
     $propertydata['net_price_property_segment'] = (!$property_xml->netPrice['propertysegment']?: str_replace('2', '', $property_xml->netPrice['propertysegment']->__toString()));
@@ -2295,6 +2305,13 @@ class Import {
       $new_meta_data['price'] = $property['price'];
       $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
     }
+    if (isset($property['price_range_from'])) {
+      $new_meta_data['price_range_from'] = $property['price_range_from'];
+    }
+    if (isset($property['price_range_to'])) {
+      $new_meta_data['price_range_to'] = $property['price_range_to'];
+    }
+
 
     if (isset($property['net_price'])) {
       $new_meta_data['netPrice'] = $property['net_price'];
