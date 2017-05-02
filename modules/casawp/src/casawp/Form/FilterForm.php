@@ -126,6 +126,29 @@ class FilterForm extends Form
                 (isset($this->options['chosen_price_to']) ? $this->options['chosen_price_to'] : null)
             );
         //}
+
+        
+        $this->options['casawp_filter_price_range_elementtype'] = 'singleselect';
+        $this->addSelector(
+            'price_range',
+            __('Price range', 'casawp'),
+            __('Price range','casawp'),
+            array(
+              '0-500000' => 'bis 0.5 Mio.',
+              '500000-800000' => '0.5 - 0.8 Mio.',
+              '800000-1000000' => '0.8 - 1.0 Mio.',
+              '1000000-1500000' => '1.0 - 1.5 Mio.',
+              '1500000-2000000' => '1.5 - 2.0 Mio.',
+              '2000000-3000000' => '2.5 - 3.0 Mio.',
+              '3000000-3500000' => '3.0 - 3.5 Mio.',
+              '3500000-4000000' => '3.5 - 4.0 Mio.',
+              '4000000-5000000' => '4.0 - 5.0 Mio.',
+              '5000000-7500000' => '5.0 - 7.5 Mio.',
+              '7500000-1000000' => '7.5 - 10.0 Mio.',
+              '10000000-9999999999' => 'über 10.0 Mio.',
+            ),
+            (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
+        );
     }
 
     private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
