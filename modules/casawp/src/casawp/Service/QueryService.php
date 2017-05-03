@@ -290,42 +290,58 @@ class QueryService{
 
 
           if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
-
               $price_seek_parts = explode('-', $this->query['price_range']);
               $range_seek_from = $price_seek_parts[0];
               $range_seek_to = $price_seek_parts[1];
+
+
+
               if ($range_seek_from && $range_seek_to) {
+                // $meta_query_items_new[] = array(
+                //   'key' => 'price_range_from',
+                //   'value' => (int) $range_seek_to,
+                //   'compare'   => '<='
+                // );
+                // $meta_query_items_new[] = array(
+                //   'key' => 'price_range_to',
+                //   'value' => (int) $range_seek_from,
+                //   'compare'   => '>='
+                // );
+
                 $meta_query_items_new[] = array(
-                  //array(
-                    //'relation' => 'OR',
-                    //array(
-                      'relation' => 'AND',
-                      array(
-                        'key' => 'price_range_from',
-                        'value' => $range_seek_to,
-                        'compare'   => '<='
-                      ),
-                      array(
-                        'key' => 'price_range_to',
-                        'value' => $range_seek_from,
-                        'compare'   => '>='
-                      ),
-                    //),
-                  //   array(
-                  //     'relation' => 'AND',
-                  //     array(
-                  //       'key' => 'price',
-                  //       'value' => $range_seek_to,
-                  //       'compare'   => '<='
-                  //     ),
-                  //     array(
-                  //       'key' => 'price',
-                  //       'value' => $range_seek_from,
-                  //       'compare'   => '>='
-                  //     ),
-                  //   ),
-                  // )
+                  'key' => 'price_range_from',
+                  'value' => array($range_seek_from, $range_seek_to),
+                  'compare'   => 'BETWEEN'
                 );
+                $meta_query_items_new[] = array(
+                  'key' => 'price_range_to',
+                  'value' => array($range_seek_from, $range_seek_to),
+                  'compare'   => 'BETWEEN'
+                );
+
+                // $meta_query_items_new[] = array(
+                //   array(
+                //     'relation' => 'OR',
+                //     array(
+                //       'relation' => 'AND',
+                //       array(
+                //         'key' => 'price_range_from',
+                //         'value' => array($range_seek_from, $range_seek_to),
+                //         'compare'   => 'BETWEEN'
+                //       ),
+                //       array(
+                //         'key' => 'price_range_to',
+                //         'value' => array($range_seek_from, $range_seek_to),
+                //         'compare'   => 'BETWEEN'
+                //       )
+                //     ),
+                //     array(
+                //       'key' => 'price',
+                //       'value' => array($range_seek_from, $range_seek_to),
+                //       'compare'   => 'BETWEEN'
+                //     )
+                //   )
+                // );
               }
           }
 

@@ -134,7 +134,7 @@ class FilterForm extends Form
             __('Price range', 'casawp'),
             __('Price range','casawp'),
             array(
-              '0-500000' => 'bis 0.5 Mio.',
+              '1-500000' => 'bis 0.5 Mio.',
               '500000-800000' => '0.5 - 0.8 Mio.',
               '800000-1000000' => '0.8 - 1.0 Mio.',
               '1000000-1500000' => '1.0 - 1.5 Mio.',

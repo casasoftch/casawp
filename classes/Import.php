@@ -1630,8 +1630,13 @@ class Import {
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml');
     set_time_limit(600);
     global $wpdb;
+    libxml_use_internal_errors();
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
-
+    $errors = libxml_get_errors();
+    if ($errors) {
+      $this->transcript['error'] = 'XML read error' . print_r($errors, true);
+      die('XML read error');
+    }
     $found_posts = array();
     //key is id value is rank!!!!
     $ranksort = array();
@@ -1707,7 +1712,9 @@ class Import {
     }
 
 
-    if ($found_posts) {
+    if (!$found_posts) {
+      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
+    }
 
       //3. remove all the unused properties
       $properties_to_remove = get_posts(  array(
@@ -1767,9 +1774,7 @@ class Import {
       $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
       $this->transcript['properties_removed'] = count($properties_to_remove);
-    } else{
-      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML';
-    }
+
 
 
 
