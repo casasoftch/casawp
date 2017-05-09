@@ -196,6 +196,7 @@ jQuery(document).ready(function($) {
           var $form = $(this);
           event.preventDefault();
           var filteredParams = $form.serialize();
+          var filteredParamsArray = $form.serializeArray();
           var url = $form.prop('action');
           url = url.replace(window.location.protocol + "//" + window.location.host, '');
 
@@ -216,6 +217,7 @@ jQuery(document).ready(function($) {
               }
               $('.casawp-filterform-button').hide();
               $form.trigger( "casawp-filterform:after-filter-reload", [url, filteredUrl]  );
+
             }
           });
 
@@ -230,6 +232,37 @@ jQuery(document).ready(function($) {
               $archiveList.removeClass('casawp-archive-list-loading');
               $archiveList.html($(data).html());
               $archiveList.trigger( "casawp-ajaxfilter:after-list-reload", [url, filteredUrl] );
+              if ($(data).data('archivelink')) {
+                casawpParams.archive_link = $(data).data('archivelink');
+                $.jStorage.set('casawpParams', casawpParams);
+              }
+
+
+            //
+            // console.log(casawpParams);
+            //
+            // $.each(filteredParamsArray, function(index, elem){
+            //   switch (elem.name) {
+            //     case 'locations':
+            //       if (casawpParams[elem.name] === undefined) {
+            //         casawpParams[elem.name] = [];
+            //       }
+            //       casawpParams[elem.name].push(elem.value);
+            //       break;
+            //     default:
+            //     casawpParams[elem.name] = elem.value;
+            //   }
+            //
+            // });
+            //
+            // $.jStorage.set('casawpParams', casawpParams);
+            // console.log('stored');
+            // console.log(casawpParams);
+            //
+
+
+
+
             },
             always: function() {
               //console.log('HEEELLLLOOO??????');
