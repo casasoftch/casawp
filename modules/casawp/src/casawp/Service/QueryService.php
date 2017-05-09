@@ -309,15 +309,47 @@ class QueryService{
                 // );
 
                 $meta_query_items_new[] = array(
-                  'key' => 'price_range_from',
-                  'value' => array($range_seek_from, $range_seek_to),
-                  'compare'   => 'BETWEEN'
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_from',
+                    'value' => 0,
+                    'compare'   => '>',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_to',
+                    'value' => 0,
+                    'compare'   => '>',
+                    'type' => 'UNSIGNED'
+                  )
                 );
                 $meta_query_items_new[] = array(
-                  'key' => 'price_range_to',
-                  'value' => array($range_seek_from, $range_seek_to),
-                  'compare'   => 'BETWEEN'
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_from',
+                    'value' => array($range_seek_from, $range_seek_to),
+                    'compare'   => 'BETWEEN',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_from',
+                    'compare'   => 'NOT EXISTS'
+                  )
                 );
+                $meta_query_items_new[] = array(
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_to',
+                    'value' => array($range_seek_from, $range_seek_to),
+                    'compare'   => 'BETWEEN',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_to',
+                    'compare'   => 'NOT EXISTS'
+                  )
+                );
+
 
                 // $meta_query_items_new[] = array(
                 //   array(
