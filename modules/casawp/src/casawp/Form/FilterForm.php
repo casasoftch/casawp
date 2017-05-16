@@ -10,13 +10,14 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array()){
         $this->options = $options;
         $this->categories = $categories;
         $this->utilities = $utilities;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
         $this->availabilities = $availabilities;
+        $this->regions = $regions;
 
         //set default options
         if (!$this->options['casawp_filter_rooms_from_elementtype']) {
@@ -33,6 +34,9 @@ class FilterForm extends Form
         }
         if (!$this->options['casawp_filter_utilities_elementtype']) {
           $this->options['casawp_filter_utilities_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_regions_elementtype']) {
+          $this->options['casawp_filter_regions_elementtype'] = 'hidden';
         }
 
         parent::__construct('filter');
@@ -82,6 +86,15 @@ class FilterForm extends Form
                 __('Choose utility','casawp'),
                 $this->getUtilityOptions(),
                 (isset($this->options['chosen_utilities']) ? $this->options['chosen_utilities'] : null)
+            );
+        }
+        if ($this->regions) {
+            $this->addSelector(
+                'regions',
+                __('Region', 'casawp'),
+                __('Choose region','casawp'),
+                $this->getRegionOptions(),
+                (isset($this->options['chosen_regions']) ? $this->options['chosen_regions'] : null)
             );
         }
         if ($this->locations) {
@@ -287,6 +300,17 @@ class FilterForm extends Form
         }
         asort($utility_options);
         return $utility_options;
+    }
+
+    public function getRegionOptions(){
+        //TODO SORTING!!!
+        // $region_options = array();
+        // foreach ($this->regions as $region) {
+        //     $region_options[$region->getKey()] = html_entity_decode($region->getLabel());
+        // }
+        // asort($region_options);
+        // return $region_options;
+        return $this->regions;
     }
 
     public function getSalestypeOptions(){
@@ -503,6 +527,8 @@ class FilterForm extends Form
                     $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'regions' && in_array($this->options['casawp_filter_regions_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||

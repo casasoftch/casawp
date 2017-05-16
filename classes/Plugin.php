@@ -894,6 +894,17 @@ class Plugin {
         return $availabilities;
     }
 
+    public function getRegions(){
+        $regions = array();
+        $region_terms = get_terms('casawp_region', array(
+            'hide_empty'        => true,
+        ));
+        foreach ($region_terms as $region_term) {
+            $regions[$region_term->slug] = $region_term->name;
+        }
+        return $regions;
+    }
+
     public function isReferenceArchive(){
         $query = $this->queryService->getQuery();
         $reference = false;
@@ -1024,17 +1035,19 @@ class Plugin {
                 'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
                 'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
                 'casawp_filter_price_to_elementtype' => get_option('casawp_filter_price_to_elementtype', false),
+                'casawp_filter_regions_elementtype' => get_option('casawp_filter_regions_elementtype', false),
                 'chosen_categories' => $this->queryService->getQueryValue('categories'),
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
                 'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
-                'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to'),
+                'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
             ),
             $this->getCategories(),
             $this->getUtilities(),
             $this->getSalestypes(),
             $this->getLocations(),
-            $this->getAvailabilities()
+            $this->getAvailabilities(),
+            $this->getRegions()
         );
         $form->setAttribute('action', get_post_type_archive_link( 'casawp_property' ));
         $form->bind($this->queryService);
@@ -2148,7 +2161,7 @@ class Plugin {
             'hierarchical'      => false,
             'labels'            => $labels,
             'show_ui'           => true,
-            'show_admin_column' => true,
+            'show_admin_column' => false,
             'query_var'         => true,
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
@@ -2264,6 +2277,34 @@ class Plugin {
         );
         register_taxonomy( 'casawp_availability', array( 'casawp_property' ), $args );
 
+
+        /*----------  custom region segments ----------*/
+
+        $labels = array(
+            'name'                       => __( 'Property regions', 'casawp' ),
+            'singular_name'              => __( 'Region Segment', 'casawp' ),
+            'search_items'               => __( 'Search Region Segments', 'casawp' ),
+            'popular_items'              => __( 'Popular Region Segments', 'casawp' ),
+            'all_items'                  => __( 'All Region Segments', 'casawp' ),
+            'edit_item'                  => __( 'Edit Region Segment', 'casawp' ),
+            'update_item'                => __( 'Update Region Segment', 'casawp' ),
+            'add_new_item'               => __( 'Add New Region Segment', 'casawp' ),
+            'new_item_name'              => __( 'New Region Segment Name', 'casawp' ),
+            'separate_items_with_commas' => __( 'Separate regions with commas', 'casawp' ),
+            'add_or_remove_items'        => __( 'Add or remove regions', 'casawp' ),
+            'choose_from_most_used'      => __( 'Choose from the most used salestypes', 'casawp' ),
+            'not_found'                  => __( 'No Region Segments found.', 'casawp' ),
+            'menu_name'                  => __( 'Region Segment', 'casawp' )
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => false,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-regions' )
+        );
+        register_taxonomy( 'casawp_region', array( 'casawp_property' ), $args );
 
 
         /*----------  attachments  ----------*/

@@ -1005,6 +1005,52 @@ class Import {
     }
   }
 
+
+  public function setOfferRegions($wp_post, $terms, $casawp_id){
+    $new_terms = array();
+    $old_terms = array();
+
+    //set post term
+    $old_terms = array();
+    $wp_term_terms = wp_get_object_terms($wp_post->ID, 'casawp_region');
+    foreach ($wp_term_terms as $term) {
+      $old_terms[] = $term->slug;
+    }
+
+    //supported
+    if ($terms) {
+      foreach ($terms as $term) {
+        $new_terms[] = $term;
+      }
+    }
+
+    //have terms changed?
+    if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
+      $slugs_to_remove = array_diff($old_terms, $new_terms);
+      $slugs_to_add    = array_diff($new_terms, $old_terms);
+      $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
+      $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
+
+      //make sure the terms exist first
+      foreach ($slugs_to_add as $new_term_slug) {
+        $label = false;
+        $this->setcasawpFeatureTerm($new_term_slug, $label);
+      }
+
+      //add the new ones
+      $term_terms = get_terms( array('casawp_region'), array('hide_empty' => false));
+      $connect_term_ids = array();
+      foreach ($term_terms as $term) {
+        if (in_array($term->slug, $new_terms)) {
+          $connect_term_ids[] = (int) $term->term_id;
+        }
+      }
+      if ($connect_term_ids) {
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_region' );
+      }
+    }
+  }
+
   public function addToLog($transcript){
     $dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
     if (!file_exists($dir)) {
@@ -2504,11 +2550,32 @@ class Import {
           } elseif ($label) {
             $custom_categories[$label]['label'] = $values[0];
           }
-
         }
+
       }
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
     }
+
+
+    $this->addToLog('updating custom regions');
+    $custom_regions = array();
+    foreach ($publisher_options as $key => $values) {
+      if (strpos($key, 'custom_region') === 0) {
+        $parts = explode('_', $key);
+        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+        $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
+        $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
+        if ($slug) {
+          $custom_regions[$sort]['slug'] = $values[0];
+        } elseif ($label) {
+          $custom_regions[$label]['label'] = $values[0];
+        }
+      }
+
+    }
+    $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
+
+
 
     $this->addToLog('updating features');
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
