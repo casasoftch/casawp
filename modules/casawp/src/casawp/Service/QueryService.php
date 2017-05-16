@@ -91,35 +91,37 @@ class QueryService{
               $key = 'salestypes';
             }
 
-            //fix singles
-            if (strpos($key, 'category') !== -1) {
-                $key = str_replace('category', 'categories', $key);
-            }
-            if (strpos($key, 'utility') !== -1) {
-                $key = str_replace('utility', 'utilities', $key);
-            }
-            if (strpos($key, 'locations') === -1 && strpos($key, 'location') !== -1) {
-                $key = str_replace('location', 'locations', $key);
-            }
-            if (strpos($key, 'salestypes') === -1 && strpos($key, 'salestype') !== -1) {
-                $key = str_replace('salestype', 'salestypes', $key);
-            }
-            if (strpos($key, 'availability') !== -1) {
-                $key = str_replace('availability', 'availabilities', $key);
-            }
-
             //remove legacy prefixes
             if (strpos($key, 'casawp_') === 0) {
                 $key = str_replace('casawp_', '', $key);
             }
 
             //remove legacy postfixes
-            if (strpos($key, '_not_s') !== -1) {
-                $key = str_replace('_not_s', 'not', $key);
+            if (strpos($key, '_not_s') !== false) {
+                $key = str_replace('_not_s', '_not', $key);
             }
-            if (strpos($key, '_s') !== -1) {
+            if (strpos($key, '_s') !== false) {
                 $key = str_replace('_s', '', $key);
             }
+
+            //fix singles
+            if (strpos($key, 'category') !== false) {
+                $key = str_replace('category', 'categories', $key);
+            }
+            if (strpos($key, 'utility') !== false) {
+                $key = str_replace('utility', 'utilities', $key);
+            }
+            if (strpos($key, 'locations') === false && strpos($key, 'location') !== false) {
+                $key = str_replace('location', 'locations', $key);
+            }
+            if (strpos($key, 'salestypes') === false && strpos($key, 'salestype') !== false) {
+                $key = str_replace('salestype', 'salestypes', $key);
+            }
+            if (strpos($key, 'availability') !== false) {
+                $key = str_replace('availability', 'availabilities', $key);
+            }
+
+
 
 
 
