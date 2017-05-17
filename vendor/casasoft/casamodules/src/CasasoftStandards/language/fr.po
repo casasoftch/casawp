@@ -2,16 +2,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2015-05-12 14:35+0100\n"
-"PO-Revision-Date: 2015-05-12 14:35+0100\n"
+"PO-Revision-Date: 2017-05-17 08:34+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;translatePlural:1,2\n"
-"X-Poedit-Basepath: ../\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -55,7 +55,7 @@ msgstr "Ferme"
 
 #: src/CasasoftStandards/Service/CategoryService.php:70
 msgid "Farm house"
-msgstr "Ferme"
+msgstr "Maison de ferme"
 
 #: src/CasasoftStandards/Service/CategoryService.php:74
 msgid "Furnished flat"
@@ -145,15 +145,15 @@ msgstr "Parking couvert"
 
 #: src/CasasoftStandards/Service/CategoryService.php:165
 msgid "Construction project"
-msgstr "Construction projet"
+msgstr "Projet de construction"
 
 #: src/CasasoftStandards/Service/FeatureService.php:36
 msgid "Fireplace"
-msgstr "Foyer"
+msgstr "Cheminée"
 
 #: src/CasasoftStandards/Service/FeatureService.php:40
 msgid "Cable TV"
-msgstr "Cable TV"
+msgstr "TV par câble"
 
 #: src/CasasoftStandards/Service/FeatureService.php:44
 msgid "Ramp"
@@ -270,7 +270,7 @@ msgstr "Cabinet de toilette"
 
 #: src/CasasoftStandards/Service/FeatureService.php:199
 msgid "Water supply"
-msgstr "Raccordement de l'eau"
+msgstr "Raccordement à l'eau"
 
 #: src/CasasoftStandards/Service/FeatureService.php:203
 msgid "Sewage supply"
@@ -282,15 +282,15 @@ msgstr "Raccordement d'éléctricité"
 
 #: src/CasasoftStandards/Service/FeatureService.php:211
 msgid "Gas supply"
-msgstr "Raccordement de gaz"
+msgstr "Raccordement au gaz"
 
 #: src/CasasoftStandards/Service/FeatureService.php:216
 msgid "Corner house"
-msgstr "Maison angle"
+msgstr "Maison d’angle"
 
 #: src/CasasoftStandards/Service/FeatureService.php:220
 msgid "Middle house"
-msgstr "Maison au milieu"
+msgstr "Maison du milieu"
 
 #: src/CasasoftStandards/Service/FeatureService.php:227
 msgid "New"
@@ -306,7 +306,7 @@ msgstr "Limitations du droit relatif aux constructions"
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
 msgid "Swimmingpool"
-msgstr "Pool"
+msgstr "Piscine"
 
 #: src/CasasoftStandards/Service/FeatureService.php:244
 msgid "Minergie general"
@@ -398,7 +398,7 @@ msgstr "Distance transport publique"
 
 #: src/CasasoftStandards/Service/NumvalService.php:260
 msgid "Distance to shop"
-msgstr "Distance achat"
+msgstr "Distance commerces"
 
 #: src/CasasoftStandards/Service/NumvalService.php:266
 msgid "Distance to freeway"
@@ -578,7 +578,7 @@ msgstr "Hauteur du plafond"
 
 #: src/CasasoftStandards/Service/NumvalService.php:615
 msgid "Hall height"
-msgstr "Hauteur d'halle"
+msgstr "Hauteur du hall"
 
 #: src/CasasoftStandards/Service/NumvalService.php:621
 msgid "Max. floor loading"
@@ -586,11 +586,11 @@ msgstr "Pollution du sol max."
 
 #: src/CasasoftStandards/Service/NumvalService.php:627
 msgid "Carrying capacity for crane"
-msgstr "Pollution de grue max."
+msgstr "Capacité de port de grue"
 
 #: src/CasasoftStandards/Service/NumvalService.php:633
 msgid "Carrying capacity for elevator"
-msgstr "Pollution d'ascenseur max."
+msgstr "Capacité de charge d'ascenseur"
 
 #: src/CasasoftStandards/Service/NumvalService.php:640
 msgid "Land price"
@@ -602,7 +602,7 @@ msgstr "Prime brute"
 
 #: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
-msgstr "Commercial(e)"
+msgstr "Commerce"
 
 #: src/CasasoftStandards/Service/UtilityService.php:38
 msgid "Gastronomy"
@@ -618,11 +618,11 @@ msgstr "Agriculture"
 
 #: src/CasasoftStandards/Service/UtilityService.php:50
 msgid "Industrial"
-msgstr "Industrial"
+msgstr "Industrie"
 
 #: src/CasasoftStandards/Service/UtilityService.php:54
 msgid "Residential"
-msgstr "Habiter"
+msgstr "Résidence"
 
 #: src/CasasoftStandards/Service/UtilityService.php:58
 msgid "Storage"
