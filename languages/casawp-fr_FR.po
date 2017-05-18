@@ -2698,7 +2698,7 @@ msgstr "Proposition"
 #: .././theme-defaults/casawp/bootstrap2/datatable.phtml:10
 #: .././theme-defaults/casawp/bootstrap3/datatable.phtml:10
 msgid "Features"
-msgstr "Fonctions"
+msgstr "Caractéristiques"
 
 #: .././theme-defaults/casawp/bootstrap2/datatable.phtml:18
 #: .././theme-defaults/casawp/bootstrap3/datatable.phtml:18
