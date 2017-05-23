@@ -26,6 +26,7 @@ class Offer{
     		case 'utilityService':
     		case 'categoryService':
     		case 'numvalService':
+				case 'integratedOfferService':
     		case 'featureService':
     		case 'messengerService':
     		case 'formService':
@@ -624,12 +625,18 @@ class Offer{
     }
 
     public function getIntegratedOffers(){
+
     	$offers = $this->getFieldValue('integratedoffers', false);
-    	if (empty($offers)) return NULL;
+
+
+
+    	if (empty($offers)) {return NULL;}
 
     	if ($offers) {
     		$offers = maybe_unserialize($offers);
     	}
+
+
 
     	//group em
     	$f_offers = array();
@@ -655,6 +662,9 @@ class Offer{
     			$f_offers[] = $offer;
     		}
     	}
+
+
+
 
     	$r_offers = array();
     	foreach ($f_offers as $offer) {
