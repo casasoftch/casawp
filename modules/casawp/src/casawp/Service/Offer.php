@@ -669,7 +669,7 @@ class Offer{
     	$r_offers = array();
     	foreach ($f_offers as $offer) {
     		if ($this->integratedOfferService->keyExists($offer["type"])) {
-    			$r_offer = $this->integratedOfferService->getItem($offer["type"]);
+    			$r_offer = clone $this->integratedOfferService->getItem($offer["type"]);
     			$r_offer->setCost($offer["price"]);
     			$r_offer->setTimesegment($offer["timesegment"]);
     			$r_offer->setPropertysegment($offer["propertysegment"]);
