@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Shala\n"
-"POT-Creation-Date: 2017-05-26 11:28+0200\n"
-"PO-Revision-Date: 2017-05-26 11:29+0200\n"
+"POT-Creation-Date: 2017-05-26 16:03+0200\n"
+"PO-Revision-Date: 2017-05-26 16:04+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/CasasoftStandards/Service/CategoryService.php:36
-#: src/CasasoftStandards/Service/CategoryService.php:263
+#: src/CasasoftStandards/Service/CategoryService.php:264
 msgid "Apartment"
 msgstr "Wohnung"
 
@@ -68,7 +68,7 @@ msgid "Garage"
 msgstr "Garage"
 
 #: src/CasasoftStandards/Service/CategoryService.php:48
-#: src/CasasoftStandards/Service/CategoryService.php:248
+#: src/CasasoftStandards/Service/CategoryService.php:249
 msgid "House"
 msgstr "Haus"
 
@@ -224,20 +224,24 @@ msgstr "Moto Hallenplatz"
 msgid "Rustico"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:93
+#: src/CasasoftStandards/Service/CategoryService.php:91
+msgid "Garden Apartment"
+msgstr "Gartenwohnung"
+
+#: src/CasasoftStandards/Service/CategoryService.php:94
 msgid "Restaurant"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:94
+#: src/CasasoftStandards/Service/CategoryService.php:95
 msgid "Shopping center"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:95
+#: src/CasasoftStandards/Service/CategoryService.php:96
 #: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
 msgstr "Gewerbe"
 
-#: src/CasasoftStandards/Service/CategoryService.php:96
+#: src/CasasoftStandards/Service/CategoryService.php:97
 msgid "Commercial plot"
 msgstr ""
 
