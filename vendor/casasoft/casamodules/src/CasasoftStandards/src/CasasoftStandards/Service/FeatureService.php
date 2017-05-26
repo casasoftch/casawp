@@ -261,6 +261,10 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Minergie certified', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-non-smoking' => array(
+                'label' => $this->translator->translate('Is non smoking', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }

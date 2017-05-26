@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Shala\n"
-"POT-Creation-Date: 2017-04-19 12:00+0200\n"
-"PO-Revision-Date: 2017-04-19 13:35+0200\n"
+"POT-Creation-Date: 2017-05-26 11:28+0200\n"
+"PO-Revision-Date: 2017-05-26 11:29+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -418,6 +418,10 @@ msgstr "Minergiebauweise"
 #: src/CasasoftStandards/Service/FeatureService.php:261
 msgid "Minergie certified"
 msgstr "Minergie zertifiziert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:265
+msgid "Is non smoking"
+msgstr "Nichtraucher"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"

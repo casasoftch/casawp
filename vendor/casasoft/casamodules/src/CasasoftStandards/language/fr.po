@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
-"POT-Creation-Date: 2017-05-17 14:57+0200\n"
-"PO-Revision-Date: 2017-05-17 14:58+0200\n"
+"POT-Creation-Date: 2017-05-26 11:29+0200\n"
+"PO-Revision-Date: 2017-05-26 11:29+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
@@ -418,6 +418,10 @@ msgstr "Minergie générale"
 #: src/CasasoftStandards/Service/FeatureService.php:261
 msgid "Minergie certified"
 msgstr "Minergie certifiée"
+
+#: src/CasasoftStandards/Service/FeatureService.php:265
+msgid "Is non smoking"
+msgstr "Non-fumeur"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
