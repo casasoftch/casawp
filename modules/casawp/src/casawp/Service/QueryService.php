@@ -23,7 +23,9 @@ class QueryService{
             'locations_not' => array(),
             'salestypes_not' => array(),
             'availabilities_not' => array(),
+            'regions_not' => array(),
             'features' => array(),
+            'features_not' => array(),
             'my_lng' => null,
             'my_lat' => null,
             'radius_km' => 10,
@@ -118,6 +120,9 @@ class QueryService{
             if (strpos($key, 'regions') === false && strpos($key, 'region') !== false) {
                 $key = str_replace('region', 'regions', $key);
             }
+            if (strpos($key, 'features') === false && strpos($key, 'feature') !== false) {
+                $key = str_replace('feature', 'features', $key);
+            }
             if (strpos($key, 'salestypes') === false && strpos($key, 'salestype') !== false) {
                 $key = str_replace('salestype', 'salestypes', $key);
             }
@@ -134,12 +139,14 @@ class QueryService{
                 case 'utilities':
                 case 'locations':
                 case 'regions':
+                case 'features':
                 case 'salestypes':
                 case 'availabilities':
                 case 'categories_not':
                 case 'utilities_not':
                 case 'locations_not':
                 case 'regions_not':
+                case 'features_not':
                 case 'salestypes_not':
                 case 'availabilities_not':
                     $query[$key] = (is_array($value) ? $value : array($value));
@@ -436,6 +443,15 @@ class QueryService{
                 'operator'=> 'IN'
             );
         }
+        if ($this->query['features']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_feature',
+                'terms' => $this->query['features'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+            );
+        }
 
         if ($this->query['salestypes']) {
             $taxquery_new[] = array(
@@ -489,6 +505,15 @@ class QueryService{
             $taxquery_new[] = array(
                 'taxonomy' => 'casawp_region',
                 'terms' => $this->query['regions_not'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'NOT IN'
+            );
+        }
+        if ($this->query['features_not']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_feature',
+                'terms' => $this->query['features_not'],
                 'include_children' => 1,
                 'field' => 'slug',
                 'operator'=> 'NOT IN'
@@ -548,6 +573,9 @@ class QueryService{
             }
             if (is_tax('casawp_region')) {
                 $this->query['regions'] = array(get_query_var( 'casawp_region' ));
+            }
+            if (is_tax('casawp_feature')) {
+                $this->query['features'] = array(get_query_var( 'casawp_feature' ));
             }
             if (is_tax('casawp_salestype')) {
                 $this->query['salestypes'] = array(get_query_var( 'casawp_salestype' ));

@@ -401,6 +401,7 @@ class Plugin {
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
         $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
+        $this->featureService = $this->serviceManager->get('CasasoftFeature');
         $this->formSettingService = $this->serviceManager->get('casawpFormSettingService');
         $this->formService = $this->serviceManager->get('casawpFormService');
 
@@ -905,6 +906,26 @@ class Plugin {
         return $regions;
     }
 
+
+    public function getFeatures(){
+        $terms = array();
+        $tax_terms = get_terms('casawp_feature', array(
+            'hide_empty'        => true,
+        ));
+        foreach ($tax_terms as $tax_term) {
+          if ($this->featureService->keyExists($tax_term->slug)) {
+            $feature = $this->featureService->getItem($tax_term->slug);
+          } else {
+            $feature = new \CasasoftStandards\Service\Feature();
+            $feature->setKey($tax_term);
+            $feature->setLabel('?'.$tax_term);
+          }
+
+          $terms[$tax_term->slug] = $feature;
+        }
+        return $terms;
+    }
+
     public function isReferenceArchive(){
         $query = $this->queryService->getQuery();
         $reference = false;
@@ -1036,8 +1057,10 @@ class Plugin {
                 'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
                 'casawp_filter_price_to_elementtype' => get_option('casawp_filter_price_to_elementtype', false),
                 'casawp_filter_regions_elementtype' => get_option('casawp_filter_regions_elementtype', false),
+                'casawp_filter_features_elementtype' => get_option('casawp_filter_features_elementtype', false),
                 'chosen_categories' => $this->queryService->getQueryValue('categories'),
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
+                'chosen_features' => $this->queryService->getQueryValue('features'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
                 'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
                 'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
@@ -1047,7 +1070,8 @@ class Plugin {
             $this->getSalestypes(),
             $this->getLocations(),
             $this->getAvailabilities(),
-            $this->getRegions()
+            $this->getRegions(),
+            $this->getFeatures()
         );
         $form->setAttribute('action', get_post_type_archive_link( 'casawp_property' ));
         $form->bind($this->queryService);

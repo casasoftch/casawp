@@ -10,7 +10,7 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array()){
+    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array(), $features = array()){
         $this->options = $options;
         $this->categories = $categories;
         $this->utilities = $utilities;
@@ -18,6 +18,7 @@ class FilterForm extends Form
         $this->locations = $locations;
         $this->availabilities = $availabilities;
         $this->regions = $regions;
+        $this->features = $features;
 
         //set default options
         if (!$this->options['casawp_filter_rooms_from_elementtype']) {
@@ -37,6 +38,9 @@ class FilterForm extends Form
         }
         if (!$this->options['casawp_filter_regions_elementtype']) {
           $this->options['casawp_filter_regions_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_features_elementtype']) {
+          $this->options['casawp_filter_features_elementtype'] = 'hidden';
         }
 
         parent::__construct('filter');
@@ -95,6 +99,15 @@ class FilterForm extends Form
                 __('Choose region','casawp'),
                 $this->getRegionOptions(),
                 (isset($this->options['chosen_regions']) ? $this->options['chosen_regions'] : null)
+            );
+        }
+        if ($this->features) {
+            $this->addSelector(
+                'features',
+                __('Feature', 'casawp'),
+                __('Choose feature','casawp'),
+                $this->getFeatureOptions(),
+                (isset($this->options['chosen_features']) ? $this->options['chosen_features'] : null)
             );
         }
         if ($this->locations) {
@@ -313,6 +326,23 @@ class FilterForm extends Form
         return $this->regions;
     }
 
+    public function getFeatureOptions(){
+        //TODO SORTING!!!
+        // $region_options = array();
+        // foreach ($this->regions as $region) {
+        //     $region_options[$region->getKey()] = html_entity_decode($region->getLabel());
+        // }
+        // asort($region_options);
+        // return $region_options;
+        $options = array();
+        foreach ($this->features as $feature) {
+          $options[$feature->getKey()] = $feature->getLabel();
+        }
+        sort($options);
+        return $options;
+        //return $this->features;
+    }
+
     public function getSalestypeOptions(){
         /*$salestype_options = array();
         foreach ($this->salestypes as $salestype) {
@@ -529,6 +559,8 @@ class FilterForm extends Form
                     $name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'regions' && in_array($this->options['casawp_filter_regions_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
