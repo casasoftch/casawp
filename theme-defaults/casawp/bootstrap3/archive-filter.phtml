@@ -186,6 +186,48 @@
     </div>
   <?php endif; ?>
 
+  <?php if ($form->getFeatureOptions()): ?>
+		<?php echo $this->formLabel($form->get('features')); ?>
+		<?php if (get_option('casawp_filter_features_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('features');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
+				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_features_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('features');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('features')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+  <?php if ($form->getRegionOptions()): ?>
+		<?php echo $this->formLabel($form->get('regions')); ?>
+		<?php if (get_option('casawp_filter_regions_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('regions');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
+				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_regions_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('regions');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('regions')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
 	<input type="submit" class="casawp-filterform-button" value="<?= __('Search', 'casawp') ?>">
 
 	<?= $this->form()->closeTag(); ?>

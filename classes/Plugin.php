@@ -908,22 +908,70 @@ class Plugin {
 
 
     public function getFeatures(){
-        $terms = array();
-        $tax_terms = get_terms('casawp_feature', array(
-            'hide_empty'        => true,
-        ));
-        foreach ($tax_terms as $tax_term) {
-          if ($this->featureService->keyExists($tax_term->slug)) {
-            $feature = $this->featureService->getItem($tax_term->slug);
-          } else {
-            $feature = new \CasasoftStandards\Service\Feature();
-            $feature->setKey($tax_term);
-            $feature->setLabel('?'.$tax_term);
-          }
+      $features = get_terms('casawp_feature',array(
+          'hierarchical'      => false,
+          'hide_empty'        => true
+      ));
+      $availability = $this->getQueriedSingularAvailability();
+      if ($availability) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_feature'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
 
-          $terms[$tax_term->slug] = $feature;
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $feature_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $feature_id_array = array_map(function($item){return $item['term_id'];}, $feature_property_count);
+        foreach ($features as $key => $feature) {
+            if (!in_array($feature->term_id, $feature_id_array)) {
+                unset($features[$key]);
+            }
         }
-        return $terms;
+      }
+
+      //salestype reduces categories
+      $salestype = $this->getQueriedSingularSalestype();
+      if ($salestype) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_feature'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $feature_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $feature_id_array = array_map(function($item){return $item['term_id'];}, $feature_property_count);
+        foreach ($features as $key => $feature) {
+            if (!in_array($feature->term_id, $feature_id_array)) {
+                unset($features[$key]);
+            }
+        }
+      }
+
+      $featureObjects = array();
+      foreach ($features as $tax_term) {
+        if ($this->featureService->keyExists($tax_term->slug)) {
+          $feature = $this->featureService->getItem($tax_term->slug);
+        } else {
+          $feature = new \CasasoftStandards\Service\Feature();
+          $feature->setKey($tax_term);
+          $feature->setLabel('?'.$tax_term);
+        }
+
+        $featureObjects[$tax_term->slug] = $feature;
+      }
+      return $featureObjects;
     }
 
     public function isReferenceArchive(){
