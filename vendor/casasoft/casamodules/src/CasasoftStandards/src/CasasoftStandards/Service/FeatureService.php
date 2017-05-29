@@ -317,6 +317,18 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Is first time occupancy', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-allowed-as-secondary-residency' => array(
+                'label' => $this->translator->translate('Secondary residency', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-only-allowed-as-primary-residency' => array(
+                'label' => $this->translator->translate('Primary residency', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-foreign-quota' => array(
+                'label' => $this->translator->translate('Foreign quota', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }

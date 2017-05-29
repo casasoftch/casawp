@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-05-29 11:00+0200\n"
-"PO-Revision-Date: 2017-05-29 11:02+0200\n"
+"POT-Creation-Date: 2017-05-29 12:00+0200\n"
+"PO-Revision-Date: 2017-05-29 12:01+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -478,6 +478,18 @@ msgstr "Neuwertig"
 #: src/CasasoftStandards/Service/FeatureService.php:317
 msgid "Is first time occupancy"
 msgstr "Erstbezug"
+
+#: src/CasasoftStandards/Service/FeatureService.php:321
+msgid "Secondary residency"
+msgstr "Zweitwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:325
+msgid "Primary residency"
+msgstr "Erstwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:329
+msgid "Foreign quota"
+msgstr "Ausländerkontingent"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
