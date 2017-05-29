@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-05-26 16:03+0200\n"
-"PO-Revision-Date: 2017-05-26 16:12+0200\n"
+"POT-Creation-Date: 2017-05-29 11:00+0200\n"
+"PO-Revision-Date: 2017-05-29 11:02+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -426,6 +426,58 @@ msgstr "Minergie zertifiziert"
 #: src/CasasoftStandards/Service/FeatureService.php:265
 msgid "Is non smoking"
 msgstr "Nichtraucher"
+
+#: src/CasasoftStandards/Service/FeatureService.php:269
+msgid "Is partially renovation indigent"
+msgstr "Teils renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:273
+msgid "Is projection"
+msgstr "Projektiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:277
+msgid "Is demolition property"
+msgstr "Abbruchobjekt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:281
+msgid "Is gutted"
+msgstr "Entkernt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:285
+msgid "Is shell construction"
+msgstr "Rohbau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:289
+msgid "Is well tended"
+msgstr "Gepflegt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:293
+msgid "Is modernized"
+msgstr "Modernisiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:297
+msgid "Is dilapidated"
+msgstr "Baufällig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:301
+msgid "Is renovation indigent"
+msgstr "Renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:305
+msgid "Is refurbished"
+msgstr "Vollsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:309
+msgid "Is partially refurbished"
+msgstr "Teilsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:313
+msgid "Is new"
+msgstr "Neuwertig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:317
+msgid "Is first time occupancy"
+msgstr "Erstbezug"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"

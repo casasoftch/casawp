@@ -265,6 +265,58 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Is non smoking', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-partially-renovation-indigent' => array(
+                'label' => $this->translator->translate('Is partially renovation indigent', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is_projection' => array(
+                'label' => $this->translator->translate('Is projection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-demolition-property' => array(
+                'label' => $this->translator->translate('Is demolition property', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-gutted' => array(
+                'label' => $this->translator->translate('Is gutted', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-shell-construction' => array(
+                'label' => $this->translator->translate('Is shell construction', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-well-tended' => array(
+                'label' => $this->translator->translate('Is well tended', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-modernized' => array(
+                'label' => $this->translator->translate('Is modernized', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-dilapidated' => array(
+                'label' => $this->translator->translate('Is dilapidated', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-renovation-indigent' => array(
+                'label' => $this->translator->translate('Is renovation indigent', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-refurbished' => array(
+                'label' => $this->translator->translate('Is refurbished', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-partially-refurbished' => array(
+                'label' => $this->translator->translate('Is partially refurbished', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-new' => array(
+                'label' => $this->translator->translate('Is new', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-first-time-occupancy' => array(
+                'label' => $this->translator->translate('Is first time occupancy', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }
