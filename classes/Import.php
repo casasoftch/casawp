@@ -71,12 +71,19 @@ class Import {
 
     //add custom_descriptions
     if ($publisher_options && isset($publisher_options['custom_descriptions']) && $publisher_options['custom_descriptions']) {
-      $custom_descriptions = json_decode($publisher_options['custom_descriptions'], true);
+      if (is_array($publisher_options['custom_descriptions'])) {
+        $json = $publisher_options['custom_descriptions'][0];
+      } else {
+        $json = $publisher_options['custom_descriptions'];
+      }
+      $custom_descriptions = json_decode($json, true);
       if ($custom_descriptions && is_array($custom_descriptions)) {
         foreach ($custom_descriptions as $custom_description_data) {
           if (isset($custom_description_data['html'])) {
-            $descriptionDatas['title'] = (isset($custom_description_data['title']) ? $custom_description_data['title'] : '');
-            $descriptionDatas['text'] = $custom_description_data['html'];
+            $newDescroptionData = array();
+            $newDescroptionData['title'] = (isset($custom_description_data['title']) ? $custom_description_data['title'] : '');
+            $newDescroptionData['text'] = $custom_description_data['html'];
+            $descriptionDatas[] = $newDescroptionData;
           }
 
         }
@@ -2215,7 +2222,13 @@ class Import {
     }
 
     $name = (isset($publisher_options['override_name']) && $publisher_options['override_name'] ? $publisher_options['override_name'] : $offer['name']);
+    if (is_array($name)) {
+      $name = $name[0];
+    }
     $excerpt = (isset($publisher_options['override_excerpt']) && $publisher_options['override_excerpt'] ? $publisher_options['override_excerpt'] : $offer['excerpt']);
+    if (is_array($excerpt)) {
+      $excerpt = $excerpt[0];
+    }
 
     /* main post data */
     $new_main_data = array(
