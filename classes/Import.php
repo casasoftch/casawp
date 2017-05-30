@@ -66,9 +66,25 @@ class Import {
     return true;
   }
 
-  public function extractDescription($offer){
+  public function extractDescription($offer, $publisher_options = null){
+    $descriptionDatas = $offer['descriptions'];
+
+    //add custom_descriptions
+    if ($publisher_options && isset($publisher_options['custom_descriptions']) && $publisher_options['custom_descriptions']) {
+      $custom_descriptions = json_decode($publisher_options['custom_descriptions'], true);
+      if ($custom_descriptions && is_array($custom_descriptions)) {
+        foreach ($custom_descriptions as $custom_description_data) {
+          if (isset($custom_description_data['html'])) {
+            $descriptionDatas['title'] = (isset($custom_description_data['title']) ? $custom_description_data['title'] : '');
+            $descriptionDatas['text'] = $custom_description_data['html'];
+          }
+
+        }
+      }
+    }
+
     $the_description = '';
-    foreach ($offer['descriptions'] as $description) {
+    foreach ($descriptionDatas as $description) {
       $the_description .= ($the_description ? '<hr class="property-separator" />' : '');
       if ($description['title']) {
         $the_description .= '<h2>' . $description['title'] . '</h2>';
@@ -2198,14 +2214,17 @@ class Import {
       }
     }
 
+    $name = (isset($publisher_options['override_name']) && $publisher_options['override_name'] ? $publisher_options['override_name'] : $offer['name']);
+    $excerpt = (isset($publisher_options['override_excerpt']) && $publisher_options['override_excerpt'] ? $publisher_options['override_excerpt'] : $offer['excerpt']);
+
     /* main post data */
     $new_main_data = array(
       'ID'            => $wp_post->ID,
-      'post_title'    => ($offer['name'] ? $offer['name'] : 'Objekt'),
-      'post_content'  => $this->extractDescription($offer),
+      'post_title'    => ($name ? $name : 'Objekt'),
+      'post_content'  => $this->extractDescription($offer, $publisher_options),
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
-      'post_excerpt'  => $offer['excerpt'],
+      'post_excerpt'  => $excerpt,
       'post_date' => $wp_post->post_date,
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
