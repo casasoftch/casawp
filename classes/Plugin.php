@@ -965,8 +965,8 @@ class Plugin {
           $feature = $this->featureService->getItem($tax_term->slug);
         } else {
           $feature = new \CasasoftStandards\Service\Feature();
-          $feature->setKey($tax_term);
-          $feature->setLabel('?'.$tax_term);
+          $feature->setKey($tax_term->slug);
+          $feature->setLabel('?'.$tax_term->slug);
         }
 
         $featureObjects[$tax_term->slug] = $feature;
