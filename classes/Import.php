@@ -1072,7 +1072,7 @@ class Import {
     //supported
     if ($terms) {
       foreach ($terms as $term) {
-        $new_terms[] = $term;
+        $new_terms[] = $term['slug'];
       }
     }
 
@@ -2647,6 +2647,8 @@ class Import {
       }
 
     }
+
+
     $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
 
 
