@@ -135,6 +135,35 @@ class Import {
     }
   }
 
+  public function setcasawpRegionTerm($term_slug, $label = false) {
+    $label = (!$label ? $term_slug : $label);
+    $term = get_term_by('slug', $term_slug, 'casawp_region', OBJECT, 'raw' );
+    $existing_term_id = false;
+    if ($term) {
+      if (
+        $term->slug != $term_slug
+        || $term->name != $label
+      ) {
+        wp_update_term($term->term_id, 'casawp_region', array(
+          'name' => $label,
+          'slug' => $term_slug
+        ));
+      }
+    } else {
+      $options = array(
+        'description' => '',
+        'slug' => $term_slug
+      );
+      $id = wp_insert_term(
+        $label,
+        'casawp_region',
+        $options
+      );
+      $this->addToLog('inserting region ' . $label);
+      return $id;
+    }
+  }
+
   public function setcasawpFeatureTerm($term_slug, $label = false) {
     $label = (!$label ? $term_slug : $label);
     $term = get_term_by('slug', $term_slug, 'casawp_feature', OBJECT, 'raw' );
@@ -1054,10 +1083,23 @@ class Import {
       $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
       $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
 
+      //get the custom labels they need them
+      $custom_labels = array();
+      if (isset($terms)) {
+        foreach ($terms as $custom) {
+          if (isset($custom['label'])) {
+            $custom_labels[$custom['slug']] = $custom['label'];
+          } else {
+            $custom_labels[$custom['slug']] = $custom['slug'];
+          }
+
+        }
+      }
+
       //make sure the terms exist first
       foreach ($slugs_to_add as $new_term_slug) {
-        $label = false;
-        $this->setcasawpFeatureTerm($new_term_slug, $label);
+        $label = (array_key_exists($new_term_slug, $custom_labels) ? $custom_labels[$new_term_slug] : false);
+        $this->setcasawpRegionTerm($new_term_slug, $label);
       }
 
       //add the new ones
