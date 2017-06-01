@@ -257,22 +257,45 @@ class QueryService{
               $meta_query_items_new[] = array(
                   'key' => 'grossPrice',
                   'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
-                  'compare'   => '>='
+                  'compare'   => '>=',
+                  'type' => 'NUMERIC'
               );
           }
           if ($this->query['price_to']) {
+            if (strpos($this->query['price_to'], '-') !== false) {
+              $price_parts = explode('-', $this->query['price_to']);
+              if ($price_parts[0]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'grossPrice',
+                    'value' => $price_parts[0],
+                    'compare'   => '>=',
+                    'type' => 'NUMERIC'
+                );
+              }
+              if ($price_parts[1]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'grossPrice',
+                    'value' => $price_parts[1],
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
+                );
+              }
+            } else {
               $meta_query_items_new[] = array(
                   'key' => 'grossPrice',
                   'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
-                  'compare'   => '<='
+                  'compare'   => '<=',
+                  'type' => 'NUMERIC'
               );
+            }
           }
         } else if(in_array('buy', $this->query['salestypes'])){
           if ($this->query['price_from']) {
               $meta_query_items_new[] = array(
                   'key' => 'price',
                   'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
-                  'compare'   => '>='
+                  'compare'   => '>=',
+                  'type' => 'NUMERIC'
               );
           }
           if ($this->query['price_to']) {
@@ -282,21 +305,24 @@ class QueryService{
                 $meta_query_items_new[] = array(
                     'key' => 'price',
                     'value' => $price_parts[0],
-                    'compare'   => '>='
+                    'compare'   => '>=',
+                    'type' => 'NUMERIC'
                 );
               }
               if ($price_parts[1]) {
                 $meta_query_items_new[] = array(
                     'key' => 'price',
                     'value' => $price_parts[1],
-                    'compare'   => '<='
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
                 );
               }
             } else {
               $meta_query_items_new[] = array(
                   'key' => 'price',
                   'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
-                  'compare'   => '<='
+                  'compare'   => '<=',
+                  'type' => 'NUMERIC'
               );
             }
           }
