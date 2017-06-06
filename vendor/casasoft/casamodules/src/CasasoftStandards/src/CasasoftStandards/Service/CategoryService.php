@@ -89,6 +89,7 @@ class CategoryService implements FactoryInterface {
             'covered-bike-space' => array('label' => $this->translator->translate('Covered bike space', 'casasoft-standards'),),
             'rustico' => array('label' => $this->translator->translate('Rustico', 'casasoft-standards'),),
             'garden-apartment' => array('label' => $this->translator->translate('Garden Apartment', 'casasoft-standards'),),
+            'retail-space' => array('label' => $this->translator->translate('Retail space', 'casasoft-standards'),),
 
             //idx legacy support
             'restaurant' => array('label' => $this->translator->translate('Restaurant', 'casasoft-standards'),),
