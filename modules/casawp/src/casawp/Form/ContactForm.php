@@ -260,7 +260,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('mobile')) {
             $filter->add(array(
                 'name' => 'mobile',
-                'required' => get_option('casawp_form_mobile_required', true),
+                'required' => get_option('casawp_form_mobile_required', false),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
