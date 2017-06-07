@@ -61,12 +61,12 @@ class FormService{
 
 			$form->get('form_id')->setValue($formSetting->getId());
       $sent = false;
+      $filter = $form->getFilter();
+      $form->setInputFilter($filter);
       if ($_POST) {
 				$id = (isset($_POST['form_id']) ? $_POST['form_id'] : false);
 				if (!$id || $id === $formSetting->getId()) {
 					$postdata = $this->sanitizeContactFormPost($_POST);
-					$filter = $form->getFilter();
-					$form->setInputFilter($filter);
 					$form->setData($postdata);
 					if ($form->isValid()) {
             if (!$this->formSendHasAlreadyOccuredDuringThisRequest) {

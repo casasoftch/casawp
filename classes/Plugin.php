@@ -580,8 +580,8 @@ class Plugin {
       }
     }
 
-    public function renderContactFormElement($element){
-        return $this->render('contact-form-element', array('element' => $element));
+    public function renderContactFormElement($element, $form = null){
+        return $this->render('contact-form-element', array('element' => $element, 'form' => $form));
     }
 
     public function render($view, $args){
