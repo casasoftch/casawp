@@ -330,6 +330,39 @@ class FeatureService implements FactoryInterface {
                 'icon' => '',
             ),
 
+            'is-attic' => array(
+                'label' => $this->translator->translate('Attic', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-ground-floor' => array(
+                'label' => $this->translator->translate('Ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-basement' => array(
+                'label' => $this->translator->translate('Basement', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-garden-level' => array(
+                'label' => $this->translator->translate('Garden level', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-raised-ground-floor' => array(
+                'label' => $this->translator->translate('Raised ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-cellar-level' => array(
+                'label' => $this->translator->translate('Cellar level', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-recessed-ground-floor' => array(
+                'label' => $this->translator->translate('Recessed ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-ground-floor-and-first-floor' => array(
+                'label' => $this->translator->translate('Ground floor and first floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
         );
     }
 
