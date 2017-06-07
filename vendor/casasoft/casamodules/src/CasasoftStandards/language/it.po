@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
-"POT-Creation-Date: 2017-05-26 11:29+0200\n"
-"PO-Revision-Date: 2017-05-26 11:29+0200\n"
+"POT-Creation-Date: 2017-06-07 16:46+0200\n"
+"PO-Revision-Date: 2017-06-07 16:49+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/CasasoftStandards/Service/CategoryService.php:36
-#: src/CasasoftStandards/Service/CategoryService.php:263
+#: src/CasasoftStandards/Service/CategoryService.php:292
 msgid "Apartment"
 msgstr "Appartamento"
 
@@ -68,7 +68,7 @@ msgid "Garage"
 msgstr "Box auto"
 
 #: src/CasasoftStandards/Service/CategoryService.php:48
-#: src/CasasoftStandards/Service/CategoryService.php:248
+#: src/CasasoftStandards/Service/CategoryService.php:277
 msgid "House"
 msgstr "Casa"
 
@@ -153,6 +153,7 @@ msgid "Flat"
 msgstr "Piatto"
 
 #: src/CasasoftStandards/Service/CategoryService.php:73
+#: src/CasasoftStandards/Service/FeatureService.php:338
 msgid "Ground floor"
 msgstr "Piano terreno"
 
@@ -224,20 +225,132 @@ msgstr "Spazio coperto per biciclette"
 msgid "Rustico"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:93
-msgid "Restaurant"
+#: src/CasasoftStandards/Service/CategoryService.php:91
+msgid "Garden Apartment"
+msgstr ""
+
+#: src/CasasoftStandards/Service/CategoryService.php:92
+msgid "Retail space"
 msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:94
+msgid "Boat dry dock"
+msgstr "Posteggio barca interno"
+
+#: src/CasasoftStandards/Service/CategoryService.php:95
+msgid "Alottment garden"
+msgstr "Orto"
+
+#: src/CasasoftStandards/Service/CategoryService.php:96
+msgid "Squash / Badminton"
+msgstr "Squash / Badminton"
+
+#: src/CasasoftStandards/Service/CategoryService.php:97
+msgid "Indoor tennis court"
+msgstr "Campo da tennis interno"
+
+#: src/CasasoftStandards/Service/CategoryService.php:98
+msgid "Tennis court"
+msgstr "Campo da tennis esterno"
+
+#: src/CasasoftStandards/Service/CategoryService.php:99
+msgid "Sports hall"
+msgstr "Impianto sportivo"
+
+#: src/CasasoftStandards/Service/CategoryService.php:100
+msgid "Campground / Tent camping"
+msgstr "Campeggio"
+
+#: src/CasasoftStandards/Service/CategoryService.php:101
+msgid "Outdoor swimming pool"
+msgstr "Piscina esterna"
+
+#: src/CasasoftStandards/Service/CategoryService.php:102
+msgid "Indoor swimming pool"
+msgstr "Piscina coperta"
+
+#: src/CasasoftStandards/Service/CategoryService.php:103
+msgid "Golf course"
+msgstr "Campo da golf"
+
+#: src/CasasoftStandards/Service/CategoryService.php:104
+msgid "Hospital"
+msgstr "Ospedale"
+
+#: src/CasasoftStandards/Service/CategoryService.php:105
+msgid "Mini-golf course"
+msgstr "Campo da minigolf"
+
+#: src/CasasoftStandards/Service/CategoryService.php:106
+msgid "Nursing home"
+msgstr "Casa di cura"
+
+#: src/CasasoftStandards/Service/CategoryService.php:107
+msgid "Riding hall"
+msgstr "Maneggio"
+
+#: src/CasasoftStandards/Service/CategoryService.php:108
+msgid "Sanatorium"
+msgstr "Sanatorio"
+
+#: src/CasasoftStandards/Service/CategoryService.php:109
+msgid "Sauna"
+msgstr "Sauna"
+
+#: src/CasasoftStandards/Service/CategoryService.php:110
+msgid "Solarium"
+msgstr "Solario"
+
+#: src/CasasoftStandards/Service/CategoryService.php:111
+msgid "Old-age home"
+msgstr "Casa di riposo"
+
+#: src/CasasoftStandards/Service/CategoryService.php:112
+msgid "Home"
+msgstr "Istituto"
+
+#: src/CasasoftStandards/Service/CategoryService.php:113
+msgid "Display window"
+msgstr "Vetrina"
+
+#: src/CasasoftStandards/Service/CategoryService.php:114
+msgid "Granny flat"
+msgstr "Stöckli"
+
+#: src/CasasoftStandards/Service/CategoryService.php:115
+msgid "Boat landing stage"
+msgstr "Attracco barca esteriore"
+
+#: src/CasasoftStandards/Service/CategoryService.php:116
+msgid "Horse box"
+msgstr "Box in stalla"
+
+#: src/CasasoftStandards/Service/CategoryService.php:117
+msgid "Boat mooring"
+msgstr "Attracco barca (boa)"
+
+#: src/CasasoftStandards/Service/CategoryService.php:118
+msgid "Cellar compartment"
+msgstr "Scomparto cantina"
+
+#: src/CasasoftStandards/Service/CategoryService.php:119
+msgid "Attic compartment"
+msgstr "Scomparto soffitta"
+
+#: src/CasasoftStandards/Service/CategoryService.php:122
+msgid "Restaurant"
+msgstr ""
+
+#: src/CasasoftStandards/Service/CategoryService.php:123
 msgid "Shopping center"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:95
+#: src/CasasoftStandards/Service/CategoryService.php:124
 #: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
 msgstr "Commerciale"
 
-#: src/CasasoftStandards/Service/CategoryService.php:96
+#: src/CasasoftStandards/Service/CategoryService.php:125
 msgid "Commercial plot"
 msgstr ""
 
@@ -287,6 +400,7 @@ msgid "Rental deposit guarantee"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:88
+#: src/CasasoftStandards/Service/FeatureService.php:350
 msgid "Raised ground floor"
 msgstr ""
 
@@ -422,6 +536,94 @@ msgstr "Certificato Minergie"
 #: src/CasasoftStandards/Service/FeatureService.php:265
 msgid "Is non smoking"
 msgstr "Non fumatore"
+
+#: src/CasasoftStandards/Service/FeatureService.php:269
+msgid "Is partially renovation indigent"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:273
+msgid "Is projection"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:277
+msgid "Is demolition property"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:281
+msgid "Is gutted"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:285
+msgid "Is shell construction"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:289
+msgid "Is well tended"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:293
+msgid "Is modernized"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:297
+msgid "Is dilapidated"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:301
+msgid "Is renovation indigent"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:305
+msgid "Is refurbished"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:309
+msgid "Is partially refurbished"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:313
+msgid "Is new"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:317
+msgid "Is first time occupancy"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:321
+msgid "Secondary residency"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:325
+msgid "Primary residency"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:329
+msgid "Foreign quota"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:334
+msgid "Attic"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:342
+msgid "Basement"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:346
+msgid "Garden level"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:354
+msgid "Cellar level"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:358
+msgid "Recessed ground floor"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:362
+msgid "Ground floor and first floor"
+msgstr ""
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"

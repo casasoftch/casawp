@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-06-07 14:29+0200\n"
-"PO-Revision-Date: 2017-06-07 14:30+0200\n"
+"POT-Creation-Date: 2017-06-07 16:39+0200\n"
+"PO-Revision-Date: 2017-06-07 16:41+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/CasasoftStandards/Service/CategoryService.php:36
-#: src/CasasoftStandards/Service/CategoryService.php:265
+#: src/CasasoftStandards/Service/CategoryService.php:292
 msgid "Apartment"
 msgstr "Wohnung"
 
@@ -68,7 +68,7 @@ msgid "Garage"
 msgstr "Garage"
 
 #: src/CasasoftStandards/Service/CategoryService.php:48
-#: src/CasasoftStandards/Service/CategoryService.php:250
+#: src/CasasoftStandards/Service/CategoryService.php:277
 msgid "House"
 msgstr "Haus"
 
@@ -233,20 +233,124 @@ msgstr "Gartenwohnung"
 msgid "Retail space"
 msgstr "Ladenfläche"
 
+#: src/CasasoftStandards/Service/CategoryService.php:94
+msgid "Boat dry dock"
+msgstr "Boot Hallenplatz"
+
 #: src/CasasoftStandards/Service/CategoryService.php:95
+msgid "Alottment garden"
+msgstr "Schrebergarten"
+
+#: src/CasasoftStandards/Service/CategoryService.php:96
+msgid "Squash / Badminton"
+msgstr "Squash / Badminton"
+
+#: src/CasasoftStandards/Service/CategoryService.php:97
+msgid "Indoor tennis court"
+msgstr "Tennishalle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:98
+msgid "Tennis court"
+msgstr "Tennisplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:99
+msgid "Sports hall"
+msgstr "Sportanlage"
+
+#: src/CasasoftStandards/Service/CategoryService.php:100
+msgid "Campground / Tent camping"
+msgstr "Camping- / Zeltplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:101
+msgid "Outdoor swimming pool"
+msgstr "Freibad"
+
+#: src/CasasoftStandards/Service/CategoryService.php:102
+msgid "Indoor swimming pool"
+msgstr "Hallenbad"
+
+#: src/CasasoftStandards/Service/CategoryService.php:103
+msgid "Golf course"
+msgstr "Golfplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:104
+msgid "Hospital"
+msgstr "Krankenhaus"
+
+#: src/CasasoftStandards/Service/CategoryService.php:105
+msgid "Mini-golf course"
+msgstr "Minigolfplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:106
+msgid "Nursing home"
+msgstr "Pflegeheim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:107
+msgid "Riding hall"
+msgstr "Reithalle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:108
+msgid "Sanatorium"
+msgstr "Sanatorium"
+
+#: src/CasasoftStandards/Service/CategoryService.php:109
+msgid "Sauna"
+msgstr "Sauna"
+
+#: src/CasasoftStandards/Service/CategoryService.php:110
+msgid "Solarium"
+msgstr "Solarium"
+
+#: src/CasasoftStandards/Service/CategoryService.php:111
+msgid "Old-age home"
+msgstr "Altersheim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:112
+msgid "Home"
+msgstr "Heim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:113
+msgid "Display window"
+msgstr "Schaufenster"
+
+#: src/CasasoftStandards/Service/CategoryService.php:114
+msgid "Granny flat"
+msgstr "Stöckli"
+
+#: src/CasasoftStandards/Service/CategoryService.php:115
+msgid "Boat landing stage"
+msgstr "Boot Stegplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:116
+msgid "Horse box"
+msgstr "Stallbox"
+
+#: src/CasasoftStandards/Service/CategoryService.php:117
+msgid "Boat mooring"
+msgstr "Boot Bojenplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:118
+msgid "Cellar compartment"
+msgstr "Kellerabteil"
+
+#: src/CasasoftStandards/Service/CategoryService.php:119
+msgid "Attic compartment"
+msgstr "Estrichabteil"
+
+#: src/CasasoftStandards/Service/CategoryService.php:122
 msgid "Restaurant"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:96
+#: src/CasasoftStandards/Service/CategoryService.php:123
 msgid "Shopping center"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:97
+#: src/CasasoftStandards/Service/CategoryService.php:124
 #: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
 msgstr "Gewerbe"
 
-#: src/CasasoftStandards/Service/CategoryService.php:98
+#: src/CasasoftStandards/Service/CategoryService.php:125
 msgid "Commercial plot"
 msgstr ""
 
