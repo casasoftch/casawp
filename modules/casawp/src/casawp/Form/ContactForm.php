@@ -158,7 +158,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('firstname')) {
             $filter->add(array(
                 'name' => 'firstname',
-                'required' => true,
+                'required' => get_option('casawp_form_firstname_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -175,7 +175,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('lastname')) {
             $filter->add(array(
                 'name' => 'lastname',
-                'required' => true,
+                'required' => get_option('casawp_form_lastname_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -192,7 +192,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('street')) {
             $filter->add(array(
                 'name' => 'street',
-                'required' => true,
+                'required' => get_option('casawp_form_street_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -209,7 +209,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('postal_code')) {
             $filter->add(array(
                 'name' => 'postal_code',
-                'required' => true,
+                'required' => get_option('casawp_form_postalcode_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -226,7 +226,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('locality')) {
             $filter->add(array(
                 'name' => 'locality',
-                'required' => true,
+                'required' => get_option('casawp_form_locality_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -240,10 +240,10 @@ class ContactForm extends Form
                 ),
             ));
         }
-        if (!$this->isInCustomFilters('locality')) {
+        if (!$this->isInCustomFilters('phone')) {
             $filter->add(array(
                 'name' => 'phone',
-                'required' => true,
+                'required' => get_option('casawp_form_phone_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
@@ -260,7 +260,7 @@ class ContactForm extends Form
         if (!$this->isInCustomFilters('mobile')) {
             $filter->add(array(
                 'name' => 'mobile',
-                'required' => false,
+                'required' => get_option('casawp_form_mobile_required', true),
                 'validators' => array(
                     array(
                         'name' => 'not_empty',
