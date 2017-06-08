@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-06-07 16:39+0200\n"
-"PO-Revision-Date: 2017-06-07 16:41+0200\n"
+"POT-Creation-Date: 2017-06-08 08:53+0200\n"
+"PO-Revision-Date: 2017-06-08 08:54+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -510,6 +510,7 @@ msgid "Middle house"
 msgstr "Mittelhaus"
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
+#: src/CasasoftStandards/Service/FeatureService.php:313
 msgid "New"
 msgstr "Neubau"
 
@@ -534,59 +535,55 @@ msgid "Minergie certified"
 msgstr "Minergie zertifiziert"
 
 #: src/CasasoftStandards/Service/FeatureService.php:265
-msgid "Is non smoking"
+msgid "Non smoking"
 msgstr "Nichtraucher"
 
 #: src/CasasoftStandards/Service/FeatureService.php:269
-msgid "Is partially renovation indigent"
+msgid "Partially renovation indigent"
 msgstr "Teils renovationsbedürftig"
 
 #: src/CasasoftStandards/Service/FeatureService.php:273
-msgid "Is projection"
+msgid "Projection"
 msgstr "Projektiert"
 
 #: src/CasasoftStandards/Service/FeatureService.php:277
-msgid "Is demolition property"
+msgid "Demolition property"
 msgstr "Abbruchobjekt"
 
 #: src/CasasoftStandards/Service/FeatureService.php:281
-msgid "Is gutted"
+msgid "Gutted"
 msgstr "Entkernt"
 
 #: src/CasasoftStandards/Service/FeatureService.php:285
-msgid "Is shell construction"
+msgid "Shell construction"
 msgstr "Rohbau"
 
 #: src/CasasoftStandards/Service/FeatureService.php:289
-msgid "Is well tended"
+msgid "Well tended"
 msgstr "Gepflegt"
 
 #: src/CasasoftStandards/Service/FeatureService.php:293
-msgid "Is modernized"
+msgid "Modernized"
 msgstr "Modernisiert"
 
 #: src/CasasoftStandards/Service/FeatureService.php:297
-msgid "Is dilapidated"
+msgid "Dilapidated"
 msgstr "Baufällig"
 
 #: src/CasasoftStandards/Service/FeatureService.php:301
-msgid "Is renovation indigent"
+msgid "Renovation indigent"
 msgstr "Renovationsbedürftig"
 
 #: src/CasasoftStandards/Service/FeatureService.php:305
-msgid "Is refurbished"
+msgid "Refurbished"
 msgstr "Vollsaniert"
 
 #: src/CasasoftStandards/Service/FeatureService.php:309
-msgid "Is partially refurbished"
+msgid "Partially refurbished"
 msgstr "Teilsaniert"
 
-#: src/CasasoftStandards/Service/FeatureService.php:313
-msgid "Is new"
-msgstr "Neuwertig"
-
 #: src/CasasoftStandards/Service/FeatureService.php:317
-msgid "Is first time occupancy"
+msgid "First time occupancy"
 msgstr "Erstbezug"
 
 #: src/CasasoftStandards/Service/FeatureService.php:321
@@ -988,6 +985,48 @@ msgstr "Bauen"
 #: src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
 msgstr "Investitionsobjekt"
+
+#~ msgid "Is non smoking"
+#~ msgstr "Nichtraucher"
+
+#~ msgid "Is partially renovation indigent"
+#~ msgstr "Teils renovationsbedürftig"
+
+#~ msgid "Is projection"
+#~ msgstr "Projektiert"
+
+#~ msgid "Is demolition property"
+#~ msgstr "Abbruchobjekt"
+
+#~ msgid "Is gutted"
+#~ msgstr "Entkernt"
+
+#~ msgid "Is shell construction"
+#~ msgstr "Rohbau"
+
+#~ msgid "Is well tended"
+#~ msgstr "Gepflegt"
+
+#~ msgid "Is modernized"
+#~ msgstr "Modernisiert"
+
+#~ msgid "Is dilapidated"
+#~ msgstr "Baufällig"
+
+#~ msgid "Is renovation indigent"
+#~ msgstr "Renovationsbedürftig"
+
+#~ msgid "Is refurbished"
+#~ msgstr "Vollsaniert"
+
+#~ msgid "Is partially refurbished"
+#~ msgstr "Teilsaniert"
+
+#~ msgid "Is new"
+#~ msgstr "Neuwertig"
+
+#~ msgid "Is first time occupancy"
+#~ msgstr "Erstbezug"
 
 #~ msgid "Office space"
 #~ msgstr "Bürofläche"

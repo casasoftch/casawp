@@ -262,59 +262,59 @@ class FeatureService implements FactoryInterface {
                 'icon' => '',
             ),
             'is-non-smoking' => array(
-                'label' => $this->translator->translate('Is non smoking', 'casasoft-standards'),
+                'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-partially-renovation-indigent' => array(
-                'label' => $this->translator->translate('Is partially renovation indigent', 'casasoft-standards'),
+                'label' => $this->translator->translate('Partially renovation indigent', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is_projection' => array(
-                'label' => $this->translator->translate('Is projection', 'casasoft-standards'),
+                'label' => $this->translator->translate('Projection', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-demolition-property' => array(
-                'label' => $this->translator->translate('Is demolition property', 'casasoft-standards'),
+                'label' => $this->translator->translate('Demolition property', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-gutted' => array(
-                'label' => $this->translator->translate('Is gutted', 'casasoft-standards'),
+                'label' => $this->translator->translate('Gutted', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-shell-construction' => array(
-                'label' => $this->translator->translate('Is shell construction', 'casasoft-standards'),
+                'label' => $this->translator->translate('Shell construction', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-well-tended' => array(
-                'label' => $this->translator->translate('Is well tended', 'casasoft-standards'),
+                'label' => $this->translator->translate('Well tended', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-modernized' => array(
-                'label' => $this->translator->translate('Is modernized', 'casasoft-standards'),
+                'label' => $this->translator->translate('Modernized', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-dilapidated' => array(
-                'label' => $this->translator->translate('Is dilapidated', 'casasoft-standards'),
+                'label' => $this->translator->translate('Dilapidated', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-renovation-indigent' => array(
-                'label' => $this->translator->translate('Is renovation indigent', 'casasoft-standards'),
+                'label' => $this->translator->translate('Renovation indigent', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-refurbished' => array(
-                'label' => $this->translator->translate('Is refurbished', 'casasoft-standards'),
+                'label' => $this->translator->translate('Refurbished', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-partially-refurbished' => array(
-                'label' => $this->translator->translate('Is partially refurbished', 'casasoft-standards'),
+                'label' => $this->translator->translate('Partially refurbished', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-new' => array(
-                'label' => $this->translator->translate('Is new', 'casasoft-standards'),
+                'label' => $this->translator->translate('New', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-first-time-occupancy' => array(
-                'label' => $this->translator->translate('Is first time occupancy', 'casasoft-standards'),
+                'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-allowed-as-secondary-residency' => array(
