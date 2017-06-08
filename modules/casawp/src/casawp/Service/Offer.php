@@ -26,6 +26,7 @@ class Offer{
     		case 'utilityService':
     		case 'categoryService':
     		case 'numvalService':
+				case 'integratedOfferService':
     		case 'featureService':
     		case 'messengerService':
     		case 'formService':
@@ -624,12 +625,18 @@ class Offer{
     }
 
     public function getIntegratedOffers(){
+
     	$offers = $this->getFieldValue('integratedoffers', false);
-    	if (empty($offers)) return NULL;
+
+
+
+    	if (empty($offers)) {return NULL;}
 
     	if ($offers) {
     		$offers = maybe_unserialize($offers);
     	}
+
+
 
     	//group em
     	$f_offers = array();
@@ -656,10 +663,13 @@ class Offer{
     		}
     	}
 
+
+
+
     	$r_offers = array();
     	foreach ($f_offers as $offer) {
     		if ($this->integratedOfferService->keyExists($offer["type"])) {
-    			$r_offer = $this->integratedOfferService->getItem($offer["type"]);
+    			$r_offer = clone $this->integratedOfferService->getItem($offer["type"]);
     			$r_offer->setCost($offer["price"]);
     			$r_offer->setTimesegment($offer["timesegment"]);
     			$r_offer->setPropertysegment($offer["propertysegment"]);
@@ -1091,8 +1101,8 @@ class Offer{
         ));
     }
 
-    public function renderContactFormElement($element){
-    	return $this->render('contact-form-element', array('element' => $element));
+    public function renderContactFormElement($element, $form = null){
+    	return $this->render('contact-form-element', array('element' => $element, 'form' => $form));
     }
 
     public function renderPagination(){

@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,22 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.2.5 =
+* update: New feature values and categories
+* fix: utility import
+* new: rooms, utility, price, region, feature filter
+* update: translations
+* fix: empty xmls will cause deletions now
+* fix: archive ajax optimizations
+* fix: legacy query parameters are more stable now
+* new: more countries in contact form
+* fix: form posts will not cause double posts anylonger
+* fix: re-enabled integratedOffers integration
+* new: override_name, override_exerpt, custom_description to replace them during import
+* fix: required field options work again for contact forms
+* new: contact forms now shows if fields are required
+
 
 = 2.2.4 =
 * new: multiple OR kriterias for shortcode integrations

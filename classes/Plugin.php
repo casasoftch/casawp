@@ -46,7 +46,7 @@ class Plugin {
         add_filter("attachment_fields_to_edit", array($this, "casawp_image_attachment_fields_to_edit"), null, 2);
         add_filter("attachment_fields_to_save", array($this, "casawp_image_attachment_fields_to_save"), null, 2);
         if (!is_admin()) {
-            add_action('pre_get_posts', array($this, 'casawp_queryfilter'));
+            add_action('pre_get_posts', array($this, 'casawp_queryfilter'), 10);
         }
 
         add_filter( 'template_include', array($this, 'include_template_function'), 1 );
@@ -401,6 +401,7 @@ class Plugin {
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
         $this->utilityService = $this->serviceManager->get('CasasoftUtility');
         $this->numvalService = $this->serviceManager->get('CasasoftNumval');
+        $this->featureService = $this->serviceManager->get('CasasoftFeature');
         $this->formSettingService = $this->serviceManager->get('casawpFormSettingService');
         $this->formService = $this->serviceManager->get('casawpFormService');
 
@@ -579,8 +580,8 @@ class Plugin {
       }
     }
 
-    public function renderContactFormElement($element){
-        return $this->render('contact-form-element', array('element' => $element));
+    public function renderContactFormElement($element, $form = null){
+        return $this->render('contact-form-element', array('element' => $element, 'form' => $form));
     }
 
     public function render($view, $args){
@@ -748,7 +749,120 @@ class Plugin {
           }
         }
 
+
+        //location reduces categories
+        $location = $this->getQueriedSingularLocation();
+        if ($location) {
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_category'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_location'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$location'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $category_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+          $category_slug_array = array_map(function($item){return $item['slug'];}, $category_property_count);
+          foreach ($categories as $key => $category) {
+              if (!in_array($category->getKey(), $category_slug_array)) {
+                  unset($categories[$key]);
+              }
+          }
+        }
+
+
         return $categories;
+    }
+
+    public function getUtilities(){
+      $utilities = array();
+      $utility_terms = get_terms('casawp_utility', array(
+          'hide_empty'        => true,
+      ));
+      $c_trans = null;
+
+      $locale = get_locale();
+      $lang = "de";
+      switch (substr($locale, 0, 2)) {
+          case 'de': $lang = 'de'; break;
+          case 'en': $lang = 'en'; break;
+          case 'it': $lang = 'it'; break;
+          case 'fr': $lang = 'fr'; break;
+          default: $lang = 'de'; break;
+      }
+
+      foreach ($utility_terms as $utility_term) {
+          if ($this->utilityService->keyExists($utility_term->slug)) {
+              $utilities[] = $this->utilityService->getItem($utility_term->slug);
+          } else if ($this->utilityService->keyExists($utility_term->slug)) {
+              //$utilities[] = $this->utilityService->getItem($utility_term->slug);
+          } else {
+              //needs to check for custom utilities
+
+
+              $unknown_utility = new \CasasoftStandards\Service\Utility();
+              $unknown_utility->setKey($utility_term->slug);
+
+              if ($c_trans === null) {
+                  $c_trans = maybe_unserialize(get_option('casawp_custom_utility_translations'));
+                  if (!$c_trans) {
+                      $c_trans = array();
+                  }
+              }
+
+              $unknown_utility->setLabel($unknown_utility->getKey());
+
+              $hidden = true;
+
+              foreach ($c_trans as $key => $trans) {
+
+                  if ($key == $utility_term->slug) {
+                      if (array_key_exists($lang, $trans)) {
+                        $unknown_utility->setLabel($trans[$lang]);
+                      }
+
+                      if (isset($c_trans[$utility_term->slug]['show']) && $c_trans[$utility_term->slug]['show']) {
+
+                        $hidden = false;
+                      }
+                  }
+              }
+              if (!$hidden) {
+                $utilities[] = $unknown_utility;
+              }
+          }
+      }
+
+
+      //salestype reduces utilities
+      $salestype = $this->getQueriedSingularSalestype();
+      if ($salestype) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_utility'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $utility_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $utility_slug_array = array_map(function($item){return $item['slug'];}, $utility_property_count);
+        foreach ($utilities as $key => $utility) {
+            if (!in_array($utility->getKey(), $utility_slug_array)) {
+                unset($utilities[$key]);
+            }
+        }
+      }
+
+      return $utilities;
     }
 
     public function getSalestypes(){
@@ -781,6 +895,85 @@ class Plugin {
         return $availabilities;
     }
 
+    public function getRegions(){
+        $regions = array();
+        $region_terms = get_terms('casawp_region', array(
+            'hide_empty'        => true,
+        ));
+        foreach ($region_terms as $region_term) {
+            $regions[$region_term->slug] = $region_term->name;
+        }
+        return $regions;
+    }
+
+
+    public function getFeatures(){
+      $features = get_terms('casawp_feature',array(
+          'hierarchical'      => false,
+          'hide_empty'        => true
+      ));
+      $availability = $this->getQueriedSingularAvailability();
+      if ($availability) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_feature'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $feature_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $feature_id_array = array_map(function($item){return $item['term_id'];}, $feature_property_count);
+        foreach ($features as $key => $feature) {
+            if (!in_array($feature->term_id, $feature_id_array)) {
+                unset($features[$key]);
+            }
+        }
+      }
+
+      //salestype reduces categories
+      $salestype = $this->getQueriedSingularSalestype();
+      if ($salestype) {
+        global $wpdb;
+        /*filters the result with reference context in mind (WPML IGNORANT) */
+        $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_feature'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_salestype'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$salestype'
+            GROUP BY ". $wpdb->prefix . "terms.term_id";
+        $feature_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+        $feature_id_array = array_map(function($item){return $item['term_id'];}, $feature_property_count);
+        foreach ($features as $key => $feature) {
+            if (!in_array($feature->term_id, $feature_id_array)) {
+                unset($features[$key]);
+            }
+        }
+      }
+
+      $featureObjects = array();
+      foreach ($features as $tax_term) {
+        if ($this->featureService->keyExists($tax_term->slug)) {
+          $feature = $this->featureService->getItem($tax_term->slug);
+        } else {
+          $feature = new \CasasoftStandards\Service\Feature();
+          $feature->setKey($tax_term->slug);
+          $feature->setLabel('?'.$tax_term->slug);
+        }
+
+        $featureObjects[$tax_term->slug] = $feature;
+      }
+      return $featureObjects;
+    }
+
     public function isReferenceArchive(){
         $query = $this->queryService->getQuery();
         $reference = false;
@@ -810,6 +1003,14 @@ class Plugin {
         $query = $this->queryService->getQuery();
         if (isset($query['categories']) && count($query['categories']) == 1) {
             return $query['categories'][0];
+        }
+        return false;
+    }
+
+    public function getQueriedSingularLocation(){
+        $query = $this->queryService->getQuery();
+        if (isset($query['locations']) && count($query['locations']) == 1) {
+            return $query['locations'][0];
         }
         return false;
     }
@@ -896,17 +1097,31 @@ class Plugin {
         $form = new \casawp\Form\FilterForm(
             array(
                 'casawp_filter_categories_elementtype' => get_option('casawp_filter_categories_elementtype', false),
+                'casawp_filter_utilities_elementtype' => get_option('casawp_filter_utilities_elementtype', false),
                 'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
                 'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
+                'casawp_filter_rooms_from_elementtype' => get_option('casawp_filter_rooms_from_elementtype', false),
+                'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
+                'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
+                'casawp_filter_price_to_elementtype' => get_option('casawp_filter_price_to_elementtype', false),
+                'casawp_filter_regions_elementtype' => get_option('casawp_filter_regions_elementtype', false),
+                'casawp_filter_features_elementtype' => get_option('casawp_filter_features_elementtype', false),
                 'chosen_categories' => $this->queryService->getQueryValue('categories'),
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
+                'chosen_features' => $this->queryService->getQueryValue('features'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
+                'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
+                'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
             ),
             $this->getCategories(),
+            $this->getUtilities(),
             $this->getSalestypes(),
             $this->getLocations(),
-            $this->getAvailabilities()
+            $this->getAvailabilities(),
+            $this->getRegions(),
+            $this->getFeatures()
         );
+        $form->setAttribute('action', get_post_type_archive_link( 'casawp_property' ));
         $form->bind($this->queryService);
         return $this->render('archive-filter', array('form' => $form));
     }
@@ -2018,7 +2233,7 @@ class Plugin {
             'hierarchical'      => false,
             'labels'            => $labels,
             'show_ui'           => true,
-            'show_admin_column' => true,
+            'show_admin_column' => false,
             'query_var'         => true,
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
@@ -2134,6 +2349,34 @@ class Plugin {
         );
         register_taxonomy( 'casawp_availability', array( 'casawp_property' ), $args );
 
+
+        /*----------  custom region segments ----------*/
+
+        $labels = array(
+            'name'                       => __( 'Property regions', 'casawp' ),
+            'singular_name'              => __( 'Region Segment', 'casawp' ),
+            'search_items'               => __( 'Search Region Segments', 'casawp' ),
+            'popular_items'              => __( 'Popular Region Segments', 'casawp' ),
+            'all_items'                  => __( 'All Region Segments', 'casawp' ),
+            'edit_item'                  => __( 'Edit Region Segment', 'casawp' ),
+            'update_item'                => __( 'Update Region Segment', 'casawp' ),
+            'add_new_item'               => __( 'Add New Region Segment', 'casawp' ),
+            'new_item_name'              => __( 'New Region Segment Name', 'casawp' ),
+            'separate_items_with_commas' => __( 'Separate regions with commas', 'casawp' ),
+            'add_or_remove_items'        => __( 'Add or remove regions', 'casawp' ),
+            'choose_from_most_used'      => __( 'Choose from the most used salestypes', 'casawp' ),
+            'not_found'                  => __( 'No Region Segments found.', 'casawp' ),
+            'menu_name'                  => __( 'Region Segment', 'casawp' )
+        );
+        $args = array(
+            'hierarchical'      => false,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => false,
+            'query_var'         => true,
+            'rewrite'           => array( 'slug' => 'immobilien-regions' )
+        );
+        register_taxonomy( 'casawp_region', array( 'casawp_property' ), $args );
 
 
         /*----------  attachments  ----------*/

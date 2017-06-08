@@ -14,18 +14,27 @@ class QueryService{
             'post__not_in' => null,
             'orderby' => get_option('casawp_archive_orderby', 'date'),
             'categories' => array(),
+            'utilities' => array(),
             'locations' => array(),
+            'regions' => array(),
             'salestypes' => array(),
             'availabilities' => array('active'),
             'categories_not' => array(),
             'locations_not' => array(),
             'salestypes_not' => array(),
             'availabilities_not' => array(),
+            'regions_not' => array(),
             'features' => array(),
+            'features_not' => array(),
             'my_lng' => null,
             'my_lat' => null,
             'radius_km' => 10,
-            'projectunit_id' => null
+            'projectunit_id' => null,
+            'rooms_from' => null,
+            'rooms_to' => null,
+            'price_from' => null,
+            'price_to' => null,
+            'price_range' => null
         );
         $this->setQuery();
     }
@@ -85,42 +94,59 @@ class QueryService{
               $key = 'salestypes';
             }
 
-            //fix singles
-            if (strpos($key, 'category') !== -1) {
-                $key = str_replace('category', 'categories', $key);
-            }
-            if (strpos($key, 'locations') === -1 && strpos($key, 'location') !== -1) {
-                $key = str_replace('location', 'locations', $key);
-            }
-            if (strpos($key, 'salestypes') === -1 && strpos($key, 'salestype') !== -1) {
-                $key = str_replace('salestype', 'salestypes', $key);
-            }
-            if (strpos($key, 'availability') !== -1) {
-                $key = str_replace('availability', 'availabilities', $key);
-            }
-
             //remove legacy prefixes
             if (strpos($key, 'casawp_') === 0) {
                 $key = str_replace('casawp_', '', $key);
             }
 
             //remove legacy postfixes
-            if (strpos($key, '_not_s') !== -1) {
-                $key = str_replace('_not_s', 'not', $key);
+            if (strpos($key, '_not_s') !== false) {
+                $key = str_replace('_not_s', '_not', $key);
             }
-            if (strpos($key, '_s') !== -1) {
+            if (strpos($key, '_s') !== false) {
                 $key = str_replace('_s', '', $key);
             }
+
+            //fix singles
+            if (strpos($key, 'category') !== false) {
+                $key = str_replace('category', 'categories', $key);
+            }
+            if (strpos($key, 'utility') !== false) {
+                $key = str_replace('utility', 'utilities', $key);
+            }
+            if (strpos($key, 'locations') === false && strpos($key, 'location') !== false) {
+                $key = str_replace('location', 'locations', $key);
+            }
+            if (strpos($key, 'regions') === false && strpos($key, 'region') !== false) {
+                $key = str_replace('region', 'regions', $key);
+            }
+            if (strpos($key, 'features') === false && strpos($key, 'feature') !== false) {
+                $key = str_replace('feature', 'features', $key);
+            }
+            if (strpos($key, 'salestypes') === false && strpos($key, 'salestype') !== false) {
+                $key = str_replace('salestype', 'salestypes', $key);
+            }
+            if (strpos($key, 'availability') !== false) {
+                $key = str_replace('availability', 'availabilities', $key);
+            }
+
+
 
 
 
             switch ($key) {
                 case 'categories':
+                case 'utilities':
                 case 'locations':
+                case 'regions':
+                case 'features':
                 case 'salestypes':
                 case 'availabilities':
                 case 'categories_not':
+                case 'utilities_not':
                 case 'locations_not':
+                case 'regions_not':
+                case 'features_not':
                 case 'salestypes_not':
                 case 'availabilities_not':
                     $query[$key] = (is_array($value) ? $value : array($value));
@@ -212,6 +238,193 @@ class QueryService{
                 'compare'   => '='
             );
         }
+        if ($this->query['rooms_from']) {
+            $meta_query_items_new[] = array(
+                'key' => 'number_of_rooms',
+                'value' => (is_array($this->query['rooms_from']) ? $this->query['rooms_from'][0] : $this->query['rooms_from']),
+                'compare'   => '>='
+            );
+        }
+        if ($this->query['rooms_to']) {
+            $meta_query_items_new[] = array(
+                'key' => 'number_of_rooms',
+                'value' => (is_array($this->query['rooms_to']) ? $this->query['rooms_to'][0] : $this->query['rooms_to']),
+                'compare'   => '<='
+            );
+        }
+        if (in_array('rent', $this->query['salestypes'])) {
+          if ($this->query['price_from']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'grossPrice',
+                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                  'compare'   => '>=',
+                  'type' => 'NUMERIC'
+              );
+          }
+          if ($this->query['price_to']) {
+            if (strpos($this->query['price_to'], '-') !== false) {
+              $price_parts = explode('-', $this->query['price_to']);
+              if ($price_parts[0]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'grossPrice',
+                    'value' => $price_parts[0],
+                    'compare'   => '>=',
+                    'type' => 'NUMERIC'
+                );
+              }
+              if ($price_parts[1]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'grossPrice',
+                    'value' => $price_parts[1],
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
+                );
+              }
+            } else {
+              $meta_query_items_new[] = array(
+                  'key' => 'grossPrice',
+                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                  'compare'   => '<=',
+                  'type' => 'NUMERIC'
+              );
+            }
+          }
+        } else if(in_array('buy', $this->query['salestypes'])){
+          if ($this->query['price_from']) {
+              $meta_query_items_new[] = array(
+                  'key' => 'price',
+                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                  'compare'   => '>=',
+                  'type' => 'NUMERIC'
+              );
+          }
+          if ($this->query['price_to']) {
+            if (strpos($this->query['price_to'], '-') !== false) {
+              $price_parts = explode('-', $this->query['price_to']);
+              if ($price_parts[0]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => $price_parts[0],
+                    'compare'   => '>=',
+                    'type' => 'NUMERIC'
+                );
+              }
+              if ($price_parts[1]) {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => $price_parts[1],
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
+                );
+              }
+            } else {
+              $meta_query_items_new[] = array(
+                  'key' => 'price',
+                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                  'compare'   => '<=',
+                  'type' => 'NUMERIC'
+              );
+            }
+          }
+
+
+
+
+          if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
+              $price_seek_parts = explode('-', $this->query['price_range']);
+              $range_seek_from = $price_seek_parts[0];
+              $range_seek_to = $price_seek_parts[1];
+
+
+
+              if ($range_seek_from && $range_seek_to) {
+                // $meta_query_items_new[] = array(
+                //   'key' => 'price_range_from',
+                //   'value' => (int) $range_seek_to,
+                //   'compare'   => '<='
+                // );
+                // $meta_query_items_new[] = array(
+                //   'key' => 'price_range_to',
+                //   'value' => (int) $range_seek_from,
+                //   'compare'   => '>='
+                // );
+
+                $meta_query_items_new[] = array(
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_from',
+                    'value' => 0,
+                    'compare'   => '>',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_to',
+                    'value' => 0,
+                    'compare'   => '>',
+                    'type' => 'UNSIGNED'
+                  )
+                );
+                $meta_query_items_new[] = array(
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_from',
+                    'value' => array($range_seek_from, $range_seek_to),
+                    'compare'   => 'BETWEEN',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_from',
+                    'compare'   => 'NOT EXISTS'
+                  )
+                );
+                $meta_query_items_new[] = array(
+                  'relation' => 'OR',
+                  array(
+                    'key' => 'price_range_to',
+                    'value' => array($range_seek_from, $range_seek_to),
+                    'compare'   => 'BETWEEN',
+                    'type' => 'UNSIGNED'
+                  ),
+                  array(
+                    'key' => 'price_range_to',
+                    'compare'   => 'NOT EXISTS'
+                  )
+                );
+
+
+                // $meta_query_items_new[] = array(
+                //   array(
+                //     'relation' => 'OR',
+                //     array(
+                //       'relation' => 'AND',
+                //       array(
+                //         'key' => 'price_range_from',
+                //         'value' => array($range_seek_from, $range_seek_to),
+                //         'compare'   => 'BETWEEN'
+                //       ),
+                //       array(
+                //         'key' => 'price_range_to',
+                //         'value' => array($range_seek_from, $range_seek_to),
+                //         'compare'   => 'BETWEEN'
+                //       )
+                //     ),
+                //     array(
+                //       'key' => 'price',
+                //       'value' => array($range_seek_from, $range_seek_to),
+                //       'compare'   => 'BETWEEN'
+                //     )
+                //   )
+                // );
+              }
+          }
+
+
+
+
+
+
+
+        }
         if ($meta_query_items_new) {
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
@@ -229,10 +442,37 @@ class QueryService{
                 'operator'         => 'IN'
             );
         }
+        if ($this->query['utilities']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => $this->query['utilities'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'IN'
+            );
+        }
         if ($this->query['locations']) {
             $taxquery_new[] = array(
                 'taxonomy' => 'casawp_location',
                 'terms' => $this->query['locations'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+            );
+        }
+        if ($this->query['regions']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_region',
+                'terms' => $this->query['regions'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+            );
+        }
+        if ($this->query['features']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_feature',
+                'terms' => $this->query['features'],
                 'include_children' => 1,
                 'field' => 'slug',
                 'operator'=> 'IN'
@@ -268,10 +508,38 @@ class QueryService{
                 'operator'         => 'NOT IN'
             );
         }
+        if ((isset($this->options['utilities_not']) ? $this->options['utilities_not'] : null)) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => (isset($this->options['utilities_not']) ? $this->options['utilities_not'] : null),
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'NOT IN'
+
+            );
+        }
         if ($this->query['locations_not']) {
             $taxquery_new[] = array(
                 'taxonomy' => 'casawp_location',
                 'terms' => $this->query['locations_not'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'NOT IN'
+            );
+        }
+        if ($this->query['regions_not']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_region',
+                'terms' => $this->query['regions_not'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'NOT IN'
+            );
+        }
+        if ($this->query['features_not']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_feature',
+                'terms' => $this->query['features_not'],
                 'include_children' => 1,
                 'field' => 'slug',
                 'operator'=> 'NOT IN'
@@ -323,8 +591,17 @@ class QueryService{
             if (is_tax('casawp_category')) {
                 $this->query['categories'] = array(get_query_var( 'casawp_category' ));
             }
+            if (is_tax('casawp_utility')) {
+                $this->query['utilities'] = array(get_query_var( 'casawp_utility' ));
+            }
             if (is_tax('casawp_location')) {
                 $this->query['locations'] = array(get_query_var( 'casawp_location' ));
+            }
+            if (is_tax('casawp_region')) {
+                $this->query['regions'] = array(get_query_var( 'casawp_region' ));
+            }
+            if (is_tax('casawp_feature')) {
+                $this->query['features'] = array(get_query_var( 'casawp_feature' ));
             }
             if (is_tax('casawp_salestype')) {
                 $this->query['salestypes'] = array(get_query_var( 'casawp_salestype' ));

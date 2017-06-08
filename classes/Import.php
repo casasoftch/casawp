@@ -23,16 +23,21 @@ class Import {
       $good_to_go = false;
       if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
         mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
+        $this->addToLog('directory casawp was missing: ' . time());
       }
       if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
         mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import');
+        $this->addToLog('directory casawp/import was missing: ' . time());
       }
       $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
       if (file_exists($file)) {
         $good_to_go = true;
+        $this->addToLog('file found lets go: ' . time());
       } else {
         //if force last check for last
+        $this->addToLog('file was missing ' . time());
         if (isset($_GET['force_last_import'])) {
+          $this->addToLog('importing last file based on force_last_import: ' . time());
           $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml';
           if (file_exists($file)) {
             $good_to_go = true;
@@ -42,7 +47,10 @@ class Import {
       if ($good_to_go) {
         $this->importFile = $file;
       }
+    } else {
+        $this->addToLog('importfile already set: ' . time());
     }
+
     return $this->importFile;
   }
 
@@ -58,9 +66,32 @@ class Import {
     return true;
   }
 
-  public function extractDescription($offer){
+  public function extractDescription($offer, $publisher_options = null){
+    $descriptionDatas = $offer['descriptions'];
+
+    //add custom_descriptions
+    if ($publisher_options && isset($publisher_options['custom_descriptions']) && $publisher_options['custom_descriptions']) {
+      if (is_array($publisher_options['custom_descriptions'])) {
+        $json = $publisher_options['custom_descriptions'][0];
+      } else {
+        $json = $publisher_options['custom_descriptions'];
+      }
+      $custom_descriptions = json_decode($json, true);
+      if ($custom_descriptions && is_array($custom_descriptions)) {
+        foreach ($custom_descriptions as $custom_description_data) {
+          if (isset($custom_description_data['html'])) {
+            $newDescroptionData = array();
+            $newDescroptionData['title'] = (isset($custom_description_data['title']) ? $custom_description_data['title'] : '');
+            $newDescroptionData['text'] = $custom_description_data['html'];
+            $descriptionDatas[] = $newDescroptionData;
+          }
+
+        }
+      }
+    }
+
     $the_description = '';
-    foreach ($offer['descriptions'] as $description) {
+    foreach ($descriptionDatas as $description) {
       $the_description .= ($the_description ? '<hr class="property-separator" />' : '');
       if ($description['title']) {
         $the_description .= '<h2>' . $description['title'] . '</h2>';
@@ -100,6 +131,35 @@ class Import {
         'casawp_category',
         $options
       );
+      return $id;
+    }
+  }
+
+  public function setcasawpRegionTerm($term_slug, $label = false) {
+    $label = (!$label ? $term_slug : $label);
+    $term = get_term_by('slug', $term_slug, 'casawp_region', OBJECT, 'raw' );
+    $existing_term_id = false;
+    if ($term) {
+      if (
+        $term->slug != $term_slug
+        || $term->name != $label
+      ) {
+        wp_update_term($term->term_id, 'casawp_region', array(
+          'name' => $label,
+          'slug' => $term_slug
+        ));
+      }
+    } else {
+      $options = array(
+        'description' => '',
+        'slug' => $term_slug
+      );
+      $id = wp_insert_term(
+        $label,
+        'casawp_region',
+        $options
+      );
+      $this->addToLog('inserting region ' . $label);
       return $id;
     }
   }
@@ -894,6 +954,7 @@ class Import {
       //add the new ones
       $connect_term_ids = array();
       $category_terms = get_terms( array('casawp_category'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($category_terms as $term) {
         if (in_array($term->slug, $new_categories)) {
           $connect_term_ids[] = (int) $term->term_id;
@@ -939,6 +1000,7 @@ class Import {
 
       //add the new ones
       $feature_terms = get_terms( array('casawp_feature'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($feature_terms as $term) {
         if (in_array($term->slug, $new_features)) {
           $connect_term_ids[] = (int) $term->term_id;
@@ -983,6 +1045,7 @@ class Import {
 
       //add the new ones
       $utility_terms = get_terms( array('casawp_utility'), array('hide_empty' => false));
+      $connect_term_ids = array();
       foreach ($utility_terms as $term) {
         if (in_array($term->slug, $new_utilities)) {
           $connect_term_ids[] = (int) $term->term_id;
@@ -990,6 +1053,65 @@ class Import {
       }
       if ($connect_term_ids) {
         wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_utility' );
+      }
+    }
+  }
+
+
+  public function setOfferRegions($wp_post, $terms, $casawp_id){
+    $new_terms = array();
+    $old_terms = array();
+
+    //set post term
+    $old_terms = array();
+    $wp_term_terms = wp_get_object_terms($wp_post->ID, 'casawp_region');
+    foreach ($wp_term_terms as $term) {
+      $old_terms[] = $term->slug;
+    }
+
+    //supported
+    if ($terms) {
+      foreach ($terms as $term) {
+        $new_terms[] = $term['slug'];
+      }
+    }
+
+    //have terms changed?
+    if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
+      $slugs_to_remove = array_diff($old_terms, $new_terms);
+      $slugs_to_add    = array_diff($new_terms, $old_terms);
+      $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
+      $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
+
+      //get the custom labels they need them
+      $custom_labels = array();
+      if (isset($terms)) {
+        foreach ($terms as $custom) {
+          if (isset($custom['label'])) {
+            $custom_labels[$custom['slug']] = $custom['label'];
+          } else {
+            $custom_labels[$custom['slug']] = $custom['slug'];
+          }
+
+        }
+      }
+
+      //make sure the terms exist first
+      foreach ($slugs_to_add as $new_term_slug) {
+        $label = (array_key_exists($new_term_slug, $custom_labels) ? $custom_labels[$new_term_slug] : false);
+        $this->setcasawpRegionTerm($new_term_slug, $label);
+      }
+
+      //add the new ones
+      $term_terms = get_terms( array('casawp_region'), array('hide_empty' => false));
+      $connect_term_ids = array();
+      foreach ($term_terms as $term) {
+        if (in_array($term->slug, $new_terms)) {
+          $connect_term_ids[] = (int) $term->term_id;
+        }
+      }
+      if ($connect_term_ids) {
+        wp_set_object_terms( $wp_post->ID, $connect_term_ids, 'casawp_region' );
       }
     }
   }
@@ -1075,9 +1197,16 @@ class Import {
       $url = $apiurl . '?' . http_build_query($query, '', '&');
 
       $response = false;
+
+
+      if (!function_exists('curl_version')) {
+        $this->addToLog('gateway ERR (CURL MISSING!!!): ' . time());
+        echo '<div id="message" class="updated"> CURL MISSING!!!</div>';
+      }
+
+      $ch = curl_init();
       try {
           //$url = 'http://casacloud.cloudcontrolapp.com' . '/rest/provider-properties?' . http_build_query($query);
-          $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $url);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
           curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -1086,9 +1215,9 @@ class Import {
           if($httpCode == 404) {
               $response = $httpCode;
           }
-          curl_close($ch);
       } catch (Exception $e) {
           $response =  $e->getMessage() ;
+          $this->addToLog('gateway ERR (' . $response . '): ' . time());
       }
 
       if ($response) {
@@ -1098,7 +1227,11 @@ class Import {
         $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
 
         file_put_contents($file, $response);
+      } else {
+        $this->addToLog('ERR no response from gateway: ' . time());
+        $this->addToLog(curl_error($ch));
       }
+      curl_close($ch);
 
       $this->addToLog('gateway start update: ' . time());
       //UPDATE OFFERS NOW!!!!
@@ -1111,6 +1244,7 @@ class Import {
 
       //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
+      $this->addToLog('gateway keys missing: ' . time());
       echo '<div id="message" class="updated"> API Keys missing</div>';
     }
   }
@@ -1141,6 +1275,13 @@ class Import {
     $propertydata['price_currency'] = $property_xml->priceCurrency->__toString();
     $propertydata['price'] = $property_xml->price->__toString();
     $propertydata['price_property_segment'] = (!$property_xml->price['propertysegment']?:str_replace('2', '', $property_xml->price['propertysegment']->__toString()));
+    if ($property_xml->priceRange) {
+      $propertydata['price_range_from'] = $property_xml->priceRange->from->__toString();
+      $propertydata['price_range_to'] = $property_xml->priceRange->to->__toString();
+    } else {
+      $propertydata['price_range_from'] = null;
+      $propertydata['price_range_to'] = null;
+    }
     $propertydata['net_price'] = $property_xml->netPrice->__toString();
     $propertydata['net_price_time_segment'] = ($property_xml->netPrice['timesegment'] ? strtolower($property_xml->netPrice['timesegment']->__toString()) : '');
     $propertydata['net_price_property_segment'] = (!$property_xml->netPrice['propertysegment']?: str_replace('2', '', $property_xml->netPrice['propertysegment']->__toString()));
@@ -1600,8 +1741,13 @@ class Import {
     $this->renameImportFileTo(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml');
     set_time_limit(600);
     global $wpdb;
+    libxml_use_internal_errors();
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
-
+    $errors = libxml_get_errors();
+    if ($errors) {
+      $this->transcript['error'] = 'XML read error' . print_r($errors, true);
+      die('XML read error');
+    }
     $found_posts = array();
     //key is id value is rank!!!!
     $ranksort = array();
@@ -1677,7 +1823,9 @@ class Import {
     }
 
 
-    if ($found_posts) {
+    if (!$found_posts) {
+      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
+    }
 
       //3. remove all the unused properties
       $properties_to_remove = get_posts(  array(
@@ -1737,9 +1885,7 @@ class Import {
       $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
       $this->transcript['properties_removed'] = count($properties_to_remove);
-    } else{
-      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML';
-    }
+
 
 
 
@@ -2117,14 +2263,23 @@ class Import {
       }
     }
 
+    $name = (isset($publisher_options['override_name']) && $publisher_options['override_name'] ? $publisher_options['override_name'] : $offer['name']);
+    if (is_array($name)) {
+      $name = $name[0];
+    }
+    $excerpt = (isset($publisher_options['override_excerpt']) && $publisher_options['override_excerpt'] ? $publisher_options['override_excerpt'] : $offer['excerpt']);
+    if (is_array($excerpt)) {
+      $excerpt = $excerpt[0];
+    }
+
     /* main post data */
     $new_main_data = array(
       'ID'            => $wp_post->ID,
-      'post_title'    => ($offer['name'] ? $offer['name'] : 'Objekt'),
-      'post_content'  => $this->extractDescription($offer),
+      'post_title'    => ($name ? $name : 'Objekt'),
+      'post_content'  => $this->extractDescription($offer, $publisher_options),
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
-      'post_excerpt'  => $offer['excerpt'],
+      'post_excerpt'  => $excerpt,
       'post_date' => $wp_post->post_date,
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
@@ -2292,6 +2447,13 @@ class Import {
       $new_meta_data['price'] = $property['price'];
       $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
     }
+    if (isset($property['price_range_from'])) {
+      $new_meta_data['price_range_from'] = $property['price_range_from'];
+    }
+    if (isset($property['price_range_to'])) {
+      $new_meta_data['price_range_to'] = $property['price_range_to'];
+    }
+
 
     if (isset($property['net_price'])) {
       $new_meta_data['netPrice'] = $property['net_price'];
@@ -2462,11 +2624,34 @@ class Import {
           } elseif ($label) {
             $custom_categories[$label]['label'] = $values[0];
           }
-
         }
+
       }
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
     }
+
+
+    $this->addToLog('updating custom regions');
+    $custom_regions = array();
+    foreach ($publisher_options as $key => $values) {
+      if (strpos($key, 'custom_region') === 0) {
+        $parts = explode('_', $key);
+        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+        $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
+        $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
+        if ($slug) {
+          $custom_regions[$sort]['slug'] = $values[0];
+        } elseif ($label) {
+          $custom_regions[$label]['label'] = $values[0];
+        }
+      }
+
+    }
+
+
+    $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
+
+
 
     $this->addToLog('updating features');
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);

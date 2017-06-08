@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Shala\n"
-"POT-Creation-Date: 2017-02-22 13:08+0100\n"
-"PO-Revision-Date: 2017-02-22 13:08+0100\n"
+"Project-Id-Version: CasasoftStandards\n"
+"POT-Creation-Date: 2017-06-08 09:54+0200\n"
+"PO-Revision-Date: 2017-06-08 09:55+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;translatePlural:1,2\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/CasasoftStandards/Service/CategoryService.php:36
-#: src/CasasoftStandards/Service/CategoryService.php:263
+#: src/CasasoftStandards/Service/CategoryService.php:292
 msgid "Apartment"
 msgstr "Wohnung"
 
@@ -68,7 +68,7 @@ msgid "Garage"
 msgstr "Garage"
 
 #: src/CasasoftStandards/Service/CategoryService.php:48
-#: src/CasasoftStandards/Service/CategoryService.php:248
+#: src/CasasoftStandards/Service/CategoryService.php:277
 msgid "House"
 msgstr "Haus"
 
@@ -153,6 +153,7 @@ msgid "Flat"
 msgstr "Etagenwohnung"
 
 #: src/CasasoftStandards/Service/CategoryService.php:73
+#: src/CasasoftStandards/Service/FeatureService.php:350
 msgid "Ground floor"
 msgstr "Erdgeschoss"
 
@@ -224,20 +225,132 @@ msgstr "Moto Hallenplatz"
 msgid "Rustico"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:93
+#: src/CasasoftStandards/Service/CategoryService.php:91
+msgid "Garden Apartment"
+msgstr "Gartenwohnung"
+
+#: src/CasasoftStandards/Service/CategoryService.php:92
+msgid "Retail space"
+msgstr "Ladenfläche"
+
+#: src/CasasoftStandards/Service/CategoryService.php:94
+msgid "Boat dry dock"
+msgstr "Boot Hallenplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:95
+msgid "Alottment garden"
+msgstr "Schrebergarten"
+
+#: src/CasasoftStandards/Service/CategoryService.php:96
+msgid "Squash / Badminton"
+msgstr "Squash / Badminton"
+
+#: src/CasasoftStandards/Service/CategoryService.php:97
+msgid "Indoor tennis court"
+msgstr "Tennishalle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:98
+msgid "Tennis court"
+msgstr "Tennisplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:99
+msgid "Sports hall"
+msgstr "Sportanlage"
+
+#: src/CasasoftStandards/Service/CategoryService.php:100
+msgid "Campground / Tent camping"
+msgstr "Camping- / Zeltplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:101
+msgid "Outdoor swimming pool"
+msgstr "Freibad"
+
+#: src/CasasoftStandards/Service/CategoryService.php:102
+msgid "Indoor swimming pool"
+msgstr "Hallenbad"
+
+#: src/CasasoftStandards/Service/CategoryService.php:103
+msgid "Golf course"
+msgstr "Golfplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:104
+msgid "Hospital"
+msgstr "Krankenhaus"
+
+#: src/CasasoftStandards/Service/CategoryService.php:105
+msgid "Mini-golf course"
+msgstr "Minigolfplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:106
+msgid "Nursing home"
+msgstr "Pflegeheim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:107
+msgid "Riding hall"
+msgstr "Reithalle"
+
+#: src/CasasoftStandards/Service/CategoryService.php:108
+msgid "Sanatorium"
+msgstr "Sanatorium"
+
+#: src/CasasoftStandards/Service/CategoryService.php:109
+msgid "Sauna"
+msgstr "Sauna"
+
+#: src/CasasoftStandards/Service/CategoryService.php:110
+msgid "Solarium"
+msgstr "Solarium"
+
+#: src/CasasoftStandards/Service/CategoryService.php:111
+msgid "Old-age home"
+msgstr "Altersheim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:112
+msgid "Home"
+msgstr "Heim"
+
+#: src/CasasoftStandards/Service/CategoryService.php:113
+msgid "Display window"
+msgstr "Schaufenster"
+
+#: src/CasasoftStandards/Service/CategoryService.php:114
+msgid "Granny flat"
+msgstr "Stöckli"
+
+#: src/CasasoftStandards/Service/CategoryService.php:115
+msgid "Boat landing stage"
+msgstr "Boot Stegplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:116
+msgid "Horse box"
+msgstr "Stallbox"
+
+#: src/CasasoftStandards/Service/CategoryService.php:117
+msgid "Boat mooring"
+msgstr "Boot Bojenplatz"
+
+#: src/CasasoftStandards/Service/CategoryService.php:118
+msgid "Cellar compartment"
+msgstr "Kellerabteil"
+
+#: src/CasasoftStandards/Service/CategoryService.php:119
+msgid "Attic compartment"
+msgstr "Estrichabteil"
+
+#: src/CasasoftStandards/Service/CategoryService.php:122
 msgid "Restaurant"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:94
+#: src/CasasoftStandards/Service/CategoryService.php:123
 msgid "Shopping center"
 msgstr ""
 
-#: src/CasasoftStandards/Service/CategoryService.php:95
+#: src/CasasoftStandards/Service/CategoryService.php:124
 #: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
-msgstr "Büro"
+msgstr "Gewerbe"
 
-#: src/CasasoftStandards/Service/CategoryService.php:96
+#: src/CasasoftStandards/Service/CategoryService.php:125
 msgid "Commercial plot"
 msgstr ""
 
@@ -287,6 +400,7 @@ msgid "Rental deposit guarantee"
 msgstr "Mietkautionsgarantie"
 
 #: src/CasasoftStandards/Service/FeatureService.php:88
+#: src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Raised ground floor"
 msgstr "Hochparterre"
 
@@ -396,6 +510,7 @@ msgid "Middle house"
 msgstr "Mittelhaus"
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
+#: src/CasasoftStandards/Service/FeatureService.php:313
 msgid "New"
 msgstr "Neubau"
 
@@ -418,6 +533,106 @@ msgstr "Minergiebauweise"
 #: src/CasasoftStandards/Service/FeatureService.php:261
 msgid "Minergie certified"
 msgstr "Minergie zertifiziert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:265
+msgid "Non smoking"
+msgstr "Nichtraucher"
+
+#: src/CasasoftStandards/Service/FeatureService.php:269
+msgid "Partially renovation indigent"
+msgstr "Teils renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:273
+msgid "Projection"
+msgstr "Projektiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:277
+msgid "Demolition property"
+msgstr "Abbruchobjekt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:281
+msgid "Gutted"
+msgstr "Entkernt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:285
+msgid "Shell construction"
+msgstr "Rohbau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:289
+msgid "Well tended"
+msgstr "Gepflegt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:293
+msgid "Modernized"
+msgstr "Modernisiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:297
+msgid "Dilapidated"
+msgstr "Baufällig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:301
+msgid "Renovation indigent"
+msgstr "Renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:305
+msgid "Refurbished"
+msgstr "Vollsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:309
+msgid "Partially refurbished"
+msgstr "Teilsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:317
+msgid "First time occupancy"
+msgstr "Erstbezug"
+
+#: src/CasasoftStandards/Service/FeatureService.php:321
+msgid "Washing machine"
+msgstr "Waschmaschine"
+
+#: src/CasasoftStandards/Service/FeatureService.php:325
+msgid "Tumbler"
+msgstr "Tumbler"
+
+#: src/CasasoftStandards/Service/FeatureService.php:329
+msgid "Kachelofen"
+msgstr "Kachelofen"
+
+#: src/CasasoftStandards/Service/FeatureService.php:333
+msgid "Secondary residency"
+msgstr "Zweitwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:337
+msgid "Primary residency"
+msgstr "Erstwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:341
+msgid "Foreign quota"
+msgstr "Ausländerkontingent"
+
+#: src/CasasoftStandards/Service/FeatureService.php:346
+msgid "Attic"
+msgstr "Dachgeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:354
+msgid "Basement"
+msgstr "Untergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:358
+msgid "Garden level"
+msgstr "Gartengeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:366
+msgid "Cellar level"
+msgstr "Kellergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:370
+msgid "Recessed ground floor"
+msgstr "Tiefparterre"
+
+#: src/CasasoftStandards/Service/FeatureService.php:374
+msgid "Ground floor and first floor"
+msgstr "Erdgeschoss, Obergeschoss"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
@@ -560,9 +775,8 @@ msgid "Property land area"
 msgstr "Grundstücksfläche"
 
 #: src/CasasoftStandards/Service/NumvalService.php:333
-#: src/CasasoftStandards/Service/NumvalService.php:609
-msgid "Total living area"
-msgstr "Bruttowohnfläche"
+msgid "Total floor area"
+msgstr "Bruttogeschossfläche"
 
 #: src/CasasoftStandards/Service/NumvalService.php:339
 msgid "Net floor area"
@@ -703,6 +917,10 @@ msgstr "Ausnützungsziffer"
 msgid "Construction utilization number"
 msgstr "Ausnützungsziffer (Bau)"
 
+#: src/CasasoftStandards/Service/NumvalService.php:609
+msgid "Total living area"
+msgstr "Bruttowohnfläche"
+
 #: src/CasasoftStandards/Service/NumvalService.php:615
 msgid "Net living area"
 msgstr "Nettowohnfläche"
@@ -779,6 +997,48 @@ msgstr "Bauen"
 #: src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
 msgstr "Investitionsobjekt"
+
+#~ msgid "Is non smoking"
+#~ msgstr "Nichtraucher"
+
+#~ msgid "Is partially renovation indigent"
+#~ msgstr "Teils renovationsbedürftig"
+
+#~ msgid "Is projection"
+#~ msgstr "Projektiert"
+
+#~ msgid "Is demolition property"
+#~ msgstr "Abbruchobjekt"
+
+#~ msgid "Is gutted"
+#~ msgstr "Entkernt"
+
+#~ msgid "Is shell construction"
+#~ msgstr "Rohbau"
+
+#~ msgid "Is well tended"
+#~ msgstr "Gepflegt"
+
+#~ msgid "Is modernized"
+#~ msgstr "Modernisiert"
+
+#~ msgid "Is dilapidated"
+#~ msgstr "Baufällig"
+
+#~ msgid "Is renovation indigent"
+#~ msgstr "Renovationsbedürftig"
+
+#~ msgid "Is refurbished"
+#~ msgstr "Vollsaniert"
+
+#~ msgid "Is partially refurbished"
+#~ msgstr "Teilsaniert"
+
+#~ msgid "Is new"
+#~ msgstr "Neuwertig"
+
+#~ msgid "Is first time occupancy"
+#~ msgstr "Erstbezug"
 
 #~ msgid "Office space"
 #~ msgstr "Bürofläche"

@@ -183,39 +183,52 @@ jQuery(document).ready(function($) {
 
     if (window.casawpOptionParams && window.casawpOptionParams.ajaxify_archive == 1) {
       var $archiveList = $('.casawp-ajax-archive-list');
-      if ($archiveList.length) {
+      var $archiveForm = $('.casawp-filterform');
+      if ($archiveList.length || $archiveForm.length) {
+        if ($archiveList.length ) {
+            $('.casawp-filterform-button').hide();
+        }
 
-        $('.casawp-filterform-button').hide();
-
-        $('.casawp-filterform').change(function(event){
+        $archiveForm.change(function(event){
           $(this).trigger( "casawp-ajaxfilter:filter-change" );
           $(this).submit();
         });
-        $('.casawp-filterform').submit(function(event){
+
+        $archiveForm.submit(function(event){
 
           var $form = $(this);
           event.preventDefault();
           var filteredParams = $form.serialize();
+          var filteredParamsArray = $form.serializeArray();
           var url = $form.prop('action');
           url = url.replace(window.location.protocol + "//" + window.location.host, '');
 
           //update filter form
           $form.addClass('casawp-filterform-loading');
 
+          if($(this).find("input[type=submit]:focus").length){
+            window.location = url + '?' + filteredParams;
+            return;
+          }
           var filteredUrl = addParameterAndReturn(url + '?' + filteredParams, 'ajax', 'archive-filter');
+
+          
 
           $.ajax({
             url: filteredUrl,
             type: 'GET',
             dataType: 'html',
             success: function (data) {
-              $form.removeClass('casawp-filterform-loading');
-              $form.html($(data).find('form').html());
-              if (window.casawpOptionParams && window.casawpOptionParams.chosen == 1) {
+                $form.removeClass('casawp-filterform-loading');
+                $form.html($(data).find('form').html());
+                if (window.casawpOptionParams && window.casawpOptionParams.chosen == 1) {
                   $form.find('.chosen-select').chosen({width:"100%"});
-              }
-              $('.casawp-filterform-button').hide();
-              $form.trigger( "casawp-filterform:after-filter-reload", [url, filteredUrl]  );
+                }
+                if ($archiveList.length ) {
+                    $('.casawp-filterform-button').hide();
+                }
+                $form.trigger( "casawp-filterform:after-filter-reload", [url, filteredUrl]  );
+
             }
           });
 
@@ -230,6 +243,37 @@ jQuery(document).ready(function($) {
               $archiveList.removeClass('casawp-archive-list-loading');
               $archiveList.html($(data).html());
               $archiveList.trigger( "casawp-ajaxfilter:after-list-reload", [url, filteredUrl] );
+              if ($(data).data('archivelink')) {
+                casawpParams.archive_link = $(data).data('archivelink');
+                $.jStorage.set('casawpParams', casawpParams);
+              }
+
+
+            //
+            // console.log(casawpParams);
+            //
+            // $.each(filteredParamsArray, function(index, elem){
+            //   switch (elem.name) {
+            //     case 'locations':
+            //       if (casawpParams[elem.name] === undefined) {
+            //         casawpParams[elem.name] = [];
+            //       }
+            //       casawpParams[elem.name].push(elem.value);
+            //       break;
+            //     default:
+            //     casawpParams[elem.name] = elem.value;
+            //   }
+            //
+            // });
+            //
+            // $.jStorage.set('casawpParams', casawpParams);
+            // console.log('stored');
+            // console.log(casawpParams);
+            //
+
+
+
+
             },
             always: function() {
               //console.log('HEEELLLLOOO??????');

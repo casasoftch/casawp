@@ -10,12 +10,38 @@ class FilterForm extends Form
     public $locations = array();
     public $availabilities = array();
 
-    public function __construct($options, $categories = array(), $salestypes = array(), $locations = array(), $availabilities = array()){
+    public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array(), $features = array()){
         $this->options = $options;
         $this->categories = $categories;
+        $this->utilities = $utilities;
         $this->salestypes = $salestypes;
         $this->locations = $locations;
         $this->availabilities = $availabilities;
+        $this->regions = $regions;
+        $this->features = $features;
+
+        //set default options
+        if (!$this->options['casawp_filter_rooms_from_elementtype']) {
+          $this->options['casawp_filter_rooms_from_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_rooms_to_elementtype']) {
+          $this->options['casawp_filter_rooms_to_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_price_from_elementtype']) {
+          $this->options['casawp_filter_price_from_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_price_to_elementtype']) {
+          $this->options['casawp_filter_price_to_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_utilities_elementtype']) {
+          $this->options['casawp_filter_utilities_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_regions_elementtype']) {
+          $this->options['casawp_filter_regions_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_features_elementtype']) {
+          $this->options['casawp_filter_features_elementtype'] = 'hidden';
+        }
 
         parent::__construct('filter');
 
@@ -57,6 +83,33 @@ class FilterForm extends Form
                 $this->options['chosen_categories']
             );
         }
+        if ($this->utilities) {
+            $this->addSelector(
+                'utilities',
+                __('Utility', 'casawp'),
+                __('Choose utility','casawp'),
+                $this->getUtilityOptions(),
+                (isset($this->options['chosen_utilities']) ? $this->options['chosen_utilities'] : null)
+            );
+        }
+        if ($this->regions) {
+            $this->addSelector(
+                'regions',
+                __('Region', 'casawp'),
+                __('Choose region','casawp'),
+                $this->getRegionOptions(),
+                (isset($this->options['chosen_regions']) ? $this->options['chosen_regions'] : null)
+            );
+        }
+        if ($this->features) {
+            $this->addSelector(
+                'features',
+                __('Feature', 'casawp'),
+                __('Choose feature','casawp'),
+                $this->getFeatureOptions(),
+                (isset($this->options['chosen_features']) ? $this->options['chosen_features'] : null)
+            );
+        }
         if ($this->locations) {
             $this->addSelector(
                 'locations',
@@ -66,6 +119,62 @@ class FilterForm extends Form
                 $this->options['chosen_locations']
             );
         }
+        //if ($this->rooms_from) {
+            $this->addSelector(
+                'rooms_from',
+                __('Rooms from', 'casawp'),
+                __('Rooms from','casawp'),
+                $this->getRoomOptions(),
+                $this->options['chosen_rooms_from']
+            );
+            $this->addSelector(
+                'rooms_to',
+                __('Rooms to', 'casawp'),
+                __('Rooms to','casawp'),
+                $this->getRoomOptions(),
+                $this->options['chosen_rooms_to']
+            );
+        //}
+
+        //if ($this->price_from) {
+            $this->addSelector(
+                'price_from',
+                __('Price from', 'casawp'),
+                __('Price from','casawp'),
+                $this->getPriceOptions(),
+                (isset($this->options['chosen_price_from']) ? $this->options['chosen_price_from'] : null)
+            );
+            $this->addSelector(
+                'price_to',
+                __('Price to', 'casawp'),
+                __('Price to','casawp'),
+                $this->getPriceOptions(),
+                (isset($this->options['chosen_price_to']) ? $this->options['chosen_price_to'] : null)
+            );
+        //}
+
+        $this->options['casawp_filter_price_range_elementtype'] = 'singleselect';
+        $this->addSelector(
+            'price_range',
+            __('Price range', 'casawp'),
+            __('Price range','casawp'),
+            array(
+              '1-500000' => 'bis CHF 0.5 Mio.',
+              '500000-800000' => 'CHF 0.5 - 0.8 Mio.',
+              '800000-1000000' => 'CHF 0.8 - 1.0 Mio.',
+              '1000000-1500000' => 'CHF 1.0 - 1.5 Mio.',
+              '1500000-2000000' => 'CHF 1.5 - 2.0 Mio.',
+              '2000000-2500000' => 'CHF 2.0 - 2.5 Mio.',
+              '2000000-3000000' => 'CHF 2.5 - 3.0 Mio.',
+              '3000000-3500000' => 'CHF 3.0 - 3.5 Mio.',
+              '3500000-4000000' => 'CHF 3.5 - 4.0 Mio.',
+              '4000000-5000000' => 'CHF 4.0 - 5.0 Mio.',
+              '5000000-7500000' => 'CHF 5.0 - 7.5 Mio.',
+              '7500000-1000000' => 'CHF 7.5 - 10.0 Mio.',
+              '10000000-9999999999' => 'ab CHF 10.0 Mio.',
+            ),
+            (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
+        );
     }
 
     private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
@@ -196,6 +305,44 @@ class FilterForm extends Form
         return $category_options;
     }
 
+    public function getUtilityOptions(){
+        //TODO SORTING!!!
+        $utility_options = array();
+        foreach ($this->utilities as $utility) {
+            $utility_options[$utility->getKey()] = html_entity_decode($utility->getLabel());
+        }
+        asort($utility_options);
+        return $utility_options;
+    }
+
+    public function getRegionOptions(){
+        //TODO SORTING!!!
+        // $region_options = array();
+        // foreach ($this->regions as $region) {
+        //     $region_options[$region->getKey()] = html_entity_decode($region->getLabel());
+        // }
+        // asort($region_options);
+        // return $region_options;
+        return $this->regions;
+    }
+
+    public function getFeatureOptions(){
+        //TODO SORTING!!!
+        // $region_options = array();
+        // foreach ($this->regions as $region) {
+        //     $region_options[$region->getKey()] = html_entity_decode($region->getLabel());
+        // }
+        // asort($region_options);
+        // return $region_options;
+        $options = array();
+        foreach ($this->features as $feature) {
+          $options[$feature->getKey()] = $feature->getLabel();
+        }
+        sort($options);
+        return $options;
+        //return $this->features;
+    }
+
     public function getSalestypeOptions(){
         /*$salestype_options = array();
         foreach ($this->salestypes as $salestype) {
@@ -320,6 +467,75 @@ class FilterForm extends Form
         return $options;
     }
 
+    public function getRoomOptions(){
+        $options = array();
+        for ($i=1; $i < 8.5; $i = $i+0.5) {
+            $options[(string) $i] = $i;
+        }
+        return $options;
+    }
+
+    public function getPriceOptions(){
+      $options = array();
+      if (in_array('rent', $this->options['chosen_salestypes'])) {
+        $options = array(
+          500 => '500',
+          600 => '600',
+          700 => '700',
+          800 => '800',
+          900 => '900',
+          1000 => '1\'000',
+          1100 => '1\'100',
+          1200 => '1\'200',
+          1300 => '1\'300',
+          1400 => '1\'400',
+          1500 => '1\'500',
+          1600 => '1\'600',
+          1700 => '1\'700',
+          1800 => '1\'800',
+          1900 => '1\'800',
+          2000 => '2\'000',
+          2200 => '2\'200',
+          2400 => '2\'400',
+          2600 => '2\'600',
+          2800 => '2\'800',
+          3000 => '3\'000',
+          3500 => '3\'500',
+          4000 => '4\'000',
+          4500 => '4\'500',
+          5000 => '5\'000',
+          5500 => '5\'500',
+          6000 => '6\'000',
+          7000 => '7\'000',
+          8000 => '8\'000',
+          9000 => '9\'000',
+          10000 => '10\'000',
+        );
+      } else if (in_array('buy', $this->options['chosen_salestypes'])) {
+        $options = array(
+          50000 => '50\'000',
+          100000 => '100\'000',
+          150000 => '150\'000',
+          200000 => '200\'000',
+          300000 => '300\'000',
+          400000 => '400\'000',
+          500000 => '500\'000',
+          600000 => '600\'000',
+          700000 => '700\'000',
+          800000 => '800\'000',
+          900000 => '900\'000',
+          1000000 => '1\'000\'000',
+          1250000 => '1\'250\'000',
+          2000000 => '2\'000\'000',
+          2500000 => '2\'500\'000',
+          3000000 => '3\'000\'000',
+          4000000 => '4\'000\'000',
+          5000000 => '5\'000\'000',
+        );
+      }
+      return $options;
+    }
+
     public function populateValues($data)
     {
         if (!is_array($data) && !$data instanceof Traversable) {
@@ -340,10 +556,22 @@ class FilterForm extends Form
                     ||
                     $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
+                    $name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'regions' && in_array($this->options['casawp_filter_regions_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'rooms_from'
+                    ||
+                    $name == 'rooms_to'
                 ) {
                     if ($data[$name] && is_array($data[$name])) {
                         $value = $data[$name][0];
+                    } else if($data[$name]){
+                      $value = $data[$name];
                     } else {
                         $value = '';
                     }

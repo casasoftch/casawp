@@ -261,6 +261,119 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Minergie certified', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-non-smoking' => array(
+                'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-partially-renovation-indigent' => array(
+                'label' => $this->translator->translate('Partially renovation indigent', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is_projection' => array(
+                'label' => $this->translator->translate('Projection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-demolition-property' => array(
+                'label' => $this->translator->translate('Demolition property', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-gutted' => array(
+                'label' => $this->translator->translate('Gutted', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-shell-construction' => array(
+                'label' => $this->translator->translate('Shell construction', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-well-tended' => array(
+                'label' => $this->translator->translate('Well tended', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-modernized' => array(
+                'label' => $this->translator->translate('Modernized', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-dilapidated' => array(
+                'label' => $this->translator->translate('Dilapidated', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-renovation-indigent' => array(
+                'label' => $this->translator->translate('Renovation indigent', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-refurbished' => array(
+                'label' => $this->translator->translate('Refurbished', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-partially-refurbished' => array(
+                'label' => $this->translator->translate('Partially refurbished', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-new' => array(
+                'label' => $this->translator->translate('New', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-first-time-occupancy' => array(
+                'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-washing-machine' => array( // Waschmaschine
+                'label' => $this->translator->translate('Washing machine', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-tumbler' => array( // Tumbler
+                'label' => $this->translator->translate('Tumbler', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-kachelofen' => array( // Kachelofen
+                'label' => $this->translator->translate('Kachelofen', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-allowed-as-secondary-residency' => array(
+                'label' => $this->translator->translate('Secondary residency', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-only-allowed-as-primary-residency' => array(
+                'label' => $this->translator->translate('Primary residency', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-foreign-quota' => array(
+                'label' => $this->translator->translate('Foreign quota', 'casasoft-standards'),
+                'icon' => '',
+            ),
+
+            'is-attic' => array(
+                'label' => $this->translator->translate('Attic', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-ground-floor' => array(
+                'label' => $this->translator->translate('Ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-basement' => array(
+                'label' => $this->translator->translate('Basement', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-garden-level' => array(
+                'label' => $this->translator->translate('Garden level', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-raised-ground-floor' => array(
+                'label' => $this->translator->translate('Raised ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-cellar-level' => array(
+                'label' => $this->translator->translate('Cellar level', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-recessed-ground-floor' => array(
+                'label' => $this->translator->translate('Recessed ground floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-ground-floor-and-first-floor' => array(
+                'label' => $this->translator->translate('Ground floor and first floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }
