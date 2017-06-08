@@ -317,6 +317,18 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-washing-machine' => array( // Waschmaschine
+                'label' => $this->translator->translate('Washing machine', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-tumbler' => array( // Tumbler
+                'label' => $this->translator->translate('Tumbler', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-kachelofen' => array( // Kachelofen
+                'label' => $this->translator->translate('Kachelofen', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'is-allowed-as-secondary-residency' => array(
                 'label' => $this->translator->translate('Secondary residency', 'casasoft-standards'),
                 'icon' => '',
