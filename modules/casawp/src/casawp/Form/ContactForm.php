@@ -292,6 +292,13 @@ class ContactForm extends Form
                 ),
             ));
         }
+        if (!$this->isInCustomFilters('message')) {
+            $filter->add(array(
+                'name' => 'message',
+                'required' => get_option('casawp_form_message_required', false),
+                'validators' => array(),
+            ));
+        }
         if (!$this->isInCustomFilters('gender')) {
             $filter->add(array(
                 'name' => 'gender',
