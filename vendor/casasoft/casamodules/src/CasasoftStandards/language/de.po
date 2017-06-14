@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-06-08 09:54+0200\n"
-"PO-Revision-Date: 2017-06-08 09:55+0200\n"
+"POT-Creation-Date: 2017-06-14 09:05+0200\n"
+"PO-Revision-Date: 2017-06-14 09:05+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -633,6 +633,14 @@ msgstr "Tiefparterre"
 #: src/CasasoftStandards/Service/FeatureService.php:374
 msgid "Ground floor and first floor"
 msgstr "Erdgeschoss, Obergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:378
+msgid "Top floor"
+msgstr "Attikageschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:382
+msgid "Base floor"
+msgstr "Sockelgeschoss"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"

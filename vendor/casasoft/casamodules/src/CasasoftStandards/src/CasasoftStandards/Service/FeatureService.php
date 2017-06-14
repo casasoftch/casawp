@@ -374,6 +374,14 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Ground floor and first floor', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-top-floor' => array(
+                'label' => $this->translator->translate('Top floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-base-floor' => array(
+                'label' => $this->translator->translate('Base floor', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }
