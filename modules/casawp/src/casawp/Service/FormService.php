@@ -134,6 +134,10 @@ class FormService{
   								$data['publisher'] = $publisherid;
   								$data['lang'] = substr(get_bloginfo('language'), 0, 2);
 
+                  if (isset($postdata['legal_name'])) {
+                    $data['legal_name'] = $postdata['legal_name'];
+                  }
+
                   if($directRecipientEmail){
                     $data['direct_recipient_email'] = $directRecipientEmail;
                   }
