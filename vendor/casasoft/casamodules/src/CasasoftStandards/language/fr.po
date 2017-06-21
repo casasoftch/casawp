@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-06-07 16:42+0200\n"
-"PO-Revision-Date: 2017-06-19 17:13+0200\n"
+"PO-Revision-Date: 2017-06-21 16:40+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
@@ -467,7 +467,7 @@ msgstr "Plat(e)"
 
 #: src/CasasoftStandards/Service/FeatureService.php:189
 msgid "Balcony"
-msgstr "Balcon"
+msgstr "Balcon / terrasse"
 
 #: src/CasasoftStandards/Service/FeatureService.php:193
 msgid "ISDN"
@@ -527,7 +527,7 @@ msgstr "Piscine"
 
 #: src/CasasoftStandards/Service/FeatureService.php:257
 msgid "Minergie general"
-msgstr "Minergie générale"
+msgstr "Construction Minergie"
 
 #: src/CasasoftStandards/Service/FeatureService.php:261
 msgid "Minergie certified"
