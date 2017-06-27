@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-06-07 16:46+0200\n"
-"PO-Revision-Date: 2017-06-07 16:49+0200\n"
+"PO-Revision-Date: 2017-06-27 14:00+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: it\n"
@@ -591,15 +591,15 @@ msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:321
 msgid "Secondary residency"
-msgstr ""
+msgstr "Abitazione secondaria"
 
 #: src/CasasoftStandards/Service/FeatureService.php:325
 msgid "Primary residency"
-msgstr ""
+msgstr "Abitazione primaria"
 
 #: src/CasasoftStandards/Service/FeatureService.php:329
 msgid "Foreign quota"
-msgstr ""
+msgstr "Quota stranieri"
 
 #: src/CasasoftStandards/Service/FeatureService.php:334
 msgid "Attic"
