@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
-"POT-Creation-Date: 2017-06-07 16:42+0200\n"
-"PO-Revision-Date: 2017-06-21 17:18+0200\n"
+"POT-Creation-Date: 2017-06-29 09:10+0200\n"
+"PO-Revision-Date: 2017-06-29 09:12+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
@@ -153,7 +153,7 @@ msgid "Flat"
 msgstr ""
 
 #: src/CasasoftStandards/Service/CategoryService.php:73
-#: src/CasasoftStandards/Service/FeatureService.php:338
+#: src/CasasoftStandards/Service/FeatureService.php:350
 msgid "Ground floor"
 msgstr ""
 
@@ -400,7 +400,7 @@ msgid "Rental deposit guarantee"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:88
-#: src/CasasoftStandards/Service/FeatureService.php:350
+#: src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Raised ground floor"
 msgstr "Rez-de-chaussée élevé"
 
@@ -510,6 +510,7 @@ msgid "Middle house"
 msgstr "Maison du milieu"
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
+#: src/CasasoftStandards/Service/FeatureService.php:313
 msgid "New"
 msgstr "Construction neuve"
 
@@ -534,95 +535,111 @@ msgid "Minergie certified"
 msgstr "Minergie certifiée"
 
 #: src/CasasoftStandards/Service/FeatureService.php:265
-msgid "Is non smoking"
-msgstr "Non-fumeur"
+msgid "Non smoking"
+msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:269
-msgid "Is partially renovation indigent"
+msgid "Partially renovation indigent"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:273
-msgid "Is projection"
+msgid "Projection"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:277
-msgid "Is demolition property"
+msgid "Demolition property"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:281
-msgid "Is gutted"
+msgid "Gutted"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:285
-msgid "Is shell construction"
+msgid "Shell construction"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:289
-msgid "Is well tended"
+msgid "Well tended"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:293
-msgid "Is modernized"
+msgid "Modernized"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:297
-msgid "Is dilapidated"
+msgid "Dilapidated"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:301
-msgid "Is renovation indigent"
+msgid "Renovation indigent"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:305
-msgid "Is refurbished"
+msgid "Refurbished"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:309
-msgid "Is partially refurbished"
-msgstr ""
-
-#: src/CasasoftStandards/Service/FeatureService.php:313
-msgid "Is new"
+msgid "Partially refurbished"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:317
-msgid "Is first time occupancy"
+msgid "First time occupancy"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:321
-msgid "Secondary residency"
+msgid "Washing machine"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:325
-msgid "Primary residency"
+msgid "Tumbler"
 msgstr ""
 
 #: src/CasasoftStandards/Service/FeatureService.php:329
-msgid "Foreign quota"
+msgid "Kachelofen"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:334
+#: src/CasasoftStandards/Service/FeatureService.php:333
+msgid "Secondary residency"
+msgstr "Second appartement"
+
+#: src/CasasoftStandards/Service/FeatureService.php:337
+msgid "Primary residency"
+msgstr "Premier appartement"
+
+#: src/CasasoftStandards/Service/FeatureService.php:341
+msgid "Foreign quota"
+msgstr "Quota étranger"
+
+#: src/CasasoftStandards/Service/FeatureService.php:346
 msgid "Attic"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:342
+#: src/CasasoftStandards/Service/FeatureService.php:354
 msgid "Basement"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:346
+#: src/CasasoftStandards/Service/FeatureService.php:358
 msgid "Garden level"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:354
+#: src/CasasoftStandards/Service/FeatureService.php:366
 msgid "Cellar level"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:358
+#: src/CasasoftStandards/Service/FeatureService.php:370
 msgid "Recessed ground floor"
 msgstr ""
 
-#: src/CasasoftStandards/Service/FeatureService.php:362
+#: src/CasasoftStandards/Service/FeatureService.php:374
 msgid "Ground floor and first floor"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:378
+msgid "Top floor"
+msgstr ""
+
+#: src/CasasoftStandards/Service/FeatureService.php:382
+msgid "Base floor"
 msgstr ""
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
@@ -988,6 +1005,9 @@ msgstr ""
 #: src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
 msgstr ""
+
+#~ msgid "Is non smoking"
+#~ msgstr "Non-fumeur"
 
 #~ msgid "Fireplace"
 #~ msgstr "Cheminée"

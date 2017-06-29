@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-06-27 14:10+0200\n"
-"PO-Revision-Date: 2017-06-27 14:18+0200\n"
+"PO-Revision-Date: 2017-06-27 14:29+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: it\n"
@@ -402,7 +402,7 @@ msgstr ""
 #: src/CasasoftStandards/Service/FeatureService.php:88
 #: src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Raised ground floor"
-msgstr ""
+msgstr "Pianoterra rialzato"
 
 #: src/CasasoftStandards/Service/FeatureService.php:93
 msgid "Has elevator"
@@ -564,7 +564,7 @@ msgstr "Tenuto bene"
 
 #: src/CasasoftStandards/Service/FeatureService.php:293
 msgid "Modernized"
-msgstr ""
+msgstr "Modernizzato"
 
 #: src/CasasoftStandards/Service/FeatureService.php:297
 msgid "Dilapidated"
@@ -616,7 +616,7 @@ msgstr "Piano sottotetto"
 
 #: src/CasasoftStandards/Service/FeatureService.php:354
 msgid "Basement"
-msgstr "Scantinato"
+msgstr "Piano terra"
 
 #: src/CasasoftStandards/Service/FeatureService.php:358
 msgid "Garden level"
@@ -624,11 +624,11 @@ msgstr "Piano giardino"
 
 #: src/CasasoftStandards/Service/FeatureService.php:366
 msgid "Cellar level"
-msgstr ""
+msgstr "Seminterrato"
 
 #: src/CasasoftStandards/Service/FeatureService.php:370
 msgid "Recessed ground floor"
-msgstr ""
+msgstr "Scantinato"
 
 #: src/CasasoftStandards/Service/FeatureService.php:374
 msgid "Ground floor and first floor"
@@ -640,7 +640,7 @@ msgstr "Piano attico"
 
 #: src/CasasoftStandards/Service/FeatureService.php:382
 msgid "Base floor"
-msgstr ""
+msgstr "Piano mezzanino"
 
 #: src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
