@@ -237,7 +237,7 @@ class FeatureService implements FactoryInterface {
             
             
             'is-new' => array(
-                'label' => $this->translator->translate('New', 'casasoft-standards'),
+                'label' => $this->translator->translate('As New', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-old' => array(
@@ -307,10 +307,6 @@ class FeatureService implements FactoryInterface {
             ),
             'is-partially-refurbished' => array(
                 'label' => $this->translator->translate('Partially refurbished', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-new' => array(
-                'label' => $this->translator->translate('New', 'casasoft-standards'),
                 'icon' => '',
             ),
             'is-first-time-occupancy' => array(

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CasasoftStandards\n"
-"POT-Creation-Date: 2017-06-14 09:05+0200\n"
-"PO-Revision-Date: 2017-06-14 09:05+0200\n"
+"POT-Creation-Date: 2017-07-07 16:07+0200\n"
+"PO-Revision-Date: 2017-07-07 16:07+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -153,7 +153,7 @@ msgid "Flat"
 msgstr "Etagenwohnung"
 
 #: src/CasasoftStandards/Service/CategoryService.php:73
-#: src/CasasoftStandards/Service/FeatureService.php:350
+#: src/CasasoftStandards/Service/FeatureService.php:346
 msgid "Ground floor"
 msgstr "Erdgeschoss"
 
@@ -400,7 +400,7 @@ msgid "Rental deposit guarantee"
 msgstr "Mietkautionsgarantie"
 
 #: src/CasasoftStandards/Service/FeatureService.php:88
-#: src/CasasoftStandards/Service/FeatureService.php:362
+#: src/CasasoftStandards/Service/FeatureService.php:358
 msgid "Raised ground floor"
 msgstr "Hochparterre"
 
@@ -510,9 +510,8 @@ msgid "Middle house"
 msgstr "Mittelhaus"
 
 #: src/CasasoftStandards/Service/FeatureService.php:240
-#: src/CasasoftStandards/Service/FeatureService.php:313
-msgid "New"
-msgstr "Neubau"
+msgid "As New"
+msgstr "Neuwertig"
 
 #: src/CasasoftStandards/Service/FeatureService.php:244
 msgid "Old"
@@ -582,63 +581,63 @@ msgstr "Vollsaniert"
 msgid "Partially refurbished"
 msgstr "Teilsaniert"
 
-#: src/CasasoftStandards/Service/FeatureService.php:317
+#: src/CasasoftStandards/Service/FeatureService.php:313
 msgid "First time occupancy"
 msgstr "Erstbezug"
 
-#: src/CasasoftStandards/Service/FeatureService.php:321
+#: src/CasasoftStandards/Service/FeatureService.php:317
 msgid "Washing machine"
 msgstr "Waschmaschine"
 
-#: src/CasasoftStandards/Service/FeatureService.php:325
+#: src/CasasoftStandards/Service/FeatureService.php:321
 msgid "Tumbler"
 msgstr "Tumbler"
 
-#: src/CasasoftStandards/Service/FeatureService.php:329
+#: src/CasasoftStandards/Service/FeatureService.php:325
 msgid "Kachelofen"
 msgstr "Kachelofen"
 
-#: src/CasasoftStandards/Service/FeatureService.php:333
+#: src/CasasoftStandards/Service/FeatureService.php:329
 msgid "Secondary residency"
 msgstr "Zweitwohnung"
 
-#: src/CasasoftStandards/Service/FeatureService.php:337
+#: src/CasasoftStandards/Service/FeatureService.php:333
 msgid "Primary residency"
 msgstr "Erstwohnung"
 
-#: src/CasasoftStandards/Service/FeatureService.php:341
+#: src/CasasoftStandards/Service/FeatureService.php:337
 msgid "Foreign quota"
 msgstr "Ausländerkontingent"
 
-#: src/CasasoftStandards/Service/FeatureService.php:346
+#: src/CasasoftStandards/Service/FeatureService.php:342
 msgid "Attic"
 msgstr "Dachgeschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:354
+#: src/CasasoftStandards/Service/FeatureService.php:350
 msgid "Basement"
 msgstr "Untergeschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:358
+#: src/CasasoftStandards/Service/FeatureService.php:354
 msgid "Garden level"
 msgstr "Gartengeschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:366
+#: src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Cellar level"
 msgstr "Kellergeschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:370
+#: src/CasasoftStandards/Service/FeatureService.php:366
 msgid "Recessed ground floor"
 msgstr "Tiefparterre"
 
-#: src/CasasoftStandards/Service/FeatureService.php:374
+#: src/CasasoftStandards/Service/FeatureService.php:370
 msgid "Ground floor and first floor"
 msgstr "Erdgeschoss, Obergeschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:378
+#: src/CasasoftStandards/Service/FeatureService.php:374
 msgid "Top floor"
 msgstr "Attikageschoss"
 
-#: src/CasasoftStandards/Service/FeatureService.php:382
+#: src/CasasoftStandards/Service/FeatureService.php:378
 msgid "Base floor"
 msgstr "Sockelgeschoss"
 
@@ -1005,6 +1004,9 @@ msgstr "Bauen"
 #: src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
 msgstr "Investitionsobjekt"
+
+#~ msgid "New"
+#~ msgstr "Neubau"
 
 #~ msgid "Is non smoking"
 #~ msgstr "Nichtraucher"
