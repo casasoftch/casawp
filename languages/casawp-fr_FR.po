@@ -2781,7 +2781,7 @@ msgstr "Précédent"
 #: theme-defaults/casawp/bootstrap3/single-pagination.phtml:3
 #: theme-defaults/casawp/bootstrap4/single-pagination.phtml:3
 msgid "To list"
-msgstr "Vos la liste"
+msgstr "Vers la liste"
 
 #: theme-defaults/casawp/bootstrap2/single-pagination.phtml:4
 #: theme-defaults/casawp/bootstrap3/single-pagination.phtml:4
