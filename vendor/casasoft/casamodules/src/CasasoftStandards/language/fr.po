@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-06-29 09:10+0200\n"
-"PO-Revision-Date: 2017-07-04 13:20+0200\n"
+"PO-Revision-Date: 2017-07-10 13:56+0200\n"
 "Last-Translator: Arnaud Fasnacht <arnaud.fasnacht@casasoft.com>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
@@ -968,7 +968,7 @@ msgstr "Prix du terrain"
 
 #: src/CasasoftStandards/Service/NumvalService.php:683
 msgid "Gross premium"
-msgstr "Prime brute"
+msgstr "Rendement brut en %"
 
 #: src/CasasoftStandards/Service/NumvalService.php:690
 msgid "Rental deposit"
