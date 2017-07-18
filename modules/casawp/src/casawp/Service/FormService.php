@@ -200,10 +200,13 @@ class FormService{
 						} else {
 						    $messages = $form->getMessages();
 						}
-	        } else {
-	        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
 	        }
-				}
+				} else {
+          if (!$form->get('message')->getValue()) {
+            $form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
+          }
+
+        }
         return array('form' => $form, 'sent' => $sent);
     }
 

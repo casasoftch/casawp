@@ -892,42 +892,74 @@ class Offer{
 	              $empty = false;
 	            }
 	            break;
-	          case 'price':
-	            if ($this->getAvailability() != 'reference') {
-	              if ($this->getSalestype() == 'buy') {
-	              	if ($this->getFieldValue('price', false)) {
-	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
-										$point = str_replace('{{field}}', $field, $point);
-	              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
-	              	} else {
-	              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
-										$point = str_replace('{{field}}', $field, $point);
-	              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
-	              	}
-	              	$empty = false;
-	              }
-	              if ($this->getSalestype() == 'rent') {
-  	                if ($this->getFieldValue('grossPrice', false)) {
-  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+							case 'price':
+		            if ($this->getAvailability() != 'reference') {
+		              if ($this->getSalestype() == 'buy') {
+		              	if ($this->getFieldValue('price', false)) {
+		              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
 											$point = str_replace('{{field}}', $field, $point);
-  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
-  	                  $empty = false;
-  	                }
-  	                if ($this->getFieldValue('netPrice', false)) {
-  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+		              		$html .= str_replace('{{value}}', $this->renderPrice(), $point);
+		              	} else {
+		              		$point = str_replace('{{label}}', __('Sales price', 'casawp'), $args['pattern_1']);
 											$point = str_replace('{{field}}', $field, $point);
-  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
-  	                  $empty = false;
-  	                }
-  	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
-  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
-											$point = str_replace('{{field}}', $field, $point );
-  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
-  	                	$empty = false;
-  	                }
-  	              }
-	            }
-	            break;
+		              		$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+		              	}
+		              	$empty = false;
+		              }
+		              if ($this->getSalestype() == 'rent') {
+										$prefer = maybe_unserialize(get_option('casawp_prefer_extracost_segmentation'));
+										if ($prefer) {
+											if ($this->getFieldValue('netPrice', false)) {
+	  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point);
+	  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+
+												if ($this->getExtraCosts()) {
+													global $casawp;
+													foreach ($this->getExtraCosts() as $cost){
+														$point = str_replace('{{label}}', __('Extra Costs:', 'casawp'), $args['pattern_1']);
+														$point = str_replace('{{field}}', $field, $point);
+			  	                  $html .= str_replace('{{value}}', $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']), $point);
+													}
+												}
+
+	  	                  $empty = false;
+	  	                } elseif ($this->getFieldValue('grossPrice', false)) {
+	  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point);
+	  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+	  	                  $empty = false;
+	  	                }
+
+	  	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
+	  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point );
+	  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+	  	                	$empty = false;
+	  	                }
+										} else {
+											if ($this->getFieldValue('grossPrice', false)) {
+	  	                  $point = str_replace('{{label}}', __('Gross price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point);
+	  	                  $html .= str_replace('{{value}}', $this->renderPrice('gross'), $point);
+	  	                  $empty = false;
+	  	                }
+	  	                if ($this->getFieldValue('netPrice', false)) {
+	  	                  $point = str_replace('{{label}}', __('Net price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point);
+	  	                  $html .= str_replace('{{value}}', $this->renderPrice('net'), $point);
+	  	                  $empty = false;
+	  	                }
+	  	                if (!$this->getFieldValue('grossPrice', false) && !$this->getFieldValue('netPrice', false)) {
+	  	                	$point = str_replace('{{label}}', __('Rent price', 'casawp'), $args['pattern_1']);
+												$point = str_replace('{{field}}', $field, $point );
+	  	                	$html .= str_replace('{{value}}', __('On Request', 'casawp'), $point);
+	  	                	$empty = false;
+	  	                }
+										}
+	  	            }
+		            }
+		            break;
 	          case 'excerpt':
 	            $html .= str_replace('{{field}}', $field, str_replace('{{value}}', $this->getExcerpt(), $args['pattern_2']));
 	            if ($this->getExcerpt()) {

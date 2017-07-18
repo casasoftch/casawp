@@ -99,6 +99,7 @@
 					'casawp_archive_show_excerpt',
 					'casawp_archive_show_availability',
 					'casawp_archive_show_thumbnail_size_crop',
+					'casawp_prefer_extracost_segmentation',
 					'casawp_filter_hide',
 					'casawp_ajaxify_archive',
 					'casawp_load_googlemaps'
@@ -1023,6 +1024,20 @@
 									</fieldset>
 								</td>
 							</tr>
+							<tr valign="top">
+								<th scope="row"></th>
+								<td id="front-static-padges">
+									<fieldset>
+										<?php $name = 'casawp_prefer_extracost_segmentation'; ?>
+										<?php $text = 'Extra kosten Schlüssel bei Mietobjekte nutzen'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+									</fieldset>
+									<fieldset>
+								</td>
+							</tr>
+
 						<?php echo $table_end; ?>
 						<?php
 					break;
