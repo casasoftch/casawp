@@ -235,7 +235,10 @@ class FeatureService implements FactoryInterface {
             ),
             
             
-            
+            'is-new-construction' => array(
+                'label' => $this->translator->translate('New construction', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'is-new' => array(
                 'label' => $this->translator->translate('As New', 'casasoft-standards'),
                 'icon' => '',
