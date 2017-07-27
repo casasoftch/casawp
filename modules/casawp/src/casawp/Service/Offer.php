@@ -968,7 +968,7 @@ class Offer{
 	            break;
 	          case 'availability':
 	          case 'special_availability':
-	            if ($this->getAvailability() != 'reference') {
+	            if ($this->getAvailability() != 'reference' && $this->getAvailability() != 'taken') {
 	              $value = $this->renderAvailabilityDate();
 	              if ($value) {
 	                $point = str_replace('{{label}}', __('Available from','casawp'), $args['pattern_1']);
