@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-06-27 14:10+0200\n"
-"PO-Revision-Date: 2017-06-27 14:29+0200\n"
+"PO-Revision-Date: 2017-07-28 08:42+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: it\n"
@@ -138,7 +138,7 @@ msgstr "Chalet"
 
 #: src/CasasoftStandards/Service/CategoryService.php:65
 msgid "Studio"
-msgstr ""
+msgstr "Monolocale"
 
 #: src/CasasoftStandards/Service/CategoryService.php:66
 msgid "Covered slot"
