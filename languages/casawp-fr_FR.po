@@ -406,7 +406,7 @@ msgstr "Îles Féroé"
 #: theme-defaults/casawp/bootstrap2/address.phtml:16
 #: theme-defaults/casawp/bootstrap3/address.phtml:16
 msgid "France"
-msgstr "Portugais"
+msgstr "France"
 
 #: classes/Conversion.php:92
 msgid "France, Metropolitan"
@@ -829,7 +829,7 @@ msgstr "Territoire palestinien"
 
 #: classes/Conversion.php:196
 msgid "Portugal"
-msgstr "Portugais (Portugal)"
+msgstr "Portugal"
 
 #: classes/Conversion.php:197
 msgid "Palau"
