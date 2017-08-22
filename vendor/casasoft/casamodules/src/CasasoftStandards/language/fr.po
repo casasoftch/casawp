@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CasaNet\n"
 "POT-Creation-Date: 2017-07-24 15:36+0200\n"
-"PO-Revision-Date: 2017-07-24 15:37+0200\n"
+"PO-Revision-Date: 2017-08-22 13:54+0200\n"
 "Last-Translator: Arnaud Fasnacht <arnaud.fasnacht@casasoft.com>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: fr\n"
@@ -563,7 +563,7 @@ msgstr "Structure vide"
 
 #: src/CasasoftStandards/Service/FeatureService.php:292
 msgid "Well tended"
-msgstr "Bien entretenu"
+msgstr "Très bon état"
 
 #: src/CasasoftStandards/Service/FeatureService.php:296
 msgid "Modernized"
@@ -579,7 +579,7 @@ msgstr "Rénovation nécessaire"
 
 #: src/CasasoftStandards/Service/FeatureService.php:308
 msgid "Refurbished"
-msgstr "Réaméngé à neuf"
+msgstr "Entièrement rénové"
 
 #: src/CasasoftStandards/Service/FeatureService.php:312
 msgid "Partially refurbished"
