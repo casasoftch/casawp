@@ -1828,6 +1828,14 @@ class Import {
 
     if (!$found_posts) {
       $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
+      $this->transcript['error_infos'] = [
+        'filesize' => filesize(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml') . ' !'
+      ];
+
+      copy(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml', CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-error.xml');
+
+      wp_mail('alert@casasoft.com', get_bloginfo('name'), 'Dieser Kunde hat alle Objekte von der Webseite gelöscht. Kann das sein? Bitte prüfen.');
+      //die('custom block');
     }
 
       //3. remove all the unused properties
