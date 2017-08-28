@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Casamodules\n"
-"POT-Creation-Date: 2017-08-23 20:50+0200\n"
-"PO-Revision-Date: 2017-08-23 20:53+0200\n"
+"POT-Creation-Date: 2017-08-28 16:43+0200\n"
+"PO-Revision-Date: 2017-08-28 16:44+0200\n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: CasaSoft <info@casasoft.ch>\n"
 "Language: de\n"
@@ -354,56 +354,112 @@ msgstr "Gewerbe"
 msgid "Commercial plot"
 msgstr ""
 
-#: src/CasasoftStandards/Service/ConversionService.php:101
+#: src/CasasoftStandards/Service/ConversionService.php:130
+msgid "Woche"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:133
+msgid "Monat"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:136
+msgid "Jahr"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:152
+msgid "Auf Anfrage"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:454
 msgid "Reference no."
 msgstr "Referenz-Nr."
 
-#: src/CasasoftStandards/Service/ConversionService.php:102
+#: src/CasasoftStandards/Service/ConversionService.php:455
 msgid "Categories"
 msgstr "Kategorien"
 
-#: src/CasasoftStandards/Service/ConversionService.php:103
+#: src/CasasoftStandards/Service/ConversionService.php:456
 msgid "Available from"
 msgstr "Verfügbar ab"
 
-#: src/CasasoftStandards/Service/ConversionService.php:104
+#: src/CasasoftStandards/Service/ConversionService.php:457
 msgid "Condition"
 msgstr "Zustand"
 
-#: src/CasasoftStandards/Service/ConversionService.php:107
+#: src/CasasoftStandards/Service/ConversionService.php:460
 msgid "Plot no."
 msgstr "Parzellen-Nr."
 
-#: src/CasasoftStandards/Service/ConversionService.php:109
+#: src/CasasoftStandards/Service/ConversionService.php:462
 msgid "Zone type"
 msgstr "Zone"
 
-#: src/CasasoftStandards/Service/ConversionService.php:110
+#: src/CasasoftStandards/Service/ConversionService.php:463
 msgid "Key facts"
 msgstr "Eckdaten"
 
-#: src/CasasoftStandards/Service/ConversionService.php:111
+#: src/CasasoftStandards/Service/ConversionService.php:464
 #: src/CasasoftStandards/Service/NumvalService.php:87
 msgid "Areas"
 msgstr "Flächen"
 
-#: src/CasasoftStandards/Service/ConversionService.php:112
+#: src/CasasoftStandards/Service/ConversionService.php:465
 msgid "Features"
 msgstr "Eigenschaften"
 
-#: src/CasasoftStandards/Service/ConversionService.php:201
+#: src/CasasoftStandards/Service/ConversionService.php:466
+msgid "Price"
+msgstr "Preis"
+
+#: src/CasasoftStandards/Service/ConversionService.php:467
+msgid "pricePerSqm"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:468
+msgid "priceBruttoPerSqmPerMonth"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:469
+msgid "priceBruttoPerSqmPerYear"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:470
+msgid "priceBruttoTotalPerMonth"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:471
+msgid "priceBruttoTotalPerYear"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:472
+msgid "priceNettoPerSqmPerMonth"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:473
+msgid "priceNettoPerSqmPerYear"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:474
+msgid "priceNettoTotalPerMonth"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:475
+msgid "priceNettoTotalPerYear"
+msgstr ""
+
+#: src/CasasoftStandards/Service/ConversionService.php:571
 msgid "On Request"
 msgstr "Auf Anfrage"
 
-#: src/CasasoftStandards/Service/ConversionService.php:250
+#: src/CasasoftStandards/Service/ConversionService.php:620
 msgid "Fully ***"
 msgstr ""
 
-#: src/CasasoftStandards/Service/ConversionService.php:252
+#: src/CasasoftStandards/Service/ConversionService.php:622
 msgid "Partialy ***"
 msgstr ""
 
-#: src/CasasoftStandards/Service/ConversionService.php:254
+#: src/CasasoftStandards/Service/ConversionService.php:624
 msgid "NOT ***"
 msgstr ""
 
@@ -768,59 +824,59 @@ msgstr "Anzahl Parzellen"
 
 #: src/CasasoftStandards/Service/NumvalService.php:215
 msgid "Distance to kindergarten"
-msgstr "Distanz zum Kindergarten"
+msgstr "Kindergarten"
 
 #: src/CasasoftStandards/Service/NumvalService.php:221
 msgid "Distance to primary school"
-msgstr "Distanz zur Unterstufe"
+msgstr "Unterstufe"
 
 #: src/CasasoftStandards/Service/NumvalService.php:227
 msgid "Distance to high school"
-msgstr "Distanz zur Oberstufe"
+msgstr "Oberstufe"
 
 #: src/CasasoftStandards/Service/NumvalService.php:233
 msgid "Distance to college"
-msgstr "Distanz zur Universität"
+msgstr "Universität"
 
 #: src/CasasoftStandards/Service/NumvalService.php:239
 msgid "Distance to bus stop"
-msgstr "Distanz zur Busstation"
+msgstr "Busstation"
 
 #: src/CasasoftStandards/Service/NumvalService.php:245
 msgid "Distance to train station"
-msgstr "Distanz zur Zugstation"
+msgstr "Zugstation"
 
 #: src/CasasoftStandards/Service/NumvalService.php:251
 msgid "Distance to post"
-msgstr "Distanz zur Post"
+msgstr "Post"
 
 #: src/CasasoftStandards/Service/NumvalService.php:257
 msgid "Distance to bank"
-msgstr "Distanz zur Bank"
+msgstr "Bank"
 
 #: src/CasasoftStandards/Service/NumvalService.php:263
 msgid "Distance to railway station"
-msgstr "Distanz zur Bergbahn"
+msgstr "Bergbahn"
 
 #: src/CasasoftStandards/Service/NumvalService.php:269
 msgid "Distance to boat dock"
-msgstr "Distanz zum Hafen"
+msgstr "Hafen"
 
 #: src/CasasoftStandards/Service/NumvalService.php:275
 msgid "Distance to public transport"
-msgstr "Distanz zum ÖV "
+msgstr "ÖV"
 
 #: src/CasasoftStandards/Service/NumvalService.php:281
 msgid "Distance to shop"
-msgstr "Distanz zum Einkauf"
+msgstr "Einkauf"
 
 #: src/CasasoftStandards/Service/NumvalService.php:287
 msgid "Distance to freeway"
-msgstr "Distanz zur Autobahn"
+msgstr "Autobahn"
 
 #: src/CasasoftStandards/Service/NumvalService.php:293
 msgid "Distance to airport"
-msgstr "Distanz zum Flughafen"
+msgstr "Flughafen"
 
 #: src/CasasoftStandards/Service/NumvalService.php:299
 msgid "Rooms"
@@ -1410,9 +1466,6 @@ msgstr "Investitionsobjekt"
 
 #~ msgid "Type"
 #~ msgstr "Typ"
-
-#~ msgid "Price"
-#~ msgstr "Preis"
 
 #~ msgid "Address"
 #~ msgstr "Adresse"
