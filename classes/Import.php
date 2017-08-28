@@ -1744,6 +1744,9 @@ class Import {
     libxml_use_internal_errors();
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
     $errors = libxml_get_errors();
+    if (!$xml) {
+      die('could not read XML!!!');
+    }
     if ($errors) {
       $this->transcript['error'] = 'XML read error' . print_r($errors, true);
       die('XML read error');

@@ -6,13 +6,20 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class UtilityFactory implements FactoryInterface
 {
+    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array$options = NULL)
+    {
+        $utilityService = $container->get('CasasoftUtility');
+        $helper = new Category($utilityService);
+        return $helper;
+    }
+
     public function createService(ServiceLocatorInterface $viewHelperManager)
     {
         $serviceLocator = $viewHelperManager->getServiceLocator();
         $utilityService = $serviceLocator->get('UtilityService');
-        
+
         $helper = new Utility($utilityService);
-        
+
         return $helper;
     }
 }

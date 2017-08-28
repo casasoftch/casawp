@@ -9,6 +9,7 @@
 
 namespace Zend\Form;
 
+use Traversable;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\FactoryInterface;
@@ -106,7 +107,8 @@ final class ElementFactory implements FactoryInterface
         }
 
         throw new InvalidServiceException(sprintf(
-            '%s requires that the requested name is provided on invocation; please update your tests or consuming container',
+            '%s requires that the requested name is provided on invocation; please update your tests or '
+            . 'consuming container',
             __CLASS__
         ));
     }

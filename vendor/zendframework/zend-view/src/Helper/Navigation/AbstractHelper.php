@@ -11,27 +11,31 @@ namespace Zend\View\Helper\Navigation;
 
 use Interop\Container\ContainerInterface;
 use RecursiveIteratorIterator;
+use ReflectionClass;
 use ReflectionProperty;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
-use Zend\I18n\Translator\TranslatorInterface as Translator;
-use Zend\I18n\Translator\TranslatorAwareInterface;
+use Zend\EventManager\SharedEventManager;
 use Zend\Navigation;
 use Zend\Navigation\Page\AbstractPage;
 use Zend\Permissions\Acl;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\View;
 use Zend\View\Exception;
+use Zend\View\Helper\TranslatorAwareTrait;
 
 /**
- * Base class for navigational helpers
+ * Base class for navigational helpers.
+ *
+ * Duck-types against Zend\I18n\Translator\TranslatorAwareInterface.
  */
 abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
     EventManagerAwareInterface,
-    HelperInterface,
-    TranslatorAwareInterface
+    HelperInterface
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var EventManagerInterface
      */
@@ -97,27 +101,6 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      * @var bool
      */
     protected $useAcl = true;
-
-    /**
-     * Translator (optional)
-     *
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * Translator text domain (optional)
-     *
-     * @var string
-     */
-    protected $translatorTextDomain = 'default';
-
-    /**
-     * Whether translator should be used
-     *
-     * @var bool
-     */
-    protected $translatorEnabled = true;
 
     /**
      * Default ACL to use when iterating pages if not explicitly set in the
@@ -196,10 +179,10 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
     public function findActive($container, $minDepth = null, $maxDepth = -1)
     {
         $this->parseContainer($container);
-        if (!is_int($minDepth)) {
+        if (! is_int($minDepth)) {
             $minDepth = $this->getMinDepth();
         }
-        if ((!is_int($maxDepth) || $maxDepth < 0) && null !== $maxDepth) {
+        if ((! is_int($maxDepth) || $maxDepth < 0) && null !== $maxDepth) {
             $maxDepth = $this->getMaxDepth();
         }
 
@@ -213,7 +196,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
         /** @var \Zend\Navigation\Page\AbstractPage $page */
         foreach ($iterator as $page) {
             $currDepth = $iterator->getDepth();
-            if ($currDepth < $minDepth || !$this->accept($page)) {
+            if ($currDepth < $minDepth || ! $this->accept($page)) {
                 // page is not accepted
                 continue;
             }
@@ -233,7 +216,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
                 }
 
                 $found = $found->getParent();
-                if (!$found instanceof AbstractPage) {
+                if (! $found instanceof AbstractPage) {
                     $found = null;
                     break;
                 }
@@ -268,6 +251,21 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
                 ));
             }
 
+            // Fallback
+            if (in_array($container, ['default', 'navigation'], true)) {
+                // Uses class name
+                if ($services->has(Navigation\Navigation::class)) {
+                    $container = $services->get(Navigation\Navigation::class);
+                    return;
+                }
+
+                // Uses old service name
+                if ($services->has('navigation')) {
+                    $container = $services->get('navigation');
+                    return;
+                }
+            }
+
             /**
              * Load the navigation container from the root service locator
              */
@@ -275,7 +273,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
             return;
         }
 
-        if (!$container instanceof Navigation\AbstractContainer) {
+        if (! $container instanceof Navigation\AbstractContainer) {
             throw new  Exception\InvalidArgumentException(
                 'Container must be a string alias or an instance of '
                 . 'Zend\Navigation\AbstractContainer'
@@ -312,7 +310,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
     {
         $accept = true;
 
-        if (!$page->isVisible(false) && !$this->getRenderInvisible()) {
+        if (! $page->isVisible(false) && ! $this->getRenderInvisible()) {
             $accept = false;
         } elseif ($this->getUseAcl()) {
             $acl = $this->getAcl();
@@ -340,7 +338,8 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      */
     protected function isAllowed($params)
     {
-        $results = $this->getEventManager()->trigger(__FUNCTION__, $this, $params);
+        $events = $this->getEventManager() ?: $this->createEventManager();
+        $results = $events->trigger(__FUNCTION__, $this, $params);
         return $results->last();
     }
 
@@ -374,7 +373,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
     {
         // filter out null values and empty string values
         foreach ($attribs as $key => $value) {
-            if ($value === null || (is_string($value) && !strlen($value))) {
+            if ($value === null || (is_string($value) && ! strlen($value))) {
                 unset($attribs[$key]);
             }
         }
@@ -418,17 +417,18 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      */
     protected function translate($message, $textDomain = null)
     {
-        if (is_string($message) && !empty($message)) {
-            if (null !== ($translator = $this->getTranslator())) {
-                if (null === $textDomain) {
-                    $textDomain = $this->getTranslatorTextDomain();
-                }
-
-                return $translator->translate($message, $textDomain);
-            }
+        if (! is_string($message) || empty($message)) {
+            return $message;
         }
 
-        return $message;
+        if (! $this->isTranslatorEnabled() || ! $this->hasTranslator()) {
+            return $message;
+        }
+
+        $translator = $this->getTranslator();
+        $textDomain = $textDomain ?: $this->getTranslatorTextDomain();
+
+        return $translator->translate($message, $textDomain);
     }
 
     /**
@@ -511,22 +511,23 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
 
         $this->events = $events;
 
-        $this->setDefaultListeners();
+        if ($events->getSharedManager()) {
+            $this->setDefaultListeners();
+        }
 
         return $this;
     }
 
     /**
-     * Get the event manager.
+     * Get the event manager, if present.
      *
-     * @return  EventManagerInterface
+     * Internally, the helper will lazy-load an EM instance the first time it
+     * requires one, but ideally it should be injected during instantiation.
+     *
+     * @return  null|EventManagerInterface
      */
     public function getEventManager()
     {
-        if (null === $this->events) {
-            $this->setEventManager(new EventManager());
-        }
-
         return $this->events;
     }
 
@@ -651,7 +652,7 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      */
     public function getMinDepth()
     {
-        if (!is_int($this->minDepth) || $this->minDepth < 0) {
+        if (! is_int($this->minDepth) || $this->minDepth < 0) {
             return 0;
         }
 
@@ -791,95 +792,6 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
         return $this->serviceLocator;
     }
 
-    // Translator methods - Good candidate to refactor as a trait with PHP 5.4
-
-    /**
-     * Sets translator to use in helper
-     *
-     * @param  Translator $translator  [optional] translator.
-     *                                 Default is null, which sets no translator.
-     * @param  string     $textDomain  [optional] text domain
-     *                                 Default is null, which skips setTranslatorTextDomain
-     * @return AbstractHelper
-     */
-    public function setTranslator(Translator $translator = null, $textDomain = null)
-    {
-        $this->translator = $translator;
-        if (null !== $textDomain) {
-            $this->setTranslatorTextDomain($textDomain);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns translator used in helper
-     *
-     * @return Translator|null
-     */
-    public function getTranslator()
-    {
-        if (! $this->isTranslatorEnabled()) {
-            return;
-        }
-
-        return $this->translator;
-    }
-
-    /**
-     * Checks if the helper has a translator
-     *
-     * @return bool
-     */
-    public function hasTranslator()
-    {
-        return (bool) $this->getTranslator();
-    }
-
-    /**
-     * Sets whether translator is enabled and should be used
-     *
-     * @param  bool $enabled
-     * @return AbstractHelper
-     */
-    public function setTranslatorEnabled($enabled = true)
-    {
-        $this->translatorEnabled = (bool) $enabled;
-        return $this;
-    }
-
-    /**
-     * Returns whether translator is enabled and should be used
-     *
-     * @return bool
-     */
-    public function isTranslatorEnabled()
-    {
-        return $this->translatorEnabled;
-    }
-
-    /**
-     * Set translation text domain
-     *
-     * @param  string $textDomain
-     * @return AbstractHelper
-     */
-    public function setTranslatorTextDomain($textDomain = 'default')
-    {
-        $this->translatorTextDomain = $textDomain;
-        return $this;
-    }
-
-    /**
-     * Return the translation text domain
-     *
-     * @return string
-     */
-    public function getTranslatorTextDomain()
-    {
-        return $this->translatorTextDomain;
-    }
-
     /**
      * Sets whether ACL should be used
      *
@@ -950,14 +862,42 @@ abstract class AbstractHelper extends View\Helper\AbstractHtmlElement implements
      */
     protected function setDefaultListeners()
     {
-        if (!$this->getUseAcl()) {
+        if (! $this->getUseAcl()) {
             return;
         }
 
-        $this->getEventManager()->getSharedManager()->attach(
+        $events = $this->getEventManager() ?: $this->createEventManager();
+
+        if (! $events->getSharedManager()) {
+            return;
+        }
+
+        $events->getSharedManager()->attach(
             'Zend\View\Helper\Navigation\AbstractHelper',
             'isAllowed',
             ['Zend\View\Helper\Navigation\Listener\AclListener', 'accept']
         );
+    }
+
+    /**
+     * Create and return an event manager instance.
+     *
+     * Ensures that the returned event manager has a shared manager
+     * composed.
+     *
+     * @return EventManager
+     */
+    private function createEventManager()
+    {
+        $r = new ReflectionClass(EventManager::class);
+        if ($r->hasMethod('setSharedManager')) {
+            $events = new EventManager();
+            $events->setSharedManager(new SharedEventManager());
+        } else {
+            $events = new EventManager(new SharedEventManager());
+        }
+
+        $this->setEventManager($events);
+        return $events;
     }
 }

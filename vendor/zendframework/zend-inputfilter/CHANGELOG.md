@@ -2,6 +2,173 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.7.4 - 2017-05-18
+
+### Added
+
+- Nothing.
+
+### Changes
+
+- [#122](https://github.com/zendframework/zend-inputfilter/pull/122) maps the
+  `Zend\InputFilter\InputFilterPluginManager` service to
+  `Zend\InputFilter\InputFilterPluginManagerFactory`, and adds an alias from
+  `InputFitlerPluginManager` to the fully qualified class name. This change
+  allows you to request the service using either the original short name, or the
+  fully qualified class name.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#137](https://github.com/zendframework/zend-inputfilter/pull/137) fixes how the
+  `InputFilterPluginManagerFactory` factory initializes the plugin manager
+  instance, ensuring it is injecting the relevant configuration from the
+  `config` service and thus seeding it with configured input filter services.
+  This means that the `input_filters` configuration will now be honored in
+  non-zend-mvc contexts.
+
+## 2.7.3 - 2016-08-18
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#115](https://github.com/zendframework/zend-inputfilter/pull/115) fixes
+  retrieval of unknown fields when using a `CollectionInputFilter`. Previously,
+  it returned all fields in the collection, not just the unknown fields, which
+  was a different behavior from all other input filters. Now it will return only
+  the unknown fields for each collection.
+- [#108](https://github.com/zendframework/zend-inputfilter/pull/108) fixes
+  the `InputFilterPluginManager::populateFactory()` method to restore behavior
+  from prior to the 2.7 series; specifically, previously it would inject itself
+  as the plugin manager to input filter factories when under zend-servicemanager
+  v2; it now will do so again.
+- [#116](https://github.com/zendframework/zend-inputfilter/pull/116) fixes the
+  behavior of `CollectionInputFilter::setData()`. Prior to this release, it
+  would validate whether the data represented a collection (i.e., it was an
+  array or traversable) and whether individual items in the collection were data
+  sets (i.e., arrays or traversables) only during `isValid()` and/or
+  `getUnknown()` calls, raising exceptions during runtime. These should have
+  been considered invalid arguments when the data was provided; they now are. As
+  such, `setData()` now raises `Zend\InputFilter\Exception\InvalidArgumentException`
+  for invalid data, ensuring that `isValid()` and `getUnknown()` only ever
+  operate on usable collections and collection sets.
+- [#118](https://github.com/zendframework/zend-inputfilter/pull/118) fixes
+  aggregation of error messages when validating collections to ensure only the
+  error messages specific to a given datum are presented.
+
+## 2.7.2 - 2016-06-11
+
+### Added
+
+- [#105](https://github.com/zendframework/zend-inputfilter/pull/105) adds and
+  publishes the documentation to https://zendframework.github.io/zend-inputfilter
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#110](https://github.com/zendframework/zend-inputfilter/pull/110) fixes an
+  issue with `InputFilterAbstractServiceFactory` whereby it was not working when
+  the provided container is not a plugin manager, but rather the application
+  container.
+
+## 2.7.1 - 2016-04-18
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#104](https://github.com/zendframework/zend-inputfilter/pull/104) fixes the
+  `Module::init()` method to properly receive a `ModuleManager` instance, and
+  not expect a `ModuleEvent`.
+
+## 2.7.0 - 2016-04-07
+
+### Added
+
+- [#3](https://github.com/zendframework/zend-inputfilter/pull/3) updates the
+  `InputFilterAbstractServiceFactory` to inject the created input filter factory
+  with the `InputFilterManager` service, ensuring that the generated factory can
+  pull named input filters and inputs from the container as needed.
+- [#100](https://github.com/zendframework/zend-inputfilter/pull/100) adds a
+  number of classes, in order to better allow usage as a standalone component:
+  - `InputFilterPluginManagerFactory`, ported from zend-mvc, allows creating and
+    returning an `InputFilterPluginManager`.
+  - `ConfigProvider` maps the `InputFilterManager` service to the above factory,
+    and enables the `InputFilterAbstractServiceFactory`.
+  - `Module` does the same as `ConfigProvider`, within a zend-mvc context, and
+    also registers a specification with the zend-modulemanager `ServiceListener`
+    to allow modules to configure the input filter plugin manager.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
+## 2.6.1 - 2016-04-07
+
+### Added
+
+- [#68](https://github.com/zendframework/zend-inputfilter/pull/68) adds support
+  for using *either* named keys *or* a `name` element in input filter specs
+  parsed by the `InputFilterAbstractServiceFactory`.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#67](https://github.com/zendframework/zend-inputfilter/pull/67) and
+  [#73](https://github.com/zendframework/zend-inputfilter/pull/73) fix
+  localization of the `NotEmpty` validation error message (created for any
+  required input for which a value was not provided).
+
 ## 2.6.0 - 2016-02-18
 
 ### Added

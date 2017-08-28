@@ -45,7 +45,7 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 * fix: trid import fix for WPML
 * fix: Visual Reference ID for view person
 * new: Optional extra cost segmentation option
-* update: Tighter CASAMODULE implementation
+* update: Tighter CASAMODULE implementation “dev-master”
 
 = 2.2.5 =
 * update: New feature values and categories
