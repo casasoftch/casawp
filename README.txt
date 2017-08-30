@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,10 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.2.7 =
+* fix: category translator
+* update: Translations
 
 = 2.2.6 =
 * update: Translations for new Terms
