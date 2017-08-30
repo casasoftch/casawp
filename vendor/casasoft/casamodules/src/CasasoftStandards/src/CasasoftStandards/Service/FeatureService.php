@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class FeatureService implements FactoryInterface {
+class FeatureService {
 
     public $items = array();
 
@@ -88,7 +88,7 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Raised ground floor', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
+
             'has-elevator' => array(
                 'label' => $this->translator->translate('Has elevator', 'casasoft-standards'),
                 'icon' => '',
@@ -114,29 +114,29 @@ class FeatureService implements FactoryInterface {
             'is-sunny' => array(
                 'label' => $this->translator->translate('Sunny', 'casasoft-standards'),
                 'icon' => '',
-            ), 
+            ),
 
 
             //alpha
             'is-quiet' => array(
                 'label' => $this->translator->translate('Quiet', 'casasoft-standards'),
                 'icon' => '',
-            ), 
+            ),
 
             //alpha
             'is_projection' => array(
                 'label' => $this->translator->translate('Projected construction (not yet realized)', 'casasoft-standards'),
                 'icon' => '',
-            ), 
+            ),
 
             //alpha
             'has_demolition_property' => array(
                 'label' => $this->translator->translate('Contains demolition structure', 'casasoft-standards'),
                 'icon' => '',
-            ), 
+            ),
 
 
-            
+
             'is-child-friendly' => array(
                 'label' => $this->translator->translate('Child friendly', 'casasoft-standards'),
                 'icon' => '',
@@ -201,9 +201,9 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Animal friendly', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
-            
-            
+
+
+
             'has-restrooms' => array(
                 'label' => $this->translator->translate('Restrooms', 'casasoft-standards'),
                 'icon' => '',
@@ -224,7 +224,7 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Gas supply', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
+
             'is-corner-house' => array(
                 'label' => $this->translator->translate('Corner house', 'casasoft-standards'),
                 'icon' => '',
@@ -233,8 +233,8 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Middle house', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
-            
+
+
             'is-new-construction' => array(
                 'label' => $this->translator->translate('New construction', 'casasoft-standards'),
                 'icon' => '',
@@ -251,7 +251,7 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('has building law restrictions', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
+
             'has-swimmingpool' => array(
                 'label' => $this->translator->translate('Swimmingpool', 'casasoft-standards'),
                 'icon' => '',
@@ -264,70 +264,70 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Minergie certified', 'casasoft-standards'),
                 'icon' => '',
             ),
-            'is-non-smoking' => array(
-                'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-partially-renovation-indigent' => array(
-                'label' => $this->translator->translate('Partially renovation indigent', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is_projection' => array(
-                'label' => $this->translator->translate('Projection', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-demolition-property' => array(
-                'label' => $this->translator->translate('Demolition property', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-gutted' => array(
-                'label' => $this->translator->translate('Gutted', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-shell-construction' => array(
-                'label' => $this->translator->translate('Shell construction', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-well-tended' => array(
-                'label' => $this->translator->translate('Well tended', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-modernized' => array(
-                'label' => $this->translator->translate('Modernized', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-dilapidated' => array(
-                'label' => $this->translator->translate('Dilapidated', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-renovation-indigent' => array(
-                'label' => $this->translator->translate('Renovation indigent', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-refurbished' => array(
-                'label' => $this->translator->translate('Refurbished', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-partially-refurbished' => array(
-                'label' => $this->translator->translate('Partially refurbished', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-first-time-occupancy' => array(
-                'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-washing-machine' => array( // Waschmaschine
-                'label' => $this->translator->translate('Washing machine', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-tumbler' => array( // Tumbler
-                'label' => $this->translator->translate('Tumbler', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-kachelofen' => array( // Kachelofen
-                'label' => $this->translator->translate('Kachelofen', 'casasoft-standards'),
-                'icon' => '',
-            ),
+           'is-non-smoking' => array(
+               'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-partially-renovation-indigent' => array(
+               'label' => $this->translator->translate('Partially renovation indigent', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is_projection' => array(
+               'label' => $this->translator->translate('Projection', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-demolition-property' => array(
+               'label' => $this->translator->translate('Demolition property', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-gutted' => array(
+               'label' => $this->translator->translate('Gutted', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-shell-construction' => array(
+               'label' => $this->translator->translate('Shell construction', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-well-tended' => array(
+               'label' => $this->translator->translate('Well tended', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-modernized' => array(
+               'label' => $this->translator->translate('Modernized', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-dilapidated' => array(
+               'label' => $this->translator->translate('Dilapidated', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-renovation-indigent' => array(
+               'label' => $this->translator->translate('Renovation indigent', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-refurbished' => array(
+               'label' => $this->translator->translate('Refurbished', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-partially-refurbished' => array(
+               'label' => $this->translator->translate('Partially refurbished', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-first-time-occupancy' => array(
+               'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'has-washing-machine' => array( // Waschmaschine
+               'label' => $this->translator->translate('Washing machine', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'has-tumbler' => array( // Tumbler
+               'label' => $this->translator->translate('Tumbler', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'has-kachelofen' => array( // Kachelofen
+               'label' => $this->translator->translate('Kachelofen', 'casasoft-standards'),
+               'icon' => '',
+           ),
             'is-allowed-as-secondary-residency' => array(
                 'label' => $this->translator->translate('Secondary residency', 'casasoft-standards'),
                 'icon' => '',
@@ -340,6 +340,7 @@ class FeatureService implements FactoryInterface {
                 'label' => $this->translator->translate('Foreign quota', 'casasoft-standards'),
                 'icon' => '',
             ),
+
 
             'is-attic' => array(
                 'label' => $this->translator->translate('Attic', 'casasoft-standards'),
@@ -403,16 +404,17 @@ class FeatureService implements FactoryInterface {
         if (isset($this->items[$key])) {
             unset($this->items[$key]);
         }
-        else {            
+        else {
             throw new \Exception("Invalid key $key.");
         }
     }
-     
+
     public function getItem($key) {
         if (isset($this->items[$key])) {
             return $this->items[$key];
         }
         else {
+          return null;
             throw new \Exception("Invalid key $key.");
         }
     }

@@ -32,14 +32,43 @@ class Numval {
     private $value;
     public function getValue(){return $this->value;}
     public function setValue($value){$this->value = $value;}
-    
+
+    public function getRenderedValue(Array $options = []){
+      $options = array_merge(array(
+          'km_convert_at' => 501
+      ), $options);
+
+      $number_filter = new \Zend\I18n\Filter\NumberFormat("de_CH");
+
+      $val = $this->getValue();
+      $km = false;
+
+      //km conversion
+      if (in_array($this->getSi(), array('m'))) {
+          if ($options['km_convert_at'] && $val >= $options['km_convert_at']) {
+              $val = $val/1000;
+              $km = true;
+          }
+      }
+
+      switch ($this->getSi()) {
+          case 'm': $val = $number_filter->filter($val) . ' ' . ($km ? 'km' : 'm'); break;
+          case 'm2': $val = $number_filter->filter($val) . ' ' . ($km ? 'km' : 'm') . '<sup>2</sup>'; break;
+          case 'm3': $val = $number_filter->filter($val) . ' ' . ($km ? 'km' : 'm') . '<sup>3</sup>'; break;
+          case 'kg': $val = $number_filter->filter($val) . ' kg'; break;
+          case '%': $val = $number_filter->filter($val) . ' %'; break;
+      }
+
+      return $val;
+    }
+
     private $translator;
     public function __construct(){
     }
     public function populate($data){
         if (isset($data['key'])) {
             $this->key = $data['key'];
-        } 
+        }
         if (isset($data['icon'])){
             $this->icon = $data['icon'];
         }

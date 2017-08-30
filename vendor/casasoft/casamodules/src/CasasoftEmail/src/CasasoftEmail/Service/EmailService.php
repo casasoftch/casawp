@@ -168,6 +168,9 @@ class EmailService {
         if ($emailOptions['cc']) {
             $message->addCc($emailOptions['cc']);
         }
+        if ($emailOptions['replyto']) {
+            $message->addReplyTo($emailOptions['replyto']);
+        }
 
         if ($this->html) {
             // HTML part
@@ -227,14 +230,34 @@ class EmailService {
         $message->getHeaders()->get('content-type')->setType($messageType);
         $message->setEncoding('UTF-8');
 
-        $transport = new SendmailTransport();
-
         if ($emailOptions['send']) {
+            if (isset($emailOptions['smtp']) && $emailOptions['smtp'] == 'google') {
+              $transport = new SmtpTransport();
+              $options   = new SmtpOptions(array(
+                  'name'              => 'casamail.com',
+                  'host'              => 'smtp.gmail.com',
+                  'port' => 465,
+                  'connection_class'  => 'login',
+                  'connection_config' => array(
+                    'username' => $emailOptions['smtp_username'],
+                    'password' => $emailOptions['smtp_password'],
+                    'ssl'=> 'ssl',
+                  ),
+              ));
+              $transport->setOptions($options);
+            } else {
+              $transport = new SendmailTransport();
+            }
+
             try {
                 $transport->send($message);
             } catch (\Exception $e) {
-                die($e->getMessage());
-                die('failed_to_send');
+              if (!get_class($transport) == 'Sendmail') {
+                //try with postfix
+                $transport = new SendmailTransport();
+                $transport->send($message);
+              }
+
             }
         } else {
             echo '<h1>E-Mail <strong>NOT</strong> sent</h1>';

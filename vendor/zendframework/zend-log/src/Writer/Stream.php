@@ -2,8 +2,8 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-log for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -50,10 +50,10 @@ class Stream extends AbstractWriter
 
         if (is_array($streamOrUrl)) {
             parent::__construct($streamOrUrl);
-            $mode            = isset($streamOrUrl['mode'])          ? $streamOrUrl['mode']          : null;
+            $mode            = isset($streamOrUrl['mode']) ? $streamOrUrl['mode'] : null;
             $logSeparator    = isset($streamOrUrl['log_separator']) ? $streamOrUrl['log_separator'] : null;
-            $filePermissions = isset($streamOrUrl['chmod'])         ? $streamOrUrl['chmod']         : $filePermissions;
-            $streamOrUrl     = isset($streamOrUrl['stream'])        ? $streamOrUrl['stream']        : null;
+            $filePermissions = isset($streamOrUrl['chmod']) ? $streamOrUrl['chmod'] : $filePermissions;
+            $streamOrUrl     = isset($streamOrUrl['stream']) ? $streamOrUrl['stream'] : null;
         }
 
         // Setting the default mode
@@ -79,21 +79,18 @@ class Stream extends AbstractWriter
             $this->stream = $streamOrUrl;
         } else {
             ErrorHandler::start();
+            if (isset($filePermissions) && ! file_exists($streamOrUrl) && is_writable(dirname($streamOrUrl))) {
+                touch($streamOrUrl);
+                chmod($streamOrUrl, $filePermissions);
+            }
             $this->stream = fopen($streamOrUrl, $mode, false);
             $error = ErrorHandler::stop();
-            if (!$this->stream) {
+            if (! $this->stream) {
                 throw new Exception\RuntimeException(sprintf(
                     '"%s" cannot be opened with mode "%s"',
                     $streamOrUrl,
                     $mode
                 ), 0, $error);
-            }
-            if (null !== $filePermissions && !chmod($streamOrUrl, $filePermissions)) {
-                throw new Exception\RuntimeException(sprintf(
-                    'Could not set the mode "%o" for the log file "%s"',
-                    $filePermissions,
-                    $streamOrUrl
-                ));
             }
         }
 

@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class CategoryService implements FactoryInterface {
+class CategoryService {
 
     public $items = array();
     public $groups = array();
@@ -26,6 +26,7 @@ class CategoryService implements FactoryInterface {
 
         $this->groups = $this->getDefaultGroupOptions();
     }
+
 
     public function createService(ServiceLocatorInterface $serviceLocator){
         return $this;
@@ -286,13 +287,16 @@ class CategoryService implements FactoryInterface {
                     'villa',
                     'hotel',
                     'chalet',
+                    'terrace-house',
                 ),
             ),
             'apartment-group' => array(
                 'label' => $this->translator->translate('Apartment', 'casasoft-standards'),
                 'category_slugs' => array(
+                    'penthouse',
                     'apartment',
                     'flat',
+                    'granny-flat',
                     'ground-floor-flat',
                     'attic-flat',
                     'bachelor-flat',
@@ -402,8 +406,8 @@ class CategoryService implements FactoryInterface {
 
         //load schema
         $schema = 'https://github.com/CasasoftCH/CasaXML/raw/master/schema/schema_7.xsd';
-        
-        
+
+
 
     }
 

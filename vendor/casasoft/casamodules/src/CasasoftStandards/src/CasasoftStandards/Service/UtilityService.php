@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class UtilityService implements FactoryInterface {
+class UtilityService{
 
     public $items = array();
 
