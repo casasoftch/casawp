@@ -20,7 +20,7 @@ class ConversionServiceFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $translator = $serviceLocator->get('MvcTranslator');
+        $translator = $serviceLocator->get('Translator');
         $numvalService = $serviceLocator->get('CasasoftNumval');
         $categoryService = $serviceLocator->get('CasasoftCategory');
         $featureService = $serviceLocator->get('CasasoftFeature');

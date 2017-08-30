@@ -18,7 +18,7 @@ class CategoryServiceFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $translator = $serviceLocator->get('MvcTranslator');
+        $translator = $serviceLocator->get('Translator');
         //$viewRenderer = $serviceLocator->get('viewRenderer');
 
         $service = new CategoryService($translator);
