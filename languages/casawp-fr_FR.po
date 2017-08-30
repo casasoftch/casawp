@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-05-31 11:16+0200\n"
+"POT-Creation-Date: 2017-07-24 15:39+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jens Stalder <js@casasoft.ch>\n"
 "Language-Team: \n"
@@ -15,6 +15,33 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: plugin-assets/global/prettify.js\n"
+
+#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
+#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:10
+#: classes/Plugin.php:1583
+#: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
+#: theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
+msgid "Address"
+msgstr "Adresse "
+
+#: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
+#: theme-defaults/casawp/bootstrap3/contact-form.phtml:44
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:32
+msgid "Please fill out all the fields."
+msgstr "* Champs obligatoires"
+
+#: theme-defaults/casawp/bootstrap2/tabable.phtml:3
+#: theme-defaults/casawp/bootstrap3/tabable.phtml:3
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:6
+msgid "Base data"
+msgstr "Informations principales"
+
+#: theme-defaults/casawp/bootstrap2/tabable.phtml:8
+#: theme-defaults/casawp/bootstrap3/tabable.phtml:8
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:11
+msgid "Specifications"
+msgstr "Caractéristiques "
 
 #: casawp.php:48
 msgid ""
@@ -55,7 +82,7 @@ msgstr ""
 
 #: classes/Archive.php:474
 #: theme-defaults/casawp/bootstrap2/archive-filter.phtml:3
-#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:15
+#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:21
 msgid "Advanced Search"
 msgstr "Recherche avancée"
 
@@ -77,7 +104,7 @@ msgstr "Choisir disponibilité"
 
 #: classes/Archive.php:520
 #: theme-defaults/casawp/bootstrap2/archive-filter.phtml:29
-#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:231
+#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:237
 msgid "Search"
 msgstr "Recherche"
 
@@ -379,7 +406,7 @@ msgstr "Îles Féroé"
 #: theme-defaults/casawp/bootstrap2/address.phtml:16
 #: theme-defaults/casawp/bootstrap3/address.phtml:16
 msgid "France"
-msgstr "Portugais"
+msgstr "France"
 
 #: classes/Conversion.php:92
 msgid "France, Metropolitan"
@@ -802,7 +829,7 @@ msgstr "Territoire palestinien"
 
 #: classes/Conversion.php:196
 msgid "Portugal"
-msgstr "Portugais (Portugal)"
+msgstr "Portugal"
 
 #: classes/Conversion.php:197
 msgid "Palau"
@@ -1814,7 +1841,7 @@ msgid "Identifiers"
 msgstr ""
 
 #: classes/Plugin.php:1520 classes/Plugin.php:1826
-#: modules/casawp/src/casawp/Form/ContactForm.php:63
+#: modules/casawp/src/casawp/Form/ContactForm.php:71
 #: modules/casawp/src/casawp/Service/Offer.php:874
 msgid "Street"
 msgstr "Rue"
@@ -1841,7 +1868,7 @@ msgid "Region"
 msgstr "Région"
 
 #: classes/Plugin.php:1562 classes/Plugin.php:1861
-#: modules/casawp/src/casawp/Form/ContactForm.php:102
+#: modules/casawp/src/casawp/Form/ContactForm.php:110
 msgid "Country"
 msgstr "Pays"
 
@@ -1852,15 +1879,6 @@ msgstr "Latitude"
 #: classes/Plugin.php:1576
 msgid "Longitude"
 msgstr "Longitude"
-
-#: classes/Plugin.php:1583
-#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
-#: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
-#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
-#: theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
-#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:10
-msgid "Address"
-msgstr "Adresse "
 
 #: classes/Plugin.php:1606
 msgid "Start"
@@ -1913,7 +1931,7 @@ msgstr ""
 msgid "Gross price time segment"
 msgstr ""
 
-#: classes/Plugin.php:1805
+#: classes/Plugin.php:1805 modules/casawp/src/casawp/Form/ContactForm.php:63
 msgid "Legal name"
 msgstr "Nom juridique"
 
@@ -1921,7 +1939,7 @@ msgstr "Nom juridique"
 msgid "Brand"
 msgstr "Marque"
 
-#: classes/Plugin.php:1819 modules/casawp/src/casawp/Form/ContactForm.php:111
+#: classes/Plugin.php:1819 modules/casawp/src/casawp/Form/ContactForm.php:119
 #: theme-defaults/casawp/bootstrap2/seller.phtml:22
 #: theme-defaults/casawp/bootstrap3/seller.phtml:22
 msgid "Phone"
@@ -1931,7 +1949,7 @@ msgstr "Téléphone"
 msgid "Street addition"
 msgstr "Complément rue"
 
-#: classes/Plugin.php:1847 modules/casawp/src/casawp/Form/ContactForm.php:80
+#: classes/Plugin.php:1847 modules/casawp/src/casawp/Form/ContactForm.php:88
 #: modules/casawp/src/casawp/Service/Offer.php:881
 #: vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:82
 msgid "Locality"
@@ -1945,10 +1963,10 @@ msgstr "Case postale"
 msgid "Organization"
 msgstr "Organisme"
 
-#: classes/Plugin.php:1900 modules/casawp/src/casawp/Form/ContactForm.php:127
+#: classes/Plugin.php:1900 modules/casawp/src/casawp/Form/ContactForm.php:135
 #: vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:50
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:18
-#: theme-defaults/casawp/bootstrap3/sales-person.phtml:18
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:28
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:23
 msgid "Email"
 msgstr "Email"
@@ -2498,7 +2516,7 @@ msgstr "Personne à contacter"
 
 #: classes/Single.php:751
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:24
-#: theme-defaults/casawp/bootstrap3/sales-person.phtml:24
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:34
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:29
 msgid "Phone direct"
 msgstr "Téléphone direct"
@@ -2536,23 +2554,23 @@ msgstr "Prénom"
 msgid "Last name"
 msgstr "Nom"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:71
+#: modules/casawp/src/casawp/Form/ContactForm.php:79
 #: vendor/casasoft/casamodules/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php:74
 msgid "ZIP"
 msgstr "Code postal"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:95
+#: modules/casawp/src/casawp/Form/ContactForm.php:103
 msgid "Other"
 msgstr "Autre"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:119
+#: modules/casawp/src/casawp/Form/ContactForm.php:127
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:29
-#: theme-defaults/casawp/bootstrap3/sales-person.phtml:29
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:39
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:34
 msgid "Mobile"
 msgstr "GSM"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:135
+#: modules/casawp/src/casawp/Form/ContactForm.php:143
 msgid "Message"
 msgstr "Message"
 
@@ -2598,9 +2616,10 @@ msgstr "Prix à"
 msgid "Price range"
 msgstr "gamme de prix"
 
-#: modules/casawp/src/casawp/Service/FormService.php:200
+#: modules/casawp/src/casawp/Service/FormService.php:204
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:15
-#: theme-defaults/casawp/bootstrap3/sales-person.phtml:15
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:16
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:23
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:20
 msgid "I am interested concerning this property. Please contact me."
 msgstr ""
@@ -2705,12 +2724,6 @@ msgstr "Login"
 msgid "Chosen Password"
 msgstr "Mode de passe choisi"
 
-#: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
-#: theme-defaults/casawp/bootstrap3/contact-form.phtml:44
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:32
-msgid "Please fill out all the fields."
-msgstr "* Champs obligatoires"
-
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:36
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:47
 #: theme-defaults/casawp/bootstrap4/contact-form.phtml:35
@@ -2781,25 +2794,19 @@ msgstr "Précédent"
 #: theme-defaults/casawp/bootstrap3/single-pagination.phtml:3
 #: theme-defaults/casawp/bootstrap4/single-pagination.phtml:3
 msgid "To list"
-msgstr "Vos la liste"
+msgstr "Vers la liste"
 
 #: theme-defaults/casawp/bootstrap2/single-pagination.phtml:4
 #: theme-defaults/casawp/bootstrap3/single-pagination.phtml:4
 #: theme-defaults/casawp/bootstrap4/single-pagination.phtml:4
 msgid "Next"
-msgstr "suivant"
+msgstr "Suivant"
 
 #: theme-defaults/casawp/bootstrap2/single.phtml:29
 #: theme-defaults/casawp/bootstrap3/single.phtml:30
 #: theme-defaults/casawp/bootstrap4/single.phtml:27
 msgid "Virtual Tour"
 msgstr "Visite virtuelle"
-
-#: theme-defaults/casawp/bootstrap2/tabable.phtml:3
-#: theme-defaults/casawp/bootstrap3/tabable.phtml:3
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:6
-msgid "Base data"
-msgstr "Informations principales"
 
 #: theme-defaults/casawp/bootstrap2/tabable.phtml:4
 #: theme-defaults/casawp/bootstrap3/tabable.phtml:4
@@ -2812,12 +2819,6 @@ msgstr "Description"
 #: theme-defaults/casawp/bootstrap4/tabable.phtml:9
 msgid "Videos"
 msgstr "Vidéos"
-
-#: theme-defaults/casawp/bootstrap2/tabable.phtml:8
-#: theme-defaults/casawp/bootstrap3/tabable.phtml:8
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:11
-msgid "Specifications"
-msgstr "Caractéristiques "
 
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:48
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:44

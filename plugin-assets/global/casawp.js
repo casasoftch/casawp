@@ -126,15 +126,15 @@ jQuery(document).ready(function($) {
 
 
 
-    var userAgent = window.navigator.userAgent;
-    console.log(userAgent);
-    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
-        $('.chosen-select').each(function(index, el) {
-            $(el).removeAttr('multiple')
-            .prop('placeholder', $(this).data('placeholder'))
-            .prepend("<option value='' disabled selected hidden>"+($(el).data('placeholder'))+"</option>");
-        });
-    }
+    // var userAgent = window.navigator.userAgent;
+    // console.log(userAgent);
+    // if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+    //     $('.chosen-select').each(function(index, el) {
+    //         $(el).removeAttr('multiple')
+    //         .prop('placeholder', $(this).data('placeholder'))
+    //         .prepend("<option value='' disabled selected hidden>"+($(el).data('placeholder'))+"</option>");
+    //     });
+    // }
 
 
     //replace radios with a controllable one
@@ -212,7 +212,7 @@ jQuery(document).ready(function($) {
           }
           var filteredUrl = addParameterAndReturn(url + '?' + filteredParams, 'ajax', 'archive-filter');
 
-          
+
 
           $.ajax({
             url: filteredUrl,

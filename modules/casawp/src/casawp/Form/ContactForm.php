@@ -57,6 +57,14 @@ class ContactForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'legal_name',
+            'type' => 'Text',
+            'options' => array(
+                'label' => __('Legal name', 'casawp'),
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'street',
             'type' => 'Text',
             'options' => array(
@@ -189,6 +197,12 @@ class ContactForm extends Form
                 ),
             ));
         }
+        if (!$this->isInCustomFilters('legal_name')) {
+            $filter->add(array(
+                'name' => 'legal_name',
+                'required' => get_option('casawp_form_legal_name_required', false)
+            ));
+        }
         if (!$this->isInCustomFilters('street')) {
             $filter->add(array(
                 'name' => 'street',
@@ -290,6 +304,13 @@ class ContactForm extends Form
                         )
                     )
                 ),
+            ));
+        }
+        if (!$this->isInCustomFilters('message')) {
+            $filter->add(array(
+                'name' => 'message',
+                'required' => get_option('casawp_form_message_required', false),
+                'validators' => array(),
             ));
         }
         if (!$this->isInCustomFilters('gender')) {

@@ -9,12 +9,22 @@
 </p>
 <?php if(get_option('casawp_show_email_person_view')) : ?>
   <?php if ($this->offer->getFieldValue('seller_view_person_email', false)) : ?>
-  <?php 
-    $id_number = ($this->offer->getFieldValue('referenceId')) ? ($this->offer->getFieldValue('referenceId')) : ($this->offer->getFieldValue('casawp_id'));
-    $mailto = 'mailto:' . $this->offer->getFieldValue('seller_view_person_email') . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
-      . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casawp'))
-    .'%0A%0ALink:%20' .  get_permalink();
-  ?>
+    <?php if ($this->offer->getFieldValue('visualReferenceId')): ?>
+      <?php 
+        $id_number = $this->offer->getFieldValue('visualReferenceId');
+        $mailto = 'mailto:' . $this->offer->getFieldValue('seller_view_person_email') . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
+          . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casawp'))
+        .'%0A%0ALink:%20' .  get_permalink();
+      ?>
+    <?php else: ?>
+      <?php 
+        $id_number = ($this->offer->getFieldValue('referenceId')) ? ($this->offer->getFieldValue('referenceId')) : ($this->offer->getFieldValue('casawp_id'));
+        $mailto = 'mailto:' . $this->offer->getFieldValue('seller_view_person_email') . '?subject=Anfrage%20auf%20Objekt-Nr.%20' . $id_number . '&amp;body='
+          . rawurlencode(__('I am interested concerning this property. Please contact me.', 'casawp'))
+        .'%0A%0ALink:%20' .  get_permalink();
+      ?>
+    <?php endif ?>
+  
   <?= '<p><span class="casawp-label">' . __('Email', 'casawp') . '</span>'
     .'<span class="value break-word"> <a href="' . $mailto . '">' . $this->offer->getFieldValue('seller_view_person_email') . '</a></span></p>'; ?>
   <?php endif; ?>

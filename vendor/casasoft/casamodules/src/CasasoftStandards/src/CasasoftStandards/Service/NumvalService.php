@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class NumvalService implements FactoryInterface {
+class NumvalService {
 
     public $items = array();
     private $template;
@@ -693,7 +693,7 @@ class NumvalService implements FactoryInterface {
                 'si' => '',
             ),
 
-            
+
         );
     }
 
@@ -725,7 +725,7 @@ class NumvalService implements FactoryInterface {
             return $this->items[$key];
         }
         else {
-            throw new \Exception("Invalid key $key.");
+          return false;
         }
     }
 

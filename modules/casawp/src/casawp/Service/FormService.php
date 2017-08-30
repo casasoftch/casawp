@@ -134,6 +134,10 @@ class FormService{
   								$data['publisher'] = $publisherid;
   								$data['lang'] = substr(get_bloginfo('language'), 0, 2);
 
+                  if (isset($postdata['legal_name'])) {
+                    $data['legal_name'] = $postdata['legal_name'];
+                  }
+
                   if($directRecipientEmail){
                     $data['direct_recipient_email'] = $directRecipientEmail;
                   }
@@ -196,10 +200,13 @@ class FormService{
 						} else {
 						    $messages = $form->getMessages();
 						}
-	        } else {
-	        	$form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
 	        }
-				}
+				} else {
+          if (!$form->get('message')->getValue()) {
+            $form->get('message')->setValue(__('I am interested concerning this property. Please contact me.','casawp'));
+          }
+
+        }
         return array('form' => $form, 'sent' => $sent);
     }
 

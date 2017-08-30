@@ -77,6 +77,40 @@ class GeoService implements FactoryInterface {
 
     }
 
+    public function findLocalityFromTree($country, $query){
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        foreach ($query as $key => $value) {
+          if ($key == 'postal_code') {
+            $key = 's';
+          }
+          $request->getQuery()->set($key, $value);
+        }
+
+
+        $request->getHeaders()->addHeaderLine('Accept', 'application/json');
+        switch ($country) {
+            case 'CH':
+                $request->setUri($this->config['url'].'/rpc/tree/search');
+                break;
+            default:
+                $request->setUri($this->config['url'].'/rpc/tree/search');
+                break;
+        }
+
+        $client = new Client();
+        $response = $client->send($request);
+        $body = $response->getBody();
+
+        $result = json_decode($body, true);
+        if ($result) {
+            return $result['nodes'];
+        }
+
+        return null;
+    }
+
+
     public function findRegion($country, $query){
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);

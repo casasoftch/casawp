@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'DbGenerator\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftThumb\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftStandards\\' => array($vendorDir . '/casasoft/casamodules/src'),

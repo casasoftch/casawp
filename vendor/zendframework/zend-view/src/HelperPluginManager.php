@@ -10,7 +10,10 @@
 namespace Zend\View;
 
 use Interop\Container\ContainerInterface;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\SharedEventManagerInterface;
 use Zend\I18n\Translator\TranslatorAwareInterface;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\Factory\InvokableFactory;
@@ -34,6 +37,8 @@ class HelperPluginManager extends AbstractPluginManager
      * @var string[]
      */
     protected $aliases = [
+        'asset'               => Helper\Asset::class,
+        'Asset'               => Helper\Asset::class,
         'basePath'            => Helper\BasePath::class,
         'BasePath'            => Helper\BasePath::class,
         'basepath'            => Helper\BasePath::class,
@@ -134,8 +139,6 @@ class HelperPluginManager extends AbstractPluginManager
         'ViewModel'           => Helper\ViewModel::class,
     ];
 
-    protected $instanceOf = Helper\HelperInterface::class;
-
     /**
      * Default factories
      *
@@ -147,12 +150,13 @@ class HelperPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $factories = [
+        Helper\Asset::class               => Helper\Service\AssetFactory::class,
         Helper\FlashMessenger::class      => Helper\Service\FlashMessengerFactory::class,
         Helper\Identity::class            => Helper\Service\IdentityFactory::class,
         Helper\BasePath::class            => InvokableFactory::class,
         Helper\Cycle::class               => InvokableFactory::class,
         Helper\DeclareVars::class         => InvokableFactory::class,
-        Helper\Doctype::class             => InvokableFactory::class, // overridden by a factory in ViewHelperManagerFactory
+        Helper\Doctype::class             => InvokableFactory::class, // overridden in ViewHelperManagerFactory
         Helper\EscapeHtml::class          => InvokableFactory::class,
         Helper\EscapeHtmlAttr::class      => InvokableFactory::class,
         Helper\EscapeJs::class            => InvokableFactory::class,
@@ -185,6 +189,7 @@ class HelperPluginManager extends AbstractPluginManager
 
         // v2 canonical FQCNs
 
+        'zendviewhelperasset'             => Helper\Service\AssetFactory::class,
         'zendviewhelperflashmessenger'    => Helper\Service\FlashMessengerFactory::class,
         'zendviewhelperidentity'          => Helper\Service\IdentityFactory::class,
         'zendviewhelperbasepath'          => InvokableFactory::class,
@@ -243,6 +248,7 @@ class HelperPluginManager extends AbstractPluginManager
     {
         $this->initializers[] = [$this, 'injectRenderer'];
         $this->initializers[] = [$this, 'injectTranslator'];
+        $this->initializers[] = [$this, 'injectEventManager'];
 
         parent::__construct($configOrContainerInstance, $v3config);
     }
@@ -285,6 +291,10 @@ class HelperPluginManager extends AbstractPluginManager
             ? $second
             : $first;
 
+        if (! $helper instanceof Helper\HelperInterface) {
+            return;
+        }
+
         $renderer = $this->getRenderer();
         if (null === $renderer) {
             return;
@@ -313,7 +323,10 @@ class HelperPluginManager extends AbstractPluginManager
             $helper = $first;
         }
 
-        if (! $helper instanceof TranslatorAwareInterface) {
+        // Allow either direct implementation or duck-typing.
+        if (! $helper instanceof TranslatorAwareInterface
+            && ! method_exists($helper, 'setTranslator')
+        ) {
             return;
         }
 
@@ -329,8 +342,8 @@ class HelperPluginManager extends AbstractPluginManager
             return;
         }
 
-        if ($container->has('Zend\I18n\Translator\TranslatorInterface')) {
-            $helper->setTranslator($container->get('Zend\I18n\Translator\TranslatorInterface'));
+        if ($container->has(TranslatorInterface::class)) {
+            $helper->setTranslator($container->get(TranslatorInterface::class));
             return;
         }
 
@@ -341,21 +354,64 @@ class HelperPluginManager extends AbstractPluginManager
     }
 
     /**
+     * Inject a helper instance with the registered event manager
+     *
+     * @param ContainerInterface|Helper\HelperInterface $first helper instance
+     *     under zend-servicemanager v2, ContainerInterface under v3.
+     * @param ContainerInterface|Helper\HelperInterface $second
+     *     ContainerInterface under zend-servicemanager v3, helper instance
+     *     under v2. Ignored regardless.
+     */
+    public function injectEventManager($first, $second)
+    {
+        if ($first instanceof ContainerInterface) {
+            // v3 usage
+            $container = $first;
+            $helper = $second;
+        } else {
+            // v2 usage; grab the parent container
+            $container = $second->getServiceLocator();
+            $helper = $first;
+        }
+
+        if (! $container) {
+            // Under zend-navigation v2.5, the navigation PluginManager is
+            // always lazy-loaded, which means it never has a parent
+            // container.
+            return;
+        }
+
+        if (! $helper instanceof EventManagerAwareInterface) {
+            return;
+        }
+
+        if (! $container->has('EventManager')) {
+            // If the container doesn't have an EM service, do nothing.
+            return;
+        }
+
+        $events = $helper->getEventManager();
+        if (! $events || ! $events->getSharedManager() instanceof SharedEventManagerInterface) {
+            $helper->setEventManager($container->get('EventManager'));
+        }
+    }
+
+    /**
      * Validate the plugin is of the expected type (v3).
      *
-     * Validates against `$instanceOf`.
+     * Validates against callables and HelperInterface implementations.
      *
      * @param mixed $instance
      * @throws InvalidServiceException
      */
     public function validate($instance)
     {
-        if (!$instance instanceof $this->instanceOf) {
+        if (! is_callable($instance) && ! $instance instanceof Helper\HelperInterface) {
             throw new InvalidServiceException(
                 sprintf(
-                    '%s can only create instances of %s; %s is invalid',
+                    '%s can only create instances of %s and/or callables; %s is invalid',
                     get_class($this),
-                    $this->instanceOf,
+                    Helper\HelperInterface::class,
                     (is_object($instance) ? get_class($instance) : gettype($instance))
                 )
             );

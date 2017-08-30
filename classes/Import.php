@@ -426,9 +426,9 @@ class Import {
 
         global $sitepress;
         if ($this->getMainLang() != $lang) {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, $sitepress->get_default_language(), true);
         } else {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, NULL, true);
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, NULL, true);
         }
 
         /*
@@ -1744,6 +1744,9 @@ class Import {
     libxml_use_internal_errors();
     $xml = simplexml_load_file($this->getImportFile(), 'SimpleXMLElement', LIBXML_NOCDATA);
     $errors = libxml_get_errors();
+    if (!$xml) {
+      die('could not read XML!!!');
+    }
     if ($errors) {
       $this->transcript['error'] = 'XML read error' . print_r($errors, true);
       die('XML read error');
@@ -1825,6 +1828,14 @@ class Import {
 
     if (!$found_posts) {
       $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
+      $this->transcript['error_infos'] = [
+        'filesize' => filesize(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml') . ' !'
+      ];
+
+      copy(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml', CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-error.xml');
+
+      wp_mail('alert@casasoft.com', get_bloginfo('name'), 'Dieser Kunde hat alle Objekte von der Webseite gelöscht. Kann das sein? Bitte prüfen.');
+      //die('custom block');
     }
 
       //3. remove all the unused properties

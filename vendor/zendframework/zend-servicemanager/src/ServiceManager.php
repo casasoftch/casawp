@@ -9,9 +9,7 @@
 
 namespace Zend\ServiceManager;
 
-use Interop\Container\ContainerInterface;
-
-class ServiceManager implements ServiceLocatorInterface, ContainerInterface
+class ServiceManager implements ServiceLocatorInterface
 {
     /**@#+
      * Constants
@@ -942,7 +940,7 @@ class ServiceManager implements ServiceLocatorInterface, ContainerInterface
             unset($circularDependencyResolver[$depKey]);
             throw new Exception\ServiceNotCreatedException(
                 sprintf('An exception was raised while creating "%s"; no instance returned', $rName),
-                $e->getCode(),
+                (int)$e->getCode(),
                 $e
             );
         }
