@@ -36,6 +36,18 @@
           </td>
         </tr>
     <?php endif ?>
+
+    <?php
+    $deposit = $this->offer->getNumval('rental_deposit');
+    if ($deposit) : ?>
+      <tr>
+         <td class="width-25"><?= $deposit->getLabel() ?></td>
+         <td class="width-75">
+           <?= $casawp->renderPrice($deposit->getValue(), 'CHF', 'all', 'infinite'); ?>
+         </td>
+       </tr>
+    <?php endif;  ?>
+
   <?php endif; ?>
 
   <?php global $casawp; ?>
