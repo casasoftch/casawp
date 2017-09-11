@@ -1,8 +1,8 @@
 <table class="table">
     <tr>
       <td class="width-25"><?= __('Reference','casawp') ?></td>
-      <td class="width-75"><?= $this->offer->getFieldValue('visualReferenceId') 
-        ? $this->offer->getFieldValue('visualReferenceId') 
+      <td class="width-75"><?= $this->offer->getFieldValue('visualReferenceId')
+        ? $this->offer->getFieldValue('visualReferenceId')
         : $this->offer->getFieldValue('referenceId'); ?></td>
     </tr>
   <?php if($this->offer->renderAddress()) : ?>
@@ -14,10 +14,12 @@
 
   <?php if ($this->offer->getNumvals()): ?>
     <?php foreach ($this->offer->getNumvals() as $numval) : ?>
-      <tr>
-        <td class="width-25"><?= $numval->getLabel() ?></td>
-        <td class="width-75"><?= $this->offer->renderNumvalValue($numval) ?></td>
-      </tr>
+      <?php if ($numval->getKey() != 'rental_deposit'): ?>
+        <tr>
+          <td class="width-25"><?= $numval->getLabel() ?></td>
+          <td class="width-75"><?= $this->offer->renderNumvalValue($numval) ?></td>
+        </tr>
+      <?php endif; ?>
     <?php endforeach ?>
   <?php endif ?>
 </table>
