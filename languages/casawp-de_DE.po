@@ -1256,7 +1256,7 @@ msgstr "Etage"
 
 #: classes/Conversion.php:320
 msgid "Volume"
-msgstr "Kubatur"
+msgstr "Gebäudevolumen"
 
 #: classes/Conversion.php:321
 msgid "Number of apartments"
