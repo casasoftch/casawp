@@ -168,6 +168,14 @@ class NumvalService {
         );
     }
 
+    public function resetService(){
+        $numval_options = $this->getDefaultOptions();
+        foreach ($numval_options as $key => $options) {
+            $numval = $this->getItem($key);
+            $numval->setValue(null);
+        }
+    }
+
     public function createService(ServiceLocatorInterface $serviceLocator){
         return $this;
     }
@@ -682,8 +690,8 @@ class NumvalService {
             'gross_premium' => array(
                 'label' => $this->translator->translate('Gross premium', 'casasoft-standards'),
                 'icon' => '',
-                'type' => 'int',
-                'si' => '',
+                'type' => 'float',
+                'si' => '%',
             ),
 
             'rental_deposit' => array(

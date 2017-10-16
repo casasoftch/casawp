@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:CasasoftCH/casamodules.git",
-                "reference": "8247cac805bbbadab02bfbfce992329481746f7b"
+                "reference": "da39fd0be1ab1bd044dadcb73703f138c67eb004"
             },
             "require": {
                 "php": ">=5.3.2"
@@ -53,7 +53,7 @@
             "keywords": [
                 "zf2"
             ],
-            "time": "2017-08-30 08:34:30"
+            "time": "2017-10-16 08:27:34"
         },
         {
             "name": "container-interop/container-interop",

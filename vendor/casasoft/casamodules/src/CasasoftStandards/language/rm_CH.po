@@ -1051,3 +1051,43 @@ msgstr ""
 msgid "Investment"
 msgstr ""
 
+#: 
+msgid "Gross rent / m² / month"
+msgstr ""
+
+#: 
+msgid "Gross rent / m² / year"
+msgstr ""
+
+#: 
+msgid "Gross rent / month"
+msgstr ""
+
+#: 
+msgid "Gross rent / year"
+msgstr ""
+
+#: 
+msgid "Gross price"
+msgstr ""
+
+#: 
+msgid "Net rent / m² / month"
+msgstr ""
+
+#: 
+msgid "Net rent / m² / year"
+msgstr ""
+
+#: 
+msgid "Net rent / year"
+msgstr ""
+
+#: 
+msgid "Net rent / month"
+msgstr ""
+
+#: 
+msgid "Net price"
+msgstr ""
+
