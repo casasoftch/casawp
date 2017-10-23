@@ -198,7 +198,7 @@ msgstr "Café / Bar"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:87
 msgid "Maisonette"
-msgstr "Maisonette"
+msgstr "Duplex"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:88
 msgid "Penthouse"
