@@ -724,6 +724,30 @@ class Plugin {
             }
         }
 
+        //availability reduces categories
+        $availability = $this->getQueriedSingularAvailability();
+        if ($availability) {
+          global $wpdb;
+          /*filters the result with reference context in mind (WPML IGNORANT) */
+          $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_category'
+              INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+              INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+              INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+              INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+              INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '$availability'
+              GROUP BY ". $wpdb->prefix . "terms.term_id";
+          $category_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+          $category_slug_array = array_map(function($item){return $item['slug'];}, $category_property_count);
+          foreach ($categories as $key => $category) {
+              if (!in_array($category->getKey(), $category_slug_array)) {
+                  unset($categories[$key]);
+              }
+          }
+        }
+
 
         //salestype reduces categories
         $salestype = $this->getQueriedSingularSalestype();
@@ -1019,6 +1043,8 @@ class Plugin {
         $localities = get_terms('casawp_location',array(
             'hierarchical'      => true
         ));
+
+        //availability reduces locations
         $availability = $this->getQueriedSingularAvailability();
         if ($availability) {
           global $wpdb;
