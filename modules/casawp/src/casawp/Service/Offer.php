@@ -746,8 +746,8 @@ class Offer{
 		switch ($numval->getSi()) {
 			case 'm3': return $numval->getValue() .' m<sup>3</sup>'; break;
 			case 'm2': return number_format(round($numval->getValue()), 0, '', '\'') . ' m<sup>2</sup>'; break;
-			case 'm':  return number_format(round($numval->getValue()), 0, '', '\'') . $numval->getValue() .' m'; break;
-			case 'kg': return number_format(round($numval->getValue()), 0, '', '\'') .  $numval->getValue() .' kg'; break;
+			case 'm':  return number_format(round($numval->getValue()), 0, '', '\'') .' m'; break;
+			case 'kg': return number_format(round($numval->getValue()), 0, '', '\'') .' kg'; break;
 			case '%':  return $numval->getValue() .' %'; break;
 			default:   return $numval->getValue(); break;
 		}
