@@ -561,7 +561,7 @@ class Offer{
 	        foreach ($this->getSingleDynamicFields() as $value) {
 	          if(get_option($value, false)) {
 	          	switch ($value) {
-								case 'casawp_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
+					case 'casawp_single_show_number_of_rooms': $key = 'number_of_rooms'; break;
 		          	case 'casawp_single_show_area_sia_nf': $key = 'area_sia_nf'; break;
 		          	case 'casawp_single_show_area_nwf': $key = 'area_nwf'; break;
 		          	case 'casawp_single_show_area_bwf': $key = 'area_bwf'; break;
@@ -846,22 +846,37 @@ class Offer{
 
 	public function renderDatapoints($context = 'single', $args = array()){
 		if ($context == 'single') {
-			$datapoints = $this->getPrimarySingleDatapoints();
+			if (!$args['datapoints']) {
+				$datapoints = $this->getPrimarySingleDatapoints();
+			} else {
+				$datapoints = $args['datapoints'];
+			}
 			$defaults = array(
 				'pattern_1' => '{{label}}: {{value}}<br>',
 				'pattern_2' => '{{value}}<br>',
-				'max' => 99
+				'max' => 99,
+				'datapoints' => null
 			);
 		} else {
-			$datapoints = $this->getPrimaryArchiveDatapoints();
+			if (!$args['datapoints']) {
+				$datapoints = $this->getPrimaryArchiveDatapoints();
+			} else {
+				$datapoints = $args['datapoints'];
+			}
 			$defaults = array(
 				'pattern_1' => '<tr class="datapoint-{{field}}"><th>{{label}}</th><td>{{value}}</td></tr>',
 				'pattern_2' => '<tr class="datapoint-{{field}}"><td colspan="2">{{value}}</td></tr>',
-				'max' => 99
+				'max' => 99,
+				'datapoints' => null
 			);
 		}
 
+
 		$args = array_merge($defaults, $args);
+
+
+
+		
 
 		$html = '';
 		$i = 0;
