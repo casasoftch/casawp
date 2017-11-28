@@ -24,6 +24,19 @@
           </td>
         </tr>
     <?php endif ?>
+
+    <!-- Mietkaution ? (untested)  -->
+    <?php /*
+    $deposit = $this->offer->getNumval('rental_deposit');
+    if ($deposit) : ?>
+      <tr>
+         <td class="width-25"><?= __('Rental deposit','casawp') ?></td>
+         <td class="width-75">
+           <?= $deposit; ?>
+         </td>
+       </tr>
+    <?php endif; */ ?>
+
   <?php endif; ?>
 
   <?php global $casawp; ?>

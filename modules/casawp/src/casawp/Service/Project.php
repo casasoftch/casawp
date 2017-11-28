@@ -411,7 +411,8 @@ class Project{
 			$queryService = new \casawp\Service\QueryService;
 
 			$the_query = $queryService->createWpQuery(array(
-				'projectunit_id' => $this->post->ID
+				'projectunit_id' => $this->post->ID,
+				'availabilities' => 'reference, active, taken, reserved'
 			));
 
 			if ( $the_query->have_posts() ) {

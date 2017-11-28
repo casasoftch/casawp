@@ -149,6 +149,12 @@ class QueryService{
                 case 'features_not':
                 case 'salestypes_not':
                 case 'availabilities_not':
+                    if (is_array($value) && count($value) === 1) {
+                        $value = $value[0];
+                    }
+                    if (is_string($value) && strpos($value, ",") !== null) {
+                        $value = explode(',', $value);
+                    }
                     $query[$key] = (is_array($value) ? $value : array($value));
                     $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
                     break;

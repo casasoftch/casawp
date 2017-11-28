@@ -362,10 +362,12 @@ class FilterForm extends Form
     public function getLocationOptions(){
         $locations_workload = $this->locations;
 
+
         //not enough locations available
         if ($locations_workload <= 1) {
             return array();
         }
+
 
         $depth = 0;
 
@@ -377,6 +379,7 @@ class FilterForm extends Form
                 unset($locations_workload[$i]);
             }
         }
+
 
         if ($depth == 1) {
             foreach ($parents as $u => $parent) {
@@ -413,6 +416,8 @@ class FilterForm extends Form
             $depth = $depth - 1;
         }
 
+
+
         //(again) ignore parent if parent is alone
         if (count($parents) == 1 && $depth > 1) {
             $parents = $parents[0]['children'];
@@ -425,7 +430,9 @@ class FilterForm extends Form
             $depth = $depth - 1;
         }
 
-        //it there is only one parent ignore options
+        
+
+        //if there is only one parent ignore options
         if (count($parents) <= 1) {
             return array();
         }
@@ -463,6 +470,8 @@ class FilterForm extends Form
                 }
             }
         }
+
+
 
         return $options;
     }

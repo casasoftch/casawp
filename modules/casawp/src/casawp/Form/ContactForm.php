@@ -90,15 +90,25 @@ class ContactForm extends Form
         ));
 
 
-
-
         $isos = array('AL', 'AD', 'AT', 'BY', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FO', 'FI', 'FR', 'DE', 'GI', 'GR', 'HU', 'IS', 'IE', 'IM', 'IT', 'RS', 'LV', 'LI', 'LT', 'LU', 'MK', 'MT', 'MD', 'MC', 'ME', 'NL', 'NO', 'PL', 'PT', 'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'UA', 'GB', 'VA', 'RS');
         $countries = array();
         foreach ($isos as $iso) {
           $countries[$iso] = $converter->countrycode_to_countryname($iso);
         }
+        //setlocale(LC_ALL, 'fr_FR');
+        //sort($countries, SORT_LOCALE_STRING);
 
-        asort($countries);
+
+        $country_sort_tmp = $countries;
+        foreach ($country_sort_tmp as $index => $country) {
+          if (in_array(mb_substr($country, 0, 1), array('Î'))) {
+            $country_sort_tmp[$index] = 'I'.$country;
+          }
+        }
+        asort($country_sort_tmp);
+
+        $countries = array_merge($country_sort_tmp, $countries);
+
         $countries = array('CH' => $converter->countrycode_to_countryname('CH')) + $countries; //beginning
         $countries['other'] = __('Other', 'casawp'); //end
 

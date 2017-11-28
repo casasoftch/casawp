@@ -14,7 +14,7 @@ msgstr ""
 #: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
 #: theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
 msgid "Address"
-msgstr "Adresse "
+msgstr "Adresse"
 
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:44
@@ -32,7 +32,7 @@ msgstr "Informations principales"
 #: theme-defaults/casawp/bootstrap3/tabable.phtml:8
 #: theme-defaults/casawp/bootstrap4/tabable.phtml:11
 msgid "Specifications"
-msgstr "Caractéristiques "
+msgstr "Caractéristiques"
 
 #: casawp.php:48
 msgid "Import your properties directly from your real-estate managment software!"
