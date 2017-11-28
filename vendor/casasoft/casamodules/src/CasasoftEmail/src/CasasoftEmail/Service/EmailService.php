@@ -76,7 +76,7 @@ class EmailService {
 
     public function renderEmail($template = 'message', $emailOptions = array()){
         $emailOptions = array_merge($this->defaultEmailOptions, $emailOptions);
-        if ($this->html && $this->casasoftMailTemplate && ($this->templateGroup == 'icasa') && isset($emailOptions['msg'])) {
+        if ($this->html && $this->casasoftMailTemplate && ($this->templateGroup == 'icasa' || $this->templateGroup == 'homestreet') && isset($emailOptions['msg'])) {
             //$casaMailTemplate  = $this->getServiceLocator()->get('CasasoftMailTemplate');
 
             if ($emailOptions['msg']->getLang() == 'de') {
@@ -106,6 +106,18 @@ class EmailService {
          //    }
 
             $person = [];
+            if ($emailOptions['msg']->getGender()) {
+                $gender = $emailOptions['msg']->getGender();
+                if($gender === 1) {
+                    $honorificPrefix = 'Mr';
+                } elseif($gender === 2) {
+                    $honorificPrefix = 'Mrs';
+                } else {
+                    $honorificPrefix = 'not specified';
+                }
+
+                $person[] = ["key" => 'honorificPrefix', "value" => $honorificPrefix];
+            }
             if ($emailOptions['msg']->getFirstname()) {
                 $person[] = ["key" => 'First name', "value" => $emailOptions['msg']->getFirstname()];
             }
@@ -128,34 +140,46 @@ class EmailService {
                 $person[] = ["key" => 'Email', "value" => $emailOptions['msg']->getEmail()];
             }
 
-            $property = [];
+            $property = [
+                'propertyOptions' => [],
+                'objectReference' => null
+            ];
             if ($emailOptions['msg']->getProperty_reference()) {
-                $property[] = ["key" => 'Object-Ref.', "value" => $emailOptions['msg']->getProperty_reference()];
+                $property['objectReference'] = ["text" => 'Object-Ref.', "value" => $emailOptions['msg']->getProperty_reference()];
             }
             if ($emailOptions['msg']->getProject_reference()) {
-                $property[] = ["key" => 'Project-Ref.', "value" => $emailOptions['msg']->getProject_reference()];
+                $property['objectReference'] = ["text" => 'Project-Ref.', "value" => $emailOptions['msg']->getProject_reference()];
             }
             if ($emailOptions['msg']->getProperty_street()) {
-                $property[] = ["key" => 'Street', "value" => $emailOptions['msg']->getProperty_street()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Street', "optionValue" => $emailOptions['msg']->getProperty_street()];
             }
             if (trim($emailOptions['msg']->getProperty_postal_code().$emailOptions['msg']->getProperty_locality())) {
-                $property[] = ["key" => 'City', "value" => trim($emailOptions['msg']->getProperty_postal_code().' '.$emailOptions['msg']->getProperty_locality())];
+                $property['propertyOptions'][] = ["optionDescription" => 'City', "optionValue" => trim($emailOptions['msg']->getProperty_postal_code().' '.$emailOptions['msg']->getProperty_locality())];
             }
             if ($emailOptions['msg']->getProperty_type()) {
-                $property[] = ["key" => 'Sales Type', "value" => $emailOptions['msg']->getProperty_type()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Sales Type', "optionValue" => $emailOptions['msg']->getProperty_type()];
             }
             if ($emailOptions['msg']->getProperty_category()) {
-                $property[] = ["key" => 'Category', "value" => $emailOptions['msg']->getProperty_category()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Category', "optionValue" => $emailOptions['msg']->getProperty_category()];
             }
             if ($emailOptions['msg']->getProperty_country()) {
-                $property[] = ["key" => 'Country', "value" => $emailOptions['msg']->getProperty_country()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Country', "optionValue" => $emailOptions['msg']->getProperty_country()];
             }
             if ($emailOptions['msg']->getProperty_rooms()) {
-                $property[] = ["key" => 'Rooms', "value" => $emailOptions['msg']->getProperty_rooms()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Rooms', "optionValue" => $emailOptions['msg']->getProperty_rooms()];
             }
             if ($emailOptions['msg']->getProperty_price()) {
-                $property[] = ["key" => 'Price', "value" => $emailOptions['msg']->getProperty_price()];
+                $property['propertyOptions'][] = ["optionDescription" => 'Price', "optionValue" => $emailOptions['msg']->getProperty_price()];
             }
+            if ($emailOptions['msg']->getBacklink()) {
+                $property['propertyOptions'][] = ["optionDescription" => 'Link', "optionValue" => 'to website', "optionLink" => true, "optionUrl" => $emailOptions['msg']->getBacklink()];
+            }
+
+            // $property['image'] = [
+            //     'src' => 'https://casamail.com/img/property-placeholder.jpg',
+            //     'link' => $emailOptions['msg']->getBacklink(),
+            //     'alt' => 'Objektbild'
+            // ];
 
             $extra_data = [];
             $searchProfile = [];
@@ -175,13 +199,24 @@ class EmailService {
                 }
             }
 
-            $data = [
-                "logo" => "https://icasa.ch/img/logo.jpg",
-                "message" => [
-                    'header' => 'Message',
-                    'txt' => $emailOptions['msg']->getMessage_plain(),
-                ]
-            ];
+            if ($this->templateGroup == 'icasa') {
+                $data = [
+                    "logo" => "https://icasa.ch/img/logo.jpg",
+                    "message" => [
+                        'header' => 'Message',
+                        'txt' => $emailOptions['msg']->getMessage_plain(),
+                    ]
+                ];    
+            } elseif ($this->templateGroup == 'homestreet') {
+                $data = [
+                    "logo" => "https://homestreet.ch/images/logo_de_CH.png",
+                    "message" => [
+                        'header' => 'Message',
+                        'txt' => $emailOptions['msg']->getMessage_plain(),
+                    ]
+                ];    
+            }
+            
 
             if ($person) {
                 $data['person'] = [
@@ -189,10 +224,11 @@ class EmailService {
                     'data' => $person
                 ];
             }
-            if ($property) {
+            if ($property['propertyOptions'] || $property['objectReference']) {
                 $data['property'] = [
                     'header' => 'Immobilie',
-                    'data' => $property
+                    'objectReference' => $property['objectReference'],
+                    'propertyOptions' => $property['propertyOptions']
                 ];
             }
             if ($searchProfile) {
@@ -254,7 +290,6 @@ class EmailService {
         try {
             $mandrill = new \Mandrill($emailOptions['mandrill']['key']); 
             $message = array(
-                'html' => $content,
                 'subject' => $emailOptions['subject'],
                 //'from_email' => $emailOptions['from'],
                 //'from_email' => $this->config['from'],
@@ -264,11 +299,16 @@ class EmailService {
                 'important' => false,
                 'track_opens' => true,
                 'track_clicks' => true,
-                'auto_text' => true,
                 'inline_css' => true,
                 'tags' => ($emailOptions['mandrill']['tags'] ? $emailOptions['mandrill']['tags'] : []),
                 //'metadata' => array('website' => $service_website),
             );
+            if ($this->html) {
+                $message['html'] = $content;
+                $message['auto_text'] = true;
+            } else {
+                $message['text'] = $content;
+            }
             if ($emailOptions['bcc']) {
                 $message['bcc_address'] = $emailOptions['bcc'];
             }
@@ -290,6 +330,32 @@ class EmailService {
             $now = new \DateTime('Now');
             $send_at = $now->format('c');
             $mandrill_result = $mandrill->messages->send($message, $async, $ip_pool, $send_at);
+
+
+            switch ($mandrill_result[0]['status']) {
+                case 'sent':
+                    # code...
+                    break;
+                case 'queued':
+                case 'rejected':
+                case 'invalid':
+                    echo print_r($mandrill_result, true). "\n";
+                    $this->sendEmail('error', array(
+                      'to' => 'js@casasoft.ch',
+                      'from' => 'alert@cassaoft.com',
+                      'subject' => 'Mandrill Fehler',
+                      'error' => print_r(array_merge($emailOptions, $mandrill_result), true),
+                      'domain' => 'casamail.local'
+                    ));
+
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+
             //print_r($mandrill_result);
             //print_r($message);
         } catch (\Exception $e) {
@@ -416,8 +482,10 @@ class EmailService {
     public function sendEmail($template = 'message', $emailOptions = array(), $content = null){
         
         $mandrillOptions = [];
-        if ($emailOptions['mandrill']) {
+        if (isset($emailOptions['mandrill']) && $emailOptions['mandrill']) {
             $mandrillOptions = array_merge($this->config['mandrill'], $emailOptions['mandrill']);
+        } else {
+            $mandrillOptions = $this->config['mandrill'];
         }
 
         $mandrillTags = [];

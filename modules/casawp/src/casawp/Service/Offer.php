@@ -846,7 +846,7 @@ class Offer{
 
 	public function renderDatapoints($context = 'single', $args = array()){
 		if ($context == 'single') {
-			if (!$args['datapoints']) {
+			if (!isset($args['datapoints']) || !$args['datapoints']) {
 				$datapoints = $this->getPrimarySingleDatapoints();
 			} else {
 				$datapoints = $args['datapoints'];
@@ -858,7 +858,7 @@ class Offer{
 				'datapoints' => null
 			);
 		} else {
-			if (!$args['datapoints']) {
+			if (!isset($args['datapoints']) || !$args['datapoints']) {
 				$datapoints = $this->getPrimaryArchiveDatapoints();
 			} else {
 				$datapoints = $args['datapoints'];
