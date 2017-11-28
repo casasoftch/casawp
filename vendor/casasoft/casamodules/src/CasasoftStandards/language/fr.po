@@ -760,59 +760,59 @@ msgstr "Nombre de parcelles"
 
 #: src/CasasoftStandards/Service/NumvalService.php:215
 msgid "Distance to kindergarten"
-msgstr "Distance école maternelle"
+msgstr "école maternelle"
 
 #: src/CasasoftStandards/Service/NumvalService.php:221
 msgid "Distance to primary school"
-msgstr "Distance école primaire"
+msgstr "école primaire"
 
 #: src/CasasoftStandards/Service/NumvalService.php:227
 msgid "Distance to high school"
-msgstr "Distance école secondaire"
+msgstr "école secondaire"
 
 #: src/CasasoftStandards/Service/NumvalService.php:233
 msgid "Distance to college"
-msgstr "Distance université"
+msgstr "université"
 
 #: src/CasasoftStandards/Service/NumvalService.php:239
 msgid "Distance to bus stop"
-msgstr "Distance arrêt de bus"
+msgstr "arrêt de bus"
 
 #: src/CasasoftStandards/Service/NumvalService.php:245
 msgid "Distance to train station"
-msgstr "Distance gare"
+msgstr "gare"
 
 #: src/CasasoftStandards/Service/NumvalService.php:251
 msgid "Distance to post"
-msgstr "Distance poste"
+msgstr "poste"
 
 #: src/CasasoftStandards/Service/NumvalService.php:257
 msgid "Distance to bank"
-msgstr "Distance banque"
+msgstr "banque"
 
 #: src/CasasoftStandards/Service/NumvalService.php:263
 msgid "Distance to railway station"
-msgstr "Distance gare ferroviaire"
+msgstr "gare ferroviaire"
 
 #: src/CasasoftStandards/Service/NumvalService.php:269
 msgid "Distance to boat dock"
-msgstr "Distance port"
+msgstr "port"
 
 #: src/CasasoftStandards/Service/NumvalService.php:275
 msgid "Distance to public transport"
-msgstr "Distance transports publiques"
+msgstr "transports publiques"
 
 #: src/CasasoftStandards/Service/NumvalService.php:281
 msgid "Distance to shop"
-msgstr "Distance commerces"
+msgstr "commerces"
 
 #: src/CasasoftStandards/Service/NumvalService.php:287
 msgid "Distance to freeway"
-msgstr "Distance autoroute"
+msgstr "autoroute"
 
 #: src/CasasoftStandards/Service/NumvalService.php:293
 msgid "Distance to airport"
-msgstr "Distance aéroport"
+msgstr "aéroport"
 
 #: src/CasasoftStandards/Service/NumvalService.php:299
 msgid "Rooms"
