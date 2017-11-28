@@ -554,8 +554,8 @@ class ConversionService {
             if (isset($this->property['visual_reference_id'])) {
               return $this->property['visual_reference_id'];
             }
-            if (isset($this->property['id'])) {
-              return $this->property['id'];
+            if (isset($this->property['exportid'])) {
+              return $this->property['exportid'];
             }
             break;
           case 'categories':

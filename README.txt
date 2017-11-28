@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.7
+Stable tag: 2.2.8
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,15 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.2.8 =
+* fix: double m/m2 renders
+* new: Rental deposit
+* update: Country order for contact forms
+* update: Allow Reference in Project Properties
+* fix: cleaned up project view files
+* update: casamodules
+* new: custom datapoints option for renderDatapoints method
 
 = 2.2.7 =
 * fix: category translator
