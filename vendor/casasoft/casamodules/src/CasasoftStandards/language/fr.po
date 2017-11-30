@@ -1141,3 +1141,7 @@ msgstr "Prix ​​de vente"
 msgid "Category"
 msgstr "Catégorie"
 
+#: 
+msgid "Part of a house"
+msgstr ""
+
