@@ -1146,3 +1146,7 @@ msgstr ""
 msgid "Part of a house"
 msgstr ""
 
+#: 
+msgid "Immediate"
+msgstr ""
+

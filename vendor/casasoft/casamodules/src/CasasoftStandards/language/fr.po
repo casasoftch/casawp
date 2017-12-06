@@ -387,7 +387,7 @@ msgstr "Fonctionnalités"
 #: ../src/CasasoftStandards/Service/ConversionService.php:458
 #: ../src/CasasoftStandards/Service/ConversionService.php:563
 msgid "On Request"
-msgstr "Prix sur demande"
+msgstr "Sur demande"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:608
 msgid "Fully ***"
@@ -1143,5 +1143,9 @@ msgstr "Catégorie"
 
 #: 
 msgid "Part of a house"
-msgstr ""
+msgstr "Partie de la maison"
+
+#: 
+msgid "Immediate"
+msgstr "Immédiatement"
 

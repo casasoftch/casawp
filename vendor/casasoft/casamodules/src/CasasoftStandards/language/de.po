@@ -1144,3 +1144,7 @@ msgstr "Kategorie"
 msgid "Part of a house"
 msgstr "Hausteil"
 
+#: 
+msgid "Immediate"
+msgstr "ab sofort"
+
