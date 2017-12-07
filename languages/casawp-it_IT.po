@@ -2604,7 +2604,7 @@ msgstr "Fascia di prezzo"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:162
 msgid "to %1$s %2$.1f million"
-msgstr "fino a %1$s %2$.1f millioni"
+msgstr "fino a %1$s %2$.1f milioni"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:163
 #: modules/casawp/src/casawp/Form/FilterForm.php:164
@@ -2618,11 +2618,11 @@ msgstr "fino a %1$s %2$.1f millioni"
 #: modules/casawp/src/casawp/Form/FilterForm.php:172
 #: modules/casawp/src/casawp/Form/FilterForm.php:173
 msgid "from %1$s %2$.1f to %3$.1f million"
-msgstr "%1$s %2$.1f - %3$.1f millioni"
+msgstr "%1$s %2$.1f - %3$.1f milioni"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:174
 msgid "from %1$s %2$.1f million"
-msgstr "oltre %1$s %2$.1f millioni"
+msgstr "oltre %1$s %2$.1f milioni"
 
 #: modules/casawp/src/casawp/Service/FormService.php:206
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:15
