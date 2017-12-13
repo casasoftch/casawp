@@ -3,9 +3,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 1.8.12\n"
 "Project-Id-Version: CASASTANDARDS\n"
-"Language: it-ch\n"
+"Language: it_CH\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -653,7 +657,7 @@ msgstr "Stufa in maiolica"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:332
 msgid "Secondary residency"
-msgstr "Quota stranieri"
+msgstr "Abitazione secondaria"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:336
 msgid "Primary residency"
@@ -1056,11 +1060,9 @@ msgstr "Costruzione"
 msgid "Investment"
 msgstr "Investment"
 
-#: 
 msgid "Gross rent / m² / month"
 msgstr "Affitto lordo / m² / mese"
 
-#: 
 msgid "Gross rent / m² / year"
 msgstr "Affitto lordo / m² / anno"
 
@@ -1068,19 +1070,15 @@ msgstr "Affitto lordo / m² / anno"
 msgid "Gross rent / month"
 msgstr "Affitto lordo / mese"
 
-#: 
 msgid "Gross rent / year"
 msgstr "Affitto netto / anno"
 
-#: 
 msgid "Gross price"
 msgstr "Prezzo lordo"
 
-#: 
 msgid "Net rent / m² / month"
 msgstr "Affitto netto / m² / mese"
 
-#: 
 msgid "Net rent / m² / year"
 msgstr "Affitto netto / m² / anno"
 
@@ -1092,7 +1090,6 @@ msgstr "Affitto netto / anno"
 msgid "Net rent / month"
 msgstr "Affitto netto / mese"
 
-#: 
 msgid "Net price"
 msgstr "Prezzo netto"
 
@@ -1140,15 +1137,11 @@ msgstr "Affitto netto / m<sup>2</sup> / anno"
 msgid "Sales price"
 msgstr "Prezzo di vendita"
 
-#: 
 msgid "Category"
 msgstr "Categoria"
 
-#: 
 msgid "Part of a house"
 msgstr "Porzione di casa"
 
-#: 
 msgid "Immediate"
 msgstr "Immediata"
-
