@@ -3,13 +3,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: POEditor.com\n"
 "Project-Id-Version: CASAWP\n"
-"Language: it_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Language: it-ch\n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -1355,7 +1351,7 @@ msgstr "Plurifamiliari"
 
 #: classes/Conversion.php:376
 msgid "Open Slot"
-msgstr ""
+msgstr "Apri slot"
 
 #: classes/Conversion.php:377
 msgid "Parking Space"
@@ -1451,7 +1447,7 @@ msgstr "Posteggio esterno"
 
 #: classes/Conversion.php:401
 msgid "Building"
-msgstr ""
+msgstr "Costruzione"
 
 #: classes/Conversion.php:402
 msgid "Advertising Area"
@@ -2527,11 +2523,11 @@ msgstr ""
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:34
 msgid "Ms."
-msgstr "Signora"
+msgstr ""
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:35
 msgid "Mr."
-msgstr "Signor"
+msgstr ""
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:47
 msgid "First name"
@@ -2580,22 +2576,22 @@ msgstr ""
 #: modules/casawp/src/casawp/Form/FilterForm.php:125
 #: modules/casawp/src/casawp/Form/FilterForm.php:126
 msgid "Rooms from"
-msgstr ""
+msgstr "Locali da"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:132
 #: modules/casawp/src/casawp/Form/FilterForm.php:133
 msgid "Rooms to"
-msgstr ""
+msgstr "Locali a"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:142
 #: modules/casawp/src/casawp/Form/FilterForm.php:143
 msgid "Price from"
-msgstr ""
+msgstr "Da prezzo"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:149
 #: modules/casawp/src/casawp/Form/FilterForm.php:150
 msgid "Price to"
-msgstr ""
+msgstr "A prezzo"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:159
 #: modules/casawp/src/casawp/Form/FilterForm.php:160
@@ -2661,7 +2657,7 @@ msgstr "Affitto lordo"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:26
 msgid "Net price"
-msgstr "Affitto lordo"
+msgstr "Affitto netto"
 
 #: modules/casawp/src/casawp/Service/Offer.php:260
 #: modules/casawp/src/casawp/Service/Project.php:191
@@ -2809,3 +2805,4 @@ msgstr ""
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
 msgid "rent"
 msgstr "Affitto"
+
