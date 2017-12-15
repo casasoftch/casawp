@@ -198,7 +198,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:87
 msgid "Maisonette"
-msgstr "Duplex"
+msgstr "Maisonette"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:88
 msgid "Penthouse"
@@ -923,7 +923,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:524
 msgid "SIA-GSF"
-msgstr ""
+msgstr "Land area"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:530
 msgid "SIA-UO"
@@ -973,7 +973,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:617
 msgid "Total living area"
-msgstr ""
+msgstr "Living area"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:623
 msgid "Net living area"
@@ -1138,5 +1138,26 @@ msgstr ""
 
 #: 
 msgid "Category"
+msgstr ""
+
+#: 
+msgid "Part of a house"
+msgstr ""
+
+#: 
+msgid "Immediate"
+msgstr ""
+
+#: 
+msgid "Gastronomy / Hotel"
+msgstr ""
+
+#: 
+msgid "Parking / Garage"
+msgstr ""
+
+#: 
+msgctxt "Nebenkosten"
+msgid "Extra Costs"
 msgstr ""
 

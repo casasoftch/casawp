@@ -1539,12 +1539,12 @@
         "source": {
             "type": "git",
             "url": "git@github.com:CasasoftCH/casamodules.git",
-            "reference": "49c93746c0f5a78942ff2d8f2fd02c71353c1e24"
+            "reference": "93767ed2bc0e184c5812ab9c0ddade3e9ce753c7"
         },
         "require": {
             "php": ">=5.3.2"
         },
-        "time": "2017-11-27T07:24:58+00:00",
+        "time": "2017-12-13T10:36:30+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
