@@ -1359,7 +1359,7 @@ msgstr "Place de parc"
 
 #: classes/Conversion.php:378
 msgid "Plot"
-msgstr "Parcelle"
+msgstr "Terrain"
 
 #: classes/Conversion.php:379
 msgid "Roof Flat"
