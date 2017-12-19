@@ -1161,3 +1161,7 @@ msgstr "Parkplatz / Garage"
 msgid "Extra Costs"
 msgstr "Nebenkosten"
 
+#: 
+msgid "Engadine house"
+msgstr "Engadinerhaus"
+

@@ -1154,14 +1154,17 @@ msgstr "Immediata"
 
 #: 
 msgid "Gastronomy / Hotel"
-msgstr ""
+msgstr "Ristorazione / Hotel"
 
 #: 
 msgid "Parking / Garage"
-msgstr ""
+msgstr "Posti auto"
 
 #: 
-msgctxt "Nebenkosten"
 msgid "Extra Costs"
-msgstr ""
+msgstr "Costi aggiuntivi"
+
+#: 
+msgid "Engadine house"
+msgstr "Casa engadinese"
 

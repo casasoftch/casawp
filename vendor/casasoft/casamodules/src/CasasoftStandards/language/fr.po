@@ -150,7 +150,7 @@ msgstr "Rez-de-chaussée"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:75
 msgid "Office"
-msgstr "Buro"
+msgstr "Bureau"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:76
 msgid "Exihition space"
@@ -1151,14 +1151,17 @@ msgstr "Immédiatement"
 
 #: 
 msgid "Gastronomy / Hotel"
-msgstr ""
+msgstr "Gastronomie / Hôtel"
 
 #: 
 msgid "Parking / Garage"
-msgstr ""
+msgstr "Parking / Garage"
 
 #: 
-msgctxt "Nebenkosten"
 msgid "Extra Costs"
+msgstr "Coûts supplémentaires"
+
+#: 
+msgid "Engadine house"
 msgstr ""
 
