@@ -743,11 +743,15 @@ class Offer{
     ===========================================*/
 
 	public function renderNumvalValue($numval){
+		$decimals = 0;
+		if (in_array($numval->getKey(), ['ceiling_height', 'hall_height'])) {
+			$decimals = 2;
+		}
 		switch ($numval->getSi()) {
 			case 'm3': return $numval->getValue() .' m<sup>3</sup>'; break;
-			case 'm2': return number_format(round($numval->getValue()), 0, '', '\'') . ' m<sup>2</sup>'; break;
-			case 'm':  return number_format(round($numval->getValue()), 0, '', '\'') .' m'; break;
-			case 'kg': return number_format(round($numval->getValue()), 0, '', '\'') .' kg'; break;
+			case 'm2': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') . ' m<sup>2</sup>'; break;
+			case 'm':  return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' m'; break;
+			case 'kg': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' kg'; break;
 			case '%':  return $numval->getValue() .' %'; break;
 			default:   return $numval->getValue(); break;
 		}
