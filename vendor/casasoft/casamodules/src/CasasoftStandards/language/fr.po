@@ -538,7 +538,7 @@ msgstr "Raccordement à l'eau"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:216
 msgid "Sewage supply"
-msgstr "Raccordement aux eaux usées"
+msgstr "Raccordement eaux usées"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:220
 msgid "Power supply"
@@ -1163,5 +1163,9 @@ msgstr "Coûts supplémentaires"
 
 #: 
 msgid "Engadine house"
+msgstr ""
+
+#: 
+msgid "Patrician house"
 msgstr ""
 
