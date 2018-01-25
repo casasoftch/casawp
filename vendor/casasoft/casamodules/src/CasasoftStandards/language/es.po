@@ -1164,3 +1164,7 @@ msgstr ""
 msgid "Engadine house"
 msgstr ""
 
+#: 
+msgid "Patrician house"
+msgstr ""
+

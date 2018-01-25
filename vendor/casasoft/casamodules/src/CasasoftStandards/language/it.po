@@ -1168,3 +1168,7 @@ msgstr "Costi aggiuntivi"
 msgid "Engadine house"
 msgstr "Casa engadinese"
 
+#: 
+msgid "Patrician house"
+msgstr "Palazzo patrizio"
+
