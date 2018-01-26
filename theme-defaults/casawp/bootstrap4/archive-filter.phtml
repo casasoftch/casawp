@@ -11,8 +11,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('salestypes');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_salestypes_elementtype', false) == 'radio'): ?>
 			<?php
@@ -32,8 +32,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('utilities');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_utilities_elementtype', false) == 'radio'): ?>
 			<?php
@@ -53,8 +53,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('categories');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_categories_elementtype', false) == 'radio'): ?>
 			<?php
@@ -74,8 +74,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('locations');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_locations_elementtype', false) == 'radio'): ?>
 			<?php
@@ -178,8 +178,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('features');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_features_elementtype', false) == 'radio'): ?>
 			<?php
@@ -199,8 +199,8 @@
 			<?php
 				$oMultiCheckboxField = $form->get('regions');
 				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
-				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
-				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
 			 ?>
 		<?php elseif (get_option('casawp_filter_regions_elementtype', false) == 'radio'): ?>
 			<?php

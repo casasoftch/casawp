@@ -1,0 +1,17 @@
+<?php $indicators = get_option('casawp_single_show_carousel_indicators' , '0'); ?>
+<div id="slider_<?= $this->offer->ID ?>" class="casawp-carousel" data-indicators="<?= $indicators ?>">
+    <?php foreach ($this->images as $i => $image): ?>
+        <div class="item">
+            <?php 
+                $img     = wp_get_attachment_image( $image->ID, 'full', true, array('class' => 'carousel-image') );
+                $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
+            ?>
+            <a class="property-image-gallery" rel="casawp-single-gallery" href="<?= $img_url[0] ?>" title="<?= $image->post_excerpt ?>"><?= $img ?></a>
+            <?php if ($image->post_excerpt) : ?>
+                <div class="casawp-carousel-caption">
+                    <p><?= $image->post_excerpt ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endforeach ?>
+</div>
