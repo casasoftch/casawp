@@ -173,7 +173,7 @@
 			'private'     => 'Geschützte Objekte',
 			'logs' => 'Logs'
 		);
-	    echo screen_icon('options-general');
+	    //echo screen_icon('options-general');
 	    echo '<h2 class="nav-tab-wrapper">';
 	    echo '<div style="float:right;">
 	        <a href="http://wordpress.org/support/view/plugin-reviews/casawp" target="_blank" class="add-new-h2">Rate this plugin</a>
