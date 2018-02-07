@@ -2062,16 +2062,17 @@ class Import {
       //set referenceId
       $new_meta_data['referenceId'] = $projectData['referenceId'];
 
-      $descriptionParts = [];
-      foreach ($projectData['detail']['descriptions'] as $desc) {
-        $desciptionParts = '<strong>'.$desc['name'].'</strong>' . '<br /><br />' . $desc['text'];
-      }
+      // $descriptionParts = [];
+      // foreach ($projectData['detail']['descriptions'] as $desc) {
+      //   $desciptionParts = '<strong>'.$desc['name'].'</strong>' . '<br /><br />' . $desc['text'];
+      // }
 
       /* main post data */
       $new_main_data = array(
         'ID'            => $wp_post->ID,
         'post_title'    => ($projectData['detail']['name'] ? $projectData['detail']['name'] : $casawp_id),
-        'post_content'  => implode('<br /><hr /><br />', $descriptionParts),
+        //'post_content'  => implode('<br /><hr /><br />', $descriptionParts),
+        'post_content'  => $this->extractDescription($projectData['detail']),
         'post_status'   => 'publish',
         'post_type'     => 'casawp_project',
         'post_excerpt'  => '',
