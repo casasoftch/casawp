@@ -1,0 +1,8 @@
+	
+		<div class="casawp-thumbnail-wrapper">
+			<?php echo (has_post_thumbnail( $project->post->ID ) ? $project->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
+		</div>
+		<div class="casawp-text">
+			<h3><a href="<?= get_permalink($project->post) ?>"><?php echo $project->getTitle(); ?></a></h3>
+		</div>
+	
