@@ -1107,6 +1107,12 @@ class Offer{
 		));
 	}
 
+	public function renderCasadistance(){
+		return $this->render('casadistance', array(
+			'offer' => $this
+		));
+	}
+
 	public function renderDatatable(){
 		return $this->render('datatable', array(
 			'offer' => $this

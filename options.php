@@ -52,7 +52,8 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
-					'casawp_load_googlemaps'
+					'casawp_load_googlemaps',
+					'casawp_casadistance_active'
 				);
 				break;
 			case 'singleview':
@@ -101,8 +102,7 @@
 					'casawp_archive_show_thumbnail_size_crop',
 					'casawp_prefer_extracost_segmentation',
 					'casawp_filter_hide',
-					'casawp_ajaxify_archive',
-					'casawp_load_googlemaps'
+					'casawp_ajaxify_archive'
 				);
 				break;
 			case 'contactform':
@@ -258,6 +258,12 @@
 										<br>
 										<?php $name = 'casawp_load_googlemaps'; ?>
 										<?php $text = 'Google Maps'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<br>
+										<?php $name = 'casawp_casadistance_active'; ?>
+										<?php $text = 'Umgebungs-Distanzen Karte'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
