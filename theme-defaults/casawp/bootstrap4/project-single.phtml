@@ -1,0 +1,93 @@
+ <!-- Project has Multiple Units (Buildings): -->
+ <?php foreach ($this->project->getUnits() as $i => $unit): ?>
+ 	<div class="well">
+		<h2>Unit <?= $i+1 ?></h2>
+
+		<!-- Unit has multiple Properties (offers): -->
+	 	<?php foreach ($unit->getProperties() as $property): ?>
+		 	<a class="casawp-property reveal" href="<?= get_permalink($property->post) ?>">
+		 		
+		 		<div class="realestate-text">
+		 			<div class="info-column" style="border-color: <?= get_field('color-code'); ?>;">
+		 				<div class="table-wrap">
+		 					<table class="table">
+		 						<tbody>
+		 							<?php 
+		 						  	$id_number = ($property->getFieldValue('referenceId')) ? ($property->getFieldValue('referenceId')) : ($property->getFieldValue('casawp_id'));
+		 						  	$locality = 'CH-' . $property->getFieldValue('address_postalcode') . ' ' . $property->getFieldValue('address_locality');
+		 							?>
+		 							<tr><th>Objekt-Nr.</th><td><?php echo $id_number ?></td></tr>
+		 							<?php foreach ($property->getCategoriesArray() as $category) {
+		 								
+		 								$propertyCategories = $property->getCategoriesArray();
+		 								$objectType = array_pop($propertyCategories);
+		 							} 
+		 							$categoryLabels = array();
+		 							foreach ($propertyCategories as $propertyCategory) {
+		 								$categoryLabels[] = $propertyCategory['label']; 
+		 							}
+		 							if ($categoryLabels) {
+		 								$categoryOutput = implode($categoryLabels, ", ");
+		 							} else {
+		 								$categoryOutput = false;
+		 							}
+		 							
+		 							?>
+		 							<?php if ($categoryOutput): ?>
+		 								<tr>
+		 									<th>Objektkategorie</th>
+		 									<td>
+		 										<?= $categoryOutput; ?>
+		 									</td>
+		 								</tr>
+		 							<?php endif ?>
+		 							<?php if ($objectType['label']): ?>
+		 								<tr>
+		 									<th>Objekttyp</th>
+		 									<td>
+		 										<?= $objectType['label'] ?>
+		 									</td>
+		 								</tr>
+		 							<?php endif ?>
+
+		 							<?php if ($property->hasCategory("plot")): ?>
+		 								<?php if ($property->getFieldValue('area_sia_gsf')): ?>
+		 									<tr><th><?= $property->getNumval('area_sia_gsf')?></th><td><?= $property->renderNumvalValue($property->getNumval('area_sia_gsf')) ?></td></tr> 	
+		 								<?php endif ?>
+		 							<?php elseif($property->getFieldValue('area_bwf')): ?>
+		 									<tr><th><?= $property->getNumval('area_bwf')?></th><td><?= $property->renderNumvalValue($property->getNumval('area_bwf')) ?></td></tr> 	
+		 							<?php elseif ($property->getFieldValue('area_nwf')): ?>
+		 								<tr><th><?= $property->getNumval('area_nwf')?></th><td><?= $property->renderNumvalValue($property->getNumval('area_nwf')) ?></td></tr> 	
+		 							<?php endif ?>
+		 							
+		 							<tr><th>Verkaufspreis</th><td><?php echo $property->renderPrice(); ?></td></tr>
+		 						</tbody>
+		 					</table>
+		 				</div>
+		 			</div>
+		 		</div>
+		 		<div class="realestate-text">
+		 			<div class="title-column">
+		 				<h3><?php echo $property->getTitle(); ?></h3>
+		 				<div class="locality">
+		 					<?php echo $locality ?>
+		 				</div>
+		 			</div>
+		 		</div>
+		 		<div class="realestate-thumbnail">
+		 			<?php if (has_post_thumbnail( $property->post->ID )): ?>
+		 				<?= $property->renderFeaturedImage() ?>
+		 			<?php else: ?>
+		 				<div class="missing-gallery-wrap">
+		 					<div class="casawp-missing-gallery">
+		 						<div class="missing-gallery-text">
+		 							Kein Bild
+		 						</div>
+		 					</div>
+		 				</div>
+		 			<?php endif ?>
+		 		</div>
+		 	</a>
+ 		<?php endforeach ?>
+ 	</div>
+ <?php endforeach ?>

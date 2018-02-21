@@ -144,6 +144,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Email', 'casawp')
             ),
+            'attributes' => array(
+                'required' => true
+            )
         ));
 
         $this->add(array(

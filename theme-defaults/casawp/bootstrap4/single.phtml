@@ -4,7 +4,7 @@
 	</nav>
 </div>
 <div class="row">
-	<div class="casawp-single-content col-sm-8">
+	<div class="casawp-single-content">
 		<header class="casawp-single-header">
 			<h1 class="casawp-single-title"><?php echo $offer->getTitle() ?></h1>
 		</header>
@@ -15,7 +15,7 @@
 			<?php //echo $offer->contactSellerByMailBox(); ?>
 		</div>
 	</div>
-	<aside class="casawp-single-aside col-sm-4">
+	<aside class="casawp-single-aside">
 		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderPagination(); ?>
 		</div>
@@ -37,6 +37,9 @@
 		</div>
 		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderSalesPerson(); ?>
+		</div>
+		<div class="casawp-single-aside-container">
+			<?php echo $offer->renderVisitPerson(); ?>
 		</div>
 		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderAllShareWidgets(); ?>
