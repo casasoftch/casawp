@@ -1443,9 +1443,9 @@ class Plugin {
         }
 
         if (get_option( 'casawp_casadistance_active', false ) && is_singular('casawp_property')) {
-            wp_enqueue_script('casadistance', CASASYNC_PLUGIN_URL . 'plugin-assets/casadistance/dist/main-bundle.js', array(), false, true );
+            wp_enqueue_script('casadistance', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/main-bundle.js', array(), false, true );
             //if (get_option( 'casawp_casadistance_basecss', false ) && is_singular('casawp_property')) {
-                wp_register_style('casadistance-css', CASASYNC_PLUGIN_URL . 'plugin-assets/casadistance/dist/style.css' );
+                wp_register_style('casadistance-css', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/style.css' );
                 wp_enqueue_style('casadistance-css' );
             //}
         }
