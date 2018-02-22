@@ -2,8 +2,3 @@
 vendor/**/.git/*
 config.codekit
 composer.phar
-node_modules/*
-node_modules/*/
-!node_modules/
-!node_modules/casadistance/
-!node_modules/casadistance/dist/
