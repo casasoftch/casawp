@@ -4,4 +4,4 @@
 
 "casadistance@git+ssh://git@bitbucket.org/casasoftag/casadistance.git", "map-distance-poc@git+ssh://git@bitbucket.org/casasoftag/casadistance.git":
   version "1.0.0"
-  resolved "git+ssh://git@bitbucket.org/casasoftag/casadistance.git#c6f02f215f3958419d83578f63538dc01f2418fc"
+  resolved "git+ssh://git@bitbucket.org/casasoftag/casadistance.git#d67d6ca13cc02182de4e06cc31566ac5e8e5ed3b"
