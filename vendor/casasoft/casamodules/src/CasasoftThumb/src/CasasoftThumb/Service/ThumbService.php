@@ -97,6 +97,170 @@ class ThumbService implements FactoryInterface {
 
     //$path -> $partial_path . $filename;
 
+    public function generateThumbFromBlob($path, $blob, $options = array(), $qHeight = 100){
+         $defaults = array(
+            'width'      => 100,
+            'height'     => 100,
+            'crop'       => true,
+            'area'       => false,
+            'withinfos'  => true,
+            'target_dir'  => '',
+            'target_filename' => false,
+            'retina' => $this->config['retina']
+        );
+        if (!is_array($options) && $options) {
+            $qWidth = $options;
+            $options = array(
+                'width' => $qWidth ,
+                'height' => $qHeight
+            );
+        }
+        $args = array_merge($defaults, $options);
+
+
+        //make sure extension is not in filename
+        if (!$args['target_filename']) {
+            $args['target_filename'] = basename($path);
+        }
+        $info = pathinfo($args['target_filename']);
+        $file_name = $info['filename'];
+        $args['target_filename'] = $file_name;
+        extract($args, EXTR_OVERWRITE, "wddx");
+
+        $targetextention = ($width > 300 ? 'jpg' : 'png');
+
+        $targetfilePublic = '/' . $this->config['public_subdir'] . basename(dirname(dirname($path))) . '/' . basename(dirname($path)) . '/' . $target_dir . $target_filename . '-' . $width . 'x' . $height . '_' . ($crop ? 'C' : 'F') . ($area ? 'A' : '') . ($retina ? '@2x' : '') . '.' . $targetextention;
+        $targetfile = getcwd() . $this->config['public_dir'] . $targetfilePublic;
+        
+        $multiplier = ($retina ? 2 : 1);
+        //$originalfile = getcwd() . '/' . $this->config['data_dir'] . $this->config['data_subdir'] . $path;
+        $originalfile = $path;
+
+        //test if thumbnail already exists
+        if (is_file($targetfile) ) {
+            if (!$withinfos) {
+                return $targetfilePublic;
+            } else {
+                list($thewidth, $theheight, $thetype, $theattr) = getimagesize($targetfile);
+                return array(
+                    'src' => $targetfilePublic,
+                    'height' => $theheight/$multiplier,
+                    'width' => $thewidth/$multiplier,
+                    'fitted_to' => ($theheight == $height ? 'height' : 'width')
+                );
+            }
+        }
+
+
+        //svgs need no conversion
+        if (pathinfo($originalfile, PATHINFO_EXTENSION) == 'svg') {
+            return false;
+        }
+
+        if (!class_exists('Imagick')) {
+            return 'Imagick_missing';
+        }
+        try {
+            //$image = new Imagick($originalfile. '[0]');
+            $image = new Imagick();
+            if (is_string($blob)) {
+                $image->readImageBlob($blob);
+            } else {
+                $image->readImageFile($blob);
+            }
+        } catch (\ImagickException $e) {
+            echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+            print_r($e->getMessage());
+            echo "</textarea>";
+            return $e->getMessage();
+        }
+        
+
+        //calculate with and height for area restrictions
+        if ($area) {
+            $org_size = $image->getImageGeometry();
+            $org_width = $org_size['width'];
+            $org_height = $org_size['height'];
+            $originalarea = ($org_width * $org_height);
+            $max_height = ($height ? $height : 9999999999999999999);
+            $max_width = ($width ? $width : 9999999999999999999);
+            $scalefactor = sqrt($area/$originalarea);
+            $widthForArea = $scalefactor * $org_width;
+            $heightForArea = $scalefactor * $org_height;
+            if ($widthForArea > $max_width) {
+                $width = $max_width;
+                $height = $max_height;
+                $area = false;
+            } elseif ($heightForArea > $max_height) {
+                $width = $max_width;
+                $height = $max_height;
+                $area = false;
+            } else {
+                $width = round($widthForArea);
+                $height = round($heightForArea);
+            }   
+        }
+
+
+        if (class_exists('Imagick')) {
+            try {
+                if ($targetextention == 'png') {
+                    $image->setImageFormat("png32");
+                } else {
+                    $image->setImageFormat("jpg");
+                    $image->setImageCompressionQuality(80);
+                }
+                
+                if ($image->getImageColorspace() == Imagick::COLORSPACE_CMYK) {
+                    $profiles = $image->getImageProfiles('*', false); 
+                    // we're only interested if ICC profile(s) exist 
+                    $has_icc_profile = (array_search('icc', $profiles) !== false); 
+                    // if it doesnt have a CMYK ICC profile, we add one 
+                    if ($has_icc_profile === false) { 
+                    } 
+                }
+                $image->stripImage();
+                if ($crop && !$area) {
+                    $image->cropThumbnailImage( $width*$multiplier,$height*$multiplier);
+                } elseif ($area) {
+                    $image->thumbnailImage($width*$multiplier,$height*$multiplier);
+                } else {
+                    $image->scaleImage(
+                        $width*$multiplier,
+                        $height*$multiplier,
+                        true
+                    );
+                }
+
+                if (!file_exists(dirname($targetfile))) {
+                    mkdir(dirname($targetfile), 0777, true);
+                }
+                $image->stripImage();
+                $image->writeImage($targetfile);
+                
+
+                if (!$withinfos) {
+                    return $targetfilePublic;
+                } else {
+                    list($thewidth, $theheight, $thetype, $theattr) = getimagesize($targetfile);
+                    return array(
+                        'src' =>  $targetfilePublic,
+                        'height' => $theheight/$multiplier,
+                        'width' => $thewidth/$multiplier,
+                        'fitted_to' => ($theheight/$multiplier == $height ? 'height' : 'width')
+                    );
+                } 
+            } catch (\ImagickException $e) {
+                echo "<textarea cols='100' rows='30' style='position:relative; z-index:10000; width:inherit; height:200px;'>";
+                print_r($e->getMessage());
+                echo "</textarea>";
+                return $e->getMessage();
+            }
+        } else {
+            return ('<pre style="width:'.$width.'px;height:'.$height.'px;overflow:scroll;">The thumbnail generator required ImageMagick/Imagick to be enabled!</pre>');
+        }
+    }
+
 
     public function generateThumb($path, $options = array(), $qHeight = 100){
         
