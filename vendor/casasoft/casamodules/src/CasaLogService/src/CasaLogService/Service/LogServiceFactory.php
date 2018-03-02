@@ -54,8 +54,7 @@ class LogServiceFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $viewRenderer = $serviceLocator->get('viewRenderer');
-        $service = new LogService($viewRenderer);
+        $service = new LogService();
 
         $main_config = $serviceLocator->get('Config');
         if (isset($main_config['casa-log-service'])) {

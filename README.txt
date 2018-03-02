@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.2.8
+Stable tag: 2.2.9
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,21 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.2.9 =
+* update: IT/FR translations
+* new: Ausländerwohnung
+* update: casastandards
+* new: Engadine house
+* fix: salestypes shortcode now supports string
+* fix: double units for numval rendering
+* update: zendframework
+* new: Bootstrap 4 integration
+* new: Patrizierhaus
+* new: Spanish translations
+* update: project imports are more reliable now
+* update: WPML fix to avoid user language and blog language confusion
+* fix: media uploads with query params work now
 
 = 2.2.8 =
 * fix: double m/m2 renders

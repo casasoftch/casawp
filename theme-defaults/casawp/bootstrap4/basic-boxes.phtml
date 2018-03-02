@@ -1,20 +1,53 @@
-<div class="card-group">
-  <div class="card">
-    <div class="card-block">
-      <h4 class="card-title"><?= $offer->renderCategoryLabels() ?></h4>
-      <p class="card-text"><?= $offer->renderDatapoints('single') ?></p>
-    </div>
+<div class="casawp-basic-box">
+  <div>
+    <h4>
+      <?php
+        if ($offer->renderCategoryLabels()) {
+          echo $offer->renderCategoryLabels();
+        } elseif ($offer->renderUtilityLabels()) {
+          echo $offer->renderUtilityLabels();
+        } else {
+          echo __('Property', 'casawp');
+        }
+      ?>
+    </h4>
+    <?= $offer->renderDatapoints('single', array()) ?>
   </div>
-  <div class="card">
-    <div class="card-block">
-      <h4 class="card-title"><?= __("Address", 'casawp') ?></h4>
-      <p class="card-text"><?= $offer->renderAddress() ?></p>
-    </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+    <h4><?= __("Address", 'casawp') ?></h4>
+    <?= $offer->renderAddress() ?>
   </div>
-  <div class="card">
-    <div class="card-block">
-      <h4 class="card-title"><?= ($offer->type == 'rent') ? (__('rent', 'casawp')) : (__('Price', 'casawp')); ?></h4>
-      <p class="card-text"><?= $this->offer->renderPrice() ?></p>
-    </div>
+</div>
+<div class="casawp-basic-box">
+  <div>
+      <?php 
+        if ($offer->getSalestype() == 'buy') {
+          echo '<h4>' . __('Price', 'casawp') . '</h4>';
+          if ($this->offer->getFieldValue('price', false)) {
+            echo $this->offer->renderPrice();
+          } else {
+            echo __('On Request','casawp');
+          }
+        } else {
+          if ($this->offer->getFieldValue('grossPrice', false)) {
+            echo '<h4>' . __('Gross price', 'casawp') . '</h4>';
+            echo $this->offer->renderPrice('gross');
+          } elseif($this->offer->getFieldValue('netPrice', false)) {
+            echo '<h4>' . __('Net price', 'casawp') . '</h4>';
+            echo $this->offer->renderPrice('net');
+          } else {
+            echo '<h4>' . __('Rent price', 'casawp') . '</h4>';
+            echo __('On Request','casawp');
+          }
+        }
+      ?>
+      <?php global $casawp; ?>
+      <?php foreach ($this->offer->getExtraCosts() as $cost): ?>
+        <br><strong><?= __('Extra Costs:', 'casawp') ?></strong>
+        <br><?= $casawp->renderPrice($cost['price'], $cost['currency'], $cost['propertysegment'], $cost['timesegment']); ?>
+        <?php break; ?>
+      <?php endforeach ?>
   </div>
 </div>

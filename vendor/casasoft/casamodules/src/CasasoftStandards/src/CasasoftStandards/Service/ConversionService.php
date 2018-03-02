@@ -127,13 +127,13 @@ class ConversionService {
         else if($input['time_segment']){
           switch ($input['time_segment']) {
             case 'w':
-              $time = $this->translator->translate('week');
+              $time = $this->translator->translate('week', 'casasoft-standards');
               break;
             case 'm':
-              $time = $this->translator->translate('month');
+              $time = $this->translator->translate('month', 'casasoft-standards');
               break;
             case 'y':
-              $time = $this->translator->translate('year');
+              $time = $this->translator->translate('year', 'casasoft-standards');
               break;
             default:
               $time = 1;
@@ -300,7 +300,6 @@ class ConversionService {
             'time_segment' => 'm'
           ]);
 
-
         // }
         if($show_prices){
 
@@ -460,7 +459,7 @@ class ConversionService {
       if ($context == 'smart' || $context == 'special') {
         switch ($key) {
           case 'visualReferenceId': return $this->translator->translate('Reference no.', 'casasoft-standards'); break;
-          case 'categories': return $this->translator->translate('Category', 'casasoft-standards'); break;
+          case 'categories': return $this->translator->translate('Categories', 'casasoft-standards'); break;
           case 'start': return $this->translator->translate('Available from', 'casasoft-standards'); break;
           case 'condition': return $this->translator->translate('Condition', 'casasoft-standards'); break;
           case 'Wärmeerzeugung': return 'Wärmeerzeugung'; break;
@@ -483,6 +482,8 @@ class ConversionService {
     			case 'priceNettoPerSqmPerYear': return $this->translator->translate('Net rent / m<sup>2</sup> / year', 'casasoft-standards'); break;
     			case 'priceNettoTotalPerMonth': return $this->translator->translate('Net rent / month', 'casasoft-standards'); break;
     			case 'priceNettoTotalPerYear': return $this->translator->translate('Net rent / year', 'casasoft-standards'); break;
+          case 'extraCosts': return $this->translator->translate('Extra Costs', 'casasoft-standards'); break;
+          
         }
       }
 
@@ -505,10 +506,43 @@ class ConversionService {
         $utility = $this->utilityService->getItem($key);
         if ($utility) {return $utility->getLabel();}
       }
+
+      if ($context == 'smart' || $context == 'utility-alt') {
+        switch ($key) {
+          case 'building': return $this->translator->translate('Building land', 'casasoft-standards'); break;
+          case 'parking': return $this->translator->translate('Parking / Garage', 'casasoft-standards'); break;
+          case 'gastronomy': return $this->translator->translate('Gastronomy / Hotel', 'casasoft-standards'); break;
+          default: 
+            $utility = $this->utilityService->getItem($key);
+            if ($utility) {return $utility->getLabel();}
+          break;
+        }
+      }
       return $key;
     }
 
     public function getRenderedValue($key, $context = 'smart'){
+      if ($context == 'smart' || $context == 'special') {
+        switch ($key) {
+          case 'extraCosts':
+            $extraCost = null;
+            foreach ($this->property['_embedded']['extracosts'] as $extracost) {
+                if (in_array($extracost['title'], ['extracosts', 'Nebenkosten']) && $extracost['cost']) {
+                  $extraCost = $extracost;
+                  break;
+                }
+              }
+            if ($extraCost) {
+              return $this->renderPrice([
+                'price' => $extraCost['cost'],
+                'time_segment' => $extraCost['time_segment'],
+                'property_segment' => $extraCost['property_segment'],
+              ]
+              );
+            }
+          break;
+        }
+      }
       if ($context == 'smart' || $context == 'numeric_value') {
         $numval = $this->numvalService->getItem($key);
         if ($numval) {
@@ -572,9 +606,14 @@ class ConversionService {
           case 'start':
             if (isset($this->property['start'])) {
               if(is_array($this->property['start'])){
+                $now = new \DateTime();
                 $date_time = new \DateTime($this->property['start']['date']);
 
-          			return $date_time->format('d.m.Y');
+                if ($now > $date_time) {
+                  return $this->translator->translate('Immediate', 'casasoft-standards');
+                } else {
+                  return $date_time->format('d.m.Y');
+                }
               }
               else{
                 return $this->property['start'];
@@ -637,6 +676,16 @@ class ConversionService {
             // }
             return '';
             break;
+          case 'extraCosts':
+            if (isset($this->property['_embedded']['extracosts'])) {
+              foreach ($this->property['_embedded']['extracosts'] as $extracost) {
+                if (in_array($extracost['title'], ['extracosts', 'Nebenkosten']) && $extracost['cost']) {
+                  return $extracost['cost'];
+                  break;
+                }
+              }
+            }
+            break;
           case 'zoneTypes':
             if (isset($this->property['zoneTypes'])) {
               return $this->property['zoneTypes'];
@@ -674,6 +723,84 @@ class ConversionService {
           foreach ($this->featureService->getDefaultOptions() as $key => $options) {
             $template[] = [$key, 'feature'];
           }
+        } elseif ($templateMixed === 'curated-utilities') {
+          $template = [
+              ['residential', 'utility'],
+              ['building', 'utility-alt'],
+              ['commercial', 'utility'],
+              ['parking', 'utility-alt'],
+              ['storage', 'utility'],
+              ['gastronomy', 'utility-alt'],
+              ['industrial', 'utility'],
+              ['investment', 'utility'],
+              ['agricultural', 'utility'],
+              ['vacation', 'utility'],
+          ];
+        } elseif ($templateMixed === 'curated-categories') {
+          $categories = $this->categoryService->getDefaultOptions();
+          $template = [];
+          $allCategories = [];
+          foreach ($categories as $optionkey => $option) {
+            if (!in_array($optionkey, [ //remove *some categories
+              'farm',
+              'mountain-farm',
+              'old-age-home',
+              'hobby-room',
+              'exhibition-space',
+              'building-project',
+              'boat-mooring',
+              'boat-dry-dock',
+              'boat-landing-stage',
+              'cafe-bar',
+              'campground',
+              'double-garage',
+              'duplex',
+              'shopping-center',
+              'single-garage',
+              'retail',
+              'ground-floor-flat',
+              'attic-compartment',
+              'factory',
+              'outdoor-swimming-pool',
+              'commercial-plot',
+              'golf-course',
+              'plot',
+              'indoor-swimming-pool',
+              'house',
+              'home',
+              'hotel',
+              'cellar-compartment',
+              'hospital',
+              'mini-golf-course',
+              'covered-bike-space',
+              'car-park',
+              'bed-and-breakfast',
+              'nursing-home',
+              'riding-hall',
+              'sanatorium',
+              'sauna',
+              'display-window',
+              'alottmen-garden',
+              'solarium',
+              'sports-hall',
+              'squash-badminton',
+              'horse-box',
+              'studio',
+              'bachelor-flat',
+              'fuel-station',
+              'indoor-tennis-court',
+              'tennis-court',
+              'underground-slot',
+              'covered-slot',
+              'workshop',
+              'open-slot',
+              'house-part',
+              'residential-commercial-building',
+              'commercial'
+            ])) {
+              $template[] = [$optionkey, 'category'];
+            }
+          }
         } else {
           return $list;
         }
@@ -703,6 +830,12 @@ class ConversionService {
       }
 
       if ($templateMixed == 'features') {
+        usort($list, function($a, $b) {
+            return strcmp($a["label"], $b["label"]);
+        });
+      }
+
+      if ($templateMixed == 'curated-categories') {
         usort($list, function($a, $b) {
             return strcmp($a["label"], $b["label"]);
         });

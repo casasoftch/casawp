@@ -18,13 +18,15 @@ class Feature extends AbstractHelper{
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-        switch ($seek) {
-            case 'label':
-                return $item->getLabel();
-                break;
-            case 'icon':
-                return $item->getIcon();
-                break;
+        if ($item) {
+            switch ($seek) {
+                case 'label':
+                    return $item->getLabel();
+                    break;
+                case 'icon':
+                    return $item->getIcon();
+                    break;
+            }
         }
         return '';
     }

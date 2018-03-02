@@ -1235,7 +1235,7 @@ msgstr ""
 
 #: classes/Conversion.php:315
 msgid "Number of rooms"
-msgstr ""
+msgstr "Rooms"
 
 #: classes/Conversion.php:316
 msgid "Number of lavatory"

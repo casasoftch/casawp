@@ -59,6 +59,20 @@ class QueryService{
             } else {
               if (strpos($value, ',')) {
                 $query[$key] = array_map('trim', explode(',', $value));
+              } elseif (is_string($value) && in_array($key, [
+                'categories',
+                'utilities',
+                'locations',
+                'regions',
+                'salestypes',
+                'categories_not',
+                'locations_not',
+                'salestypes_not',
+                'availabilities_not',
+                'regions_not',
+                'features',
+                'features_not'])) {
+                  $query[$key] = [$value];
               }
             }
         }

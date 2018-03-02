@@ -1,24 +1,46 @@
 <div>
-  <!-- $urls = $this->getUrls(); -->
-  <?php $urls = false ?>
-
-  <ul class="casawp-tabable-nav nav nav-tabs" role="tablist">
-    <li class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#text_basics"><?= __("Base data", 'casawp') ?></a></li>
-    <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#text_description"><?= __('Description', 'casawp') ?></a></li>
-    <?php if ($urls && array_key_exists('youtube', $urls)) : ?>
-      <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#tab_videos"><?= __('Videos', 'casawp') ?></a></li>
+  <ul class="casawp-tabable-nav nav nav-tabs">
+    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#text_basics"><small><?= __("Base data", 'casawp') ?></small></a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#text_description"><small><?= __('Description', 'casawp') ?></small></a></li>
+    <?php if ($this->offer->getUrls() && array_key_exists('youtube', $this->offer->getUrls())) : ?>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab_videos"><small><?= __('Videos', 'casawp') ?></small></a></li>
     <?php endif; ?>
-    <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#text_numbers"><?= __("Specifications", 'casawp') ?></a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#text_numbers"><small><?= __("Specifications", 'casawp') ?></small></a></li>
   </ul>
-  <div class="casawp-tabable-content tab-content bg-faded">
-    <div class="casawp-tabable-pane tab-pane fade in active p-a" id="text_basics">
-      <?= $this->offer->renderBasicBoxes(); ?>
-      <?= $this->offer->renderMap() ?>
+  <div class="casawp-tabable-content tab-content">
+    <div class="casawp-tabable-pane tab-pane fade show active" id="text_basics">
+      <div class="casawp-basic-boxes">
+          <?= $this->offer->renderBasicBoxes(); ?>
+      </div>
+      <?php if(get_option( 'casawp_casadistance_active', false )){
+        echo $this->offer->renderCasadistance();
+      } else{ 
+        echo $this->offer->renderMap();
+      } ?>
     </div>
-    <div class="casawp-tabable-pane tab-pane fade p-a" id="text_description">
+    <div class="casawp-tabable-pane tab-pane fade" id="text_description">
       <?= $this->offer->renderContent() ?>
     </div>
-    <div class="casawp-tabable-pane tab-pane fade p-a" id="text_numbers">
+    <?php if ($this->offer->getUrls() && array_key_exists('youtube', $this->offer->getUrls())) : ?>
+      <div class="casawp-tabable-pane tab-pane fade" id="tab_videos">
+        <?php foreach ($this->offer->getUrls() as $urltype => $urlgroup): ?>
+          <?php if ($urltype == 'youtube'): ?>
+            <?php foreach ($urlgroup as $url): ?>
+              <h2><?= $url['title'] ?></h2>
+              <?php $embed_code = wp_oembed_get( $url['href'], array() ); ?>
+              <?php if ($embed_code): ?>
+                <div class="embed-responsive embed-responsive-16by9">
+                  <?php echo $embed_code ?>
+                </div>
+              <?php else: ?>
+                <a href="<?php echo $url['href'] ?>">Link</a>
+              <?php endif ?>
+            <?php endforeach ?>
+          <?php endif ?>
+        <?php endforeach ?>
+      </div>
+    <?php endif; ?>
+    <div class="casawp-tabable-pane tab-pane fade" id="text_numbers">
       <?= $this->offer->renderDatatable() ?>
     </div>
   </div>

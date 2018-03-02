@@ -1,18 +1,17 @@
-<div class="form-group <?php if($this->formElementErrors($element)) echo "has-warning" ?>">
-	<label class="control-label"><?php echo $element->getLabel() ?></label>
-	<?php 
-		$classes[] = 'form-control'; 
-		if ($this->formElementErrors($element)) {
-			$classes[] = 'form-control-warning';
-		}
-		$ex_classes = explode(' ', $element->getAttribute('class')); 
-		if ($ex_classes) {
-			$classes = array_merge($classes, $ex_classes);
-		}
-		$class_str = implode(' ', $classes);
-	?>
-	<?php echo $this->formElement($element->setAttribute('class', $class_str)); ?>
+<?php
+	$required = false;
+	if ($form) {
+		$required = $form->getInputFilter()->get($element->getName())->isRequired();
+	}
+?>
+
+<div class="form-group <?php if($required) echo "is-required" ?> <?php if($this->formElementErrors($element)) echo "has-error has-feedback" ?>">
+	<label for="contactForm<?php echo $element->getName() ?>" class="control-label"><?php echo $element->getLabel() ?></label>
+	<?php echo $this->formElement($element
+		->setAttribute('class', 'form-control casawp-form-control ' . ($this->formElementErrors($element) ? "is-invalid" : ""))
+		->setAttribute("id", "contactForm" . $element->getName())
+	); ?>
 	<?php if ($this->formElementErrors($element)): ?>
-		<span class="help-block"><?php echo $this->formElementErrors($element) ?></span>
+		<div class="invalid-feedback"><?php echo $this->formElementErrors($element) ?></div>
 	<?php endif ?>
 </div>

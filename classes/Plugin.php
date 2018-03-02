@@ -1281,13 +1281,13 @@ class Plugin {
             header('Content-Type: application/json');
             if ($_GET['ajax'] === 'archive-filter') {
               $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-filter-ajax.php';
-              if ( $theme_file = locate_template( array($template_path ) ) ) {
+              if ( $theme_file = locate_template( array('casawp-archive-filter-ajax.php') ) ) {
                 $template_path = $theme_file;
               }
             } else if ($_GET['ajax'] === 'archive') {
               $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-ajax.php';
 
-              if ( $theme_file = locate_template( array($template_path ) ) ) {
+              if ( $theme_file = locate_template( array('casawp-archive-ajax.php') ) ) {
                 $template_path = $theme_file;
               }
             } else {
@@ -1381,7 +1381,8 @@ class Plugin {
     function registerScriptsAndStyles(){
         wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
         wp_enqueue_style( 'casawp_css' );
-        wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery' ), false, true );
+        wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ));
+        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ));
 
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
             case 'bootstrap2':
@@ -1415,9 +1416,9 @@ class Plugin {
                 break;
         }
 
-        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ));
+        
 
-        if(is_singular('casawp_property')) {
+        if(is_singular('casawp_property') && in_array(get_option('casawp_viewgroup', 'bootstrap3'), ['bootstrap2', 'bootstrap3'])) {
             wp_enqueue_script('casawp_jquery_eqheight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jquery.equal-height-columns.js', array( 'jquery' ), false, true);
         }
 
@@ -1439,6 +1440,14 @@ class Plugin {
 
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
             wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY', array(), false, true );
+        }
+
+        if (get_option( 'casawp_casadistance_active', false ) && is_singular('casawp_property')) {
+            wp_enqueue_script('casadistance', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/main-bundle.js', array(), false, true );
+            //if (get_option( 'casawp_casadistance_basecss', false ) && is_singular('casawp_property')) {
+               // wp_register_style('casadistance-css', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/style.css' );
+                //wp_enqueue_style('casadistance-css' );
+            //}
         }
 
 

@@ -126,6 +126,11 @@ class CategoryService {
             'commercial-plot' => array('label' => $this->translator->translate('Commercial plot', 'casasoft-standards'),),
             'house-part' => array('label' => $this->translator->translate('Part of a house', 'casasoft-standards'),),
             'residential-commercial-building' => array('label' => $this->translator->translate('Residential / commercial building', 'casasoft-standards'),),
+
+            'engadine-house' => array('label' => $this->translator->translate('Engadine house', 'casasoft-standards'),),
+            'patrician-house' => array('label' => $this->translator->translate('Patrician house', 'casasoft-standards'),),
+
+            
             
         );
 

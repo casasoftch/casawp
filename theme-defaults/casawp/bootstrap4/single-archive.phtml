@@ -1,10 +1,13 @@
-<div class="casawp-property row">
-	<div class="casawp-thumbnail-wrapper col-sm-5">
-		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casawp-missing-image">' . __('No image', 'casawp') . '</div>'); ?>
+<div class="casawp-property">
+	<div class="casawp-thumbnail-wrapper">
+		<?php echo (has_post_thumbnail( $offer->post->ID ) ? $offer->renderFeaturedImage() : '<div class="casawp-missing-gallery">' . __('No image', 'casawp') . '</div>'); ?>
 	</div>
-	<div class="casawp-text col-sm-7">
+	<div class="casawp-text">
 		<h3><a href="<?= get_permalink($offer->post) ?>"><?php echo $offer->getTitle(); ?></a></h3>
-		<?php echo $offer->renderQuickInfosTable(); ?>
+		<table class="table">
+		  <tbody>
+		    <?php echo $offer->renderDatapoints('archive', array()) ?>
+		  </tbody>
+		</table>
 	</div>
 </div>
-<hr class="soften">

@@ -1,0 +1,16 @@
+{
+  "name": "casawp",
+  "version": "1.0.0",
+  "description": "CasaWP",
+  "main": "",
+  "directories": {},
+  "scripts": {},
+  "repository": {},
+  "author": "Dominic Fath",
+  "license": "",
+  "homepage": "",
+  "dependencies": {
+    "casadistance": "git+ssh://git@bitbucket.org/casasoftag/casadistance.git",
+    "map-distance-poc": "git+ssh://git@bitbucket.org/casasoftag/casadistance.git"
+  }
+}

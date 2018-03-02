@@ -1,0 +1,221 @@
+<div class="casawp-filterform-wrap">
+	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-filterform')); ?>
+
+	<?php if ($form->getAvailabilityOptions()): ?>
+		<?php echo $this->formElement($form->get('availabilities')->setAttribute('style', 'display:none')); ?>
+	<?php endif ?>
+
+	<?php if ($form->getSalestypeOptions()): ?>
+		<?php echo $this->formLabel($form->get('salestypes')); ?>
+		<?php if (get_option('casawp_filter_salestypes_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('salestypes');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_salestypes_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('salestypes');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('salestypes')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+  <?php if ($form->getUtilityOptions()): ?>
+		<?php echo $this->formLabel($form->get('utilities')); ?>
+		<?php if (get_option('casawp_filter_utilities_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('utilities');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_utilities_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('utilities');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('utilities')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+	<?php if ($form->getCategoryOptions()): ?>
+		<?php echo $this->formLabel($form->get('categories')); ?>
+		<?php if (get_option('casawp_filter_categories_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('categories');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_categories_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('categories');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('categories')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+	<?php if ($form->getLocationOptions()): ?>
+		<?php echo $this->formLabel($form->get('locations')); ?>
+		<?php if (get_option('casawp_filter_locations_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('locations');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_locations_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('locations');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('locations')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+  <?php if ($form->getRoomOptions()): ?>
+    <?php
+      $roomselect_count = 0;
+      $roomsfrom_et = get_option('casawp_filter_rooms_from_elementtype', false);
+      $roomsto_et = get_option('casawp_filter_rooms_to_elementtype', false);
+      if ($roomsfrom_et && $roomsfrom_et !== 'hidden'){$roomselect_count++;}
+      if ($roomsto_et && $roomsfrom_et !== 'hidden'){$roomselect_count++;}
+    ?>
+    <div class="casawp-filterform-duo casawp-filterform-rooms <?= ($roomselect_count ? 'casawp-filterform-roomscount-' . $roomselect_count : '')?>">
+      <div class="casawp-filterform-duo-label">
+        Rooms
+      </div>
+      <div class="casawp-filterform-duo-item">
+      	<?php echo $this->formLabel($form->get('rooms_from')); ?>
+      	<?php if ($roomsfrom_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('rooms_from');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('rooms_from')); ?>
+      	<?php endif ?>
+      </div>
+      <div class="casawp-filterform-duo-item">
+        <?php echo $this->formLabel($form->get('rooms_to')); ?>
+      	<?php if ($roomsto_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('rooms_to');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('rooms_to')); ?>
+      	<?php endif ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+
+  <?php if ($form->getPriceOptions()): ?>
+    <?php
+      $priceelect_count = 0;
+      $pricefrom_et = get_option('casawp_filter_price_from_elementtype', false);
+      $priceto_et = get_option('casawp_filter_price_to_elementtype', false);
+      if ($pricefrom_et && $pricefrom_et !== 'hidden'){$priceelect_count++;}
+      if ($priceto_et && $pricefrom_et !== 'hidden'){$priceelect_count++;}
+    ?>
+    <div class="casawp-filterform-duo casawp-filterform-price <?= ($priceelect_count ? 'casawp-filterform-pricecount-' . $priceelect_count : '')?>">
+      <div class="casawp-filterform-duo-label">
+        Price
+      </div>
+      <div class="casawp-filterform-duo-item">
+      	<?php echo $this->formLabel($form->get('price_from')); ?>
+      	<?php if ($pricefrom_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('price_from');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('price_from')); ?>
+      	<?php endif ?>
+      </div>
+      <div class="casawp-filterform-duo-item">
+        <?php echo $this->formLabel($form->get('price_to')); ?>
+      	<?php if ($priceto_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('price_to');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('price_to')); ?>
+      	<?php endif ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($form->getFeatureOptions()): ?>
+		<?php echo $this->formLabel($form->get('features')); ?>
+		<?php if (get_option('casawp_filter_features_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('features');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_features_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('features');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('features')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+  <?php if ($form->getRegionOptions()): ?>
+		<?php echo $this->formLabel($form->get('regions')); ?>
+		<?php if (get_option('casawp_filter_regions_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('regions');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_regions_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('regions');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('regions')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+	<input type="submit" class="casawp-filterform-button" value="<?= __('Search', 'casawp') ?>">
+
+	<?= $this->form()->closeTag(); ?>
+	<div class="clearfix"></div>
+</div>
