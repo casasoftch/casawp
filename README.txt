@@ -51,7 +51,6 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 * new: Spanish translations
 * update: project imports are more reliable now
 * update: WPML fix to avoid user language and blog language confusion
-* new: CASADISTANCE integration
 * fix: media uploads with query params work now
 
 = 2.2.8 =
