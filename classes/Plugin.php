@@ -1281,13 +1281,13 @@ class Plugin {
             header('Content-Type: application/json');
             if ($_GET['ajax'] === 'archive-filter') {
               $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-filter-ajax.php';
-              if ( $theme_file = locate_template( array($template_path ) ) ) {
+              if ( $theme_file = locate_template( array('casawp-archive-filter-ajax.php') ) ) {
                 $template_path = $theme_file;
               }
             } else if ($_GET['ajax'] === 'archive') {
               $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive-ajax.php';
 
-              if ( $theme_file = locate_template( array($template_path ) ) ) {
+              if ( $theme_file = locate_template( array('casawp-archive-ajax.php') ) ) {
                 $template_path = $theme_file;
               }
             } else {
@@ -1445,8 +1445,8 @@ class Plugin {
         if (get_option( 'casawp_casadistance_active', false ) && is_singular('casawp_property')) {
             wp_enqueue_script('casadistance', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/main-bundle.js', array(), false, true );
             //if (get_option( 'casawp_casadistance_basecss', false ) && is_singular('casawp_property')) {
-                wp_register_style('casadistance-css', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/style.css' );
-                wp_enqueue_style('casadistance-css' );
+               // wp_register_style('casadistance-css', CASASYNC_PLUGIN_URL . 'node_modules/casadistance/dist/style.css' );
+                //wp_enqueue_style('casadistance-css' );
             //}
         }
 
