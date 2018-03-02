@@ -127,13 +127,13 @@ class ConversionService {
         else if($input['time_segment']){
           switch ($input['time_segment']) {
             case 'w':
-              $time = $this->translator->translate('week');
+              $time = $this->translator->translate('week', 'casasoft-standards');
               break;
             case 'm':
-              $time = $this->translator->translate('month');
+              $time = $this->translator->translate('month', 'casasoft-standards');
               break;
             case 'y':
-              $time = $this->translator->translate('year');
+              $time = $this->translator->translate('year', 'casasoft-standards');
               break;
             default:
               $time = 1;

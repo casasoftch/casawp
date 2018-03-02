@@ -763,59 +763,59 @@ msgstr "Nombre de parcelles"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:223
 msgid "Distance to kindergarten"
-msgstr "école maternelle"
+msgstr "Ecole maternelle"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:229
 msgid "Distance to primary school"
-msgstr "école primaire"
+msgstr "Ecole primaire"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:235
 msgid "Distance to high school"
-msgstr "école secondaire"
+msgstr "Ecole secondaire"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:241
 msgid "Distance to college"
-msgstr "université"
+msgstr "Université"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:247
 msgid "Distance to bus stop"
-msgstr "arrêt de bus"
+msgstr "Arrêt de bus"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:253
 msgid "Distance to train station"
-msgstr "gare"
+msgstr "Gare"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:259
 msgid "Distance to post"
-msgstr "poste"
+msgstr "Poste"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:265
 msgid "Distance to bank"
-msgstr "banque"
+msgstr "Banque"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:271
 msgid "Distance to railway station"
-msgstr "gare ferroviaire"
+msgstr "Gare ferroviaire"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:277
 msgid "Distance to boat dock"
-msgstr "port"
+msgstr "Port"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:283
 msgid "Distance to public transport"
-msgstr "transports publics"
+msgstr "Transports publics"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:289
 msgid "Distance to shop"
-msgstr "commerces"
+msgstr "Commerces"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:295
 msgid "Distance to freeway"
-msgstr "autoroute"
+msgstr "Autoroute"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:301
 msgid "Distance to airport"
-msgstr "aéroport"
+msgstr "Aéroport"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:307
 msgid "Rooms"
@@ -1167,5 +1167,5 @@ msgstr ""
 
 #: 
 msgid "Patrician house"
-msgstr ""
+msgstr "Maison patricienne"
 

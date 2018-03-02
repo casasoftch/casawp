@@ -264,9 +264,9 @@
 										<br>
 										<?php $name = 'casawp_casadistance_active'; ?>
 										<?php $text = 'Umgebungs-Distanzen Karte'; ?>
-										<label>
+										<!-- <label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
+										</label> -->
 									</fieldset>
 								</td>
 							</tr>

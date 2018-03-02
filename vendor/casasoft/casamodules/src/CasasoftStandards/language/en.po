@@ -218,7 +218,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:92
 msgid "Garden Apartment"
-msgstr ""
+msgstr "Garden apartment"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:93
 msgid "Retail space"
@@ -653,7 +653,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:336
 msgid "Primary residency"
-msgstr ""
+msgstr "Primary residence"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:340
 msgid "Foreign quota"
