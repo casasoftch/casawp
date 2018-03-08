@@ -274,8 +274,8 @@ class Plugin {
             $setting = new \casawp\Form\DefaultFormSetting();
         }
         $formResult = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting, $args['direct_recipient_email']);
-        if (is_string($formResult['form'])) {
-            return $formResult['form'];
+        if (is_string($formResult)) {
+            return $formResult;
         }
 
         $result = $this->render($setting->getView(), array(
