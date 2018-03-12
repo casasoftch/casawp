@@ -1,5 +1,6 @@
 <?php if ($this->offer->getFieldValue('address_streetaddress') && $this->offer->getFieldValue('property_geo_latitude')) : ?>
 	<h3><?php echo __('Distances', 'casawp') ?></h3>
+	<!-- Don't forget to specify a google API Key at data property data-google-maps-api-key  AIzaSyA5npxnSjaEzaz-Pkrz7IgheNwysOZYDqg -->
 	<div
 		class="casadistance"
 		id="casadistance"
@@ -14,6 +15,7 @@
 		data-marker-poi-color="#666666"
 		data-marker-poi-text-color="#ffffff"
 		data-locale="de"
+		data-google-maps-api-key=""
 		data-template-listitem-content='
 			<span class="casadistance__result__listitem__number" style="">
 				{{number}}
