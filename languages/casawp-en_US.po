@@ -1754,7 +1754,7 @@ msgstr ""
 
 #: classes/Conversion.php:556
 msgid "Minergie general"
-msgstr ""
+msgstr "Minergie"
 
 #: classes/Conversion.php:557
 msgid "Minergie certified"
@@ -2804,5 +2804,9 @@ msgstr ""
 
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
 msgid "rent"
+msgstr ""
+
+#: 
+msgid "School"
 msgstr ""
 
