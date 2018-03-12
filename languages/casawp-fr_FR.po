@@ -1754,7 +1754,7 @@ msgstr "Piscine"
 
 #: classes/Conversion.php:556
 msgid "Minergie general"
-msgstr "Minergie général"
+msgstr "Minergie"
 
 #: classes/Conversion.php:557
 msgid "Minergie certified"
@@ -2805,4 +2805,8 @@ msgstr "Désolé, rien ne correspond à vos critères"
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
 msgid "rent"
 msgstr "louer"
+
+#: 
+msgid "School"
+msgstr "École"
 
