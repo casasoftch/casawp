@@ -1,0 +1,317 @@
+<?php if ($this->offer->getFieldValue('address_streetaddress') && $this->offer->getFieldValue('property_geo_latitude')) : ?>
+	<?php if (get_field('marker', 'option')): ?>
+		<?php $marker = get_field('marker', 'option')['sizes']['medium'] ?>
+	<?php else: ?>
+		<?php $marker = 'faMapMarkerAlt'; ?>
+	<?php endif ?>
+	<div class="casadistance"
+		id="casadistance"
+		data-lat="<?= $this->offer->getFieldValue('property_geo_latitude') ?>"
+		data-lng="<?= $this->offer->getFieldValue('property_geo_longitude') ?>"
+		data-zoom="16"
+		data-marker-size="60px"
+		data-marker-icon="faMapMarkerAlt"
+		data-marker-color="#1985A1"
+		data-marker-title="some title"
+		data-marker-poi-size="24px"
+		data-marker-poi-color="#666666"
+		data-marker-poi-text-color="#ffffff"
+		data-locale="de"
+		data-template-listitem-content='
+            <span class="list__number" style="">
+                {{number}}
+            </span>
+            <h4 class="casadistance__listitem__title">{{title}}<span class="casadistance__listitem__subtitle">{{subtitle}}</span></h4>
+        '
+        data-template-distance-result-item='
+            <div>{{{icon}}} <span class="casadistance__result__value">{{distance}}, {{duration}}</span></div>
+        '		
+        data-template-distance-result-item-close-btn-content='<i class="fal fa-arrow-left"></i>'
+        data-distance-timetable-title='Fahrplan'
+        data-template-distance-timetable-item='
+        	<li class="casadistance__timetable__listitem">
+        		<div class="casadistance__timetable__listitem__departure">{{departure}}</div>
+        		<div class="casadistance__timetable__listitem__name">{{name}}</div>
+        		<div class="casadistance__timetable__listitem__to">{{to}}</div>
+        	</li>
+        		
+        '
+		data-styles='[
+			{
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#f5f5f5"
+			  }
+			]
+			},
+			{
+			"elementType": "labels.icon",
+			"stylers": [
+			  {
+			    "visibility": "off"
+			  }
+			]
+			},
+			{
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#616161"
+			  }
+			]
+			},
+			{
+			"elementType": "labels.text.stroke",
+			"stylers": [
+			  {
+			    "color": "#f5f5f5"
+			  }
+			]
+			},
+			{
+			"featureType": "administrative.land_parcel",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#bdbdbd"
+			  }
+			]
+			},
+			{
+			"featureType": "poi",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#eeeeee"
+			  }
+			]
+			},
+			{
+			"featureType": "poi",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#757575"
+			  }
+			]
+			},
+			{
+			"featureType": "poi.park",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#e5e5e5"
+			  }
+			]
+			},
+			{
+			"featureType": "poi.park",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#9e9e9e"
+			  }
+			]
+			},
+			{
+			"featureType": "road",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#ffffff"
+			  }
+			]
+			},
+			{
+			"featureType": "road.arterial",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#757575"
+			  }
+			]
+			},
+			{
+			"featureType": "road.highway",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#dadada"
+			  }
+			]
+			},
+			{
+			"featureType": "road.highway",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#616161"
+			  }
+			]
+			},
+			{
+			"featureType": "road.local",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#9e9e9e"
+			  }
+			]
+			},
+			{
+			"featureType": "transit.line",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#e5e5e5"
+			  }
+			]
+			},
+			{
+			"featureType": "transit.station",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#eeeeee"
+			  }
+			]
+			},
+			{
+			"featureType": "water",
+			"elementType": "geometry",
+			"stylers": [
+			  {
+			    "color": "#c9c9c9"
+			  }
+			]
+			},
+			{
+			"featureType": "water",
+			"elementType": "labels.text.fill",
+			"stylers": [
+			  {
+			    "color": "#9e9e9e"
+			  }
+			]
+			}
+		]'
+	>
+		<div class="container">
+			<h3><?php echo __('Distances', 'casawp') ?></h3>
+		</div>
+		<div class="container-fluid custom-fluid">
+			<div class="distance__navwrap">
+				<div class="row no-gutters">
+					<div class="col-md-6">
+						<div class="address_wrap">
+							<svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							    <g id="Distanzen_final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-135.000000, -441.000000)">
+							        <g id="Group-9" transform="translate(-1.000000, 441.000000)">
+							            <g id="Group-12" transform="translate(136.000000, 0.000000)">
+							                <rect id="Rectangle-20" x="0" y="0" width="84" height="84"></rect>
+							                <g id="map-marker-alt" transform="translate(31.000000, 27.000000)" fill-rule="nonzero">
+							                    <path d="M11,5.62500275 C7.96726563,5.62500275 5.5,8.14834382 5.5,11.2500055 C5.5,14.3516672 7.96726563,16.8750082 11,16.8750082 C14.0327344,16.8750082 16.5,14.3516672 16.5,11.2500055 C16.5,8.14834382 14.0327344,5.62500275 11,5.62500275 Z M11,15.0000073 C8.97817708,15.0000073 7.33333333,13.3177799 7.33333333,11.2500055 C7.33333333,9.18223105 8.97817708,7.50000366 11,7.50000366 C13.0218229,7.50000366 14.6666667,9.18223105 14.6666667,11.2500055 C14.6666667,13.3177799 13.0218229,15.0000073 11,15.0000073 Z M11,0 C4.92484896,0 0,5.0367798 0,11.2500055 C0,15.7859257 1.54515625,17.052606 9.86952083,29.3947409 C10.4157396,30.2016944 11.5842031,30.2018116 12.1305365,29.3947409 C20.4548437,17.052606 22,15.7859257 22,11.2500055 C22,5.0367798 17.075151,0 11,0 Z M11,27.7694081 C3.01955729,15.9661015 1.83333333,15.0289527 1.83333333,11.2500055 C1.83333333,8.74582458 2.78683854,6.39158515 4.51819271,4.62088116 C6.24954688,2.85017717 8.55146875,1.87500092 11,1.87500092 C13.4485313,1.87500092 15.7504531,2.85017717 17.4818073,4.62088116 C19.2131615,6.39158515 20.1666667,8.74582458 20.1666667,11.2500055 C20.1666667,15.0287183 18.9811875,15.9650469 11,27.7694081 Z" fill="#20c997" id="Shape"></path>
+							                </g>
+							            </g>
+							        </g>
+							    </g>
+							</svg>
+						<span class="address_property">
+							<?php if ($offer->getFieldValue('address_streetaddress')): ?>
+								<?php echo $offer->getFieldValue('address_streetaddress') ?>, 
+							<?php endif ?>
+							<?php echo $offer->getFieldValue('address_postalcode') . ' ' . $offer->getFieldValue('address_locality') ?>
+						</span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="casadistancePointOfInterest" class="casadistance__menu">
+							<ul class="casadistance__menu__list">
+								<li class="casadistance__menu__item">
+									<div class="casadistance__menu__button" id="casadistanceShowSchools">
+										<span class="button__inner">
+											<svg width="27px" height="16px" viewBox="0 0 27 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+											    <g id="Distanzen_final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-916.000000, -1241.000000)">
+											        <g id="Group-4" transform="translate(911.000000, 1241.000000)" fill="#20c997" fill-rule="nonzero">
+											            <path d="M30.8339475,3.47084119 L19.7711161,0.176884922 C18.9405324,-0.0589758044 18.0594724,-0.0589613639 17.2288966,0.176926588 L6.16665583,3.47075786 C4.60668819,3.92213257 4.61554756,6.08046455 6.16665583,6.52925594 L7.33925774,6.87842239 C7.19670614,7.32250544 7.1421155,7.79296348 7.12178111,8.31608815 C6.76196382,8.51604636 6.51875281,8.89654612 6.51875281,9.33333751 C6.51875281,9.76608724 6.75749195,10.1435453 7.11182486,10.3449202 L6.68855755,15.6404169 C6.67307473,15.8340834 6.82811384,16 7.02500296,16 L8.37500336,16 C8.57172373,16 8.72693159,15.8342084 8.71144877,15.6404169 L8.28818146,10.3449202 C8.64251437,10.1435453 8.88125351,9.76608724 8.88125351,9.33333751 C8.88125351,8.90667111 8.64926438,8.53371301 8.30315803,8.33025481 C8.32121428,7.90071341 8.36580648,7.54129697 8.47380651,7.21621384 L10.9534619,7.95454671 C10.7000837,9.623004 10.400004,11.6085861 10.400004,11.6533361 C10.400004,14.1062095 15.99584,14.6666675 18.5000063,14.6666675 C21.0046368,14.6666675 26.6000087,14.1060845 26.6000087,11.6533361 C26.6000087,11.6087111 26.3000133,9.623129 26.0466351,7.95458838 L30.8339475,6.52917261 C32.3900761,6.07867289 32.3872917,3.92054924 30.8339475,3.47084119 Z M25,11.3428252 C24.6782832,12.3319527 21.7517376,13 18.5000203,13 C15.248303,13 12.3217574,12.3319527 12,11.3428252 L12.4881234,8 L17.2753016,9.48252221 C18.0755405,9.71887853 18.9244112,9.718893 19.7246577,9.48256397 L24.5118359,8.00008351 C24.7191329,9.41909947 24.9485416,10.9902632 25,11.3428252 Z M29.8015896,4.73848711 L18.8832396,7.88179874 C18.3059413,8.03941394 17.6939103,8.03940016 17.1166198,7.88175897 L6.20489486,4.74031653 L6.19839473,4.73848711 C5.93401428,4.66511122 5.93372261,4.33493961 6.19839473,4.26148419 L17.1166198,1.11821232 C17.6939159,0.960609411 18.3059357,0.960595634 18.8832396,1.11817255 L29.7951312,4.25965476 L29.8015896,4.26148419 C30.0659701,4.33486007 30.0663034,4.66503168 29.8015896,4.73848711 Z" id="Shape"></path>
+											        </g>
+											    </g>
+											</svg>
+											<span>
+												Schule
+											</span>
+										</span>
+									</div>
+								</li>
+								<li class="casadistance__menu__item">
+									<div class="casadistance__menu__button" id="casadistanceShowPublicTransports">
+										<span class="button__inner">
+											<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+											    <g id="Distanzen_final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1003.000000, -1238.000000)">
+											        <g id="Group" transform="translate(1003.000000, 1238.000000)" fill="#20c997" fill-rule="nonzero">
+											            <g id="bus">
+											                <path d="M6.25,13.75 C6.25,14.4403516 5.69035156,15 5,15 C4.30964844,15 3.75,14.4403516 3.75,13.75 C3.75,13.0596484 4.30964844,12.5 5,12.5 C5.69035156,12.5 6.25,13.0596484 6.25,13.75 Z M15,12.5 C14.3096484,12.5 13.75,13.0596484 13.75,13.75 C13.75,14.4403516 14.3096484,15 15,15 C15.6903516,15 16.25,14.4403516 16.25,13.75 C16.25,13.0596484 15.6903516,12.5 15,12.5 Z M20,5.9375 L20,9.0625 C20,9.58027344 19.5802734,10 19.0625,10 L18.75,10 L18.75,15.625 C18.75,16.4397656 18.2274609,17.1344922 17.5,17.3925 L17.5,18.4375 C17.5,19.3004297 16.8004297,20 15.9375,20 L14.0625,20 C13.1995703,20 12.5,19.3004297 12.5,18.4375 L12.5,17.5 L7.5,17.5 L7.5,18.4375 C7.5,19.3004297 6.80042969,20 5.9375,20 L4.0625,20 C3.19957031,20 2.5,19.3004297 2.5,18.4375 L2.5,17.3925 C1.77253906,17.1344922 1.25,16.4397656 1.25,15.625 L1.25,10 L0.9375,10 C0.419726562,10 0,9.58027344 0,9.0625 L0,5.9375 C0,5.41972656 0.419726562,5 0.9375,5 L1.25,5 L1.25,3.92855469 C1.25,0.838007813 6.8490625,0 10,0 C13.163125,0 18.75,0.838125 18.75,3.92855469 L18.75,5 L19.0625,5 C19.5802734,5 20,5.41972656 20,5.9375 Z M2.5,10 L17.5,10 L17.5,5 L2.5,5 L2.5,10 Z M2.51699219,3.75 L17.4830078,3.75 C17.2256641,2.35394531 13.9740625,1.25 10,1.25 C6.0259375,1.25 2.77433594,2.35394531 2.51699219,3.75 Z M6.25,17.5 L3.75,17.5 L3.75,18.4375 C3.75,18.6098047 3.89019531,18.75 4.0625,18.75 L5.9375,18.75 C6.10980469,18.75 6.25,18.6098047 6.25,18.4375 L6.25,17.5 Z M16.25,18.4375 L16.25,17.5 L13.75,17.5 L13.75,18.4375 C13.75,18.6098047 13.8901953,18.75 14.0625,18.75 L15.9375,18.75 C16.1098047,18.75 16.25,18.6098047 16.25,18.4375 Z M17.5,15.625 L17.5,11.25 L2.5,11.25 L2.5,15.625 C2.5,15.9701953 2.77980469,16.25 3.125,16.25 L16.875,16.25 C17.2201953,16.25 17.5,15.9701953 17.5,15.625 Z" id="Shape"></path>
+											            </g>
+											        </g>
+											    </g>
+											</svg>
+											<span>
+												ÖV
+											</span>
+										</span>
+									</div>
+								</li>
+								<li class="casadistance__menu__item">
+									<div class="casadistance__menu__button" id="casadistanceShowAirports">
+										<span class="button__inner">
+											<svg width="24px" height="21px" viewBox="0 0 24 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+											    <g id="Distanzen_final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1252.000000, -1238.000000)">
+											        <g id="Group-10" transform="translate(1237.000000, 1238.000000)" fill="#20c997" fill-rule="nonzero">
+											            <g id="plane" transform="translate(15.000000, 0.000000)">
+											                <path d="M19.2708319,7.875 L15.2242889,7.875 L11.3411627,0.571552734 L11.3182877,0.531931641 C11.1131627,0.203806641 10.7426209,0 10.3512874,0 L8.09399507,0 C7.36149484,0 6.82449468,0.670359375 6.98720306,1.36717383 L8.14487009,7.875 L4.9564941,7.875 L3.7834104,5.79161133 L3.77199373,5.77212891 C3.56799367,5.43740039 3.19491022,5.22949219 2.7984101,5.22949219 L1.13578458,5.22949219 C0.418576026,5.22949219 -0.11792414,5.87544727 0.0224092365,6.56635547 L0.821617817,10.500041 L0.0224509032,14.4336445 C-0.118215807,15.1259473 0.420117693,15.7705488 1.13590958,15.7704668 L2.7984101,15.7703848 C3.19495189,15.7703848 3.56799367,15.5624766 3.77199373,15.2277891 L4.9564941,13.125 L8.14487009,13.125 L6.98720306,19.6328262 C6.82445301,20.3298867 7.36174484,21 8.09399507,21 L10.3512874,21 C10.7426626,21 11.1132043,20.7961934 11.3182877,20.4680684 L11.3304127,20.448668 L15.2242889,13.125 L19.2708319,13.125 C21.2732908,13.125 24,12.4466836 24,10.5 C24,8.54974805 21.2651658,7.875 19.2708319,7.875 Z M19.2708319,11.8125 L14.417247,11.8125 L10.2302041,19.6875 L8.33112014,19.6875 L9.73199558,11.8125 L4.17107719,11.8125 L2.68149339,14.4578848 L1.37699299,14.4579668 L2.18115991,10.500041 L1.37699299,6.54199219 L2.68149339,6.54199219 L4.17107719,9.1875 L9.73199558,9.1875 L8.33112014,1.3125 L10.2302041,1.3125 L14.417247,9.1875 L19.2708319,9.1875 C21.3021242,9.1875 22.6666663,9.84375 22.6666663,10.5 C22.6666663,11.15625 21.3021242,11.8125 19.2708319,11.8125 Z" id="Shape"></path>
+											            </g>
+											        </g>
+											    </g>
+											</svg>
+											<span>Flughafen</span>
+										</span>
+									</div>
+								</li>
+								<li class="casadistance__menu__item">
+									<div class="casadistance__menu__button" id="casadistanceShowShopping">
+										<span class="button__inner">
+											<svg width="24px" height="21px" viewBox="0 0 24 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+											    <g id="Distanzen_final" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1084.000000, -1238.000000)">
+											        <g id="Group-8" transform="translate(1071.000000, 1238.000000)" fill="#20c997" fill-rule="nonzero">
+											            <g id="shopping-cart" transform="translate(13.000000, 0.000000)">
+											                <path d="M22.9995876,2.625 L5.3866579,2.625 L5.0396168,0.802962891 C4.95090861,0.337394531 4.53795095,0 4.0567434,0 L0.499999186,0 C0.223874636,0 0,0.220376953 0,0.4921875 L0,0.8203125 C0,1.09212305 0.223874636,1.3125 0.499999186,1.3125 L3.77999385,1.3125 L6.69361411,16.6091133 C6.26269814,17.0753789 5.99999024,17.6949609 5.99999024,18.375 C5.99999024,19.8247383 7.19390496,21 8.66665256,21 C10.1394002,21 11.3333149,19.8247383 11.3333149,18.375 C11.3338342,17.9141027 11.2104502,17.461277 10.9756905,17.0625 L17.0243056,17.0625 C16.7895459,17.461277 16.6661619,17.9141027 16.6666812,18.375 C16.6666812,19.8247383 17.8605959,21 19.3333435,21 C20.8060911,21 22.0000059,19.8247383 22.0000059,18.375 C22.0000059,17.6370059 21.6902147,16.970625 21.1921738,16.4936953 C21.0842157,16.0736543 20.6982997,15.75 20.2219671,15.75 L7.88665383,15.75 L7.38665465,13.125 L21.1941738,13.125 C21.6678397,13.125 22.0765474,12.7978594 22.1731723,12.3413965 L23.9786276,3.81014648 C24.1079608,3.19884961 23.6339199,2.625 22.9995876,2.625 Z M9.99998373,18.375 C9.99998373,19.0987207 9.4018597,19.6875 8.66665256,19.6875 C7.93144543,19.6875 7.3333214,19.0987207 7.3333214,18.375 C7.3333214,17.6512793 7.93144543,17.0625 8.66665256,17.0625 C9.4018597,17.0625 9.99998373,17.6512793 9.99998373,18.375 Z M19.3333019,19.6875 C18.5980947,19.6875 17.9999707,19.0987207 17.9999707,18.375 C17.9999707,17.6512793 18.5980947,17.0625 19.3333019,17.0625 C20.068509,17.0625 20.666633,17.6512793 20.666633,18.375 C20.666633,19.0987207 20.068509,19.6875 19.3333019,19.6875 Z M20.9231326,11.8125 L7.13665505,11.8125 L5.63665749,3.9375 L22.5897966,3.9375 L20.9231326,11.8125 Z" id="Shape"></path>
+											            </g>
+											        </g>
+											    </g>
+											</svg>
+											<span>
+												Einkaufen
+											</span>
+										</span>
+									</div>
+								</li>
+								<div class="clearfix"></div>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid custom-fluid">
+			<div class="row no-gutters">
+				<div id="casadistanceMap" class="casadistance__map col-xs-12"></div>
+				<div class="casadistance__result col-xs-12">
+					<div class="casadistance__result__list" id="casadistanceResultList"></div>
+					<div class="casadistance__result__content" id="casadistanceContent"></div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
