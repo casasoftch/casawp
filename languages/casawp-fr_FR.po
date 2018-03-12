@@ -3,9 +3,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 2.0.6\n"
 "Project-Id-Version: CASAWP\n"
-"Language: fr-ch\n"
+"Language: fr_CH\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -2563,7 +2567,7 @@ msgstr "Type de vente"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:90
 msgid "Choose utility"
-msgstr "Choisir équipement"
+msgstr "Choisir type d’utilisation"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:99
 msgid "Choose region"
@@ -2805,4 +2809,3 @@ msgstr "Désolé, rien ne correspond à vos critères"
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
 msgid "rent"
 msgstr "louer"
-
