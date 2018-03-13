@@ -7,7 +7,7 @@ Tested up to: 4.3.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.3
+Stable tag: 2.3.0
 
 Import your properties directly from your real-estate management software!
 
@@ -38,8 +38,10 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 
-= 2.3 =
+= 2.3.0 =
 * new: Casadistance
+* update: Old map can use specified api key defined in options page
+* fix: m3 numeric values now also have seperators
 
 = 2.2.9 =
 * update: IT/FR translations
