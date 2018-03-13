@@ -1,12 +1,18 @@
 <?php if ($this->offer->getFieldValue('address_streetaddress') && $this->offer->getFieldValue('property_geo_latitude')) : ?>
 	<h3><?php echo __('Distances', 'casawp') ?></h3>
-	<!-- Don't forget to specify a google API Key at data property data-google-maps-api-key  AIzaSyA5npxnSjaEzaz-Pkrz7IgheNwysOZYDqg -->
+	<?php 
+		$google_api_key = get_option( 'casawp_google_apikey', 'AIzaSyA5npxnSjaEzaz-Pkrz7IgheNwysOZYDqg');
+		if (!$google_api_key) {
+			$google_api_key = 'AIzaSyA5npxnSjaEzaz-Pkrz7IgheNwysOZYDqg';
+		}
+		$zoom = get_option( 'casawp_single_use_zoomlevel', 16);
+	?>
 	<div
 		class="casadistance"
 		id="casadistance"
 		data-lat="<?= $this->offer->getFieldValue('property_geo_latitude') ?>"
 		data-lng="<?= $this->offer->getFieldValue('property_geo_longitude') ?>"
-		data-zoom="16"
+		data-zoom="<?= $zoom ?>"
 		data-marker-size="60px"
 		data-marker-icon="faMapMarkerAlt"
 		data-marker-color="#1985A1"
@@ -15,7 +21,7 @@
 		data-marker-poi-color="#666666"
 		data-marker-poi-text-color="#ffffff"
 		data-locale="de"
-		data-google-maps-api-key=""
+		data-google-maps-api-key="<?= $google_api_key ?>"
 		data-template-listitem-content='
 			<span class="casadistance__result__listitem__number" style="">
 				{{number}}
