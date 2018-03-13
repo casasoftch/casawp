@@ -40,6 +40,8 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 = 2.3 =
 * new: Casadistance
+* update: Old map can use specified api key defined in options page
+* fix: m3 numeric values now also have seperators
 
 = 2.2.9 =
 * update: IT/FR translations
