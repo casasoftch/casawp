@@ -52,9 +52,6 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
-					'casawp_load_googlemaps',
-					'casawp_casadistance_active',
-					'casawp_casadistance_basecss',
 				);
 				break;
 			case 'singleview':
@@ -76,6 +73,9 @@
 					'casawp_single_show_availability',
 					'casawp_sellerfallback_show_organization',
 					'casawp_sellerfallback_show_person_view',
+					'casawp_load_googlemaps',
+					'casawp_casadistance_active',
+					'casawp_casadistance_basecss',
 				);
 				break;
 			case 'archiveview':
@@ -256,24 +256,6 @@
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
-										<br>
-										<?php $name = 'casawp_load_googlemaps'; ?>
-										<?php $text = 'Google Maps'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-										<br>
-										<?php $name = 'casawp_casadistance_active'; ?>
-										<?php $text = 'Umgebungs-Distanzen Karte'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-										<br>
-										<?php $name = 'casawp_casadistance_basecss'; ?>
-										<?php $text = 'Umgebungs-Distanzen Karte CSS laden'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
 									</fieldset>
 								</td>
 							</tr>
@@ -413,6 +395,35 @@
 						<?php echo $table_end; ?>
 						<h3>Karte</h3>
 						<?php echo $table_start; ?>
+							<?php $name = 'casawp_load_googlemaps'; ?>
+							<?php $text = 'Basis Google Maps'; ?>
+							<label>
+								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+							</label>
+							<br />
+							<?php $name = 'casawp_casadistance_active'; ?>
+							<?php $text = 'Umgebungs-Distanzen Karte'; ?>
+							<label>
+								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+							</label>
+							<br>
+							<?php $name = 'casawp_casadistance_basecss'; ?>
+							<?php $text = 'Umgebungs-Distanzen Karte CSS laden'; ?>
+							<label>
+								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+							</label>
+							<br>
+							<?php $name = 'casawp_google_apikey'; ?>
+							<?php $text = 'Google API Schlüssel'; ?>
+							<tr>
+								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+								<td>
+									<label>
+										<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>">
+									</label>
+								</td>
+							</tr>
+							<br>
 							<?php $name = 'casawp_single_use_zoomlevel'; ?>
 							<?php $text = 'Zoomstufe'; ?>
 							<tr>
