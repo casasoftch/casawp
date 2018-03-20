@@ -1535,7 +1535,7 @@ msgstr "Hotel\t"
 
 #: classes/Conversion.php:457
 msgid "Public transportation"
-msgstr "Transports en commun"
+msgstr "Transports"
 
 #: classes/Conversion.php:458
 msgid "Shopping"
