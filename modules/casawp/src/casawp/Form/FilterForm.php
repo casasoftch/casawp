@@ -458,20 +458,30 @@ class FilterForm extends Form
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
                 foreach ($parent['children'] as $child) {
-                    $label = $parent['name'] . ' ' . $child['name'];
                     $value_options = array();
-                    foreach ($child['children'] as $grandchild) {
-                        $value_options[$grandchild['slug']] = $grandchild['name'];
+                    if ($child['children']) {
+                        $label = $parent['name'] . ' ' . $child['name'];
+                        foreach ($child['children'] as $grandchild) {
+                            $value_options[$grandchild['slug']] = $grandchild['name'];
+                        } 
+                        $options[] = array(
+                            'label' => $label,
+                            'options' => $value_options
+                        );
+                    } else {
+                        $slug = 'country_' . $parent['slug'];
+                        if (!isset($options[$slug])) {
+                            $options[$slug] = [
+                                'label' => $parent['name'],
+                                'options' => array(),
+                            ];
+                        }
+                        $options[$slug]['options'][$child['slug']] =$child['name'];
                     }
-                    $options[] = array(
-                        'label' => $label,
-                        'options' => $value_options
-                    );
+                    
                 }
             }
         }
-
-
 
         return $options;
     }
