@@ -1195,6 +1195,7 @@ class Plugin {
                 'casawp_filter_utilities_elementtype' => get_option('casawp_filter_utilities_elementtype', false),
                 'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
                 'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
+                'casawp_filter_countries_elementtype' => get_option('casawp_filter_countries_elementtype', false),
                 'casawp_filter_rooms_from_elementtype' => get_option('casawp_filter_rooms_from_elementtype', false),
                 'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
                 'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
@@ -1205,6 +1206,7 @@ class Plugin {
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
                 'chosen_features' => $this->queryService->getQueryValue('features'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
+                'chosen_countries' => $this->queryService->getQueryValue('countries'),
                 'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
                 'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
             ),

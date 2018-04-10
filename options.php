@@ -808,7 +808,20 @@
 								</select>
 							</td>
 						</tr>
-            <tr  valign="top">
+						<tr  valign="top">
+							<?php $name = 'casawp_filter_countries_elementtype'; ?>
+							<?php $text = 'Länder-Filter'; ?>
+							<?php $options = ['hidden' => 'Ausblenden', 'multiselect' => 'Mehrfach-Filter', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
 							<?php $name = 'casawp_filter_rooms_from_elementtype'; ?>
 							<?php $text = 'Zimmer-Filter von'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
@@ -821,7 +834,7 @@
 								</select>
 							</td>
 						</tr>
-            <tr  valign="top">
+						<tr  valign="top">
 							<?php $name = 'casawp_filter_rooms_to_elementtype'; ?>
 							<?php $text = 'Zimmer-Filter zu'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>

@@ -109,6 +109,27 @@
 		<?php endif ?>
 	<?php endif ?>
 
+	<?php if ($form->getCountryOptions()): ?>
+		<?php echo $this->formLabel($form->get('countries')); ?>
+		<?php if (get_option('casawp_filter_countries_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('countries');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="checkbox">');
+				echo '<div class="checkbox">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_countries_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('countries');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('countries')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
   <?php if ($form->getRoomOptions()): ?>
     <?php
       $roomselect_count = 0;

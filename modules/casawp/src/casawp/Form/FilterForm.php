@@ -1,16 +1,19 @@
 <?php
 namespace casawp\Form;
+use casawp\Conversion;
 
 use Zend\Form\Form;
 
 class FilterForm extends Form
 {
+    private $converter = null;
     public $categories = array();
     public $salestypes = array();
     public $locations = array();
     public $availabilities = array();
 
     public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array(), $features = array()){
+        $this->converter = new Conversion;
         $this->options = $options;
         $this->categories = $categories;
         $this->utilities = $utilities;
@@ -117,6 +120,15 @@ class FilterForm extends Form
                 __('Choose locality','casawp'),
                 $this->getLocationOptions(),
                 $this->options['chosen_locations']
+            );
+        }
+        if ($this->locations) {
+            $this->addSelector(
+                'countries',
+                __('Countries', 'casawp'),
+                __('Choose country','casawp'),
+                $this->getCountryOptions(),
+                $this->options['chosen_countries']
             );
         }
         //if ($this->rooms_from) {
@@ -359,6 +371,32 @@ class FilterForm extends Form
         return $this->availabilities;
     }
 
+    public function getCountryOptions(){
+        $locations_workload = $this->locations;
+
+        //not enough locations available
+        if (count($locations_workload) <= 1) {
+            return array();
+        }
+
+        $options = array();
+        foreach ($locations_workload as $i => $location) {
+            if ($location->parent == 0 && strpos($location->slug, 'country_') === 0) {
+                $iso = strtoupper(str_replace('country_', '', $location->slug));
+                $name = $this->converter->countrycode_to_countryname($iso);
+                $options[$location->slug] = $name;
+                unset($locations_workload[$i]);
+            }
+        }
+
+        //not enough countries
+        if (count($options) <= 1) {
+            return array();
+        }
+
+        return $options;
+    }
+
     public function getLocationOptions(){
         $locations_workload = $this->locations;
 
@@ -582,6 +620,8 @@ class FilterForm extends Form
                     $name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'countries' && in_array($this->options['casawp_filter_countries_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'rooms_from'
                     ||
