@@ -340,8 +340,10 @@ class Import {
             $this->WPML = true;
           }
       } else {
-        if (get_bloginfo('language')) {
-          $main_lang = substr(get_bloginfo('language'), 0, 2);
+        if (get_locale()) {
+          $main_lang = substr(get_locale(), 0, 2);
+        //if (get_bloginfo('language')) {
+        //  $main_lang = substr(get_bloginfo('language'), 0, 2);
         }
       }
       $this->main_lang = $main_lang;
@@ -1585,6 +1587,7 @@ class Import {
 
   public function project2Array($project_xml){
     $data['ref'] = (isset($project_xml['id']) ? $project_xml['id']->__toString() : '');
+    $data['referenceId'] = (isset($project_xml['referenceId']) ? $project_xml['referenceId']->__toString() : '');
 
     $di = 0;
     if ($project_xml->details) {
@@ -1594,6 +1597,7 @@ class Import {
         $data['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
 
         $dd = 0;
+        $data['details'][$di]['descriptions'] = [];
         if ($xml_detail->descriptions) {
           foreach ($xml_detail->descriptions->description as $xml_description) {
             $dd++;
@@ -1610,6 +1614,7 @@ class Import {
         $data['units'] = array();
         foreach ($project_xml->units->unit as $xml_unit) {
           $ui++;
+          $data['units'][$ui]['referenceId'] = (isset($xml_unit['referenceId']) ? $xml_unit['referenceId']->__toString() : '');
           $data['units'][$ui]['ref'] = (isset($xml_unit['id']) ? $xml_unit['id']->__toString() : '');
           $data['units'][$ui]['name'] = (isset($xml_unit->name) ? $xml_unit->name->__toString() : '');
           if ($xml_unit->details) {
@@ -1619,6 +1624,7 @@ class Import {
               $data['units'][$ui]['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
 
               $dd = 0;
+              $data['units'][$ui]['details'][$di]['descriptions'] = [];
               if ($xml_detail->descriptions) {
                 foreach ($xml_detail->descriptions->description as $xml_description) {
                   $dd++;
@@ -1964,7 +1970,7 @@ class Import {
             $this->transcript[$casawp_id]['action'] = 'new';
             $the_post['post_title'] = $projectData['detail']['name'];
             $the_post['post_content'] = 'unsaved project';
-            $the_post['post_status'] = 'pending';
+            $the_post['post_status'] = 'publish';
             $the_post['post_type'] = 'casawp_project';
             $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
             $_POST['icl_post_language'] = $lang;
@@ -2063,17 +2069,20 @@ class Import {
 
 
 
-    //skip if is the same as before
-    $update = false;
-    if (
-      !isset($old_meta_data['last_import_hash'])
-      || isset($_GET['force_all_properties'])
-      || $curImportHash != $old_meta_data['last_import_hash']
-    ) {
-        $update = true;
-    } else {
-      //skip if is the same as before
-      $this->addToLog('skipped project: '. $casawp_id);
+    //skip if is the same as before (accept if was trashed (reactivation))
+    $update = true;
+    if ($wp_post->post_status == 'publish') {
+      $update = false;
+      if (
+        !isset($old_meta_data['last_import_hash'])
+        || isset($_GET['force_all_properties'])
+        || $curImportHash != $old_meta_data['last_import_hash']
+      ) {
+          $update = true;
+      } else {
+        //skip if is the same as before
+        $this->addToLog('skipped project: '. $casawp_id);
+      }
     }
 
     if ($update) {
@@ -2086,8 +2095,7 @@ class Import {
       $new_meta_data['last_import_hash'] = $curImportHash;
 
       //set referenceId
-      $new_meta_data['last_import_hash'] = $projectData['referenceId'];
-
+      $new_meta_data['referenceId'] = $projectData['referenceId'];
 
       // $descriptionParts = [];
       // foreach ($projectData['detail']['descriptions'] as $desc) {
@@ -2189,7 +2197,7 @@ class Import {
         //is unit already in db
         $unit_casawp_id = 'subunit_' . $unitData['ref'] . $lang;
 
-        $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
+        $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
         $wp_unit_post = false;
         while ( $the_query->have_posts() ) :
           $the_query->the_post();
@@ -2203,7 +2211,7 @@ class Import {
           $this->transcript[$unit_casawp_id]['action'] = 'new';
           $the_post['post_title'] = $unitData['detail']['name'];
           $the_post['post_content'] = 'unsaved unit';
-          $the_post['post_status'] = 'pending';
+          $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_project';
           $the_post['post_name'] = sanitize_title_with_dashes($unit_casawp_id . '-' . $unitData['detail']['name'],'','save');
           $_POST['icl_post_language'] = $lang;
