@@ -2630,7 +2630,7 @@ msgstr "de %1$s %2$.1f million"
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:23
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:20
 msgid "I am interested concerning this property. Please contact me."
-msgstr "Je suis intéressé par cette propriété. Veuillez me contactez-moi s’il vous plaît."
+msgstr "Je suis intéressé par cette propriété. Veuillez me contactez s’il vous plaît."
 
 #: modules/casawp/src/casawp/Service/Offer.php:95
 #: modules/casawp/src/casawp/Service/Offer.php:899
@@ -2740,7 +2740,7 @@ msgstr "Fournisseur"
 #: theme-defaults/casawp/bootstrap2/seller.phtml:14
 #: theme-defaults/casawp/bootstrap3/seller.phtml:14
 msgid "I am interested concerning this property. Please contact me"
-msgstr "Je suis intéressé par cette propriété. Veuillez me contactez-moi s’il vous plaît."
+msgstr "Je suis intéressé par cette propriété. Veuillez me contactez s’il vous plaît."
 
 #: theme-defaults/casawp/bootstrap2/seller.phtml:16
 #: theme-defaults/casawp/bootstrap3/seller.phtml:16
