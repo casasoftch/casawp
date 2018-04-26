@@ -371,7 +371,7 @@ class Offer{
     public function getNumvals(){
         $numvals = array();
         foreach ($this->numvalService->getItems() as $numval) {
-      if (strpos($numval->getKey(), "distance_") !== 0) {
+      if (strpos($numval->getKey(), "distance_") !== 0 && strpos($numval->getKey(), "rental_deposit") !== 0) {
                 $value = $this->getFieldValue($numval->getKey(), false);
                 if ($value) {
                     $numval->setValue($value);
