@@ -361,17 +361,17 @@ class Offer{
     }
 
     public function getNumval($key){
-        foreach ($this->getNumvals() as $numval) {
+        foreach ($this->getNumvals(true) as $numval) {
             if ($numval->getKey() == $key) {
                 return $numval;
             }
         }
     }
 
-    public function getNumvals(){
+    public function getNumvals($all = false){
         $numvals = array();
         foreach ($this->numvalService->getItems() as $numval) {
-            if (strpos($numval->getKey(), "distance_") !== 0 && strpos($numval->getKey(), "rental_deposit") !== 0) {
+            if ($all || (strpos($numval->getKey(), "distance_") !== 0 && strpos($numval->getKey(), "rental_deposit") !== 0)) {
                 $value = $this->getFieldValue($numval->getKey(), false);
                 if ($value) {
                     $numval->setValue($value);
