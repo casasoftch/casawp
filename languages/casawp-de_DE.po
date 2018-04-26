@@ -2811,3 +2811,15 @@ msgstr "Miete"
 msgid "School"
 msgstr "Schule"
 
+#: 
+msgid "Choose country"
+msgstr "Land wählen"
+
+#: 
+msgid "Countries"
+msgstr ""
+
+#: 
+msgid "Extra Costs"
+msgstr "Nebenkosten"
+

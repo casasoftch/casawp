@@ -2810,3 +2810,15 @@ msgstr "Affitto"
 msgid "School"
 msgstr "Scuola"
 
+#: 
+msgid "Choose country"
+msgstr ""
+
+#: 
+msgid "Countries"
+msgstr ""
+
+#: 
+msgid "Extra Costs"
+msgstr "Acconto spese"
+

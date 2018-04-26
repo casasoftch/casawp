@@ -45,6 +45,9 @@ class FilterForm extends Form
         if (!$this->options['casawp_filter_features_elementtype']) {
           $this->options['casawp_filter_features_elementtype'] = 'hidden';
         }
+        if (!$this->options['casawp_filter_countries_elementtype']) {
+          $this->options['casawp_filter_countries_elementtype'] = 'hidden';
+        }
 
         parent::__construct('filter');
 

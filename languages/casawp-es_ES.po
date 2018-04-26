@@ -2806,3 +2806,19 @@ msgstr "Lo sentimos, no hay publicaciones que coincidan con sus criterios."
 msgid "rent"
 msgstr "alquiler"
 
+#: 
+msgid "School"
+msgstr ""
+
+#: 
+msgid "Choose country"
+msgstr ""
+
+#: 
+msgid "Countries"
+msgstr ""
+
+#: 
+msgid "Extra Costs"
+msgstr "Costes adicionales"
+
