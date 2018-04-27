@@ -163,11 +163,62 @@ class ComposerStaticInite9612eed58397472c0325058b9c473d8
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'D' => 
+        array (
+            'DbGenerator\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+        ),
+        'C' => 
+        array (
+            'CasasoftThumb\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftStandards\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftMessenger\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftHelpers\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftGeo\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftEmail\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasasoftAuth\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+            'CasaLogService\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/casasoft/casamodules/src',
+            ),
+        ),
+    );
+
+    public static $classMap = array (
+        'CasaLogService\\Service\\LogService' => __DIR__ . '/..' . '/casasoft/casamodules/src/CasaLogService/src/CasaLogService/Service/LogService.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInite9612eed58397472c0325058b9c473d8::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite9612eed58397472c0325058b9c473d8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite9612eed58397472c0325058b9c473d8::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInite9612eed58397472c0325058b9c473d8::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -1,5 +1,56 @@
 [
     {
+        "name": "casasoft/casamodules",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:CasasoftCH/casamodules.git",
+            "reference": "a34985c140ff552e4dc2b02531fae41475141836"
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2018-02-22T16:04:40+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "CasaLogService\\": "src/",
+                "CasasoftAuth\\": "src/",
+                "CasasoftEmail\\": "src/",
+                "CasasoftHelpers\\": "src/",
+                "CasasoftThumb\\": "src/",
+                "CasasoftStandards\\": "src/",
+                "DbGenerator\\": "src/",
+                "CasasoftMessenger\\": "src/",
+                "CasasoftGeo\\": "src/"
+            },
+            "classmap": [
+                "src/CasaLogService/src/CasaLogService/Service/LogService.php"
+            ]
+        },
+        "license": [
+            "GPL"
+        ],
+        "authors": [
+            {
+                "name": "Jens Stalder",
+                "email": "jens.stalder@casasoft.ch"
+            }
+        ],
+        "description": "Casasoft Modules for Zend Framework 2 (PSR7) implementations.",
+        "homepage": "http://casasoft.ch/",
+        "keywords": [
+            "zf2"
+        ]
+    },
+    {
         "name": "container-interop/container-interop",
         "version": "1.2.0",
         "version_normalized": "1.2.0.0",

@@ -709,7 +709,7 @@ msgstr "Garage collegato"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:54
 msgid "Garage box"
-msgstr "Box auto"
+msgstr "Garage"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:58
 msgid "Duplex garage"
