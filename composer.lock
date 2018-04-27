@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "78f8c66473628e4d28dbd717f800c5ff",
@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:CasasoftCH/casamodules.git",
-                "reference": "a34985c140ff552e4dc2b02531fae41475141836"
+                "reference": "399a747ccf46bdf927d3ccd64832faa8a9d221a3"
             },
             "require": {
                 "php": ">=5.3.2"
@@ -53,7 +53,7 @@
             "keywords": [
                 "zf2"
             ],
-            "time": "2018-02-22T16:04:40+00:00"
+            "time": "2018-04-27T07:37:53+00:00"
         },
         {
             "name": "container-interop/container-interop",
