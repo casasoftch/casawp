@@ -6,13 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'DbGenerator\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftThumb\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftStandards\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftMessenger\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftHelpers\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftGeo\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftEmail\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasasoftAuth\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasaLogService\\' => array($vendorDir . '/casasoft/casamodules/src'),
 );

@@ -6,5 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'CasaLogService\\Service\\LogService' => $vendorDir . '/casasoft/casamodules/src/CasaLogService/src/CasaLogService/Service/LogService.php',
 );
