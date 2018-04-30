@@ -10,7 +10,6 @@
   "license": "",
   "homepage": "",
   "dependencies": {
-    "casadistance": "git+ssh://git@bitbucket.org/casasoftag/casadistance.git",
-    "map-distance-poc": "git+ssh://git@bitbucket.org/casasoftag/casadistance.git"
+    "casadistance": "git+ssh://git@bitbucket.org/casasoftag/casadistance.git"
   }
 }
