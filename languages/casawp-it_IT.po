@@ -2523,11 +2523,11 @@ msgstr ""
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:34
 msgid "Ms."
-msgstr ""
+msgstr "Signora"
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:35
 msgid "Mr."
-msgstr ""
+msgstr "Signore"
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:47
 msgid "First name"
