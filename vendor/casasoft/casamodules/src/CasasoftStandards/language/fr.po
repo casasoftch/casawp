@@ -73,7 +73,7 @@ msgstr "Ferme de montagne"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:52
 msgid "Multiple dwelling"
-msgstr "Plurifamiliale"
+msgstr "Immeuble"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:53
 msgid "Open slot"
@@ -958,7 +958,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:590
 msgid "Cubature GVA"
-msgstr "Cubature ECA"
+msgstr "Cubage ECA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:596
 msgid "Cubature SIA"
