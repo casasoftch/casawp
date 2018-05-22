@@ -2646,7 +2646,7 @@ msgstr "Prix ​​de vente"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:19
 msgid "Gross price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: modules/casawp/src/casawp/Service/Offer.php:111
 #: modules/casawp/src/casawp/Service/Offer.php:913
@@ -2657,7 +2657,7 @@ msgstr "Prix brut"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:26
 msgid "Net price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: modules/casawp/src/casawp/Service/Offer.php:260
 #: modules/casawp/src/casawp/Service/Project.php:191
