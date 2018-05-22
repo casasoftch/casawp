@@ -1894,7 +1894,7 @@ msgstr "Tout"
 
 #: classes/Plugin.php:1704
 msgid "Net Price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: classes/Plugin.php:1713
 msgid "Net price property segment"
@@ -1906,7 +1906,7 @@ msgstr "Segment de prix net"
 
 #: classes/Plugin.php:1741
 msgid "Gross Price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: classes/Plugin.php:1750
 msgid "Gross price property segment"
