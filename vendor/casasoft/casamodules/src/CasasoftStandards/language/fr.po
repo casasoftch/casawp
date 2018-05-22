@@ -73,7 +73,7 @@ msgstr "Ferme de montagne"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:52
 msgid "Multiple dwelling"
-msgstr "Immeuble"
+msgstr "Plurifamiliale"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:53
 msgid "Open slot"
@@ -1099,7 +1099,7 @@ msgstr "semaine "
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:133
 msgid "month"
-msgstr "mois "
+msgstr "mois"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:136
 msgid "year"
