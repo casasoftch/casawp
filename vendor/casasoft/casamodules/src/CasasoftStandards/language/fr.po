@@ -958,7 +958,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:590
 msgid "Cubature GVA"
-msgstr "Cubature GVA"
+msgstr "Cubature ECA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:596
 msgid "Cubature SIA"
