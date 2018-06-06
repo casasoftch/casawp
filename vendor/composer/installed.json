@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "git@github.com:CasasoftCH/casamodules.git",
-            "reference": "6796647ab95ea1a71c931bcafbda9b4cc578edb6"
+            "reference": "73d185e6881b77906b8c14ff089bd99c6356b8b5"
         },
         "require": {
             "php": ">=5.3.2"
         },
-        "time": "2018-05-22T15:24:12+00:00",
+        "time": "2018-06-06T11:35:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

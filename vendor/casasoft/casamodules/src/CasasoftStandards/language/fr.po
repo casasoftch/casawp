@@ -526,7 +526,7 @@ msgstr "Accessible aux fauteuils roulants"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:201
 msgid "Animal friendly"
-msgstr "Respectueux des animaux"
+msgstr "Animaux domestiques admis"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:208
 msgid "Restrooms"
@@ -646,7 +646,7 @@ msgstr "Séchoir à linge"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:328
 msgid "Kachelofen"
-msgstr "Poêle de faïence"
+msgstr "Poêle suédois"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:332
 msgid "Secondary residency"
