@@ -136,7 +136,7 @@ class FormService{
   							//send to casamail
   							if (get_option('casawp_inquiry_method') == 'casamail') {
 
-  								$data = $postdata;
+  								$data = array_merge_recursive($postdata, $validatedData);
   								$data['email'] = $postdata['emailreal'];
   								$data['provider'] = $customerid;
   								$data['publisher'] = $publisherid;
@@ -171,7 +171,7 @@ class FormService{
   									}
   								}
 
-    							$data = $formSetting->preCasaMailFilter($data, $postdata);
+    							$data = $formSetting->preCasaMailFilter($data, $postdata, $validatedData);
 
 
   								$data_string = json_encode($data);
