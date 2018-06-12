@@ -67,6 +67,14 @@ class FormService{
 				$id = (isset($_POST['form_id']) ? $_POST['form_id'] : false);
 				if (!$id || $id === $formSetting->getId()) {
 					$postdata = $this->sanitizeContactFormPost($_POST);
+
+					if (isset($_FILES && $_FILES)) {
+						$postdata = array_merge_recursive(
+							$postdata,
+							$_FILES
+						);
+					}
+
 					$form->setData($postdata);
 					if ($form->isValid()) {
             if (!$this->formSendHasAlreadyOccuredDuringThisRequest) {
