@@ -68,7 +68,7 @@ class FormService{
 				if (!$id || $id === $formSetting->getId()) {
 					$postdata = $this->sanitizeContactFormPost($_POST);
 
-					if (isset($_FILES && $_FILES)) {
+					if (isset($_FILES) && $_FILES) {
 						$postdata = array_merge_recursive(
 							$postdata,
 							$_FILES
