@@ -167,7 +167,9 @@ class ContactForm extends Form
 
     private function isInCustomFilters($field){
         foreach ($this->customFilters as $filter) {
-            if ($filter['name'] == $field) {
+            if (is_array($filter) && $filter['name'] == $field) {
+                return true;
+            } else if (is_object($filter) && $filter->getName() == $field) {
                 return true;
             }
         }
