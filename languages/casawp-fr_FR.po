@@ -3,13 +3,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: POEditor.com\n"
 "Project-Id-Version: CASAWP\n"
-"Language: fr_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Language: fr-ch\n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -1898,7 +1894,7 @@ msgstr "Tout"
 
 #: classes/Plugin.php:1704
 msgid "Net Price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: classes/Plugin.php:1713
 msgid "Net price property segment"
@@ -1910,7 +1906,7 @@ msgstr "Segment de prix net"
 
 #: classes/Plugin.php:1741
 msgid "Gross Price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: classes/Plugin.php:1750
 msgid "Gross price property segment"
@@ -2650,7 +2646,7 @@ msgstr "Prix ​​de vente"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:19
 msgid "Gross price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: modules/casawp/src/casawp/Service/Offer.php:111
 #: modules/casawp/src/casawp/Service/Offer.php:913
@@ -2661,7 +2657,7 @@ msgstr "Prix brut"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:26
 msgid "Net price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: modules/casawp/src/casawp/Service/Offer.php:260
 #: modules/casawp/src/casawp/Service/Project.php:191
@@ -2810,14 +2806,23 @@ msgstr "Désolé, rien ne correspond à vos critères"
 msgid "rent"
 msgstr "louer"
 
+#: 
 msgid "School"
 msgstr "École"
 
+#: 
 msgid "Choose country"
 msgstr ""
 
+#: 
 msgid "Countries"
 msgstr ""
 
+#: 
 msgid "Extra Costs"
 msgstr "Charges"
+
+#: 
+msgid "Ground floor"
+msgstr "Rez-de-chaussée"
+

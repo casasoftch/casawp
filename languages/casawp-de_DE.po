@@ -2823,3 +2823,7 @@ msgstr ""
 msgid "Extra Costs"
 msgstr "Nebenkosten"
 
+#: 
+msgid "Ground floor"
+msgstr "EG"
+

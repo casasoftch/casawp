@@ -693,7 +693,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
-msgstr ""
+msgstr "Outdoor parking space"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:46
 msgid "Carport"

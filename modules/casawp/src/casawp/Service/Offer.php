@@ -349,52 +349,59 @@ class Offer{
     }
 
     public function getFeaturesArray(){
-        $features = $this->getFeatures();
-        $arr_features = array();
-        foreach ($features as $feature) {
-            $arr_features[] = array(
-                'key' => $feature->getKey(),
-                'label' => $feature->getLabel()
-            );
-        }
-        return $arr_features;
-    }
+		$features = $this->getFeatures();
+		$arr_features = array();
+		foreach ($features as $feature) {
+			$arr_features[] = array(
+				'key' => $feature->getKey(),
+				'label' => $feature->getLabel()
+			);
+		}
+		return $arr_features;
+	}
 
-    public function getNumval($key){
-        foreach ($this->getNumvals(true) as $numval) {
-            if ($numval->getKey() == $key) {
-                return $numval;
-            }
-        }
-    }
+	public function getNumval($key){
+		foreach ($this->getNumvals() as $numval) {
+			if ($numval->getKey() == $key) {
+				return $numval;
+			}
+		}
+	}
 
-    public function getNumvals($all = false){
-        $numvals = array();
-        foreach ($this->numvalService->getItems() as $numval) {
-            if ($all || (strpos($numval->getKey(), "distance_") !== 0 && strpos($numval->getKey(), "rental_deposit") !== 0)) {
-                $value = $this->getFieldValue($numval->getKey(), false);
-                if ($value) {
-                    $numval->setValue($value);
-                    $numvals[$numval->getKey()] = $numval;
-                }
-            }
-        }
-        return $numvals;
-    }
+	public function getNumvals(){
+		$numvals = array();
+		foreach ($this->numvalService->getItems() as $numval) {
+			if (strpos($numval->getKey(), "distance_") !== 0) {
+				$value = $this->getFieldValue($numval->getKey(), false);
+				if ($value) {
+					$numval->setValue($value);
+					$numvals[$numval->getKey()] = $numval;
+				}
+			}
+			if (strpos($numval->getKey(), "floor") === 0) {
+				$value = $this->getFieldValue($numval->getKey(), false);
+				if ($value == EG ) {
+					$numval->setValue(__('Ground floor', 'casawp')); // Should be from casasoft-standards
+					$numvals[$numval->getKey()] = $numval;
+				}
+			}
+		}
+		return $numvals;
+	}
 
-    public function getNumvalsArray(){
-        $numvals = $this->getNumvals();
-        $arr_numvals = array();
-        foreach ($numvals as $numval) {
-            $arr_numvals[] = array(
-                'key' => $numval->getKey(),
-                'label' => $numval->getLabel(),
-                'value' => $numval->getValue(),
-                'rendered' => $this->renderNumvalValue($numval)
-            );
-        }
-        return $arr_numvals;
-    }
+	public function getNumvalsArray(){
+		$numvals = $this->getNumvals();
+		$arr_numvals = array();
+		foreach ($numvals as $numval) {
+			$arr_numvals[] = array(
+				'key' => $numval->getKey(),
+				'label' => $numval->getLabel(),
+				'value' => $numval->getValue(),
+				'rendered' => $this->renderNumvalValue($numval)
+			);
+		}
+		return $arr_numvals;
+	}
 
     public function getDistances(){
         $numvals = array();
@@ -456,67 +463,67 @@ class Offer{
         }
 
         return $images_array;
-    }
+	}
 
-    public function getDocuments(){
-        $docs = array();
-        foreach ($this->getAttachments() as $attachment) {
-            if(has_term( 'document', 'casawp_attachment_type', $attachment )){
-                $docs[] = $attachment;
-            }
-        }
-        return $docs;
-    }
+	public function getDocuments(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'document', 'casawp_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
 
-    public function getSalesBrochures(){
-        $docs = array();
-        foreach ($this->getAttachments() as $attachment) {
-            if(has_term( 'sales-brochure', 'casawp_attachment_type', $attachment )){
-                $docs[] = $attachment;
-            }
-        }
-        return $docs;
-    }
+	public function getSalesBrochures(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'sales-brochure', 'casawp_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
 
-    public function getPlans(){
-        $docs = array();
-        foreach ($this->getAttachments() as $attachment) {
-            if(has_term( 'plan', 'casawp_attachment_type', $attachment )){
-                $docs[] = $attachment;
-            }
-        }
-        return $docs;
-    }
+	public function getPlans(){
+		$docs = array();
+		foreach ($this->getAttachments() as $attachment) {
+			if(has_term( 'plan', 'casawp_attachment_type', $attachment )){
+				$docs[] = $attachment;
+			}
+		}
+		return $docs;
+	}
 
-    public function getMetas(){
-        if ($this->metas === null) {
-            $this->metas = get_post_meta($this->post->ID);
-        }
-        return $this->metas;
-    }
+	public function getMetas(){
+		if ($this->metas === null) {
+			$this->metas = get_post_meta($this->post->ID);
+		}
+		return $this->metas;
+	}
 
-    public function getMeta($key){
-        if (array_key_exists($key, $this->getMetas())) {
-            return $this->metas[$key][0];
-        }
-        return null;
-    }
+	public function getMeta($key){
+		if (array_key_exists($key, $this->getMetas())) {
+			return $this->metas[$key][0];
+		}
+		return null;
+	}
 
-    public function getFieldValue($key, $fallback = null){
-        switch (true) {
-            case strpos($key,'address') === 0:
-                $value = $this->getFieldValue('property_'.$key, $fallback);
-                break;
-            default:
-                $value = $this->getMeta($key);
-                break;
-        }
-        if ($value) {
-            return $value;
-        } else {
-            return $fallback;
-        }
-    }
+	public function getFieldValue($key, $fallback = null){
+		switch (true) {
+			case strpos($key,'address') === 0:
+				$value = $this->getFieldValue('property_'.$key, $fallback);
+				break;
+			default:
+				$value = $this->getMeta($key);
+				break;
+		}
+		if ($value) {
+			return $value;
+		} else {
+			return $fallback;
+		}
+	}
 
     private function getSingleDynamicFields() {
         return array(
