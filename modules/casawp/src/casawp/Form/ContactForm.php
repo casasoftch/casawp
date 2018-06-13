@@ -46,6 +46,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('First name', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_firstname_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -53,6 +56,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Last name', 'casawp'),
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_lastname_required', false),
             ),
         ));
 
@@ -62,6 +68,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Legal name', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_legal_name_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -69,6 +78,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Street', 'casawp'),
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_street_required', false),
             ),
         ));
 
@@ -78,6 +90,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('ZIP', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_postal_code_required', false),
+            ),
         ));
 
 
@@ -86,6 +101,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Locality', 'casawp'),
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_locality_required', false),
             ),
         ));
 
@@ -120,6 +138,9 @@ class ContactForm extends Form
                 'label' => __('Country', 'casawp'),
                 'options' => $countries
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_country_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -128,6 +149,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Phone', 'casawp')
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_phone_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -135,6 +159,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Mobile', 'casawp')
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_mobile_required', false),
             ),
         ));
 
@@ -156,7 +183,8 @@ class ContactForm extends Form
                 'label' => __('Message', 'casawp')
             ),
             'attributes' => array(
-                'rows' => 3
+                'rows' => 3,
+                'required' => get_option('casawp_form_message_required', false),
             )
         ));
     }
