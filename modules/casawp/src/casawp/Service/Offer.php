@@ -380,7 +380,7 @@ class Offer{
 			}
 			if (strpos($numval->getKey(), "floor") === 0) {
 				$value = $this->getFieldValue($numval->getKey(), false);
-				if ($value == EG ) {
+				if ($value == 'EG' ) {
 					$numval->setValue(__('Ground floor', 'casawp')); // Should be from casasoft-standards
 					$numvals[$numval->getKey()] = $numval;
 				}
