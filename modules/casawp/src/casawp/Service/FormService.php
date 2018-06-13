@@ -136,7 +136,7 @@ class FormService{
   							//send to casamail
   							if (get_option('casawp_inquiry_method') == 'casamail') {
 
-  								$data = array_merge_recursive($postdata, $validatedData);
+  								$data = array_merge($postdata, $validatedData);
   								$data['email'] = $postdata['emailreal'];
   								$data['provider'] = $customerid;
   								$data['publisher'] = $publisherid;
