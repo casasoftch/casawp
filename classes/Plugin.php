@@ -2264,38 +2264,39 @@ class Plugin {
 
 
         /*----------  Inquiry  ----------*/
+        // THIS HAS BEEN DISABLED DUE TO GDPR
 
-        $labels = array(
-            'name'               => __('Inquiries', 'casawp'),
-            'singular_name'      => __('Inquiry', 'casawp'),
-            'add_new'            => __('Add New', 'casawp'),
-            'add_new_item'       => __('Add New inquiry', 'casawp'),
-            'edit_item'          => __('Edit Inquiry', 'casawp'),
-            'new_item'           => __('New Inquiry', 'casawp'),
-            'all_items'          => __('All Inquiries', 'casawp'),
-            'view_item'          => __('View Inquiry', 'casawp'),
-            'search_items'       => __('Search Inquiries', 'casawp'),
-            'not_found'          => __('No inquiries found', 'casawp'),
-            'not_found_in_trash' => __('No inquiries found in Trash', 'casawp'),
-            'menu_name'          => __('Inquiries', 'casawp')
-        );
-        $args = array(
-            'labels'             => $labels,
-            'public'             => false,
-            'publicly_queryable' => false,
-            'show_ui'            => true,
-            'show_in_menu'       => true,
-            'query_var'          => true,
-            'rewrite'            => array( 'slug' => 'anfragen' ),
-            'capability_type'    => 'post',
-            'has_archive'        => false,
-            'hierarchical'       => false,
-            'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'author','custom-fields', 'page-attributes' ),
-            'menu_icon'          => 'dashicons-admin-comments',
-            'show_in_nav_menus'  => true
-        );
-        register_post_type( 'casawp_inquiry', $args );
+        // $labels = array(
+        //     'name'               => __('Inquiries', 'casawp'),
+        //     'singular_name'      => __('Inquiry', 'casawp'),
+        //     'add_new'            => __('Add New', 'casawp'),
+        //     'add_new_item'       => __('Add New inquiry', 'casawp'),
+        //     'edit_item'          => __('Edit Inquiry', 'casawp'),
+        //     'new_item'           => __('New Inquiry', 'casawp'),
+        //     'all_items'          => __('All Inquiries', 'casawp'),
+        //     'view_item'          => __('View Inquiry', 'casawp'),
+        //     'search_items'       => __('Search Inquiries', 'casawp'),
+        //     'not_found'          => __('No inquiries found', 'casawp'),
+        //     'not_found_in_trash' => __('No inquiries found in Trash', 'casawp'),
+        //     'menu_name'          => __('Inquiries', 'casawp')
+        // );
+        // $args = array(
+        //     'labels'             => $labels,
+        //     'public'             => false,
+        //     'publicly_queryable' => false,
+        //     'show_ui'            => true,
+        //     'show_in_menu'       => true,
+        //     'query_var'          => true,
+        //     'rewrite'            => array( 'slug' => 'anfragen' ),
+        //     'capability_type'    => 'post',
+        //     'has_archive'        => false,
+        //     'hierarchical'       => false,
+        //     'menu_position'      => null,
+        //     'supports'           => array( 'title', 'editor', 'author','custom-fields', 'page-attributes' ),
+        //     'menu_icon'          => 'dashicons-admin-comments',
+        //     'show_in_nav_menus'  => true
+        // );
+        // register_post_type( 'casawp_inquiry', $args );
 
 
 

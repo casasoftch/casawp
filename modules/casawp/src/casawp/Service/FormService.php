@@ -96,32 +96,33 @@ class FormService{
   							));
 
   							//add to WP for safekeeping
-  							$nameExtension = '';
-  							if ($subjectItem instanceof Offer) {
-  								$nameExtension = ': [' . ($subjectItem->getFieldValue('referenceId') ? $subjectItem->getFieldValue('referenceId') : $subjectItem->getFieldValue('casawp_id')) . '] ' . $subjectItem->getTitle();
-  							}
-  							$post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue());
-  							$post = array(
-  								'post_type' => 'casawp_inquiry',
-  								'post_content' => ($form->get('message')->getValue() ? $form->get('message')->getValue() : 'NO MESSAGE'),
-  								'post_title' => $post_title,
-  								'post_status' => 'private',
-  								'ping_status' => false
-  							);
-  							$inquiry_id = wp_insert_post($post);
-  							foreach ($form->getElements() as $element) {
-  								if (!in_array($element->getName(), array('message')) ) {
-  									add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
-  								}
-  							}
-  							if ($subjectItem instanceof Offer) {
-  								add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
-  								add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
-  							}
-                if ($subjectItem instanceof Project) {
-  								add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
-  								add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
-  							}
+                // THIS HAS BEEN DISABLED DUE TO GDPR
+  							// $nameExtension = '';
+  							// if ($subjectItem instanceof Offer) {
+  							// 	$nameExtension = ': [' . ($subjectItem->getFieldValue('referenceId') ? $subjectItem->getFieldValue('referenceId') : $subjectItem->getFieldValue('casawp_id')) . '] ' . $subjectItem->getTitle();
+  							// }
+  							// $post_title = wp_strip_all_tags($form->get('firstname')->getValue() . ' ' . $form->get('lastname')->getValue());
+  							// $post = array(
+  							// 	'post_type' => 'casawp_inquiry',
+  							// 	'post_content' => ($form->get('message')->getValue() ? $form->get('message')->getValue() : 'NO MESSAGE'),
+  							// 	'post_title' => $post_title,
+  							// 	'post_status' => 'private',
+  							// 	'ping_status' => false
+  							// );
+  							// $inquiry_id = wp_insert_post($post);
+  							// foreach ($form->getElements() as $element) {
+  							// 	if (!in_array($element->getName(), array('message')) ) {
+  							// 		add_post_meta($inquiry_id, 'sender_' . $element->getName(), $element->getValue(), true );
+  							// 	}
+  							// }
+  							// if ($subjectItem instanceof Offer) {
+  							// 	add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
+  							// 	add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
+  							// }
+                //        if ($subjectItem instanceof Project) {
+  							// 	add_post_meta($inquiry_id, 'casawp_id', $subjectItem->getFieldValue('casawp_id'), true );
+  							// 	add_post_meta($inquiry_id, 'referenceId', $subjectItem->getFieldValue('referenceId'), true );
+  							// }
 
 
 
