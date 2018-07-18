@@ -2563,15 +2563,15 @@ msgstr "Tipo Vendita"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:90
 msgid "Choose utility"
-msgstr ""
+msgstr "Scegli utilità"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:99
 msgid "Choose region"
-msgstr ""
+msgstr "Scegli regione"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:108
 msgid "Choose feature"
-msgstr ""
+msgstr "Scegli caratteristica"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:125
 #: modules/casawp/src/casawp/Form/FilterForm.php:126
