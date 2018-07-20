@@ -1172,3 +1172,7 @@ msgstr "Casa engadinese"
 msgid "Patrician house"
 msgstr "Palazzo patrizio"
 
+#: 
+msgid "Volumes"
+msgstr "Volumi"
+

@@ -1169,3 +1169,7 @@ msgstr ""
 msgid "Patrician house"
 msgstr "Maison patricienne"
 
+#: 
+msgid "Volumes"
+msgstr "Volumes"
+

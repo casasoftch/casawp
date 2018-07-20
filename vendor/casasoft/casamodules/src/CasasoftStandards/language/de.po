@@ -742,11 +742,11 @@ msgstr "Distanzen"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:193
 msgid "Floor"
-msgstr "Stockwerk"
+msgstr "Etage"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:199
 msgid "Floors"
-msgstr "Stockwerke"
+msgstr "Etagen"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:205
 msgid "Apartments"
@@ -1168,4 +1168,8 @@ msgstr "Engadinerhaus"
 #: 
 msgid "Patrician house"
 msgstr "Patrizierhaus"
+
+#: 
+msgid "Volumes"
+msgstr "Volumen"
 
