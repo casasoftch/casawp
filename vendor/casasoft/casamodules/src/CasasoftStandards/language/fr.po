@@ -3,13 +3,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: POEditor.com\n"
 "Project-Id-Version: CASASTANDARDS\n"
-"Language: fr_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Language: fr-ch\n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -751,15 +747,15 @@ msgstr "Etage"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:199
 msgid "Floors"
-msgstr "Nombre d’étages"
+msgstr "Nombre d'étages"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:205
 msgid "Apartments"
-msgstr "Appartements"
+msgstr "Appartement(s)"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:211
 msgid "Bathrooms"
-msgstr "Salles de bain"
+msgstr "Salle(s) de bain"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:217
 msgid "Numver of parcels"
@@ -1057,9 +1053,11 @@ msgstr "Bâtiment"
 msgid "Investment"
 msgstr "Investissement"
 
+#: 
 msgid "Gross rent / m² / month"
 msgstr "Loyer brut / m² / mois"
 
+#: 
 msgid "Gross rent / m² / year"
 msgstr "Loyer brut / m² / année"
 
@@ -1067,15 +1065,19 @@ msgstr "Loyer brut / m² / année"
 msgid "Gross rent / month"
 msgstr "Loyer brut / mois"
 
+#: 
 msgid "Gross rent / year"
 msgstr "Loyer brut / année"
 
+#: 
 msgid "Gross price"
 msgstr "Prix brut"
 
+#: 
 msgid "Net rent / m² / month"
 msgstr "Loyer net / m² / mois"
 
+#: 
 msgid "Net rent / m² / year"
 msgstr "Loyer net / m² / année"
 
@@ -1087,6 +1089,7 @@ msgstr "Loyer net / année"
 msgid "Net rent / month"
 msgstr "Loyer net / mois"
 
+#: 
 msgid "Net price"
 msgstr "Prix net"
 
@@ -1134,29 +1137,39 @@ msgstr "Loyer net / m<sup>2</sup> / année"
 msgid "Sales price"
 msgstr "Prix ​​de vente"
 
+#: 
 msgid "Category"
 msgstr "Catégorie"
 
+#: 
 msgid "Part of a house"
 msgstr "Partie de la maison"
 
+#: 
 msgid "Immediate"
 msgstr "Immédiatement"
 
+#: 
 msgid "Gastronomy / Hotel"
 msgstr "Gastronomie / Hôtel"
 
+#: 
 msgid "Parking / Garage"
 msgstr "Parking / Garage"
 
+#: 
 msgid "Extra Costs"
 msgstr "Coûts supplémentaires"
 
+#: 
 msgid "Engadine house"
 msgstr ""
 
+#: 
 msgid "Patrician house"
 msgstr "Maison patricienne"
 
+#: 
 msgid "Volumes"
 msgstr "Volumes"
+
