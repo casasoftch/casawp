@@ -3,9 +3,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 2.1.1\n"
 "Project-Id-Version: CASASTANDARDS\n"
 "Language: en\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-Basepath: ../src\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -1052,11 +1059,9 @@ msgstr ""
 msgid "Investment"
 msgstr ""
 
-#: 
 msgid "Gross rent / m² / month"
 msgstr ""
 
-#: 
 msgid "Gross rent / m² / year"
 msgstr ""
 
@@ -1064,19 +1069,15 @@ msgstr ""
 msgid "Gross rent / month"
 msgstr ""
 
-#: 
 msgid "Gross rent / year"
 msgstr ""
 
-#: 
 msgid "Gross price"
 msgstr ""
 
-#: 
 msgid "Net rent / m² / month"
 msgstr ""
 
-#: 
 msgid "Net rent / m² / year"
 msgstr ""
 
@@ -1088,7 +1089,6 @@ msgstr ""
 msgid "Net rent / month"
 msgstr ""
 
-#: 
 msgid "Net price"
 msgstr ""
 
@@ -1136,39 +1136,29 @@ msgstr ""
 msgid "Sales price"
 msgstr ""
 
-#: 
 msgid "Category"
 msgstr ""
 
-#: 
 msgid "Part of a house"
 msgstr ""
 
-#: 
 msgid "Immediate"
 msgstr ""
 
-#: 
 msgid "Gastronomy / Hotel"
 msgstr ""
 
-#: 
 msgid "Parking / Garage"
 msgstr ""
 
-#: 
 msgid "Extra Costs"
 msgstr ""
 
-#: 
 msgid "Engadine house"
 msgstr ""
 
-#: 
 msgid "Patrician house"
 msgstr ""
 
-#: 
 msgid "Volumes"
 msgstr ""
-

@@ -1,1175 +1,1187 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: CASASTANDARDS\n"
+"POT-Creation-Date: 2018-09-07 11:46+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_CH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: CASASTANDARDS\n"
-"Language: de-ch\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:37
-#: ../src/CasasoftStandards/Service/CategoryService.php:294
+#: src/CasasoftStandards/Service/CategoryService.php:37
+#: src/CasasoftStandards/Service/CategoryService.php:302
 msgid "Apartment"
 msgstr "Wohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:38
+#: src/CasasoftStandards/Service/CategoryService.php:38
 msgid "Attic flat"
 msgstr "Attikawohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:39
+#: src/CasasoftStandards/Service/CategoryService.php:39
 msgid "Bachelor flat"
 msgstr "Studio"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:40
+#: src/CasasoftStandards/Service/CategoryService.php:40
 msgid "Bifamiliar house"
 msgstr "Doppeleinfamilienhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:41
+#: src/CasasoftStandards/Service/CategoryService.php:41
+#: src/CasasoftStandards/Service/ConversionService.php:513
 msgid "Building land"
 msgstr "Bauland"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:42
-#: ../src/CasasoftStandards/Service/FeatureService.php:155
+#: src/CasasoftStandards/Service/CategoryService.php:42
+#: src/CasasoftStandards/Service/FeatureService.php:155
 msgid "Double garage"
 msgstr "Doppelgarage"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:43
+#: src/CasasoftStandards/Service/CategoryService.php:43
 msgid "Duplex"
 msgstr "Duplex"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:44
+#: src/CasasoftStandards/Service/CategoryService.php:44
 msgid "Factory"
 msgstr "Fabrik"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:45
+#: src/CasasoftStandards/Service/CategoryService.php:45
 msgid "Farm"
 msgstr "Bauernhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:46
+#: src/CasasoftStandards/Service/CategoryService.php:46
 msgid "Farm house"
 msgstr "Bauernhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:47
+#: src/CasasoftStandards/Service/CategoryService.php:47
 msgid "Furnished flat"
 msgstr "Möblierte Wohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:48
-#: ../src/CasasoftStandards/Service/FeatureService.php:149
+#: src/CasasoftStandards/Service/CategoryService.php:48
+#: src/CasasoftStandards/Service/FeatureService.php:149
 msgid "Garage"
 msgstr "Garage"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:49
-#: ../src/CasasoftStandards/Service/CategoryService.php:278
+#: src/CasasoftStandards/Service/CategoryService.php:49
+#: src/CasasoftStandards/Service/CategoryService.php:286
 msgid "House"
 msgstr "Haus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:50
+#: src/CasasoftStandards/Service/CategoryService.php:50
 msgid "Loft"
 msgstr "Loft"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:51
+#: src/CasasoftStandards/Service/CategoryService.php:51
 msgid "Mountain farm"
 msgstr "Alpwirtschaft"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:52
+#: src/CasasoftStandards/Service/CategoryService.php:52
 msgid "Multiple dwelling"
 msgstr "Mehrfamilien&#173;haus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:53
+#: src/CasasoftStandards/Service/CategoryService.php:53
 msgid "Open slot"
 msgstr "offener Parkplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:54
+#: src/CasasoftStandards/Service/CategoryService.php:54
 msgid "Parking space"
 msgstr "Parkplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:55
+#: src/CasasoftStandards/Service/CategoryService.php:55
 msgid "Plot"
 msgstr "Grundstück"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:56
+#: src/CasasoftStandards/Service/CategoryService.php:56
 msgid "Roof flat"
 msgstr "Dachwohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:57
+#: src/CasasoftStandards/Service/CategoryService.php:57
 msgid "Row house"
 msgstr "Reihenhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:58
+#: src/CasasoftStandards/Service/CategoryService.php:58
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:66
 msgid "Single garage"
 msgstr "Einzelgarage"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:59
+#: src/CasasoftStandards/Service/CategoryService.php:59
 msgid "Single house"
 msgstr "Einfamilienhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:60
+#: src/CasasoftStandards/Service/CategoryService.php:60
 msgid "Single room"
 msgstr "Einzelzimmer"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:61
+#: src/CasasoftStandards/Service/CategoryService.php:61
 msgid "Terrace flat"
 msgstr "Terrassenwohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:62
+#: src/CasasoftStandards/Service/CategoryService.php:62
 msgid "Terrace house"
 msgstr "Terrassenhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:63
+#: src/CasasoftStandards/Service/CategoryService.php:63
 msgid "Underground slot"
 msgstr "Tief&#173;garagen&#173;stellplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:64
+#: src/CasasoftStandards/Service/CategoryService.php:64
 msgid "Villa"
 msgstr "Villa"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:65
+#: src/CasasoftStandards/Service/CategoryService.php:65
 msgid "Chalet"
 msgstr "Chalet"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:66
+#: src/CasasoftStandards/Service/CategoryService.php:66
 msgid "Studio"
 msgstr "Studio"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:67
+#: src/CasasoftStandards/Service/CategoryService.php:67
 msgid "Covered slot"
 msgstr "Unterstand"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:70
+#: src/CasasoftStandards/Service/CategoryService.php:70
 msgid "Construction project"
 msgstr "Bau-Projekt"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:73
+#: src/CasasoftStandards/Service/CategoryService.php:73
 msgid "Flat"
 msgstr "Etagenwohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:74
-#: ../src/CasasoftStandards/Service/FeatureService.php:350
+#: src/CasasoftStandards/Service/CategoryService.php:74
+#: src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Ground floor"
 msgstr "Erdgeschoss"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:75
+#: src/CasasoftStandards/Service/CategoryService.php:75
 msgid "Office"
 msgstr "Büro"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:76
+#: src/CasasoftStandards/Service/CategoryService.php:76
 msgid "Exihition space"
 msgstr "Ausstellungsfläche"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:77
+#: src/CasasoftStandards/Service/CategoryService.php:77
 msgid "Retail"
 msgstr "Einzelhandel"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:78
+#: src/CasasoftStandards/Service/CategoryService.php:78
 msgid "Bed and breakfast"
 msgstr "Pension"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:79
+#: src/CasasoftStandards/Service/CategoryService.php:79
 msgid "Hotel"
 msgstr "Hotel"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:80
+#: src/CasasoftStandards/Service/CategoryService.php:80
 msgid "Warehouse"
 msgstr "Lager"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:81
+#: src/CasasoftStandards/Service/CategoryService.php:81
 msgid "Workshop"
 msgstr "Werkstatt"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:82
+#: src/CasasoftStandards/Service/CategoryService.php:82
 msgid "Car park"
 msgstr "Parkhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:83
+#: src/CasasoftStandards/Service/CategoryService.php:83
 msgid "Bungalow"
 msgstr "Bungalow"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:84
+#: src/CasasoftStandards/Service/CategoryService.php:84
 msgid "Castle"
 msgstr "Schloss"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:85
+#: src/CasasoftStandards/Service/CategoryService.php:85
 msgid "Fuel station"
 msgstr "Tankstelle"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:86
+#: src/CasasoftStandards/Service/CategoryService.php:86
 msgid "Café / Bar"
 msgstr "Café / Bar"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:87
+#: src/CasasoftStandards/Service/CategoryService.php:87
 msgid "Maisonette"
 msgstr "Maisonette"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:88
+#: src/CasasoftStandards/Service/CategoryService.php:88
 msgid "Penthouse"
 msgstr "Penthouse"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:89
+#: src/CasasoftStandards/Service/CategoryService.php:89
 msgid "Atelier"
 msgstr "Atelier"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:90
+#: src/CasasoftStandards/Service/CategoryService.php:90
 msgid "Covered bike space"
 msgstr "Moto Hallenplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:91
+#: src/CasasoftStandards/Service/CategoryService.php:91
 msgid "Rustico"
 msgstr "Rustico"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:92
+#: src/CasasoftStandards/Service/CategoryService.php:92
 msgid "Garden Apartment"
 msgstr "Gartenwohnung"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:93
+#: src/CasasoftStandards/Service/CategoryService.php:93
 msgid "Retail space"
 msgstr "Ladenfläche"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:95
+#: src/CasasoftStandards/Service/CategoryService.php:95
 msgid "Boat dry dock"
 msgstr "Boot Hallenplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:96
+#: src/CasasoftStandards/Service/CategoryService.php:96
 msgid "Alottment garden"
 msgstr "Schrebergarten"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:97
+#: src/CasasoftStandards/Service/CategoryService.php:97
 msgid "Squash / Badminton"
 msgstr "Squash / Badminton"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:98
+#: src/CasasoftStandards/Service/CategoryService.php:98
 msgid "Indoor tennis court"
 msgstr "Tennishalle"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:99
+#: src/CasasoftStandards/Service/CategoryService.php:99
 msgid "Tennis court"
 msgstr "Tennisplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:100
+#: src/CasasoftStandards/Service/CategoryService.php:100
 msgid "Sports hall"
 msgstr "Sportanlage"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:101
+#: src/CasasoftStandards/Service/CategoryService.php:101
 msgid "Campground / Tent camping"
 msgstr "Camping- / Zeltplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:102
+#: src/CasasoftStandards/Service/CategoryService.php:102
 msgid "Outdoor swimming pool"
 msgstr "Freibad"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:103
+#: src/CasasoftStandards/Service/CategoryService.php:103
 msgid "Indoor swimming pool"
 msgstr "Hallenbad"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:104
+#: src/CasasoftStandards/Service/CategoryService.php:104
 msgid "Golf course"
 msgstr "Golfplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:105
+#: src/CasasoftStandards/Service/CategoryService.php:105
 msgid "Hospital"
 msgstr "Krankenhaus"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:106
+#: src/CasasoftStandards/Service/CategoryService.php:106
 msgid "Mini-golf course"
 msgstr "Minigolfplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:107
+#: src/CasasoftStandards/Service/CategoryService.php:107
 msgid "Nursing home"
 msgstr "Pflegeheim"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:108
+#: src/CasasoftStandards/Service/CategoryService.php:108
 msgid "Riding hall"
 msgstr "Reithalle"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:109
+#: src/CasasoftStandards/Service/CategoryService.php:109
 msgid "Sanatorium"
 msgstr "Sanatorium"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:110
+#: src/CasasoftStandards/Service/CategoryService.php:110
 msgid "Sauna"
 msgstr "Sauna"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:111
+#: src/CasasoftStandards/Service/CategoryService.php:111
 msgid "Solarium"
 msgstr "Solarium"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:112
+#: src/CasasoftStandards/Service/CategoryService.php:112
 msgid "Old-age home"
 msgstr "Altersheim"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:113
+#: src/CasasoftStandards/Service/CategoryService.php:113
 msgid "Home"
 msgstr "Heim"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:114
+#: src/CasasoftStandards/Service/CategoryService.php:114
 msgid "Display window"
 msgstr "Schaufenster"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:115
+#: src/CasasoftStandards/Service/CategoryService.php:115
 msgid "Granny flat"
 msgstr "Stöckli"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:116
+#: src/CasasoftStandards/Service/CategoryService.php:116
 msgid "Boat landing stage"
 msgstr "Boot Stegplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:117
+#: src/CasasoftStandards/Service/CategoryService.php:117
 msgid "Horse box"
 msgstr "Stallbox"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:118
+#: src/CasasoftStandards/Service/CategoryService.php:118
 msgid "Boat mooring"
 msgstr "Boot Bojenplatz"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:119
+#: src/CasasoftStandards/Service/CategoryService.php:119
 msgid "Cellar compartment"
 msgstr "Kellerabteil"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:120
+#: src/CasasoftStandards/Service/CategoryService.php:120
 msgid "Attic compartment"
 msgstr "Estrichabteil"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:123
+#: src/CasasoftStandards/Service/CategoryService.php:123
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:124
+#: src/CasasoftStandards/Service/CategoryService.php:124
 msgid "Shopping center"
 msgstr "Einkaufszentrum"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:125
-#: ../src/CasasoftStandards/Service/UtilityService.php:34
+#: src/CasasoftStandards/Service/CategoryService.php:125
+#: src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
 msgstr "Gewerbe"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:126
+#: src/CasasoftStandards/Service/CategoryService.php:126
 msgid "Commercial plot"
 msgstr "Gewerbegrundstück"
 
-#: ../src/CasasoftStandards/Service/ConversionService.php:444
-msgid "Reference no."
-msgstr "Referenz-Nr."
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:445
-msgid "Categories"
-msgstr "Kategorien"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:446
-msgid "Available from"
-msgstr "Verfügbar ab"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:447
-msgid "Condition"
-msgstr "Zustand"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:450
-msgid "Plot no."
-msgstr "Parzellen-Nr."
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:452
-msgid "Zone type"
-msgstr "Zone"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:453
-msgid "Key facts"
-msgstr "Eckdaten"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:454
-#: ../src/CasasoftStandards/Service/NumvalService.php:87
-msgid "Areas"
-msgstr "Flächen"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:455
-msgid "Features"
-msgstr "Eigenschaften"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:155
-#: ../src/CasasoftStandards/Service/ConversionService.php:458
-#: ../src/CasasoftStandards/Service/ConversionService.php:563
-msgid "On Request"
-msgstr "Auf Anfrage"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:608
-msgid "Fully ***"
-msgstr "Voll ***"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:610
-msgid "Partialy ***"
-msgstr "Teilweise ***"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:612
-msgid "NOT ***"
-msgstr "NICHT ***"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:37
-msgid "Chimney fireplace"
-msgstr "Cheminée"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:41
-msgid "Cable TV"
-msgstr "Kabelfernsehen"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:45
-msgid "Ramp"
-msgstr "Rampe"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:49
-msgid "Has lifting platform"
-msgstr "Hebebühne"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:53
-msgid "Cable railway terminal"
-msgstr "Bahnanschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:57
-#: ../src/CasasoftStandards/Service/FeatureService.php:61
-msgid "Train station"
-msgstr "Bahnanschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:65
-msgid "Flat sharing community"
-msgstr "In Wohngemeinschaft"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:69
-msgid "Connected building land"
-msgstr "Bauland erschlossen"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:73
-msgid "Gardenhouse"
-msgstr "Sommerlaube"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:77
-msgid "Is under roof"
-msgstr "Gedeckt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:83
-msgid "Rental deposit guarantee"
-msgstr "Mietkautionsgarantie"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:88
-#: ../src/CasasoftStandards/Service/FeatureService.php:362
-msgid "Raised ground floor"
-msgstr "Hochparterre"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:93
-msgid "Has elevator"
-msgstr "Lift"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:97
-msgid "Nice view"
-msgstr "Aussicht"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:103
-msgid "Lake view"
-msgstr "Seesicht"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:109
-msgid "Mountain view"
-msgstr "Bergsicht"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:115
-msgid "Sunny"
-msgstr "Sonnig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:122
-msgid "Quiet"
-msgstr "Ruhig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:128
-msgid "Projected construction (not yet realized)"
-msgstr "Bauprojekt (Nicht Realisiert)"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:134
-msgid "Contains demolition structure"
-msgstr "Abbruchobjekt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:141
-msgid "Child friendly"
-msgstr "Kinderfreundlich"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:145
-#: ../src/CasasoftStandards/Service/UtilityService.php:62
-msgid "Parking"
-msgstr "Parkplatz"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:161
-msgid "Car port"
-msgstr "Carport"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:167
-msgid "Double car port"
-msgstr "Duplex"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:174
-msgid "On a slope"
-msgstr "Hanglage"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:179
-msgid "South-facing slope"
-msgstr "Südhang"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:184
-msgid "Even Ground"
-msgstr "Parterre"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:189
-msgid "Balcony"
-msgstr "Balkon"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:193
-msgid "ISDN"
-msgstr "ISDN-Anschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:197
-msgid "Wheelchair accessible"
-msgstr "Rollstuhlgängig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:201
-msgid "Animal friendly"
-msgstr "Haustiere erlaubt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:208
-msgid "Restrooms"
-msgstr "Nasszellen"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:212
-msgid "Water supply"
-msgstr "Wasseranschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:216
-msgid "Sewage supply"
-msgstr "Abwasseranschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:220
-msgid "Power supply"
-msgstr "Stromanschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:224
-msgid "Gas supply"
-msgstr "Gasanschluss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:229
-msgid "Corner house"
-msgstr "Eckhaus"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:233
-msgid "Middle house"
-msgstr "Mittelhaus"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:239
-msgid "New construction"
-msgstr "Neubau"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:243
-msgid "As New"
-msgstr "Neuwertig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:247
-msgid "Old"
-msgstr "Altbau"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:251
-msgid "has building law restrictions"
-msgstr "Im Baurecht"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:256
-msgid "Swimmingpool"
-msgstr "Swimmingpool"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:260
-msgid "Minergie general"
-msgstr "Minergiebauweise"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:264
-msgid "Minergie certified"
-msgstr "Minergie zertifiziert"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:268
-msgid "Non smoking"
-msgstr "Nichtraucher"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:272
-msgid "Partially renovation indigent"
-msgstr "Teils renovationsbedürftig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:276
-msgid "Projection"
-msgstr "Projektiert"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:280
-msgid "Demolition property"
-msgstr "Abbruchobjekt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:284
-msgid "Gutted"
-msgstr "Entkernt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:288
-msgid "Shell construction"
-msgstr "Rohbau"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:292
-msgid "Well tended"
-msgstr "Gepflegt"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:296
-msgid "Modernized"
-msgstr "Modernisiert"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:300
-msgid "Dilapidated"
-msgstr "Baufällig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:304
-msgid "Renovation indigent"
-msgstr "Renovationsbedürftig"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:308
-msgid "Refurbished"
-msgstr "Vollsaniert"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:312
-msgid "Partially refurbished"
-msgstr "Teilsaniert"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:316
-msgid "First time occupancy"
-msgstr "Erstbezug"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:320
-msgid "Washing machine"
-msgstr "Waschmaschine"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:324
-msgid "Tumbler"
-msgstr "Tumbler"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:328
-msgid "Kachelofen"
-msgstr "Kachelofen"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:332
-msgid "Secondary residency"
-msgstr "Zweitwohnung"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:336
-msgid "Primary residency"
-msgstr "Erstwohnung"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:340
-msgid "Foreign quota"
-msgstr "Ausländerkontingent"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:346
-msgid "Attic"
-msgstr "Dachgeschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:354
-msgid "Basement"
-msgstr "Untergeschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:358
-msgid "Garden level"
-msgstr "Gartengeschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:366
-msgid "Cellar level"
-msgstr "Kellergeschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:370
-msgid "Recessed ground floor"
-msgstr "Tiefparterre"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:374
-msgid "Ground floor and first floor"
-msgstr "Erdgeschoss, Obergeschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:378
-msgid "Top floor"
-msgstr "Attikageschoss"
-
-#: ../src/CasasoftStandards/Service/FeatureService.php:382
-msgid "Base floor"
-msgstr "Sockelgeschoss"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:42
-msgid "External parking space"
-msgstr "Aussenparkplatz"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:46
-msgid "Carport"
-msgstr "Carport"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:50
-msgid "Connected garage"
-msgstr "Garage"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:54
-msgid "Garage box"
-msgstr "Garagenbox"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:58
-msgid "Duplex garage"
-msgstr "Duplex Garage"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:62
-msgid "Underground parking garage"
-msgstr "Tiefgarage"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:66
-msgid "Parking structure"
-msgstr "Parkgebäude"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:70
-msgid "Workroom"
-msgstr "Baselraum"
-
-#: ../src/CasasoftStandards/Service/IntegratedOfferService.php:74
-msgid "Storage basement"
-msgstr "Keller-Lager"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:31
-msgid "General"
-msgstr "Generell"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:70
-msgid "Number of"
-msgstr "Anzahl"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:456
-#: ../src/CasasoftStandards/Service/NumvalService.php:122
-msgid "Distances"
-msgstr "Distanzen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:193
-msgid "Floor"
-msgstr "Etage"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:199
-msgid "Floors"
-msgstr "Etagen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:205
-msgid "Apartments"
-msgstr "Wohnungen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:211
-msgid "Bathrooms"
-msgstr "Badezimmer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:217
-msgid "Numver of parcels"
-msgstr "Anzahl Parzellen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:223
-msgid "Distance to kindergarten"
-msgstr "Kindergarten"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:229
-msgid "Distance to primary school"
-msgstr "Unterstufe"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:235
-msgid "Distance to high school"
-msgstr "Oberstufe"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:241
-msgid "Distance to college"
-msgstr "Universität"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:247
-msgid "Distance to bus stop"
-msgstr "Busstation"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:253
-msgid "Distance to train station"
-msgstr "Zugstation"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:259
-msgid "Distance to post"
-msgstr "Post"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:265
-msgid "Distance to bank"
-msgstr "Bank"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:271
-msgid "Distance to railway station"
-msgstr "Bergbahn"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:277
-msgid "Distance to boat dock"
-msgstr "Hafen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:283
-msgid "Distance to public transport"
-msgstr "ÖV"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:289
-msgid "Distance to shop"
-msgstr "Einkauf"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:295
-msgid "Distance to freeway"
-msgstr "Autobahn"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:301
-msgid "Distance to airport"
-msgstr "Flughafen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:307
-msgid "Rooms"
-msgstr "Zimmer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:313
-msgid "Max. elevator weight"
-msgstr "Traglast Lift"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:320
-msgid "Property land area"
-msgstr "Grundstücksfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:341
-msgid "Total floor area"
-msgstr "Bruttogeschossfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:347
-msgid "Net floor area"
-msgstr "Nettogeschossfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:353
-msgid "Floorspace"
-msgstr "Nutzfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:359
-msgid "Main floor space"
-msgstr "Hauptnutzfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:365
-msgid "Secondary usable area"
-msgstr "Nebennutzfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:372
-msgid "Traffic area"
-msgstr "Verkehrsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:378
-msgid "Functional surface"
-msgstr "Funktionsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:386
-msgid "Construction area"
-msgstr "Konstruktionsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:392
-msgid "Construction area supporting"
-msgstr "Konstruktionsfläche tragend"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:398
-msgid "Construction area non-supporting"
-msgstr "Konstruktionsfläche nicht-tragend"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:414
-msgid "SIA-AGF"
-msgstr "Aussen-Geschossfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:420
-msgid "SIA-ANGF"
-msgstr "Aussen-Nettogeschossfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:426
-msgid "SIA-ANF"
-msgstr "Aussen-Nutzfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:432
-msgid "SIA-AVF"
-msgstr "Aussen-Verkehrsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:438
-msgid "SIA-AFF"
-msgstr "Aussen-Funktionsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:446
-msgid "SIA-AFK"
-msgstr "Aussen-Konstruktionsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:452
-msgid "SIA-AFFT"
-msgstr "Aussen-Konstruktionsfläche tragend"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:458
-msgid "SIA-AFFN"
-msgstr "Aussen-Konstruktionsfläche nicht-tragend"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:475
-msgid "SIA-GV"
-msgstr "Gebäudevolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:481
-msgid "SIA-ANGV"
-msgstr "Aussen-Nettogeschossvolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:487
-msgid "SIA-ANV"
-msgstr "Aussen-Nutzvolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:493
-msgid "SIA-AVV"
-msgstr "Aussen-Verkehrsvolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:499
-#: ../src/CasasoftStandards/Service/NumvalService.php:507
-msgid "SIA-AFV"
-msgstr "Aussen-Funktionsvolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:524
-msgid "SIA-GSF"
-msgstr "Grundstücksfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:530
-msgid "SIA-UO"
-msgstr "Aussen-Nettogeschossfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:536
-msgid "SIA-BUF"
-msgstr "Aussen-Nutzfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:542
-msgid "SIA-UUF"
-msgstr "Aussen-Verkehrsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:548
-msgid "SIA-GGF"
-msgstr "Aussen-Konstruktionsfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:557
-msgid "SIA-GFZ"
-msgstr "Geschossflächenziffer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:563
-msgid "SIA-AZ"
-msgstr "Ausnützungsziffer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:569
-#: ../src/CasasoftStandards/Service/NumvalService.php:575
-#: ../src/CasasoftStandards/Service/NumvalService.php:581
-msgid "SIA-BMZ"
-msgstr "Baumassenziffer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:590
-msgid "Cubature GVA"
-msgstr "Gebäudevolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:596
-msgid "Cubature SIA"
-msgstr "Gebäudevolumen"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:605
-msgid "Utilization number"
-msgstr "Ausnützungsziffer"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:611
-msgid "Construction utilization number"
-msgstr "Ausnützungsziffer (Bau)"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:617
-msgid "Total living area"
-msgstr "Bruttowohnfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:623
-msgid "Net living area"
-msgstr "Nettowohnfläche"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:635
-msgid "Year built"
-msgstr "Baujahr"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:641
-#: ../src/CasasoftStandards/Service/NumvalService.php:647
-msgid "Year of last renovation"
-msgstr "Renovationsjahr"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:653
-msgid "Ceiling height"
-msgstr "Raumhöhe"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:659
-msgid "Hall height"
-msgstr "Hallenhöhe"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:665
-msgid "Max. floor loading"
-msgstr "Max. Bodenbelastung"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:671
-msgid "Carrying capacity for crane"
-msgstr "Max. Kranbelastung"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:677
-msgid "Carrying capacity for elevator"
-msgstr "Max. Aufzugsbelastung"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:684
-msgid "Land price"
-msgstr "Grundstückspreis"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:691
-msgid "Gross premium"
-msgstr "Bruttorendite"
-
-#: ../src/CasasoftStandards/Service/NumvalService.php:698
-msgid "Rental deposit"
-msgstr "Mietkaution"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:38
-msgid "Gastronomy"
-msgstr "Gastronomie"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:42
-msgid "Vacation"
-msgstr "Ferien"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:46
-msgid "Agricultural"
-msgstr "Landwirtschafts&#173;betrieb"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:50
-msgid "Industrial"
-msgstr "Industrie"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:54
-msgid "Residential"
-msgstr "Wohnen"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:58
-msgid "Storage"
-msgstr "Lager"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:66
-msgid "Building"
-msgstr "Bauen"
-
-#: ../src/CasasoftStandards/Service/UtilityService.php:70
-msgid "Investment"
-msgstr "Investitionsobjekt"
-
-#: 
-msgid "Gross rent / m² / month"
-msgstr "Bruttomiete / m² / Monat"
-
-#: 
-msgid "Gross rent / m² / year"
-msgstr "Bruttomiete / m² / Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:462
-msgid "Gross rent / month"
-msgstr "Bruttomiete / Monat"
-
-#: 
-msgid "Gross rent / year"
-msgstr "Bruttomiete / Jahr"
-
-#: 
-msgid "Gross price"
-msgstr "Bruttopreis"
-
-#: 
-msgid "Net rent / m² / month"
-msgstr "Nettomiete / m² / Monat"
-
-#: 
-msgid "Net rent / m² / year"
-msgstr "Nettomiete / m² / Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:467
-msgid "Net rent / year"
-msgstr "Nettomiete / Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:466
-msgid "Net rent / month"
-msgstr "Nettomiete / Monat"
-
-#: 
-msgid "Net price"
-msgstr "Nettopreis"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:130
-msgid "week"
-msgstr "Woche"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:133
-msgid "month"
-msgstr "Monat"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:136
-msgid "year"
-msgstr "Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:453
-msgid "Price"
-msgstr "Preis"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:459
-msgid "Price per sqm"
-msgstr "Preis pro m²"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:460
-msgid "priceBruttoPerSqmPerMonth"
-msgstr "Bruttomiete / m² / Monat"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:461
-msgid "priceBruttoPerSqmPerYear"
-msgstr "Bruttomiete / m² / Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:463
-msgid "priceBruttoTotalPerYear"
-msgstr "Bruttomiete pro Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:464
-msgid "Net rent / m<sup>2</sup> / month"
-msgstr "Nettomiete  / m<sup>2</sup> / Monat"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:465
-msgid "Net rent / m<sup>2</sup> / year"
-msgstr "Nettomiete / m<sup>2</sup> / Jahr"
-
-#: ../src/CasasoftStandards/Service/ConversionService.php:457
-msgid "Sales price"
-msgstr "Verkaufspreis"
-
-#: 
-msgid "Category"
-msgstr "Kategorie"
-
-#: 
+#: src/CasasoftStandards/Service/CategoryService.php:127
 msgid "Part of a house"
 msgstr "Hausteil"
 
-#: 
-msgid "Immediate"
-msgstr "ab sofort"
+#: src/CasasoftStandards/Service/CategoryService.php:128
+msgid "Residential / commercial building"
+msgstr ""
 
-#: 
-msgid "Gastronomy / Hotel"
-msgstr "Gastronomie / Hotel"
+#: src/CasasoftStandards/Service/CategoryService.php:130
+msgid "Engadine house"
+msgstr "Engadinerhaus"
 
-#: 
-msgid "Parking / Garage"
-msgstr "Parkplatz / Garage"
+#: src/CasasoftStandards/Service/CategoryService.php:131
+msgid "Patrician house"
+msgstr "Patrizierhaus"
 
-#: 
+#: src/CasasoftStandards/Service/ConversionService.php:130
+msgid "week"
+msgstr "Woche"
+
+#: src/CasasoftStandards/Service/ConversionService.php:133
+msgid "month"
+msgstr "Monat"
+
+#: src/CasasoftStandards/Service/ConversionService.php:136
+msgid "year"
+msgstr "Jahr"
+
+#: src/CasasoftStandards/Service/ConversionService.php:155
+#: src/CasasoftStandards/Service/ConversionService.php:476
+#: src/CasasoftStandards/Service/ConversionService.php:623
+msgid "On Request"
+msgstr "Auf Anfrage"
+
+#: src/CasasoftStandards/Service/ConversionService.php:461
+msgid "Reference no."
+msgstr "Referenz-Nr."
+
+#: src/CasasoftStandards/Service/ConversionService.php:462
+msgid "Categories"
+msgstr "Kategorien"
+
+#: src/CasasoftStandards/Service/ConversionService.php:463
+msgid "Available from"
+msgstr "Verfügbar ab"
+
+#: src/CasasoftStandards/Service/ConversionService.php:464
+msgid "Condition"
+msgstr "Zustand"
+
+#: src/CasasoftStandards/Service/ConversionService.php:467
+msgid "Plot no."
+msgstr "Parzellen-Nr."
+
+#: src/CasasoftStandards/Service/ConversionService.php:469
+msgid "Zone type"
+msgstr "Zone"
+
+#: src/CasasoftStandards/Service/ConversionService.php:470
+msgid "Key facts"
+msgstr "Eckdaten"
+
+#: src/CasasoftStandards/Service/ConversionService.php:471
+#: src/CasasoftStandards/Service/NumvalService.php:87
+msgid "Areas"
+msgstr "Flächen"
+
+#: src/CasasoftStandards/Service/ConversionService.php:472
+msgid "Volumes"
+msgstr "Volumen"
+
+#: src/CasasoftStandards/Service/ConversionService.php:473
+msgid "Features"
+msgstr "Eigenschaften"
+
+#: src/CasasoftStandards/Service/ConversionService.php:474
+#: src/CasasoftStandards/Service/NumvalService.php:122
+msgid "Distances"
+msgstr "Distanzen"
+
+#: src/CasasoftStandards/Service/ConversionService.php:475
+msgid "Sales price"
+msgstr "Verkaufspreis"
+
+#: src/CasasoftStandards/Service/ConversionService.php:477
+msgid "Price per sqm"
+msgstr "Preis pro m²"
+
+#: src/CasasoftStandards/Service/ConversionService.php:478
+msgid "priceBruttoPerSqmPerMonth"
+msgstr "Bruttomiete / m² / Monat"
+
+#: src/CasasoftStandards/Service/ConversionService.php:479
+msgid "priceBruttoPerSqmPerYear"
+msgstr "Bruttomiete / m² / Jahr"
+
+#: src/CasasoftStandards/Service/ConversionService.php:480
+msgid "Gross rent / month"
+msgstr "Bruttomiete / Monat"
+
+#: src/CasasoftStandards/Service/ConversionService.php:481
+msgid "priceBruttoTotalPerYear"
+msgstr "Bruttomiete pro Jahr"
+
+#: src/CasasoftStandards/Service/ConversionService.php:482
+msgid "Net rent / m<sup>2</sup> / month"
+msgstr "Nettomiete  / m<sup>2</sup> / Monat"
+
+#: src/CasasoftStandards/Service/ConversionService.php:483
+msgid "Net rent / m<sup>2</sup> / year"
+msgstr "Nettomiete / m<sup>2</sup> / Jahr"
+
+#: src/CasasoftStandards/Service/ConversionService.php:484
+msgid "Net rent / month"
+msgstr "Nettomiete / Monat"
+
+#: src/CasasoftStandards/Service/ConversionService.php:485
+msgid "Net rent / year"
+msgstr "Nettomiete / Jahr"
+
+#: src/CasasoftStandards/Service/ConversionService.php:486
 #, fuzzy
 msgid "Extra Costs"
 msgstr "Nebenkosten"
 
-#: 
-msgid "Engadine house"
-msgstr "Engadinerhaus"
+#: src/CasasoftStandards/Service/ConversionService.php:514
+msgid "Parking / Garage"
+msgstr "Parkplatz / Garage"
 
-#: 
-msgid "Patrician house"
-msgstr "Patrizierhaus"
+#: src/CasasoftStandards/Service/ConversionService.php:515
+msgid "Gastronomy / Hotel"
+msgstr "Gastronomie / Hotel"
 
-#: 
-msgid "Volumes"
-msgstr "Volumen"
+#: src/CasasoftStandards/Service/ConversionService.php:614
+msgid "Immediate"
+msgstr "ab sofort"
 
+#: src/CasasoftStandards/Service/FeatureService.php:37
+msgid "Chimney fireplace"
+msgstr "Cheminée"
+
+#: src/CasasoftStandards/Service/FeatureService.php:41
+msgid "Cable TV"
+msgstr "Kabelfernsehen"
+
+#: src/CasasoftStandards/Service/FeatureService.php:45
+msgid "Ramp"
+msgstr "Rampe"
+
+#: src/CasasoftStandards/Service/FeatureService.php:49
+msgid "Has lifting platform"
+msgstr "Hebebühne"
+
+#: src/CasasoftStandards/Service/FeatureService.php:53
+msgid "Cable railway terminal"
+msgstr "Bahnanschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:57
+#: src/CasasoftStandards/Service/FeatureService.php:61
+msgid "Train station"
+msgstr "Bahnanschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:65
+msgid "Flat sharing community"
+msgstr "In Wohngemeinschaft"
+
+#: src/CasasoftStandards/Service/FeatureService.php:69
+msgid "Connected building land"
+msgstr "Bauland erschlossen"
+
+#: src/CasasoftStandards/Service/FeatureService.php:73
+msgid "Gardenhouse"
+msgstr "Sommerlaube"
+
+#: src/CasasoftStandards/Service/FeatureService.php:77
+msgid "Is under roof"
+msgstr "Gedeckt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:83
+msgid "Rental deposit guarantee"
+msgstr "Mietkautionsgarantie"
+
+#: src/CasasoftStandards/Service/FeatureService.php:88
+#: src/CasasoftStandards/Service/FeatureService.php:374
+msgid "Raised ground floor"
+msgstr "Hochparterre"
+
+#: src/CasasoftStandards/Service/FeatureService.php:93
+msgid "Has elevator"
+msgstr "Lift"
+
+#: src/CasasoftStandards/Service/FeatureService.php:97
+msgid "Nice view"
+msgstr "Aussicht"
+
+#: src/CasasoftStandards/Service/FeatureService.php:103
+msgid "Lake view"
+msgstr "Seesicht"
+
+#: src/CasasoftStandards/Service/FeatureService.php:109
+msgid "Mountain view"
+msgstr "Bergsicht"
+
+#: src/CasasoftStandards/Service/FeatureService.php:115
+msgid "Sunny"
+msgstr "Sonnig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:122
+msgid "Quiet"
+msgstr "Ruhig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:128
+msgid "Projected construction (not yet realized)"
+msgstr "Bauprojekt (Nicht Realisiert)"
+
+#: src/CasasoftStandards/Service/FeatureService.php:134
+msgid "Contains demolition structure"
+msgstr "Abbruchobjekt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:141
+msgid "Child friendly"
+msgstr "Kinderfreundlich"
+
+#: src/CasasoftStandards/Service/FeatureService.php:145
+#: src/CasasoftStandards/Service/UtilityService.php:62
+msgid "Parking"
+msgstr "Parkplatz"
+
+#: src/CasasoftStandards/Service/FeatureService.php:161
+msgid "Car port"
+msgstr "Carport"
+
+#: src/CasasoftStandards/Service/FeatureService.php:167
+msgid "Double car port"
+msgstr "Duplex"
+
+#: src/CasasoftStandards/Service/FeatureService.php:174
+msgid "On a slope"
+msgstr "Hanglage"
+
+#: src/CasasoftStandards/Service/FeatureService.php:179
+msgid "South-facing slope"
+msgstr "Südhang"
+
+#: src/CasasoftStandards/Service/FeatureService.php:184
+msgid "Even Ground"
+msgstr "Parterre"
+
+#: src/CasasoftStandards/Service/FeatureService.php:189
+msgid "Balcony"
+msgstr "Balkon"
+
+#: src/CasasoftStandards/Service/FeatureService.php:193
+msgid "ISDN"
+msgstr "ISDN-Anschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:197
+msgid "Wheelchair accessible"
+msgstr "Rollstuhlgängig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:201
+msgid "Animal friendly"
+msgstr "Haustiere erlaubt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:208
+msgid "Restrooms"
+msgstr "Nasszellen"
+
+#: src/CasasoftStandards/Service/FeatureService.php:212
+msgid "Water supply"
+msgstr "Wasseranschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:216
+msgid "Sewage supply"
+msgstr "Abwasseranschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:220
+msgid "Power supply"
+msgstr "Stromanschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:224
+msgid "Gas supply"
+msgstr "Gasanschluss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:229
+msgid "Corner house"
+msgstr "Eckhaus"
+
+#: src/CasasoftStandards/Service/FeatureService.php:233
+msgid "Middle house"
+msgstr "Mittelhaus"
+
+#: src/CasasoftStandards/Service/FeatureService.php:239
+msgid "New construction"
+msgstr "Neubau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:243
+msgid "As New"
+msgstr "Neuwertig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:247
+msgid "Old"
+msgstr "Altbau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:251
+msgid "has building law restrictions"
+msgstr "Im Baurecht"
+
+#: src/CasasoftStandards/Service/FeatureService.php:256
+msgid "Swimmingpool"
+msgstr "Swimmingpool"
+
+#: src/CasasoftStandards/Service/FeatureService.php:260
+msgid "Minergie general"
+msgstr "Minergiebauweise"
+
+#: src/CasasoftStandards/Service/FeatureService.php:264
+msgid "Minergie certified"
+msgstr "Minergie zertifiziert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:268
+msgid "Minergie A"
+msgstr "Minergie A"
+
+#: src/CasasoftStandards/Service/FeatureService.php:272
+msgid "Minergie B"
+msgstr "Minergie B"
+
+#: src/CasasoftStandards/Service/FeatureService.php:276
+msgid "Minergie P"
+msgstr "Minergie P"
+
+#: src/CasasoftStandards/Service/FeatureService.php:280
+msgid "Non smoking"
+msgstr "Nichtraucher"
+
+#: src/CasasoftStandards/Service/FeatureService.php:284
+msgid "Partially renovation indigent"
+msgstr "Teils renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:288
+msgid "Projection"
+msgstr "Projektiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:292
+msgid "Demolition property"
+msgstr "Abbruchobjekt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:296
+msgid "Gutted"
+msgstr "Entkernt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:300
+msgid "Shell construction"
+msgstr "Rohbau"
+
+#: src/CasasoftStandards/Service/FeatureService.php:304
+msgid "Well tended"
+msgstr "Gepflegt"
+
+#: src/CasasoftStandards/Service/FeatureService.php:308
+msgid "Modernized"
+msgstr "Modernisiert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:312
+msgid "Dilapidated"
+msgstr "Baufällig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:316
+msgid "Renovation indigent"
+msgstr "Renovationsbedürftig"
+
+#: src/CasasoftStandards/Service/FeatureService.php:320
+msgid "Refurbished"
+msgstr "Vollsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:324
+msgid "Partially refurbished"
+msgstr "Teilsaniert"
+
+#: src/CasasoftStandards/Service/FeatureService.php:328
+msgid "First time occupancy"
+msgstr "Erstbezug"
+
+#: src/CasasoftStandards/Service/FeatureService.php:332
+msgid "Washing machine"
+msgstr "Waschmaschine"
+
+#: src/CasasoftStandards/Service/FeatureService.php:336
+msgid "Tumbler"
+msgstr "Tumbler"
+
+#: src/CasasoftStandards/Service/FeatureService.php:340
+msgid "Kachelofen"
+msgstr "Kachelofen"
+
+#: src/CasasoftStandards/Service/FeatureService.php:344
+msgid "Secondary residency"
+msgstr "Zweitwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:348
+msgid "Primary residency"
+msgstr "Erstwohnung"
+
+#: src/CasasoftStandards/Service/FeatureService.php:352
+msgid "Foreign quota"
+msgstr "Ausländerkontingent"
+
+#: src/CasasoftStandards/Service/FeatureService.php:358
+msgid "Attic"
+msgstr "Dachgeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:366
+msgid "Basement"
+msgstr "Untergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:370
+msgid "Garden level"
+msgstr "Gartengeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:378
+msgid "Cellar level"
+msgstr "Kellergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:382
+msgid "Recessed ground floor"
+msgstr "Tiefparterre"
+
+#: src/CasasoftStandards/Service/FeatureService.php:386
+msgid "Ground floor and first floor"
+msgstr "Erdgeschoss, Obergeschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:390
+msgid "Top floor"
+msgstr "Attikageschoss"
+
+#: src/CasasoftStandards/Service/FeatureService.php:394
+msgid "Base floor"
+msgstr "Sockelgeschoss"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:42
+msgid "External parking space"
+msgstr "Aussenparkplatz"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:46
+msgid "Carport"
+msgstr "Carport"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:50
+msgid "Connected garage"
+msgstr "Garage"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:54
+msgid "Garage box"
+msgstr "Garagenbox"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:58
+msgid "Duplex garage"
+msgstr "Duplex Garage"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:62
+msgid "Underground parking garage"
+msgstr "Tiefgarage"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:70
+msgid "Parking structure"
+msgstr "Parkgebäude"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:74
+msgid "Workroom"
+msgstr "Baselraum"
+
+#: src/CasasoftStandards/Service/IntegratedOfferService.php:78
+msgid "Storage basement"
+msgstr "Keller-Lager"
+
+#: src/CasasoftStandards/Service/NumvalService.php:31
+msgid "General"
+msgstr "Generell"
+
+#: src/CasasoftStandards/Service/NumvalService.php:70
+msgid "Number of"
+msgstr "Anzahl"
+
+#: src/CasasoftStandards/Service/NumvalService.php:193
+msgid "Floor"
+msgstr "Etage"
+
+#: src/CasasoftStandards/Service/NumvalService.php:199
+msgid "Floors"
+msgstr "Etagen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:205
+msgid "Apartments"
+msgstr "Wohnungen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:211
+msgid "Bathrooms"
+msgstr "Badezimmer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:217
+msgid "Numver of parcels"
+msgstr "Anzahl Parzellen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:223
+msgid "Distance to kindergarten"
+msgstr "Kindergarten"
+
+#: src/CasasoftStandards/Service/NumvalService.php:229
+msgid "Distance to primary school"
+msgstr "Unterstufe"
+
+#: src/CasasoftStandards/Service/NumvalService.php:235
+msgid "Distance to high school"
+msgstr "Oberstufe"
+
+#: src/CasasoftStandards/Service/NumvalService.php:241
+msgid "Distance to college"
+msgstr "Universität"
+
+#: src/CasasoftStandards/Service/NumvalService.php:247
+msgid "Distance to bus stop"
+msgstr "Busstation"
+
+#: src/CasasoftStandards/Service/NumvalService.php:253
+msgid "Distance to train station"
+msgstr "Zugstation"
+
+#: src/CasasoftStandards/Service/NumvalService.php:259
+msgid "Distance to post"
+msgstr "Post"
+
+#: src/CasasoftStandards/Service/NumvalService.php:265
+msgid "Distance to bank"
+msgstr "Bank"
+
+#: src/CasasoftStandards/Service/NumvalService.php:271
+msgid "Distance to railway station"
+msgstr "Bergbahn"
+
+#: src/CasasoftStandards/Service/NumvalService.php:277
+msgid "Distance to boat dock"
+msgstr "Hafen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:283
+msgid "Distance to public transport"
+msgstr "ÖV"
+
+#: src/CasasoftStandards/Service/NumvalService.php:289
+msgid "Distance to shop"
+msgstr "Einkauf"
+
+#: src/CasasoftStandards/Service/NumvalService.php:295
+msgid "Distance to freeway"
+msgstr "Autobahn"
+
+#: src/CasasoftStandards/Service/NumvalService.php:301
+msgid "Distance to airport"
+msgstr "Flughafen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:307
+msgid "Rooms"
+msgstr "Zimmer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:313
+msgid "Max. elevator weight"
+msgstr "Traglast Lift"
+
+#: src/CasasoftStandards/Service/NumvalService.php:320
+msgid "Property land area"
+msgstr "Grundstücksfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:341
+msgid "Total floor area"
+msgstr "Bruttogeschossfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:347
+msgid "Net floor area"
+msgstr "Nettogeschossfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:353
+msgid "Floorspace"
+msgstr "Nutzfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:359
+msgid "Main floor space"
+msgstr "Hauptnutzfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:365
+msgid "Secondary usable area"
+msgstr "Nebennutzfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:372
+msgid "Traffic area"
+msgstr "Verkehrsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:378
+msgid "Functional surface"
+msgstr "Funktionsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:386
+msgid "Construction area"
+msgstr "Konstruktionsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:392
+msgid "Construction area supporting"
+msgstr "Konstruktionsfläche tragend"
+
+#: src/CasasoftStandards/Service/NumvalService.php:398
+msgid "Construction area non-supporting"
+msgstr "Konstruktionsfläche nicht-tragend"
+
+#: src/CasasoftStandards/Service/NumvalService.php:414
+msgid "SIA-AGF"
+msgstr "Aussen-Geschossfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:420
+msgid "SIA-ANGF"
+msgstr "Aussen-Nettogeschossfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:426
+msgid "SIA-ANF"
+msgstr "Aussen-Nutzfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:432
+msgid "SIA-AVF"
+msgstr "Aussen-Verkehrsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:438
+msgid "SIA-AFF"
+msgstr "Aussen-Funktionsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:446
+msgid "SIA-AFK"
+msgstr "Aussen-Konstruktionsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:452
+msgid "SIA-AFFT"
+msgstr "Aussen-Konstruktionsfläche tragend"
+
+#: src/CasasoftStandards/Service/NumvalService.php:458
+msgid "SIA-AFFN"
+msgstr "Aussen-Konstruktionsfläche nicht-tragend"
+
+#: src/CasasoftStandards/Service/NumvalService.php:475
+msgid "SIA-GV"
+msgstr "Gebäudevolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:481
+msgid "SIA-ANGV"
+msgstr "Aussen-Nettogeschossvolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:487
+msgid "SIA-ANV"
+msgstr "Aussen-Nutzvolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:493
+msgid "SIA-AVV"
+msgstr "Aussen-Verkehrsvolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:499
+#: src/CasasoftStandards/Service/NumvalService.php:507
+msgid "SIA-AFV"
+msgstr "Aussen-Funktionsvolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:524
+msgid "SIA-GSF"
+msgstr "Grundstücksfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:530
+msgid "SIA-UO"
+msgstr "Aussen-Nettogeschossfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:536
+msgid "SIA-BUF"
+msgstr "Aussen-Nutzfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:542
+msgid "SIA-UUF"
+msgstr "Aussen-Verkehrsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:548
+msgid "SIA-GGF"
+msgstr "Aussen-Konstruktionsfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:557
+msgid "SIA-GFZ"
+msgstr "Geschossflächenziffer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:563
+msgid "SIA-AZ"
+msgstr "Ausnützungsziffer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:569
+#: src/CasasoftStandards/Service/NumvalService.php:575
+#: src/CasasoftStandards/Service/NumvalService.php:581
+msgid "SIA-BMZ"
+msgstr "Baumassenziffer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:590
+msgid "Cubature GVA"
+msgstr "Gebäudevolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:596
+msgid "Cubature SIA"
+msgstr "Gebäudevolumen"
+
+#: src/CasasoftStandards/Service/NumvalService.php:605
+msgid "Utilization number"
+msgstr "Ausnützungsziffer"
+
+#: src/CasasoftStandards/Service/NumvalService.php:611
+msgid "Construction utilization number"
+msgstr "Ausnützungsziffer (Bau)"
+
+#: src/CasasoftStandards/Service/NumvalService.php:617
+msgid "Total living area"
+msgstr "Bruttowohnfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:623
+msgid "Net living area"
+msgstr "Nettowohnfläche"
+
+#: src/CasasoftStandards/Service/NumvalService.php:635
+msgid "Year built"
+msgstr "Baujahr"
+
+#: src/CasasoftStandards/Service/NumvalService.php:641
+#: src/CasasoftStandards/Service/NumvalService.php:647
+msgid "Year of last renovation"
+msgstr "Renovationsjahr"
+
+#: src/CasasoftStandards/Service/NumvalService.php:653
+msgid "Ceiling height"
+msgstr "Raumhöhe"
+
+#: src/CasasoftStandards/Service/NumvalService.php:659
+msgid "Hall height"
+msgstr "Hallenhöhe"
+
+#: src/CasasoftStandards/Service/NumvalService.php:665
+msgid "Max. floor loading"
+msgstr "Max. Bodenbelastung"
+
+#: src/CasasoftStandards/Service/NumvalService.php:671
+msgid "Carrying capacity for crane"
+msgstr "Max. Kranbelastung"
+
+#: src/CasasoftStandards/Service/NumvalService.php:677
+msgid "Carrying capacity for elevator"
+msgstr "Max. Aufzugsbelastung"
+
+#: src/CasasoftStandards/Service/NumvalService.php:684
+msgid "Land price"
+msgstr "Grundstückspreis"
+
+#: src/CasasoftStandards/Service/NumvalService.php:691
+msgid "Gross premium"
+msgstr "Bruttorendite"
+
+#: src/CasasoftStandards/Service/NumvalService.php:698
+msgid "Rental deposit"
+msgstr "Mietkaution"
+
+#: src/CasasoftStandards/Service/UtilityService.php:38
+msgid "Gastronomy"
+msgstr "Gastronomie"
+
+#: src/CasasoftStandards/Service/UtilityService.php:42
+msgid "Vacation"
+msgstr "Ferien"
+
+#: src/CasasoftStandards/Service/UtilityService.php:46
+msgid "Agricultural"
+msgstr "Landwirtschafts&#173;betrieb"
+
+#: src/CasasoftStandards/Service/UtilityService.php:50
+msgid "Industrial"
+msgstr "Industrie"
+
+#: src/CasasoftStandards/Service/UtilityService.php:54
+msgid "Residential"
+msgstr "Wohnen"
+
+#: src/CasasoftStandards/Service/UtilityService.php:58
+msgid "Storage"
+msgstr "Lager"
+
+#: src/CasasoftStandards/Service/UtilityService.php:66
+msgid "Building"
+msgstr "Bauen"
+
+#: src/CasasoftStandards/Service/UtilityService.php:70
+msgid "Investment"
+msgstr "Investitionsobjekt"
+
+#~ msgid "Fully ***"
+#~ msgstr "Voll ***"
+
+#~ msgid "Partialy ***"
+#~ msgstr "Teilweise ***"
+
+#~ msgid "NOT ***"
+#~ msgstr "NICHT ***"
+
+#~ msgid "Gross rent / m² / month"
+#~ msgstr "Bruttomiete / m² / Monat"
+
+#~ msgid "Gross rent / m² / year"
+#~ msgstr "Bruttomiete / m² / Jahr"
+
+#~ msgid "Gross rent / year"
+#~ msgstr "Bruttomiete / Jahr"
+
+#~ msgid "Gross price"
+#~ msgstr "Bruttopreis"
+
+#~ msgid "Net rent / m² / month"
+#~ msgstr "Nettomiete / m² / Monat"
+
+#~ msgid "Net rent / m² / year"
+#~ msgstr "Nettomiete / m² / Jahr"
+
+#~ msgid "Net price"
+#~ msgstr "Nettopreis"
+
+#~ msgid "Price"
+#~ msgstr "Preis"
+
+#~ msgid "Category"
+#~ msgstr "Kategorie"
