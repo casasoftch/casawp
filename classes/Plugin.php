@@ -28,6 +28,30 @@ class Plugin {
         $this->configuration = $configuration;
         $this->conversion = new Conversion;
         $this->locale = substr(get_bloginfo('language'), 0, 2);
+
+        // this is in case wpml is not loaded yet. We will take the first segment of the uri
+        $uri_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri_segments = explode('/', $uri_path);
+
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'en') {
+            $this->locale = 'en';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'de') {
+            $this->locale = 'de';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'fr') {
+            $this->locale = 'fr';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'it') {
+            $this->locale = 'it';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'ru') {
+            $this->locale = 'ru';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'rm') {
+            $this->locale = 'rm';
+        }
+
         add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
 
         //what is this?
