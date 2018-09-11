@@ -469,6 +469,7 @@ class ConversionService {
           case 'zoneTypes': return $this->translator->translate('Zone type', 'casasoft-standards'); break;
           case 'key-facts': return $this->translator->translate('Key facts', 'casasoft-standards'); break;
           case 'areas': return $this->translator->translate('Areas', 'casasoft-standards'); break;
+          case 'volumes': return $this->translator->translate('Volumes', 'casasoft-standards'); break;
           case 'features': return $this->translator->translate('Features', 'casasoft-standards'); break;
           case 'distances': return $this->translator->translate('Distances', 'casasoft-standards'); break;
           case 'price': return $this->translator->translate('Sales price', 'casasoft-standards'); break;
@@ -711,7 +712,15 @@ class ConversionService {
               $template[] = [$key, 'numeric_value'];
             }
           }
-        } elseif ($templateMixed === 'distances') {
+        } elseif ($templateMixed === 'volumes') {
+          $template = [];
+          foreach ($this->numvalService->getDefaultOptions() as $key => $options) {
+            if(strpos($key, 'volume_') !== false) {
+              $template[] = [$key, 'numeric_value'];
+            }
+          }
+        }
+         elseif ($templateMixed === 'distances') {
           $template = [];
           foreach ($this->numvalService->getDefaultOptions() as $key => $options) {
             if(strpos($key, 'distance_') !== false) {

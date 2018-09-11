@@ -2213,7 +2213,7 @@ msgstr ""
 #: classes/Plugin.php:2247 classes/Plugin.php:2256
 #: modules/casawp/src/casawp/Form/FilterForm.php:89
 msgid "Utility"
-msgstr "Utilità"
+msgstr "Scopo"
 
 #: classes/Plugin.php:2248
 msgid "Search Utilities"
@@ -2563,15 +2563,15 @@ msgstr "Tipo Vendita"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:90
 msgid "Choose utility"
-msgstr ""
+msgstr "Scegli scopo"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:99
 msgid "Choose region"
-msgstr ""
+msgstr "Scegli regione"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:108
 msgid "Choose feature"
-msgstr ""
+msgstr "Scegli caratteristica"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:125
 #: modules/casawp/src/casawp/Form/FilterForm.php:126

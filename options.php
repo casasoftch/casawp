@@ -52,6 +52,7 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
+					'casawp_load_scripts_in_footer'
 				);
 				break;
 			case 'singleview':
@@ -253,6 +254,12 @@
 										<br>
 										<?php $name = 'casawp_load_chosen'; ?>
 										<?php $text = 'Chosen'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<br>
+										<?php $name = 'casawp_load_scripts_in_footer'; ?>
+										<?php $text = 'Load casawp.js in Footer'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
