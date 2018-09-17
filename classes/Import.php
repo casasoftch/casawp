@@ -594,6 +594,7 @@ class Import {
     //upload necesary images to wordpress
     if (isset($the_casawp_attachments)) {
       $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
+      $dup_checker_arr = [];
       foreach ($the_casawp_attachments as $the_mediaitem) {
         //look up wp and see if file is already attached
         $existing = false;
@@ -601,6 +602,14 @@ class Import {
         foreach ($wp_casawp_attachments as $key => $wp_mediaitem) {
           $attachment_customfields = get_post_custom($wp_mediaitem->ID);
           $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+
+          // this checks for duplicates and ignores them if they exist. This can fix duplicates existing in the DB if they where, for instance, created durring run-in imports.
+          if (in_array($original_filename, $dup_checker_arr)) {
+            // this file appears to be a duplicate, skip it (that way it will be deleted later) aka. it will remain in $wp_casawp_attachments_to_remove.
+            continue;
+          }
+          $dup_checker_arr[] = $original_filename;
+
           $alt = '';
           if ($original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])) {
             $existing = true;
