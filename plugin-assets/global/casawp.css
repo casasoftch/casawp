@@ -18,3 +18,14 @@
   line-height: 400px;
   text-align: center;
   background-color: #eeeeee; }
+
+
+.casadistance__placeholder {
+height: 435px;
+line-height: 435px;
+text-align: center;
+background-color: #eeeeee; }
+@media (min-width: 992px) {
+  .casadistance__placeholder {
+    height: 785px;
+    line-height: 785px; } }
