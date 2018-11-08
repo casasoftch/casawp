@@ -77,6 +77,7 @@
 					'casawp_load_googlemaps',
 					'casawp_casadistance_active',
 					'casawp_casadistance_basecss',
+					'casawp_load_maps_on_click'
 				);
 				break;
 			case 'archiveview':
@@ -416,6 +417,12 @@
 							<br>
 							<?php $name = 'casawp_casadistance_basecss'; ?>
 							<?php $text = 'Umgebungs-Distanzen Karte CSS laden'; ?>
+							<label>
+								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+							</label>
+							<br>
+							<?php $name = 'casawp_load_maps_on_click'; ?>
+							<?php $text = 'Google Maps via Button laden'; ?>
 							<label>
 								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 							</label>

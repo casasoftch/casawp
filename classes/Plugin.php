@@ -1475,7 +1475,11 @@ class Plugin {
             if (!$google_api_key) {
                 $google_api_key = 'AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY'; //default api key that just works
             }
-            wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key, array(), false, true );
+            if (!get_option('casawp_load_maps_on_click', false)) {
+                wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key . '&callback=initialize', array(), false, true );
+            } else {
+                wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key, array(), false, true );
+            }
         }
 
         if (get_option( 'casawp_casadistance_active', false ) && is_singular('casawp_property')) {

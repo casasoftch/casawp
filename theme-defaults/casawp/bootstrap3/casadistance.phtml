@@ -7,9 +7,20 @@
 		}
 		$zoom = get_option( 'casawp_single_use_zoomlevel', 16);
 	?>
+	<?php if (get_option('casawp_load_maps_on_click', false)): ?>
+		<div class="casadistance__placeholder" id="casadistancePlaceholder">
+			<button class="casadistance__placeholder__show-btn" id="casadistanceShowBtn">Click me to load</button>
+		</div>
+	<?php endif ?>
 	<div
 		class="casadistance"
 		id="casadistance"
+		style="display: none"
+		<?php if (get_option('casawp_load_maps_on_click', false)): ?>
+			data-load-map-on-click="true"
+		<?php else: ?>
+			data-load-map-on-click="false"
+		<?php endif ?>
 		data-lat="<?= $this->offer->getFieldValue('property_geo_latitude') ?>"
 		data-lng="<?= $this->offer->getFieldValue('property_geo_longitude') ?>"
 		data-zoom="<?= $zoom ?>"

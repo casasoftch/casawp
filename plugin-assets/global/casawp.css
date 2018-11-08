@@ -11,3 +11,10 @@
 .casawp-hidden{
 	display: none;
 }
+
+
+.casawp-map__placeholder {
+  height: 400px;
+  line-height: 400px;
+  text-align: center;
+  background-color: #eeeeee; }

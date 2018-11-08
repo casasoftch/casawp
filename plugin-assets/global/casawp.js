@@ -85,7 +85,22 @@ jQuery(document).ready(function($) {
                 var $mapwraper = $(this);
                 if ($mapwraper.data('lat') && $mapwraper.data('lng')) {
                     var map;
-                    initializeMap($mapwraper);
+                    //initializeMap($mapwraper);
+                    if ($('#casawp-mapShowBtn').length) {
+                        $('#casawp-mapShowBtn').click(function() {
+                            console.log("click");
+                            if ($('#casawp-mapShowBtn').length) {
+                                $('#casawp-mapShowBtn').css('display', 'none');
+                            }
+                            if ($('.casawp-map__placeholder').length) {
+                                $('.casawp-map__placeholder').css('display', 'none');
+                            }
+                            $('.casawp-map').css('display', 'block');
+                            initializeMap($mapwraper);
+                        });
+                    } else {
+                        initializeMap($mapwraper);
+                    }
                 }
             });
         }
