@@ -1475,7 +1475,7 @@ class Plugin {
             if (!$google_api_key) {
                 $google_api_key = 'AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY'; //default api key that just works
             }
-            if (!get_option('casawp_load_maps_on_click', false)) {
+            if (get_option('casawp_load_maps_immediately', false)) {
                 wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key . '&callback=initialize', array(), false, true );
             } else {
                 wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key, array(), false, true );
@@ -1770,6 +1770,13 @@ class Plugin {
                 'USD'   => '$',
             ),
             'layout' => 'horizontal',
+        );
+        $fields[] = array(
+            'key' => 'last_import_hash',
+            'label' => __('Last Import Hash', 'casawp'),
+            'name' => 'last_import_hash',
+            'type' => 'text',
+            'required' => 0
         );
         acf_add_local_field_group(array (
             'key' => 'group_casawp_setting',
