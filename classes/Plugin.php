@@ -1476,7 +1476,7 @@ class Plugin {
                 $google_api_key = 'AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY'; //default api key that just works
             }
             if (get_option('casawp_load_maps_immediately', false)) {
-                wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key . '&callback=initialize', array(), false, true );
+                wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key . '&callback=initializeMap', array(), false, true );
             } else {
                 wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key, array(), false, true );
             }
