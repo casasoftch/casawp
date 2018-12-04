@@ -266,7 +266,7 @@ class Plugin {
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
         if (get_option('casawp_use_casagateway_cdn', false)) {
             $orig = get_post_meta($attachment_id, '_origin', true);
-            if ($orig && strpos($orig, 'casagateway.ch') && strpos($orig, '/media-thumb/') ) {
+            if ($orig && strpos($orig, 'casagateway.ch') && strpos($orig, '/media-thumb/') || strpos($orig, '/media/') ) {
                 $remoteSrcArr = $this->origToGwSrc($orig, $size);
                 $image[0] = $remoteSrcArr['src'];
                 $image[1] = $remoteSrcArr['width'];
