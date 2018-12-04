@@ -212,13 +212,13 @@ class Plugin {
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=md', $remoteSrc);
             }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos('?p=lg', $remoteSrc)){
                 $remoteSrc = str_replace('?p=lg', '?p=md', $remoteSrc);
             }
             if (strpos('?p=hd', $remoteSrc)){
                 $remoteSrc = str_replace('?p=hd', '?p=md', $remoteSrc);
             }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos('?p=xl', $remoteSrc)){
                 $remoteSrc = str_replace('?p=xl', '?p=md', $remoteSrc);
             }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
@@ -229,13 +229,13 @@ class Plugin {
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=lg', $remoteSrc);
             }
-            // if (strpos('?p=hd', $remoteSrc)){
+            // if (strpos('?p=lg', $remoteSrc)){
             //     $remoteSrc = str_replace('?p=lg', '?p=lg', $remoteSrc);
             // }
             if (strpos('?p=hd', $remoteSrc)){
                 $remoteSrc = str_replace('?p=hd', '?p=lg', $remoteSrc);
             }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos('?p=xl', $remoteSrc)){
                 $remoteSrc = str_replace('?p=xl', '?p=lg', $remoteSrc);
             }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
@@ -246,10 +246,10 @@ class Plugin {
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=xl', $remoteSrc);
             }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos('?p=lg', $remoteSrc)){
                 $remoteSrc = str_replace('?p=hd', '?p=xl', $remoteSrc);
             }
-            // if (strpos('?p=hd', $remoteSrc)){
+            // if (strpos('?p=xl', $remoteSrc)){
             //     $remoteSrc = str_replace('?p=xl', '?p=xl', $remoteSrc);
             // }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
