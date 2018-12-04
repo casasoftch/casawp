@@ -126,6 +126,7 @@
 			case 'general':
 			default:
 				$checkbox_traps = array(
+					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
@@ -1346,6 +1347,15 @@
 							<tr valign="top">
 								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
+
+									<fieldset>
+										<legend class="screen-reader-text"><span>Bilder direkt von Gateway CDN darstellen.</span></legend>
+										<?php $name = 'casawp_use_casagateway_cdn'; ?>
+										<?php $text = 'Bilder direkt von Gateway CDN darstellen.'; ?>
+										<p><label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
 
 									<fieldset>
 										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>
