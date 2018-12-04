@@ -616,14 +616,22 @@ class Import {
 
           // this checks for duplicates and ignores them if they exist. This can fix duplicates existing in the DB if they where, for instance, created durring run-in imports.
           if (in_array($original_filename, $dup_checker_arr)) {
+            $this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
             // this file appears to be a duplicate, skip it (that way it will be deleted later) aka. it will remain in $wp_casawp_attachments_to_remove.
+            // because it encountered this file before it must be made existing in the past loop right?
+            $existing = true;
             continue;
           }
           $dup_checker_arr[] = $original_filename;
 
           $alt = '';
-          if ($original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])) {
+          if (
+            $original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
+            ||
+            str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
+          ) {
             $existing = true;
+            $this->addToLog('updating attachment ' . $wp_mediaitem->ID);
 
             //its here to stay
             unset($wp_casawp_attachments_to_remove[$key]);
@@ -677,6 +685,7 @@ class Import {
         }
 
         if (!$existing) {
+          $this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
           //insert the new image
           $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
           if (is_int($new_id)) {
@@ -687,14 +696,27 @@ class Import {
         }
 
         //tries to fix missing files
-        if (isset($the_mediaitem['url'])) {
+        if (! get_option('casawp_use_casagateway_cdn', false) && isset($the_mediaitem['url'])) {
           $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
         }
 
 
       } //foreach ($the_casawp_attachments as $the_mediaitem) {
 
-      //featured image
+      //images to remove
+      if ($wp_casawp_attachments_to_remove){
+        $this->addToLog('removing ' . count($wp_casawp_attachments_to_remove) . ' attachments');
+      }
+      foreach ($wp_casawp_attachments_to_remove as $attachment) {
+        $this->addToLog('removing ' . $attachment->ID);
+        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
+
+        // $attachment_customfields = get_post_custom($attachment->ID);
+        // $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+        wp_delete_attachment( $attachment->ID );
+      }
+
+      //featured image (refetch to avoid setting just removed items or not having new items)
       $args = array(
         'post_type'   => 'attachment',
         'numberposts' => -1,
@@ -730,25 +752,23 @@ class Import {
           foreach ($wp_casawp_attachments as $wp_mediaitem) {
             $attachment_customfields = get_post_custom($wp_mediaitem->ID);
             $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-            if ($original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])) {
+            if (
+              $original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
+              ||
+              str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
+            ) {
               $cur_thumbnail_id = get_post_thumbnail_id( $wp_post->ID );
               if ($cur_thumbnail_id != $wp_mediaitem->ID) {
                 set_post_thumbnail( $wp_post->ID, $wp_mediaitem->ID );
                 $this->transcript[$casawp_id]['attachments']["featured_image_set"] = 1;
+                break;
               }
             }
           }
         }
       }
 
-      //images to remove
-      foreach ($wp_casawp_attachments_to_remove as $attachment) {
-        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
 
-        $attachment_customfields = get_post_custom($attachment->ID);
-        $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-        wp_delete_attachment( $attachment->ID );
-      }
 
 
     } //(isset($the_casawp_attachments)
