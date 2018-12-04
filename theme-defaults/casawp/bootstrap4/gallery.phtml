@@ -2,7 +2,7 @@
 <div id="slider_<?= $this->offer->ID ?>" class="casawp-carousel" data-indicators="<?= $indicators ?>">
     <?php foreach ($this->images as $i => $image): ?>
         <div class="item">
-            <?php 
+            <?php
                 $img     = wp_get_attachment_image( $image->ID, 'full', true, array('class' => 'carousel-image') );
                 $img_url = wp_get_attachment_image_src( $image->ID, 'full' );
             ?>
