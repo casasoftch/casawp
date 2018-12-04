@@ -202,8 +202,8 @@ class Plugin {
         // -1024x768_F.jpg
         // -1300x800_F.jpg
         $remoteSrc = $orig;
-        $remoteSrc = str_replcae('%3F', '?', $remoteSrc);
-        $remoteSrc = str_replcae('%3D', '=', $remoteSrc);
+        $remoteSrc = str_replace('%3F', '?', $remoteSrc);
+        $remoteSrc = str_replace('%3D', '=', $remoteSrc);
         $width = null;
         $height = null;
         if ($targetSize === 'casawp-thumb') {
