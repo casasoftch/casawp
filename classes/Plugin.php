@@ -1854,6 +1854,13 @@ class Plugin {
             ),
             'layout' => 'horizontal',
         );
+        $fields[] = array(
+            'key' => 'last_import_hash',
+            'label' => __('Last Import Hash', 'casawp'),
+            'name' => 'last_import_hash',
+            'type' => 'text',
+            'required' => 0
+        );
         acf_add_local_field_group(array (
             'key' => 'group_casawp_setting',
             'title' => __('General settings', 'casawp'),
