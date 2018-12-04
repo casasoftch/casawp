@@ -207,19 +207,38 @@ class Plugin {
         if ($targetSize === 'casawp-thumb') {
             $width = 500;
             $height = 375;
-            $remoteSrc = str_replace('-1300x800_F.jpg', '-'.$width.'x'.$height.'_C.jpg', $remoteSrc);
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=md', $remoteSrc);
+            }
+            if (strpos('?p=hd', $remoteSrc)){
+                $remoteSrc = str_replace('?p=hd', '?p=md', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
         if ($targetSize === 'large') {
             $width = 1024;
             $height = 768;
-            $remoteSrc = str_replace('-1300x800_F.jpg', '-'.$width.'x'.$height.'_F.jpg', $remoteSrc);
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=lg', $remoteSrc);
+            }
+            if (strpos('?p=hd', $remoteSrc)){
+                $remoteSrc = str_replace('?p=hd', '?p=lg', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
         if ($targetSize === 'full') {
             $width = 1300;
             $height = 800;
-            // $remoteSrc = str_replace('-1300x800_F.jpg', '-'.$width.'x'.$height.'_F.jpg', $remoteSrc);
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=hd', $remoteSrc);
+            }
+            // if (strpos('?p=hd', $remoteSrc)){
+            //     $remoteSrc = str_replace('?p=hd', '?p=hd', $remoteSrc);
+            // }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
         $remoteSrc = str_replace('http://', 'https://', $remoteSrc);
+        $remoteSrc = str_replace('casagateway.ch', 'gwcdn.casasoft.com', $remoteSrc);
         return [
             'src' => $remoteSrc,
             'width' => $width,
@@ -228,7 +247,7 @@ class Plugin {
     }
 
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
-        if (get_option('casawp_use_casagateway_cdn', true)) {
+        if (get_option('casawp_use_casagateway_cdn', false)) {
             $orig = get_post_meta($attachment_id, '_origin', true);
             if ($orig && strpos($orig, 'casagateway.ch') && strpos($orig, '/media-thumb/') ) {
                 $remoteSrcArr = $this->origToGwSrc($orig, $size);
@@ -241,7 +260,7 @@ class Plugin {
     }
 
     public function modifyPostThumbnailHtml($html, $post_id, $post_thumbnail_id, $size, $attr){
-        if (get_option('casawp_use_casagateway_cdn', true)) {
+        if (get_option('casawp_use_casagateway_cdn', false)) {
             $post_thumbnail_id = get_post_thumbnail_id( $post_id );
             $orig = get_post_meta($post_thumbnail_id, '_origin', true);
             $attachment_id = $post_thumbnail_id;

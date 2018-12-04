@@ -290,8 +290,9 @@ class Import {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
     } elseif ($the_mediaitem['url']) { //external
-      if (get_option('casawp_use_casagateway_cdn', false)){
+      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)){
         // simply don't copy the original file (the orig meta is used for rendering instead)
+        $filename = $the_mediaitem['url'];
       } else {
         $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
       }
@@ -302,8 +303,12 @@ class Import {
     if ($filename && (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename) || get_option('casawp_use_casagateway_cdn', false))) {
       //new file attachment upload it and attach it fully
       $wp_filetype = wp_check_filetype(basename($filename), null );
+      $guid = CASASYNC_CUR_UPLOAD_BASEURL . $filename;
+      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
+        $guid = $filename;
+      }
       $attachment = array(
-        'guid'           => CASASYNC_CUR_UPLOAD_BASEURL . $filename,
+        'guid'           => $guid,
         'post_mime_type' => $wp_filetype['type'],
         'post_title'     =>  preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) ),
         'post_content'   => '',
