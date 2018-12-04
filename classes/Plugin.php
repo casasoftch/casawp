@@ -206,19 +206,43 @@ class Plugin {
         $remoteSrc = str_replace('%3D', '=', $remoteSrc);
         $width = null;
         $height = null;
+        //echo $remoteSrc;
+        // echo "*" . $targetSize . "*"; 
+        /*if (strpos($orig, '-p-xl.jpg')){
+            $remoteSrc = str_replace('-p-xl.jpg', '.jpg?p=xl', $remoteSrc);
+        }*/
+        if ($targetSize === 'thumbnail') {
+            $width = 240;
+            $height = 180;
+            //echo '.';
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=lg')){
+                $remoteSrc = str_replace('?p=lg', '?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=hd')){
+                $remoteSrc = str_replace('?p=hd', '?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=xl')){
+                //echo 'xl_prop';
+                $remoteSrc = str_replace('?p=xl', '?p=sm', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
+        }
         if ($targetSize === 'casawp-thumb') {
             $width = 500;
             $height = 375;
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=md', $remoteSrc);
             }
-            if (strpos('?p=lg', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=lg')){
                 $remoteSrc = str_replace('?p=lg', '?p=md', $remoteSrc);
             }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=hd')){
                 $remoteSrc = str_replace('?p=hd', '?p=md', $remoteSrc);
             }
-            if (strpos('?p=xl', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=xl')){
                 $remoteSrc = str_replace('?p=xl', '?p=md', $remoteSrc);
             }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
@@ -229,13 +253,13 @@ class Plugin {
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=lg', $remoteSrc);
             }
-            // if (strpos('?p=lg', $remoteSrc)){
+            // if (strpos($remoteSrc, '?p=lg')){
             //     $remoteSrc = str_replace('?p=lg', '?p=lg', $remoteSrc);
             // }
-            if (strpos('?p=hd', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=hd')){
                 $remoteSrc = str_replace('?p=hd', '?p=lg', $remoteSrc);
             }
-            if (strpos('?p=xl', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=xl')){
                 $remoteSrc = str_replace('?p=xl', '?p=lg', $remoteSrc);
             }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
@@ -246,10 +270,10 @@ class Plugin {
             if (strpos($orig, '-1300x800_F.jpg')){
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=xl', $remoteSrc);
             }
-            if (strpos('?p=lg', $remoteSrc)){
+            if (strpos($remoteSrc, '?p=lg')){
                 $remoteSrc = str_replace('?p=hd', '?p=xl', $remoteSrc);
             }
-            // if (strpos('?p=xl', $remoteSrc)){
+            // if (strpos($remoteSrc, '?p=xl')){
             //     $remoteSrc = str_replace('?p=xl', '?p=xl', $remoteSrc);
             // }
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
@@ -266,7 +290,7 @@ class Plugin {
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
         if (get_option('casawp_use_casagateway_cdn', false)) {
             $orig = get_post_meta($attachment_id, '_origin', true);
-            if ($orig && strpos($orig, 'casagateway.ch') && strpos($orig, '/media-thumb/') || strpos($orig, '/media/') ) {
+            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/')) ) {
                 $remoteSrcArr = $this->origToGwSrc($orig, $size);
                 $image[0] = $remoteSrcArr['src'];
                 $image[1] = $remoteSrcArr['width'];
