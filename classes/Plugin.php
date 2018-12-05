@@ -207,7 +207,7 @@ class Plugin {
         $width = null;
         $height = null;
         //echo $remoteSrc;
-        // echo "*" . $targetSize . "*"; 
+        // echo "*" . $targetSize . "*";
         /*if (strpos($orig, '-p-xl.jpg')){
             $remoteSrc = str_replace('-p-xl.jpg', '.jpg?p=xl', $remoteSrc);
         }*/
@@ -279,7 +279,7 @@ class Plugin {
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
         $remoteSrc = str_replace('http://', 'https://', $remoteSrc);
-        $remoteSrc = str_replace('casagateway.ch', 'gwcdn.casasoft.com', $remoteSrc);
+        $remoteSrc = str_replace('casagateway.ch', 'cdn.casasoft.com', $remoteSrc);
         return [
             'src' => $remoteSrc,
             'width' => $width,
