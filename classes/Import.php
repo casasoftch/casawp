@@ -603,10 +603,10 @@ class Import {
     }
 
     //upload necesary images to wordpress
-    if (isset($the_casawp_attachments)) {
+    if (isset($the_casawp_attachments)) { // go through each attachment specified in xml
       $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
       $dup_checker_arr = [];
-      foreach ($the_casawp_attachments as $the_mediaitem) {
+      foreach ($the_casawp_attachments as $the_mediaitem) { // go through each available attachment already in db
         //look up wp and see if file is already attached
         $existing = false;
         $existing_attachment = array();
@@ -619,8 +619,9 @@ class Import {
             $this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
             // this file appears to be a duplicate, skip it (that way it will be deleted later) aka. it will remain in $wp_casawp_attachments_to_remove.
             // because it encountered this file before it must be made existing in the past loop right?
-            $existing = true;
-            continue;
+            // DISABLE FOR NOW
+            // $existing = true;
+            // continue;
           }
           $dup_checker_arr[] = $original_filename;
 
@@ -633,7 +634,7 @@ class Import {
             $existing = true;
             $this->addToLog('updating attachment ' . $wp_mediaitem->ID);
 
-            //its here to stay
+            //it's here to stay
             unset($wp_casawp_attachments_to_remove[$key]);
 
             $types = wp_get_post_terms( $wp_mediaitem->ID, 'casawp_attachment_type');
