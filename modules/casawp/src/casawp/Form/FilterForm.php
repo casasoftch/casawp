@@ -190,6 +190,32 @@ class FilterForm extends Form
             ),
             (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
         );
+
+
+        // order by element
+        $this->addSelector(
+            'orderby',
+            __('Order by', 'casawp'),
+            __('Choose order','casawp'),
+            [
+                "location" => __("Location",'casawp'),
+                "title" => __("Title",'casawp'),
+            ],
+            (isset($_GET['orderby']) ? $_GET['orderby'] : false)
+        );
+
+        // order dir element
+        $this->addSelector(
+            'order',
+            __('Order direction', 'casawp'),
+            __('Choose order direction','casawp'),
+            [
+                "ASC" => __("Ascending",'casawp'),
+                "DESC" => __("Descending",'casawp'),
+            ],
+            (isset($_GET['order']) ? $_GET['order'] : false)
+        );
+
     }
 
     private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
@@ -201,8 +227,11 @@ class FilterForm extends Form
             <?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
             <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
         <?php endif ?>*/
-
-        if (count($chosen_values) > 1) {
+        if ($name === 'orderby'){
+            $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
+        } else if ($name === 'order'){
+            $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
+        } else if (count($chosen_values) > 1) {
             if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'singleselect') {
                 $this->options['casawp_filter_'.$name.'_elementtype'] = 'multiselect';
             }
@@ -533,6 +562,15 @@ class FilterForm extends Form
             $options[(string) $i] = $i;
         }
         return $options;
+    }
+
+    public function getOrderOptions(){
+        /*if ($this->options['casawp_filter_order_active']) {
+            return true;
+        } else {
+            return false;
+        }*/
+        return [];
     }
 
     public function getPriceOptions(){

@@ -1,6 +1,5 @@
 <div class="casawp-filterform-wrap">
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-filterform')); ?>
-
 	<?php if ($form->getAvailabilityOptions()): ?>
 		<?php echo $this->formElement($form->get('availabilities')->setAttribute('style', 'display:none')); ?>
 	<?php endif ?>
@@ -234,7 +233,20 @@
 			<?php echo $this->formElement($form->get('regions')); ?>
 		<?php endif ?>
 	<?php endif ?>
-
+	
+	<?php if ($form->getOrderOptions()): ?>
+		<div class="casawp-filterform-duo casawp-filterform-order">
+			<div class="casawp-filterform-duo-label">
+			  Sortierung
+			</div>
+			<div class="casawp-filterform-duo-item">
+				<?php echo $this->formElement($form->get('orderby')); ?>
+			</div>
+			<div class="casawp-filterform-duo-item">
+				<?php echo $this->formElement($form->get('order')); ?>
+			</div>
+		</div>
+	<?php endif ?>
 	<input type="submit" class="casawp-filterform-button" value="<?= __('Search', 'casawp') ?>">
 
 	<?= $this->form()->closeTag(); ?>
