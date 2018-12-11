@@ -198,9 +198,9 @@ class FilterForm extends Form
             __('Order by', 'casawp'),
             __('Choose order','casawp'),
             [
-                "location" => __("Location",'casawp'),
+                "date" => __('Date', 'casawp'),
                 "price" => __('Price', 'casawp'),
-                "date" => __('Date', 'casawp')
+                "location" => __("Location",'casawp'),
             ],
             (isset($_GET['orderby']) ? $_GET['orderby'] : false)
         );
