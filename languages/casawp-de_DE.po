@@ -2837,11 +2837,11 @@ msgstr "Sortieren nach"
 
 #: 
 msgid "Ascending"
-msgstr ""
+msgstr "Aufsteigend"
 
 #: 
 msgid "Descending"
-msgstr ""
+msgstr "Absteigend"
 
 #: 
 msgid "Order direction"
