@@ -2826,3 +2826,27 @@ msgstr ""
 msgid "Ground floor"
 msgstr ""
 
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
