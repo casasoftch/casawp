@@ -2851,3 +2851,7 @@ msgstr "Reihenfolge"
 msgid "Choose order direction"
 msgstr "Reihenfolge wählen"
 
+#: 
+msgid "Date"
+msgstr "Datum"
+
