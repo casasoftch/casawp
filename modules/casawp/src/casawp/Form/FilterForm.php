@@ -635,7 +635,8 @@ class FilterForm extends Form
       return $options;
     }
 
-    public function populateValues($data)
+    // yes onlybase is not used but required to be interface compatible (keep it!!!)
+    public function populateValues($data, $onlyBase = false)
     {
         if (!is_array($data) && !$data instanceof Traversable) {
             throw new Exception\InvalidArgumentException(sprintf(
