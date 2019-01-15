@@ -2,7 +2,7 @@
 	<?php if(get_option('casawp_single_use_zoomlevel') != '0') : ?>
 		<?php if (!get_option('casawp_load_maps_immediately', false)): ?>
 			<div class="casawp-map__placeholder" id="casawp-mapPlaceholder">
-				<button class="btn btn-primary casawp-map__placeholder__show-btn" id="casawp-mapShowBtn">Click me to load</button>
+				<button class="btn btn-primary casawp-map__placeholder__show-btn" id="casawp-mapShowBtn"><?php __('Load map', 'casawp') ?></button>
 			</div>
 		<?php endif ?>
 		<?php $map_url = "https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=" . substr(get_locale(), 0, 2)  . "&amp;geocode=&amp;q=" . $this->offer->getFieldValue('property_geo_latitude') .','.$this->offer->getFieldValue('property_geo_longitude') . "&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=" . $this->offer->getFieldValue('property_geo_latitude') .',' . $this->offer->getFieldValue('property_geo_longitude') . "&amp;t=m&amp;z=12"; ?>
