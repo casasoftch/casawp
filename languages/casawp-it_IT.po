@@ -2826,3 +2826,39 @@ msgstr "Acconto spese"
 msgid "Ground floor"
 msgstr "Piano terreno"
 
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
+#: 
+msgid "Date"
+msgstr ""
+
+#: 
+msgid "Load distance map"
+msgstr "Mostra la mappa della distanza"
+
+#: 
+msgid "Load map"
+msgstr "Mostra la mappa"
+
