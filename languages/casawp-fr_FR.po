@@ -2826,3 +2826,39 @@ msgstr "Charges"
 msgid "Ground floor"
 msgstr "Rez-de-chaussée"
 
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
+#: 
+msgid "Date"
+msgstr ""
+
+#: 
+msgid "Load distance map"
+msgstr "Afficher la carte des distances"
+
+#: 
+msgid "Load map"
+msgstr "Afficher la carte"
+
