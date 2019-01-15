@@ -2855,3 +2855,11 @@ msgstr "Reihenfolge wählen"
 msgid "Date"
 msgstr "Datum"
 
+#: 
+msgid "Load distance map"
+msgstr "Distanzenkarte laden"
+
+#: 
+msgid "Load map"
+msgstr "Karte laden"
+
