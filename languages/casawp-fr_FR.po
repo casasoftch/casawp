@@ -1535,7 +1535,7 @@ msgstr "Hotel\t"
 
 #: classes/Conversion.php:457
 msgid "Public transportation"
-msgstr "Transports en commun"
+msgstr "Transports"
 
 #: classes/Conversion.php:458
 msgid "Shopping"
@@ -1894,7 +1894,7 @@ msgstr "Tout"
 
 #: classes/Plugin.php:1704
 msgid "Net Price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: classes/Plugin.php:1713
 msgid "Net price property segment"
@@ -1906,7 +1906,7 @@ msgstr "Segment de prix net"
 
 #: classes/Plugin.php:1741
 msgid "Gross Price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: classes/Plugin.php:1750
 msgid "Gross price property segment"
@@ -2626,7 +2626,7 @@ msgstr "de %1$s %2$.1f million"
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:23
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:20
 msgid "I am interested concerning this property. Please contact me."
-msgstr "Je suis intéressé par cette propriété. Veillez me contactez-moi s’il vous plaît."
+msgstr "Je suis intéressé/e par cette propriété. Veuillez me contacter s’il vous plaît."
 
 #: modules/casawp/src/casawp/Service/Offer.php:95
 #: modules/casawp/src/casawp/Service/Offer.php:899
@@ -2646,7 +2646,7 @@ msgstr "Prix ​​de vente"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:19
 msgid "Gross price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: modules/casawp/src/casawp/Service/Offer.php:111
 #: modules/casawp/src/casawp/Service/Offer.php:913
@@ -2657,7 +2657,7 @@ msgstr "Prix brut"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:26
 msgid "Net price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: modules/casawp/src/casawp/Service/Offer.php:260
 #: modules/casawp/src/casawp/Service/Project.php:191
@@ -2736,7 +2736,7 @@ msgstr "Fournisseur"
 #: theme-defaults/casawp/bootstrap2/seller.phtml:14
 #: theme-defaults/casawp/bootstrap3/seller.phtml:14
 msgid "I am interested concerning this property. Please contact me"
-msgstr "Je suis intéressé par cette propriété. Veillez me contactez-moi s’il vous plaît."
+msgstr "Je suis intéressé/e par cette propriété. Veuillez me contacter s’il vous plaît."
 
 #: theme-defaults/casawp/bootstrap2/seller.phtml:16
 #: theme-defaults/casawp/bootstrap3/seller.phtml:16
@@ -2809,4 +2809,56 @@ msgstr "louer"
 #: 
 msgid "School"
 msgstr "École"
+
+#: 
+msgid "Choose country"
+msgstr ""
+
+#: 
+msgid "Countries"
+msgstr ""
+
+#: 
+msgid "Extra Costs"
+msgstr "Charges"
+
+#: 
+msgid "Ground floor"
+msgstr "Rez-de-chaussée"
+
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
+#: 
+msgid "Date"
+msgstr ""
+
+#: 
+msgid "Load distance map"
+msgstr "Afficher la carte des distances"
+
+#: 
+msgid "Load map"
+msgstr "Afficher la carte"
 

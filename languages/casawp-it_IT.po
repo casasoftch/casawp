@@ -2213,7 +2213,7 @@ msgstr ""
 #: classes/Plugin.php:2247 classes/Plugin.php:2256
 #: modules/casawp/src/casawp/Form/FilterForm.php:89
 msgid "Utility"
-msgstr "Utilità"
+msgstr "Scopo"
 
 #: classes/Plugin.php:2248
 msgid "Search Utilities"
@@ -2523,11 +2523,11 @@ msgstr ""
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:34
 msgid "Ms."
-msgstr ""
+msgstr "Signora"
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:35
 msgid "Mr."
-msgstr ""
+msgstr "Signore"
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:47
 msgid "First name"
@@ -2563,15 +2563,15 @@ msgstr "Tipo Vendita"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:90
 msgid "Choose utility"
-msgstr ""
+msgstr "Scegli scopo"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:99
 msgid "Choose region"
-msgstr ""
+msgstr "Scegli regione"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:108
 msgid "Choose feature"
-msgstr ""
+msgstr "Scegli caratteristica"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:125
 #: modules/casawp/src/casawp/Form/FilterForm.php:126
@@ -2809,4 +2809,56 @@ msgstr "Affitto"
 #: 
 msgid "School"
 msgstr "Scuola"
+
+#: 
+msgid "Choose country"
+msgstr ""
+
+#: 
+msgid "Countries"
+msgstr ""
+
+#: 
+msgid "Extra Costs"
+msgstr "Acconto spese"
+
+#: 
+msgid "Ground floor"
+msgstr "Piano terreno"
+
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
+#: 
+msgid "Date"
+msgstr ""
+
+#: 
+msgid "Load distance map"
+msgstr "Mostra la mappa della distanza"
+
+#: 
+msgid "Load map"
+msgstr "Mostra la mappa"
 

@@ -52,6 +52,7 @@
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
 					'casawp_load_chosen',
+					'casawp_load_scripts_in_footer'
 				);
 				break;
 			case 'singleview':
@@ -76,6 +77,7 @@
 					'casawp_load_googlemaps',
 					'casawp_casadistance_active',
 					'casawp_casadistance_basecss',
+					'casawp_load_maps_immediately'
 				);
 				break;
 			case 'archiveview':
@@ -124,6 +126,7 @@
 			case 'general':
 			default:
 				$checkbox_traps = array(
+					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
@@ -253,6 +256,12 @@
 										<br>
 										<?php $name = 'casawp_load_chosen'; ?>
 										<?php $text = 'Chosen'; ?>
+										<label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label>
+										<br>
+										<?php $name = 'casawp_load_scripts_in_footer'; ?>
+										<?php $text = 'Load casawp.js in Footer'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
@@ -409,6 +418,12 @@
 							<br>
 							<?php $name = 'casawp_casadistance_basecss'; ?>
 							<?php $text = 'Umgebungs-Distanzen Karte CSS laden'; ?>
+							<label>
+								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+							</label>
+							<br>
+							<?php $name = 'casawp_load_maps_immediately'; ?>
+							<?php $text = 'Google Maps sofort laden'; ?>
 							<label>
 								<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 							</label>
@@ -808,7 +823,20 @@
 								</select>
 							</td>
 						</tr>
-            <tr  valign="top">
+						<tr  valign="top">
+							<?php $name = 'casawp_filter_countries_elementtype'; ?>
+							<?php $text = 'Länder-Filter'; ?>
+							<?php $options = ['hidden' => 'Ausblenden', 'multiselect' => 'Mehrfach-Filter', 'singleselect' => 'Einfache Auswahl', 'multicheckbox' => 'Checkboxes', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
 							<?php $name = 'casawp_filter_rooms_from_elementtype'; ?>
 							<?php $text = 'Zimmer-Filter von'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
@@ -821,7 +849,7 @@
 								</select>
 							</td>
 						</tr>
-            <tr  valign="top">
+						<tr  valign="top">
 							<?php $name = 'casawp_filter_rooms_to_elementtype'; ?>
 							<?php $text = 'Zimmer-Filter zu'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
@@ -1319,6 +1347,15 @@
 							<tr valign="top">
 								<th scope="row">Import Einstellungen<br></th>
 								<td class="front-static-pages">
+
+									<fieldset>
+										<legend class="screen-reader-text"><span>Bilder direkt von Gateway CDN darstellen.</span></legend>
+										<?php $name = 'casawp_use_casagateway_cdn'; ?>
+										<?php $text = 'Bilder direkt von Gateway CDN darstellen.'; ?>
+										<p><label>
+											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
+										</label></p>
+									</fieldset>
 
 									<fieldset>
 										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>

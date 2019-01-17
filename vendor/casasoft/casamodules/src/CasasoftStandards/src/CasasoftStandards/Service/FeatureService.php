@@ -264,6 +264,18 @@ class FeatureService {
                 'label' => $this->translator->translate('Minergie certified', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-minergie-a' => array(
+                'label' => $this->translator->translate('Minergie A', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-minergie-b' => array(
+                'label' => $this->translator->translate('Minergie B', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-minergie-p' => array(
+                'label' => $this->translator->translate('Minergie P', 'casasoft-standards'),
+                'icon' => '',
+            ),
            'is-non-smoking' => array(
                'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
                'icon' => '',

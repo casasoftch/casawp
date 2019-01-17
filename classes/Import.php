@@ -231,20 +231,20 @@ class Import {
     if (isset($parsed_url['query']) && $parsed_url['query']) {
       $file_parts = pathinfo($parsed_url['path']);
 
-      $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : ''; 
-      $host     = isset($parsed_url['host']) ? $parsed_url['host'] : ''; 
-      $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : ''; 
-      $user     = isset($parsed_url['user']) ? $parsed_url['user'] : ''; 
-      $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : ''; 
-      $pass     = ($user || $pass) ? "$pass@" : ''; 
-      $path     = isset($parsed_url['path']) ? $parsed_url['path'] : ''; 
+      $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+      $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+      $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+      $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+      $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+      $pass     = ($user || $pass) ? "$pass@" : '';
+      $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
 
       $extension = $file_parts['extension'];
       $pathWithoutExtension = str_replace('.'.$file_parts['extension'], '', $path);
 
-      $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : ''; 
-      $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : ''; 
-      
+      $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+      $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
       $converted = $scheme.$user.$pass.$host.$port.$pathWithoutExtension . str_replace(['?', '&', '#', '='], '-', $query.$fragment) . '.'.$extension;
 
       $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($converted);
@@ -270,6 +270,7 @@ class Import {
           $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
         }
         $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
+
         if (strpos($fileurl, '://')) {
           $could_copy = copy(urldecode($fileurl), CASASYNC_CUR_UPLOAD_BASEDIR . $filename );
         } else {
@@ -279,6 +280,7 @@ class Import {
           $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' .$filename;
           $filename = false;
         }
+
       }
     }
     return $filename;
@@ -288,16 +290,25 @@ class Import {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/'. $the_mediaitem['file'];
     } elseif ($the_mediaitem['url']) { //external
-      $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
+      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)){
+        // simply don't copy the original file (the orig meta is used for rendering instead)
+        $filename = $the_mediaitem['url'];
+      } else {
+        $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
+      }
     } else { //missing
       $filename = false;
     }
 
-    if ($filename && is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
+    if ($filename && (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename) || get_option('casawp_use_casagateway_cdn', false))) {
       //new file attachment upload it and attach it fully
       $wp_filetype = wp_check_filetype(basename($filename), null );
+      $guid = CASASYNC_CUR_UPLOAD_BASEURL . $filename;
+      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
+        $guid = $filename;
+      }
       $attachment = array(
-        'guid'           => CASASYNC_CUR_UPLOAD_BASEURL . $filename,
+        'guid'           => $guid,
         'post_mime_type' => $wp_filetype['type'],
         'post_title'     =>  preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) ),
         'post_content'   => '',
@@ -340,8 +351,10 @@ class Import {
             $this->WPML = true;
           }
       } else {
-        if (get_bloginfo('language')) {
-          $main_lang = substr(get_bloginfo('language'), 0, 2);
+        if (get_locale()) {
+          $main_lang = substr(get_locale(), 0, 2);
+        //if (get_bloginfo('language')) {
+        //  $main_lang = substr(get_bloginfo('language'), 0, 2);
         }
       }
       $this->main_lang = $main_lang;
@@ -590,20 +603,38 @@ class Import {
     }
 
     //upload necesary images to wordpress
-    if (isset($the_casawp_attachments)) {
+    if (isset($the_casawp_attachments)) { // go through each attachment specified in xml
       $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
-      foreach ($the_casawp_attachments as $the_mediaitem) {
+      $dup_checker_arr = [];
+      foreach ($the_casawp_attachments as $the_mediaitem) { // go through each available attachment already in db
         //look up wp and see if file is already attached
         $existing = false;
         $existing_attachment = array();
         foreach ($wp_casawp_attachments as $key => $wp_mediaitem) {
           $attachment_customfields = get_post_custom($wp_mediaitem->ID);
           $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-          $alt = '';
-          if ($original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])) {
-            $existing = true;
 
-            //its here to stay
+          // this checks for duplicates and ignores them if they exist. This can fix duplicates existing in the DB if they where, for instance, created durring run-in imports.
+          if (in_array($original_filename, $dup_checker_arr)) {
+            $this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
+            // this file appears to be a duplicate, skip it (that way it will be deleted later) aka. it will remain in $wp_casawp_attachments_to_remove.
+            // because it encountered this file before it must be made existing in the past loop right?
+            // DISABLE FOR NOW
+            // $existing = true;
+            // continue;
+          }
+          $dup_checker_arr[] = $original_filename;
+
+          $alt = '';
+          if (
+            $original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
+            ||
+            str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
+          ) {
+            $existing = true;
+            $this->addToLog('updating attachment ' . $wp_mediaitem->ID);
+
+            //it's here to stay
             unset($wp_casawp_attachments_to_remove[$key]);
 
             $types = wp_get_post_terms( $wp_mediaitem->ID, 'casawp_attachment_type');
@@ -655,6 +686,7 @@ class Import {
         }
 
         if (!$existing) {
+          $this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
           //insert the new image
           $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
           if (is_int($new_id)) {
@@ -665,14 +697,27 @@ class Import {
         }
 
         //tries to fix missing files
-        if (isset($the_mediaitem['url'])) {
+        if (! get_option('casawp_use_casagateway_cdn', false) && isset($the_mediaitem['url'])) {
           $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
         }
 
 
       } //foreach ($the_casawp_attachments as $the_mediaitem) {
 
-      //featured image
+      //images to remove
+      if ($wp_casawp_attachments_to_remove){
+        $this->addToLog('removing ' . count($wp_casawp_attachments_to_remove) . ' attachments');
+      }
+      foreach ($wp_casawp_attachments_to_remove as $attachment) {
+        $this->addToLog('removing ' . $attachment->ID);
+        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
+
+        // $attachment_customfields = get_post_custom($attachment->ID);
+        // $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
+        wp_delete_attachment( $attachment->ID );
+      }
+
+      //featured image (refetch to avoid setting just removed items or not having new items)
       $args = array(
         'post_type'   => 'attachment',
         'numberposts' => -1,
@@ -708,25 +753,23 @@ class Import {
           foreach ($wp_casawp_attachments as $wp_mediaitem) {
             $attachment_customfields = get_post_custom($wp_mediaitem->ID);
             $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-            if ($original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])) {
+            if (
+              $original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
+              ||
+              str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
+            ) {
               $cur_thumbnail_id = get_post_thumbnail_id( $wp_post->ID );
               if ($cur_thumbnail_id != $wp_mediaitem->ID) {
                 set_post_thumbnail( $wp_post->ID, $wp_mediaitem->ID );
                 $this->transcript[$casawp_id]['attachments']["featured_image_set"] = 1;
+                break;
               }
             }
           }
         }
       }
 
-      //images to remove
-      foreach ($wp_casawp_attachments_to_remove as $attachment) {
-        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
 
-        $attachment_customfields = get_post_custom($attachment->ID);
-        $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-        wp_delete_attachment( $attachment->ID );
-      }
 
 
     } //(isset($the_casawp_attachments)
@@ -1585,6 +1628,7 @@ class Import {
 
   public function project2Array($project_xml){
     $data['ref'] = (isset($project_xml['id']) ? $project_xml['id']->__toString() : '');
+    $data['referenceId'] = (isset($project_xml['referenceId']) ? $project_xml['referenceId']->__toString() : '');
 
     $di = 0;
     if ($project_xml->details) {
@@ -1594,6 +1638,7 @@ class Import {
         $data['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
 
         $dd = 0;
+        $data['details'][$di]['descriptions'] = [];
         if ($xml_detail->descriptions) {
           foreach ($xml_detail->descriptions->description as $xml_description) {
             $dd++;
@@ -1610,6 +1655,7 @@ class Import {
         $data['units'] = array();
         foreach ($project_xml->units->unit as $xml_unit) {
           $ui++;
+          $data['units'][$ui]['referenceId'] = (isset($xml_unit['referenceId']) ? $xml_unit['referenceId']->__toString() : '');
           $data['units'][$ui]['ref'] = (isset($xml_unit['id']) ? $xml_unit['id']->__toString() : '');
           $data['units'][$ui]['name'] = (isset($xml_unit->name) ? $xml_unit->name->__toString() : '');
           if ($xml_unit->details) {
@@ -1619,6 +1665,7 @@ class Import {
               $data['units'][$ui]['details'][$di]['name'] = (isset($xml_detail->name) ? $xml_detail->name->__toString() : '');
 
               $dd = 0;
+              $data['units'][$ui]['details'][$di]['descriptions'] = [];
               if ($xml_detail->descriptions) {
                 foreach ($xml_detail->descriptions->description as $xml_description) {
                   $dd++;
@@ -1964,7 +2011,7 @@ class Import {
             $this->transcript[$casawp_id]['action'] = 'new';
             $the_post['post_title'] = $projectData['detail']['name'];
             $the_post['post_content'] = 'unsaved project';
-            $the_post['post_status'] = 'pending';
+            $the_post['post_status'] = 'publish';
             $the_post['post_type'] = 'casawp_project';
             $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
             $_POST['icl_post_language'] = $lang;
@@ -2063,17 +2110,20 @@ class Import {
 
 
 
-    //skip if is the same as before
-    $update = false;
-    if (
-      !isset($old_meta_data['last_import_hash'])
-      || isset($_GET['force_all_properties'])
-      || $curImportHash != $old_meta_data['last_import_hash']
-    ) {
-        $update = true;
-    } else {
-      //skip if is the same as before
-      $this->addToLog('skipped project: '. $casawp_id);
+    //skip if is the same as before (accept if was trashed (reactivation))
+    $update = true;
+    if ($wp_post->post_status == 'publish') {
+      $update = false;
+      if (
+        !isset($old_meta_data['last_import_hash'])
+        || isset($_GET['force_all_properties'])
+        || $curImportHash != $old_meta_data['last_import_hash']
+      ) {
+          $update = true;
+      } else {
+        //skip if is the same as before
+        $this->addToLog('skipped project: '. $casawp_id);
+      }
     }
 
     if ($update) {
@@ -2086,8 +2136,7 @@ class Import {
       $new_meta_data['last_import_hash'] = $curImportHash;
 
       //set referenceId
-      $new_meta_data['last_import_hash'] = $projectData['referenceId'];
-
+      $new_meta_data['referenceId'] = $projectData['referenceId'];
 
       // $descriptionParts = [];
       // foreach ($projectData['detail']['descriptions'] as $desc) {
@@ -2189,7 +2238,7 @@ class Import {
         //is unit already in db
         $unit_casawp_id = 'subunit_' . $unitData['ref'] . $lang;
 
-        $the_query = new \WP_Query( 'post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
+        $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id );
         $wp_unit_post = false;
         while ( $the_query->have_posts() ) :
           $the_query->the_post();
@@ -2203,7 +2252,7 @@ class Import {
           $this->transcript[$unit_casawp_id]['action'] = 'new';
           $the_post['post_title'] = $unitData['detail']['name'];
           $the_post['post_content'] = 'unsaved unit';
-          $the_post['post_status'] = 'pending';
+          $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_project';
           $the_post['post_name'] = sanitize_title_with_dashes($unit_casawp_id . '-' . $unitData['detail']['name'],'','save');
           $_POST['icl_post_language'] = $lang;

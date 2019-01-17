@@ -1,16 +1,19 @@
 <?php
 namespace casawp\Form;
+use casawp\Conversion;
 
 use Zend\Form\Form;
 
 class FilterForm extends Form
 {
+    private $converter = null;
     public $categories = array();
     public $salestypes = array();
     public $locations = array();
     public $availabilities = array();
 
     public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array(), $features = array()){
+        $this->converter = new Conversion;
         $this->options = $options;
         $this->categories = $categories;
         $this->utilities = $utilities;
@@ -41,6 +44,9 @@ class FilterForm extends Form
         }
         if (!$this->options['casawp_filter_features_elementtype']) {
           $this->options['casawp_filter_features_elementtype'] = 'hidden';
+        }
+        if (!$this->options['casawp_filter_countries_elementtype']) {
+          $this->options['casawp_filter_countries_elementtype'] = 'hidden';
         }
 
         parent::__construct('filter');
@@ -119,6 +125,15 @@ class FilterForm extends Form
                 $this->options['chosen_locations']
             );
         }
+        if ($this->locations) {
+            $this->addSelector(
+                'countries',
+                __('Countries', 'casawp'),
+                __('Choose country','casawp'),
+                $this->getCountryOptions(),
+                $this->options['chosen_countries']
+            );
+        }
         //if ($this->rooms_from) {
             $this->addSelector(
                 'rooms_from',
@@ -175,6 +190,33 @@ class FilterForm extends Form
             ),
             (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
         );
+
+
+        // order by element
+        $this->addSelector(
+            'orderby',
+            __('Order by', 'casawp'),
+            __('Choose order','casawp'),
+            [
+                "location" => __("Location",'casawp'),
+                "date" => __('Date', 'casawp'),
+                "price" => __('Price', 'casawp'),
+            ],
+            (isset($_GET['orderby']) ? $_GET['orderby'] : false)
+        );
+
+        // order dir element
+        $this->addSelector(
+            'order',
+            __('Order direction', 'casawp'),
+            __('Choose order direction','casawp'),
+            [
+                "ASC" => __("Ascending",'casawp'),
+                "DESC" => __("Descending",'casawp'),
+            ],
+            (isset($_GET['order']) ? $_GET['order'] : false)
+        );
+
     }
 
     private function addSelector($name, $label, $emptyLabel, $value_options, $chosen_values = array()){
@@ -186,8 +228,11 @@ class FilterForm extends Form
             <?php echo $this->formLabel($form->get('categories')->setOptions(array('label_attributes' => array('class' => 'visible-xs casawp-filterform-label')))); ?>
             <?php echo $this->formElement($form->get('categories')->setAttribute('class', 'form-control chosen-select')->setAttribute('data-placeholder', __('Choose category','casawp'))); ?>
         <?php endif ?>*/
-
-        if (count($chosen_values) > 1) {
+        if ($name === 'orderby'){
+            $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
+        } else if ($name === 'order'){
+            $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
+        } else if ($chosen_values && count($chosen_values) > 1) {
             if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'singleselect') {
                 $this->options['casawp_filter_'.$name.'_elementtype'] = 'multiselect';
             }
@@ -359,6 +404,32 @@ class FilterForm extends Form
         return $this->availabilities;
     }
 
+    public function getCountryOptions(){
+        $locations_workload = $this->locations;
+
+        //not enough locations available
+        if (count($locations_workload) <= 1) {
+            return array();
+        }
+
+        $options = array();
+        foreach ($locations_workload as $i => $location) {
+            if ($location->parent == 0 && strpos($location->slug, 'country_') === 0) {
+                $iso = strtoupper(str_replace('country_', '', $location->slug));
+                $name = $this->converter->countrycode_to_countryname($iso);
+                $options[$location->slug] = $name;
+                unset($locations_workload[$i]);
+            }
+        }
+
+        //not enough countries
+        if (count($options) <= 1) {
+            return array();
+        }
+
+        return $options;
+    }
+
     public function getLocationOptions(){
         $locations_workload = $this->locations;
 
@@ -458,20 +529,30 @@ class FilterForm extends Form
         } elseif ($depth == 3){
             foreach ($parents as $parent) {
                 foreach ($parent['children'] as $child) {
-                    $label = $parent['name'] . ' ' . $child['name'];
                     $value_options = array();
-                    foreach ($child['children'] as $grandchild) {
-                        $value_options[$grandchild['slug']] = $grandchild['name'];
+                    if ($child['children']) {
+                        $label = $parent['name'] . ' ' . $child['name'];
+                        foreach ($child['children'] as $grandchild) {
+                            $value_options[$grandchild['slug']] = $grandchild['name'];
+                        } 
+                        $options[] = array(
+                            'label' => $label,
+                            'options' => $value_options
+                        );
+                    } else {
+                        $slug = 'country_' . $parent['slug'];
+                        if (!isset($options[$slug])) {
+                            $options[$slug] = [
+                                'label' => $parent['name'],
+                                'options' => array(),
+                            ];
+                        }
+                        $options[$slug]['options'][$child['slug']] =$child['name'];
                     }
-                    $options[] = array(
-                        'label' => $label,
-                        'options' => $value_options
-                    );
+                    
                 }
             }
         }
-
-
 
         return $options;
     }
@@ -482,6 +563,15 @@ class FilterForm extends Form
             $options[(string) $i] = $i;
         }
         return $options;
+    }
+
+    public function getOrderOptions(){
+        /*if ($this->options['casawp_filter_order_active']) {
+            return true;
+        } else {
+            return false;
+        }*/
+        return [];
     }
 
     public function getPriceOptions(){
@@ -545,7 +635,8 @@ class FilterForm extends Form
       return $options;
     }
 
-    public function populateValues($data)
+    // yes onlybase is not used but required to be interface compatible (keep it!!!)
+    public function populateValues($data, $onlyBase = false)
     {
         if (!is_array($data) && !$data instanceof Traversable) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -572,6 +663,8 @@ class FilterForm extends Form
                     $name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
+                    ||
+                    $name == 'countries' && in_array($this->options['casawp_filter_countries_elementtype'], ['singleselect', 'radio', 'hidden'])
                     ||
                     $name == 'rooms_from'
                     ||

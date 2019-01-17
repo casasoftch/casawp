@@ -2811,3 +2811,55 @@ msgstr "Miete"
 msgid "School"
 msgstr "Schule"
 
+#: 
+msgid "Choose country"
+msgstr "Land wählen"
+
+#: 
+msgid "Countries"
+msgstr "Länder"
+
+#: 
+msgid "Extra Costs"
+msgstr "Nebenkosten"
+
+#: 
+msgid "Ground floor"
+msgstr "EG"
+
+#: 
+msgid "Choose order"
+msgstr "Sortierung wählen"
+
+#: 
+msgid "Order by"
+msgstr "Sortieren nach"
+
+#: 
+msgid "Ascending"
+msgstr "Aufsteigend"
+
+#: 
+msgid "Descending"
+msgstr "Absteigend"
+
+#: 
+msgid "Order direction"
+msgstr "Reihenfolge"
+
+#: 
+msgid "Choose order direction"
+msgstr "Reihenfolge wählen"
+
+#: 
+msgid "Date"
+msgstr "Datum"
+
+#: 
+msgid "Load distance map"
+msgstr "Distanzenkarte laden"
+
+#: 
+msgid "Load map"
+msgstr "Karte laden"
+

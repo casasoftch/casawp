@@ -1,6 +1,5 @@
 <div class="casawp-filterform-wrap">
 	<?= $this->form()->openTag($form->setAttribute('class', 'casawp-filterform')); ?>
-
 	<?php if ($form->getAvailabilityOptions()): ?>
 		<?php echo $this->formElement($form->get('availabilities')->setAttribute('style', 'display:none')); ?>
 	<?php endif ?>
@@ -86,6 +85,27 @@
 			 ?>
 		<?php else: ?>
 			<?php echo $this->formElement($form->get('locations')); ?>
+		<?php endif ?>
+	<?php endif ?>
+
+	<?php if ($form->getCountryOptions()): ?>
+		<?php echo $this->formLabel($form->get('countries')); ?>
+		<?php if (get_option('casawp_filter_countries_elementtype', false) == 'multicheckbox'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('countries');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormMultiCheckbox();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="form-check">');
+				echo '<div class="form-check">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php elseif (get_option('casawp_filter_countries_elementtype', false) == 'radio'): ?>
+			<?php
+				$oMultiCheckboxField = $form->get('countries');
+				$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+				$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+				echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+			 ?>
+		<?php else: ?>
+			<?php echo $this->formElement($form->get('countries')); ?>
 		<?php endif ?>
 	<?php endif ?>
 
@@ -213,7 +233,20 @@
 			<?php echo $this->formElement($form->get('regions')); ?>
 		<?php endif ?>
 	<?php endif ?>
-
+	
+	<?php if ($form->getOrderOptions()): ?>
+		<div class="casawp-filterform-duo casawp-filterform-order">
+			<div class="casawp-filterform-duo-label">
+			  Sortierung
+			</div>
+			<div class="casawp-filterform-duo-item">
+				<?php echo $this->formElement($form->get('orderby')); ?>
+			</div>
+			<div class="casawp-filterform-duo-item">
+				<?php echo $this->formElement($form->get('order')); ?>
+			</div>
+		</div>
+	<?php endif ?>
 	<input type="submit" class="casawp-filterform-button" value="<?= __('Search', 'casawp') ?>">
 
 	<?= $this->form()->closeTag(); ?>

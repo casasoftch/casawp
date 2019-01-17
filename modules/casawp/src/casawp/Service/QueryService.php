@@ -16,11 +16,13 @@ class QueryService{
             'categories' => array(),
             'utilities' => array(),
             'locations' => array(),
+            'countries' => array(),
             'regions' => array(),
             'salestypes' => array(),
             'availabilities' => array('active'),
             'categories_not' => array(),
             'locations_not' => array(),
+            'countries_not' => array(),
             'salestypes_not' => array(),
             'availabilities_not' => array(),
             'regions_not' => array(),
@@ -63,10 +65,12 @@ class QueryService{
                 'categories',
                 'utilities',
                 'locations',
+                'countries',
                 'regions',
                 'salestypes',
                 'categories_not',
                 'locations_not',
+                'countries_not',
                 'salestypes_not',
                 'availabilities_not',
                 'regions_not',
@@ -131,6 +135,9 @@ class QueryService{
             if (strpos($key, 'locations') === false && strpos($key, 'location') !== false) {
                 $key = str_replace('location', 'locations', $key);
             }
+            if (strpos($key, 'countries') === false && strpos($key, 'country') !== false) {
+                $key = str_replace('country', 'countries', $key);
+            }
             if (strpos($key, 'regions') === false && strpos($key, 'region') !== false) {
                 $key = str_replace('region', 'regions', $key);
             }
@@ -152,6 +159,7 @@ class QueryService{
                 case 'categories':
                 case 'utilities':
                 case 'locations':
+                case 'countries':
                 case 'regions':
                 case 'features':
                 case 'salestypes':
@@ -159,6 +167,7 @@ class QueryService{
                 case 'categories_not':
                 case 'utilities_not':
                 case 'locations_not':
+                case 'countries_not':
                 case 'regions_not':
                 case 'features_not':
                 case 'salestypes_not':
@@ -480,6 +489,15 @@ class QueryService{
                 'operator'=> 'IN'
             );
         }
+        if ($this->query['countries']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_location',
+                'terms' => $this->query['countries'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'IN'
+            );
+        }
         if ($this->query['regions']) {
             $taxquery_new[] = array(
                 'taxonomy' => 'casawp_region',
@@ -542,6 +560,15 @@ class QueryService{
             $taxquery_new[] = array(
                 'taxonomy' => 'casawp_location',
                 'terms' => $this->query['locations_not'],
+                'include_children' => 1,
+                'field' => 'slug',
+                'operator'=> 'NOT IN'
+            );
+        }
+        if ($this->query['countries_not']) {
+            $taxquery_new[] = array(
+                'taxonomy' => 'casawp_location',
+                'terms' => $this->query['countries_not'],
                 'include_children' => 1,
                 'field' => 'slug',
                 'operator'=> 'NOT IN'
@@ -615,7 +642,12 @@ class QueryService{
                 $this->query['utilities'] = array(get_query_var( 'casawp_utility' ));
             }
             if (is_tax('casawp_location')) {
-                $this->query['locations'] = array(get_query_var( 'casawp_location' ));
+                if (strpos(get_query_var( 'casawp_location' ), 'country_') !== false) {
+                    $this->query['countries'] = array(get_query_var( 'casawp_location' ));
+                } else {
+                    $this->query['locations'] = array(get_query_var( 'casawp_location' ));
+                }
+                
             }
             if (is_tax('casawp_region')) {
                 $this->query['regions'] = array(get_query_var( 'casawp_region' ));

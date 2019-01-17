@@ -3,11 +3,11 @@ Contributors: casasoft
 Donate link: http://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML
 Requires at least: 4.0.0
-Tested up to: 4.3.1
+Tested up to: 5.0.2
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.3.1
+Stable tag: 2.4.0
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,25 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.4.0 =
+* update: translations
+* update: contact form fixes to allow objects for Filters
+* update: preperations for uploads
+* update: contact html5 required attributes
+* update: inquiries wont be stored anylonger. (DSGVO)
+* update: Casadistance
+* new: Option to load casawp.js in Footer
+* fix: better language detection when load order with WPML is iregular
+* update: imports now smartly skipps duplicates ???
+* update: Added the Arabic Emirates as an contact form country option field
+* new: Buttons to hide and show maps. Map does not load by default. There is an option to reactivate that.
+* update: updated dependencies (casadistance, bootstrap4, )
+* new: Option to activate gateway CDN for images. (only use with permission)
+* fix: odd media names during import
+* new: New frontend way to sort by price/date/title/location
+* fix: preperations for PHP 7.2
+
 
 = 2.3.1 =
 * fix: fixed javascript bugs for IE 10/11 for Casadistance

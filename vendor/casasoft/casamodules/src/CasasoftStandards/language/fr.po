@@ -526,7 +526,7 @@ msgstr "Accessible aux fauteuils roulants"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:201
 msgid "Animal friendly"
-msgstr "Respectueux des animaux"
+msgstr "Animaux domestiques admis"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:208
 msgid "Restrooms"
@@ -646,7 +646,7 @@ msgstr "Séchoir à linge"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:328
 msgid "Kachelofen"
-msgstr "Poêle de faïence"
+msgstr "Poêle suédois"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:332
 msgid "Secondary residency"
@@ -747,15 +747,15 @@ msgstr "Etage"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:199
 msgid "Floors"
-msgstr "Etages"
+msgstr "Nombre d'étages"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:205
 msgid "Apartments"
-msgstr "Appartements"
+msgstr "Appartement(s)"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:211
 msgid "Bathrooms"
-msgstr "Salles de bain"
+msgstr "Salle(s) de bain"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:217
 msgid "Numver of parcels"
@@ -958,7 +958,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:590
 msgid "Cubature GVA"
-msgstr "Cubature GVA"
+msgstr "Cubage ECA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:596
 msgid "Cubature SIA"
@@ -1099,7 +1099,7 @@ msgstr "semaine "
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:133
 msgid "month"
-msgstr "mois "
+msgstr "mois"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:136
 msgid "year"
@@ -1168,4 +1168,8 @@ msgstr ""
 #: 
 msgid "Patrician house"
 msgstr "Maison patricienne"
+
+#: 
+msgid "Volumes"
+msgstr "Volumes"
 

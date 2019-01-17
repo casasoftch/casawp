@@ -46,6 +46,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('First name', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_firstname_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -53,6 +56,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Last name', 'casawp'),
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_lastname_required', false),
             ),
         ));
 
@@ -62,6 +68,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Legal name', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_legal_name_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -70,6 +79,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Street', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_street_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -77,6 +89,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('ZIP', 'casawp'),
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_postal_code_required', false),
             ),
         ));
 
@@ -87,10 +102,13 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Locality', 'casawp'),
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_locality_required', false),
+            ),
         ));
 
 
-        $isos = array('AL', 'AD', 'AT', 'BY', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FO', 'FI', 'FR', 'DE', 'GI', 'GR', 'HU', 'IS', 'IE', 'IM', 'IT', 'RS', 'LV', 'LI', 'LT', 'LU', 'MK', 'MT', 'MD', 'MC', 'ME', 'NL', 'NO', 'PL', 'PT', 'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'UA', 'GB', 'VA', 'RS');
+        $isos = array('AE', 'AL', 'AD', 'AT', 'BY', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FO', 'FI', 'FR', 'DE', 'GI', 'GR', 'HU', 'IS', 'IE', 'IM', 'IT', 'RS', 'LV', 'LI', 'LT', 'LU', 'MK', 'MT', 'MD', 'MC', 'ME', 'NL', 'NO', 'PL', 'PT', 'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'UA', 'GB', 'VA', 'RS');
         $countries = array();
         foreach ($isos as $iso) {
           $countries[$iso] = $converter->countrycode_to_countryname($iso);
@@ -120,6 +138,9 @@ class ContactForm extends Form
                 'label' => __('Country', 'casawp'),
                 'options' => $countries
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_country_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -128,6 +149,9 @@ class ContactForm extends Form
             'options' => array(
                 'label' => __('Phone', 'casawp')
             ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_phone_required', false),
+            ),
         ));
 
         $this->add(array(
@@ -135,6 +159,9 @@ class ContactForm extends Form
             'type' => 'Text',
             'options' => array(
                 'label' => __('Mobile', 'casawp')
+            ),
+            'attributes' => array(
+                'required' => get_option('casawp_form_mobile_required', false),
             ),
         ));
 
@@ -156,7 +183,8 @@ class ContactForm extends Form
                 'label' => __('Message', 'casawp')
             ),
             'attributes' => array(
-                'rows' => 3
+                'rows' => 3,
+                'required' => get_option('casawp_form_message_required', false),
             )
         ));
     }
@@ -167,7 +195,9 @@ class ContactForm extends Form
 
     private function isInCustomFilters($field){
         foreach ($this->customFilters as $filter) {
-            if ($filter['name'] == $field) {
+            if (is_array($filter) && $filter['name'] == $field) {
+                return true;
+            } else if (is_object($filter) && $filter->getName() == $field) {
                 return true;
             }
         }

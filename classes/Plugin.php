@@ -28,6 +28,30 @@ class Plugin {
         $this->configuration = $configuration;
         $this->conversion = new Conversion;
         $this->locale = substr(get_bloginfo('language'), 0, 2);
+
+        // this is in case wpml is not loaded yet. We will take the first segment of the uri
+        $uri_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri_segments = explode('/', $uri_path);
+
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'en') {
+            $this->locale = 'en';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'de') {
+            $this->locale = 'de';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'fr') {
+            $this->locale = 'fr';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'it') {
+            $this->locale = 'it';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'ru') {
+            $this->locale = 'ru';
+        }
+        if (isset($uri_segments[1]) && $uri_segments[1] == 'rm') {
+            $this->locale = 'rm';
+        }
+
         add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
 
         //what is this?
@@ -104,6 +128,9 @@ class Plugin {
         // logout page
         add_action ('template_redirect', array($this, 'privateUserLogOutOnLogoutPage'));
 
+        // custom post thumbnail (for gateway cdn usage)
+        add_filter('post_thumbnail_html', array($this, 'modifyPostThumbnailHtml'), 99, 5);
+        add_filter('wp_get_attachment_image_src', array($this, 'modifyGetAttachmentImageSrc'), 99, 5);
 
     }
 
@@ -165,6 +192,150 @@ class Plugin {
         }
       }
     }
+
+    public function origToGwSrc($orig, $targetSize){
+        // gateway sizes
+        // -72x72_C.png
+        // -100x72_C.png
+        // -240x180_C.png
+        // -500x375_C.jpg
+        // -1024x768_F.jpg
+        // -1300x800_F.jpg
+        $remoteSrc = $orig;
+        $remoteSrc = str_replace('%3F', '?', $remoteSrc);
+        $remoteSrc = str_replace('%3D', '=', $remoteSrc);
+        $width = null;
+        $height = null;
+        //echo $remoteSrc;
+        // echo "*" . $targetSize . "*";
+        /*if (strpos($orig, '-p-xl.jpg')){
+            $remoteSrc = str_replace('-p-xl.jpg', '.jpg?p=xl', $remoteSrc);
+        }*/
+        if ($targetSize === 'thumbnail') {
+            $width = 240;
+            $height = 180;
+            //echo '.';
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=lg')){
+                $remoteSrc = str_replace('?p=lg', '?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=hd')){
+                $remoteSrc = str_replace('?p=hd', '?p=sm', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=xl')){
+                //echo 'xl_prop';
+                $remoteSrc = str_replace('?p=xl', '?p=sm', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
+        }
+        if ($targetSize === 'casawp-thumb') {
+            $width = 500;
+            $height = 375;
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=md', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=lg')){
+                $remoteSrc = str_replace('?p=lg', '?p=md', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=hd')){
+                $remoteSrc = str_replace('?p=hd', '?p=md', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=xl')){
+                $remoteSrc = str_replace('?p=xl', '?p=md', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
+        }
+        if ($targetSize === 'large') {
+            $width = 1024;
+            $height = 768;
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=lg', $remoteSrc);
+            }
+            // if (strpos($remoteSrc, '?p=lg')){
+            //     $remoteSrc = str_replace('?p=lg', '?p=lg', $remoteSrc);
+            // }
+            if (strpos($remoteSrc, '?p=hd')){
+                $remoteSrc = str_replace('?p=hd', '?p=lg', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=xl')){
+                $remoteSrc = str_replace('?p=xl', '?p=lg', $remoteSrc);
+            }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
+        }
+        if ($targetSize === 'full') {
+            $width = 1300;
+            $height = 800;
+            if (strpos($orig, '-1300x800_F.jpg')){
+                $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=xl', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=lg')){
+                $remoteSrc = str_replace('?p=hd', '?p=xl', $remoteSrc);
+            }
+            // if (strpos($remoteSrc, '?p=xl')){
+            //     $remoteSrc = str_replace('?p=xl', '?p=xl', $remoteSrc);
+            // }
+            $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
+        }
+        $remoteSrc = str_replace('http://', 'https://', $remoteSrc);
+        $remoteSrc = str_replace('casagateway.ch', 'cdn.casasoft.com', $remoteSrc);
+        return [
+            'src' => $remoteSrc,
+            'width' => $width,
+            'height' => $height,
+        ];
+    }
+
+    public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
+        if (get_option('casawp_use_casagateway_cdn', false)) {
+            $orig = get_post_meta($attachment_id, '_origin', true);
+            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/')) ) {
+                $remoteSrcArr = $this->origToGwSrc($orig, $size);
+                $image[0] = $remoteSrcArr['src'];
+                $image[1] = $remoteSrcArr['width'];
+                $image[2] = $remoteSrcArr['height'];
+            }
+        }
+        return $image;
+    }
+
+    public function modifyPostThumbnailHtml($html, $post_id, $post_thumbnail_id, $size, $attr){
+        if (get_option('casawp_use_casagateway_cdn', false)) {
+            $post_thumbnail_id = get_post_thumbnail_id( $post_id );
+            $orig = get_post_meta($post_thumbnail_id, '_origin', true);
+            $attachment_id = $post_thumbnail_id;
+            $remoteSrcArr = false;
+            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/')) ) {
+                $remoteSrcArr = $this->origToGwSrc($orig, $size);
+            } else {
+                return $html;
+            }
+            $id = get_post_thumbnail_id(); // gets the id of the current post_thumbnail (in the loop)
+            $alt = trim( strip_tags( get_post_meta( $post_thumbnail_id, '_wp_attachment_image_alt', true ) ) ); // get_the_title($id); // gets the post thumbnail title
+            $size_class = $size;
+            if ( is_array( $size_class ) ) {
+                $size_class = join( 'x', $size_class );
+            }
+            $default_attr = array(
+                'src'   => $remoteSrcArr['src'],
+                'class' => "attachment-$size_class size-$size_class",
+                'alt'   => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ),
+            );
+            $attr = wp_parse_args( $attr, $default_attr );
+            $attachment = get_post($attachment_id);
+            $attr = apply_filters( 'wp_get_attachment_image_attributes', $attr, $attachment, $size );
+            $attr = array_map( 'esc_attr', $attr );
+            $hwstring = image_hwstring($remoteSrcArr['width'], $remoteSrcArr['height']);
+            $html = rtrim("<img $hwstring");
+            foreach ( $attr as $name => $value ) {
+                $html .= " $name=" . '"' . $value . '"';
+            }
+            $html .= ' />';
+        }
+
+        return $html;
+      }
 
     public function privateUserHideAdminBarForRegisteredUsers(){
       if (!current_user_can('edit_posts')) {
@@ -491,6 +662,7 @@ class Plugin {
            'load_bootstrap_js'        => get_option('casawp_load_bootstrap_scripts'),
            'thumbnails_ideal_width'   => get_option('casawp_single_thumbnail_ideal_width', 150),
            'ajaxify_archive'          => get_option('casawp_ajaxify_archive', 0),
+           'footer_script'              => get_option('casawp_load_scripts_in_footer', 0),
         );
         //wp_localize_script( 'casawp_bootstrap2_main', 'casawpOptionParams', $script_params );
         //wp_localize_script( 'casawp_bootstrap3_main', 'casawpOptionParams', $script_params );
@@ -1127,8 +1299,8 @@ class Plugin {
               INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` IN ('" . implode('\', \'', $categories). "')";
 
 
-              
-        
+
+
               if ($availability) {
                  $query .= " INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheckAvailability ON referenceCheckAvailability.object_id = ". $wpdb->prefix . "posts.ID
                  INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckAvailabilityTermTax ON referenceCheckAvailability.term_taxonomy_id = referenceCheckAvailabilityTermTax.term_taxonomy_id AND referenceCheckAvailabilityTermTax.taxonomy = 'casawp_availability'
@@ -1155,8 +1327,8 @@ class Plugin {
               }
           }
 
-          
-         
+
+
 
           //die(print_r($localities, true));
 
@@ -1195,6 +1367,7 @@ class Plugin {
                 'casawp_filter_utilities_elementtype' => get_option('casawp_filter_utilities_elementtype', false),
                 'casawp_filter_salestypes_elementtype' => get_option('casawp_filter_salestypes_elementtype', false),
                 'casawp_filter_locations_elementtype' => get_option('casawp_filter_locations_elementtype', false),
+                'casawp_filter_countries_elementtype' => get_option('casawp_filter_countries_elementtype', false),
                 'casawp_filter_rooms_from_elementtype' => get_option('casawp_filter_rooms_from_elementtype', false),
                 'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
                 'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
@@ -1205,6 +1378,7 @@ class Plugin {
                 'chosen_salestypes' => $this->queryService->getQueryValue('salestypes'),
                 'chosen_features' => $this->queryService->getQueryValue('features'),
                 'chosen_locations' => $this->queryService->getQueryValue('locations'),
+                'chosen_countries' => $this->queryService->getQueryValue('countries'),
                 'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
                 'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
             ),
@@ -1381,7 +1555,12 @@ class Plugin {
     function registerScriptsAndStyles(){
         wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
         wp_enqueue_style( 'casawp_css' );
-        wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ));
+        if (get_option( 'casawp_load_scripts_in_footer', 1 )) {
+            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), true, true);
+        } else {
+            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ));
+        }
+
         wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ));
 
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
@@ -1416,7 +1595,7 @@ class Plugin {
                 break;
         }
 
-        
+
 
         if(is_singular('casawp_property') && in_array(get_option('casawp_viewgroup', 'bootstrap3'), ['bootstrap2', 'bootstrap3'])) {
             wp_enqueue_script('casawp_jquery_eqheight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jquery.equal-height-columns.js', array( 'jquery' ), false, true);
@@ -1734,6 +1913,13 @@ class Plugin {
                 'USD'   => '$',
             ),
             'layout' => 'horizontal',
+        );
+        $fields[] = array(
+            'key' => 'last_import_hash',
+            'label' => __('Last Import Hash', 'casawp'),
+            'name' => 'last_import_hash',
+            'type' => 'text',
+            'required' => 0
         );
         acf_add_local_field_group(array (
             'key' => 'group_casawp_setting',
@@ -2262,38 +2448,39 @@ class Plugin {
 
 
         /*----------  Inquiry  ----------*/
+        // THIS HAS BEEN DISABLED DUE TO GDPR
 
-        $labels = array(
-            'name'               => __('Inquiries', 'casawp'),
-            'singular_name'      => __('Inquiry', 'casawp'),
-            'add_new'            => __('Add New', 'casawp'),
-            'add_new_item'       => __('Add New inquiry', 'casawp'),
-            'edit_item'          => __('Edit Inquiry', 'casawp'),
-            'new_item'           => __('New Inquiry', 'casawp'),
-            'all_items'          => __('All Inquiries', 'casawp'),
-            'view_item'          => __('View Inquiry', 'casawp'),
-            'search_items'       => __('Search Inquiries', 'casawp'),
-            'not_found'          => __('No inquiries found', 'casawp'),
-            'not_found_in_trash' => __('No inquiries found in Trash', 'casawp'),
-            'menu_name'          => __('Inquiries', 'casawp')
-        );
-        $args = array(
-            'labels'             => $labels,
-            'public'             => false,
-            'publicly_queryable' => false,
-            'show_ui'            => true,
-            'show_in_menu'       => true,
-            'query_var'          => true,
-            'rewrite'            => array( 'slug' => 'anfragen' ),
-            'capability_type'    => 'post',
-            'has_archive'        => false,
-            'hierarchical'       => false,
-            'menu_position'      => null,
-            'supports'           => array( 'title', 'editor', 'author','custom-fields', 'page-attributes' ),
-            'menu_icon'          => 'dashicons-admin-comments',
-            'show_in_nav_menus'  => true
-        );
-        register_post_type( 'casawp_inquiry', $args );
+        // $labels = array(
+        //     'name'               => __('Inquiries', 'casawp'),
+        //     'singular_name'      => __('Inquiry', 'casawp'),
+        //     'add_new'            => __('Add New', 'casawp'),
+        //     'add_new_item'       => __('Add New inquiry', 'casawp'),
+        //     'edit_item'          => __('Edit Inquiry', 'casawp'),
+        //     'new_item'           => __('New Inquiry', 'casawp'),
+        //     'all_items'          => __('All Inquiries', 'casawp'),
+        //     'view_item'          => __('View Inquiry', 'casawp'),
+        //     'search_items'       => __('Search Inquiries', 'casawp'),
+        //     'not_found'          => __('No inquiries found', 'casawp'),
+        //     'not_found_in_trash' => __('No inquiries found in Trash', 'casawp'),
+        //     'menu_name'          => __('Inquiries', 'casawp')
+        // );
+        // $args = array(
+        //     'labels'             => $labels,
+        //     'public'             => false,
+        //     'publicly_queryable' => false,
+        //     'show_ui'            => true,
+        //     'show_in_menu'       => true,
+        //     'query_var'          => true,
+        //     'rewrite'            => array( 'slug' => 'anfragen' ),
+        //     'capability_type'    => 'post',
+        //     'has_archive'        => false,
+        //     'hierarchical'       => false,
+        //     'menu_position'      => null,
+        //     'supports'           => array( 'title', 'editor', 'author','custom-fields', 'page-attributes' ),
+        //     'menu_icon'          => 'dashicons-admin-comments',
+        //     'show_in_nav_menus'  => true
+        // );
+        // register_post_type( 'casawp_inquiry', $args );
 
 
 
