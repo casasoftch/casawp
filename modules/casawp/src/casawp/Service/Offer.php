@@ -648,6 +648,7 @@ class Offer{
         //group em
         $f_offers = array();
         $check_keys = array('type', 'price', 'timesegment', 'propertysegment', 'currency', 'frequency', 'inclusive');
+        
 
         foreach ($offers as $offer) {
             $found = false;
@@ -661,16 +662,12 @@ class Offer{
                     break;
                 }
             }
-
-            if ($found) {
-                $f_offers[$found]['count'] = (isset($f_offers[$found]['count']) ? $f_offers[$found]['count'] : 1) + 1;
-            } else {
-                $offer['count'] = 1;
-                $f_offers[] = $offer;
-            }
+            //print_r($check_a);
+            $offer['count'] = 1;
+            $f_offers[] = $offer;
         }
-
-
+        
+//        die('hier');
 
 
         $r_offers = array();

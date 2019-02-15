@@ -312,7 +312,7 @@ jQuery(document).ready(function($) {
 
       });
 
-      $('.casawp-filterform').on( "casawp-ajaxfilter:after-filter-reload", function(event, url, filteredUrl){
+      $('.casawp-filterform').on( "casawp-filterform:after-filter-reload", function(event, url, filteredUrl){
 
       });
 

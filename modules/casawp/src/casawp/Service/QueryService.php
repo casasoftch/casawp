@@ -36,7 +36,14 @@ class QueryService{
             'rooms_to' => null,
             'price_from' => null,
             'price_to' => null,
-            'price_range' => null
+            'price_range' => null,
+            'filter_meta_key' => null,
+            'filter_meta_key_not' => null,
+            'filter_meta_compare' => null,
+            'filter_meta_value' => null,
+            'filter_meta_key_2' => null,
+            'filter_meta_compare_2' => null,
+            'filter_meta_value_2' => null
         );
         $this->setQuery();
     }
@@ -223,7 +230,6 @@ class QueryService{
             } else {
                 $args['post__not_in'] = array($this->query["post__not_in"]);
             }
-
         }
 
         switch ($this->query['orderby']) {
@@ -260,6 +266,39 @@ class QueryService{
 
 
         $meta_query_items_new = array();
+
+        if ($this->query['filter_meta_key']) {
+            $ametaquery = [
+                'key' => $this->query['filter_meta_key'],
+            ];
+            if ($this->query['filter_meta_value']) {
+                $ametaquery['compare'] = ($this->query['filter_meta_compare'] ? $this->query['filter_meta_compare'] : 'IN');
+                $ametaquery['value'] = $this->query['filter_meta_value'];
+            }
+            $meta_query_items_new[] = $ametaquery;
+        }
+
+        if ($this->query['filter_meta_key_not']) {
+            $ametaquery = [
+                'key' => $this->query['filter_meta_key_not'],
+                'compare' => 'NOT EXISTS'
+            ];
+            $meta_query_items_new[] = $ametaquery;
+        }
+
+        if ($this->query['filter_meta_key_2']) {
+            $ametaquery = [
+                'key' => $this->query['filter_meta_key_2'],
+            ];
+            if ($this->query['filter_meta_value_2']) {
+                $ametaquery['compare'] = 'IN';
+                $ametaquery['value'] = $this->query['filter_meta_value_2'];
+            }
+            $meta_query_items_new[] = $ametaquery;
+        }
+
+
+
         if ($this->query['projectunit_id']) {
             $meta_query_items_new[] = array(
                 'key' => 'projectunit_id',
@@ -454,7 +493,10 @@ class QueryService{
 
 
         }
+
+
         if ($meta_query_items_new) {
+           
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
         }
