@@ -130,8 +130,10 @@ class Plugin {
 
         // custom post thumbnail (for gateway cdn usage)
         add_filter('post_thumbnail_html', array($this, 'modifyPostThumbnailHtml'), 99, 5);
+
         add_filter('wp_get_attachment_image_src', array($this, 'modifyGetAttachmentImageSrc'), 99, 5);
 
+        add_filter('wp_get_attachment_url', array($this, 'modifyGetAttachmentUrl'), 99, 5);
     }
 
     public function privateUserMakeSurePagesExist(){
@@ -285,6 +287,17 @@ class Plugin {
             'width' => $width,
             'height' => $height,
         ];
+    }
+
+    public function modifyGetAttachmentUrl($url, $attachment_id) {
+        if (get_option('casawp_use_casagateway_cdn', false)) {
+            $orig = get_post_meta($attachment_id, '_origin', true);
+            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/')) ) {
+                $remoteSrcArr = $this->origToGwSrc($orig, 'full');
+                return $remoteSrcArr['src'];
+            }
+        }
+        return $url;
     }
 
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
