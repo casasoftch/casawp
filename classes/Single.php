@@ -1066,7 +1066,13 @@
       if($attachments) {
         $html .= '<ul class="casawp-unstyled casawp-documents">';
         foreach ( (array) $attachments as $attachment_id => $attachment ) {
-          if(strpos($attachment->post_mime_type, 'image') === false ) {
+
+          $types = wp_get_post_terms( $attachment_id, 'casawp_attachment_type');
+          $typeslug = null;
+          if (array_key_exists(0, $types)) {
+            $typeslug = $types[0]->slug;
+          }
+          if($typeslug !== null && $typeslug !== 'image') {
             $url = wp_get_attachment_url( $attachment_id );
             $title = (is_numeric($attachment->post_title)) ? (__('Document', 'casawp') . ' ' . $count) : ($attachment->post_title);
             $html .= '<li>' . $icon . '<a href="' . $url . '" title="' . $title . '" target="_blank" >' . $title . '</a></li>';
