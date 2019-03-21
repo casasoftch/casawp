@@ -414,6 +414,7 @@ class ConversionService {
           ['floor', 'numeric_value'],
           ['number_of_rooms', 'numeric_value'],
           ['number_of_bathrooms', 'numeric_value'],
+          ['number_of_toilets_guest', 'numeric_value'],
           ['number_of_apartments','numeric_value'],
           ['number_of_floors','numeric_value'],
           ['year_built','numeric_value'],

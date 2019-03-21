@@ -314,7 +314,7 @@
             case 'year_built':                 return __('Year of construction' ,'casawp');break;
             case 'number_of_rooms':            return __('Number of rooms' ,'casawp');break;
             case 'number_of_lavatory':            return __('Number of lavatory' ,'casawp');break;
-            case 'number_of_guest_wc':            return __('Number of guest toilets' ,'casawp');break;
+            case 'number_of_toilets_guest':         return __('Number of guest toilets' ,'casawp');break;
             case 'number_of_floors':           return __('Number of floors' ,'casawp');break;
             case 'floor':                      return __('Floor' ,'casawp');break;
             case 'volume':                     return __('Volume' ,'casawp');break;
@@ -577,7 +577,7 @@
         'number_of_rooms',
         'number_of_floors',
         'number_of_lavatory',
-        'number_of_guest_wc',
+        'number_of_toilets_guest',
         'floor',
         'number_of_apartments',
         'volume',

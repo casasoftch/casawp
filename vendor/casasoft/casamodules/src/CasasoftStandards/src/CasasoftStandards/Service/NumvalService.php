@@ -78,6 +78,9 @@ class NumvalService {
                     'number_of_bathrooms' => array(
                         'required' => true,
                     ),
+                    'number_of_toilets_guest' => array(
+                        'required' => true,
+                    ),
                     'number_of_apartments' => array(
                         'required' => true,
                     ),
@@ -209,6 +212,12 @@ class NumvalService {
             ),
             'number_of_bathrooms' => array(
                 'label' => $this->translator->translate('Bathrooms', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'float_half',
+                'si' => '',
+            ),
+            'number_of_toilets_guest' => array(
+                'label' => $this->translator->translate('Guest toilets', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'float_half',
                 'si' => '',
