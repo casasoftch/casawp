@@ -2863,3 +2863,7 @@ msgstr "Distanzenkarte laden"
 msgid "Load map"
 msgstr "Karte laden"
 
+#: 
+msgid "Guest toilets"
+msgstr "Gäste WC"
+
