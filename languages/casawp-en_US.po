@@ -2862,3 +2862,7 @@ msgstr ""
 msgid "Load map"
 msgstr ""
 
+#: 
+msgid "Guest toilets"
+msgstr ""
+
