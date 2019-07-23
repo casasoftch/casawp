@@ -310,7 +310,7 @@ class Import {
       $attachment = array(
         'guid'           => $guid,
         'post_mime_type' => $wp_filetype['type'],
-        'post_title'     =>  preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) ),
+        'post_title'     => ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)),
         'post_content'   => '',
         'post_excerpt'   => $the_mediaitem['caption'],
         'post_status'    => 'inherit',
@@ -556,7 +556,7 @@ class Import {
           $the_casawp_attachments[] = array(
             'type'    => $offer_media['type'],
             'alt'     => $offer_media['alt'],
-            'title'   => preg_replace('/\.[^.]+$/', '', ( $offer_media['title'] ? $offer_media['title'] : basename($media['original_file'])) ),
+            'title'   => ( $offer_media['title'] ? $offer_media['title'] : basename($media['original_file'])),
             'file'    => '',
             'url'     => $media['original_file'],
             'caption' => $offer_media['caption'],
@@ -664,7 +664,7 @@ class Import {
                 || $existing_attachment['order'] != $the_mediaitem['order']
                 ) {
                 $att['post_excerpt'] = $the_mediaitem['caption'];
-                $att['post_title']   = preg_replace('/\.[^.]+$/', '', ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)) );
+                $att['post_title']   = ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename));
                 $att['ID']           = $wp_mediaitem->ID;
                 $att['menu_order']   = $the_mediaitem['order'];
                 $insert_id           = wp_update_post( $att);
