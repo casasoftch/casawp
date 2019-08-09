@@ -383,7 +383,8 @@ class FilterForm extends Form
         foreach ($this->features as $feature) {
           $options[$feature->getKey()] = $feature->getLabel();
         }
-        sort($options);
+       
+        asort($options);
         return $options;
         //return $this->features;
     }
