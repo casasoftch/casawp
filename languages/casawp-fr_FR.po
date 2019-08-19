@@ -2862,3 +2862,7 @@ msgstr "Afficher la carte des distances"
 msgid "Load map"
 msgstr "Afficher la carte"
 
+#: 
+msgid "Guest toilets"
+msgstr ""
+
