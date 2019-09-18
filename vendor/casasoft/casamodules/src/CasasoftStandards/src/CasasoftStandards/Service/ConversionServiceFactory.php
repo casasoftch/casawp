@@ -7,15 +7,17 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ConversionServiceFactory implements FactoryInterface
 {
 
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
-      $translator = $container->get('MvcTranslator');
-      $numvalService = $container->get('CasasoftNumval');
-      $categoryService = $container->get('CasasoftCategory');
-      $featureService = $container->get('CasasoftFeature');
-      $utilityService = $container->get('CasasoftUtility');
-      $service = new ConversionService($translator, $numvalService, $categoryService, $featureService, $utilityService);
+    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null){
+        $translator = $container->get('MvcTranslator');
+        $numvalService = $container->get('CasasoftNumval');
+        $categoryService = $container->get('CasasoftCategory');
+        $featureService = $container->get('CasasoftFeature');
+        $utilityService = $container->get('CasasoftUtility');
+        $integratedOfferService = $container->get('CasasoftIntegratedOffer');
+        $heatService = $container->get('CasasoftHeat');
+        $service = new ConversionService($translator, $numvalService, $categoryService, $featureService, $utilityService, $integratedOfferService, $heatService);
 
-      return $service;
+        return $service;
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -25,7 +27,9 @@ class ConversionServiceFactory implements FactoryInterface
         $categoryService = $serviceLocator->get('CasasoftCategory');
         $featureService = $serviceLocator->get('CasasoftFeature');
         $utilityService = $serviceLocator->get('CasasoftUtility');
-        $service = new ConversionService($translator, $numvalService, $categoryService, $featureService, $utilityService);
+        $integratedOfferService = $serviceLocator->get('CasasoftIntegratedOffer');
+        $heatService = $serviceLocator->get('CasasoftHeat');
+        $service = new ConversionService($translator, $numvalService, $categoryService, $featureService, $utilityService, $integratedOfferService, $heatService);
 
         return $service;
     }
