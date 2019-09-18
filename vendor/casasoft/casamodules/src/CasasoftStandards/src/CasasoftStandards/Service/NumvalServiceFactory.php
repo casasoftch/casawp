@@ -7,13 +7,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class NumvalServiceFactory implements FactoryInterface
 {
 
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
-      $translator = $container->get('MvcTranslator');
-      //$viewRenderer = $serviceLocator->get('viewRenderer');
+    public function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null){
+        $translator = $container->get('MvcTranslator');
+        //$viewRenderer = $serviceLocator->get('viewRenderer');
 
-      $service = new NumvalService($translator);
+        $service = new NumvalService($translator);
 
-      return $service;
+        return $service;
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)

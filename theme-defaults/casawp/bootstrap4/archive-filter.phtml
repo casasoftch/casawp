@@ -151,6 +151,48 @@
   <?php endif; ?>
 
 
+  <?php if ($form->getAreaOptions()): ?>
+    <?php
+      $areaselect_count = 0;
+      $areasfrom_et = get_option('casawp_filter_areas_from_elementtype', false);
+      $areasto_et = get_option('casawp_filter_areas_to_elementtype', false);
+      if ($areasfrom_et && $areasfrom_et !== 'hidden'){$areaselect_count++;}
+      if ($areasto_et && $areasfrom_et !== 'hidden'){$areaselect_count++;}
+    ?>
+    <div class="casawp-filterform-duo casawp-filterform-areas <?= ($areaselect_count ? 'casawp-filterform-areascount-' . $areaselect_count : '')?>">
+      <div class="casawp-filterform-duo-label">
+        Area
+      </div>
+      <div class="casawp-filterform-duo-item">
+      	<?php echo $this->formLabel($form->get('areas_from')); ?>
+      	<?php if ($areasfrom_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('areas_from');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('areas_from')); ?>
+      	<?php endif ?>
+      </div>
+      <div class="casawp-filterform-duo-item">
+        <?php echo $this->formLabel($form->get('areas_to')); ?>
+      	<?php if ($areasto_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('areas_to');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('areas_to')); ?>
+      	<?php endif ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+
   <?php if ($form->getPriceOptions()): ?>
     <?php
       $priceelect_count = 0;

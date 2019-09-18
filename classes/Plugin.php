@@ -1688,6 +1688,8 @@ class Plugin {
                 'casawp_filter_countries_elementtype' => get_option('casawp_filter_countries_elementtype', false),
                 'casawp_filter_rooms_from_elementtype' => get_option('casawp_filter_rooms_from_elementtype', false),
                 'casawp_filter_rooms_to_elementtype' => get_option('casawp_filter_rooms_to_elementtype', false),
+                'casawp_filter_areas_from_elementtype' => get_option('casawp_filter_areas_from_elementtype', false),
+                'casawp_filter_areas_to_elementtype' => get_option('casawp_filter_areas_to_elementtype', false),
                 'casawp_filter_price_from_elementtype' => get_option('casawp_filter_price_from_elementtype', false),
                 'casawp_filter_price_to_elementtype' => get_option('casawp_filter_price_to_elementtype', false),
                 'casawp_filter_regions_elementtype' => get_option('casawp_filter_regions_elementtype', false),
@@ -1699,7 +1701,9 @@ class Plugin {
                 'chosen_regions' => $this->queryService->getQueryValue('regions'),
                 'chosen_countries' => $this->queryService->getQueryValue('countries'),
                 'chosen_rooms_from' => $this->queryService->getQueryValue('rooms_from'),
-                'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to')
+                'chosen_rooms_to' => $this->queryService->getQueryValue('rooms_to'),
+                'chosen_areas_from' => $this->queryService->getQueryValue('areas_from'),
+                'chosen_areas_to' => $this->queryService->getQueryValue('areas_to')
             ),
             $this->getCategories(),
             $this->getUtilities(),

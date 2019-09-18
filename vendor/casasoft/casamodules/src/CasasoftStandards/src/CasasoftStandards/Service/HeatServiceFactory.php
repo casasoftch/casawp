@@ -3,21 +3,25 @@ namespace CasasoftStandards\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Interop\Container\ContainerInterface;
 
-class IntegratedOfferServiceFactory implements FactoryInterface
+class HeatServiceFactory implements FactoryInterface
 {
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
+
+    public function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null){
         $translator = $container->get('MvcTranslator');
         //$viewRenderer = $serviceLocator->get('viewRenderer');
-        $service = new IntegratedOfferService($translator);
+
+        $service = new HeatService($translator);
+
         return $service;
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $translator = $serviceLocator->get('Translator');
-        $service = new IntegratedOfferService($translator);
+
+        $service = new HeatService($translator);
+
         return $service;
     }
 }

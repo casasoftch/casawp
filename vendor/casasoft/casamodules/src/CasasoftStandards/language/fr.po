@@ -31,7 +31,7 @@ msgstr "Terrain constructible"
 #: ../src/CasasoftStandards/Service/CategoryService.php:42
 #: ../src/CasasoftStandards/Service/FeatureService.php:155
 msgid "Double garage"
-msgstr "Garage double"
+msgstr "Garage(s) double(s)"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:43
 msgid "Duplex"
@@ -56,7 +56,7 @@ msgstr "Appartement meublé"
 #: ../src/CasasoftStandards/Service/CategoryService.php:48
 #: ../src/CasasoftStandards/Service/FeatureService.php:149
 msgid "Garage"
-msgstr "Garage"
+msgstr "Garage(s)"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:49
 #: ../src/CasasoftStandards/Service/CategoryService.php:278
@@ -77,11 +77,11 @@ msgstr "Immeuble"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:53
 msgid "Open slot"
-msgstr "Place de parking extérieure"
+msgstr "Place(s) de parking extérieure"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:54
 msgid "Parking space"
-msgstr "Place de parking"
+msgstr "Place(s) de parking"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:55
 msgid "Plot"
@@ -93,11 +93,11 @@ msgstr "Appartement mansardé"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:57
 msgid "Row house"
-msgstr "Maison mitoyenne"
+msgstr "Maison contiguë"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:58
 msgid "Single garage"
-msgstr "Garage"
+msgstr "Garage(s) individuel(s)"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:59
 msgid "Single house"
@@ -141,7 +141,7 @@ msgstr "Projet de construction"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:73
 msgid "Flat"
-msgstr "Appartement"
+msgstr "Appartement dans les étages"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:74
 #: ../src/CasasoftStandards/Service/FeatureService.php:350
@@ -178,7 +178,7 @@ msgstr "Atelier"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:82
 msgid "Car park"
-msgstr "Place de parc"
+msgstr "Place(s) de parc"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:83
 msgid "Bungalow"
@@ -198,7 +198,7 @@ msgstr "Café / Bar"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:87
 msgid "Maisonette"
-msgstr "Duplex"
+msgstr "Maisonette"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:88
 msgid "Penthouse"
@@ -206,7 +206,7 @@ msgstr "Attique"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:89
 msgid "Atelier"
-msgstr "Atelier"
+msgstr "Atelier artistique"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:90
 msgid "Covered bike space"
@@ -310,7 +310,7 @@ msgstr "Dépendance"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:116
 msgid "Boat landing stage"
-msgstr "Place extérieure à bâteaux"
+msgstr "Place(s) extérieure(s) à bâteaux"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:117
 msgid "Horse box"
@@ -339,7 +339,7 @@ msgstr "Centre commercial"
 #: ../src/CasasoftStandards/Service/CategoryService.php:125
 #: ../src/CasasoftStandards/Service/UtilityService.php:34
 msgid "Commercial"
-msgstr "Commerce"
+msgstr "Commercial"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:126
 msgid "Commercial plot"
@@ -391,11 +391,11 @@ msgstr "Sur demande"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:608
 msgid "Fully ***"
-msgstr ""
+msgstr "Entièrement ***"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:610
 msgid "Partialy ***"
-msgstr ""
+msgstr "Partiellement ***"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:612
 msgid "NOT ***"
@@ -494,11 +494,11 @@ msgstr "Parking"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:161
 msgid "Car port"
-msgstr "Carport"
+msgstr "Carport(s)"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:167
 msgid "Double car port"
-msgstr "Carport double"
+msgstr "Carport(s) double(s)"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:174
 msgid "On a slope"
@@ -610,7 +610,7 @@ msgstr "Structure vide"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:292
 msgid "Well tended"
-msgstr "Très bon état"
+msgstr "Bon état"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:296
 msgid "Modernized"
@@ -646,7 +646,7 @@ msgstr "Séchoir à linge"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:328
 msgid "Kachelofen"
-msgstr "Poêle suédois"
+msgstr "Poêle en faïence"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:332
 msgid "Secondary residency"
@@ -694,39 +694,39 @@ msgstr "Premier étage"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:42
 msgid "External parking space"
-msgstr "Place de parc extérieure"
+msgstr "Place(s) de parc extérieure(s)"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:46
 msgid "Carport"
-msgstr "Carport"
+msgstr "Carport(s)"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:50
 msgid "Connected garage"
-msgstr "Garage relié"
+msgstr "Garage(s) relié(s)"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:54
 msgid "Garage box"
-msgstr "Box à voiture"
+msgstr "Box(es) à voiture(s)"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:58
 msgid "Duplex garage"
-msgstr "Garage duplex"
+msgstr "Garage(s) duplex"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:62
 msgid "Underground parking garage"
-msgstr "Parking souterrain"
+msgstr "Parking(s) souterrain"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:66
 msgid "Parking structure"
-msgstr "Structure de stationnement"
+msgstr "Structure(s) de stationnement"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:70
 msgid "Workroom"
-msgstr "Salle de travail"
+msgstr "Salle(s) de travail"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:74
 msgid "Storage basement"
-msgstr "Sous-sol de stockage"
+msgstr "Sous-sol(s) de stockage"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:31
 msgid "General"
@@ -819,7 +819,7 @@ msgstr "Aéroport"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:307
 msgid "Rooms"
-msgstr "Nombre de pièces"
+msgstr "Pièce(s)"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:313
 msgid "Max. elevator weight"
@@ -891,7 +891,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:446
 msgid "SIA-AFK"
-msgstr ""
+msgstr "Surface de construction extérieure"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:452
 msgid "SIA-AFFT"
@@ -903,7 +903,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:475
 msgid "SIA-GV"
-msgstr ""
+msgstr "Volume du bâtiment"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:481
 msgid "SIA-ANGV"
@@ -940,7 +940,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:548
 msgid "SIA-GGF"
-msgstr ""
+msgstr "Surface de construction extérieure"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:557
 msgid "SIA-GFZ"
@@ -1039,7 +1039,7 @@ msgstr "Industrie"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:54
 msgid "Residential"
-msgstr "Résidence"
+msgstr "Habitation"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:58
 msgid "Storage"
@@ -1071,7 +1071,7 @@ msgstr "Loyer brut / année"
 
 #: 
 msgid "Gross price"
-msgstr "Prix brut"
+msgstr "Loyer brut"
 
 #: 
 msgid "Net rent / m² / month"
@@ -1091,11 +1091,11 @@ msgstr "Loyer net / mois"
 
 #: 
 msgid "Net price"
-msgstr "Prix net"
+msgstr "Loyer net"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:130
 msgid "week"
-msgstr "semaine "
+msgstr "semaine"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:133
 msgid "month"
@@ -1111,15 +1111,15 @@ msgstr "Prix"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:459
 msgid "Price per sqm"
-msgstr "Prix par m<sup>2</sup> par mois"
+msgstr "Prix par m² par mois"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:460
 msgid "priceBruttoPerSqmPerMonth"
-msgstr "Prix brut par m<sup>2</sup> par mois"
+msgstr "Prix brut par m² par mois"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:461
 msgid "priceBruttoPerSqmPerYear"
-msgstr "Prix brut par m<sup>2</sup> par année"
+msgstr "Prix brut par m² par année"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:463
 msgid "priceBruttoTotalPerYear"
@@ -1127,15 +1127,15 @@ msgstr "Prix brut total par an"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:464
 msgid "Net rent / m<sup>2</sup> / month"
-msgstr "Loyer net / m<sup>2</sup> / month"
+msgstr "Loyer net / m² / month"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:465
 msgid "Net rent / m<sup>2</sup> / year"
-msgstr "Loyer net / m<sup>2</sup> / année"
+msgstr "Loyer net / m² / année"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:457
 msgid "Sales price"
-msgstr "Prix ​​de vente"
+msgstr "Prix de vente"
 
 #: 
 msgid "Category"
@@ -1155,7 +1155,7 @@ msgstr "Gastronomie / Hôtel"
 
 #: 
 msgid "Parking / Garage"
-msgstr "Parking / Garage"
+msgstr "Parking(s) / Garage(s)"
 
 #: 
 msgid "Extra Costs"
@@ -1163,7 +1163,7 @@ msgstr "Coûts supplémentaires"
 
 #: 
 msgid "Engadine house"
-msgstr ""
+msgstr "Maison engadinoise"
 
 #: 
 msgid "Patrician house"
@@ -1172,4 +1172,308 @@ msgstr "Maison patricienne"
 #: 
 msgid "Volumes"
 msgstr "Volumes"
+
+#: 
+msgid "Guest toilets"
+msgstr "WC séparés"
+
+#: 
+msgid "Electric heating"
+msgstr "Chauffage électrique"
+
+#: 
+msgid "Geothermal-probe heating"
+msgstr "Chauffage géothermique"
+
+#: 
+msgid "District heating"
+msgstr "Chauffage à distance"
+
+#: 
+msgid "Gas heating"
+msgstr "Chauffage à gaz"
+
+#: 
+msgid "Wood heating"
+msgstr "Chauffage à bois"
+
+#: 
+msgid "Air-water-heatpump heating"
+msgstr "Chauffage air-eau-pompe à chaleur"
+
+#: 
+msgid "Oil heating"
+msgstr "Chauffage à mazout"
+
+#: 
+msgid "Pellet heating"
+msgstr "Chaudières à pellets"
+
+#: 
+msgid "Heatpump heating"
+msgstr "Chauffage par pompe à chaleur"
+
+#: 
+msgid "Floor heating"
+msgstr "Chauffage au sol"
+
+#: 
+msgid "Radiators"
+msgstr "Radiateurs"
+
+#: 
+msgid "Heat generation"
+msgstr "Production de chaleur"
+
+#: 
+msgid "Heat distribution"
+msgstr "Distribution de chaleur"
+
+#: 
+msgid "Egid"
+msgstr "Egid"
+
+#: 
+msgid "Ewid"
+msgstr "Ewid"
+
+#: 
+msgid "Official building number"
+msgstr "Numéro d'immeuble officiel"
+
+#: 
+msgid "Ownership share"
+msgstr "Part du bien"
+
+#: 
+msgid "Property development"
+msgstr "Viabilité"
+
+#: 
+msgid "S-Number"
+msgstr "Nombre-S"
+
+#: 
+msgid "Unit number"
+msgstr "Numéro d'immeuble"
+
+#: 
+msgid "Renewal fund date"
+msgstr "Date de renouvellement du fonds"
+
+#: 
+msgid "Price range"
+msgstr "Gamme de prix"
+
+#: 
+msgid "Energy"
+msgstr "Energie"
+
+#: 
+msgid "Fully developed"
+msgstr "Pleinement développé"
+
+#: 
+msgid "Partialy Developed"
+msgstr "Partiellement développé"
+
+#: 
+msgid "Undeveloped"
+msgstr "Pas développé"
+
+#: 
+msgid "From"
+msgstr "de"
+
+#: 
+msgid "To"
+msgstr "à"
+
+#: 
+msgid "Balcony space"
+msgstr "Surface balcon"
+
+#: 
+msgid "Cellar space"
+msgstr "Surface cave"
+
+#: 
+msgid "Garden space"
+msgstr "Surface jardin"
+
+#: 
+msgid "Loggia space"
+msgstr "Surface loggia"
+
+#: 
+msgid "Terrace space"
+msgstr "Surface terrasse"
+
+#: 
+msgid "Year of last modernization"
+msgstr "Année de la dernière modernisation"
+
+#: 
+msgid "Year of last restoration"
+msgstr "Année de la dernière rénovation"
+
+#: 
+msgid "Rental income (gross)"
+msgstr "Revenu de location (brut)"
+
+#: 
+msgid "Rental income (net)"
+msgstr "Revenu de location (net)"
+
+#: 
+msgid "Renewal fund input"
+msgstr "Apport PPE"
+
+#: 
+msgid "Official tax value"
+msgstr "Valeur fiscale"
+
+#: 
+msgid "Imputed rent value"
+msgstr "Valeur du loyer imputé"
+
+#: 
+msgid "Net premium"
+msgstr "Rendement net"
+
+#: 
+msgid "Building insurance value"
+msgstr "Valeur d'assurance de l'immeuble"
+
+#: 
+msgid "Constructed factor"
+msgstr "Facteur de construction"
+
+#: 
+msgid "GEAK exterior"
+msgstr "CECB extérieur"
+
+#: 
+msgid "GEAK total"
+msgstr "CECB total"
+
+#: 
+msgid "Renewal fund value"
+msgstr "Valeur du fond de rénovation"
+
+#: 
+msgid "Number of guest toilets"
+msgstr "Nombre de toilettes d’invité"
+
+#: 
+msgid "Starting from"
+msgstr "dès"
+
+#: 
+msgid "Mr."
+msgstr "Monsieur"
+
+#: 
+msgid "Ms."
+msgstr "Madame"
+
+#: 
+msgid "Infrared"
+msgstr "Infrarouge"
+
+#: 
+msgid "Minergie-ECO"
+msgstr "Minergie-ECO"
+
+#: 
+msgid "Minergie-P-ECO"
+msgstr "Minergie-P-ECO"
+
+#: 
+msgid "GVA"
+msgstr "ECA"
+
+#: 
+msgid "Availability"
+msgstr "Disponibilité"
+
+#: 
+msgid "Active"
+msgstr "Actif"
+
+#: 
+msgid "Inactive"
+msgstr "Inactif"
+
+#: 
+msgid "Reference"
+msgstr "Référence"
+
+#: 
+msgid "Reserved"
+msgstr "Réservé"
+
+#: 
+msgid "Draft"
+msgstr "Brouillon"
+
+#: 
+msgid "Private"
+msgstr "Privé"
+
+#: 
+msgid "In acquisition"
+msgstr "En acquisition"
+
+#: 
+msgid "Sold"
+msgstr "Vendu"
+
+#: 
+msgid "Rented"
+msgstr "Loué"
+
+#: 
+msgid "Taken"
+msgstr "Loué / Vendu"
+
+#: 
+msgid "Residential / commercial building"
+msgstr "Immeuble locatif et commercial"
+
+#: 
+msgid "day"
+msgstr "jour"
+
+#: 
+msgid "Wall heating"
+msgstr "Chauffage mural"
+
+#: 
+msgid "Solar Thermal"
+msgstr "Solaire thermique"
+
+#: 
+msgid "Photovoltaics"
+msgstr "Solaire photovoltaïque"
+
+#: 
+msgid "Dishwasher"
+msgstr ""
+
+#: 
+msgid "Charging station"
+msgstr ""
+
+#: 
+msgid "Cellar"
+msgstr ""
+
+#: 
+msgid "Number of toilets"
+msgstr ""
+
+#: 
+msgid "Number of showers"
+msgstr ""
 

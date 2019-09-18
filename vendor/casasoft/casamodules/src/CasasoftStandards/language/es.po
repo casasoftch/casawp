@@ -1126,11 +1126,11 @@ msgstr "(precioBrutoPorm²PorMes)"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:464
 msgid "Net rent / m<sup>2</sup> / month"
-msgstr "Renta neta/m<sup>²</sup>/mes"
+msgstr "Renta neta / m² / mes"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:465
 msgid "Net rent / m<sup>2</sup> / year"
-msgstr "Renta neta/m<sup>2</sup>/año"
+msgstr "Renta neta / m² / año"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:457
 msgid "Sales price"
@@ -1171,4 +1171,308 @@ msgstr ""
 #: 
 msgid "Volumes"
 msgstr "Volúmenes"
+
+#: 
+msgid "Guest toilets"
+msgstr ""
+
+#: 
+msgid "Electric heating"
+msgstr ""
+
+#: 
+msgid "Geothermal-probe heating"
+msgstr ""
+
+#: 
+msgid "District heating"
+msgstr ""
+
+#: 
+msgid "Gas heating"
+msgstr ""
+
+#: 
+msgid "Wood heating"
+msgstr ""
+
+#: 
+msgid "Air-water-heatpump heating"
+msgstr ""
+
+#: 
+msgid "Oil heating"
+msgstr ""
+
+#: 
+msgid "Pellet heating"
+msgstr ""
+
+#: 
+msgid "Heatpump heating"
+msgstr ""
+
+#: 
+msgid "Floor heating"
+msgstr ""
+
+#: 
+msgid "Radiators"
+msgstr ""
+
+#: 
+msgid "Heat generation"
+msgstr ""
+
+#: 
+msgid "Heat distribution"
+msgstr ""
+
+#: 
+msgid "Egid"
+msgstr ""
+
+#: 
+msgid "Ewid"
+msgstr ""
+
+#: 
+msgid "Official building number"
+msgstr ""
+
+#: 
+msgid "Ownership share"
+msgstr ""
+
+#: 
+msgid "Property development"
+msgstr ""
+
+#: 
+msgid "S-Number"
+msgstr ""
+
+#: 
+msgid "Unit number"
+msgstr ""
+
+#: 
+msgid "Renewal fund date"
+msgstr ""
+
+#: 
+msgid "Price range"
+msgstr ""
+
+#: 
+msgid "Energy"
+msgstr ""
+
+#: 
+msgid "Fully developed"
+msgstr ""
+
+#: 
+msgid "Partialy Developed"
+msgstr ""
+
+#: 
+msgid "Undeveloped"
+msgstr ""
+
+#: 
+msgid "From"
+msgstr ""
+
+#: 
+msgid "To"
+msgstr ""
+
+#: 
+msgid "Balcony space"
+msgstr ""
+
+#: 
+msgid "Cellar space"
+msgstr ""
+
+#: 
+msgid "Garden space"
+msgstr ""
+
+#: 
+msgid "Loggia space"
+msgstr ""
+
+#: 
+msgid "Terrace space"
+msgstr ""
+
+#: 
+msgid "Year of last modernization"
+msgstr ""
+
+#: 
+msgid "Year of last restoration"
+msgstr ""
+
+#: 
+msgid "Rental income (gross)"
+msgstr ""
+
+#: 
+msgid "Rental income (net)"
+msgstr ""
+
+#: 
+msgid "Renewal fund input"
+msgstr ""
+
+#: 
+msgid "Official tax value"
+msgstr ""
+
+#: 
+msgid "Imputed rent value"
+msgstr ""
+
+#: 
+msgid "Net premium"
+msgstr ""
+
+#: 
+msgid "Building insurance value"
+msgstr ""
+
+#: 
+msgid "Constructed factor"
+msgstr ""
+
+#: 
+msgid "GEAK exterior"
+msgstr ""
+
+#: 
+msgid "GEAK total"
+msgstr ""
+
+#: 
+msgid "Renewal fund value"
+msgstr ""
+
+#: 
+msgid "Number of guest toilets"
+msgstr ""
+
+#: 
+msgid "Starting from"
+msgstr ""
+
+#: 
+msgid "Mr."
+msgstr ""
+
+#: 
+msgid "Ms."
+msgstr ""
+
+#: 
+msgid "Infrared"
+msgstr ""
+
+#: 
+msgid "Minergie-ECO"
+msgstr "Minergie-ECO"
+
+#: 
+msgid "Minergie-P-ECO"
+msgstr "Minergie-P-ECO"
+
+#: 
+msgid "GVA"
+msgstr ""
+
+#: 
+msgid "Availability"
+msgstr ""
+
+#: 
+msgid "Active"
+msgstr ""
+
+#: 
+msgid "Inactive"
+msgstr ""
+
+#: 
+msgid "Reference"
+msgstr ""
+
+#: 
+msgid "Reserved"
+msgstr ""
+
+#: 
+msgid "Draft"
+msgstr ""
+
+#: 
+msgid "Private"
+msgstr ""
+
+#: 
+msgid "In acquisition"
+msgstr ""
+
+#: 
+msgid "Sold"
+msgstr ""
+
+#: 
+msgid "Rented"
+msgstr ""
+
+#: 
+msgid "Taken"
+msgstr ""
+
+#: 
+msgid "Residential / commercial building"
+msgstr ""
+
+#: 
+msgid "day"
+msgstr "día"
+
+#: 
+msgid "Wall heating"
+msgstr ""
+
+#: 
+msgid "Solar Thermal"
+msgstr ""
+
+#: 
+msgid "Photovoltaics"
+msgstr ""
+
+#: 
+msgid "Dishwasher"
+msgstr ""
+
+#: 
+msgid "Charging station"
+msgstr ""
+
+#: 
+msgid "Cellar"
+msgstr ""
+
+#: 
+msgid "Number of toilets"
+msgstr ""
+
+#: 
+msgid "Number of showers"
+msgstr ""
 

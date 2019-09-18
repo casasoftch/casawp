@@ -20,6 +20,7 @@ return array(
             'CasasoftUtility'         => 'CasasoftStandards\Service\UtilityServiceFactory',
             'CasasoftIntegratedOffer' => 'CasasoftStandards\Service\IntegratedOfferServiceFactory',
             'CasasoftConversion'      => 'CasasoftStandards\Service\ConversionServiceFactory',
+            'CasasoftHeat'      => 'CasasoftStandards\Service\HeatServiceFactory',
         )
     ),
     'translator' => array(

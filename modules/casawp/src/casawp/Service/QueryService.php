@@ -34,6 +34,8 @@ class QueryService{
             'projectunit_id' => null,
             'rooms_from' => null,
             'rooms_to' => null,
+            'areas_from' => null,
+            'areas_to' => null,
             'price_from' => null,
             'price_to' => null,
             'price_range' => null,
@@ -310,14 +312,32 @@ class QueryService{
             $meta_query_items_new[] = array(
                 'key' => 'number_of_rooms',
                 'value' => (is_array($this->query['rooms_from']) ? $this->query['rooms_from'][0] : $this->query['rooms_from']),
-                'compare'   => '>='
+                'compare'   => '>=',
+                'type' => 'DECIMAL(10,1)'
             );
         }
         if ($this->query['rooms_to']) {
             $meta_query_items_new[] = array(
                 'key' => 'number_of_rooms',
                 'value' => (is_array($this->query['rooms_to']) ? $this->query['rooms_to'][0] : $this->query['rooms_to']),
-                'compare'   => '<='
+                'compare'   => '<=',
+                'type' => 'DECIMAL(10,1)'
+            );
+        }
+        if ($this->query['areas_from']) {
+            $meta_query_items_new[] = array(
+                'key' => 'areaForOrder',
+                'value' => (is_array($this->query['areas_from']) ? $this->query['areas_from'][0] : $this->query['areas_from']),
+                'compare'   => '>=',
+                'type' => 'NUMERIC'
+            );
+        }
+        if ($this->query['areas_to']) {
+            $meta_query_items_new[] = array(
+                'key' => 'areaForOrder',
+                'value' => (is_array($this->query['areas_to']) ? $this->query['areas_to'][0] : $this->query['areas_to']),
+                'compare'   => '<=',
+                'type' => 'NUMERIC'
             );
         }
         if (in_array('rent', $this->query['salestypes'])) {

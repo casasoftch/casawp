@@ -3,7 +3,6 @@ namespace CasasoftGeo\Service;
 
 use Zend\Http\Client;
 use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 
@@ -12,7 +11,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 //define('MAGICK_PATH', '/Applications/MAMP/bin/ImageMagick/ImageMagick-6.6.1/bin/convert');
 
-class GeoService implements FactoryInterface {
+class GeoService {
 
     protected $config = array(
         'url' => 'http://domain.com',

@@ -1976,9 +1976,23 @@ class Import {
       $this->transcript['properties_found_in_xml'] = count($found_posts);
       $this->transcript['properties_removed'] = count($properties_to_remove);
 
+      //5a. fetch max and min options and set them anew
+      global $wpdb;
+      $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM {$wpdb->postmeta} WHERE meta_key='areaForOrder'", 'foo', 'bar');
+      $max_area = $wpdb->get_var( $query );
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM {$wpdb->postmeta} WHERE meta_key='areaForOrder'", 'foo', 'bar');
+      $min_area = $wpdb->get_var( $query );
 
+      //5b. fetch max and min options and set them anew
+      $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM {$wpdb->postmeta} WHERE meta_key='number_of_rooms'", 'foo', 'bar');
+      $max_rooms = $wpdb->get_var( $query );
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM {$wpdb->postmeta} WHERE meta_key='number_of_rooms'", 'foo', 'bar');
+      $min_rooms = $wpdb->get_var( $query );
 
-
+      update_option('casawp_archive_area_min', $min_area);
+      update_option('casawp_archive_area_max', $max_area);
+      update_option('casawp_archive_rooms_min', $min_rooms);
+      update_option('casawp_archive_rooms_max', $max_rooms);
 
 
     //projects
@@ -2607,6 +2621,21 @@ class Import {
       $numericValues[$numval['key']] = $numval['value'];
     }
     $new_meta_data = array_merge($new_meta_data, $numericValues);
+
+
+    $tmp_area_bwf      = (array_key_exists('area_bwf', $new_meta_data)      && $new_meta_data['area_bwf'] !== "")      ? ($new_meta_data['area_bwf'])      : null;
+    $tmp_area_nwf      = (array_key_exists('area_nwf', $new_meta_data)      && $new_meta_data['area_nwf'] !== "")      ? ($new_meta_data['area_nwf'])      : null;
+    $tmp_area_sia_nf      = (array_key_exists('area_sia_nf', $new_meta_data)      && $new_meta_data['area_sia_nf'] !== "")      ? ($new_meta_data['area_sia_nf'])      : null;
+    if ($tmp_area_bwf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_bwf;
+    } else if ($tmp_area_nwf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_nwf;
+    } else if ($tmp_area_sia_nf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_sia_nf;
+    }
+    // else {
+    //      $new_meta_data['areaForOrder'] = 0;
+    //    }
 
     //integratedOffers
     //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);

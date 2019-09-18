@@ -3,13 +3,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: POEditor.com\n"
 "Project-Id-Version: CASASTANDARDS\n"
-"Language: it_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Language: it-ch\n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -114,7 +110,7 @@ msgstr "Singola"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:61
 msgid "Terrace flat"
-msgstr "Terrazza appartamento"
+msgstr "Attico"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:62
 msgid "Terrace house"
@@ -159,7 +155,7 @@ msgstr "Ufficio"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:76
 msgid "Exihition space"
-msgstr "Exihition spazio"
+msgstr "Superfice Exihition"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:77
 msgid "Retail"
@@ -215,7 +211,7 @@ msgstr "Atelier"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:90
 msgid "Covered bike space"
-msgstr "Spazio coperto per biciclette"
+msgstr "Superfice coperto per biciclette"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:91
 msgid "Rustico"
@@ -227,7 +223,7 @@ msgstr "Appartamento giardino"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:93
 msgid "Retail space"
-msgstr "Spazio commerciale"
+msgstr "Superfice commerciale"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:95
 msgid "Boat dry dock"
@@ -360,7 +356,7 @@ msgstr "Categorie"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:446
 msgid "Available from"
-msgstr "Disponibile"
+msgstr "Disponibile da"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:447
 msgid "Condition"
@@ -386,7 +382,7 @@ msgstr "Aree"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:455
 msgid "Features"
-msgstr "Funzionalità"
+msgstr "Caratteristiche"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:155
 #: ../src/CasasoftStandards/Service/ConversionService.php:458
@@ -441,7 +437,7 @@ msgstr "Terreno edificabile collegato"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:73
 msgid "Gardenhouse"
-msgstr "Casetta in giardino"
+msgstr "Deposito attrezzi"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:77
 msgid "Is under roof"
@@ -449,7 +445,7 @@ msgstr "È sotto il tetto"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:83
 msgid "Rental deposit guarantee"
-msgstr "Garanzia cauzione"
+msgstr "Deposito cauzionale"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:88
 #: ../src/CasasoftStandards/Service/FeatureService.php:362
@@ -466,11 +462,11 @@ msgstr "Bella vista"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:103
 msgid "Lake view"
-msgstr "Prospettiva sul lago"
+msgstr "Vista lago"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:109
 msgid "Mountain view"
-msgstr "Vista delle montagne"
+msgstr "Vista montagna"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:115
 msgid "Sunny"
@@ -577,7 +573,7 @@ msgstr "Vecchio"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:251
 msgid "has building law restrictions"
-msgstr "Diritto edilizio"
+msgstr "Indice di sfruttamento"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:256
 msgid "Swimmingpool"
@@ -705,7 +701,7 @@ msgstr "Parcheggio esterno"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:46
 msgid "Carport"
-msgstr "tettoia per automobili"
+msgstr "Posto auto coperto"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:50
 msgid "Connected garage"
@@ -846,7 +842,7 @@ msgstr "Superficie netta"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:353
 msgid "Floorspace"
-msgstr "Superficie"
+msgstr "Superfice reale"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:359
 msgid "Main floor space"
@@ -858,23 +854,23 @@ msgstr "Superficie utile secondaria"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:372
 msgid "Traffic area"
-msgstr "Zona di traffico"
+msgstr "Superficie di circolazione"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:378
 msgid "Functional surface"
-msgstr "Superficie funzionale"
+msgstr "Superficie delle installazioni"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:386
 msgid "Construction area"
-msgstr "Area di edificazione"
+msgstr "Superficie di costruzione"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:392
 msgid "Construction area supporting"
-msgstr "Supporto per area di edificazione"
+msgstr "Superficie di costruzione portante"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:398
 msgid "Construction area non-supporting"
-msgstr "Nessun supporto per area edificabile"
+msgstr "Superficie di costruzione non portante"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:414
 msgid "SIA-AGF"
@@ -886,31 +882,31 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:426
 msgid "SIA-ANF"
-msgstr ""
+msgstr "Superficie utile esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:432
 msgid "SIA-AVF"
-msgstr ""
+msgstr "Superficie di circolazione esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:438
 msgid "SIA-AFF"
-msgstr ""
+msgstr "Superficie delle installazioni esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:446
 msgid "SIA-AFK"
-msgstr ""
+msgstr "Superficie di costruzione esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:452
 msgid "SIA-AFFT"
-msgstr ""
+msgstr "Superficie di costruzione portante esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:458
 msgid "SIA-AFFN"
-msgstr ""
+msgstr "Superficie di costruzione non portante esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:475
 msgid "SIA-GV"
-msgstr ""
+msgstr "Volume dell'edificio"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:481
 msgid "SIA-ANGV"
@@ -931,7 +927,7 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:524
 msgid "SIA-GSF"
-msgstr "Sup. terreno"
+msgstr "Superfice del lotto"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:530
 msgid "SIA-UO"
@@ -939,15 +935,15 @@ msgstr ""
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:536
 msgid "SIA-BUF"
-msgstr ""
+msgstr "Superficie utile esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:542
 msgid "SIA-UUF"
-msgstr ""
+msgstr "Superficie di circolazione esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:548
 msgid "SIA-GGF"
-msgstr ""
+msgstr "Superficie di costruzione esterna"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:557
 msgid "SIA-GFZ"
@@ -961,7 +957,7 @@ msgstr ""
 #: ../src/CasasoftStandards/Service/NumvalService.php:575
 #: ../src/CasasoftStandards/Service/NumvalService.php:581
 msgid "SIA-BMZ"
-msgstr ""
+msgstr "Indice di occupazione"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:590
 msgid "Cubature GVA"
@@ -973,7 +969,7 @@ msgstr "Cubature SIA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:605
 msgid "Utilization number"
-msgstr "Numero di utilizzazione"
+msgstr "Indice di sfruttamento"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:611
 msgid "Construction utilization number"
@@ -981,7 +977,7 @@ msgstr "Numero di costruzione l'utilizzo"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:617
 msgid "Total living area"
-msgstr "Superficie abitabile"
+msgstr "Superfice lorda"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:623
 msgid "Net living area"
@@ -1022,11 +1018,11 @@ msgstr "Prezzo del terreno"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:691
 msgid "Gross premium"
-msgstr "Premio lordo"
+msgstr "Rendità lorda"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:698
 msgid "Rental deposit"
-msgstr "Cauzione"
+msgstr "Deposito cauzionale"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:38
 msgid "Gastronomy"
@@ -1058,11 +1054,13 @@ msgstr "Costruzione"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
-msgstr "Investment"
+msgstr "Investimento"
 
+#: 
 msgid "Gross rent / m² / month"
 msgstr "Affitto lordo / m² / mese"
 
+#: 
 msgid "Gross rent / m² / year"
 msgstr "Affitto lordo / m² / anno"
 
@@ -1070,15 +1068,19 @@ msgstr "Affitto lordo / m² / anno"
 msgid "Gross rent / month"
 msgstr "Affitto lordo / mese"
 
+#: 
 msgid "Gross rent / year"
 msgstr "Affitto netto / anno"
 
+#: 
 msgid "Gross price"
 msgstr "Prezzo lordo"
 
+#: 
 msgid "Net rent / m² / month"
 msgstr "Affitto netto / m² / mese"
 
+#: 
 msgid "Net rent / m² / year"
 msgstr "Affitto netto / m² / anno"
 
@@ -1090,6 +1092,7 @@ msgstr "Affitto netto / anno"
 msgid "Net rent / month"
 msgstr "Affitto netto / mese"
 
+#: 
 msgid "Net price"
 msgstr "Prezzo netto"
 
@@ -1127,39 +1130,353 @@ msgstr "Prezzo lordo totale / anno"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:464
 msgid "Net rent / m<sup>2</sup> / month"
-msgstr "Affitto netto / m<sup>2</sup> / mese"
+msgstr "Affitto netto / m² / mese"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:465
 msgid "Net rent / m<sup>2</sup> / year"
-msgstr "Affitto netto / m<sup>2</sup> / anno"
+msgstr "Affitto netto / m² / anno"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:457
 msgid "Sales price"
 msgstr "Prezzo di vendita"
 
+#: 
 msgid "Category"
 msgstr "Categoria"
 
+#: 
 msgid "Part of a house"
 msgstr "Porzione di casa"
 
+#: 
 msgid "Immediate"
 msgstr "Immediata"
 
+#: 
 msgid "Gastronomy / Hotel"
 msgstr "Ristorazione / Hotel"
 
+#: 
 msgid "Parking / Garage"
 msgstr "Posti auto"
 
+#: 
 msgid "Extra Costs"
-msgstr "Costi aggiuntivi"
+msgstr "Acconto spese"
 
+#: 
 msgid "Engadine house"
 msgstr "Casa engadinese"
 
+#: 
 msgid "Patrician house"
 msgstr "Palazzo patrizio"
 
+#: 
 msgid "Volumes"
 msgstr "Volumi"
+
+#: 
+msgid "Guest toilets"
+msgstr "WC separati"
+
+#: 
+msgid "Electric heating"
+msgstr "Riscaldamento elettrico"
+
+#: 
+msgid "Geothermal-probe heating"
+msgstr "Riscaldamento con sonda geotermica"
+
+#: 
+msgid "District heating"
+msgstr "Riscaldamento centralizzato"
+
+#: 
+msgid "Gas heating"
+msgstr "Riscaldamento a gas metano"
+
+#: 
+msgid "Wood heating"
+msgstr "Riscaldamento a legna"
+
+#: 
+msgid "Air-water-heatpump heating"
+msgstr "Riscaldamento con pompa di calore aria-acqua"
+
+#: 
+msgid "Oil heating"
+msgstr "Riscaldamento a olio"
+
+#: 
+msgid "Pellet heating"
+msgstr "Riscaldamento a pellet"
+
+#: 
+msgid "Heatpump heating"
+msgstr "Riscaldamento con pompa di calore"
+
+#: 
+msgid "Floor heating"
+msgstr "Riscaldamento a pavimento"
+
+#: 
+msgid "Radiators"
+msgstr "Radiatori"
+
+#: 
+msgid "Heat generation"
+msgstr "Generazione di calore"
+
+#: 
+msgid "Heat distribution"
+msgstr "Ripartiz. costi  risc."
+
+#: 
+msgid "Egid"
+msgstr "Egid"
+
+#: 
+msgid "Ewid"
+msgstr "Ewid"
+
+#: 
+msgid "Official building number"
+msgstr "Numero ufficiale di costruzione"
+
+#: 
+msgid "Ownership share"
+msgstr "Quota di proprietà"
+
+#: 
+msgid "Property development"
+msgstr "Sviluppo immobiliare"
+
+#: 
+msgid "S-Number"
+msgstr "Numero fornitura"
+
+#: 
+msgid "Unit number"
+msgstr "Numero unità"
+
+#: 
+msgid "Renewal fund date"
+msgstr "Data di rinnovo del fondo"
+
+#: 
+msgid "Price range"
+msgstr "Fascia di prezzo"
+
+#: 
+msgid "Energy"
+msgstr "Energetico"
+
+#: 
+msgid "Fully developed"
+msgstr "Completamente sviluppato"
+
+#: 
+msgid "Partialy Developed"
+msgstr "Parzialmente sviluppato"
+
+#: 
+msgid "Undeveloped"
+msgstr "Parzialmente allacciato"
+
+#: 
+msgid "From"
+msgstr "da"
+
+#: 
+msgid "To"
+msgstr "fino a"
+
+#: 
+msgid "Balcony space"
+msgstr "Superfice balcone"
+
+#: 
+msgid "Cellar space"
+msgstr "Superfice cantina"
+
+#: 
+msgid "Garden space"
+msgstr "Superfice giardino"
+
+#: 
+msgid "Loggia space"
+msgstr "Superfice loggia"
+
+#: 
+msgid "Terrace space"
+msgstr "Superfice terrazzo"
+
+#: 
+msgid "Year of last modernization"
+msgstr "Anno dell'ultimo ammodernamento"
+
+#: 
+msgid "Year of last restoration"
+msgstr "Anno dell'ultimo restauro"
+
+#: 
+msgid "Rental income (gross)"
+msgstr "Reddito da locazione (lordo)"
+
+#: 
+msgid "Rental income (net)"
+msgstr "Reddito da locazione (netto)"
+
+#: 
+msgid "Renewal fund input"
+msgstr "Input rinnovo del fondo"
+
+#: 
+msgid "Official tax value"
+msgstr "Valore fiscale"
+
+#: 
+msgid "Imputed rent value"
+msgstr "Valore locativo stimato"
+
+#: 
+msgid "Net premium"
+msgstr "Reddività netta"
+
+#: 
+msgid "Building insurance value"
+msgstr "Valore dell'assicurazione dell'edificio"
+
+#: 
+msgid "Constructed factor"
+msgstr "Indice di occupazione"
+
+#: 
+msgid "GEAK exterior"
+msgstr "CECE esterno"
+
+#: 
+msgid "GEAK total"
+msgstr "CECE totale"
+
+#: 
+msgid "Renewal fund value"
+msgstr "Valore rinnovo del fondo"
+
+#: 
+msgid "Number of guest toilets"
+msgstr "Numero di bagni per gli ospiti"
+
+#: 
+msgid "Starting from"
+msgstr "A partire da"
+
+#: 
+msgid "Mr."
+msgstr "Signore"
+
+#: 
+msgid "Ms."
+msgstr "Signora"
+
+#: 
+msgid "Infrared"
+msgstr "Infrarosso"
+
+#: 
+msgid "Minergie-ECO"
+msgstr "Minergie-ECO"
+
+#: 
+msgid "Minergie-P-ECO"
+msgstr "Minergie-P-ECO"
+
+#: 
+msgid "GVA"
+msgstr "GVA"
+
+#: 
+msgid "Availability"
+msgstr "Disponibilità"
+
+#: 
+msgid "Active"
+msgstr "Attivo"
+
+#: 
+msgid "Inactive"
+msgstr "Inattivo"
+
+#: 
+msgid "Reference"
+msgstr "Referenza"
+
+#: 
+msgid "Reserved"
+msgstr "Riservati"
+
+#: 
+msgid "Draft"
+msgstr "Bozza"
+
+#: 
+msgid "Private"
+msgstr "Privato"
+
+#: 
+msgid "In acquisition"
+msgstr "In corso di acquisizione"
+
+#: 
+msgid "Sold"
+msgstr "Venduto"
+
+#: 
+msgid "Rented"
+msgstr "Affittato"
+
+#: 
+msgid "Taken"
+msgstr "Presi"
+
+#: 
+msgid "Residential / commercial building"
+msgstr "Immobilie commerciale/d'abitazione"
+
+#: 
+msgid "day"
+msgstr "Giorno"
+
+#: 
+msgid "Wall heating"
+msgstr "Riscaldamento a parete"
+
+#: 
+msgid "Solar Thermal"
+msgstr ""
+
+#: 
+msgid "Photovoltaics"
+msgstr ""
+
+#: 
+msgid "Dishwasher"
+msgstr ""
+
+#: 
+msgid "Charging station"
+msgstr ""
+
+#: 
+msgid "Cellar"
+msgstr ""
+
+#: 
+msgid "Number of toilets"
+msgstr ""
+
+#: 
+msgid "Number of showers"
+msgstr ""
+
