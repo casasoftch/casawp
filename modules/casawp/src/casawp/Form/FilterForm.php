@@ -30,24 +30,12 @@ class FilterForm extends Form
         if (!$this->options['casawp_filter_rooms_to_elementtype']) {
           $this->options['casawp_filter_rooms_to_elementtype'] = 'hidden';
         }
-        if (!$this->options['casawp_filter_areas_from_elementtype']) {
-          $this->options['casawp_filter_areas_from_elementtype'] = 'hidden';
-        }
-        if (!$this->options['casawp_filter_areas_to_elementtype']) {
-          $this->options['casawp_filter_areas_to_elementtype'] = 'hidden';
-        }
         if (!$this->options['casawp_filter_price_from_elementtype']) {
           $this->options['casawp_filter_price_from_elementtype'] = 'hidden';
         }
         if (!$this->options['casawp_filter_price_to_elementtype']) {
           $this->options['casawp_filter_price_to_elementtype'] = 'hidden';
         }
-       /* if (!$this->options['casawp_filter_area_sia_nf_from_elementtype']) {
-          $this->options['casawp_filter_area_sia_nf_from_elementtype'] = 'hidden';
-        }
-        if (!$this->options['casawp_filter_area_sia_nf_to_elementtype']) {
-          $this->options['casawp_filter_area_sia_nf_to_elementtype'] = 'hidden';
-        }*/
         if (!$this->options['casawp_filter_utilities_elementtype']) {
           $this->options['casawp_filter_utilities_elementtype'] = 'hidden';
         }
@@ -163,23 +151,6 @@ class FilterForm extends Form
             );
         //}
 
-        //if ($this->areas_from) {
-            $this->addSelector(
-                'areas_from',
-                __('Areas from', 'casawp'),
-                __('Areas from','casawp'),
-                $this->getAreaOptions(),
-                $this->options['chosen_areas_from']
-            );
-            $this->addSelector(
-                'areas_to',
-                __('Areas to', 'casawp'),
-                __('Areas to','casawp'),
-                $this->getAreaOptions(),
-                $this->options['chosen_areas_to']
-            );
-        //}
-
         //if ($this->price_from) {
             $this->addSelector(
                 'price_from',
@@ -219,24 +190,6 @@ class FilterForm extends Form
             ),
             (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
         );
-
-
-        //if ($this->area_from) {
-          /*  $this->addSelector(
-                'area_from',
-                __('Area from', 'casawp'),
-                __('Area from','casawp'),
-                $this->getAreaOptions(),
-                (isset($this->options['chosen_area_from']) ? $this->options['chosen_area_from'] : null)
-            );
-            $this->addSelector(
-                'area_to',
-                __('Area to', 'casawp'),
-                __('Area to','casawp'),
-                $this->getAreaOptions(),
-                (isset($this->options['chosen_area_to']) ? $this->options['chosen_area_to'] : null)
-            );*/
-        //}
 
 
         // order by element
@@ -606,46 +559,10 @@ class FilterForm extends Form
     }
 
     public function getRoomOptions(){
-        $min = get_option('casawp_archive_rooms_min', null);
-        $max = get_option('casawp_archive_rooms_max', null);
-        if ($min && $max) {
-            $options = array();
-            for ($i=$min; $i <= $max; $i = $i+0.5) {
-                $options[(string) $i] = $i;
-            }    
-        } else {
-            $options = array();
-            for ($i=1; $i < 8.5; $i = $i+0.5) {
-                $options[(string) $i] = $i;
-            }    
+        $options = array();
+        for ($i=1; $i < 8.5; $i = $i+0.5) {
+            $options[(string) $i] = $i;
         }
-
-        
-        return $options;
-    }
-
-    public function getAreaOptions(){
-        $min = get_option('casawp_archive_area_min', null);
-        $max = get_option('casawp_archive_area_max', null);
-        if ($min && $max) {
-            $options = array();
-            for ($i=$min; $i <= $max; $i = $i+1) {
-                if ($i == $min) {
-                    $options[(string) $i] = $min;    
-                } else if ($i == $max) {
-                    $options[(string) $i] = $max;  
-                } else if ($i % 100 === 0) {
-                    $options[(string) $i] = $i;    
-                }
-            }    
-        } else {
-            $options = array();
-            for ($i=1; $i < 1000; $i = $i+1) {
-                $options[(string) $i] = $i;
-            }    
-        }
-
-        
         return $options;
     }
 
@@ -719,25 +636,6 @@ class FilterForm extends Form
       return $options;
     }
 
-   /* public function getAreaOptions(){
-      $options = array();
-      if (in_array('agricultural', $this->options['chosen_utility']) ||
-        in_array('commercial', $this->options['chosen_utility']) ||
-        in_array('gastronomy', $this->options['chosen_utility']) ||
-        in_array('industrial', $this->options['chosen_utility'])) {
-        $options = array(
-          500 => '500',
-          600 => '600',
-        );
-      } else {
-        $options = array(
-          50000 => '50\'000',
-          100000 => '100\'000',
-        );
-      }
-      return $options;
-    }*/
-
     // yes onlybase is not used but required to be interface compatible (keep it!!!)
     public function populateValues($data, $onlyBase = false)
     {
@@ -772,10 +670,6 @@ class FilterForm extends Form
                     $name == 'rooms_from'
                     ||
                     $name == 'rooms_to'
-                    ||
-                    $name == 'areas_from'
-                    ||
-                    $name == 'areas_to'
                 ) {
                     if ($data[$name] && is_array($data[$name])) {
                         $value = $data[$name][0];

@@ -2,9 +2,3 @@
 vendor/**/.git/*
 config.codekit
 composer.phar
-node_modules/casadistance/yarn.lock
-node_modules/casadistance/package.json
-node_modules/casadistance/package-lock.json
-node_modules/.yarn-integrity
-vendor/composer/installed.json
-yarn.lock

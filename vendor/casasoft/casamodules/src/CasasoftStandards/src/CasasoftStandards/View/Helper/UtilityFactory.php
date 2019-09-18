@@ -16,7 +16,7 @@ class UtilityFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $viewHelperManager)
     {
         $serviceLocator = $viewHelperManager->getServiceLocator();
-        $utilityService = $serviceLocator->get('CasasoftUtility');
+        $utilityService = $serviceLocator->get('UtilityService');
 
         $helper = new Utility($utilityService);
 

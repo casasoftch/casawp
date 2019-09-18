@@ -749,38 +749,6 @@
 						</tr>
 					<?php echo $table_end; ?>
 
-					<?php echo $table_start; ?>
-						<tr valign="top">
-							<th scope="row">Fläche</th>
-							<td>
-								<?php $name = 'casawp_archive_area_min'; ?>
-								<?php $text = 'Fläche min'; ?>
-								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
-								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
-								<?php $name = 'casawp_archive_area_max'; ?>
-								<?php $text = 'Fläche max'; ?>
-								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
-								<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
-							</td>
-						</tr>
-					<?php echo $table_end; ?>
-
-					<?php echo $table_start; ?>
-						<tr valign="top">
-							<th scope="row">Zimmer</th>
-							<td>
-								<?php $name = 'casawp_archive_rooms_min'; ?>
-								<?php $text = 'Zimmer min'; ?>
-								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
-								<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo get_option($name); ?>" class="small-text">
-								<?php $name = 'casawp_archive_rooms_max'; ?>
-								<?php $text = 'Zimmer max'; ?>
-								<label for="<?php echo $name; ?>"><?php echo $text; ?></label>
-								<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo get_option($name); ?>" class="small-text">
-							</td>
-						</tr>
-					<?php echo $table_end; ?>
-
 					<h3>Filter Formular Einstellungen</h3>
 					<?php echo $table_start; ?>
 						<tr valign="top">
@@ -884,32 +852,6 @@
 						<tr  valign="top">
 							<?php $name = 'casawp_filter_rooms_to_elementtype'; ?>
 							<?php $text = 'Zimmer-Filter zu'; ?>
-							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
-							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-							<td>
-								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-									<?php foreach ($options as $key => $value) : ?>
-										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
-									<?php endforeach; ?>
-								</select>
-							</td>
-						</tr>
-						<tr  valign="top">
-							<?php $name = 'casawp_filter_areas_from_elementtype'; ?>
-							<?php $text = 'Fläche von'; ?>
-							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
-							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-							<td>
-								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
-									<?php foreach ($options as $key => $value) : ?>
-										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
-									<?php endforeach; ?>
-								</select>
-							</td>
-						</tr>
-						<tr  valign="top">
-							<?php $name = 'casawp_filter_areas_to_elementtype'; ?>
-							<?php $text = 'Fläche zu'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
 							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
 							<td>

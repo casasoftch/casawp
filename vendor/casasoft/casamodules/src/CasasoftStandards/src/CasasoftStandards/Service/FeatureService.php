@@ -9,10 +9,20 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class FeatureService {
 
-    public $items = [];
+    public $items = array();
 
     public function __construct($translator){
         $this->translator = $translator;
+
+        //set default numvals
+        $options = $this->getDefaultOptions();
+        foreach ($options as $key => $options) {
+            $feature = new Feature;
+            $feature->populate($options);
+            $feature->setKey($key);
+            $this->addItem($feature, $key);
+        }
+
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator){
@@ -266,14 +276,6 @@ class FeatureService {
                 'label' => $this->translator->translate('Minergie P', 'casasoft-standards'),
                 'icon' => '',
             ),
-            'is-minergie-eco' => array(
-                'label' => $this->translator->translate('Minergie-ECO', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'is-minergie-p-eco' => array(
-                'label' => $this->translator->translate('Minergie-P-ECO', 'casasoft-standards'),
-                'icon' => '',
-            ),
            'is-non-smoking' => array(
                'label' => $this->translator->translate('Non smoking', 'casasoft-standards'),
                'icon' => '',
@@ -392,35 +394,15 @@ class FeatureService {
                 'label' => $this->translator->translate('Base floor', 'casasoft-standards'),
                 'icon' => '',
             ),
-            'has-attic' => array(
-                'label' => $this->translator->translate('Attic', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-cellar' => array(
-                'label' => $this->translator->translate('Cellar', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-charging-station' => array(
-                'label' => $this->translator->translate('Charging station', 'casasoft-standards'),
-                'icon' => '',
-            ),
-            'has-dishwasher' => array(
-                'label' => $this->translator->translate('Dishwasher', 'casasoft-standards'),
-                'icon' => '',
-            ),
 
         );
-    }
-
-    public function setTranslator($translator) {
-        $this->translator = $translator;
-        $this->items = null;
     }
 
     public function addItem($obj, $key = null) {
         if ($key == null) {
             $this->items[] = $obj;
-        } else {
+        }
+        else {
             if (isset($this->items[$key])) {
                 throw new KeyHasUseException("Key $key already in use.");
             }
@@ -431,46 +413,38 @@ class FeatureService {
     }
 
     public function deleteItem($key) {
-        if (isset($this->getItems()[$key])) {
-            unset($this->getItems()[$key]);
-        } else {
+        if (isset($this->items[$key])) {
+            unset($this->items[$key]);
+        }
+        else {
             throw new \Exception("Invalid key $key.");
         }
     }
 
     public function getItem($key) {
-        if (isset($this->getItems()[$key])) {
-            return $this->getItems()[$key];
-        } else {
-            return null;
+        if (isset($this->items[$key])) {
+            return $this->items[$key];
+        }
+        else {
+          return null;
             throw new \Exception("Invalid key $key.");
         }
     }
 
     public function getItems(){
-        if (! $this->items) {
-            //set default numvals
-            $options = $this->getDefaultOptions();
-            foreach ($options as $key => $options) {
-                $feature = new Feature;
-                $feature->populate($options);
-                $feature->setKey($key);
-                $this->addItem($feature, $key);
-            }
-        }
         return $this->items;
     }
 
     public function keys() {
-        return array_keys($this->getItems());
+        return array_keys($this->items);
     }
 
     public function length() {
-        return count($this->getItems());
+        return count($this->items);
     }
 
     public function keyExists($key) {
-        return isset($this->getItems()[$key]);
+        return isset($this->items[$key]);
     }
 
 }

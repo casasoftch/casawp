@@ -14,6 +14,16 @@ class CategoryService {
 
     public function __construct($translator){
         $this->translator = $translator;
+
+        //set default categorys
+        $category_options = $this->getDefaultOptions();
+        foreach ($category_options as $key => $options) {
+            $category = new Category;
+            $category->populate($options);
+            $category->setKey($key);
+            $this->addItem($category, $key);
+        }
+
         $this->groups = $this->getDefaultGroupOptions();
     }
 
@@ -309,12 +319,6 @@ class CategoryService {
         return $groups;
     }
 
-    public function setTranslator($translator) {
-        $this->translator = $translator;
-        $this->items = null;
-    }
-
-
     public function hasSlugInGroup($slug, $groupslug){
         if (array_key_exists($groupslug, $this->groups)) {
             if (in_array($slug, $this->groups[$groupslug]['category_slugs'])) {
@@ -348,8 +352,8 @@ class CategoryService {
     }
 
     public function deleteItem($key) {
-        if (isset($this->getItems()[$key])) {
-            unset($this->getItems()[$key]);
+        if (isset($this->items[$key])) {
+            unset($this->items[$key]);
         } else {
             throw new \Exception("Invalid key $key.");
         }
@@ -367,43 +371,35 @@ class CategoryService {
     public function getGroup($key) {
         if (isset($this->groups[$key])) {
             return $this->groups[$key];
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     public function getItem($key) {
-        if (isset($this->getItems()[$key])) {
-            return $this->getItems()[$key];
-        } else {
+        if (isset($this->items[$key])) {
+            return $this->items[$key];
+        }
+        else {
             return false;
         }
     }
 
     public function getItems(){
-        if (! $this->items) {
-            //set default categorys
-            $category_options = $this->getDefaultOptions();
-            foreach ($category_options as $key => $options) {
-                $category = new Category;
-                $category->populate($options);
-                $category->setKey($key);
-                $this->addItem($category, $key);
-            }
-        }
         return $this->items;
     }
 
     public function keys() {
-        return array_keys($this->getItems());
+        return array_keys($this->items);
     }
 
     public function length() {
-        return count($this->getItems());
+        return count($this->items);
     }
 
     public function keyExists($key) {
-        return isset($this->getItems()[$key]);
+        return isset($this->items[$key]);
     }
 
     public function testCategoryTranslationsAndCasaXMLcompare(){

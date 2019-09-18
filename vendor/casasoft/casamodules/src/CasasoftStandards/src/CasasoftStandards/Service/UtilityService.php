@@ -13,6 +13,15 @@ class UtilityService{
 
     public function __construct($translator){
         $this->translator = $translator;
+
+        //set default utilitys
+        $utility_options = $this->getDefaultOptions();
+        foreach ($utility_options as $key => $options) {
+            $utility = new Utility;
+            $utility->populate($options);
+            $utility->setKey($key);
+            $this->addItem($utility, $key);
+        }
     }
 
     public function createService(ServiceLocatorInterface $serviceLocator){
@@ -64,11 +73,6 @@ class UtilityService{
         );
     }
 
-    public function setTranslator($translator) {
-        $this->translator = $translator;
-        $this->items = null;
-    }
-
     public function addItem($obj, $key = null) {
         if ($key == null) {
             $this->items[] = $obj;
@@ -82,45 +86,35 @@ class UtilityService{
     }
 
     public function deleteItem($key) {
-        if (isset($this->getItems()[$key])) {
-            unset($this->getItems()[$key]);
+        if (isset($this->items[$key])) {
+            unset($this->items[$key]);
         } else {
             throw new \Exception("Invalid key $key.");
         }
     }
 
     public function getItem($key) {
-        if (isset($this->getItems()[$key])) {
-            return $this->getItems()[$key];
+        if (isset($this->items[$key])) {
+            return $this->items[$key];
         } else {
-            return false;
+            throw new \Exception("Invalid key $key.");
         }
     }
 
     public function getItems(){
-        if (! $this->items) {
-            //set default utilitys
-            $utility_options = $this->getDefaultOptions();
-            foreach ($utility_options as $key => $options) {
-                $utility = new Utility;
-                $utility->populate($options);
-                $utility->setKey($key);
-                $this->addItem($utility, $key);
-            }
-        }
         return $this->items;
     }
 
     public function keys() {
-        return array_keys($this->getItems());
+        return array_keys($this->items);
     }
 
     public function length() {
-        return count($this->getItems());
+        return count($this->items);
     }
 
     public function keyExists($key) {
-        return isset($this->getItems()[$key]);
+        return isset($this->items[$key]);
     }
 
 }
