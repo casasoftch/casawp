@@ -2826,3 +2826,43 @@ msgstr "Costes adicionales"
 msgid "Ground floor"
 msgstr "Planta baja"
 
+#: 
+msgid "Choose order"
+msgstr ""
+
+#: 
+msgid "Order by"
+msgstr ""
+
+#: 
+msgid "Ascending"
+msgstr ""
+
+#: 
+msgid "Descending"
+msgstr ""
+
+#: 
+msgid "Order direction"
+msgstr ""
+
+#: 
+msgid "Choose order direction"
+msgstr ""
+
+#: 
+msgid "Date"
+msgstr ""
+
+#: 
+msgid "Load distance map"
+msgstr ""
+
+#: 
+msgid "Load map"
+msgstr ""
+
+#: 
+msgid "Guest toilets"
+msgstr ""
+
