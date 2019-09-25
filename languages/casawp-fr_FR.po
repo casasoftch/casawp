@@ -3,9 +3,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 2.2.3\n"
 "Project-Id-Version: CASAWP\n"
-"Language: fr-ch\n"
+"Language: fr_CH\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -1918,7 +1922,7 @@ msgstr "Segment de prix brut"
 
 #: classes/Plugin.php:1805 modules/casawp/src/casawp/Form/ContactForm.php:63
 msgid "Legal name"
-msgstr "Nom juridique"
+msgstr "Société"
 
 #: classes/Plugin.php:1812
 msgid "Brand"
@@ -1937,7 +1941,7 @@ msgstr "Complément rue"
 #: classes/Plugin.php:1847 modules/casawp/src/casawp/Form/ContactForm.php:88
 #: modules/casawp/src/casawp/Service/Offer.php:881
 msgid "Locality"
-msgstr "Localité"
+msgstr "Lieu"
 
 #: classes/Plugin.php:1868
 msgid "P.O. Box"
@@ -1952,7 +1956,7 @@ msgstr "Organisme"
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:28
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:23
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #: classes/Plugin.php:1907
 msgid "Function"
@@ -2806,63 +2810,47 @@ msgstr "Désolé, rien ne correspond à vos critères"
 msgid "rent"
 msgstr "louer"
 
-#: 
 msgid "School"
 msgstr "École"
 
-#: 
 msgid "Choose country"
 msgstr ""
 
-#: 
 msgid "Countries"
 msgstr ""
 
-#: 
 msgid "Extra Costs"
 msgstr "Charges"
 
-#: 
 msgid "Ground floor"
 msgstr "Rez-de-chaussée"
 
-#: 
 msgid "Choose order"
 msgstr ""
 
-#: 
 msgid "Order by"
 msgstr ""
 
-#: 
 msgid "Ascending"
 msgstr ""
 
-#: 
 msgid "Descending"
 msgstr ""
 
-#: 
 msgid "Order direction"
 msgstr ""
 
-#: 
 msgid "Choose order direction"
 msgstr ""
 
-#: 
 msgid "Date"
 msgstr ""
 
-#: 
 msgid "Load distance map"
 msgstr "Afficher la carte des distances"
 
-#: 
 msgid "Load map"
 msgstr "Afficher la carte"
 
-#: 
 msgid "Guest toilets"
 msgstr ""
-
