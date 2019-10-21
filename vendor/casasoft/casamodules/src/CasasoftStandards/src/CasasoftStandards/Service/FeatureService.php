@@ -139,6 +139,10 @@ class FeatureService {
                 'label' => $this->translator->translate('Garage', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-garage-underground' => array(
+                'label' => $this->translator->translate('Garage underground', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
             //alpha
             'has-double-garage' => array(
@@ -396,16 +400,20 @@ class FeatureService {
                 'label' => $this->translator->translate('Attic', 'casasoft-standards'),
                 'icon' => '',
             ),
-            'has-cellar' => array(
-                'label' => $this->translator->translate('Cellar', 'casasoft-standards'),
-                'icon' => '',
-            ),
             'has-charging-station' => array(
                 'label' => $this->translator->translate('Charging station', 'casasoft-standards'),
                 'icon' => '',
             ),
             'has-dishwasher' => array(
                 'label' => $this->translator->translate('Dishwasher', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-cellar' => array(
+                'label' => $this->translator->translate('Cellar', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-playground' => array(
+                'label' => $this->translator->translate('Playground', 'casasoft-standards'),
                 'icon' => '',
             ),
 
