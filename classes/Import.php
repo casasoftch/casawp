@@ -311,6 +311,7 @@ class Import {
         'guid'           => $guid,
         'post_mime_type' => $wp_filetype['type'],
         'post_title'     => ( $the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)),
+        'post_name'      => sanitize_title_with_dashes($guid,'', 'save'),
         'post_content'   => '',
         'post_excerpt'   => $the_mediaitem['caption'],
         'post_status'    => 'inherit',
