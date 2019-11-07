@@ -1000,6 +1000,14 @@ class Import {
       }
     }
 
+    // TODO: non official cateogries cause weird updates!!!!
+    // if (in_array('PARKING', $new_categories) ) {
+    //   print_r($new_categories);
+    //   print_r($old_categories);
+    //   die();
+    // }
+
+
     //have categories changed?
     if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
       $slugs_to_remove = array_diff($old_categories, $new_categories);
@@ -1834,8 +1842,47 @@ class Import {
     //key is id value is rank!!!!
     $ranksort = array();
     $curRank = 0;
+
+
+    // echo '<pre>';
+    // $totalTime = microtime(true);
+
+    // select all properties from db at once
+    $startfullselectiontime = microtime(true);
+    $posts_pool = [];
+    $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_property&suppress_filters=true&posts_per_page=100000' );
+    $wp_post = false;
+    while ( $the_query->have_posts() ) :
+      $the_query->the_post();
+      global $post;
+      $existing_casawp_import_id = get_post_meta($post->ID, 'casawp_id', true);
+      if ($existing_casawp_import_id) {
+        $posts_pool[$existing_casawp_import_id] = $post;
+      }
+    endwhile;
+    wp_reset_postdata();
+    // echo count($posts_pool);
+    // echo'<br />select all time';
+    // echo number_format((microtime(true) - $startfullselectiontime), 10);
+    // echo '<br />';
+
+
+    // function convert($size)
+    // {
+    //     $unit=array('b','kb','mb','gb','tb','pb');
+    //     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+    // }
+
+    // echo convert(memory_get_usage(true)); // 123 kb
+
+    // die();
+
+
     foreach ($xml->properties->property as $property) {
       $curRank++;
+
+
+      $timeStart = microtime(true);
 
       $propertyData = $this->property2Array($property);
       //make main language first and "single out" if not multilingual
@@ -1857,6 +1904,8 @@ class Import {
         $theoffers = $this->fillMissingTranslations($theoffers);
       }
 
+
+
       $offer_pos = 0;
       foreach ($theoffers as $offerData) {
         $offer_pos++;
@@ -1864,14 +1913,22 @@ class Import {
         //is it already in db
         $casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
 
-        $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+
+        // select one at a time
+        // $the_query = new \WP_Query( 'post_status=publish,pending,draft,future,trash&post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id );
+        // $wp_post = false;
+        // while ( $the_query->have_posts() ) :
+        //   $the_query->the_post();
+        //   global $post;
+        //   $wp_post = $post;
+        // endwhile;
+        // wp_reset_postdata();
+
+        // select from pool
         $wp_post = false;
-        while ( $the_query->have_posts() ) :
-          $the_query->the_post();
-          global $post;
-          $wp_post = $post;
-        endwhile;
-        wp_reset_postdata();
+        if (array_key_exists($casawp_id, $posts_pool)) {
+          $wp_post = $posts_pool[$casawp_id];
+        }
 
         //if not create a basic property
         if (!$wp_post) {
@@ -1899,11 +1956,23 @@ class Import {
         $found_posts[] = $wp_post->ID;
 
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
+
         $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $propertyData['exportproperty_id']);
 
       }
-    }
 
+      // echo $curRank . '<br />';
+      // echo number_format((microtime(true) - $timeStart), 10);
+      // echo '<br />';
+      // if ($curRank > 500) {
+      //   break;
+      // }
+      // echo '</pre>';
+    }
+    // echo'<br />Total';
+    // echo number_format((microtime(true) - $totalTime), 10);
+    // echo '<br />';
+    // die();
 
     if (!$found_posts) {
       $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
@@ -1957,9 +2026,18 @@ class Import {
         )
       );
       $sortsUpdated = 0;
+      // echo '<pre>';
+      // echo "properties_to_sort\n";
+      // print_r($properties_to_sort);
+
+      // echo "ranksort\n";
+      // print_r($ranksort);
+      // TODO: when one changes an id of a property in the xml with wpml:  Error: Maximum function nesting level of '256'  happens: 	WPML_Post_Synchronization->sync_with_translations( ) happens indefinetly
       foreach ($properties_to_sort as $prop_to_sort) {
         if (array_key_exists($prop_to_sort->ID, $ranksort)) {
           if ($prop_to_sort->menu_order != $ranksort[$prop_to_sort->ID]) {
+            // echo "wp_post_update\n";
+            // print_r('ID' . $prop_to_sort->ID . ':' . $prop_to_sort->menu_order . 'to' . $ranksort[$prop_to_sort->ID]);
             $sortsUpdated++;
             $newPostID = wp_update_post(array(
               'ID' => $prop_to_sort->ID,
@@ -1971,6 +2049,7 @@ class Import {
         }
 
       }
+      echo '</pre>';
 
       $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
