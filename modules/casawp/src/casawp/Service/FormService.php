@@ -24,7 +24,7 @@ class FormService{
 		return $data;
 	}
 
-    public function buildAndValidateContactForm($subjectItem, $formSetting = null, $directRecipientEmail = null){
+    public function buildAndValidateContactForm($subjectItem, $formSetting = null, $directRecipientEmail = null, $propertyReference = null){
     	if ($subjectItem instanceof Offer && $subjectItem->getAvailability() == 'reference') {
 	        return false;
 	    }
@@ -151,6 +151,10 @@ class FormService{
                     $data['direct_recipient_email'] = $directRecipientEmail;
                   }
 
+                  if ($propertyReference) {
+                    $data['property_reference'] = $propertyReference;
+                  }
+
                   if ($subjectItem instanceof Project) {
                     $data['project_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
                   } elseif ($subjectItem instanceof Offer) {
@@ -224,8 +228,8 @@ class FormService{
 		return $casawp->render($view, $args);
 	}
 
-  public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null){
-  	$formResult = $this->buildAndValidateContactForm($subjectItem, null, $directRecipientEmail);
+  public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null, $propertyReference = null){
+  	$formResult = $this->buildAndValidateContactForm($subjectItem, null, $directRecipientEmail, $propertyReference);
     return $this->render($viewfile, array(
     	'form' => $formResult['form'],
     	'sent' => $formResult['sent']

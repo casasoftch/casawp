@@ -422,7 +422,8 @@ class Plugin {
             'id' => false,
             'offer_id' => false,
             'project_id' => false,
-            'direct_recipient_email' => false
+            'direct_recipient_email' => false,
+            'property_reference' => false
         ), ($args ? $args : array()));
 
 
@@ -457,7 +458,7 @@ class Plugin {
         if (!$setting) {
             $setting = new \casawp\Form\DefaultFormSetting();
         }
-        $formResult = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting, $args['direct_recipient_email']);
+        $formResult = $this->formService->buildAndValidateContactForm(($offer ? $offer : $project), $setting, $args['direct_recipient_email'], $args['property_reference']);
         if (is_string($formResult)) {
             return $formResult;
         }
