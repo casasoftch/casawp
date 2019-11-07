@@ -2039,17 +2039,25 @@ class Import {
             // echo "wp_post_update\n";
             // print_r('ID' . $prop_to_sort->ID . ':' . $prop_to_sort->menu_order . 'to' . $ranksort[$prop_to_sort->ID]);
             $sortsUpdated++;
-            $newPostID = wp_update_post(array(
-              'ID' => $prop_to_sort->ID,
-              'menu_order' => $ranksort[$prop_to_sort->ID]
-            ));
-
+            try {
+              $newPostID = wp_update_post(array(
+                'ID' => $prop_to_sort->ID,
+                'menu_order' => $ranksort[$prop_to_sort->ID]
+              ));
+            } catch (\Throwable $th) {
+              //throw $th;
+              if (isset($this->transcript['wp_update_post_error'])) {
+                $this->transcript['wp_update_post_error'][] = $th->getMessage();
+              } else {
+                $this->transcript['wp_update_post_error'] = [$th->getMessage()];
+              }
+            }
           }
 
         }
 
       }
-      echo '</pre>';
+      // echo '</pre>';
 
       $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
