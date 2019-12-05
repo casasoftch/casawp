@@ -2833,10 +2833,12 @@ class Import {
           $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
           $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
           $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-          if ($slug) {
+          if (!$values[0] || !$sort) {
+            // skip
+          } elseif ($slug) {
             $custom_categories[$sort]['slug'] = $values[0];
           } elseif ($label) {
-            $custom_categories[$label]['label'] = $values[0];
+            $custom_categories[$sort]['label'] = $values[0];
           }
         }
 
@@ -2853,10 +2855,12 @@ class Import {
         $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
         $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
         $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-        if ($slug) {
+        if (!$values[0] || !$sort) {
+          // skip
+        } elseif ($slug) {
           $custom_regions[$sort]['slug'] = $values[0];
         } elseif ($label) {
-          $custom_regions[$label]['label'] = $values[0];
+          $custom_regions[$sort]['label'] = $values[0];
         }
       }
 
