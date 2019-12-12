@@ -3,9 +3,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 2.2.1\n"
 "Project-Id-Version: CASAWP\n"
-"Language: it-ch\n"
+"Language: it_CH\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -365,7 +369,7 @@ msgstr "Eritrea"
 
 #: classes/Conversion.php:84
 msgid "Spain"
-msgstr "Italia"
+msgstr "Spagna"
 
 #: classes/Conversion.php:85
 msgid "Ethiopia"
@@ -2806,63 +2810,47 @@ msgstr ""
 msgid "rent"
 msgstr "Affitto"
 
-#: 
 msgid "School"
 msgstr "Scuola"
 
-#: 
 msgid "Choose country"
 msgstr ""
 
-#: 
 msgid "Countries"
 msgstr ""
 
-#: 
 msgid "Extra Costs"
 msgstr "Acconto spese"
 
-#: 
 msgid "Ground floor"
 msgstr "Piano terreno"
 
-#: 
 msgid "Choose order"
 msgstr ""
 
-#: 
 msgid "Order by"
 msgstr ""
 
-#: 
 msgid "Ascending"
 msgstr ""
 
-#: 
 msgid "Descending"
 msgstr ""
 
-#: 
 msgid "Order direction"
 msgstr ""
 
-#: 
 msgid "Choose order direction"
 msgstr ""
 
-#: 
 msgid "Date"
 msgstr ""
 
-#: 
 msgid "Load distance map"
 msgstr "Mostra la mappa della distanza"
 
-#: 
 msgid "Load map"
 msgstr "Mostra la mappa"
 
-#: 
 msgid "Guest toilets"
 msgstr ""
-
