@@ -1375,13 +1375,13 @@ msgid "Photovoltaics"
 msgstr "Solaire photovoltaïque"
 
 msgid "Dishwasher"
-msgstr ""
+msgstr "Plongeur"
 
 msgid "Charging station"
 msgstr ""
 
 msgid "Cellar"
-msgstr ""
+msgstr "Cave"
 
 msgid "Number of toilets"
 msgstr "Salle de bain"
