@@ -1375,7 +1375,7 @@ msgid "Photovoltaics"
 msgstr "Solaire photovoltaïque"
 
 msgid "Dishwasher"
-msgstr "Plongeur"
+msgstr "Machine à vaisselle"
 
 msgid "Charging station"
 msgstr ""
