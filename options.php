@@ -51,8 +51,7 @@
 					'casawp_load_bootstrap_scripts',
 					//'casawp_load_fancybox',
 					'casawp_load_featherlight',
-					'casawp_load_chosen',
-					'casawp_load_scripts_in_footer'
+					'casawp_load_chosen'
 				);
 				break;
 			case 'singleview':
@@ -218,7 +217,7 @@
 										</label>
 										<br>
 										<label>
-											<input name="<?php echo $name ?>" type="radio" value="bootstrap4" <?php echo (get_option($name) == 'bootstrap4' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 4 (coming soon)
+											<input name="<?php echo $name ?>" type="radio" value="bootstrap4" <?php echo (get_option($name) == 'bootstrap4' ? 'checked="checked"' : ''); ?>> Twitter Bootstrap Version 4
 										</label>
 										<br>
 									</fieldset>
@@ -229,13 +228,13 @@
 								<td class="front-static-pages">
 									<fieldset>
 										<?php $name = 'casawp_load_css'; ?>
-										<?php $text = 'CSS laden'; ?>
+										<?php $text = 'CASAWP CSS laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casawp_load_scripts'; ?>
-										<?php $text = 'JS laden'; ?>
+										<?php $text = 'CASAWP JS laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
@@ -249,19 +248,13 @@
 										<br>
 										<php */ ?>
 										<?php $name = 'casawp_load_featherlight'; ?>
-										<?php $text = 'Feather Light (Lightbox)'; ?>
+										<?php $text = 'Featherlight JS-Library laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
 										<br>
 										<?php $name = 'casawp_load_chosen'; ?>
-										<?php $text = 'Chosen'; ?>
-										<label>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label>
-										<br>
-										<?php $name = 'casawp_load_scripts_in_footer'; ?>
-										<?php $text = 'Load casawp.js in Footer'; ?>
+										<?php $text = 'Chosen JS-Library laden'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
@@ -781,7 +774,7 @@
 						</tr>
 					<?php echo $table_end; ?>
 
-					<h3>Filter Formular Einstellungen</h3>
+					<h3>Filter-Einstellungen</h3>
 					<?php echo $table_start; ?>
 						<tr valign="top">
 							<th scope="row">Filter</th>
@@ -795,7 +788,7 @@
 								</fieldset>
 								<fieldset>
 									<?php $name = 'casawp_ajaxify_archive'; ?>
-									<?php $text = 'Archiv Ajax'; ?>
+									<?php $text = 'Ajax-Filter aktivieren'; ?>
 									<label>
 										<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 									</label>
@@ -1139,7 +1132,7 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<?php $name = 'casawp_prefer_extracost_segmentation'; ?>
-										<?php $text = 'Extra kosten Schlüssel bei Mietobjekte nutzen'; ?>
+										<?php $text = 'Extrakosten-Schlüssel bei Mietobjekten nutzen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
@@ -1154,28 +1147,17 @@
 				case 'contactform':
 					?>
 						<?php /******* Kontaktformular *******/ ?>
-						<h3>Anfrage-Variante</h3>
+						<h3>Anfrage-Einstellungen</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
 								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 								<td class="front-static-pages contactform-tab">
 									<fieldset>
-										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
 										<input style="width:100%" name="casawp_customerid" type="text" placeholder="CUSTOMER ID" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
-										<small>(Objekte mit deklarierten CUSTOMER IDs werden bevorzugt)</small>
+										<input style="width:100%" name="casawp_publisherid" type="text" placeholder="PUBLISHER ID" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+										<small>(Objekte mit deklarierten CUSTOMER-IDs werden bevorzugt)</small>
 										<br><br>
-										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte E-Mails an angegebene <code>inquiryPerson</code> E-Mails versenden.
-									</fieldset>
-								</td>
-							</tr>
-						<?php echo $table_end; ?>
-						<?php echo $table_start; ?>
-							<tr valign="top">
-								<th scope="row"><label><input name="casawp_inquiry_method" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>> E-Mail</label></th>
-								<td class="front-static-pages contactform-tab">
-									<fieldset>
-										<input style="width:100%" name="casawp_email_fallback" type="text" placeholder="EMAIL" value="">
-										<small>(Objekte mit deklarierten Anfrage-Emails werden bevorzugt)</small>
+										<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> <strong>CASA</strong>MAIL soll direkte E-Mails an angegebene <code>inquiryPerson</code> versenden.
 									</fieldset>
 								</td>
 							</tr>
@@ -1209,10 +1191,10 @@
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
-						<h3>Formular Pflichtfelder</h3>
+						<h3>Formular-Einstellungen</h3>
 						<?php echo $table_start; ?>
 							<tr valign="top">
-								<th scope="row">Formular Pflichtfelder</th>
+								<th scope="row">Pflichtfelder</th>
 								<td id="front-static-padges">
 									<fieldset>
 										<legend class="screen-reader-text"><span>Vorname</span></legend>
@@ -1403,7 +1385,7 @@
 								</td>
 							</tr>
 							<tr valign="top">
-								<th scope="row">Import Einstellungen<br></th>
+								<th scope="row">Import-Einstellungen<br></th>
 								<td class="front-static-pages">
 
 									<fieldset>
@@ -1416,9 +1398,9 @@
 									</fieldset>
 
 									<fieldset>
-										<legend class="screen-reader-text"><span>Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.</span></legend>
+										<legend class="screen-reader-text"><span>Max. 1 Bild pro Referenzobjekt importieren (kann nicht mit Gateway CDN kombiniert werden).</span></legend>
 										<?php $name = 'casawp_limit_reference_images'; ?>
-										<?php $text = 'Bilderimport bei Referenzen beschränken. Wird bei vielen Referenz-Objekten empfohlen.'; ?>
+										<?php $text = 'Max. 1 Bild für Referenzobjekte importieren (kann nicht mit Gateway CDN kombiniert werden).'; ?>
 										<p><label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label></p>
@@ -1427,7 +1409,7 @@
 									<fieldset>
 										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
 										<?php $name = 'casawp_live_import'; ?>
-										<?php $text = 'Datei <code>/wp-content/uploads/casawp/import/data.xml</code> automatisch bei jedem Seiten-Aufruf überprüfen und importieren.'; ?>
+										<?php $text = 'Datei <code>/wp-content/uploads/casawp/import/data.xml</code> automatisch bei jedem Seitenaufruf überprüfen und importieren.'; ?>
 										<p><label>
 											<?php
 												$url = get_admin_url('', 'admin.php?page=casawp');
@@ -1449,7 +1431,7 @@
 												<?php else: ?>
 													<td><strike><code>data.xml</code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo $manually  ?>">Import Manuel anstossen</a></td>
+												<td><a href="<?php echo $manually  ?>">Manueller Import ausführen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
@@ -1457,7 +1439,7 @@
 												<?php else: ?>
 													<td><strike><code>data-done.xml</code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo $force_last  ?>">Letzer erfolgreicher Import erneut anstossen</a></td>
+												<td><a href="<?php echo $force_last  ?>">Letzer erfolgreicher Import erneut ausführen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
@@ -1465,7 +1447,7 @@
 												<?php else: ?>
 													<td><strike><code>data-done.xml</code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo $forced  ?>">Letzer erfolgreicher Import erneut anstossen und alle Objekte zwingendermasse durchtesten</a></td>
+												<td><a href="<?php echo $forced  ?>">Forced Import ausführen</a></td>
 											</tr>
 											<tr>
 												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
@@ -1473,7 +1455,7 @@
 												<?php else: ?>
 													<td><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
 												<?php endif ?>
-												<td><a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Import Ausführen</a></td>
+												<td><a href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Import ausführen</a></td>
 											</tr>
 										</table>
 									</fieldset>
@@ -1485,7 +1467,7 @@
 										<?php $text = '<strong>CASA</strong><span style="font-weight:100">GATEWAY</span> • API Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
-											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
+											<input type="text" placeholder="API Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
 										</p>
 									</fieldset>
 									<fieldset>
@@ -1494,7 +1476,7 @@
 										<?php $text = '<strong>CASA</strong><span style="font-weight:100">GATEWAY</span> • Private Key'; ?>
 										<p><?php echo $text; ?></p>
 										<p>
-											<input type="text" placeholder="Deaktiviert" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
+											<input type="text" placeholder="Private Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"  />
 										</p>
 									</fieldset>
 								</td>
