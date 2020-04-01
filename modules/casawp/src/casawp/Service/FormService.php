@@ -173,7 +173,9 @@ class FormService{
   									//direct recipient emails
                     if (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_inquiry_person_email', false)) {
   										$data['direct_recipient_email'] = $subjectItem->getFieldValue('seller_inquiry_person_email', false);
-  									}
+  									} elseif (get_option('casawp_casamail_direct_recipient') && $subjectItem->getFieldValue('seller_view_person_email', false)) {
+                      $data['direct_recipient_email'] = $subjectItem->getFieldValue('seller_view_person_email', false);
+                    }
   								}
 
     							$data = $formSetting->preCasaMailFilter($data, $postdata, $validatedData);
