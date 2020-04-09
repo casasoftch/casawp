@@ -42,6 +42,12 @@ class FilterForm extends Form
         if (!$this->options['casawp_filter_price_to_elementtype']) {
           $this->options['casawp_filter_price_to_elementtype'] = 'hidden';
         }
+        if (!$this->options['casawp_filter_pricem2_from_elementtype']) {
+            $this->options['casawp_filter_pricem2_from_elementtype'] = 'hidden';
+          }
+          if (!$this->options['casawp_filter_pricem2_to_elementtype']) {
+            $this->options['casawp_filter_pricem2_to_elementtype'] = 'hidden';
+          }
        /* if (!$this->options['casawp_filter_area_sia_nf_from_elementtype']) {
           $this->options['casawp_filter_area_sia_nf_from_elementtype'] = 'hidden';
         }
@@ -196,6 +202,21 @@ class FilterForm extends Form
                 (isset($this->options['chosen_price_to']) ? $this->options['chosen_price_to'] : null)
             );
         //}
+
+        $this->addSelector(
+            'pricem2_from',
+            __('Pricem2 from', 'casawp'),
+            __('Pricem2 from','casawp'),
+            $this->getPriceOptions(),
+            (isset($this->options['chosen_pricem2_from']) ? $this->options['chosen_pricem2_from'] : null)
+        );
+        $this->addSelector(
+            'pricem2_to',
+            __('Pricem2 to', 'casawp'),
+            __('Pricem2 to','casawp'),
+            $this->getPriceOptions(),
+            (isset($this->options['chosen_pricem2_to']) ? $this->options['chosen_pricem2_to'] : null)
+        );
 
         $this->options['casawp_filter_price_range_elementtype'] = 'singleselect';
         $this->addSelector(
@@ -430,7 +451,7 @@ class FilterForm extends Form
         foreach ($this->features as $feature) {
           $options[$feature->getKey()] = $feature->getLabel();
         }
-       
+
         asort($options);
         return $options;
         //return $this->features;
@@ -549,7 +570,7 @@ class FilterForm extends Form
             $depth = $depth - 1;
         }
 
-        
+
 
         //if there is only one parent ignore options
         if (count($parents) <= 1) {
@@ -582,7 +603,7 @@ class FilterForm extends Form
                         $label = $parent['name'] . ' ' . $child['name'];
                         foreach ($child['children'] as $grandchild) {
                             $value_options[$grandchild['slug']] = $grandchild['name'];
-                        } 
+                        }
                         $options[] = array(
                             'label' => $label,
                             'options' => $value_options
@@ -597,7 +618,7 @@ class FilterForm extends Form
                         }
                         $options[$slug]['options'][$child['slug']] =$child['name'];
                     }
-                    
+
                 }
             }
         }
@@ -612,15 +633,15 @@ class FilterForm extends Form
             $options = array();
             for ($i=$min; $i <= $max; $i = $i+0.5) {
                 $options[(string) $i] = $i;
-            }    
+            }
         } else {
             $options = array();
             for ($i=1; $i < 8.5; $i = $i+0.5) {
                 $options[(string) $i] = $i;
-            }    
+            }
         }
 
-        
+
         return $options;
     }
 
@@ -631,21 +652,21 @@ class FilterForm extends Form
             $options = array();
             for ($i=$min; $i <= $max; $i = $i+1) {
                 if ($i == $min) {
-                    $options[(string) $i] = $min;    
+                    $options[(string) $i] = $min;
                 } else if ($i == $max) {
-                    $options[(string) $i] = $max;  
+                    $options[(string) $i] = $max;
                 } else if ($i % 100 === 0) {
-                    $options[(string) $i] = $i;    
+                    $options[(string) $i] = $i;
                 }
-            }    
+            }
         } else {
             $options = array();
             for ($i=1; $i < 1000; $i = $i+1) {
                 $options[(string) $i] = $i;
-            }    
+            }
         }
 
-        
+
         return $options;
     }
 

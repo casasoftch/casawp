@@ -947,6 +947,32 @@
 							</td>
 						</tr>
 						<tr  valign="top">
+							<?php $name = 'casawp_filter_pricem2_from_elementtype'; ?>
+							<?php $text = 'Preis-Filter m2 von'; ?>
+							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio']; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+            <tr  valign="top">
+							<?php $name = 'casawp_filter_pricem2_to_elementtype'; ?>
+							<?php $text = 'Preis-Filter m2 zu'; ?>
+							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'radio' => 'Radio' ]; ?>
+							<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
+							<td>
+								<select name="<?php echo $name ?>" id="<?php echo $name ?>">
+									<?php foreach ($options as $key => $value) : ?>
+										<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr  valign="top">
 							<?php $name = 'casawp_filter_regions_elementtype'; ?>
 							<?php $text = 'Regionen-Filter'; ?>
 							<?php $options = ['hidden' => 'Ausblenden', 'singleselect' => 'Einfache Auswahl', 'multiselect' => 'Mehrfach-Filter',  'radio' => 'Radio' ]; ?>
