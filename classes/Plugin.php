@@ -999,7 +999,7 @@ class Plugin {
 
             $query .= " GROUP BY ". $wpdb->prefix . "terms.term_id";
 
-            
+
             $category_property_count = $wpdb->get_results( $query, ARRAY_A );
 
             $category_slug_array = array_map(function($item){return $item['slug'];}, $category_property_count);
@@ -1491,7 +1491,7 @@ class Plugin {
           'hierarchical'      => false,
           'hide_empty'        => true
       ));
-      
+
       //availability reduces features
       $availability = $this->getQueriedSingularAvailability();
       if ($availability) {
@@ -1800,7 +1800,7 @@ class Plugin {
             $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
             switch ($viewgroup) {
                 case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-archive.php'; break;
-                case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-archive.php'; break;
+                case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
                 default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-archive.php'; break;
             }
             if ( $theme_file = locate_template(array('casawp-archive.php'))) {

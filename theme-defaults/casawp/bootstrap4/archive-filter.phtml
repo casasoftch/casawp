@@ -234,6 +234,47 @@
     </div>
   <?php endif; ?>
 
+  <?php if ($form->getPriceOptions()): ?>
+    <?php
+      $pricem2elect_count = 0;
+      $pricem2from_et = get_option('casawp_filter_pricem2_from_elementtype', false);
+      $pricem2to_et = get_option('casawp_filter_pricem2_to_elementtype', false);
+      if ($pricem2from_et && $pricem2from_et !== 'hidden'){$pricem2elect_count++;}
+      if ($pricem2to_et && $pricem2from_et !== 'hidden'){$pricem2elect_count++;}
+    ?>
+    <div class="casawp-filterform-duo casawp-filterform-pricem2 <?= ($pricem2elect_count ? 'casawp-filterform-pricem2count-' . $pricem2elect_count : '')?>">
+      <div class="casawp-filterform-duo-label">
+        Pricem2
+      </div>
+      <div class="casawp-filterform-duo-item">
+      	<?php echo $this->formLabel($form->get('pricem2_from')); ?>
+      	<?php if ($pricem2from_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('pricem2_from');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('pricem2_from')); ?>
+      	<?php endif ?>
+      </div>
+      <div class="casawp-filterform-duo-item">
+        <?php echo $this->formLabel($form->get('pricem2_to')); ?>
+      	<?php if ($pricem2to_et == 'radio'): ?>
+      		<?php
+      			$oMultiCheckboxField = $form->get('pricem2_to');
+      			$oMultiCheckboxViewHelper = new \Zend\Form\View\Helper\FormRadio();
+      			$oMultiCheckboxViewHelper->setSeparator('</div><div class="radio">');
+      			echo '<div class="radio">'.$oMultiCheckboxViewHelper->render($oMultiCheckboxField).'</div>';
+      		 ?>
+      	<?php else: ?>
+      		<?php echo $this->formElement($form->get('pricem2_to')); ?>
+      	<?php endif ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
   <?php if ($form->getFeatureOptions()): ?>
 		<?php echo $this->formLabel($form->get('features')); ?>
 		<?php if (get_option('casawp_filter_features_elementtype', false) == 'multicheckbox'): ?>
@@ -275,7 +316,7 @@
 			<?php echo $this->formElement($form->get('regions')); ?>
 		<?php endif ?>
 	<?php endif ?>
-	
+
 	<?php if ($form->getOrderOptions()): ?>
 		<div class="casawp-filterform-duo casawp-filterform-order">
 			<div class="casawp-filterform-duo-label">

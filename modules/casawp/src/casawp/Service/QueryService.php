@@ -524,7 +524,7 @@ class QueryService{
         if (in_array('rent', $this->query['salestypes'])) {
             if ($this->query['pricem2_from'] || $this->query['pricem2_to']) {
                 $meta_query_items_new[] = array(
-                    'key' => 'gross_price_property_segment',
+                    'key' => 'grossPrice_propertysegment',
                     'value' => 'm2',
                     'compare'   => '==',
                     // 'type' => 'NUMERIC'
@@ -571,7 +571,7 @@ class QueryService{
                 $meta_query_items_new[] = array(
                     'key' => 'price_property_segment',
                     'value' => 'm2',
-                    'compare'   => '==',
+                    'compare'   => '=',
                     // 'type' => 'NUMERIC'
                 );
             }
