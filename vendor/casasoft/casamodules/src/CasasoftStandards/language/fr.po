@@ -3,9 +3,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 2.2.4\n"
 "Project-Id-Version: CASASTANDARDS\n"
-"Language: fr-ch\n"
+"Language: fr_CH\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -1053,11 +1057,9 @@ msgstr "Bâtiment"
 msgid "Investment"
 msgstr "Investissement"
 
-#: 
 msgid "Gross rent / m² / month"
 msgstr "Loyer brut / m² / mois"
 
-#: 
 msgid "Gross rent / m² / year"
 msgstr "Loyer brut / m² / année"
 
@@ -1065,19 +1067,15 @@ msgstr "Loyer brut / m² / année"
 msgid "Gross rent / month"
 msgstr "Loyer brut / mois"
 
-#: 
 msgid "Gross rent / year"
 msgstr "Loyer brut / année"
 
-#: 
 msgid "Gross price"
 msgstr "Loyer brut"
 
-#: 
 msgid "Net rent / m² / month"
 msgstr "Loyer net / m² / mois"
 
-#: 
 msgid "Net rent / m² / year"
 msgstr "Loyer net / m² / année"
 
@@ -1089,7 +1087,6 @@ msgstr "Loyer net / année"
 msgid "Net rent / month"
 msgstr "Loyer net / mois"
 
-#: 
 msgid "Net price"
 msgstr "Loyer net"
 
@@ -1137,343 +1134,257 @@ msgstr "Loyer net / m² / année"
 msgid "Sales price"
 msgstr "Prix de vente"
 
-#: 
 msgid "Category"
 msgstr "Catégorie"
 
-#: 
 msgid "Part of a house"
 msgstr "Partie de la maison"
 
-#: 
 msgid "Immediate"
 msgstr "Immédiatement"
 
-#: 
 msgid "Gastronomy / Hotel"
 msgstr "Gastronomie / Hôtel"
 
-#: 
 msgid "Parking / Garage"
 msgstr "Parking(s) / Garage(s)"
 
-#: 
 msgid "Extra Costs"
 msgstr "Coûts supplémentaires"
 
-#: 
 msgid "Engadine house"
 msgstr "Maison engadinoise"
 
-#: 
 msgid "Patrician house"
 msgstr "Maison patricienne"
 
-#: 
 msgid "Volumes"
 msgstr "Volumes"
 
-#: 
 msgid "Guest toilets"
 msgstr "WC séparés"
 
-#: 
 msgid "Electric heating"
 msgstr "Chauffage électrique"
 
-#: 
 msgid "Geothermal-probe heating"
 msgstr "Chauffage géothermique"
 
-#: 
 msgid "District heating"
 msgstr "Chauffage à distance"
 
-#: 
 msgid "Gas heating"
 msgstr "Chauffage à gaz"
 
-#: 
 msgid "Wood heating"
 msgstr "Chauffage à bois"
 
-#: 
 msgid "Air-water-heatpump heating"
 msgstr "Chauffage air-eau-pompe à chaleur"
 
-#: 
 msgid "Oil heating"
 msgstr "Chauffage à mazout"
 
-#: 
 msgid "Pellet heating"
 msgstr "Chaudières à pellets"
 
-#: 
 msgid "Heatpump heating"
 msgstr "Chauffage par pompe à chaleur"
 
-#: 
 msgid "Floor heating"
 msgstr "Chauffage au sol"
 
-#: 
 msgid "Radiators"
 msgstr "Radiateurs"
 
-#: 
 msgid "Heat generation"
 msgstr "Production de chaleur"
 
-#: 
 msgid "Heat distribution"
 msgstr "Distribution de chaleur"
 
-#: 
 msgid "Egid"
 msgstr "Egid"
 
-#: 
 msgid "Ewid"
 msgstr "Ewid"
 
-#: 
 msgid "Official building number"
 msgstr "Numéro d'immeuble officiel"
 
-#: 
 msgid "Ownership share"
 msgstr "Part du bien"
 
-#: 
 msgid "Property development"
 msgstr "Viabilité"
 
-#: 
 msgid "S-Number"
 msgstr "Nombre-S"
 
-#: 
 msgid "Unit number"
 msgstr "Numéro d'immeuble"
 
-#: 
 msgid "Renewal fund date"
 msgstr "Date de renouvellement du fonds"
 
-#: 
 msgid "Price range"
 msgstr "Gamme de prix"
 
-#: 
 msgid "Energy"
 msgstr "Energie"
 
-#: 
 msgid "Fully developed"
 msgstr "Pleinement développé"
 
-#: 
 msgid "Partialy Developed"
 msgstr "Partiellement développé"
 
-#: 
 msgid "Undeveloped"
 msgstr "Pas développé"
 
-#: 
 msgid "From"
 msgstr "de"
 
-#: 
 msgid "To"
 msgstr "à"
 
-#: 
 msgid "Balcony space"
 msgstr "Surface balcon"
 
-#: 
 msgid "Cellar space"
 msgstr "Surface cave"
 
-#: 
 msgid "Garden space"
 msgstr "Surface jardin"
 
-#: 
 msgid "Loggia space"
 msgstr "Surface loggia"
 
-#: 
 msgid "Terrace space"
 msgstr "Surface terrasse"
 
-#: 
 msgid "Year of last modernization"
 msgstr "Année de la dernière modernisation"
 
-#: 
 msgid "Year of last restoration"
 msgstr "Année de la dernière rénovation"
 
-#: 
 msgid "Rental income (gross)"
 msgstr "Revenu de location (brut)"
 
-#: 
 msgid "Rental income (net)"
 msgstr "Revenu de location (net)"
 
-#: 
 msgid "Renewal fund input"
 msgstr "Apport PPE"
 
-#: 
 msgid "Official tax value"
 msgstr "Valeur fiscale"
 
-#: 
 msgid "Imputed rent value"
 msgstr "Valeur du loyer imputé"
 
-#: 
 msgid "Net premium"
 msgstr "Rendement net"
 
-#: 
 msgid "Building insurance value"
 msgstr "Valeur d'assurance de l'immeuble"
 
-#: 
 msgid "Constructed factor"
 msgstr "Facteur de construction"
 
-#: 
 msgid "GEAK exterior"
 msgstr "CECB extérieur"
 
-#: 
 msgid "GEAK total"
 msgstr "CECB total"
 
-#: 
 msgid "Renewal fund value"
 msgstr "Valeur du fond de rénovation"
 
-#: 
 msgid "Number of guest toilets"
 msgstr "Nombre de toilettes d’invité"
 
-#: 
 msgid "Starting from"
 msgstr "dès"
 
-#: 
 msgid "Mr."
 msgstr "Monsieur"
 
-#: 
 msgid "Ms."
 msgstr "Madame"
 
-#: 
 msgid "Infrared"
 msgstr "Infrarouge"
 
-#: 
 msgid "Minergie-ECO"
 msgstr "Minergie-ECO"
 
-#: 
 msgid "Minergie-P-ECO"
 msgstr "Minergie-P-ECO"
 
-#: 
 msgid "GVA"
 msgstr "ECA"
 
-#: 
 msgid "Availability"
 msgstr "Disponibilité"
 
-#: 
 msgid "Active"
 msgstr "Actif"
 
-#: 
 msgid "Inactive"
 msgstr "Inactif"
 
-#: 
 msgid "Reference"
 msgstr "Référence"
 
-#: 
 msgid "Reserved"
 msgstr "Réservé"
 
-#: 
 msgid "Draft"
 msgstr "Brouillon"
 
-#: 
 msgid "Private"
 msgstr "Privé"
 
-#: 
 msgid "In acquisition"
 msgstr "En acquisition"
 
-#: 
 msgid "Sold"
 msgstr "Vendu"
 
-#: 
 msgid "Rented"
 msgstr "Loué"
 
-#: 
 msgid "Taken"
 msgstr "Loué / Vendu"
 
-#: 
 msgid "Residential / commercial building"
 msgstr "Immeuble locatif et commercial"
 
-#: 
 msgid "day"
 msgstr "jour"
 
-#: 
 msgid "Wall heating"
 msgstr "Chauffage mural"
 
-#: 
 msgid "Solar Thermal"
 msgstr "Solaire thermique"
 
-#: 
 msgid "Photovoltaics"
 msgstr "Solaire photovoltaïque"
 
-#: 
 msgid "Dishwasher"
-msgstr ""
+msgstr "Machine à vaisselle"
 
-#: 
 msgid "Charging station"
 msgstr ""
 
-#: 
 msgid "Cellar"
-msgstr ""
+msgstr "Cave"
 
-#: 
 msgid "Number of toilets"
-msgstr ""
+msgstr "Salle de bain"
 
-#: 
 msgid "Number of showers"
 msgstr ""
-

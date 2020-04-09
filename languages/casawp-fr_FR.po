@@ -3,7 +3,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "Project-Id-Version: CASAWP\n"
 "Language: fr_CH\n"
 "POT-Creation-Date: \n"
@@ -1941,7 +1941,7 @@ msgstr "Complément rue"
 #: classes/Plugin.php:1847 modules/casawp/src/casawp/Form/ContactForm.php:88
 #: modules/casawp/src/casawp/Service/Offer.php:881
 msgid "Locality"
-msgstr "Lieu"
+msgstr "Localité"
 
 #: classes/Plugin.php:1868
 msgid "P.O. Box"
