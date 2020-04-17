@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "git@github.com:CasasoftCH/casamodules.git",
-            "reference": "d241b2ebda5b760a7b5d3a6f658aefb29feee18b"
+            "reference": "2df3c05589a0433fcaac5ec0546a3931b9eae4a4"
         },
         "require": {
             "php": ">=5.3.2"
         },
-        "time": "2019-11-18T15:01:15+00:00",
+        "time": "2020-04-14T07:21:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -81,7 +81,8 @@
             "MIT"
         ],
         "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-        "homepage": "https://github.com/container-interop/container-interop"
+        "homepage": "https://github.com/container-interop/container-interop",
+        "abandoned": "psr/container"
     },
     {
         "name": "psr/container",
@@ -295,7 +296,8 @@
         "keywords": [
             "config",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-config"
     },
     {
         "name": "zendframework/zend-diactoros",
@@ -349,7 +351,8 @@
             "http",
             "psr",
             "psr-7"
-        ]
+        ],
+        "abandoned": "laminas/laminas-diactoros"
     },
     {
         "name": "zendframework/zend-escaper",
@@ -395,7 +398,8 @@
         "keywords": [
             "escaper",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-escaper"
     },
     {
         "name": "zendframework/zend-eventmanager",
@@ -451,7 +455,8 @@
             "eventmanager",
             "events",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-eventmanager"
     },
     {
         "name": "zendframework/zend-filter",
@@ -513,7 +518,8 @@
         "keywords": [
             "filter",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-filter"
     },
     {
         "name": "zendframework/zend-form",
@@ -593,7 +599,8 @@
             "ZendFramework",
             "form",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-form"
     },
     {
         "name": "zendframework/zend-http",
@@ -648,7 +655,8 @@
             "http client",
             "zend",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-http"
     },
     {
         "name": "zendframework/zend-hydrator",
@@ -712,7 +720,8 @@
         "keywords": [
             "hydrator",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-hydrator"
     },
     {
         "name": "zendframework/zend-i18n",
@@ -781,7 +790,8 @@
         "keywords": [
             "i18n",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-i18n"
     },
     {
         "name": "zendframework/zend-inputfilter",
@@ -836,7 +846,8 @@
             "ZendFramework",
             "inputfilter",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-inputfilter"
     },
     {
         "name": "zendframework/zend-json",
@@ -888,7 +899,8 @@
             "ZendFramework",
             "json",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-json"
     },
     {
         "name": "zendframework/zend-loader",
@@ -934,7 +946,8 @@
         "keywords": [
             "loader",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-loader"
     },
     {
         "name": "zendframework/zend-log",
@@ -1007,7 +1020,8 @@
             "log",
             "logging",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-log"
     },
     {
         "name": "zendframework/zend-modulemanager",
@@ -1069,7 +1083,8 @@
             "ZendFramework",
             "modulemanager",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-modulemanager"
     },
     {
         "name": "zendframework/zend-mvc",
@@ -1163,7 +1178,8 @@
         "keywords": [
             "mvc",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-mvc"
     },
     {
         "name": "zendframework/zend-psr7bridge",
@@ -1214,7 +1230,8 @@
             "http",
             "psr",
             "psr-7"
-        ]
+        ],
+        "abandoned": "laminas/laminas-psr7bridge"
     },
     {
         "name": "zendframework/zend-serializer",
@@ -1274,7 +1291,8 @@
         "keywords": [
             "serializer",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-serializer"
     },
     {
         "name": "zendframework/zend-servicemanager",
@@ -1328,7 +1346,8 @@
         "keywords": [
             "servicemanager",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-servicemanager"
     },
     {
         "name": "zendframework/zend-stdlib",
@@ -1375,7 +1394,8 @@
         "keywords": [
             "stdlib",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-stdlib"
     },
     {
         "name": "zendframework/zend-uri",
@@ -1424,7 +1444,8 @@
         "keywords": [
             "uri",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-uri"
     },
     {
         "name": "zendframework/zend-validator",
@@ -1497,7 +1518,8 @@
         "keywords": [
             "validator",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-validator"
     },
     {
         "name": "zendframework/zend-view",
@@ -1586,6 +1608,7 @@
         "keywords": [
             "view",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-view"
     }
 ]

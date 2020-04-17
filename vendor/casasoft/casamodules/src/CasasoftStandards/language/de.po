@@ -3,13 +3,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: POEditor.com\n"
 "Project-Id-Version: CASASTANDARDS\n"
-"Language: de_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Language: de-ch\n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -661,7 +657,7 @@ msgstr "Erstwohnung"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:340
 msgid "Foreign quota"
-msgstr "Ausländerkontingent"
+msgstr "Ausländer&#173;kontingent"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:346
 msgid "Attic"
@@ -1056,9 +1052,11 @@ msgstr "Bauen"
 msgid "Investment"
 msgstr "Investitionsobjekt"
 
+#: 
 msgid "Gross rent / m² / month"
 msgstr "Bruttomiete / m² / Monat"
 
+#: 
 msgid "Gross rent / m² / year"
 msgstr "Bruttomiete / m² / Jahr"
 
@@ -1066,15 +1064,19 @@ msgstr "Bruttomiete / m² / Jahr"
 msgid "Gross rent / month"
 msgstr "Bruttomiete / Monat"
 
+#: 
 msgid "Gross rent / year"
 msgstr "Bruttomiete / Jahr"
 
+#: 
 msgid "Gross price"
 msgstr "Bruttomiete"
 
+#: 
 msgid "Net rent / m² / month"
 msgstr "Nettomiete / m² / Monat"
 
+#: 
 msgid "Net rent / m² / year"
 msgstr "Nettomiete / m² / Jahr"
 
@@ -1086,6 +1088,7 @@ msgstr "Nettomiete / Jahr"
 msgid "Net rent / month"
 msgstr "Nettomiete / Monat"
 
+#: 
 msgid "Net price"
 msgstr "Nettomiete"
 
@@ -1133,257 +1136,343 @@ msgstr "Nettomiete / m² / Jahr"
 msgid "Sales price"
 msgstr "Verkaufspreis"
 
+#: 
 msgid "Category"
 msgstr "Kategorie"
 
+#: 
 msgid "Part of a house"
 msgstr "Hausteil"
 
+#: 
 msgid "Immediate"
 msgstr "ab sofort"
 
+#: 
 msgid "Gastronomy / Hotel"
 msgstr "Gastronomie / Hotel"
 
+#: 
 msgid "Parking / Garage"
 msgstr "Parkplatz / Garage"
 
+#: 
 msgid "Extra Costs"
 msgstr "Nebenkosten"
 
+#: 
 msgid "Engadine house"
 msgstr "Engadinerhaus"
 
+#: 
 msgid "Patrician house"
 msgstr "Patrizierhaus"
 
+#: 
 msgid "Volumes"
 msgstr "Volumen"
 
+#: 
 msgid "Guest toilets"
 msgstr "Separate WC"
 
+#: 
 msgid "Electric heating"
 msgstr "Elektroheizung"
 
+#: 
 msgid "Geothermal-probe heating"
 msgstr "Erdsonde"
 
+#: 
 msgid "District heating"
 msgstr "Fernwärme"
 
+#: 
 msgid "Gas heating"
 msgstr "Gasheizung"
 
+#: 
 msgid "Wood heating"
 msgstr "Holzheizung"
 
+#: 
 msgid "Air-water-heatpump heating"
 msgstr "Luft-Wasser-Wärmepumpe"
 
+#: 
 msgid "Oil heating"
 msgstr "Ölheizung"
 
+#: 
 msgid "Pellet heating"
 msgstr "Pelletheizung"
 
+#: 
 msgid "Heatpump heating"
 msgstr "Wärmepumpe"
 
+#: 
 msgid "Floor heating"
 msgstr "Bodenheizung"
 
+#: 
 msgid "Radiators"
 msgstr "Radiatoren"
 
+#: 
 msgid "Heat generation"
 msgstr "Wärmeerzeugung"
 
+#: 
 msgid "Heat distribution"
 msgstr "Wärmeverteilung"
 
+#: 
 msgid "Egid"
 msgstr "Egid"
 
+#: 
 msgid "Ewid"
 msgstr "Ewid"
 
+#: 
 msgid "Official building number"
 msgstr "Amtliche Gebäudenummer"
 
+#: 
 msgid "Ownership share"
 msgstr "Wertquote"
 
+#: 
 msgid "Property development"
 msgstr "Erschliessung"
 
+#: 
 msgid "S-Number"
 msgstr "S-Nummer"
 
+#: 
 msgid "Unit number"
 msgstr "Liegenschafts-Nr."
 
+#: 
 msgid "Renewal fund date"
 msgstr "Erneuerungsfonds Datum"
 
+#: 
 msgid "Price range"
 msgstr "Preisbereich"
 
+#: 
 msgid "Energy"
 msgstr "Energie"
 
+#: 
 msgid "Fully developed"
 msgstr "Vollerschlossen"
 
+#: 
 msgid "Partialy Developed"
 msgstr "Teilerschlossen"
 
+#: 
 msgid "Undeveloped"
 msgstr "Unerschlossen"
 
+#: 
 msgid "From"
 msgstr "von"
 
+#: 
 msgid "To"
 msgstr "bis"
 
+#: 
 msgid "Balcony space"
 msgstr "Balkonfläche"
 
+#: 
 msgid "Cellar space"
 msgstr "Kellerfläche"
 
+#: 
 msgid "Garden space"
 msgstr "Gartenfläche"
 
+#: 
 msgid "Loggia space"
 msgstr "Loggiafläche"
 
+#: 
 msgid "Terrace space"
 msgstr "Terrassenfläche"
 
+#: 
 msgid "Year of last modernization"
 msgstr "Modernisierungsjahr"
 
+#: 
 msgid "Year of last restoration"
 msgstr "Restaurationsjahr"
 
+#: 
 msgid "Rental income (gross)"
 msgstr "Mieteinnahmen (brutto)"
 
+#: 
 msgid "Rental income (net)"
 msgstr "Mieteinnahmen (netto)"
 
+#: 
 msgid "Renewal fund input"
 msgstr "Erneuerungsfonds Einlage"
 
+#: 
 msgid "Official tax value"
 msgstr "Amtlicher Steuerwert"
 
+#: 
 msgid "Imputed rent value"
 msgstr "Eigenmietwert"
 
+#: 
 msgid "Net premium"
 msgstr "Nettorendite"
 
+#: 
 msgid "Building insurance value"
 msgstr "Gebäude&#173;versicherungs&#173;wert"
 
+#: 
 msgid "Constructed factor"
 msgstr "Baumassenziffer"
 
+#: 
 msgid "GEAK exterior"
 msgstr "Effizienz Gebäudehülle"
 
+#: 
 msgid "GEAK total"
 msgstr "Effizienz Gesamtenergie"
 
+#: 
 msgid "Renewal fund value"
 msgstr "Erneuerungsfonds Wert"
 
+#: 
 msgid "Number of guest toilets"
 msgstr "Anzahl Gäste WC"
 
+#: 
 msgid "Starting from"
 msgstr "ab"
 
+#: 
 msgid "Mr."
 msgstr "Herr"
 
+#: 
 msgid "Ms."
 msgstr "Frau"
 
+#: 
 msgid "Infrared"
 msgstr "Infrarot"
 
+#: 
 msgid "Minergie-ECO"
 msgstr "Minergie-ECO"
 
+#: 
 msgid "Minergie-P-ECO"
 msgstr "Minergie-P-ECO"
 
+#: 
 msgid "GVA"
 msgstr "GVA"
 
+#: 
 msgid "Availability"
 msgstr "Verfügbarkeit"
 
+#: 
 msgid "Active"
 msgstr "Aktiv"
 
+#: 
 msgid "Inactive"
 msgstr "Inaktiv"
 
+#: 
 msgid "Reference"
 msgstr "Referenz"
 
+#: 
 msgid "Reserved"
 msgstr "Reserviert"
 
+#: 
 msgid "Draft"
 msgstr "In Bearbeitung"
 
+#: 
 msgid "Private"
 msgstr "Privat"
 
+#: 
 msgid "In acquisition"
 msgstr "In Akquise"
 
+#: 
 msgid "Sold"
 msgstr "Verkauft"
 
+#: 
 msgid "Rented"
 msgstr "Vermietet"
 
+#: 
 msgid "Taken"
 msgstr "Vermietet / Verkauft"
 
+#: 
 msgid "Residential / commercial building"
 msgstr "Wohn-/Geschäftshaus"
 
+#: 
 msgid "day"
 msgstr "Tag"
 
+#: 
 msgid "Wall heating"
 msgstr "Wandheizung"
 
+#: 
 msgid "Solar Thermal"
 msgstr "Solarthermie"
 
+#: 
 msgid "Photovoltaics"
 msgstr "Photovoltaik"
 
+#: 
 msgid "Dishwasher"
 msgstr "Geschirrspülmaschine"
 
+#: 
 msgid "Charging station"
 msgstr "Ladestation"
 
+#: 
 msgid "Cellar"
 msgstr "Keller"
 
+#: 
 msgid "Number of toilets"
 msgstr "Anzahl Toiletten"
 
+#: 
 msgid "Number of showers"
 msgstr "Anzahl Duschen"
+

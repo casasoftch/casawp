@@ -416,6 +416,10 @@ class FeatureService {
                 'label' => $this->translator->translate('Playground', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-remote-viewings' => array(
+                'label' => $this->translator->translate('Remote viewing', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
         );
     }
