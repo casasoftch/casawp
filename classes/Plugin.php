@@ -2755,6 +2755,7 @@ class Plugin {
             'public'             => true,
             'publicly_queryable' => true,
             'show_ui'            => true,
+            'show_in_rest'       => true,
             'show_in_menu'       => true,
             'query_var'          => true,
             'rewrite'            => array( 'slug' => 'projekte' ),
