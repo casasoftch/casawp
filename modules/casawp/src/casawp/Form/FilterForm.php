@@ -42,12 +42,6 @@ class FilterForm extends Form
         if (!$this->options['casawp_filter_price_to_elementtype']) {
           $this->options['casawp_filter_price_to_elementtype'] = 'hidden';
         }
-        if (!$this->options['casawp_filter_pricem2_from_elementtype']) {
-            $this->options['casawp_filter_pricem2_from_elementtype'] = 'hidden';
-          }
-          if (!$this->options['casawp_filter_pricem2_to_elementtype']) {
-            $this->options['casawp_filter_pricem2_to_elementtype'] = 'hidden';
-          }
        /* if (!$this->options['casawp_filter_area_sia_nf_from_elementtype']) {
           $this->options['casawp_filter_area_sia_nf_from_elementtype'] = 'hidden';
         }
@@ -202,21 +196,6 @@ class FilterForm extends Form
                 (isset($this->options['chosen_price_to']) ? $this->options['chosen_price_to'] : null)
             );
         //}
-
-        $this->addSelector(
-            'pricem2_from',
-            __('Pricem2 from', 'casawp'),
-            __('Pricem2 from','casawp'),
-            $this->getPriceOptions(),
-            (isset($this->options['chosen_pricem2_from']) ? $this->options['chosen_pricem2_from'] : null)
-        );
-        $this->addSelector(
-            'pricem2_to',
-            __('Pricem2 to', 'casawp'),
-            __('Pricem2 to','casawp'),
-            $this->getPriceOptions(),
-            (isset($this->options['chosen_pricem2_to']) ? $this->options['chosen_pricem2_to'] : null)
-        );
 
         $this->options['casawp_filter_price_range_elementtype'] = 'singleselect';
         $this->addSelector(

@@ -1764,7 +1764,7 @@ class Plugin {
             $viewgroup = get_option('casawp_viewgroup', 'bootstrap3');
             switch ($viewgroup) {
               case 'bootstrap2': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap2/casawp-single.php'; break;
-              case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp/bootstrap4/casawp-single.php'; break;
+              case 'bootstrap4': $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
               default: $template_path = CASASYNC_PLUGIN_DIR . 'theme-defaults/casawp-single.php'; break;
             }
             if ( $theme_file = locate_template( array( 'casawp-single.php' ) ) ) {

@@ -38,8 +38,6 @@ class QueryService{
             'areas_to' => null,
             'price_from' => null,
             'price_to' => null,
-            'pricem2_from' => null,
-            'pricem2_to' => null,
             'price_range' => null,
             'filter_meta_key' => null,
             'filter_meta_key_not' => null,
@@ -508,116 +506,7 @@ class QueryService{
               }
           }
 
-
-
-
-
-
-
         }
-
-
-
-
-
-        // price m2
-        if (in_array('rent', $this->query['salestypes'])) {
-            if ($this->query['pricem2_from'] || $this->query['pricem2_to']) {
-                $meta_query_items_new[] = array(
-                    'key' => 'grossPrice_propertysegment',
-                    'value' => 'm2',
-                    'compare'   => '==',
-                    // 'type' => 'NUMERIC'
-                );
-            }
-            if ($this->query['pricem2_from']) {
-                $meta_query_items_new[] = array(
-                    'key' => 'grossPrice',
-                    'value' => (is_array($this->query['pricem2_from']) ? $this->query['pricem2_from'][0] : $this->query['pricem2_from']),
-                    'compare'   => '>=',
-                    'type' => 'NUMERIC'
-                );
-            }
-            if ($this->query['pricem2_to']) {
-              if (strpos($this->query['pricem2_to'], '-') !== false) {
-                $price_parts = explode('-', $this->query['pricem2_to']);
-                if ($price_parts[0]) {
-                  $meta_query_items_new[] = array(
-                      'key' => 'grossPrice',
-                      'value' => $price_parts[0],
-                      'compare'   => '>=',
-                      'type' => 'NUMERIC'
-                  );
-                }
-                if ($price_parts[1]) {
-                  $meta_query_items_new[] = array(
-                      'key' => 'grossPrice',
-                      'value' => $price_parts[1],
-                      'compare'   => '<=',
-                      'type' => 'NUMERIC'
-                  );
-                }
-              } else {
-                $meta_query_items_new[] = array(
-                    'key' => 'grossPrice',
-                    'value' => (is_array($this->query['pricem2_to']) ? $this->query['pricem2_to'][0] : $this->query['pricem2_to']),
-                    'compare'   => '<=',
-                    'type' => 'NUMERIC'
-                );
-              }
-            }
-          } else if(in_array('buy', $this->query['salestypes'])){
-            if ($this->query['pricem2_from'] || $this->query['pricem2_to']) {
-                $meta_query_items_new[] = array(
-                    'key' => 'price_property_segment',
-                    'value' => 'm2',
-                    'compare'   => '=',
-                    // 'type' => 'NUMERIC'
-                );
-            }
-            if ($this->query['pricem2_from']) {
-                $meta_query_items_new[] = array(
-                    'key' => 'price',
-                    'value' => (is_array($this->query['pricem2_from']) ? $this->query['pricem2_from'][0] : $this->query['pricem2_from']),
-                    'compare'   => '>=',
-                    'type' => 'NUMERIC'
-                );
-            }
-            if ($this->query['pricem2_to']) {
-              if (strpos($this->query['pricem2_to'], '-') !== false) {
-                $price_parts = explode('-', $this->query['pricem2_to']);
-                if ($price_parts[0]) {
-                  $meta_query_items_new[] = array(
-                      'key' => 'price',
-                      'value' => $price_parts[0],
-                      'compare'   => '>=',
-                      'type' => 'NUMERIC'
-                  );
-                }
-                if ($price_parts[1]) {
-                  $meta_query_items_new[] = array(
-                      'key' => 'price',
-                      'value' => $price_parts[1],
-                      'compare'   => '<=',
-                      'type' => 'NUMERIC'
-                  );
-                }
-              } else {
-                $meta_query_items_new[] = array(
-                    'key' => 'price',
-                    'value' => (is_array($this->query['pricem2_to']) ? $this->query['pricem2_to'][0] : $this->query['pricem2_to']),
-                    'compare'   => '<=',
-                    'type' => 'NUMERIC'
-                );
-              }
-            }
-
-          }
-
-
-
-
-
 
 
 
