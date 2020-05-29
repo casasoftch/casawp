@@ -7,7 +7,7 @@ Tested up to: 5.0.2
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,27 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.5.0 =
+
+* update: backend interface names/strings/descriptions updates and clean up
+* new: remote viewing
+* new: post type casawp_property now shown in WP Rest API
+* fix: send mail to viewPerson, if there is a viewPerson but no inquiryPerson
+* new: property_reference ID can now be entered in form shortcode to directly connect a property in the request
+* update: import performance improvements
+* new: area filters
+* fix: deleted "chdir" as this broke some other plugin backend links
+* fix: feature filter
+* fix: import post title attachment
+* update: ajax filters filter each other
+* fix: price filter rent
+* new: guest toilets
+* update: translations
+* fix: getAllDocuments
+* update: CDN OG Meta
+* fix: integrated offers
+* new: integrated meta filters
 
 = 2.4.0 =
 * update: translations
