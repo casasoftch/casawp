@@ -1,5 +1,38 @@
-td.contactform-tab label {
-	display:inline-block;
-	padding-left:20px;
-	width: 70px;
+
+.block-label{
+	display: block;
+	font-weight: 500;
+	margin-bottom: 10px;
+}
+
+.block-label--intd{
+	margin-top: 30px;
+}
+
+.toplevel_page_casawp.wp-core-ui select{
+	width: 165px;
+}
+
+.margin-top{
+	margin-top: 30px;
+}
+
+.draggable-list-item{
+	background: white;
+	padding: 5px 10px;
+	margin-bottom: 5px;
+	cursor: move;
+	position: relative;
+	padding-left: 45px;
+}
+
+.draggable-list-item svg{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+.form-table .draggable-list-item label{
+	margin: 0 !important;
+	line-height: 31px;
 }

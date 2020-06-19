@@ -84,7 +84,9 @@ class Admin {
 	public function registerAdminScriptsAndStyles() {
 		wp_register_style( 'casawp-admin-css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp-admin.css' );
         wp_enqueue_style( 'casawp-admin-css' );
+        wp_enqueue_script('jquery-ui-droppable');
+        wp_enqueue_script('jquery-ui-draggable');
+        wp_enqueue_script('jquery-ui-sortable');
 	}
-
 
 }
