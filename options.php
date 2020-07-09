@@ -1047,7 +1047,6 @@
 											    stop: function(event, ui) {
 													var itemOrder = $('#draggableList').sortable("toArray");
 													for (var i = 0; i < itemOrder.length; i++) {
-														console.log("Position: " + i + " ID: " + itemOrder[i]);
 														$('#' + itemOrder[i]).find('.small-text').val(i);
 													}
 											    }
@@ -1098,7 +1097,7 @@
 								<td id="front-static-padges">
 									<fieldset>
 										<?php $name = 'casawp_prefer_extracost_segmentation'; ?>
-										<?php $text = 'Netto- anstelle Bruttomiete und Nebenkosten anzeigen'; ?>
+										<?php $text = 'Nettomiete anzeigen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
 										</label>
@@ -1246,15 +1245,15 @@
 								<?php
 								$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
 
-								$log = '/wp-content/uploads/casawp/logs'."/".date('Y M').'.log';
+								$log = '/wp-content/uploads/casawp/logs'."/".date('Ym').'.log';
 
 								echo '<a href="'.$log.'" target="_blank">'.$log.'</a><br>';
 
 								for ($i = 1; $i <= 6; $i++) 
 								{
-								   $months[] = date("Y M%", strtotime( date( 'Y-m-01' )." -$i months"));
+								   $months[] = date("Ym%", strtotime( date( 'Y-m-01' )." -$i months"));
 
-								   $log = '/wp-content/uploads/casawp/logs'."/".date("Y M", strtotime( date( 'Y-m-01' )." -$i months")).'.log';
+								   $log = '/wp-content/uploads/casawp/logs'."/".date("Ym", strtotime( date( 'Y-m-01' )." -$i months")).'.log';
 
 								   if (file_exists(ABSPATH . $log)) {
 								   	echo '<a href="'.$log.'" target="_blank">'.$log.'</a><br>';
