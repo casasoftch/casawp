@@ -158,7 +158,11 @@ class FormService{
                   if ($subjectItem instanceof Project) {
                     $data['project_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
                   } elseif ($subjectItem instanceof Offer) {
-                    $data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
+					if (substr_count($subjectItem->getFieldValue('referenceId'), '.') >= 2) {
+						$data['property_reference'] = $subjectItem->getFieldValue('referenceId');
+					} else {
+						$data['property_reference'] = $subjectItem->getFieldValue('visualReferenceId') . '..' . $subjectItem->getFieldValue('referenceId');
+					}
                   }
 
   								if ($subjectItem instanceof Offer) {
