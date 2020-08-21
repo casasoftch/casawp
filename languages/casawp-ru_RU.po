@@ -3,7 +3,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.3.1\n"
 "Project-Id-Version: CASAWP\n"
 "Language: ru\n"
 "POT-Creation-Date: \n"
@@ -1219,7 +1219,7 @@ msgstr "Общая жилая площадь"
 
 #: classes/Conversion.php:309
 msgid "Net living space"
-msgstr "Полезная жилая площадь"
+msgstr "Жилая площадь"
 
 #: classes/Conversion.php:310
 msgid "Gross floor area"
@@ -1247,7 +1247,7 @@ msgstr "Количество санузлов"
 
 #: classes/Conversion.php:317
 msgid "Number of guest toilets"
-msgstr "Количество гостевых туалетов"
+msgstr "Количество гостевых санузлов"
 
 #: classes/Conversion.php:318
 msgid "Number of floors"
@@ -1754,7 +1754,7 @@ msgstr "Под крышей"
 
 #: classes/Conversion.php:555
 msgid "Swimmingpool"
-msgstr "Плавательный бассейн"
+msgstr "Бассейн"
 
 #: classes/Conversion.php:556
 msgid "Minergie general"
