@@ -1239,7 +1239,7 @@ msgstr "Год постройки"
 
 #: classes/Conversion.php:315
 msgid "Number of rooms"
-msgstr "Количество комнат"
+msgstr "Комнат(ы)"
 
 #: classes/Conversion.php:316
 msgid "Number of lavatory"
@@ -1251,7 +1251,7 @@ msgstr "Количество гостевых санузлов"
 
 #: classes/Conversion.php:318
 msgid "Number of floors"
-msgstr "Количество этажей"
+msgstr "Этажи"
 
 #: classes/Conversion.php:319 classes/Single.php:431
 msgid "Floor"
@@ -2853,4 +2853,4 @@ msgid "Load map"
 msgstr "Загрузить карту"
 
 msgid "Guest toilets"
-msgstr "Гостевые туалеты"
+msgstr "Количество гостевых санузлов"
