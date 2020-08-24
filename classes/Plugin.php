@@ -865,6 +865,7 @@ class Plugin {
             case 'en': $lang = 'en'; break;
             case 'it': $lang = 'it'; break;
             case 'fr': $lang = 'fr'; break;
+            case 'ru': $lang = 'ru'; break;
             default: $lang = 'de'; break;
         }
 
@@ -1173,6 +1174,7 @@ class Plugin {
           case 'en': $lang = 'en'; break;
           case 'it': $lang = 'it'; break;
           case 'fr': $lang = 'fr'; break;
+          case 'ru': $lang = 'ru'; break;
           default: $lang = 'de'; break;
       }
 
@@ -2006,6 +2008,7 @@ class Plugin {
             case 'en': $locale = 'en_US'; break;
             case 'it': $locale = 'it_CH'; break;
             case 'fr': $locale = 'fr_CH'; break;
+            case 'ru': $locale = 'ru_RU'; break;
             default: $locale = 'de_DE'; break;
         }
 
