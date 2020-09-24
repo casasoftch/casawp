@@ -779,7 +779,9 @@ class Plugin {
         $stack = new Resolver\TemplatePathStack(array(
             'script_paths' => array(
                 CASASYNC_PLUGIN_DIR . '/theme-defaults/casawp',
-                get_template_directory() . '/casawp'
+                get_template_directory() . '/casawp',
+                get_theme_file_path() . '/casawp',
+                //get_stylesheet_directory() . '/casawp'
             )
         ));
         $resolver->attach($stack);
