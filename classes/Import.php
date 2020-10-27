@@ -2802,6 +2802,10 @@ class Import {
         }
 
         $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
+        if (function_exists("casawp_unicode_dirty_replace")) {
+          $oldval = casawp_unicode_dirty_replace($oldval); 
+        }
+        
         if (($oldval || $newval || $newval === 0) && $oldval !== $newval) {
           update_post_meta($wp_post->ID, $key, $newval);
           $this->transcript[$casawp_id]['meta_data'][$key]['from'] = $oldval;

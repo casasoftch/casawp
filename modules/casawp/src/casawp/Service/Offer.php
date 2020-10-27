@@ -497,7 +497,7 @@ class Offer{
 
 	public function getMetas(){
 		if ($this->metas === null) {
-			$this->metas = get_post_meta($this->post->ID);
+            $this->metas = maybe_unserialize( get_post_meta($this->post->ID) );
 		}
 		return $this->metas;
 	}
