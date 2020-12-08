@@ -1984,10 +1984,7 @@ class Plugin {
         }
 
         if (get_option( 'casawp_load_googlemaps', 1 ) && is_singular('casawp_property')) {
-            $google_api_key = get_option( 'casawp_google_apikey', 'AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY');
-            if (!$google_api_key) {
-                $google_api_key = 'AIzaSyDDhmv2qeROibgF41coXDjNm-8RoiQaNYY'; //default api key that just works
-            }
+            $google_api_key = get_option( 'casawp_google_apikey' );
             wp_enqueue_script('google_maps_v3', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=' . $google_api_key, array(), false, true );
         }
 
