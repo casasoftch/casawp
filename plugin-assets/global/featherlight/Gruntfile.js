@@ -27,6 +27,7 @@ module.exports = function(grunt) {
 					eqeqeq: true,
 					eqnull: true,
 					browser: true,
+					reporterOutput: "",
 					globals: {
 						jQuery: true,
 						Hammer: true,
@@ -90,6 +91,10 @@ module.exports = function(grunt) {
 					{
 						from: /archive\/[0-9]+[.]{1}[0-9]+[.]{1}[0-9]+/g,
 						to: 'archive/<%= pkg.version %>'
+					},
+					{
+						from: /noelboss\/featherlight\/[0-9]+[.]{1}[0-9]+[.]{1}[0-9]+/g,
+						to: 'noelboss/featherlight/<%= pkg.version %>'
 					},
 					{
 						from: /"version": "[0-9]+[.]{1}[0-9]+[.]{1}[0-9]+"/g,

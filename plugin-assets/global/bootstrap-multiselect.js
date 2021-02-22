@@ -219,7 +219,7 @@
 			this.$container.on('keydown', $.proxy(function(event) {
 				if ((event.keyCode == 9 || event.keyCode == 27) && this.$container.hasClass('open')) {
 					// Close on tab or escape.
-					$(this.$container).find(".multiselect.dropdown-toggle").click();
+					$(this.$container).find(".multiselect.dropdown-toggle").trigger('click');
 				}
 				else {
 					var $items = $(this.$container).find("li:not(.divider):visible a");
@@ -257,7 +257,7 @@
 						var $checkbox = $current.find('input[type="checkbox"]');
 
 						$checkbox.prop("checked", !$checkbox.prop("checked"));
-						$checkbox.change();
+						$checkbox.trigger('change');
 					}
 
 					event.stopPropagation();

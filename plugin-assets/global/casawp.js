@@ -1,12 +1,12 @@
 jQuery.noConflict();
-jQuery(document).ready(function($) {
+jQuery(function($) {
 
     //archive jstorage persistance
     if (window.casawpParams) {
         $.jStorage.set('casawpParams', window.casawpParams);
     }
 
-    $('#casawpContactAnchor').click(function(event){
+    $('#casawpContactAnchor').on('click', function(event){
         event.preventDefault();
 
         $('html, body').animate({
@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
         }, 500);
 
         $('.casawp-contactform-form').parent().addClass('casawp-highlight');
-        $('.casawp-contactform-form').delay(500).find(' input[name="firstname"]').focus();
+        $('.casawp-contactform-form').delay(500).find(' input[name="firstname"]').trigger('focus');
 
         return false;
     });
@@ -87,7 +87,7 @@ jQuery(document).ready(function($) {
                     var map;
                     //initializeMap($mapwraper);
                     if ($('#casawp-mapShowBtn').length) {
-                        $('#casawp-mapShowBtn').click(function() {
+                        $('#casawp-mapShowBtn').on('click', function() {
                             console.log("click");
                             if ($('#casawp-mapShowBtn').length) {
                                 $('#casawp-mapShowBtn').css('display', 'none');
@@ -204,12 +204,12 @@ jQuery(document).ready(function($) {
             $('.casawp-filterform-button').hide();
         }
 
-        $archiveForm.change(function(event){
+        $archiveForm.on('change', function(event){
           $(this).trigger( "casawp-ajaxfilter:filter-change" );
-          $(this).submit();
+          $(this).trigger('submit');
         });
 
-        $archiveForm.submit(function(event){
+        $archiveForm.on('submit', function(event){
 
           var $form = $(this);
           event.preventDefault();

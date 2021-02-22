@@ -1,4 +1,16 @@
 var expect = chai.expect;
+var stubAjaxLoad = function(content) {
+  var oldLoad = $.fn.load;
+  $.fn.load = function(url, callback) {
+    var $this = this;
+    $.fn.load = oldLoad;
+    window.setTimeout(function() {
+      $this.html(content);
+      callback(null, "success");
+    });
+    return this;
+  };
+};
 
 (function($) {
 	var $htmlFixtures = null;
@@ -7,7 +19,15 @@ var expect = chai.expect;
 		$('body >:not(#mocha)').remove()
 		$('body').append($htmlFixtures.clone(true));
 	};
+	var triggerKeyCode = function(keyCode) {
+		$(window).trigger($.Event("keyup", { keyCode: keyCode }));
+	};
+	var triggerEscape = function(){
+		triggerKeyCode(27);
+	};
+
 	$.fx.off = true;
+	$.fn.toJSON = function() { return 'jQuery: ' + this.selector + ' (' + this.length + ')' };
 
 	describe('Featherlight', function() {
 		beforeEach(resetFixtures);
@@ -27,6 +47,31 @@ var expect = chai.expect;
 			]);
 		});
 
+		it ('works on items with data-featherlight by default', function(done) {
+			$('body').append('<div id="auto-bound-2" data-featherlight="fixtures/photo.jpeg">Dynamic</div>')
+			expect($('img')).to.not.be.visible;
+			$('#auto-bound-2').click();
+			patiently(done, [
+				function() {
+					expect($('.featherlight img')).to.be.visible;
+					expect($('.featherlight img')).to.have.attr('src').equal('fixtures/photo.jpeg');
+					$('.featherlight').click();
+				}, function() {
+					expect($('img')).to.not.be.visible;
+				}
+			]);
+		});
+
+		it ('does not move content that was already placed in the featherlight by content-filters', function() {
+			$.featherlight.contentFilters.advancedExample = {
+				process: function() {
+					return $('<p>Hello</p>').appendTo(this.$instance);
+				}
+			};
+			$.featherlight({advancedExample: 'dummy'});
+			expect($('.featherlight > p').length).to.equal(1);
+		});
+
 		describe('jQuery#featherlight', function() {
 
 			it('is chainable', function() {
@@ -36,8 +81,9 @@ var expect = chai.expect;
 			});
 
 			it("won't open a dialog if the event is already prevented", function(){
-				$('#auto-bound').on('click', function(event) { event.preventDefault(); }).click()
-				expect($.featherlight.current()).to.be.undefined;
+				$('#plain-photo-link').on('click', function(event) { event.preventDefault(); })
+				.featherlight().click();
+				expect($.featherlight.current()).to.be.null;
 			});
 		});
 
@@ -50,17 +96,29 @@ var expect = chai.expect;
 
 		});
 
+		describe('jQuery.featherlight#open', function() {
+			it('returns a promise', function(done) {
+				var fl = new $.featherlight('<p class="testing">This is a test<p>');
+				expect($.featherlight.current()).to.be.null;
+				var evt = $.Event('dummy');
+				evt.preventDefault();
+				expect(fl.open(evt).state()).to.equal('rejected');
+				expect($.featherlight.current()).to.be.null;
+				fl.open().then(function(){ done(); });
+			});
+		});
+
 		describe('jQuery.featherlight.current', function() {
 			it('returns null if no dialogbox is currently opened', function() {
-				expect($.featherlight.current()).to.be.undefined;
+				expect($.featherlight.current()).to.be.null;
 				/* even if opened and then closed */
 				$.featherlight('<p class="testing">This is a test<p>');
 				$('.featherlight').click();
-				expect($.featherlight.current()).to.be.undefined;
+				expect($.featherlight.current()).to.be.null;
 				/* even if savagely removed */
 				$.featherlight('<p class="testing">This is a test<p>');
 				$('.featherlight').remove();
-				expect($.featherlight.current()).to.be.undefined;
+				expect($.featherlight.current()).to.be.null;
 			});
 
 			it('returns the featherlight object of the last currently opened dialog', function() {
@@ -74,18 +132,58 @@ var expect = chai.expect;
 
 		});
 
+		describe('jQuery.featherlight.opened', function() {
+			it('returns [] ]if no dialogbox is currently opened', function() {
+				expect($.featherlight.opened()).to.eql([]);
+				/* even if opened and then closed */
+				$.featherlight('<p class="testing">This is a test<p>');
+				$('.featherlight').click();
+				expect($.featherlight.opened()).to.eql([]);
+				/* even if savagely removed */
+				$.featherlight('<p class="testing">This is a test<p>');
+				$('.featherlight').remove();
+				expect($.featherlight.opened()).to.eql([]);
+			});
+
+			it('returns the featherlight objects of the currently opened dialog', function() {
+				var first = $.featherlight('<p>First<p>');
+				expect($.featherlight.opened()).to.eql([first]);
+				var second = $.featherlight('<p>Inner<p>', {namespace: 'different_namespace'});
+				expect($.featherlight.opened()).to.eql([first, second]);
+				$('.different_namespace').click();
+				expect($.featherlight.opened()).to.eql([first]);
+			});
+		});
+
 		describe('jQuery.featherlight.close', function() {
 			it('closes the currently opened window, if any', function() {
 				$.featherlight('<p class="testing">This is a test<p>');
 				$.featherlight.close();
-				expect($.featherlight.current()).to.be.undefined;
+				expect($.featherlight.current()).to.be.null;
 				$.featherlight.close(); /* should not create error */
 			});
 		});
 
+		describe('jQuery.featherlight.close', function() {
+			it('returns a promise', function(done) {
+				$.featherlight('<p class="testing">This is a test<p>');
+				$.featherlight.close().then(function(){ done() });
+			});
+		});
+
+		describe('image content filter', function() {
+			it('stores the natural width & height', function(done) {
+				$('#plain-photo-link').featherlight({
+					afterOpen: function() {
+						expect(this.$content.naturalWidth).to.equal(200);
+						done();
+					}
+				}).click();
+			});
+		});
 
 		describe('configuration', function() {
-			it('can be set using data-feather-*', function() {
+			it('can be set using data-featherlight-*', function() {
 				$('#data-attr-test a').featherlight().click();
 				expect($.featherlight.current()).to.have.properties({
 					variant: 'test',
@@ -95,7 +193,7 @@ var expect = chai.expect;
 				expect($.featherlight.current().$instance.find('b')).to.have.text('Added in callback');
 			});
 
-			it('can be set using data-feather-* on filtered element too', function() {
+			it('can be set using data-featherlight-* on filtered element too', function() {
 				$('#data-attr-filter-test a:first').click();
 				expect($.featherlight.current()).to.have.property('variant').equal('wrapper');
 				$('#data-attr-filter-test a:last').click();
@@ -109,10 +207,8 @@ var expect = chai.expect;
 				var first = $.featherlight('<p/>'),
 					second = $.featherlight('<p/>'),
 					third = $.featherlight('<p/>', {closeOnEsc: false}),
-					last = $.featherlight('<p/>', {closeOnEsc: true}),
-					triggerEscape = function(){
-						$(document).trigger($.Event("keyup", { keyCode: 27 }));
-					};
+					last = $.featherlight('<p/>', {closeOnEsc: true});
+				expect($.featherlight._globalHandlerInstalled).to.be.true;
 				triggerEscape();
 				expect($.featherlight.current()).to.equal(third);
 				triggerEscape();
@@ -121,6 +217,48 @@ var expect = chai.expect;
 				expect($.featherlight.current()).to.equal(second);
 				triggerEscape();
 				expect($.featherlight.current()).to.equal(first);
+				expect($.featherlight._globalHandlerInstalled).to.be.true;
+				$.featherlight.current().close();
+				expect($.featherlight._globalHandlerInstalled).to.be.false;
+			});
+
+			it('can specify to a close icon', function() {
+				var fl = $.featherlight('<p/>', {closeIcon: '<div class="test">X</div>'});
+				expect($.featherlight.current()).to.equal(fl);
+				$('.test').click();
+				expect($.featherlight.current()).to.be.null;
+			});
+
+			it('can specify a key handler', function() {
+				var lastKeyCode;
+				$.featherlight('<p/>', {
+					onKeyUp: function(event) {
+						lastKeyCode = event.keyCode;
+					}
+				});
+				triggerKeyCode(25);
+				expect(lastKeyCode).to.equal(25);
+				triggerKeyCode(27);
+				expect(lastKeyCode).to./* still be */equal(25); /* since event is handled by FL */
+				expect($.featherlight.current()).to.be.null;
+			});
+
+			it('can specify a resize handler', function() {
+				var resizes = [],
+				  open = function() {
+						$.featherlight('<p/>', {
+							onResize: function(event) { resizes.push(this.id); }
+						});
+					}
+				open();
+				open();
+				$(window).trigger('resize');
+				open();
+				$.featherlight.current().close();
+				$.featherlight.current().close();
+				$(window).trigger('resize');
+				resizes = $.map(resizes, function(id) { return id - $.featherlight.current().id });
+				expect(resizes).to.eql([0, 1, 1, 0, 2, 0]);
 			});
 
 			it('can specify a filter for events', function() {
@@ -142,13 +280,21 @@ var expect = chai.expect;
 				patiently(done, function() {
 					expect($('.featherlight')).to.contain('Hello');
 				});
-			})
+			});
+
+			it('ajax content can be text only', function(done) {
+				stubAjaxLoad('Hello <b>world</b>');
+				$.featherlight({ajax: 'stubbed'});
+				patiently(done, function() {
+					expect($('.featherlight')).to.contain('Hello');
+				});
+			});
 
 			it('can specify an alternate close button selector', function() {
 				var fl = $.featherlight('<div>Test<div class="close-me">close</div></div>', {otherClose: '.close-me'});
 				expect($.featherlight.current()).to.equal(fl);
 				$('.close-me').click();
-				expect($.featherlight.current()).to.be.undefined;
+				expect($.featherlight.current()).to.be.null;
 			});
 
 			it('can specify an alternate root selector', function() {
@@ -156,7 +302,193 @@ var expect = chai.expect;
 				expect($('#fixtures').children().last()).to.have.class('featherlight');
 			});
 
+			it('can specify callbacks to track the progress of the dialog', function() {
+				var callbacks = ['beforeOpen', 'beforeContent', 'afterContent', 'afterOpen', 'beforeClose', 'afterClose'],
+					lastCallback = undefined,
+					options = {};
+				$.each(callbacks, function(i, cb){
+					options[cb] = function() {
+						expect(lastCallback).to.equal(callbacks[i-1]);
+						lastCallback = cb;
+					}
+				});
+				$.featherlight($('<p>Hello</p>'), options);
+				expect(lastCallback).to.equal('afterOpen');
+				$.featherlight.current().close();
+				expect(lastCallback).to.equal('afterClose');
+			});
+
+			it('can be interrupted via beforeOpen', function() {
+				$.featherlight({text: "Hello", beforeOpen: function() { return false; }});
+				expect($.featherlight.current()).to.be.null;
+				// Tricky case:
+				$.featherlight.defaults.beforeOpen = function() { return false; }
+				$('#auto-bound').click();
+				expect($.featherlight.current()).to.be.null;
+				$.featherlight.defaults.beforeOpen = $.noop;
+			});
+
+			it('provides event to beforeClose when close via closebox', function() {
+				$.featherlight({text: "Hello", beforeClose: function(evt) {
+					expect(evt).to.be.an('object');
+				}});
+				$('.featherlight-close').click();
+			});
+
+			it('provides event to beforeClose & al when closed via escape', function() {
+				$.featherlight({text: "Hello", beforeClose: function(evt) {
+					expect(evt).to.be.an('object');
+				}});
+				triggerEscape();
+			});
+
+			it('passes event to beforeClose & al when closed via global function', function() {
+				$.featherlight({text: "Hello", beforeClose: function(evt) {
+					expect(evt).to.eql(42);
+				}});
+				$.featherlight.close(42);
+			});
+
+			it('can specify a loading text', function(done) {
+				stubAjaxLoad('<b>Hi</b>');
+				$.featherlight({ajax: 'stubbed', loading: "Spinner!"});
+				expect($('.featherlight')).to.contain('Spinner!');
+				expect($('.featherlight')).to.have.class('featherlight-loading');
+				patiently(done, function() {
+					expect($('.featherlight')).to.contain('Hi');
+					expect($('.featherlight')).not.to.contain('Spinner!');
+					expect($('.featherlight')).not.to.have.class('featherlight-loading');
+				});
+			});
+
+			it('can specify a different namespace', function() {
+				$('#namespace-test a').featherlight({namespace: 'custom-namespace'}).click();
+				expect($.featherlight.current().$instance.find('b')).to.have.text('Namespace ok');
+			});
+
+			it('can specify to persist the content', function() {
+				var $elem = $('<div class="keepme"/>').appendTo('body');
+				expect($('.keepme')).with.length(1).to.have.text('');
+				var fl = $.featherlight({
+					jquery: $elem,
+					persist: true,
+					afterContent: function() { this.$content.append('<i>1</i>'); },
+					afterOpen: function() { this.$content.append('<b>2</b>'); }
+				});
+				expect($('.keepme')).with.length(1).to.have.text('12');
+				$.featherlight.close();
+				fl.open();
+				expect($('.keepme')).with.length(1).to.have.text('1212');
+				$.featherlight.close();
+			});
+
+			var persistTest = function(setting, lastValue) {
+				$('<div class="keepme">Foo</div>').appendTo('body');
+				$('<div class="other">Bar</div>').appendTo('body');
+				var $buttons = $('<a href=".keepme"/><a href=".other"/>').appendTo('body');
+				$buttons.featherlight({ persist: setting });
+				$buttons.first().click();
+				$.featherlight.close();
+				$buttons.first().click();
+				expect($('.featherlight-inner')).to.have.text('Foo');
+				$.featherlight.close();
+				$buttons.last().click();
+				expect($('.featherlight-inner')).to.have.text(lastValue);
+			};
+
+			it('can specify to persist the content individually', function() {
+				persistTest(true, 'Bar');
+			});
+
+			it('can specify to persist the share the content as a group', function() {
+				persistTest('shared', 'Foo');
+			});
+
 		});
 
+		describe('error handling', function() {
+			it('is quite basic', function(done) {
+				$.featherlight('does_not_exist.jpg');
+				patiently(done, function() {
+					expect($('.featherlight-image')).to.have.attr('src').equal('does_not_exist.jpg');
+					expect($('.featherlight')).not.to.have.class('featherlight-loading');
+				});
+			});
+		});
+
+		describe('iframe content filter', function() {
+			it('generates an iframe with the right attributes and css', function(done) {
+				$('<a data-featherlight-iframe="#test-iframe" data-featherlight-iframe-allowfullscreen="true" '+
+					'data-featherlight-iframe-width="323" data-featherlight-iframe-min-height="212">').featherlight().click();
+				expect($('.featherlight iframe')).to.have.attr('src').equal('#test-iframe');
+				expect($('.featherlight iframe')).to.have.css('width').equal('323px');
+				expect($('.featherlight iframe')).to.have.css('min-height').equal('212px');
+				expect($('.featherlight iframe')).to.have.attr('allowfullscreen').equal('true');
+				expect($('.featherlight iframe')).not.to.have.attr('min-height');
+				patiently(done, function() {
+					expect($('.featherlight')).to.have.attr('class').equal('featherlight featherlight-iframe');
+				});
+			});
+
+			it('allows "about:blank"', function() {
+				$('<a data-featherlight-iframe="about:blank">').featherlight().click();
+				expect($('.featherlight iframe')).to.have.attr('src').equal('about:blank');
+			});
+		});
+
+		describe('accessibility', function() {
+			it('has a focusable close button', function() {
+				$.featherlight({text: 'Hello'});
+				close = $('.featherlight-close-icon')
+				close.focus();
+				expect($('.featherlight-close-icon').attr('tabindex')).to.be.undefined;
+				expect($(document.activeElement)).to.have.class('featherlight-close-icon');
+			});
+
+			it('removes focus and then resets it', function() {
+				$('.for-focus').focus();
+				$.featherlight({text: 'Hello'});
+				expect($('.for-focus')).to.have.attr('tabindex', '-1');
+				expect($(document.activeElement)).not.to.have.class('for-focus');
+				$.featherlight.close();
+				expect($(document.activeElement)).to.have.class('for-focus');
+				expect($('.for-focus').attr('tabindex')).to.be.undefined;
+			});
+
+			it('resets tabindex properly', function() {
+				$('.for-focus').attr('tabindex', 42);
+				$.featherlight({text: 'Hello'});
+				$.featherlight.close();
+				expect($('.for-focus')).to.have.attr('tabindex').equal('42');
+			});
+
+			it('focussed on "autofocus" content, if any', function() {
+				$.featherlight({html: '<input><input autofocus class="ok">'});
+				expect($(document.activeElement)).to.have.class('ok');
+				$.featherlight.close();
+			});
+
+			it('sets the "with-featherlight" class correctly on html', function() {
+				expect($('html')).not.to.have.class('with-featherlight');
+				$.featherlight({html: 'hello'});
+				expect($('html')).to.have.class('with-featherlight');
+				$.featherlight({html: 'hello'});
+				$.featherlight.close();
+				$.featherlight.close();
+				expect($('html')).not.to.have.class('with-featherlight');
+			});
+
+			it('works correctly with filters [#235]', function() {
+				var ok = false;
+				var fn = function(evt) {
+					ok = !evt.isDefaultPrevented();
+				};
+				$(document).on('click', fn);
+				$('#bug-235 .unrelated').click();
+				$(document).off('click', fn);
+				expect(ok).to.eql(true);
+			});
+
+		});
 	});
 }(jQuery));

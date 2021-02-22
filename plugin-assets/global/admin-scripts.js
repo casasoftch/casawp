@@ -18,7 +18,7 @@
 
     /* --- set or remove attributes --- */
     $.each(myElements, function(i, val) {
-        $('[name="' + val + '"]').click(function() {
+        $('[name="' + val + '"]').on('click', function() {
             if($(this).attr('value') != 0) {
                 $(i).removeAttr('readonly');
                 $(i).removeAttr('disabled');

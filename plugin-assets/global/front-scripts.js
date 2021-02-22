@@ -1,13 +1,13 @@
 
 jQuery.noConflict();
-jQuery(document).ready(function($) {
+jQuery(function($) {
 
     //archive jstorage persistance
     if (window.casawpParams) {
         $.jStorage.set('casawpParams', window.casawpParams);
     }
 
-    $('#casawpContactAnchor').click(function(event){
+    $('#casawpContactAnchor').on('click', function(event){
         event.preventDefault();
 
         $('html, body').animate({
@@ -49,9 +49,6 @@ jQuery(document).ready(function($) {
     if ($('.casawp-basic-box:visible').length){
         if (window.casawpOptionParams && window.casawpOptionParams.load_css == 'bootstrapv3') {
             var selector = '.casawp-basic-box';
-            $(selector).equalHeightColumns({
-                speed : 500
-            });
         }
     }
 

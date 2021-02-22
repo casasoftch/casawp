@@ -1963,16 +1963,16 @@ class Plugin {
 
 
 
-        if(is_singular('casawp_property') && in_array(get_option('casawp_viewgroup', 'bootstrap3'), ['bootstrap2', 'bootstrap3'])) {
+       /*  if(is_singular('casawp_property') && in_array(get_option('casawp_viewgroup', 'bootstrap3'), ['bootstrap2', 'bootstrap3'])) {
             wp_enqueue_script('casawp_jquery_eqheight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jquery.equal-height-columns.js', array( 'jquery' ), false, true);
-        }
+        } */
 
         if (get_option( 'casawp_load_featherlight', 1 )) {
-            wp_enqueue_script('featherlight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/featherlight.min.js', array( 'jquery' ), false, true);
-            wp_register_style('featherlight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/featherlight.min.css' );
+            wp_enqueue_script('featherlight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/featherlight/release/featherlight.min.js', array( 'jquery' ), false, true);
+            wp_register_style('featherlight', CASASYNC_PLUGIN_URL . 'plugin-assets/global/featherlight/release/featherlight.min.css' );
             wp_enqueue_style('featherlight' );
-            wp_enqueue_script('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/featherlight.gallery.min.js', array( 'jquery', 'featherlight' ), false, true );
-            wp_register_style('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/featherlight.gallery.min.css' );
+            wp_enqueue_script('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin-assets/global/featherlight/release/featherlight.gallery.min.js', array( 'jquery', 'featherlight' ), false, true );
+            wp_register_style('featherlight-gallery', CASASYNC_PLUGIN_URL . 'plugin-assets/global/featherlight/release/featherlight.gallery.min.css' );
             wp_enqueue_style('featherlight-gallery' );
         }
 

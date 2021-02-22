@@ -3,15 +3,117 @@ Featherlight – Changelog
 
 Master
 -----------------------------------
+
+
+1.7.0 - 2016-12-22
+-----------------------------------
+- Can now specify standard iFrame attributes and CSS [#269]
+- Hopefully Fix iOS scroll issue [#77]
+
+1.6.0 - 2016-11-16
+-----------------------------------
+- Changed close icon to a <button>. Be sure to use current CSS files too. [#260]
+- Improved focus handling [#259]
+
+1.5.0 - 2016-06-27
+-----------------------------------
+- CSS now sets box-sizing to border-box
+
+1.4.0 - 2016-03-21
+-----------------------------------
+- New method `resize` that can be overriden if need be.
+
+1.3.5 - 2015-11-13
+-----------------------------------
+- Bug fixes
+
+1.3.4 - 2015-09-09
+-----------------------------------
+- Tweak auto binding to work with persist and remove limitation on filter.
+
+1.3.3 - 2015-08-17
+-----------------------------------
+- Bug fixes
+
+1.3.2 - 2015-06-09
+-----------------------------------
+- Gallery: renamed 'images' to 'slides'
+
+1.3.1 - 2015-06-04
+-----------------------------------
+- Bug fix for 1.3.0
+
+1.3.0 - 2015-06-03
+-----------------------------------
+- New `persist` option to persist content [#122]
+
+1.2.3 - 2015-03-21
+-----------------------------------
+- Bump z-index to insure dialogs appear above everything else.
+- Open & Close return promises that are resolved when their action successfully finishes.
+
+1.2.2 - 2015-03-11
+-----------------------------------
+- Fixed Hammer support [#119]
+
+1.2.1 - 2015-03-08
+-----------------------------------
+- Fixed `namespace` option.
+
+1.2.0 - 2015-02-20
+-----------------------------------
+### Features
+- New setting: loading (default is '') is shown initially while content loads. The lightbox also has a class '.featherlight-loading' while content is loading.
+- New content-filter "iframe" to generate an iframe with the given URL.
+  Options iframeWidth, iframeMinWidth, etc. or their corresponding data attributes
+  are used as CSS when present.
+
+### Changes
+- Basic error handling for images that won't load
+
+1.1.0 - 2015-02-17
+-----------------------------------
+### Features
+- New callback: onResize called for new content and when the window is resized.
+- onResize is used to automatically resize images if needed.
+
+### Changes
+- current() now returns null if no lightbox is currently opened
+- now avoids memory leaks
+- onKeyDown() renamed onKeyUp()
+
+1.0.4 - 2015-01-27
+-----------------------------------
+
+
+1.0.3 - 2014-12-09
+-----------------------------------
+- Fix bug in IE8. Thanks a barry!
+
+1.0.2 - 2014-11-26
+-----------------------------------
+- Gallery: Bug with beforeOpen callback. Thanks Cristian Bica!
+
+1.0.1 - 2014-11-17
+-----------------------------------
+- Re-release, removing afterSlide & beforeSlide and some debugging code
+
+1.0.0 - 2014-11-16
+-----------------------------------
 ### Features
 - New option filter to attach lazily like `$(sel).on('click', filter, ...)`. Attaching is done for the whole set, not on each individual element. Attributes of the whole set and the filtered
 element are combined.
 - New option otherClose to support extra closing buttons.
 - New option root to support appending featherlight elsewhere than on the body.
 - New content filter 'text' for plain text messages.
-- Gallery has new callbacks `beforeImage` and `afterImage`.
+- New callback onKeyDown, beforeContent, afterContent
+- Gallery can display mixed content, not just images.
 - Gallery defaults are accessible with $.featherlightGallery.defaults
 - Callbacks like afterOpen can be set using data-featherlight-after-open
+- Gallery inherits Featherlight's prototype and class methods.
+- Gallery can be called entirely from javascript.
+- Gallery can be navigated using left and right arrow keys.
+- Gallery uses its `autoBind` setting to automatically bind galleries. Its recommended to use it with the `filter` setting.
 
 ### Breaking changes
 - `$.featherlight` now always trigger a new lightbox. Use `$.fn.featherlight` for attaching events to elements.
@@ -22,6 +124,7 @@ element are combined.
 - The `config` attribute has been removed and merged with the `this` object.
 - The `methods` global attribute has been removed. Methods have changed quite a bit. Access the prototype instead if needed.
 - Content returned from filters isn't cloned anymore.
+- Gallery configuration has changed and is no longer nested under `gallery`.
 
 ### Maintenance & Fixes
 - Small bugs fixed
