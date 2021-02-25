@@ -1921,10 +1921,11 @@ class Plugin {
     function registerScriptsAndStyles(){
         wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
         wp_enqueue_style( 'casawp_css' );
+        $version = 4;
         if (get_option( 'casawp_load_scripts_in_footer', 1 )) {
-            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), true, true);
+            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), $version, true);
         } else {
-            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ));
+            wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), $version);
         }
 
         wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ));
@@ -1978,7 +1979,7 @@ class Plugin {
 
 
         if (get_option( 'casawp_load_chosen', 1 )) {
-            wp_enqueue_script('chosen', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/chosen.jquery.min.js', array( 'jquery' ), false, true);
+            wp_enqueue_script('chosen', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/chosen.cs.jquery.min.js', array( 'jquery' ), $version, true);
             wp_register_style('chosen-css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/chosen.css' );
             wp_enqueue_style('chosen-css' );
         }
