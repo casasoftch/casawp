@@ -661,7 +661,7 @@ msgstr "Erstwohnung"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:340
 msgid "Foreign quota"
-msgstr "Ausländer&shy;kontingent"
+msgstr "Ausländerkontingent"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:346
 msgid "Attic"
