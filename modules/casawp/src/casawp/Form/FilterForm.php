@@ -220,6 +220,29 @@ class FilterForm extends Form
             (isset($this->options['chosen_price_range']) ? $this->options['chosen_price_range'] : null)
         );
 
+        $this->options['casawp_filter_price_range_custom_elementtype'] = 'singleselect';
+        $this->addSelector(
+            'price_range_custom',
+            __('Price range', 'casawp'),
+            __('Price range','casawp'),
+            array(
+              '1-500000' => sprintf(__('to %1$s %2$.1f million', 'casawp'), 'CHF', 0.5),
+              '500000-800000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 0.5, 0.8),
+              '800000-1000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 0.8, 1),
+              '1000000-1500000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 1.0, 1.5),
+              '1500000-2000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 1.5, 2),
+              '2000000-2500000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 2, 2.5),
+              '2000000-3000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 2.5, 3),
+              '3000000-3500000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 3, 3.5),
+              '3500000-4000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 3.5, 4),
+              '4000000-5000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 4, 5),
+              '5000000-7500000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 5, 7.5),
+              '7500000-1000000' => sprintf(__('from %1$s %2$.1f to %3$.1f million', 'casawp'), 'CHF', 7.5, 10),
+              '10000000-9999999999' => sprintf(__('from %1$s %2$.1f million', 'casawp'), 'CHF', 10),
+            ),
+            (isset($this->options['chosen_price_range_custom']) ? $this->options['chosen_price_range_custom'] : null)
+        );
+
 
         //if ($this->area_from) {
           /*  $this->addSelector(

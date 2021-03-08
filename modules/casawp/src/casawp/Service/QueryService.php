@@ -39,6 +39,7 @@ class QueryService{
             'price_from' => null,
             'price_to' => null,
             'price_range' => null,
+            'price_range_custom' => null,
             'filter_meta_key' => null,
             'filter_meta_key_not' => null,
             'filter_meta_compare' => null,
@@ -418,14 +419,14 @@ class QueryService{
 
 
 
-          if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
-              $price_seek_parts = explode('-', $this->query['price_range']);
-              $range_seek_from = $price_seek_parts[0];
-              $range_seek_to = $price_seek_parts[1];
+            if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
+                $price_seek_parts = explode('-', $this->query['price_range']);
+                $range_seek_from = $price_seek_parts[0];
+                $range_seek_to = $price_seek_parts[1];
 
 
 
-              if ($range_seek_from && $range_seek_to) {
+                if ($range_seek_from && $range_seek_to) {
                 // $meta_query_items_new[] = array(
                 //   'key' => 'price_range_from',
                 //   'value' => (int) $range_seek_to,
@@ -438,45 +439,45 @@ class QueryService{
                 // );
 
                 $meta_query_items_new[] = array(
-                  'relation' => 'OR',
-                  array(
+                    'relation' => 'OR',
+                    array(
                     'key' => 'price_range_from',
                     'value' => 0,
                     'compare'   => '>',
                     'type' => 'UNSIGNED'
-                  ),
-                  array(
+                    ),
+                    array(
                     'key' => 'price_range_to',
                     'value' => 0,
                     'compare'   => '>',
                     'type' => 'UNSIGNED'
-                  )
+                    )
                 );
                 $meta_query_items_new[] = array(
-                  'relation' => 'OR',
-                  array(
+                    'relation' => 'OR',
+                    array(
                     'key' => 'price_range_from',
                     'value' => array($range_seek_from, $range_seek_to),
                     'compare'   => 'BETWEEN',
                     'type' => 'UNSIGNED'
-                  ),
-                  array(
+                    ),
+                    array(
                     'key' => 'price_range_from',
                     'compare'   => 'NOT EXISTS'
-                  )
+                    )
                 );
                 $meta_query_items_new[] = array(
-                  'relation' => 'OR',
-                  array(
+                    'relation' => 'OR',
+                    array(
                     'key' => 'price_range_to',
                     'value' => array($range_seek_from, $range_seek_to),
                     'compare'   => 'BETWEEN',
                     'type' => 'UNSIGNED'
-                  ),
-                  array(
+                    ),
+                    array(
                     'key' => 'price_range_to',
                     'compare'   => 'NOT EXISTS'
-                  )
+                    )
                 );
 
 
@@ -503,8 +504,25 @@ class QueryService{
                 //     )
                 //   )
                 // );
-              }
-          }
+                }
+            }
+
+            //Define custom ranges in theme and search all prices. Did this for Property One
+            if ($this->query['price_range_custom'] && strpos($this->query['price_range_custom'], '-') !== false ) {
+                $price_seek_parts = explode('-', $this->query['price_range_custom']);
+                $range_seek_from = $price_seek_parts[0];
+                $range_seek_to = $price_seek_parts[1];
+
+                
+
+                if ($range_seek_from && $range_seek_to) {
+                    $meta_query_items_new[] = array(
+                        'key' => 'price',
+                        'value' => $price_seek_parts,
+                        'compare'   => 'BETWEEN'
+                    );
+                }
+            }
 
         }
 
