@@ -418,7 +418,6 @@ class QueryService{
 
 
 
-
             if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
                 $price_seek_parts = explode('-', $this->query['price_range']);
                 $range_seek_from = $price_seek_parts[0];
@@ -513,13 +512,14 @@ class QueryService{
                 $range_seek_from = $price_seek_parts[0];
                 $range_seek_to = $price_seek_parts[1];
 
-                
+                #die('billburr' . print_r($price_seek_parts));
 
                 if ($range_seek_from && $range_seek_to) {
                     $meta_query_items_new[] = array(
                         'key' => 'price',
                         'value' => $price_seek_parts,
-                        'compare'   => 'BETWEEN'
+                        'compare'   => 'BETWEEN',
+                        'type' => 'NUMERIC'
                     );
                 }
             }
