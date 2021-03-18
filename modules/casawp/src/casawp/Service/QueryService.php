@@ -424,7 +424,6 @@ class QueryService{
                 $range_seek_to = $price_seek_parts[1];
 
 
-
                 if ($range_seek_from && $range_seek_to) {
                 // $meta_query_items_new[] = array(
                 //   'key' => 'price_range_from',
@@ -436,6 +435,7 @@ class QueryService{
                 //   'value' => (int) $range_seek_from,
                 //   'compare'   => '>='
                 // );
+                
 
                 $meta_query_items_new[] = array(
                     'relation' => 'OR',
@@ -514,12 +514,38 @@ class QueryService{
 
                 #die('billburr' . print_r($price_seek_parts));
 
-                if ($range_seek_from && $range_seek_to) {
+                /* if ($range_seek_from && $range_seek_to) {
                     $meta_query_items_new[] = array(
                         'key' => 'price',
                         'value' => $price_seek_parts,
                         'compare'   => 'BETWEEN',
                         'type' => 'NUMERIC'
+                    );
+                } */
+
+                if ($range_seek_from && $range_seek_to) {
+                    $meta_query_items_new[] = array(
+                        array(
+                            'relation' => 'OR',
+                            array(
+                                'key' => 'price',
+                                'value' => $price_seek_parts,
+                                'compare'   => 'BETWEEN',
+                                'type' => 'NUMERIC'
+                            ),
+                            array(
+                                'key' => 'price_range_from',
+                                'value' => $price_seek_parts,
+                                'compare'   => 'BETWEEN',
+                                'type' => 'NUMERIC'
+                            ),
+                            array(
+                                'key' => 'price_range_to',
+                                'value' => $price_seek_parts,
+                                'compare'   => 'BETWEEN',
+                                'type' => 'NUMERIC'
+                            ),
+                        ),                        
                     );
                 }
             }
