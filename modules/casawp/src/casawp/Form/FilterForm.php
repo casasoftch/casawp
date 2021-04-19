@@ -244,8 +244,8 @@ class FilterForm extends Form
         );
 
 
-        //if ($this->area_from) {
-          /*  $this->addSelector(
+        if ($this->area_from) {
+            $this->addSelector(
                 'area_from',
                 __('Area from', 'casawp'),
                 __('Area from','casawp'),
@@ -258,8 +258,8 @@ class FilterForm extends Form
                 __('Area to','casawp'),
                 $this->getAreaOptions(),
                 (isset($this->options['chosen_area_to']) ? $this->options['chosen_area_to'] : null)
-            );*/
-        //}
+            );
+        }
 
 
         // order by element
@@ -657,14 +657,17 @@ class FilterForm extends Form
                     $options[(string) $i] = $min;
                 } else if ($i == $max) {
                     $options[(string) $i] = $max;
-                } else if ($i % 100 === 0) {
+                } else if ($i % 10 === 0) {
                     $options[(string) $i] = $i;
                 }
             }
         } else {
             $options = array();
             for ($i=1; $i < 1000; $i = $i+1) {
-                $options[(string) $i] = $i;
+                if ($i % 10 === 0) {
+                    $options[(string) $i] = $i;
+                }
+                
             }
         }
 

@@ -90,7 +90,6 @@ class QueryService{
               }
             }
         }
-
         $this->query = array_merge($this->query, $query);
     }
 

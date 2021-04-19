@@ -1,66 +1,49 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: CASAWP\n"
+"POT-Creation-Date: 2021-04-19 09:00+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.2\n"
-"Project-Id-Version: CASAWP\n"
-"Language: it_CH\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-
-#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
-#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
-#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:10
-#: classes/Plugin.php:1583
-#: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
-#: theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
-msgid "Address"
-msgstr "Indirizzo"
-
-#: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
-#: theme-defaults/casawp/bootstrap3/contact-form.phtml:44
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:32
-msgid "Please fill out all the fields."
-msgstr "Compila tutti i campi richiesti."
-
-#: theme-defaults/casawp/bootstrap2/tabable.phtml:3
-#: theme-defaults/casawp/bootstrap3/tabable.phtml:3
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:6
-msgid "Base data"
-msgstr "Dati di base"
-
-#: theme-defaults/casawp/bootstrap2/tabable.phtml:8
-#: theme-defaults/casawp/bootstrap3/tabable.phtml:8
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:11
-msgid "Specifications"
-msgstr "Foglio dei dati"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: vendor\n"
 
 #: casawp.php:48
-msgid "Import your properties directly from your real-estate managment software!"
-msgstr "Importare le proprietà direttamente dal vostro software di gestione immobiliare!"
+msgid ""
+"Import your properties directly from your real-estate managment software!"
+msgstr ""
+"Importare le proprietà direttamente dal vostro software di gestione "
+"immobiliare!"
 
-#: classes/Archive.php:379 classes/Plugin.php:876 classes/Plugin.php:1676
+#: classes/Archive.php:379 classes/Plugin.php:1299 classes/Plugin.php:2335
 msgid "Buy"
 msgstr "Acquistare"
 
-#: classes/Archive.php:381 classes/Plugin.php:875 classes/Plugin.php:1778
+#: classes/Archive.php:381 classes/Plugin.php:1298 classes/Plugin.php:2437
 msgid "Rent"
 msgstr "Affittare"
 
-#: classes/Archive.php:401 classes/Plugin.php:890
+#: classes/Archive.php:401 classes/Plugin.php:1313
 msgid "Active"
 msgstr "Attivo"
 
-#: classes/Archive.php:403 classes/Conversion.php:485 classes/Plugin.php:891
+#: classes/Archive.php:403 classes/Conversion.php:485 classes/Plugin.php:1314
 #: modules/casawp/src/casawp/Service/Offer.php:259
 #: modules/casawp/src/casawp/Service/Offer.php:261
 #: modules/casawp/src/casawp/Service/Project.php:190
 #: modules/casawp/src/casawp/Service/Project.php:192
 #: theme-defaults/casawp/bootstrap2/datatable-property.phtml:3
 #: theme-defaults/casawp/bootstrap3/datatable-property.phtml:3
+#: theme-defaults/casawp/bootstrap4/datatable-property.phtml:3
 msgid "Reference"
 msgstr "Numero di referenza"
 
@@ -80,15 +63,15 @@ msgstr "Presi"
 msgid "Advanced Search"
 msgstr "Erweiterte Suche"
 
-#: classes/Archive.php:489 modules/casawp/src/casawp/Form/FilterForm.php:70
+#: classes/Archive.php:489 modules/casawp/src/casawp/Form/FilterForm.php:88
 msgid "Choose offer"
 msgstr "Scegli l'offerta"
 
-#: classes/Archive.php:496 modules/casawp/src/casawp/Form/FilterForm.php:81
+#: classes/Archive.php:496 modules/casawp/src/casawp/Form/FilterForm.php:99
 msgid "Choose category"
 msgstr "Scegli la categoria"
 
-#: classes/Archive.php:506 modules/casawp/src/casawp/Form/FilterForm.php:117
+#: classes/Archive.php:506 modules/casawp/src/casawp/Form/FilterForm.php:135
 msgid "Choose locality"
 msgstr "Scegli la località"
 
@@ -98,7 +81,8 @@ msgstr "Scegliere la disponibilità"
 
 #: classes/Archive.php:520
 #: theme-defaults/casawp/bootstrap2/archive-filter.phtml:29
-#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:237
+#: theme-defaults/casawp/bootstrap3/archive-filter.phtml:259
+#: theme-defaults/casawp/bootstrap4/archive-filter.phtml:292
 msgid "Search"
 msgstr "Cerca"
 
@@ -154,6 +138,7 @@ msgstr "Samoa Americane"
 #: modules/casawp/src/casawp/Service/Project.php:133
 #: theme-defaults/casawp/bootstrap2/address.phtml:14
 #: theme-defaults/casawp/bootstrap3/address.phtml:14
+#: theme-defaults/casawp/bootstrap4/address.phtml:14
 msgid "Austria"
 msgstr "Austria"
 
@@ -269,6 +254,7 @@ msgstr "Congo"
 #: modules/casawp/src/casawp/Service/Project.php:131
 #: theme-defaults/casawp/bootstrap2/address.phtml:12
 #: theme-defaults/casawp/bootstrap3/address.phtml:12
+#: theme-defaults/casawp/bootstrap4/address.phtml:12
 msgid "Switzerland"
 msgstr "Svizzera"
 
@@ -324,6 +310,7 @@ msgstr "Repubblica Ceca"
 #: modules/casawp/src/casawp/Service/Project.php:132
 #: theme-defaults/casawp/bootstrap2/address.phtml:13
 #: theme-defaults/casawp/bootstrap3/address.phtml:13
+#: theme-defaults/casawp/bootstrap4/address.phtml:13
 msgid "Germany"
 msgstr "Germania"
 
@@ -399,6 +386,7 @@ msgstr "Isole Faroe"
 #: modules/casawp/src/casawp/Service/Project.php:135
 #: theme-defaults/casawp/bootstrap2/address.phtml:16
 #: theme-defaults/casawp/bootstrap3/address.phtml:16
+#: theme-defaults/casawp/bootstrap4/address.phtml:16
 msgid "France"
 msgstr "Francia"
 
@@ -538,6 +526,7 @@ msgstr "Islanda"
 #: modules/casawp/src/casawp/Service/Project.php:134
 #: theme-defaults/casawp/bootstrap2/address.phtml:15
 #: theme-defaults/casawp/bootstrap3/address.phtml:15
+#: theme-defaults/casawp/bootstrap4/address.phtml:15
 msgid "Italy"
 msgstr "Italia"
 
@@ -1538,10 +1527,12 @@ msgid "Hotel"
 msgstr "Hotel"
 
 #: classes/Conversion.php:457
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:236
 msgid "Public transportation"
 msgstr "Mezzi di trasporto pubblici"
 
 #: classes/Conversion.php:458
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:252
 msgid "Shopping"
 msgstr "Acquisti"
 
@@ -1586,17 +1577,18 @@ msgid "Boat dock"
 msgstr "Molo per la barca"
 
 #: classes/Conversion.php:469
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:244
 msgid "Airport"
 msgstr "Aeroporto"
 
 #: classes/Conversion.php:476 modules/casawp/src/casawp/Service/Offer.php:93
 #: modules/casawp/src/casawp/Service/Offer.php:101
 #: modules/casawp/src/casawp/Service/Offer.php:109
-#: modules/casawp/src/casawp/Service/Offer.php:796
-#: modules/casawp/src/casawp/Service/Offer.php:817
-#: modules/casawp/src/casawp/Service/Offer.php:905
-#: modules/casawp/src/casawp/Service/Offer.php:937
-#: modules/casawp/src/casawp/Service/Offer.php:956
+#: modules/casawp/src/casawp/Service/Offer.php:804
+#: modules/casawp/src/casawp/Service/Offer.php:825
+#: modules/casawp/src/casawp/Service/Offer.php:928
+#: modules/casawp/src/casawp/Service/Offer.php:960
+#: modules/casawp/src/casawp/Service/Offer.php:979
 #: modules/casawp/src/casawp/Service/Project.php:86
 #: modules/casawp/src/casawp/Service/Project.php:94
 #: modules/casawp/src/casawp/Service/Project.php:102
@@ -1606,6 +1598,10 @@ msgstr "Aeroporto"
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:42
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:10
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:35
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:31
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:42
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:10
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:35
 msgid "On Request"
 msgstr "Su richiesta"
 
@@ -1613,7 +1609,7 @@ msgstr "Su richiesta"
 msgid "By Agreement"
 msgstr "su richiesta"
 
-#: classes/Conversion.php:478 modules/casawp/src/casawp/Service/Offer.php:819
+#: classes/Conversion.php:478 modules/casawp/src/casawp/Service/Offer.php:827
 msgid "Immediate"
 msgstr "Immediata"
 
@@ -1637,10 +1633,12 @@ msgid "Child friendly"
 msgstr "Adatto ai bambini"
 
 #: classes/Conversion.php:494
+#, php-format
 msgid "%d garages"
 msgstr "%d garage"
 
 #: classes/Conversion.php:501
+#, php-format
 msgid "%dx balconies"
 msgstr "%d x balcone"
 
@@ -1657,10 +1655,12 @@ msgid "Cable TV"
 msgstr "TV via cavo"
 
 #: classes/Conversion.php:510
+#, php-format
 msgid "%d Parking spaces"
 msgstr "%d Parcheggi"
 
 #: classes/Conversion.php:517
+#, php-format
 msgid "%d Pets allowed"
 msgstr "%d accettano animali domestici"
 
@@ -1673,6 +1673,7 @@ msgid "ISDN Anschluss"
 msgstr "Connessione ISDN"
 
 #: classes/Conversion.php:526
+#, php-format
 msgid "%d Restrooms"
 msgstr "%d Toilette"
 
@@ -1681,6 +1682,7 @@ msgid "Restrooms"
 msgstr "Toilette"
 
 #: classes/Conversion.php:533
+#, php-format
 msgid "%d elevators"
 msgstr "%d ascensori"
 
@@ -1776,715 +1778,697 @@ msgstr "Terreno fabbricabile"
 msgid "Flat sharing community"
 msgstr "In condivisione"
 
-#: classes/Plugin.php:126
+#: classes/Plugin.php:155
 msgid "Gennerated login page"
 msgstr ""
 
-#: classes/Plugin.php:149
+#: classes/Plugin.php:178
 msgid "Gennerated logout page"
 msgstr ""
 
-#: classes/Plugin.php:647 classes/Plugin.php:1730 classes/Plugin.php:1767
-#: classes/Single.php:832 classes/Single.php:942
-msgid "month"
-msgstr "al mese"
-
-#: classes/Plugin.php:648 classes/Plugin.php:1731 classes/Plugin.php:1768
-#: classes/Single.php:833 classes/Single.php:943
-msgid "week"
-msgstr "settimana"
-
-#: classes/Plugin.php:649 classes/Plugin.php:1732 classes/Plugin.php:1769
-#: classes/Single.php:834 classes/Single.php:944
-msgid "day"
-msgstr "giorno"
-
-#: classes/Plugin.php:650 classes/Plugin.php:1733 classes/Plugin.php:1770
-#: classes/Single.php:835 classes/Single.php:945
-msgid "year"
-msgstr "all'anno"
-
-#: classes/Plugin.php:651 classes/Plugin.php:1734 classes/Plugin.php:1771
-#: classes/Single.php:836 classes/Single.php:946
-msgid "hour"
-msgstr "ora"
-
-#: classes/Plugin.php:1269
-msgid "Custom Text Field"
-msgstr "Campo di testo personalizzato"
-
-#: classes/Plugin.php:1273
-msgid "Original filename"
-msgstr "Original filename"
-
-#: classes/Plugin.php:1484 classes/Plugin.php:2048
-msgid "CASAWP ID"
-msgstr ""
-
-#: classes/Plugin.php:1491 classes/Plugin.php:2055
-msgid "Reference Nr."
-msgstr "Riferimento Nr."
-
-#: classes/Plugin.php:1498 classes/Plugin.php:2062
-msgid "Identifiers"
-msgstr "Identificatori"
-
-#: classes/Plugin.php:1520 classes/Plugin.php:1826
-#: modules/casawp/src/casawp/Form/ContactForm.php:71
-#: modules/casawp/src/casawp/Service/Offer.php:874
-msgid "Street"
-msgstr "Indirizzo"
-
-#: classes/Plugin.php:1527
-msgid "Nr."
-msgstr "N."
-
-#: classes/Plugin.php:1534
-msgid "Addition"
-msgstr "Addizione"
-
-#: classes/Plugin.php:1541 classes/Plugin.php:1840
-msgid "Postal Code"
-msgstr "C.A.P."
-
-#: classes/Plugin.php:1548
-msgid "City"
-msgstr "Città"
-
-#: classes/Plugin.php:1555 classes/Plugin.php:1854
-#: modules/casawp/src/casawp/Form/FilterForm.php:98
-msgid "Region"
-msgstr "Regione"
-
-#: classes/Plugin.php:1562 classes/Plugin.php:1861
-#: modules/casawp/src/casawp/Form/ContactForm.php:110
-msgid "Country"
-msgstr "Paese"
-
-#: classes/Plugin.php:1569
-msgid "Latitude"
-msgstr "Latitudine"
-
-#: classes/Plugin.php:1576
-msgid "Longitude"
-msgstr "Longitudine"
-
-#: classes/Plugin.php:1606
-msgid "Start"
-msgstr "Inizio"
-
-#: classes/Plugin.php:1618
-msgid "Currency"
-msgstr "Valuta"
-
-#: classes/Plugin.php:1632
-msgid "General settings"
-msgstr "Configurazione generale"
-
-#: classes/Plugin.php:1655
-#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:27
-#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:27
-#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
-msgid "Price"
-msgstr "Prezzo"
-
-#: classes/Plugin.php:1664
-msgid "Price property segment"
-msgstr "Segmento di prezzo proprietà"
-
-#: classes/Plugin.php:1669 classes/Plugin.php:1718 classes/Plugin.php:1755
-msgid "All"
-msgstr "Tutti"
-
-#: classes/Plugin.php:1704
-msgid "Net Price"
-msgstr "Affitto netto"
-
-#: classes/Plugin.php:1713
-msgid "Net price property segment"
-msgstr "Segmento di proprietà prezzo netto"
-
-#: classes/Plugin.php:1725
-msgid "Net price time segment"
-msgstr "Segmento di tempo prezzo netto"
-
-#: classes/Plugin.php:1741
-msgid "Gross Price"
-msgstr "Affitto lordo"
-
-#: classes/Plugin.php:1750
-msgid "Gross price property segment"
-msgstr "Segmento di proprietà prezzo lordo"
-
-#: classes/Plugin.php:1762
-msgid "Gross price time segment"
-msgstr "Segmento di tempo prezzo lordo"
-
-#: classes/Plugin.php:1805 modules/casawp/src/casawp/Form/ContactForm.php:63
-msgid "Legal name"
-msgstr "Nome Azienda"
-
-#: classes/Plugin.php:1812
-msgid "Brand"
-msgstr "Marchio"
-
-#: classes/Plugin.php:1819 modules/casawp/src/casawp/Form/ContactForm.php:119
-#: theme-defaults/casawp/bootstrap2/seller.phtml:22
-#: theme-defaults/casawp/bootstrap3/seller.phtml:22
-msgid "Phone"
-msgstr "Telefono"
-
-#: classes/Plugin.php:1833
-msgid "Street addition"
-msgstr "Aggiunta di strada"
-
-#: classes/Plugin.php:1847 modules/casawp/src/casawp/Form/ContactForm.php:88
-#: modules/casawp/src/casawp/Service/Offer.php:881
-msgid "Locality"
-msgstr "Località"
-
-#: classes/Plugin.php:1868
-msgid "P.O. Box"
-msgstr "Casella postale"
-
-#: classes/Plugin.php:1875
-msgid "Organization"
-msgstr "Organizzazione"
-
-#: classes/Plugin.php:1900 modules/casawp/src/casawp/Form/ContactForm.php:135
-#: theme-defaults/casawp/bootstrap2/sales-person.phtml:18
-#: theme-defaults/casawp/bootstrap3/sales-person.phtml:28
-#: theme-defaults/casawp/bootstrap3/visit-person.phtml:23
-msgid "Email"
-msgstr "E-mail"
-
-#: classes/Plugin.php:1907
-msgid "Function"
-msgstr "Funzione"
-
-#: classes/Plugin.php:1914
-msgid "Firstname"
-msgstr "Cognome"
-
-#: classes/Plugin.php:1921
-msgid "Lastname"
-msgstr ""
-
-#: classes/Plugin.php:1928 theme-defaults/casawp/bootstrap2/seller.phtml:28
-#: theme-defaults/casawp/bootstrap3/seller.phtml:28
-msgid "Fax"
-msgstr "Fax"
-
-#: classes/Plugin.php:1935
-msgid "Direct phone"
-msgstr "Telefono diretto"
-
-#: classes/Plugin.php:1942
-msgid "Mobile phone"
-msgstr "Telefono cellulare"
-
-#: classes/Plugin.php:1949
-msgid "Gender"
-msgstr "Sesso"
-
-#: classes/Plugin.php:1954
-msgid "Unknown"
-msgstr "non noto"
-
-#: classes/Plugin.php:1955
-msgid "Male"
-msgstr "Maschio"
-
-#: classes/Plugin.php:1956
-msgid "Female"
-msgstr "Femmina"
-
-#: classes/Plugin.php:1963
-msgid "Note"
-msgstr "Nota"
-
-#: classes/Plugin.php:1971
-msgid "Display person"
-msgstr "Persona di visualizzazione"
-
-#: classes/Plugin.php:1972
-msgid "Inquiry recipient"
-msgstr "Destinatario della tua richiesta"
-
-#: classes/Plugin.php:1973
-#: theme-defaults/casawp/bootstrap3/visit-person.phtml:7
-msgid "Visit person"
-msgstr "Visitare di persona"
-
-#: classes/Plugin.php:2087 classes/Plugin.php:2098
-msgid "Properties"
-msgstr "Proprietà"
-
-#: classes/Plugin.php:2088
+#: classes/Plugin.php:610 classes/Plugin.php:2747
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:10
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:4
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:10
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:4
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:10
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:4
 msgid "Property"
 msgstr "Proprietà"
 
-#: classes/Plugin.php:2089 classes/Plugin.php:2124 classes/Plugin.php:2161
+#: classes/Plugin.php:835 classes/Plugin.php:2389 classes/Plugin.php:2426
+#: classes/Single.php:832 classes/Single.php:942
+msgid "month"
+msgstr "al mese"
+
+#: classes/Plugin.php:836 classes/Plugin.php:2390 classes/Plugin.php:2427
+#: classes/Single.php:833 classes/Single.php:943
+msgid "week"
+msgstr "settimana"
+
+#: classes/Plugin.php:837 classes/Plugin.php:2391 classes/Plugin.php:2428
+#: classes/Single.php:834 classes/Single.php:944
+msgid "day"
+msgstr "giorno"
+
+#: classes/Plugin.php:838 classes/Plugin.php:2392 classes/Plugin.php:2429
+#: classes/Single.php:835 classes/Single.php:945
+msgid "year"
+msgstr "all'anno"
+
+#: classes/Plugin.php:839 classes/Plugin.php:2393 classes/Plugin.php:2430
+#: classes/Single.php:836 classes/Single.php:946
+msgid "hour"
+msgstr "ora"
+
+#: classes/Plugin.php:1904
+msgid "Custom Text Field"
+msgstr "Campo di testo personalizzato"
+
+#: classes/Plugin.php:1908
+msgid "Original filename"
+msgstr "Original filename"
+
+#: classes/Plugin.php:2136 classes/Plugin.php:2707
+msgid "CASAWP ID"
+msgstr ""
+
+#: classes/Plugin.php:2143 classes/Plugin.php:2714
+msgid "Reference Nr."
+msgstr "Riferimento Nr."
+
+#: classes/Plugin.php:2150 classes/Plugin.php:2721
+msgid "Identifiers"
+msgstr "Identificatori"
+
+#: classes/Plugin.php:2172 classes/Plugin.php:2485
+#: modules/casawp/src/casawp/Form/ContactForm.php:80
+#: modules/casawp/src/casawp/Service/Offer.php:897
+msgid "Street"
+msgstr "Indirizzo"
+
+#: classes/Plugin.php:2179
+msgid "Nr."
+msgstr "N."
+
+#: classes/Plugin.php:2186
+msgid "Addition"
+msgstr "Addizione"
+
+#: classes/Plugin.php:2193 classes/Plugin.php:2499
+msgid "Postal Code"
+msgstr "C.A.P."
+
+#: classes/Plugin.php:2200
+msgid "City"
+msgstr "Città"
+
+#: classes/Plugin.php:2207 classes/Plugin.php:2513
+#: modules/casawp/src/casawp/Form/FilterForm.php:116
+msgid "Region"
+msgstr "Regione"
+
+#: classes/Plugin.php:2214 classes/Plugin.php:2520
+#: modules/casawp/src/casawp/Form/ContactForm.php:138
+msgid "Country"
+msgstr "Paese"
+
+#: classes/Plugin.php:2221
+msgid "Latitude"
+msgstr "Latitudine"
+
+#: classes/Plugin.php:2228
+msgid "Longitude"
+msgstr "Longitudine"
+
+#: classes/Plugin.php:2235
+#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
+#: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
+#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
+#: theme-defaults/casawp/bootstrap3/datatable-property.phtml:10
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:19
+#: theme-defaults/casawp/bootstrap4/datatable-property.phtml:10
+msgid "Address"
+msgstr "Indirizzo"
+
+#: classes/Plugin.php:2258
+msgid "Start"
+msgstr "Inizio"
+
+#: classes/Plugin.php:2270
+msgid "Currency"
+msgstr "Valuta"
+
+#: classes/Plugin.php:2284
+msgid "Last Import Hash"
+msgstr ""
+
+#: classes/Plugin.php:2291
+msgid "General settings"
+msgstr "Configurazione generale"
+
+#: classes/Plugin.php:2314 modules/casawp/src/casawp/Form/FilterForm.php:273
+#: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:27
+#: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:27
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:27
+msgid "Price"
+msgstr "Prezzo"
+
+#: classes/Plugin.php:2323
+msgid "Price property segment"
+msgstr "Segmento di prezzo proprietà"
+
+#: classes/Plugin.php:2328 classes/Plugin.php:2377 classes/Plugin.php:2414
+msgid "All"
+msgstr "Tutti"
+
+#: classes/Plugin.php:2363
+msgid "Net Price"
+msgstr "Affitto netto"
+
+#: classes/Plugin.php:2372
+msgid "Net price property segment"
+msgstr "Segmento di proprietà prezzo netto"
+
+#: classes/Plugin.php:2384
+msgid "Net price time segment"
+msgstr "Segmento di tempo prezzo netto"
+
+#: classes/Plugin.php:2400
+msgid "Gross Price"
+msgstr "Affitto lordo"
+
+#: classes/Plugin.php:2409
+msgid "Gross price property segment"
+msgstr "Segmento di proprietà prezzo lordo"
+
+#: classes/Plugin.php:2421
+msgid "Gross price time segment"
+msgstr "Segmento di tempo prezzo lordo"
+
+#: classes/Plugin.php:2464 modules/casawp/src/casawp/Form/ContactForm.php:69
+msgid "Legal name"
+msgstr "Nome Azienda"
+
+#: classes/Plugin.php:2471
+msgid "Brand"
+msgstr "Marchio"
+
+#: classes/Plugin.php:2478 modules/casawp/src/casawp/Form/ContactForm.php:150
+#: theme-defaults/casawp/bootstrap2/seller.phtml:22
+#: theme-defaults/casawp/bootstrap3/seller.phtml:22
+#: theme-defaults/casawp/bootstrap4/seller.phtml:22
+msgid "Phone"
+msgstr "Telefono"
+
+#: classes/Plugin.php:2492
+msgid "Street addition"
+msgstr "Aggiunta di strada"
+
+#: classes/Plugin.php:2506 modules/casawp/src/casawp/Form/ContactForm.php:103
+#: modules/casawp/src/casawp/Service/Offer.php:904
+msgid "Locality"
+msgstr "Località"
+
+#: classes/Plugin.php:2527
+msgid "P.O. Box"
+msgstr "Casella postale"
+
+#: classes/Plugin.php:2534
+msgid "Organization"
+msgstr "Organizzazione"
+
+#: classes/Plugin.php:2559 modules/casawp/src/casawp/Form/ContactForm.php:172
+#: theme-defaults/casawp/bootstrap2/sales-person.phtml:18
+#: theme-defaults/casawp/bootstrap3/sales-person.phtml:28
+#: theme-defaults/casawp/bootstrap3/visit-person.phtml:23
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:28
+#: theme-defaults/casawp/bootstrap4/visit-person.phtml:23
+msgid "Email"
+msgstr "E-mail"
+
+#: classes/Plugin.php:2566
+msgid "Function"
+msgstr "Funzione"
+
+#: classes/Plugin.php:2573
+msgid "Firstname"
+msgstr "Cognome"
+
+#: classes/Plugin.php:2580
+msgid "Lastname"
+msgstr ""
+
+#: classes/Plugin.php:2587 theme-defaults/casawp/bootstrap2/seller.phtml:28
+#: theme-defaults/casawp/bootstrap3/seller.phtml:28
+#: theme-defaults/casawp/bootstrap4/seller.phtml:28
+msgid "Fax"
+msgstr "Fax"
+
+#: classes/Plugin.php:2594
+msgid "Direct phone"
+msgstr "Telefono diretto"
+
+#: classes/Plugin.php:2601
+msgid "Mobile phone"
+msgstr "Telefono cellulare"
+
+#: classes/Plugin.php:2608
+msgid "Gender"
+msgstr "Sesso"
+
+#: classes/Plugin.php:2613
+msgid "Unknown"
+msgstr "non noto"
+
+#: classes/Plugin.php:2614
+msgid "Male"
+msgstr "Maschio"
+
+#: classes/Plugin.php:2615
+msgid "Female"
+msgstr "Femmina"
+
+#: classes/Plugin.php:2622
+msgid "Note"
+msgstr "Nota"
+
+#: classes/Plugin.php:2630
+msgid "Display person"
+msgstr "Persona di visualizzazione"
+
+#: classes/Plugin.php:2631
+msgid "Inquiry recipient"
+msgstr "Destinatario della tua richiesta"
+
+#: classes/Plugin.php:2632
+#: theme-defaults/casawp/bootstrap3/visit-person.phtml:7
+#: theme-defaults/casawp/bootstrap4/visit-person.phtml:7
+msgid "Visit person"
+msgstr "Visitare di persona"
+
+#: classes/Plugin.php:2746 classes/Plugin.php:2757
+msgid "Properties"
+msgstr "Proprietà"
+
+#: classes/Plugin.php:2748 classes/Plugin.php:2783
 msgid "Add New"
 msgstr "Aggiungi nuovo"
 
-#: classes/Plugin.php:2090
+#: classes/Plugin.php:2749
 msgid "Add New Property"
 msgstr "Aggiungi Nuova proprietà"
 
-#: classes/Plugin.php:2091
+#: classes/Plugin.php:2750
 msgid "Edit Property"
 msgstr "Modifica proprietà"
 
-#: classes/Plugin.php:2092
+#: classes/Plugin.php:2751
 msgid "New Property"
 msgstr "Nuova proprietà"
 
-#: classes/Plugin.php:2093
+#: classes/Plugin.php:2752
 msgid "All Properties"
 msgstr "Tutte le proprietà"
 
-#: classes/Plugin.php:2094
+#: classes/Plugin.php:2753
 msgid "View Property"
 msgstr "Vedi proprietà"
 
-#: classes/Plugin.php:2095
+#: classes/Plugin.php:2754
 msgid "Search Properties"
 msgstr "Ricerca Proprietà"
 
-#: classes/Plugin.php:2096 classes/Plugin.php:2131
+#: classes/Plugin.php:2755 classes/Plugin.php:2790
 msgid "No properties found"
 msgstr "Nessun immobile trovato"
 
-#: classes/Plugin.php:2097 classes/Plugin.php:2132
+#: classes/Plugin.php:2756 classes/Plugin.php:2791
 msgid "No properties found in Trash"
 msgstr "Nessun immobile trovato nel cestino"
 
-#: classes/Plugin.php:2122 classes/Plugin.php:2133
+#: classes/Plugin.php:2781 classes/Plugin.php:2792
 msgid "Projects"
 msgstr ""
 
-#: classes/Plugin.php:2123
+#: classes/Plugin.php:2782
 msgid "Project"
 msgstr ""
 
-#: classes/Plugin.php:2125
+#: classes/Plugin.php:2784
 msgid "Add New Project"
 msgstr ""
 
-#: classes/Plugin.php:2126
+#: classes/Plugin.php:2785
 msgid "Edit Project"
 msgstr ""
 
-#: classes/Plugin.php:2127
+#: classes/Plugin.php:2786
 msgid "New Project"
 msgstr ""
 
-#: classes/Plugin.php:2128
+#: classes/Plugin.php:2787
 msgid "All Projects"
 msgstr ""
 
-#: classes/Plugin.php:2129
+#: classes/Plugin.php:2788
 msgid "View Project"
 msgstr ""
 
-#: classes/Plugin.php:2130
+#: classes/Plugin.php:2789
 msgid "Search Projects"
 msgstr ""
 
-#: classes/Plugin.php:2159 classes/Plugin.php:2170
-msgid "Inquiries"
-msgstr "Inchiesta"
-
-#: classes/Plugin.php:2160
-msgid "Inquiry"
-msgstr "Inchiesta"
-
-#: classes/Plugin.php:2162
-msgid "Add New inquiry"
-msgstr "Aggiungi nuova inchiesta"
-
-#: classes/Plugin.php:2163
-msgid "Edit Inquiry"
-msgstr "Modifica proprietà"
-
-#: classes/Plugin.php:2164
-msgid "New Inquiry"
-msgstr "Nuova richiesta"
-
-#: classes/Plugin.php:2165
-msgid "All Inquiries"
-msgstr "Tutte le richieste"
-
-#: classes/Plugin.php:2166
-msgid "View Inquiry"
-msgstr ""
-
-#: classes/Plugin.php:2167
-msgid "Search Inquiries"
-msgstr ""
-
-#: classes/Plugin.php:2168
-msgid "No inquiries found"
-msgstr ""
-
-#: classes/Plugin.php:2169
-msgid "No inquiries found in Trash"
-msgstr ""
-
-#: classes/Plugin.php:2195
+#: classes/Plugin.php:2856
 msgid "Property categories"
 msgstr "Categorie di proprietà"
 
-#: classes/Plugin.php:2196 classes/Plugin.php:2205
-#: modules/casawp/src/casawp/Form/FilterForm.php:80
+#: classes/Plugin.php:2857 classes/Plugin.php:2866
+#: modules/casawp/src/casawp/Form/FilterForm.php:98
 msgid "Category"
 msgstr "Categoria"
 
-#: classes/Plugin.php:2197 classes/Plugin.php:2222
+#: classes/Plugin.php:2858 classes/Plugin.php:2883
 msgid "Search Categories"
 msgstr "Cerca Categorie"
 
-#: classes/Plugin.php:2198 classes/Plugin.php:2223
+#: classes/Plugin.php:2859 classes/Plugin.php:2884
 msgid "All Categories"
 msgstr "Tutte le categorie"
 
-#: classes/Plugin.php:2199
+#: classes/Plugin.php:2860
 msgid "Parent Category"
 msgstr "Categoria principale"
 
-#: classes/Plugin.php:2200
+#: classes/Plugin.php:2861
 msgid "Parent Category:"
 msgstr "Categoria principale:"
 
-#: classes/Plugin.php:2201
+#: classes/Plugin.php:2862
 msgid "Edit Category"
 msgstr "Modifica categoria"
 
-#: classes/Plugin.php:2202
+#: classes/Plugin.php:2863
 msgid "Update Category"
 msgstr "Aggiornamento Categoria"
 
-#: classes/Plugin.php:2203
+#: classes/Plugin.php:2864
 msgid "Add New Category"
 msgstr "Aggiungi Nuova Categoria"
 
-#: classes/Plugin.php:2204
+#: classes/Plugin.php:2865
 msgid "New Category Name"
 msgstr "Nuova Categoria Nome"
 
-#: classes/Plugin.php:2220
+#: classes/Plugin.php:2881
 msgid "Property features"
 msgstr ""
 
-#: classes/Plugin.php:2221 classes/Plugin.php:2230
-#: modules/casawp/src/casawp/Form/FilterForm.php:107
+#: classes/Plugin.php:2882 classes/Plugin.php:2891
+#: modules/casawp/src/casawp/Form/FilterForm.php:125
 msgid "Feature"
 msgstr "Caratteristica"
 
-#: classes/Plugin.php:2224
+#: classes/Plugin.php:2885
 msgid "Parent Feature"
 msgstr ""
 
-#: classes/Plugin.php:2225
+#: classes/Plugin.php:2886
 msgid "Parent Feature:"
 msgstr ""
 
-#: classes/Plugin.php:2226
+#: classes/Plugin.php:2887
 msgid "Edit Feature"
 msgstr "Modifica Caratteristica"
 
-#: classes/Plugin.php:2227
+#: classes/Plugin.php:2888
 msgid "Update Feature"
 msgstr ""
 
-#: classes/Plugin.php:2228
+#: classes/Plugin.php:2889
 msgid "Add New Feature"
 msgstr ""
 
-#: classes/Plugin.php:2229
+#: classes/Plugin.php:2890
 msgid "New Feature Name"
 msgstr ""
 
-#: classes/Plugin.php:2246
+#: classes/Plugin.php:2907
 msgid "Property utilities"
 msgstr ""
 
-#: classes/Plugin.php:2247 classes/Plugin.php:2256
-#: modules/casawp/src/casawp/Form/FilterForm.php:89
+#: classes/Plugin.php:2908 classes/Plugin.php:2917
+#: modules/casawp/src/casawp/Form/FilterForm.php:107
 msgid "Utility"
 msgstr "Scopo"
 
-#: classes/Plugin.php:2248
+#: classes/Plugin.php:2909
 msgid "Search Utilities"
 msgstr ""
 
-#: classes/Plugin.php:2249
+#: classes/Plugin.php:2910
 msgid "All Utilities"
 msgstr ""
 
-#: classes/Plugin.php:2250
+#: classes/Plugin.php:2911
 msgid "Parent Utility"
 msgstr ""
 
-#: classes/Plugin.php:2251
+#: classes/Plugin.php:2912
 msgid "Parent Utility:"
 msgstr ""
 
-#: classes/Plugin.php:2252
+#: classes/Plugin.php:2913
 msgid "Edit Utility"
 msgstr ""
 
-#: classes/Plugin.php:2253
+#: classes/Plugin.php:2914
 msgid "Update Utility"
 msgstr ""
 
-#: classes/Plugin.php:2254
+#: classes/Plugin.php:2915
 msgid "Add New Utility"
 msgstr ""
 
-#: classes/Plugin.php:2255
+#: classes/Plugin.php:2916
 msgid "New Utility Name"
 msgstr ""
 
-#: classes/Plugin.php:2272
+#: classes/Plugin.php:2933
 msgid "Property locations"
 msgstr "Posizioni degli immobili per"
 
-#: classes/Plugin.php:2273 classes/Plugin.php:2282
-#: modules/casawp/src/casawp/Form/FilterForm.php:116
+#: classes/Plugin.php:2934 classes/Plugin.php:2943
+#: modules/casawp/src/casawp/Form/FilterForm.php:134
+#: modules/casawp/src/casawp/Form/FilterForm.php:271
 msgid "Location"
 msgstr "Località"
 
-#: classes/Plugin.php:2274
+#: classes/Plugin.php:2935
 msgid "Search Locations"
 msgstr "Percorsi di ricerca"
 
-#: classes/Plugin.php:2275
+#: classes/Plugin.php:2936
 msgid "All Locations"
 msgstr "Tutte le Località"
 
-#: classes/Plugin.php:2276
+#: classes/Plugin.php:2937
 msgid "Parent Location"
 msgstr "Parent Localit"
 
-#: classes/Plugin.php:2277
+#: classes/Plugin.php:2938
 msgid "Parent Location:"
 msgstr "Parent Località:"
 
-#: classes/Plugin.php:2278
+#: classes/Plugin.php:2939
 msgid "Edit Location"
 msgstr "Modifica Località"
 
-#: classes/Plugin.php:2279
+#: classes/Plugin.php:2940
 msgid "Update Location"
 msgstr "Aggiorna Località"
 
-#: classes/Plugin.php:2280
+#: classes/Plugin.php:2941
 msgid "Add New Location"
 msgstr "Aggiungi nuova Località"
 
-#: classes/Plugin.php:2281
+#: classes/Plugin.php:2942
 msgid "New Location Name"
 msgstr "New Posizione Nome"
 
-#: classes/Plugin.php:2298
+#: classes/Plugin.php:2959
 msgid "Property salestypes"
 msgstr "Salestypes strutturaLe"
 
-#: classes/Plugin.php:2299 classes/Plugin.php:2311
+#: classes/Plugin.php:2960 classes/Plugin.php:2972
 msgid "Salestype"
 msgstr "Tipo di vendita"
 
-#: classes/Plugin.php:2300
+#: classes/Plugin.php:2961
 msgid "Search Salestypes"
 msgstr "Cerca Salestypes"
 
-#: classes/Plugin.php:2301
+#: classes/Plugin.php:2962
 msgid "Popular Salestypes"
 msgstr "Salestypes popolari"
 
-#: classes/Plugin.php:2302
+#: classes/Plugin.php:2963
 msgid "All Salestypes"
 msgstr "Tutti Salestypes"
 
-#: classes/Plugin.php:2303
+#: classes/Plugin.php:2964
 msgid "Edit Salestype"
 msgstr "Modifica Tipo di vendita"
 
-#: classes/Plugin.php:2304
+#: classes/Plugin.php:2965
 msgid "Update Salestype"
 msgstr "Aggiornamento Tipo di vendita"
 
-#: classes/Plugin.php:2305
+#: classes/Plugin.php:2966
 msgid "Add New Salestype"
 msgstr "Aggiungi nuovo Tipo di vendita"
 
-#: classes/Plugin.php:2306
+#: classes/Plugin.php:2967
 msgid "New Salestype Name"
 msgstr "Nuovo Nome Tipo di vendita"
 
-#: classes/Plugin.php:2307
+#: classes/Plugin.php:2968
 msgid "Separate salestypes with commas"
 msgstr "Salestypes separati con virgole"
 
-#: classes/Plugin.php:2308
+#: classes/Plugin.php:2969
 msgid "Add or remove salestypes"
 msgstr "Aggiungere o rimuovere salestypes"
 
-#: classes/Plugin.php:2309 classes/Plugin.php:2367
+#: classes/Plugin.php:2970 classes/Plugin.php:3028
 msgid "Choose from the most used salestypes"
 msgstr "Scegliere tra le salestypes più utilizzati"
 
-#: classes/Plugin.php:2310
+#: classes/Plugin.php:2971
 msgid "No Salestypes found."
 msgstr "Nessun Salestypes trovato."
 
-#: classes/Plugin.php:2327
+#: classes/Plugin.php:2988
 msgid "Property availability"
 msgstr ""
 
-#: classes/Plugin.php:2328 classes/Plugin.php:2340
+#: classes/Plugin.php:2989 classes/Plugin.php:3001
 msgid "Availability"
 msgstr "Disponibilità"
 
-#: classes/Plugin.php:2329
+#: classes/Plugin.php:2990
 msgid "Search availabilities"
 msgstr ""
 
-#: classes/Plugin.php:2330
+#: classes/Plugin.php:2991
 msgid "Popular Availabilities"
 msgstr ""
 
-#: classes/Plugin.php:2331
+#: classes/Plugin.php:2992
 msgid "All Availabilities"
 msgstr ""
 
-#: classes/Plugin.php:2332
+#: classes/Plugin.php:2993
 msgid "Edit Availability"
 msgstr ""
 
-#: classes/Plugin.php:2333
+#: classes/Plugin.php:2994
 msgid "Update Availability"
 msgstr ""
 
-#: classes/Plugin.php:2334
+#: classes/Plugin.php:2995
 msgid "Add New Availability"
 msgstr ""
 
-#: classes/Plugin.php:2335
+#: classes/Plugin.php:2996
 msgid "New Availability Name"
 msgstr ""
 
-#: classes/Plugin.php:2336
+#: classes/Plugin.php:2997
 msgid "Separate availabilities with commas"
 msgstr ""
 
-#: classes/Plugin.php:2337
+#: classes/Plugin.php:2998
 msgid "Add or remove availabilities"
 msgstr ""
 
-#: classes/Plugin.php:2338
+#: classes/Plugin.php:2999
 msgid "Choose from the most used availabilities"
 msgstr ""
 
-#: classes/Plugin.php:2339
+#: classes/Plugin.php:3000
 msgid "No Availabilities found."
 msgstr ""
 
-#: classes/Plugin.php:2356
+#: classes/Plugin.php:3017
 msgid "Property regions"
 msgstr ""
 
-#: classes/Plugin.php:2357 classes/Plugin.php:2369
+#: classes/Plugin.php:3018 classes/Plugin.php:3030
 msgid "Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:2358
+#: classes/Plugin.php:3019
 msgid "Search Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:2359
+#: classes/Plugin.php:3020
 msgid "Popular Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:2360
+#: classes/Plugin.php:3021
 msgid "All Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:2361
+#: classes/Plugin.php:3022
 msgid "Edit Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:2362
+#: classes/Plugin.php:3023
 msgid "Update Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:2363
+#: classes/Plugin.php:3024
 msgid "Add New Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:2364
+#: classes/Plugin.php:3025
 msgid "New Region Segment Name"
 msgstr ""
 
-#: classes/Plugin.php:2365
+#: classes/Plugin.php:3026
 msgid "Separate regions with commas"
 msgstr ""
 
-#: classes/Plugin.php:2366
+#: classes/Plugin.php:3027
 msgid "Add or remove regions"
 msgstr ""
 
-#: classes/Plugin.php:2368
+#: classes/Plugin.php:3029
 msgid "No Region Segments found."
 msgstr ""
 
-#: classes/Plugin.php:2385
+#: classes/Plugin.php:3046
 msgid "Property Attachment Types"
 msgstr "Tipi di allegati Proprietà"
 
-#: classes/Plugin.php:2386 classes/Plugin.php:2395
+#: classes/Plugin.php:3047 classes/Plugin.php:3056
 msgid "Attachment Type"
 msgstr "Tipo di allegato"
 
-#: classes/Plugin.php:2387
+#: classes/Plugin.php:3048
 msgid "Search Attachment Types"
 msgstr "Tipi di Ricerca allegati"
 
-#: classes/Plugin.php:2388
+#: classes/Plugin.php:3049
 msgid "All Attachment Types"
 msgstr "Tutti i tipi di allegati"
 
-#: classes/Plugin.php:2389
+#: classes/Plugin.php:3050
 msgid "Parent Attachment Type"
 msgstr "Parent Attachment Type"
 
-#: classes/Plugin.php:2390
+#: classes/Plugin.php:3051
 msgid "Parent Attachment Type:"
 msgstr "Parent Tipo Allegato:"
 
-#: classes/Plugin.php:2391
+#: classes/Plugin.php:3052
 msgid "Edit Attachment Type"
 msgstr "Modifica Attachment Type"
 
-#: classes/Plugin.php:2392
+#: classes/Plugin.php:3053
 msgid "Update Attachment Type"
 msgstr "Aggiornamento Attachment Type"
 
-#: classes/Plugin.php:2393
+#: classes/Plugin.php:3054
 msgid "Add New Attachment Type"
 msgstr "Aggiungi nuovo tipo allegato"
 
-#: classes/Plugin.php:2394
+#: classes/Plugin.php:3055
 msgid "New Attachment Type Name"
 msgstr "Nuovo allegato Tipo Nome"
 
-#: classes/Plugin.php:2415
+#: classes/Plugin.php:3076
 msgid "Additional Meta Fields"
 msgstr ""
 
@@ -2498,6 +2482,7 @@ msgstr "contattare direttamente l’offerente"
 
 #: classes/Single.php:743 theme-defaults/casawp/bootstrap2/sales-person.phtml:1
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:1
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:1
 msgid "Contact person"
 msgstr "Persona di contatto"
 
@@ -2505,11 +2490,14 @@ msgstr "Persona di contatto"
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:24
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:34
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:29
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:34
+#: theme-defaults/casawp/bootstrap4/visit-person.phtml:29
 msgid "Phone direct"
 msgstr "Telefono diretto"
 
 #: classes/Single.php:780 theme-defaults/casawp/bootstrap2/share-widget.phtml:3
 #: theme-defaults/casawp/bootstrap3/share-widget.phtml:3
+#: theme-defaults/casawp/bootstrap4/share-widget.phtml:3
 msgid "Share"
 msgstr "Consigliare"
 
@@ -2517,7 +2505,8 @@ msgstr "Consigliare"
 msgid "and"
 msgstr "e"
 
-#: classes/Single.php:1071 theme-defaults/casawp/bootstrap3/datatable.phtml:39
+#: classes/Single.php:1077 theme-defaults/casawp/bootstrap3/datatable.phtml:39
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:39
 msgid "Document"
 msgstr "Documento"
 
@@ -2537,129 +2526,215 @@ msgstr "Signore"
 msgid "First name"
 msgstr "Nome"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:55
+#: modules/casawp/src/casawp/Form/ContactForm.php:58
 msgid "Last name"
 msgstr "Cognome"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:79
+#: modules/casawp/src/casawp/Form/ContactForm.php:91
 msgid "ZIP"
 msgstr "CAP"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:103
+#: modules/casawp/src/casawp/Form/ContactForm.php:131
 msgid "Other"
 msgstr "Altri"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:127
+#: modules/casawp/src/casawp/Form/ContactForm.php:161
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:29
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:39
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:34
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:39
+#: theme-defaults/casawp/bootstrap4/visit-person.phtml:34
 msgid "Mobile"
 msgstr "Telefono mobile"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:143
+#: modules/casawp/src/casawp/Form/ContactForm.php:183
 msgid "Message"
 msgstr "Messaggio"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:60
-#: modules/casawp/src/casawp/Form/FilterForm.php:69
+#: modules/casawp/src/casawp/Form/FilterForm.php:78
+#: modules/casawp/src/casawp/Form/FilterForm.php:87
 msgid "Sales type"
 msgstr "Tipo Vendita"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:90
+#: modules/casawp/src/casawp/Form/FilterForm.php:108
 msgid "Choose utility"
 msgstr "Scegli scopo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:99
+#: modules/casawp/src/casawp/Form/FilterForm.php:117
 msgid "Choose region"
 msgstr "Scegli regione"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:108
+#: modules/casawp/src/casawp/Form/FilterForm.php:126
 msgid "Choose feature"
 msgstr "Scegli caratteristica"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:125
-#: modules/casawp/src/casawp/Form/FilterForm.php:126
+#: modules/casawp/src/casawp/Form/FilterForm.php:143
+msgid "Countries"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:144
+msgid "Choose country"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:152
+#: modules/casawp/src/casawp/Form/FilterForm.php:153
 msgid "Rooms from"
 msgstr "Locali da"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:132
-#: modules/casawp/src/casawp/Form/FilterForm.php:133
+#: modules/casawp/src/casawp/Form/FilterForm.php:159
+#: modules/casawp/src/casawp/Form/FilterForm.php:160
 msgid "Rooms to"
 msgstr "Locali a"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:142
-#: modules/casawp/src/casawp/Form/FilterForm.php:143
+#: modules/casawp/src/casawp/Form/FilterForm.php:169
+#: modules/casawp/src/casawp/Form/FilterForm.php:170
+msgid "Areas from"
+msgstr "Superfici da"
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:176
+#: modules/casawp/src/casawp/Form/FilterForm.php:177
+msgid "Areas to"
+msgstr "Superfici a"
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:186
+#: modules/casawp/src/casawp/Form/FilterForm.php:187
 msgid "Price from"
 msgstr "Da prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:149
-#: modules/casawp/src/casawp/Form/FilterForm.php:150
+#: modules/casawp/src/casawp/Form/FilterForm.php:193
+#: modules/casawp/src/casawp/Form/FilterForm.php:194
 msgid "Price to"
 msgstr "A prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:159
-#: modules/casawp/src/casawp/Form/FilterForm.php:160
+#: modules/casawp/src/casawp/Form/FilterForm.php:203
+#: modules/casawp/src/casawp/Form/FilterForm.php:204
+#: modules/casawp/src/casawp/Form/FilterForm.php:226
+#: modules/casawp/src/casawp/Form/FilterForm.php:227
 msgid "Price range"
 msgstr "Fascia di prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:162
+#: modules/casawp/src/casawp/Form/FilterForm.php:206
+#: modules/casawp/src/casawp/Form/FilterForm.php:229
+#, php-format
 msgid "to %1$s %2$.1f million"
 msgstr "fino a %1$s %2$.1f milioni"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:163
-#: modules/casawp/src/casawp/Form/FilterForm.php:164
-#: modules/casawp/src/casawp/Form/FilterForm.php:165
-#: modules/casawp/src/casawp/Form/FilterForm.php:166
-#: modules/casawp/src/casawp/Form/FilterForm.php:167
-#: modules/casawp/src/casawp/Form/FilterForm.php:168
-#: modules/casawp/src/casawp/Form/FilterForm.php:169
-#: modules/casawp/src/casawp/Form/FilterForm.php:170
-#: modules/casawp/src/casawp/Form/FilterForm.php:171
-#: modules/casawp/src/casawp/Form/FilterForm.php:172
-#: modules/casawp/src/casawp/Form/FilterForm.php:173
+#: modules/casawp/src/casawp/Form/FilterForm.php:207
+#: modules/casawp/src/casawp/Form/FilterForm.php:208
+#: modules/casawp/src/casawp/Form/FilterForm.php:209
+#: modules/casawp/src/casawp/Form/FilterForm.php:210
+#: modules/casawp/src/casawp/Form/FilterForm.php:211
+#: modules/casawp/src/casawp/Form/FilterForm.php:212
+#: modules/casawp/src/casawp/Form/FilterForm.php:213
+#: modules/casawp/src/casawp/Form/FilterForm.php:214
+#: modules/casawp/src/casawp/Form/FilterForm.php:215
+#: modules/casawp/src/casawp/Form/FilterForm.php:216
+#: modules/casawp/src/casawp/Form/FilterForm.php:217
+#: modules/casawp/src/casawp/Form/FilterForm.php:230
+#: modules/casawp/src/casawp/Form/FilterForm.php:231
+#: modules/casawp/src/casawp/Form/FilterForm.php:232
+#: modules/casawp/src/casawp/Form/FilterForm.php:233
+#: modules/casawp/src/casawp/Form/FilterForm.php:234
+#: modules/casawp/src/casawp/Form/FilterForm.php:235
+#: modules/casawp/src/casawp/Form/FilterForm.php:236
+#: modules/casawp/src/casawp/Form/FilterForm.php:237
+#: modules/casawp/src/casawp/Form/FilterForm.php:238
+#: modules/casawp/src/casawp/Form/FilterForm.php:239
+#: modules/casawp/src/casawp/Form/FilterForm.php:240
+#, php-format
 msgid "from %1$s %2$.1f to %3$.1f million"
 msgstr "%1$s %2$.1f - %3$.1f milioni"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:174
+#: modules/casawp/src/casawp/Form/FilterForm.php:218
+#: modules/casawp/src/casawp/Form/FilterForm.php:241
+#, php-format
 msgid "from %1$s %2$.1f million"
 msgstr "oltre %1$s %2$.1f milioni"
 
-#: modules/casawp/src/casawp/Service/FormService.php:206
+#: modules/casawp/src/casawp/Form/FilterForm.php:250
+#: modules/casawp/src/casawp/Form/FilterForm.php:251
+msgid "Area from"
+msgstr "Superfici da"
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:257
+#: modules/casawp/src/casawp/Form/FilterForm.php:258
+msgid "Area to"
+msgstr "Superfici a"
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:268
+msgid "Order by"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:269
+msgid "Choose order"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:272
+msgid "Date"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:281
+msgid "Order direction"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:282
+msgid "Choose order direction"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:284
+msgid "Ascending"
+msgstr ""
+
+#: modules/casawp/src/casawp/Form/FilterForm.php:285
+msgid "Descending"
+msgstr ""
+
+#: modules/casawp/src/casawp/Service/FormService.php:225
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:15
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:16
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:23
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:20
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:16
+#: theme-defaults/casawp/bootstrap4/sales-person.phtml:23
+#: theme-defaults/casawp/bootstrap4/visit-person.phtml:20
 msgid "I am interested concerning this property. Please contact me."
-msgstr "Sono interessato a questa offerta. Vi chiedo cortesemente di contattarmi. Grazie"
+msgstr ""
+"Sono interessato a questa offerta. Vi chiedo cortesemente di contattarmi. "
+"Grazie"
 
 #: modules/casawp/src/casawp/Service/Offer.php:95
-#: modules/casawp/src/casawp/Service/Offer.php:899
-#: modules/casawp/src/casawp/Service/Offer.php:903
+#: modules/casawp/src/casawp/Service/Offer.php:922
+#: modules/casawp/src/casawp/Service/Offer.php:926
 #: modules/casawp/src/casawp/Service/Project.php:88
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:4
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:4
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:4
 msgid "Sales price"
 msgstr "Prezzo di vendita"
 
 #: modules/casawp/src/casawp/Service/Offer.php:103
-#: modules/casawp/src/casawp/Service/Offer.php:928
-#: modules/casawp/src/casawp/Service/Offer.php:942
+#: modules/casawp/src/casawp/Service/Offer.php:951
+#: modules/casawp/src/casawp/Service/Offer.php:965
 #: modules/casawp/src/casawp/Service/Project.php:96
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:13
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:19
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:35
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:19
 msgid "Gross price"
 msgstr "Affitto lordo"
 
 #: modules/casawp/src/casawp/Service/Offer.php:111
-#: modules/casawp/src/casawp/Service/Offer.php:913
-#: modules/casawp/src/casawp/Service/Offer.php:948
+#: modules/casawp/src/casawp/Service/Offer.php:936
+#: modules/casawp/src/casawp/Service/Offer.php:971
 #: modules/casawp/src/casawp/Service/Project.php:104
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:21
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:26
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:38
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:26
 msgid "Net price"
 msgstr "Affitto netto"
 
@@ -2668,27 +2743,42 @@ msgstr "Affitto netto"
 msgid "Private"
 msgstr "Privato"
 
-#: modules/casawp/src/casawp/Service/Offer.php:920
+#: modules/casawp/src/casawp/Service/Offer.php:384
+msgid "Ground floor"
+msgstr "Piano terreno"
+
+#: modules/casawp/src/casawp/Service/Offer.php:943
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:48
-#: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:44
+#: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:47
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:48
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:47
 msgid "Extra Costs:"
 msgstr "Acconto spese:"
 
-#: modules/casawp/src/casawp/Service/Offer.php:935
-#: modules/casawp/src/casawp/Service/Offer.php:954
+#: modules/casawp/src/casawp/Service/Offer.php:958
+#: modules/casawp/src/casawp/Service/Offer.php:977
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:41
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:41
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:33
+#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:41
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:33
 msgid "Rent price"
 msgstr "Canone d'affitto"
 
-#: modules/casawp/src/casawp/Service/Offer.php:974
+#: modules/casawp/src/casawp/Service/Offer.php:997
 msgid "Available from"
 msgstr "Disponibile da"
 
+#: options.php:154
+msgid "Einstellungen gespeichert.."
+msgstr ""
+
+#: options.php:160
+msgid "Daten wurden importiert.."
+msgstr ""
+
 #: theme-defaults/casawp-archive.php:5
 #: theme-defaults/casawp/bootstrap2/casawp-archive.php:5
-#: theme-defaults/casawp/bootstrap4/casawp-archive.php:5
 msgid "Property list"
 msgstr ""
 
@@ -2696,60 +2786,77 @@ msgstr ""
 msgid "Project list"
 msgstr ""
 
+#: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
+#: theme-defaults/casawp/bootstrap3/contact-form.phtml:44
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:44
+msgid "Please fill out all the fields."
+msgstr "Compila tutti i campi richiesti."
+
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:36
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:47
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:35
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:47
 msgid "Send"
 msgstr "Invia"
 
-#: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:38
-#: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:50
+#: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:51
+#: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:63
+#: theme-defaults/casawp/bootstrap4/datatable-offer.phtml:63
 msgid "Available from:"
 msgstr "Disponibile da:"
 
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:1
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:1
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:1
 msgid "Offer"
 msgstr "Offerta"
 
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:10
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:10
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:10
 msgid "Features"
 msgstr "Caratteristiche"
 
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:18
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:2
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:18
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:18
 msgid "Distances"
 msgstr "Distanze"
 
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:25
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:25
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:25
 msgid "Documents"
 msgstr "Documenti"
 
 #: theme-defaults/casawp/bootstrap2/map.phtml:4
-#: theme-defaults/casawp/bootstrap3/map.phtml:4
 msgid "View lager version"
 msgstr "Visualizzare immagine grande "
 
 #: theme-defaults/casawp/bootstrap2/seller.phtml:1
 #: theme-defaults/casawp/bootstrap3/seller.phtml:1
+#: theme-defaults/casawp/bootstrap4/seller.phtml:1
 msgid "Provider"
 msgstr "Offerente"
 
 #: theme-defaults/casawp/bootstrap2/seller.phtml:14
 #: theme-defaults/casawp/bootstrap3/seller.phtml:14
+#: theme-defaults/casawp/bootstrap4/seller.phtml:14
 msgid "I am interested concerning this property. Please contact me"
 msgstr "Sono interessato concernente questa proprietà. Vi prego di contattarmi"
 
 #: theme-defaults/casawp/bootstrap2/seller.phtml:16
 #: theme-defaults/casawp/bootstrap3/seller.phtml:16
+#: theme-defaults/casawp/bootstrap4/seller.phtml:16
 msgid "E-Mail"
 msgstr "e-Mail"
 
 #: theme-defaults/casawp/bootstrap2/single-archive.phtml:3
+#: theme-defaults/casawp/bootstrap3/project-archive-single.phtml:3
 #: theme-defaults/casawp/bootstrap3/shortcode-properties.phtml:13
 #: theme-defaults/casawp/bootstrap3/single-archive.phtml:3
+#: theme-defaults/casawp/bootstrap4/project-archive-single.phtml:3
+#: theme-defaults/casawp/bootstrap4/shortcode-properties.phtml:13
 #: theme-defaults/casawp/bootstrap4/single-archive.phtml:3
 msgid "No image"
 msgstr "Nessuna immagine"
@@ -2778,79 +2885,83 @@ msgstr "Avanti"
 msgid "Virtual Tour"
 msgstr "Tour virtuale"
 
+#: theme-defaults/casawp/bootstrap2/tabable.phtml:3
+#: theme-defaults/casawp/bootstrap3/tabable.phtml:3
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:3
+msgid "Base data"
+msgstr "Dati di base"
+
 #: theme-defaults/casawp/bootstrap2/tabable.phtml:4
 #: theme-defaults/casawp/bootstrap3/tabable.phtml:4
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:7
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:4
 msgid "Description"
 msgstr "Descrizione"
 
 #: theme-defaults/casawp/bootstrap2/tabable.phtml:6
 #: theme-defaults/casawp/bootstrap3/tabable.phtml:6
-#: theme-defaults/casawp/bootstrap4/tabable.phtml:9
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:6
 msgid "Videos"
 msgstr ""
 
+#: theme-defaults/casawp/bootstrap2/tabable.phtml:8
+#: theme-defaults/casawp/bootstrap3/tabable.phtml:8
+#: theme-defaults/casawp/bootstrap4/tabable.phtml:8
+msgid "Specifications"
+msgstr "Foglio dei dati"
+
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:12
+msgid "Load distance map"
+msgstr "Mostra la mappa della distanza"
+
+#: theme-defaults/casawp/bootstrap3/casadistance.phtml:228
+msgid "School"
+msgstr "Scuola"
+
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:31
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:31
 msgid "Sales Brochure"
 msgstr "Brochure di vendita"
 
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:47
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:47
 msgid "Plan"
 msgstr "Pianifica"
 
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:56
+#: theme-defaults/casawp/bootstrap4/datatable.phtml:56
 msgid "Links"
 msgstr ""
 
-#: theme-defaults/casawp/bootstrap3/shortcode-properties.phtml:38
-msgid "Sorry, no posts matched your criteria."
-msgstr ""
-
-#: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
-msgid "rent"
-msgstr "Affitto"
-
-msgid "School"
-msgstr "Scuola"
-
-msgid "Choose country"
-msgstr ""
-
-msgid "Countries"
-msgstr ""
-
-msgid "Extra Costs"
-msgstr "Acconto spese"
-
-msgid "Ground floor"
-msgstr "Piano terreno"
-
-msgid "Choose order"
-msgstr ""
-
-msgid "Order by"
-msgstr ""
-
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
-msgid "Order direction"
-msgstr ""
-
-msgid "Choose order direction"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
-msgid "Load distance map"
-msgstr "Mostra la mappa della distanza"
-
+#: theme-defaults/casawp/bootstrap3/map.phtml:5
+#: theme-defaults/casawp/bootstrap4/map.phtml:5
 msgid "Load map"
 msgstr "Mostra la mappa"
 
-msgid "Guest toilets"
+#: theme-defaults/casawp/bootstrap3/shortcode-properties.phtml:38
+#: theme-defaults/casawp/bootstrap4/shortcode-properties.phtml:37
+msgid "Sorry, no posts matched your criteria."
 msgstr ""
+
+#~ msgid "Inquiries"
+#~ msgstr "Inchiesta"
+
+#~ msgid "Inquiry"
+#~ msgstr "Inchiesta"
+
+#~ msgid "Add New inquiry"
+#~ msgstr "Aggiungi nuova inchiesta"
+
+#~ msgid "Edit Inquiry"
+#~ msgstr "Modifica proprietà"
+
+#~ msgid "New Inquiry"
+#~ msgstr "Nuova richiesta"
+
+#~ msgid "All Inquiries"
+#~ msgstr "Tutte le richieste"
+
+#~ msgid "rent"
+#~ msgstr "Affitto"
+
+#~ msgid "Extra Costs"
+#~ msgstr "Acconto spese"
