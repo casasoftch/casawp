@@ -91,6 +91,15 @@ class NumvalService {
                         'number_of_apartments' => array(
                             'required' => true,
                         ),
+                        'number_of_commercial_units' => array(
+                            'required' => false,
+                        ),
+                        'number_of_residential_units' => array(
+                            'required' => false,
+                        ),
+                        'number_of_buildings' => array(
+                            'required' => false,
+                        ),
                         'number_of_guest_toilets' => [
                             'required' => true,
                         ],
@@ -222,6 +231,24 @@ class NumvalService {
             ),
             'number_of_apartments' => array(
                 'label' => $this->translator->translate('Apartments', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => '',
+            ),
+            'number_of_commercial_units' => array(
+                'label' => $this->translator->translate('Number of commercial units', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => '',
+            ),
+            'number_of_residential_units' => array(
+                'label' => $this->translator->translate('Number of residential units', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => '',
+            ),
+            'number_of_buildings' => array(
+                'label' => $this->translator->translate('Number of buildings', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => '',
