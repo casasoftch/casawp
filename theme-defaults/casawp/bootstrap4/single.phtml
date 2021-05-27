@@ -30,7 +30,9 @@
 			?>
 		</div>
 		<div class="casawp-single-aside-container">
-			<?php echo $offer->renderContactform(); ?>
+			<?php if ($offer->getAvailability() !== 'reference'): ?>
+				<?php echo $offer->renderContactform(); ?>
+			<?php endif; ?>
 		</div>
 		<div class="casawp-single-aside-container">
 			<?php echo $offer->renderSeller(); ?>
