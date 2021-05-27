@@ -911,9 +911,10 @@ class Plugin {
             }
         }
 
-        //availability reduces categories
-        $availability = $this->getQueriedSingularAvailability();
-        if ($availability) {
+
+        //availabilities reduces categories
+        $availabilities = $this->getQueriedArrayAvailability();
+        if ($availabilities) {
             global $wpdb;
             /*filters the result with reference context in mind (WPML IGNORANT) */
             $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
@@ -922,10 +923,17 @@ class Plugin {
             INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
 
             INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
-            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
-            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` = '" . $availability . "'
-            GROUP BY ". $wpdb->prefix . "terms.term_id";
 
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` IN ('" . implode('\', \'', $availabilities). "')";
+
+            if ($salestype) {
+               $query .= " INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheckSalestype ON referenceCheckSalestype.object_id = ". $wpdb->prefix . "posts.ID
+               INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckSalestypeTermTax ON referenceCheckSalestype.term_taxonomy_id = referenceCheckSalestypeTermTax.term_taxonomy_id AND referenceCheckSalestypeTermTax.taxonomy = 'casawp_salestype'
+               INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckSalestypeTerms ON referenceCheckSalestypeTerms.`term_id` = referenceCheckSalestypeTermTax.term_id AND referenceCheckSalestypeTerms.`slug` = '$salestype' ";
+            }
+
+            $query .= " GROUP BY ". $wpdb->prefix . "terms.term_id";
 
             $category_property_count = $wpdb->get_results( $query, ARRAY_A );
 
@@ -1333,6 +1341,11 @@ class Plugin {
             return $query['availabilities'][0];
         }
         return false;
+    }
+
+    public function getQueriedArrayAvailability(){
+        $query = $this->queryService->getQuery();
+        return $query['availabilities'];
     }
 
     public function getQueriedSingularSalestype(){
