@@ -244,24 +244,6 @@ class FilterForm extends Form
         );
 
 
-        if ($this->area_from) {
-            $this->addSelector(
-                'area_from',
-                __('Area from', 'casawp'),
-                __('Area from','casawp'),
-                $this->getAreaOptions(),
-                (isset($this->options['chosen_area_from']) ? $this->options['chosen_area_from'] : null)
-            );
-            $this->addSelector(
-                'area_to',
-                __('Area to', 'casawp'),
-                __('Area to','casawp'),
-                $this->getAreaOptions(),
-                (isset($this->options['chosen_area_to']) ? $this->options['chosen_area_to'] : null)
-            );
-        }
-
-
         // order by element
         $this->addSelector(
             'orderby',
