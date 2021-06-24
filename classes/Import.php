@@ -327,8 +327,10 @@ class Import {
 
       //category
       $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
-      $term_id = $term->term_id;
-      wp_set_post_terms( $attach_id,  array($term_id), 'casawp_attachment_type' );
+      if ($term) {
+        $term_id = $term->term_id;
+        wp_set_post_terms( $attach_id,  array($term_id), 'casawp_attachment_type' );
+      }
 
       //alt
       update_post_meta($attach_id, '_wp_attachment_image_alt', $the_mediaitem['alt']);
@@ -673,8 +675,10 @@ class Import {
               //update attachment category
               if ($existing_attachment['type'] != $the_mediaitem['type']) {
                 $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
-                $term_id = $term->term_id;
-                wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casawp_attachment_type' );
+                if ($term) {
+                  $term_id = $term->term_id;
+                  wp_set_post_terms( $wp_mediaitem->ID,  array($term_id), 'casawp_attachment_type' );
+                }
               }
               //update attachment alt
               if ($alt != $the_mediaitem['alt']) {
@@ -2066,15 +2070,17 @@ class Import {
 
       //5a. fetch max and min options and set them anew
       global $wpdb;
-      $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM {$wpdb->postmeta} WHERE meta_key='areaForOrder'", 'foo', 'bar');
+      $meta_key_area = 'areaForOrder';
+      $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_area );
       $max_area = $wpdb->get_var( $query );
-      $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM {$wpdb->postmeta} WHERE meta_key='areaForOrder'", 'foo', 'bar');
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_area );
       $min_area = $wpdb->get_var( $query );
 
       //5b. fetch max and min options and set them anew
-      $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM {$wpdb->postmeta} WHERE meta_key='number_of_rooms'", 'foo', 'bar');
+      $meta_key_rooms = 'number_of_rooms';
+      $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_rooms );
       $max_rooms = $wpdb->get_var( $query );
-      $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM {$wpdb->postmeta} WHERE meta_key='number_of_rooms'", 'foo', 'bar');
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_rooms );
       $min_rooms = $wpdb->get_var( $query );
 
       update_option('casawp_archive_area_min', $min_area);
