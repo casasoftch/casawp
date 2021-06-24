@@ -2071,16 +2071,16 @@ class Import {
       //5a. fetch max and min options and set them anew
       global $wpdb;
       $meta_key_area = 'areaForOrder';
-      $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_area );
+      $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area );
       $max_area = $wpdb->get_var( $query );
-      $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_area );
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area );
       $min_area = $wpdb->get_var( $query );
 
       //5b. fetch max and min options and set them anew
       $meta_key_rooms = 'number_of_rooms';
-      $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_rooms );
+      $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms );
       $max_rooms = $wpdb->get_var( $query );
-      $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%f", $meta_key_rooms );
+      $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms );
       $min_rooms = $wpdb->get_var( $query );
 
       update_option('casawp_archive_area_min', $min_area);

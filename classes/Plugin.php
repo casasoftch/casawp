@@ -914,6 +914,7 @@ class Plugin {
 
         //availabilities reduces categories
         $availabilities = $this->getQueriedArrayAvailability();
+         $salestype = $this->getQueriedSingularSalestype();
         if ($availabilities) {
             global $wpdb;
             /*filters the result with reference context in mind (WPML IGNORANT) */
@@ -947,7 +948,7 @@ class Plugin {
         }
 
         //salestype reduces categories
-        $salestype = $this->getQueriedSingularSalestype();
+       
 
         if ($salestype) {
         global $wpdb;
