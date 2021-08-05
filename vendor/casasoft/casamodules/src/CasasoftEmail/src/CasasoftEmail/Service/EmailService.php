@@ -111,6 +111,8 @@ class EmailService {
                     $honorificPrefix = 'Mr';
                 } elseif($gender === 2) {
                     $honorificPrefix = 'Mrs';
+                } elseif($gender === 0) {
+                    $honorificPrefix = '*';
                 } else {
                     $honorificPrefix = 'not specified';
                 }

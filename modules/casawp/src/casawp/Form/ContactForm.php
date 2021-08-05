@@ -32,7 +32,8 @@ class ContactForm extends Form
               'label' => __('Anrede', 'casawp'),
               'options' => array(
                 '2' => __('Ms.', 'casawp'),
-                '1' => __('Mr.', 'casawp')
+                '1' => __('Mr.', 'casawp'),
+                '0' => '*'
               )
             ),
             'attributes' => array(
