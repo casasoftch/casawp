@@ -1122,7 +1122,12 @@
 									<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
 									<fieldset class="margin-top">
 										<label>
-											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden.
+											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
+										</label>
+									</fieldset>
+									<fieldset class="margin-top">
+										<label>
+											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
 										</label>
 									</fieldset>
 									

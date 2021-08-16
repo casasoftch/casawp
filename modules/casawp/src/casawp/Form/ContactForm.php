@@ -25,16 +25,25 @@ class ContactForm extends Form
           'type' => 'hidden'
         ));
 
+        $genderArray = array(
+            '2' => __('Ms.', 'casawp'),
+            '1' => __('Mr.', 'casawp')
+        );
+
+        if (get_option('casawp_form_gender_neutral', false)) {
+            $genderArray = array(
+                '2' => __('Ms.', 'casawp'),
+                '1' => __('Mr.', 'casawp'),
+                '0' => '*'
+            );
+        }
+
         $this->add(array(
             'name' => 'gender',
             'type' => 'radio',
             'options' => array(
               'label' => __('Anrede', 'casawp'),
-              'options' => array(
-                '2' => __('Ms.', 'casawp'),
-                '1' => __('Mr.', 'casawp'),
-                '0' => '*'
-              )
+              'options' => $genderArray
             ),
             'attributes' => array(
               'value' => '2'

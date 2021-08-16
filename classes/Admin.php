@@ -48,6 +48,7 @@ class Admin {
 		add_option('casawp_archive_show_thumbnail_size_h', '360');
 		add_option('casawp_archive_show_thumbnail_size_crop', '1');
 		//contactform
+		add_option('casawp_form_gender_neutral', '0');
 		add_option('casawp_request_per_mail', '1');
 		add_option('casawp_request_per_remcat', '0');
 		add_option('casawp_request_per_mail_fallback', '0');
