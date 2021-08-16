@@ -119,7 +119,8 @@
 					'casawp_form_phone_required',
 					'casawp_form_email_required',
 					'casawp_form_message_required',
-					'casawp_casamail_direct_recipient'
+					'casawp_casamail_direct_recipient',
+					'casawp_form_gender_neutral'
 				);
 				break;
 			case 'general':
