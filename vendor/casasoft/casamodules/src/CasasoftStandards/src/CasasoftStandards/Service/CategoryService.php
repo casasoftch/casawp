@@ -42,6 +42,7 @@ class CategoryService {
             'multiple-dwelling' => array('label' => $this->translator->translate('Multiple dwelling', 'casasoft-standards'),),
             'open-slot' => array('label' => $this->translator->translate('Open slot', 'casasoft-standards'),),
             'parking-space' => array('label' => $this->translator->translate('Parking space', 'casasoft-standards'),),
+            'parking' => array('label' => $this->translator->translate('Parking', 'casasoft-standards'),),
             'plot' => array('label' => $this->translator->translate('Plot', 'casasoft-standards'),),
             'roof-flat' => array('label' => $this->translator->translate('Roof flat', 'casasoft-standards'),),
             'row-house' => array('label' => $this->translator->translate('Row house', 'casasoft-standards'),),
