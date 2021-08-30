@@ -124,12 +124,8 @@ class FeatureService {
                 'label' => $this->translator->translate('Contains demolition structure', 'casasoft-standards'),
                 'icon' => '',
             ),
-            
-            //alpha
-            'is-vat-opted' => array(
-                'label' => $this->translator->translate('VAT opted', 'casasoft-standards'),
-                'icon' => '',
-            ),
+
+
 
             'is-child-friendly' => array(
                 'label' => $this->translator->translate('Child friendly', 'casasoft-standards'),
@@ -424,6 +420,16 @@ class FeatureService {
                 'label' => $this->translator->translate('Remote viewing', 'casasoft-standards'),
                 'icon' => '',
             ),
+
+            'is-vat-opted' => [
+                'label' => $this->translator->translate('VAT opted', 'casasoft-standards'),
+                'icon' => '',
+            ],
+
+            'is-share-deal' => [
+                'label' => $this->translator->translate('Share deal', 'casasoft-standards'),
+                'icon' => '',
+            ],
 
         );
     }

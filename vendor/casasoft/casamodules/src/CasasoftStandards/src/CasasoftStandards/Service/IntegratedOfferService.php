@@ -81,6 +81,15 @@ class IntegratedOfferService {
         $this->items = null;
     }
 
+    public function resetService() {
+        $this->items = null;
+        $integrated_offer_options = $this->getDefaultOptions();
+        foreach ($integrated_offer_options as $key => $options) {
+            $integrated_offer = $this->getItem($key);
+            $integrated_offer->setValue(null);
+        }
+    }
+
 
     public function addItem($obj, $key = null) {
         if ($key == null) {

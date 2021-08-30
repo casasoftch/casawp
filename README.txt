@@ -1,13 +1,13 @@
 === CASAWP ===
 Contributors: casasoft
-Donate link: http://immobilien-plugin.ch
+Donate link: https://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML
 Requires at least: 4.0.0
-Tested up to: 5.0.2
+Tested up to: 5.8
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,29 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 2.6.0 =
+
+* new: area filters
+* new: possibility for neutral gender in form requests
+* update: remove screen_icon
+* update: new CASAMAIL url
+* update: no dynamic font awesome icons anymore
+* update: price_range_custom filter
+* update: chosen harvest custom fork for new jquery
+* update: jquery migration to 3.5.1
+* update: no default maps api key anymore
+* update: language updates
+* update: log names
+* update: wp-admin ui clean up & improvements
+* update: js dependencies
+* fix: "parking" was missing as category
+* fix: path fix in order to work with child themes
+* fix: db prepare function fix for term objects
+* fix: PHP 7.4 Zend Framework compatibility fix
+* fix: hide form for reference properties
+* fix: taxonomy reduction filter fixes
+* fix: fixed check for displaying visualReferenceId or referenceId
 
 = 2.5.0 =
 

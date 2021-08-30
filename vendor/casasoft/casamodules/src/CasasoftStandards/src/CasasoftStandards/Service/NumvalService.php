@@ -91,15 +91,6 @@ class NumvalService {
                         'number_of_apartments' => array(
                             'required' => true,
                         ),
-                        'number_of_commercial_units' => array(
-                            'required' => false,
-                        ),
-                        'number_of_residential_units' => array(
-                            'required' => false,
-                        ),
-                        'number_of_buildings' => array(
-                            'required' => false,
-                        ),
                         'number_of_guest_toilets' => [
                             'required' => true,
                         ],
@@ -153,7 +144,7 @@ class NumvalService {
                         /*'area_sia_ngf' => array(
                             'required' => false,
                         ),*/
-                        
+
                         /*'area_property_land' => array(
                             'required' => false,
                         ),*/
@@ -230,25 +221,7 @@ class NumvalService {
                 'si' => '',
             ),
             'number_of_apartments' => array(
-                'label' => $this->translator->translate('Apartments', 'casasoft-standards'),
-                'icon' => '',
-                'type' => 'int',
-                'si' => '',
-            ),
-            'number_of_commercial_units' => array(
-                'label' => $this->translator->translate('Number of commercial units', 'casasoft-standards'),
-                'icon' => '',
-                'type' => 'int',
-                'si' => '',
-            ),
-            'number_of_residential_units' => array(
                 'label' => $this->translator->translate('Number of residential units', 'casasoft-standards'),
-                'icon' => '',
-                'type' => 'int',
-                'si' => '',
-            ),
-            'number_of_buildings' => array(
-                'label' => $this->translator->translate('Number of buildings', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => '',
@@ -688,7 +661,7 @@ class NumvalService {
                 'label' => $this->translator->translate('Utilization number', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'float',
-                'si' => '%',
+                'si' => '',
             ),
             'construction_utilization_number' => array( //baumassenzahl
                 'label' => $this->translator->translate('Construction utilization number', 'casasoft-standards'),
@@ -788,6 +761,12 @@ class NumvalService {
                 'type' => 'float',
                 'si' => '%',
             ),
+            'gross_premium_target' => [
+                'label' => $this->translator->translate('Gross premium (target)', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'float',
+                'si' => '%',
+            ],
 
             'rental_deposit' => array(
                 'label' => $this->translator->translate('Rental deposit', 'casasoft-standards'),
@@ -803,6 +782,12 @@ class NumvalService {
             ],
             'rental_income_net' => [
                 'label' => $this->translator->translate('Rental income (net)', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'currency',
+            ],
+            'rental_income_net_max_potential' => [
+                'label' => $this->translator->translate('Rental income (potential)', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
                 'si' => 'currency',
@@ -847,7 +832,7 @@ class NumvalService {
                 'label' => $this->translator->translate('Constructed factor', 'casasoft-standards'),
                 'icon' => '',
                 'type' => 'int',
-                'si' => '%',
+                'si' => '',
             ],
             'geak_exterior' => [
                 'label' => $this->translator->translate('GEAK exterior', 'casasoft-standards'),
@@ -873,6 +858,41 @@ class NumvalService {
                 'type' => 'int',
                 'si' => '',
             ],
+            'occupancy_percentage' => [
+                'label' => $this->translator->translate('Current occupancy', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'float',
+                'si' => '%',
+            ],
+
+            'yearly_operation_and_maintenance_costs' => [
+                'label' => $this->translator->translate('Operation and maintenance cost', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'currency',
+            ],
+
+            'auction_start_price' => [
+                'label' => $this->translator->translate('Auction start price', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'currency',
+            ],
+
+            'auction_minimal_increase' => [
+                'label' => $this->translator->translate('Auction minimal increase', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'currency',
+            ],
+
+            'bidding_start_price' => [
+                'label' => $this->translator->translate('Bidding start price', 'casasoft-standards'),
+                'icon' => '',
+                'type' => 'int',
+                'si' => 'currency',
+            ],
+
 
         );
     }
