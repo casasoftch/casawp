@@ -1043,6 +1043,9 @@
 
 									<script>
 										jQuery(document).ready( function($) {
+											$('#draggableList').children().each(function(idx, val){
+												$(val).find('.small-text').val(idx);
+											})
 											$( "#draggableList" ).sortable({
 											    stop: function(event, ui) {
 													var itemOrder = $('#draggableList').sortable("toArray");
