@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 require_once ( 'wp_autoupdate.php' );
 $plugin_current_version = '2.5.0';
 $plugin_slug = plugin_basename( __FILE__ );
-$plugin_remote_path = 'http://wp.casasoft.ch/casawp/update.php';
+$plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
 $license_key = 'abcd';
 new WP_AutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );
