@@ -1403,10 +1403,9 @@ class Plugin {
         ));
 
         //availability reduces locations
-        $availability = $this->getQueriedSingularAvailability();
+        /* $availability = $this->getQueriedSingularAvailability();
         if ($availability) {
             global $wpdb;
-            /*filters the result with reference context in mind (WPML IGNORANT) */
             $query = "SELECT ". $wpdb->prefix . "terms.term_id FROM ". $wpdb->prefix . "terms
             INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
             INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
@@ -1427,10 +1426,44 @@ class Plugin {
                     unset($localities[$key]);
                 }
             }
+        } */
+
+        $availabilities = $this->getQueriedArrayAvailability();
+
+        $salestype = $this->getQueriedSingularSalestype();
+
+        if ($availabilities) {
+            global $wpdb;
+            $query = "SELECT ". $wpdb->prefix . "terms.term_id, ". $wpdb->prefix . "terms.slug FROM ". $wpdb->prefix . "terms
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy ON ". $wpdb->prefix . "term_taxonomy.term_id = ". $wpdb->prefix . "terms.term_id AND ". $wpdb->prefix . "term_taxonomy.taxonomy = 'casawp_location'
+            INNER JOIN ". $wpdb->prefix . "term_relationships ON ". $wpdb->prefix . "term_relationships.term_taxonomy_id = ". $wpdb->prefix . "term_taxonomy.term_taxonomy_id
+            INNER JOIN ". $wpdb->prefix . "posts ON ". $wpdb->prefix . "term_relationships.object_id = ". $wpdb->prefix . "posts.ID AND ". $wpdb->prefix . "posts.post_status = 'publish'
+
+            INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheck ON referenceCheck.object_id = ". $wpdb->prefix . "posts.ID
+
+            INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckTermTax ON referenceCheck.term_taxonomy_id = referenceCheckTermTax.term_taxonomy_id AND referenceCheckTermTax.taxonomy = 'casawp_availability'
+            INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckTerms ON referenceCheckTerms.`term_id` = referenceCheckTermTax.term_id AND referenceCheckTerms.`slug` IN ('" . implode('\', \'', $availabilities). "')";
+
+            if ($salestype) {
+               $query .= " INNER JOIN ". $wpdb->prefix . "term_relationships AS referenceCheckSalestype ON referenceCheckSalestype.object_id = ". $wpdb->prefix . "posts.ID
+               INNER JOIN ". $wpdb->prefix . "term_taxonomy AS referenceCheckSalestypeTermTax ON referenceCheckSalestype.term_taxonomy_id = referenceCheckSalestypeTermTax.term_taxonomy_id AND referenceCheckSalestypeTermTax.taxonomy = 'casawp_salestype'
+               INNER JOIN ". $wpdb->prefix . "terms AS referenceCheckSalestypeTerms ON referenceCheckSalestypeTerms.`term_id` = referenceCheckSalestypeTermTax.term_id AND referenceCheckSalestypeTerms.`slug` = '$salestype' ";
+            }
+
+            $query .= " GROUP BY ". $wpdb->prefix . "terms.term_id";
+
+            $location_property_count = $wpdb->get_results( $query, ARRAY_A );
+
+            $location_id_array = array_map(function($item){return $item['term_id'];}, $location_property_count);
+
+            foreach ($localities as $key => $locality) {
+                if (!in_array($locality->term_id, $location_id_array)) {
+                    unset($localities[$key]);
+                }
+            }
         }
 
         //salestype reduces locations
-        $salestype = $this->getQueriedSingularSalestype();
         if ($salestype) {
             global $wpdb;
             /*filters the result with reference context in mind (WPML IGNORANT) */
@@ -1943,7 +1976,8 @@ class Plugin {
             wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), $version);
         }
 
-        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ));
+        wp_enqueue_script('jstorage', CASASYNC_PLUGIN_URL . 'plugin-assets/global/js/jstorage.js', array( 'jquery' ), array(), true);
+
 
         switch (get_option('casawp_viewgroup', 'bootstrap3')) {
             case 'bootstrap2':
