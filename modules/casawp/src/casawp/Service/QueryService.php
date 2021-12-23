@@ -421,87 +421,48 @@ class QueryService{
                 $price_seek_parts = explode('-', $this->query['price_range']);
                 $range_seek_from = $price_seek_parts[0];
                 $range_seek_to = $price_seek_parts[1];
-
-
-                if ($range_seek_from && $range_seek_to) {
-                // $meta_query_items_new[] = array(
-                //   'key' => 'price_range_from',
-                //   'value' => (int) $range_seek_to,
-                //   'compare'   => '<='
-                // );
-                // $meta_query_items_new[] = array(
-                //   'key' => 'price_range_to',
-                //   'value' => (int) $range_seek_from,
-                //   'compare'   => '>='
-                // );
-                
-
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_from',
-                    'value' => 0,
-                    'compare'   => '>',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_to',
-                    'value' => 0,
-                    'compare'   => '>',
-                    'type' => 'UNSIGNED'
-                    )
-                );
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_from',
-                    'value' => array($range_seek_from, $range_seek_to),
-                    'compare'   => 'BETWEEN',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_from',
-                    'compare'   => 'NOT EXISTS'
-                    )
-                );
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_to',
-                    'value' => array($range_seek_from, $range_seek_to),
-                    'compare'   => 'BETWEEN',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_to',
-                    'compare'   => 'NOT EXISTS'
-                    )
-                );
-
-
-                // $meta_query_items_new[] = array(
-                //   array(
-                //     'relation' => 'OR',
-                //     array(
-                //       'relation' => 'AND',
-                //       array(
-                //         'key' => 'price_range_from',
-                //         'value' => array($range_seek_from, $range_seek_to),
-                //         'compare'   => 'BETWEEN'
-                //       ),
-                //       array(
-                //         'key' => 'price_range_to',
-                //         'value' => array($range_seek_from, $range_seek_to),
-                //         'compare'   => 'BETWEEN'
-                //       )
-                //     ),
-                //     array(
-                //       'key' => 'price',
-                //       'value' => array($range_seek_from, $range_seek_to),
-                //       'compare'   => 'BETWEEN'
-                //     )
-                //   )
-                // );
+                if ($range_seek_from && $range_seek_to) {               
+                    $meta_query_items_new[] = array(
+                        'relation' => 'OR',
+                        array(
+                        'key' => 'price_range_from',
+                        'value' => 0,
+                        'compare'   => '>',
+                        'type' => 'UNSIGNED'
+                        ),
+                        array(
+                        'key' => 'price_range_to',
+                        'value' => 0,
+                        'compare'   => '>',
+                        'type' => 'UNSIGNED'
+                        )
+                    );
+                    $meta_query_items_new[] = array(
+                        'relation' => 'OR',
+                        array(
+                        'key' => 'price_range_from',
+                        'value' => array($range_seek_from, $range_seek_to),
+                        'compare'   => 'BETWEEN',
+                        'type' => 'UNSIGNED'
+                        ),
+                        array(
+                        'key' => 'price_range_from',
+                        'compare'   => 'NOT EXISTS'
+                        )
+                    );
+                    $meta_query_items_new[] = array(
+                        'relation' => 'OR',
+                        array(
+                        'key' => 'price_range_to',
+                        'value' => array($range_seek_from, $range_seek_to),
+                        'compare'   => 'BETWEEN',
+                        'type' => 'UNSIGNED'
+                        ),
+                        array(
+                        'key' => 'price_range_to',
+                        'compare'   => 'NOT EXISTS'
+                        )
+                    );
                 }
             }
 
@@ -510,18 +471,6 @@ class QueryService{
                 $price_seek_parts = explode('-', $this->query['price_range_custom']);
                 $range_seek_from = $price_seek_parts[0];
                 $range_seek_to = $price_seek_parts[1];
-
-                #die('billburr' . print_r($price_seek_parts));
-
-                /* if ($range_seek_from && $range_seek_to) {
-                    $meta_query_items_new[] = array(
-                        'key' => 'price',
-                        'value' => $price_seek_parts,
-                        'compare'   => 'BETWEEN',
-                        'type' => 'NUMERIC'
-                    );
-                } */
-
                 if ($range_seek_from && $range_seek_to) {
                     $meta_query_items_new[] = array(
                         array(
@@ -557,6 +506,30 @@ class QueryService{
 
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
+        }
+
+        if ($this->query['my_lng'] && $this->query['my_lat'] && $this->query['radius_km']) {
+
+            $mylng = $this->query['my_lng'];
+            $mylat = $this->query['my_lat'];
+            $radius = $this->query['radius_km'];
+            global $wpdb;
+
+            $sql = "SELECT ID from wp_posts 
+            LEFT JOIN wp_postmeta AS latitude ON wp_posts.ID = latitude.post_id AND latitude.meta_key = 'property_geo_latitude'
+            LEFT JOIN wp_postmeta AS longitude ON wp_posts.ID = longitude.post_id AND longitude.meta_key = 'property_geo_longitude'
+            WHERE ( 6371 * acos( cos( radians(".$mylat.") )
+                                            * cos( radians( latitude.meta_value ) )
+                                            * cos( radians( longitude.meta_value ) - radians(".$mylng.") )
+                                            + sin( radians(".$mylat.") )
+                                            * sin( radians( latitude.meta_value ) ) ) <= ".$radius.") ";
+
+            $results = $wpdb->get_results( $sql, ARRAY_A );
+
+            $post_ids = wp_list_pluck( $results, 'ID' );
+
+            $args['post__in'] = $post_ids;
+            
         }
 
 

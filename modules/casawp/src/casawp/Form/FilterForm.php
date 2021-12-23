@@ -284,12 +284,14 @@ class FilterForm extends Form
             $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
         } else if ($name === 'order'){
             $this->options['casawp_filter_'.$name.'_elementtype'] = 'singleselect';
-        } else if ($chosen_values && count($chosen_values) > 1) {
-            if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'singleselect') {
-                $this->options['casawp_filter_'.$name.'_elementtype'] = 'multiselect';
-            }
-            if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'radio') {
-                $this->options['casawp_filter_'.$name.'_elementtype'] = 'multicheckbox';
+        } else if ($chosen_values && is_array($chosen_values)) {
+            if (count($chosen_values) > 1) {
+                 if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'singleselect') {
+                    $this->options['casawp_filter_'.$name.'_elementtype'] = 'multiselect';
+                }
+                if ($this->options['casawp_filter_'.$name.'_elementtype'] == 'radio') {
+                    $this->options['casawp_filter_'.$name.'_elementtype'] = 'multicheckbox';
+                }
             }
         }
 

@@ -1060,15 +1060,21 @@
 
 										<?php 
 											$finalArray = [];
+											$shouldSort = false;
 										 ?>
 
 										<?php foreach ($dynamicFields as $field): ?>
 											<?php $finalArray[$field['field']]['field'] = $field['field'] ?>
 											<?php $finalArray[$field['field']]['order'] = get_option($field['order']) ?>
 											<?php $finalArray[$field['field']]['label'] = $field['label'] ?>
+											<?php if (get_option($field['order'])): ?>
+												<?php $shouldSort = true; ?>
+											<?php endif; ?>
 										<?php endforeach ?>
 
-										<?php usort($finalArray, function ($a, $b) { return $a['order'] - $b['order']; }); ?>
+										<?php if ($shouldSort): ?>
+											<?php usort($finalArray, function ($a, $b) { return $a['order'] - $b['order']; }); ?>
+										<?php endif; ?>
 
 										<?php foreach ($finalArray as $field): ?>
 											<div class="draggable-list-item" id="<?php echo $field['field'] ?>">
