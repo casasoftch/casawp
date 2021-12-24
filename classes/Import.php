@@ -691,7 +691,9 @@ class Import {
         }
 
         if (!$existing) {
-          $this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
+          if (isset($wp_mediaitem->ID)) {
+            $this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
+          }
           //insert the new image
           $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
           if (is_int($new_id)) {
@@ -1750,12 +1752,12 @@ class Import {
 
   public function findLangKey($lang, $array){
     foreach ($array as $key => $value) {
-      if ($lang == $value['lang']) {
-        if ($value) {
+      if (isset($value['lang'])) {
+        if ($lang == $value['lang']) {
           return $key;
-        } else {
-          return false;
         }
+      } else {
+        return false;
       }
     }
     return false;
@@ -1961,7 +1963,7 @@ class Import {
         $found_posts[] = $wp_post->ID;
 
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
-
+        
         $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $propertyData['exportproperty_id']);
 
       }
@@ -2031,12 +2033,12 @@ class Import {
         )
       );
       $sortsUpdated = 0;
-      // echo '<pre>';
-      // echo "properties_to_sort\n";
-      // print_r($properties_to_sort);
-
-      // echo "ranksort\n";
-      // print_r($ranksort);
+       //echo '<pre>';
+       //echo "properties_to_sort\n";
+       //print_r($properties_to_sort);
+//
+       //echo "ranksort\n";
+       //print_r($ranksort);
       // TODO: when one changes an id of a property in the xml with wpml:  Error: Maximum function nesting level of '256'  happens: 	WPML_Post_Synchronization->sync_with_translations( ) happens indefinetly
       foreach ($properties_to_sort as $prop_to_sort) {
         if (array_key_exists($prop_to_sort->ID, $ranksort)) {
@@ -2062,7 +2064,8 @@ class Import {
         }
 
       }
-      // echo '</pre>';
+
+       //echo '</pre>';
 
       $this->transcript['sorts_updated'] = $sortsUpdated;
       $this->transcript['properties_found_in_xml'] = count($found_posts);
@@ -2808,7 +2811,7 @@ class Import {
         }
 
         $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
-        if (function_exists("casawp_unicode_dirty_replace")) {
+        if (function_exists("casawp_unicode_dirty_replace") && !is_array($oldval)) {
           $oldval = casawp_unicode_dirty_replace($oldval); 
         }
         

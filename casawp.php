@@ -2172,10 +2172,10 @@ function casawp_unicode_dirty_replace($str)
 		"￥" => "uffe5", // (alt-065509)	FULLWIDTH YEN SIGN
 		"￦" => "uffe6", // (alt-065510)	FULLWIDTH WON SIGN
 	];
-
+	
 	foreach ($charset as $rChar => $unicode) {
 		$str = str_replace($unicode, "\\" . $unicode, $str);
 	}
-
+	
 	return $str;
 }

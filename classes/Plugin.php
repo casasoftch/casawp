@@ -1401,7 +1401,8 @@ class Plugin {
         $localities = get_terms('casawp_location',array(
             'hierarchical'      => true
         ));
-
+        
+        $availability = $this->getQueriedSingularAvailability();
         //availability reduces locations
         /* $availability = $this->getQueriedSingularAvailability();
         if ($availability) {
