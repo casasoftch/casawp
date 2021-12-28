@@ -2018,7 +2018,11 @@ class Import {
             $attachment_id = $attachment->ID;
           }
         }
-        wp_trash_post($prop_to_rm->ID);
+        if (get_option('casawp_permanently_delete_properties')) {
+          wp_delete_post($prop_to_rm->ID, 1);
+        } else {
+          wp_trash_post($prop_to_rm->ID);
+        }
 
       }
 

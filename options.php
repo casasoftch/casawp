@@ -128,6 +128,7 @@
 				$checkbox_traps = array(
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
+					'casawp_permanently_delete_properties',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
 					'casawp_remCat',
@@ -1405,6 +1406,15 @@
 										<?php $text = 'Max. 1 Bild für Referenzobjekte importieren (kann nicht mit Gateway CDN kombiniert werden).'; ?>
 										<p><label>
 											<input id="ckRef" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Max. 1 Bild für Referenz-Objekte importieren (nicht möglich mit <a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> CDN).
+										</label></p>
+									</fieldset>
+
+									<fieldset>
+										<legend class="screen-reader-text"><span>Zu löschende Objekte direkt löschen (Papierkorb überspringen).</span></legend>
+										<?php $name = 'casawp_permanently_delete_properties'; ?>
+										<?php $text = 'Zu löschende Objekte direkt löschen (Papierkorb überspringen).'; ?>
+										<p><label>
+											<input id="ckRef" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Zu löschende Objekte direkt löschen (Papierkorb überspringen).
 										</label></p>
 									</fieldset>
 
