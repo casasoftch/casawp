@@ -333,6 +333,156 @@
         }
     }
 
+    public function casawp_get_allDistanceKeys(){
+        return array(
+            'distance_public_transport',
+            'distance_shop',
+            'distance_kindergarten',
+            'distance_motorway',
+            'distance_school1',
+            'distance_school2',
+            'distance_bus_stop',
+            'distance_train_station',
+            'distance_post',
+            'distance_bank',
+            'distance_cable_railway_station',
+            'distance_boat_dock',
+            'distance_airport'
+        );
+    }
+
+    public function casawp_convert_distanceKeyToLabel($key){
+        switch ($key) {
+            case 'distance_public_transport':      return __('Public transportation' ,'casawp');break;
+            case 'distance_shop':                  return __('Shopping' ,'casawp');break;
+            case 'distance_kindergarten':          return __('Kindergarten' ,'casawp');break;
+            case 'distance_motorway':              return __('Motorway' ,'casawp');break;
+            case 'distance_school1':               return __('Primary school' ,'casawp');break;
+            case 'distance_school2':               return __('Secondary school' ,'casawp');break;
+            case 'distance_bus_stop':              return __('Bus stop' ,'casawp');break;
+            case 'distance_train_station':         return __('Train station' ,'casawp');break;
+            case 'distance_post':                  return __('Post' ,'casawp');break;
+            case 'distance_bank':                  return __('Bank' ,'casawp');break;
+            case 'distance_cable_railway_station': return __('Railway Station' ,'casawp');break;
+            case 'distance_boat_dock':             return __('Boat dock' ,'casawp');break;
+            case 'distance_airport':               return __('Airport', 'casawp');break;
+        }
+    }
+
+    public function casawp_convert_availabilityKeyToLabel($key){
+        switch ($key) {
+            //old
+            case 'on-request':   return __('On Request' ,'casawp');break;
+            case 'by-agreement': return __('By Agreement' ,'casawp');break;
+            case 'immediately':  return __('Immediate' ,'casawp');break;
+
+            //new
+            case 'active':       return __('Available' ,'casawp');break;
+            case 'reserved':     return __('Reserved' ,'casawp');break;
+            case 'sold':         return __('Sold' ,'casawp');break;
+            case 'rented':       return __('Rented' ,'casawp');break;
+            case 'reference':    return __('Reference' ,'casawp');break;
+        }
+    }
+
+    public function casawp_get_allNumvalKeys(){
+      return array(
+        #'surface_living',
+        #'surface_usable',
+        'area_bwf',
+        'area_nwf',
+        'area_sia_gf',
+        'area_sia_nf',
+        'surface_property',
+        'year_renovated',
+        'year_built',
+        'number_of_rooms',
+        'number_of_floors',
+        'number_of_lavatory',
+        'number_of_toilets_guest',
+        'floor',
+        'number_of_apartments',
+        'volume',
+        'ceiling_height',
+        'hall_height',
+        'maximal_floor_loading',
+        'carrying_capacity_crane',
+        'carrying_capacity_elevator'
+      );
+    }
+
+    public function casawp_numStringToArray($key, $string){
+      
+      $si = false;
+      if ($string == '') {
+        return false;
+      }
+      if (strlen($string) == 1) {
+        if (!is_numeric($string[0])) {
+           $string = false;
+        }
+      } elseif (strlen($string) == 2) { // 23 or m2 or km or 1m
+        $first  = $string[strlen($string)-2];
+        $second = $string[strlen($string)-1];
+
+        //avoid float dots to be considered as SI
+        $first  = ($first == '.' ? 0 : $first);
+        $second = ($first == '.' ? 0 : $first);
+
+        if ( !is_numeric($string[0]) ) { //m2 or km
+          $string = false;
+        } elseif (is_numeric($first) && !is_numeric($second)) { // 1m
+          $string = substr($string, 0, -1);
+          $si = $second;
+        }
+      } elseif (strlen($string) > 2) { //123 or 1m2 or 1km or 12m
+        $first  = $string[strlen($string)-3];
+        $second = $string[strlen($string)-2];
+        $third  = $string[strlen($string)-1];
+
+        //avoid float dots to be considered as SI
+        $first  = ($first == '.' ? 0 : $first);
+        $second = ($second == '.' ? 0 : $second);
+        $third  = ($third == '.' ? 0 : $third);
+
+        if (is_numeric($first)  && !is_numeric($second) && is_numeric($third)) { //(...)1m2
+          $string = substr($string, 0, -2);
+          $si = $second;
+        } elseif (is_numeric($first)  && !is_numeric($second) && !is_numeric($third)) { //(...)1km
+          $string = substr($string, 0, -2);
+          $si = $second . $third;
+        } elseif (is_numeric($first)  && is_numeric($second) && !is_numeric($third)) { //(...)12m
+          $string = substr($string, 0, -1);
+          $si = $third;
+        } elseif ( // (...)1km2
+            strlen($string) > 3 &&
+            is_numeric($first) &&
+            !is_numeric($second) &&
+            is_numeric($third) &&
+            is_numeric($string[strlen($string)-4])
+          ) {
+            $string = substr($string, 0, -3);
+            $si = $first . $second;
+        }
+      }
+
+      switch ($key) {
+        case 'area_bwf':
+        case 'area_nwf':
+        case 'area_sia_gf':
+        case 'area_sia_nf':
+          if(!$si) {
+            $si = 'm';
+          }
+          break;
+        default:
+          break;
+      }
+
+
+      return array('value' => (FLOAT) $string, 'si' => $si);
+    }
+
     public function casawp_convert_categoryKeyToLabel($key, $fallback = ''){
         $label = null;
 
@@ -434,55 +584,25 @@
         }
     }
 
-    public function casawp_get_allDistanceKeys(){
-        return array(
-            'distance_public_transport',
-            'distance_shop',
-            'distance_kindergarten',
-            'distance_motorway',
-            'distance_school1',
-            'distance_school2',
-            'distance_bus_stop',
-            'distance_train_station',
-            'distance_post',
-            'distance_bank',
-            'distance_cable_railway_station',
-            'distance_boat_dock',
-            'distance_airport'
-        );
-    }
-
-    public function casawp_convert_distanceKeyToLabel($key){
+    public function casawp_convert_utilityKeyToLabel($key){
         switch ($key) {
-            case 'distance_public_transport':      return __('Public transportation' ,'casawp');break;
-            case 'distance_shop':                  return __('Shopping' ,'casawp');break;
-            case 'distance_kindergarten':          return __('Kindergarten' ,'casawp');break;
-            case 'distance_motorway':              return __('Motorway' ,'casawp');break;
-            case 'distance_school1':               return __('Primary school' ,'casawp');break;
-            case 'distance_school2':               return __('Secondary school' ,'casawp');break;
-            case 'distance_bus_stop':              return __('Bus stop' ,'casawp');break;
-            case 'distance_train_station':         return __('Train station' ,'casawp');break;
-            case 'distance_post':                  return __('Post' ,'casawp');break;
-            case 'distance_bank':                  return __('Bank' ,'casawp');break;
-            case 'distance_cable_railway_station': return __('Railway Station' ,'casawp');break;
-            case 'distance_boat_dock':             return __('Boat dock' ,'casawp');break;
-            case 'distance_airport':               return __('Airport', 'casawp');break;
+            case 'commercial':   return __('Commercial' ,'casawp');break;
+            case 'gastronomy': return __('Gastronomy' ,'casawp');break;
+            case 'vacation': return __('Vacation' ,'casawp');break;
+            case 'agricultural': return __('Agricultural' ,'casawp');break;
+            case 'industrial': return __('Industrial' ,'casawp');break;
+            case 'residential': return __('Residential' ,'casawp');break;
+            case 'storage': return __('Storage' ,'casawp');break;
+            case 'parking': return __('Parking' ,'casawp');break;
+            case 'building': return __('Building' ,'casawp');break;
+            case 'investment': return __('Investment' ,'casawp');break;
         }
     }
 
-    public function casawp_convert_availabilityKeyToLabel($key){
+    public function casawp_convert_salestypeKeyToLabel($key){
         switch ($key) {
-            //old
-            case 'on-request':   return __('On Request' ,'casawp');break;
-            case 'by-agreement': return __('By Agreement' ,'casawp');break;
-            case 'immediately':  return __('Immediate' ,'casawp');break;
-
-            //new
-            case 'active':       return __('Available' ,'casawp');break;
-            case 'reserved':     return __('Reserved' ,'casawp');break;
-            case 'sold':         return __('Sold' ,'casawp');break;
-            case 'rented':       return __('Rented' ,'casawp');break;
-            case 'reference':    return __('Reference' ,'casawp');break;
+            case 'buy':   return __('Buy' ,'casawp');break;
+            case 'rent': return __('Rent' ,'casawp');break;
         }
     }
 
@@ -561,103 +681,5 @@
 
             default : return $key . ($value ? ': ' . $value : ''); break;
         }
-    }
-
-    public function casawp_get_allNumvalKeys(){
-      return array(
-        #'surface_living',
-        #'surface_usable',
-        'area_bwf',
-        'area_nwf',
-        'area_sia_gf',
-        'area_sia_nf',
-        'surface_property',
-        'year_renovated',
-        'year_built',
-        'number_of_rooms',
-        'number_of_floors',
-        'number_of_lavatory',
-        'number_of_toilets_guest',
-        'floor',
-        'number_of_apartments',
-        'volume',
-        'ceiling_height',
-        'hall_height',
-        'maximal_floor_loading',
-        'carrying_capacity_crane',
-        'carrying_capacity_elevator'
-      );
-    }
-
-    public function casawp_numStringToArray($key, $string){
-      
-      $si = false;
-      if ($string == '') {
-        return false;
-      }
-      if (strlen($string) == 1) {
-        if (!is_numeric($string[0])) {
-           $string = false;
-        }
-      } elseif (strlen($string) == 2) { // 23 or m2 or km or 1m
-        $first  = $string[strlen($string)-2];
-        $second = $string[strlen($string)-1];
-
-        //avoid float dots to be considered as SI
-        $first  = ($first == '.' ? 0 : $first);
-        $second = ($first == '.' ? 0 : $first);
-
-        if ( !is_numeric($string[0]) ) { //m2 or km
-          $string = false;
-        } elseif (is_numeric($first) && !is_numeric($second)) { // 1m
-          $string = substr($string, 0, -1);
-          $si = $second;
-        }
-      } elseif (strlen($string) > 2) { //123 or 1m2 or 1km or 12m
-        $first  = $string[strlen($string)-3];
-        $second = $string[strlen($string)-2];
-        $third  = $string[strlen($string)-1];
-
-        //avoid float dots to be considered as SI
-        $first  = ($first == '.' ? 0 : $first);
-        $second = ($second == '.' ? 0 : $second);
-        $third  = ($third == '.' ? 0 : $third);
-
-        if (is_numeric($first)  && !is_numeric($second) && is_numeric($third)) { //(...)1m2
-          $string = substr($string, 0, -2);
-          $si = $second;
-        } elseif (is_numeric($first)  && !is_numeric($second) && !is_numeric($third)) { //(...)1km
-          $string = substr($string, 0, -2);
-          $si = $second . $third;
-        } elseif (is_numeric($first)  && is_numeric($second) && !is_numeric($third)) { //(...)12m
-          $string = substr($string, 0, -1);
-          $si = $third;
-        } elseif ( // (...)1km2
-            strlen($string) > 3 &&
-            is_numeric($first) &&
-            !is_numeric($second) &&
-            is_numeric($third) &&
-            is_numeric($string[strlen($string)-4])
-          ) {
-            $string = substr($string, 0, -3);
-            $si = $first . $second;
-        }
-      }
-
-      switch ($key) {
-        case 'area_bwf':
-        case 'area_nwf':
-        case 'area_sia_gf':
-        case 'area_sia_nf':
-          if(!$si) {
-            $si = 'm';
-          }
-          break;
-        default:
-          break;
-      }
-
-
-      return array('value' => (FLOAT) $string, 'si' => $si);
     }
   }
