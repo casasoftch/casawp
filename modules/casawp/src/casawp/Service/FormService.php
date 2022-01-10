@@ -201,7 +201,7 @@ class FormService{
   								$result = curl_exec($ch);
   								$json = json_decode($result, true);
   								if (isset($json['validation_messages'])) {
-  									wp_mail( 'js@casasoft.ch', 'casawp casamail issue', print_r($json['validation_messages'], true));
+  									wp_mail( 'dev@casasoft.ch', 'casawp casamail issue publisher ' . $data['publisher'], print_r($json['validation_messages'], true));
   									return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
   								}
 
