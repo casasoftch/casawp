@@ -569,6 +569,7 @@ class Import {
       }
     }
 
+
     if (get_option('casawp_limit_reference_images') && $property['availability'] == 'reference') {
       $title_image = false;
       foreach ($the_casawp_attachments as $key => $attachment) {
@@ -604,6 +605,7 @@ class Import {
         $wp_casawp_attachments[] = $attachment;
       }
     }
+
 
     //upload necesary images to wordpress
     if (isset($the_casawp_attachments)) { // go through each attachment specified in xml
@@ -2003,6 +2005,7 @@ class Import {
         'post_status' =>  'publish'
         )
       );
+      
       foreach ($properties_to_remove as $prop_to_rm) {
         //remove the attachments
         $attachments = get_posts( array(
@@ -2011,11 +2014,23 @@ class Import {
           'post_type'      => 'attachment',
           'posts_per_page' => -1,
           'post_parent'    => $prop_to_rm->ID,
-          'exclude'        => get_post_thumbnail_id()
+          'exclude'        => get_post_thumbnail_id(),
+          'tax_query'   => array(
+            'relation'  => 'AND',
+            array(
+              'taxonomy' => 'casawp_attachment_type',
+              'field'    => 'slug',
+              'terms'    => array( 'image', 'plan', 'document', 'offer-logo', 'sales-brochure' )
+            )
+          )
         ) );
+
         if ( $attachments ) {
           foreach ( $attachments as $attachment ) {
             $attachment_id = $attachment->ID;
+            if (get_option('casawp_permanently_delete_properties')) {
+              wp_delete_attachment( $attachment->ID );
+            }
           }
         }
         if (get_option('casawp_permanently_delete_properties')) {
@@ -2423,6 +2438,7 @@ class Import {
   }
 
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post){
+
 
     $new_meta_data = array();
 
