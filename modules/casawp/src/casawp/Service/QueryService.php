@@ -242,6 +242,10 @@ class QueryService{
                 $args['meta_key'] = 'property_address_locality';
                 $args['orderby'] = 'meta_value';
                 break;
+            case 'rooms':
+                $args['meta_key'] = 'number_of_rooms';
+                $args['orderby'] = 'meta_value';
+                break;
             case 'price':
                 $args['meta_key'] = 'priceForOrder';
                 $args['orderby'] = 'meta_value';
