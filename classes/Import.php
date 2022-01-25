@@ -2750,9 +2750,9 @@ class Import {
     } else if ($tmp_area_sia_nf) {
       $new_meta_data['areaForOrder'] = $tmp_area_sia_nf;
     }
-    // else {
-    //      $new_meta_data['areaForOrder'] = 0;
-    //    }
+     /* else {
+          $new_meta_data['areaForOrder'] = 0;
+        } */
 
     //integratedOffers
     //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
