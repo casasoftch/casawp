@@ -7,7 +7,7 @@ class QueryService{
 
     public function __construct(){
         $this->defaultQuery = array(
-            'post-type' => 'casawp_property',
+            'post_type' => 'casawp_property',
             'posts_per_page' => get_option('posts_per_page', 10),
             'order' => get_option('casawp_archive_order', 'DESC'),
             'ignore_sticky_posts' => 0,
@@ -218,7 +218,7 @@ class QueryService{
 
     public function getArgs(){
         $args = array();
-        $args['post-type'] = $this->query['post-type'];
+        $args['post_type'] = $this->query['post_type'];
         $args['posts_per_page'] = $this->query['posts_per_page'];
         $args['order'] = $this->query['order'];
 
@@ -244,19 +244,19 @@ class QueryService{
                 break;
             case 'rooms':
                 $args['meta_key'] = 'number_of_rooms';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'area':
                 $args['meta_key'] = 'areaForOrder';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'price':
                 $args['meta_key'] = 'priceForOrder';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'start':
                 $args['meta_key'] = 'priceForOrder';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'menu_order':
                 $args['orderby'] = 'menu_order date';

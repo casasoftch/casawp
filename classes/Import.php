@@ -2727,11 +2727,30 @@ class Import {
 
 
     //price for order
-    $tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== "")      ? ($new_meta_data['price'])      :(9999999999);
-    $tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") ? ($new_meta_data['grossPrice']) :(9999999999);
-    $tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== "")   ? ($new_meta_data['netPrice'])   :(9999999999);
-    $new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
 
+    if (array_key_exists('price', $new_meta_data) && $new_meta_data['price'] !== "") {
+      $tmp_price = $new_meta_data['price'];
+    } elseif(array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") {
+      $tmp_price = $new_meta_data['grossPrice'];
+    } elseif(array_key_exists('netPrice', $new_meta_data) && $new_meta_data['netPrice'] !== "") {
+      $tmp_price = $new_meta_data['netPrice'];
+    } else {
+      $tmp_price = 9999999999;
+    }
+
+    $new_meta_data['priceForOrder'] = $tmp_price;
+
+    #$tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== "")      ? ($new_meta_data['price'])      :(9999999999);
+    #$tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") ? ($new_meta_data['grossPrice']) :(9999999999);
+    #$tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== "")   ? ($new_meta_data['netPrice'])   :(9999999999);
+    #$new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
+    /* if ($tmp_price) {
+      $new_meta_data['priceForOrder'] = $tmp_price;
+    } else if ($tmp_grossPrice) {
+      $new_meta_data['priceForOrder'] = $tmp_grossPrice;
+    } else if ($tmp_netPrice) {
+      $new_meta_data['priceForOrder'] = $tmp_netPrice;
+    } */
     //nuvals
     $numericValues = array();
     foreach ($property['numeric_values'] as $numval) {
