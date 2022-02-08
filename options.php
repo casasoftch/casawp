@@ -129,6 +129,8 @@
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
 					'casawp_permanently_delete_properties',
+					'casawp_auto_translate_properties',
+					'casawp_custom_slug',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
 					'casawp_remCat',
@@ -1385,6 +1387,12 @@
 										</label></p>
 										<p class="description" id="tagline-description">Erlaubt ist nur der div-Tag mit den Attributen id und class.</p>
 									</fieldset>
+									<legend class="screen-reader-text"><span>Custom Slug</span></legend>
+									<?php $name = 'casawp_custom_slug'; ?>
+									<?php $text = 'Custom Slug'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
+									<input type="text" placeholder="Custom Slug definieren" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
+
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1414,7 +1422,16 @@
 										<?php $name = 'casawp_permanently_delete_properties'; ?>
 										<?php $text = 'Zu löschende Objekte direkt löschen (Papierkorb überspringen).'; ?>
 										<p><label>
-											<input id="ckRef" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Zu löschende Objekte direkt löschen (Papierkorb überspringen).
+											<input id="ckDel" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Zu löschende Objekte direkt löschen (Papierkorb überspringen).
+										</label></p>
+									</fieldset>
+
+									<fieldset>
+										<legend class="screen-reader-text"><span>Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).</span></legend>
+										<?php $name = 'casawp_auto_translate_properties'; ?>
+										<?php $text = 'Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).'; ?>
+										<p><label>
+											<input id="ckTrans" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).
 										</label></p>
 									</fieldset>
 

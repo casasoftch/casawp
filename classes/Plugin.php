@@ -2806,6 +2806,11 @@ class Plugin {
             'not_found_in_trash' => __('No properties found in Trash', 'casawp'),
             'menu_name'          => __('Properties', 'casawp')
         );
+        if (get_option('casawp_custom_slug')) {
+            $casawpSlug = array( 'slug' => get_option('casawp_custom_slug') );
+        } else {
+            $casawpSlug = array( 'slug' => 'immobilien' );
+        }
         $args = array(
             'labels'             => $labels,
             'public'             => true,
@@ -2813,7 +2818,7 @@ class Plugin {
             'show_ui'            => true,
             'show_in_menu'       => true,
             'query_var'          => true,
-            'rewrite'            => array( 'slug' => 'immobilien' ),
+            'rewrite'            => $casawpSlug,
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => true,

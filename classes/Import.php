@@ -101,7 +101,7 @@ class Import {
     if ($the_description) {
       return $the_description;
     } else {
-      return '...';
+      return '';
     }
 
   }
@@ -1796,6 +1796,31 @@ class Import {
       if (!$translations[$language['language_code']]) {
         $copy = $carbon;
         $copy['lang'] = $language['language_code'];
+        
+        if (get_option('casawp_auto_translate_properties')) {
+          if ($copy['type'] == 'rent') {
+            if ($language['language_code'] == 'de') {
+              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
+            } elseif($language['language_code'] == 'fr') {
+              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
+            } elseif($language['language_code'] == 'en') {
+              $copy['name'] = 'Property for rent in ' . $copy['locality'];
+            } elseif($language['language_code'] == 'it') {
+              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
+            }
+          } else {
+            if ($language['language_code'] == 'de') {
+              $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
+            } elseif($language['language_code'] == 'fr') {
+              $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
+            } elseif($language['language_code'] == 'en') {
+              $copy['name'] = 'Property for sale in ' . $copy['locality'];
+            } elseif($language['language_code'] == 'it') {
+              $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
+            }
+          }          
+          $copy['descriptions'] = array();
+        }
         $translations[$language['language_code']] = $copy;
       }
     }
@@ -1901,9 +1926,11 @@ class Import {
         $i++;
         if ($offer['lang'] == $this->getMainLang()) {
           $theoffers[0] = $offer;
+          $theoffers[0]['locality'] = $propertyData['address']['locality'];
         } else {
           if ($this->hasWPML()) {
             $theoffers[$i] = $offer;
+            $theoffers[$i]['locality'] = $propertyData['address']['locality'];
           }
         }
       }
@@ -1938,6 +1965,7 @@ class Import {
         if (array_key_exists($casawp_id, $posts_pool)) {
           $wp_post = $posts_pool[$casawp_id];
         }
+        
 
         //if not create a basic property
         if (!$wp_post) {
