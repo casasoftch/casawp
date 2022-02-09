@@ -1968,8 +1968,10 @@ class Plugin {
     }
 
     function registerScriptsAndStyles(){
-        wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
-        wp_enqueue_style( 'casawp_css' );
+        if (get_option('casawp_load_css', false)) {
+            wp_register_style( 'casawp_css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.css' );
+            wp_enqueue_style( 'casawp_css' );
+        }
         $version = 4;
         if (get_option( 'casawp_load_scripts_in_footer', 1 )) {
             wp_enqueue_script('casawp', CASASYNC_PLUGIN_URL . 'plugin-assets/global/casawp.js', array( 'jquery', 'jstorage' ), $version, true);
