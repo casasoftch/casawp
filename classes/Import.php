@@ -1791,6 +1791,10 @@ class Import {
       }
     }
 
+    /* echo '<pre>';
+    print_r($carbon);
+    echo '</pre>';
+    die(); */
     //copy main language to missing translations
     foreach ($languages as $language) {
       if (!$translations[$language['language_code']]) {
@@ -1798,27 +1802,108 @@ class Import {
         $copy['lang'] = $language['language_code'];
         
         if (get_option('casawp_auto_translate_properties')) {
-          if ($copy['type'] == 'rent') {
-            if ($language['language_code'] == 'de') {
-              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
-            } elseif($language['language_code'] == 'fr') {
-              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
-            } elseif($language['language_code'] == 'en') {
-              $copy['name'] = 'Property for rent in ' . $copy['locality'];
-            } elseif($language['language_code'] == 'it') {
-              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
+
+          if ($copy['urls']) {
+            foreach ($copy['urls'] as $i => $url) {
+              $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
+              $urlString = strtok($urlString, '/');
+              $copy['urls'][$i]['title'] = $urlString;
             }
-          } else {
-            if ($language['language_code'] == 'de') {
+          }
+
+          if ($language['language_code'] == 'de') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
+            } else {
               $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
-            } elseif($language['language_code'] == 'fr') {
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {                  
+                  $copy['offer_medias'][$i]['title'] = 'Dokument #' . $doc;
+                  $doc++;
+                } elseif($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Bild #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif($language['language_code'] == 'fr') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
+            } else {
               $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
-            } elseif($language['language_code'] == 'en') {
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {                  
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif($language['language_code'] == 'en') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Property for rent in ' . $copy['locality'];
+            } else {
               $copy['name'] = 'Property for sale in ' . $copy['locality'];
-            } elseif($language['language_code'] == 'it') {
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {                  
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif($language['language_code'] == 'it') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
+            } else {
               $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
             }
-          }          
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {                  
+                  $copy['offer_medias'][$i]['title'] = 'Documento #' . $doc;
+                  $doc++;
+                } elseif($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Piano #' . $plan;
+                  $plan++;
+                } elseif($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Immagine #' . $img;
+                  $img++;
+                }
+              }
+            }
+          }        
           $copy['descriptions'] = array();
         }
         $translations[$language['language_code']] = $copy;
@@ -1837,7 +1922,6 @@ class Import {
       }
     }
     ksort($theoffers);
-
     return $theoffers;
   }
 
