@@ -1133,6 +1133,12 @@
 									
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Publisher Slug</label>
 									<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Key</label>
+									<input name="casawp_recaptcha" type="text" value="<?= get_option('casawp_recaptcha') ?>" class="regular-text">
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Secret</label>
+									<input name="casawp_recaptcha_secret" type="text" value="<?= get_option('casawp_recaptcha_secret') ?>" class="regular-text">
 									<fieldset class="margin-top">
 										<label>
 											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
@@ -1143,7 +1149,6 @@
 											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
 										</label>
 									</fieldset>
-									
 								</td>
 							</tr>
 						<?php echo $table_end; ?>

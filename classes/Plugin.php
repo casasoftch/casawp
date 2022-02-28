@@ -467,7 +467,8 @@ class Plugin {
             'form' => $formResult['form'],
             'offer' => $offer,
             'project' => $project,
-            'sent' => $formResult['sent']
+            'sent' => $formResult['sent'],
+            'invalidCaptcha' => $formResult['invalidCaptcha']
         ));
         return $result;
     }
