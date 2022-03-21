@@ -535,8 +535,8 @@ class QueryService{
             $results = $wpdb->get_results( $sql, ARRAY_A );
 
             $post_ids = wp_list_pluck( $results, 'ID' );
-
-            $args['post__in'] = $post_ids;
+            
+            $args['post__in'] = empty( $post_ids ) ? [ 0 ] : $post_ids;
             
         }
 
