@@ -1219,6 +1219,7 @@ class ConversionService {
                         'boat-dry-dock',
                         'boat-landing-stage',
                         'cafe-bar',
+                        'restaurant',
                         'campground',
                         'double-garage',
                         'duplex',

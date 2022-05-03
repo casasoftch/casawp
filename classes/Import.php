@@ -66,6 +66,44 @@ class Import {
     return true;
   }
 
+  public function casawp_sanitize_title($result){
+      $result = strtolower($result);
+      $replacer = array(
+          '&shy;' => '',
+          ' ' => '-',
+          'ä' => 'ae',
+          'ö' => 'oe',
+          'ü' => 'ue',
+          'é' => 'e',
+          'è' => 'e',
+          'ê' => 'e',
+          'à' => 'a',
+          'ô' => 'o',
+          'ò' => 'o',
+          'û' => 'u',
+          'â' => 'a',
+          'ì' => 'i',
+          'î' => 'i',
+          'ï' => 'i',
+          'æ' => 'ae',
+          'œ' => 'oe',
+          'ÿ' => 'y',
+          'ù' => 'u',
+          'û' => 'u',
+          'ë' => 'e',
+          'ç' => 'c',
+          'ß' => 'ss',
+          '/' => '-',
+          ',' => '-'
+      );
+
+      foreach ($replacer as $key => $value) {
+          $result = str_replace($key, $value, $result);
+      }
+      $result = preg_replace('/[^A-Za-z0-9\-]/', '', $result);
+      return $result;
+  }
+
   public function extractDescription($offer, $publisher_options = null){
     $descriptionDatas = $offer['descriptions'];
 
@@ -1346,6 +1384,10 @@ class Import {
   }
 
   public function property2Array($property_xml){
+    /* echo '<pre>';
+    print_r($property_xml);
+    echo '</pre>';
+    die(); */
     $propertydata['address'] = array(
         'country'       => ($property_xml->address->country->__toString() ?:''),
         'locality'      => ($property_xml->address->locality->__toString() ?:''),
@@ -1442,6 +1484,8 @@ class Import {
             }
         }
     }
+
+    
 
     $propertydata['features'] = array();
     if ($property_xml->features) {
@@ -1604,6 +1648,8 @@ class Import {
             }
             $offerData['descriptions'] = $descriptionDatas;
 
+            
+
             //attachments
             $offerData['offer_medias'] = array();
             if ($offer_xml->attachments) {
@@ -1631,6 +1677,11 @@ class Import {
                     );
                 }
             }
+
+            /*  echo '<pre>';
+            print_r($offerData['offer_medias']);
+            echo '</pre>';
+            die(); */
 
             $offerDatas[] = $offerData;
 
@@ -1905,6 +1956,7 @@ class Import {
             }
           }        
           $copy['descriptions'] = array();
+          $copy['excerpt'] = '';
         }
         $translations[$language['language_code']] = $copy;
       }
@@ -1995,6 +2047,10 @@ class Import {
 
     // die();
 
+    /* echo '<pre>';
+    print_r($xml->properties);
+    echo '</pre>';
+    die(); */
 
     foreach ($xml->properties->property as $property) {
       $curRank++;
@@ -2018,6 +2074,11 @@ class Import {
           }
         }
       }
+
+     /*  echo '<pre>';
+      print_r($theoffers);
+      echo '</pre>';
+      die(); */
 
       //complete missing translations if multilingual
       if ($this->hasWPML()) {
@@ -2050,7 +2111,7 @@ class Import {
           $wp_post = $posts_pool[$casawp_id];
         }
         
-
+        
         //if not create a basic property
         if (!$wp_post) {
           $this->transcript[$casawp_id]['action'] = 'new';
@@ -2059,7 +2120,7 @@ class Import {
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_property';
           $the_post['menu_order'] = $curRank;
-          $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offerData['name'],'','save');
+          $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']);
 
           //use the casagateway creation date if its new
           $the_post['post_date'] = ($propertyData['creation'] ? $propertyData['creation']->format('Y-m-d H:i:s') : $propertyData['last_update']->format('Y-m-d H:i:s'));
@@ -2090,6 +2151,8 @@ class Import {
       // }
       // echo '</pre>';
     }
+    /* print_r($propertyData);
+    die(); */
     // echo'<br />Total';
     // echo number_format((microtime(true) - $totalTime), 10);
     // echo '<br />';
@@ -2255,7 +2318,7 @@ class Import {
             $the_post['post_content'] = 'unsaved project';
             $the_post['post_status'] = 'publish';
             $the_post['post_type'] = 'casawp_project';
-            $the_post['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
+            $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
             $_POST['icl_post_language'] = $lang;
             $insert_id = wp_insert_post($the_post);
 
@@ -2423,7 +2486,7 @@ class Import {
 
         //manage post_name and post_date (if new)
         if (!$wp_post->post_name) {
-          $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $projectData['detail']['name'],'','save');
+          $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
           //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
         } else {
           $new_main_data['post_name'] = $wp_post->post_name;
@@ -2496,7 +2559,7 @@ class Import {
           $the_post['post_content'] = 'unsaved unit';
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_project';
-          $the_post['post_name'] = sanitize_title_with_dashes($unit_casawp_id . '-' . $unitData['detail']['name'],'','save');
+          $the_post['post_name'] = $this->casawp_sanitize_title($unit_casawp_id . '-' . $unitData['detail']['name']);
           $_POST['icl_post_language'] = $lang;
           $insert_id = wp_insert_post($the_post);
           update_post_meta($insert_id, 'casawp_id', $unit_casawp_id);
@@ -2648,7 +2711,7 @@ class Import {
 
       //manage post_name and post_date (if new)
       if (!$wp_post->post_name) {
-        $new_main_data['post_name'] = sanitize_title_with_dashes($casawp_id . '-' . $offer['name'],'','save');
+        $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
         //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
       } else {
         $new_main_data['post_name'] = $wp_post->post_name;
@@ -3007,6 +3070,7 @@ class Import {
         }
 
       }
+     
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
     }
 
