@@ -39,6 +39,27 @@
 	<?= $renderobject->renderContactFormElement($form->get('emailreal'), $form) ?>
 	<?= $renderobject->renderContactFormElement($form->get('message'), $form) ?>
 
+	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret')): ?>
+		<div class="g-recaptcha" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
+		<div id="recaptchaerror" <?php echo (!$invalidCaptcha ? 'style="display: none;"' : '') ?> class="alert alert-danger" role="alert">
+			<?php echo __('Invalid reCAPTCHA response!', 'casawp') ?>
+		</div>
+		<div id="casawpRecaptcha"></div>
+		<script>
+			window.captchaKey = '<?php echo $form->escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+		</script>
+		<script>
+			var onloadCallback = function() {
+				grecaptcha.render('casawpRecaptcha', {
+				'sitekey' : window.captchaKey
+				});
+			};
+		</script>
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+			async defer>
+		</script>
+	<?php endif; ?>
+
 	<div class="row">
 	    <div class="col-md-7 casawp-input-left">
 	        <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>

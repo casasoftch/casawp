@@ -199,6 +199,10 @@ class ContactForm extends Form
         ));
     }
 
+    public function escapeJavaScriptText($string){
+        return str_replace("\n", '\n', str_replace('"', '\"', addcslashes(str_replace("\r", '', (string)$string), "\0..\37'\\")));
+    }
+
     public function setCustomFilters($filters){
         $this->customFilters = $filters;
     }
