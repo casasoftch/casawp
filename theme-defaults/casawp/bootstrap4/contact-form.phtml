@@ -39,14 +39,14 @@
 	<?= $renderobject->renderContactFormElement($form->get('emailreal'), $form) ?>
 	<?= $renderobject->renderContactFormElement($form->get('message'), $form) ?>
 
-	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret')): ?>
+	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && !get_option('casawp_recaptcha_v3')): ?>
 		<div class="g-recaptcha" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
 		<div id="recaptchaerror" <?php echo (!$invalidCaptcha ? 'style="display: none;"' : '') ?> class="alert alert-danger" role="alert">
 			<?php echo __('Invalid reCAPTCHA response!', 'casawp') ?>
 		</div>
 		<div id="casawpRecaptcha"></div>
 		<script>
-			window.captchaKey = '<?php echo $form->escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+			window.captchaKey = '<?php echo escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
 		</script>
 		<script>
 			var onloadCallback = function() {
@@ -58,6 +58,37 @@
 		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
 			async defer>
 		</script>
+	<?php elseif(get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && get_option('casawp_recaptcha_v3')): ?>
+		<div class="g-recaptcha-v3" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
+		<script src="https://www.google.com/recaptcha/api.js?render=<?php echo get_option('casawp_recaptcha') ?>"></script>
+		<input type="hidden" id="gRecaptchaResponse" name="g-recaptcha-response">
+		<script>
+			window.captchaKey = '<?php echo $form->escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+		</script>
+		<script>
+
+			var form = document.getElementById("casawpPropertyContactForm");
+
+			form.addEventListener('submit', event => {
+				event.preventDefault()
+				validate(form)
+			});
+
+			function validate(form) {
+				getRecaptchaToken(form)
+			}
+
+			function getRecaptchaToken(form) {
+				grecaptcha.ready(function() {
+					grecaptcha.execute(window.captchaKey, {action: 'casawpPropertyContactForm'}).then(function(token) {
+						gRecaptchaResponse.value = token //set the value of the hidden field
+						form.submit() //submit the form
+					});
+				});
+			}
+			
+		</script>
+
 	<?php endif; ?>
 
 	<div class="row">
@@ -69,6 +100,12 @@
 	    </div>
 	    <div class="clearBoth"></div>
 	</div>
+
+	<?php 
+	/*echo '<pre>';
+		print_r($form->getMessages());
+	echo '</pre>';*/
+	 ?>
 
 	<?= $this->form()->closeTag(); ?>
 

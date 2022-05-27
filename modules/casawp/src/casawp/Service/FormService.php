@@ -342,7 +342,14 @@ class FormService{
 		$result = json_decode($response, true);
 		//  print_r($result);
 
-		if ($result['success']) {
+		$is_recaptcha_v3 = false;
+		if (get_option('casawp_recaptcha_v3')) {
+			$is_recaptcha_v3 = true;
+		}
+	
+		if (!$result['success'] || ($is_recaptcha_v3 && $result['score'] <= get_option('casawp_recaptcha_v3_score'))) {
+			throw new \Exception('Gah! CAPTCHA verification failed.', 1);
+		} else {
 			return 'success';
 		}
 	}

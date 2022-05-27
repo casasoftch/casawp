@@ -1139,6 +1139,16 @@
 
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Secret</label>
 									<input name="casawp_recaptcha_secret" type="text" value="<?= get_option('casawp_recaptcha_secret') ?>" class="regular-text">
+									
+									<fieldset class="margin-top">
+										<label>
+											<input type="checkbox" name="casawp_recaptcha_v3" value="1" <?php echo (get_option('casawp_recaptcha_v3') == '1' ? 'checked="checked"' : ''); ?>> Google reCAPTCHA v3 aktivieren
+										</label>
+									</fieldset>
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA v3 score</label>
+									<input name="casawp_recaptcha_v3_score" type="number" step="0.1" <?php echo (get_option('casawp_recaptcha_v3_score') ? 'value="' . get_option('casawp_recaptcha_v3_score') . '"' : 'value="0.4"'); ?> class="regular-text">
+
 									<fieldset class="margin-top">
 										<label>
 											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
