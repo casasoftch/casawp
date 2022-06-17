@@ -322,36 +322,42 @@ class FormService{
 	}
 
 	private function verifyCaptcha($captchaResponse) {
-		$post_data = http_build_query(
-			array(
-			'secret' => get_option('casawp_recaptcha_secret'),
-			'response' => $_POST['g-recaptcha-response'],
-			'remoteip' => $_SERVER['REMOTE_ADDR']
-			)
-		);
-		$opts = array('http' =>
-			array(
-			'method'  => 'POST',
-			'header'  => 'Content-type: application/x-www-form-urlencoded',
-			'content' => $post_data
-			)
-		);
-		$context  = stream_context_create($opts);
-		// print_r($opts);
-		$response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
-		$result = json_decode($response, true);
-		//  print_r($result);
-
 		$is_recaptcha_v3 = false;
 		if (get_option('casawp_recaptcha_v3')) {
 			$is_recaptcha_v3 = true;
 		}
-	
-		if (!$result['success'] || ($is_recaptcha_v3 && $result['score'] <= get_option('casawp_recaptcha_v3_score'))) {
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, [
+			'secret' => get_option('casawp_recaptcha_secret'),
+			'response' => $captchaResponse,
+			'remoteip' => $_SERVER['REMOTE_ADDR']
+		]);
+
+		$response = json_decode(curl_exec($ch));
+		curl_close($ch);
+
+		$this->addToLogFormStuff('V3?: ' . $is_recaptcha_v3 . ' Success: ' . $response->success . ' Score: ' . $response->score . ' Score defined: ' . get_option('casawp_recaptcha_v3_score'));
+
+		if (empty($response->success) || ($is_recaptcha_v3 && $response->score <= get_option('casawp_recaptcha_v3_score', '0.4'))) {
+			// Fail
 			throw new \Exception('Gah! CAPTCHA verification failed.', 1);
 		} else {
+			// Success
 			return 'success';
 		}
+	}
+
+	public function addToLogFormStuff($transcript){
+		$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logsformstuff';
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, true);
+		}
+		file_put_contents($dir."/".get_date_from_gmt('', 'Ym').'.log', "\n".json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
 	}
 
 	public function renderContactForm($subjectItem = false, $viewfile = 'contact-form', $directRecipientEmail = null, $propertyReference = null){
