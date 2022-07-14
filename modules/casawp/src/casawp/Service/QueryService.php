@@ -21,6 +21,7 @@ class QueryService{
             'salestypes' => array(),
             'availabilities' => array('active'),
             'categories_not' => array(),
+            'utilities_not' => array(),
             'locations_not' => array(),
             'countries_not' => array(),
             'salestypes_not' => array(),
@@ -635,6 +636,15 @@ class QueryService{
                 'field'            => 'slug',
                 'operator'         => 'NOT IN'
 
+            );
+        }
+        if ($this->query['utilities_not']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => $this->query['utilities_not'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'NOT IN'
             );
         }
         if ($this->query['locations_not']) {
