@@ -573,11 +573,12 @@ class FilterForm extends Form
         } elseif ($depth == 2) {
             foreach ($parents as $parent) {
                 $value_options = array();
+                $value_options[$parent['slug']] = $parent['name'];
                 foreach ($parent['children'] as $child) {
                     $value_options[$child['slug']] = $child['name'];
                 }
                 $options[] = array(
-                    'label' => $parent['name'],
+                    /* 'label' => $parent['name'], */
                     'options' => $value_options
                 );
             }
