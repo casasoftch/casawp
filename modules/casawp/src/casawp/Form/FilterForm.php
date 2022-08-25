@@ -587,23 +587,24 @@ class FilterForm extends Form
                 foreach ($parent['children'] as $child) {
                     $value_options = array();
                     if ($child['children']) {
-                        $label = $parent['name'] . ' ' . $child['name'];
+                        $value_options[$child['slug']] = $parent['name'] . ' ' . $child['name'];
                         foreach ($child['children'] as $grandchild) {
                             $value_options[$grandchild['slug']] = $grandchild['name'];
                         }
                         $options[] = array(
-                            'label' => $label,
+                            /* 'label' => $label, */
                             'options' => $value_options
                         );
                     } else {
-                        $slug = 'country_' . $parent['slug'];
-                        if (!isset($options[$slug])) {
-                            $options[$slug] = [
-                                'label' => $parent['name'],
-                                'options' => array(),
+                        $value_options[$parent['slug']] = $parent['name'];
+                        if (!isset($options[$parent['slug']])) {
+                            $options[$parent['slug']] = [
+                                /* 'label' => $parent['name'], */
+                                'options' => $value_options,
                             ];
                         }
-                        $options[$slug]['options'][$child['slug']] =$child['name'];
+                        $options[$parent['slug']]['options'][$child['slug']] =$child['name'];
+                        #print_r($options);
                     }
 
                 }
