@@ -345,7 +345,8 @@ class FormService{
 
 		if (empty($response->success) || ($is_recaptcha_v3 && $response->score <= get_option('casawp_recaptcha_v3_score', '0.4'))) {
 			// Fail
-			throw new \Exception('Gah! CAPTCHA verification failed.', 1);
+			//throw new \Exception('Gah! CAPTCHA verification failed.', 1);
+			return 'fail';
 		} else {
 			// Success
 			return 'success';
