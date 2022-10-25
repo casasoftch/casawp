@@ -101,7 +101,7 @@ class ContactForm extends Form
                 'label' => __('ZIP', 'casawp'),
             ),
             'attributes' => array(
-                'required' => get_option('casawp_form_postal_code_required', false),
+                'required' => get_option('casawp_form_postalcode_required', false),
             ),
         ));
 
