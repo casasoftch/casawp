@@ -319,6 +319,7 @@
             case 'floor':                      return __('Floor' ,'casawp');break;
             case 'volume':                     return __('Volume' ,'casawp');break;
             case 'number_of_apartments':       return __('Number of apartments' ,'casawp');break;
+            case 'number_of_commercial_units':       return __('Number of commercial units' ,'casawp');break;
             case 'ceiling_height':             return __('Ceiling height' ,'casawp');break;
             case 'hall_height':                return __('Hall height' ,'casawp');break;
             case 'maximal_floor_loading':      return __('Maximal floor loading' ,'casawp');break;
@@ -402,6 +403,7 @@
         'number_of_toilets_guest',
         'floor',
         'number_of_apartments',
+        'number_of_commercial_units',
         'volume',
         'ceiling_height',
         'hall_height',

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CASAWP\n"
-"POT-Creation-Date: 2022-09-06 14:09+0200\n"
+"POT-Creation-Date: 2022-11-24 15:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n\n"
 "X-Poedit-Basepath: ..\n"
@@ -22,12 +22,12 @@ msgid ""
 "Import your properties directly from your real-estate managment software!"
 msgstr "Importez vos propriétés directement depuis votre logiciel immobilier!"
 
-#: classes/Archive.php:379 classes/Conversion.php:604 classes/Plugin.php:1310
+#: classes/Archive.php:379 classes/Conversion.php:606 classes/Plugin.php:1310
 #: classes/Plugin.php:2388
 msgid "Buy"
 msgstr "Acheter"
 
-#: classes/Archive.php:381 classes/Conversion.php:605 classes/Plugin.php:1309
+#: classes/Archive.php:381 classes/Conversion.php:607 classes/Plugin.php:1309
 #: classes/Plugin.php:2490
 msgid "Rent"
 msgstr "Louer"
@@ -36,7 +36,7 @@ msgstr "Louer"
 msgid "Active"
 msgstr "Actif"
 
-#: classes/Archive.php:403 classes/Conversion.php:384 classes/Plugin.php:1325
+#: classes/Archive.php:403 classes/Conversion.php:385 classes/Plugin.php:1325
 #: modules/casawp/src/casawp/Service/Offer.php:259
 #: modules/casawp/src/casawp/Service/Offer.php:261
 #: modules/casawp/src/casawp/Service/Project.php:190
@@ -47,7 +47,7 @@ msgstr "Actif"
 msgid "Reference"
 msgstr "Référence"
 
-#: classes/Archive.php:405 classes/Conversion.php:381
+#: classes/Archive.php:405 classes/Conversion.php:382
 #: modules/casawp/src/casawp/Service/Offer.php:257
 #: modules/casawp/src/casawp/Service/Project.php:188
 msgid "Reserved"
@@ -1255,81 +1255,85 @@ msgid "Number of apartments"
 msgstr "Nombre d'appartements"
 
 #: classes/Conversion.php:322
+msgid "Number of commercial units"
+msgstr "Nombre d’unités commerciales"
+
+#: classes/Conversion.php:323
 msgid "Ceiling height"
 msgstr "Hauteur sous plafond"
 
-#: classes/Conversion.php:323
+#: classes/Conversion.php:324
 msgid "Hall height"
 msgstr "Hauteur Hall"
 
-#: classes/Conversion.php:324
+#: classes/Conversion.php:325
 msgid "Maximal floor loading"
 msgstr "Charge au sol maximale"
 
-#: classes/Conversion.php:325
+#: classes/Conversion.php:326
 msgid "Carrying capacity crane"
 msgstr "Capacité de port de grue"
 
-#: classes/Conversion.php:326
+#: classes/Conversion.php:327
 msgid "Carrying capacity elevator"
 msgstr "Capacité de charge d'ascenseur"
 
-#: classes/Conversion.php:356
+#: classes/Conversion.php:357
 #: theme-defaults/casawp/bootstrap3/casadistance.phtml:236
 msgid "Public transportation"
 msgstr "Transports"
 
-#: classes/Conversion.php:357
+#: classes/Conversion.php:358
 #: theme-defaults/casawp/bootstrap3/casadistance.phtml:252
 msgid "Shopping"
 msgstr "Commerce"
 
-#: classes/Conversion.php:358
+#: classes/Conversion.php:359
 msgid "Kindergarten"
 msgstr "Garderie"
 
-#: classes/Conversion.php:359
+#: classes/Conversion.php:360
 msgid "Motorway"
 msgstr "Autoroute"
 
-#: classes/Conversion.php:360
+#: classes/Conversion.php:361
 msgid "Primary school"
 msgstr "École primaire"
 
-#: classes/Conversion.php:361
+#: classes/Conversion.php:362
 msgid "Secondary school"
 msgstr "École secondaire"
 
-#: classes/Conversion.php:362
+#: classes/Conversion.php:363
 msgid "Bus stop"
 msgstr "Arret d’autobus"
 
-#: classes/Conversion.php:363
+#: classes/Conversion.php:364
 msgid "Train station"
 msgstr "Gare"
 
-#: classes/Conversion.php:364
+#: classes/Conversion.php:365
 msgid "Post"
 msgstr "Bureau de poste"
 
-#: classes/Conversion.php:365
+#: classes/Conversion.php:366
 msgid "Bank"
 msgstr "Banque"
 
-#: classes/Conversion.php:366
+#: classes/Conversion.php:367
 msgid "Railway Station"
 msgstr "Gare ferroviaire"
 
-#: classes/Conversion.php:367
+#: classes/Conversion.php:368
 msgid "Boat dock"
 msgstr "Quai à bateau"
 
-#: classes/Conversion.php:368
+#: classes/Conversion.php:369
 #: theme-defaults/casawp/bootstrap3/casadistance.phtml:244
 msgid "Airport"
 msgstr "Aéroport"
 
-#: classes/Conversion.php:375 modules/casawp/src/casawp/Service/Offer.php:93
+#: classes/Conversion.php:376 modules/casawp/src/casawp/Service/Offer.php:93
 #: modules/casawp/src/casawp/Service/Offer.php:101
 #: modules/casawp/src/casawp/Service/Offer.php:109
 #: modules/casawp/src/casawp/Service/Offer.php:804
@@ -1353,444 +1357,444 @@ msgstr "Aéroport"
 msgid "On Request"
 msgstr "Sur demande"
 
-#: classes/Conversion.php:376
+#: classes/Conversion.php:377
 msgid "By Agreement"
 msgstr "selon accord"
 
-#: classes/Conversion.php:377 modules/casawp/src/casawp/Service/Offer.php:827
+#: classes/Conversion.php:378 modules/casawp/src/casawp/Service/Offer.php:827
 msgid "Immediate"
 msgstr "Immédiatement"
 
-#: classes/Conversion.php:380 modules/casawp/src/casawp/Service/Offer.php:258
+#: classes/Conversion.php:381 modules/casawp/src/casawp/Service/Offer.php:258
 #: modules/casawp/src/casawp/Service/Project.php:189
 msgid "Available"
 msgstr "Disponible"
 
-#: classes/Conversion.php:382 modules/casawp/src/casawp/Service/Offer.php:266
+#: classes/Conversion.php:383 modules/casawp/src/casawp/Service/Offer.php:266
 #: modules/casawp/src/casawp/Service/Project.php:197
 msgid "Sold"
 msgstr "Vendu"
 
-#: classes/Conversion.php:383 modules/casawp/src/casawp/Service/Offer.php:264
+#: classes/Conversion.php:384 modules/casawp/src/casawp/Service/Offer.php:264
 #: modules/casawp/src/casawp/Service/Project.php:195
 msgid "Rented"
 msgstr "Loué"
 
-#: classes/Conversion.php:508
+#: classes/Conversion.php:510
 msgid "Secondary rooms"
 msgstr "Chambres secondaires"
 
-#: classes/Conversion.php:509
+#: classes/Conversion.php:511
 msgid "Garden"
 msgstr "Jardin"
 
-#: classes/Conversion.php:511
+#: classes/Conversion.php:513
 msgid "Apartment"
 msgstr "Appartement"
 
-#: classes/Conversion.php:512
+#: classes/Conversion.php:514
 msgid "Attic Flat"
 msgstr "Attique"
 
-#: classes/Conversion.php:513
+#: classes/Conversion.php:515
 msgid "Bachelor Flat"
 msgstr "Chambre d’étudiant"
 
-#: classes/Conversion.php:514
+#: classes/Conversion.php:516
 msgid "Bifamiliar House"
 msgstr "Maison mitoyenne"
 
-#: classes/Conversion.php:515
+#: classes/Conversion.php:517
 msgid "Building Land"
 msgstr "Terrain constructible"
 
-#: classes/Conversion.php:516
+#: classes/Conversion.php:518
 msgid "Double Garage"
 msgstr "Garage double"
 
-#: classes/Conversion.php:517
+#: classes/Conversion.php:519
 msgid "Duplex"
 msgstr "Duplex"
 
-#: classes/Conversion.php:518
+#: classes/Conversion.php:520
 msgid "Factory"
 msgstr "Usine"
 
-#: classes/Conversion.php:519
+#: classes/Conversion.php:521
 msgid "Farm"
 msgstr "Ferme"
 
-#: classes/Conversion.php:520
+#: classes/Conversion.php:522
 msgid "Farm House"
 msgstr "Maison de ferme"
 
-#: classes/Conversion.php:521
+#: classes/Conversion.php:523
 msgid "Furnished Flat"
 msgstr "Appartement meublé"
 
-#: classes/Conversion.php:522 classes/Conversion.php:616
+#: classes/Conversion.php:524 classes/Conversion.php:618
 msgid "Garage"
 msgstr "Garage"
 
-#: classes/Conversion.php:523
+#: classes/Conversion.php:525
 msgid "Loft"
 msgstr "Loft\t"
 
-#: classes/Conversion.php:524
+#: classes/Conversion.php:526
 msgid "Mountain Farm"
 msgstr "Ferme de montagne"
 
-#: classes/Conversion.php:525
+#: classes/Conversion.php:527
 msgid "Multiple Dwelling"
 msgstr "Immeuble collectif"
 
-#: classes/Conversion.php:526
+#: classes/Conversion.php:528
 msgid "Open Slot"
 msgstr "Emplacement ouvert"
 
-#: classes/Conversion.php:527
+#: classes/Conversion.php:529
 msgid "Parking Space"
 msgstr "Place de parc"
 
-#: classes/Conversion.php:528
+#: classes/Conversion.php:530
 msgid "Plot"
 msgstr "Terrain"
 
-#: classes/Conversion.php:529
+#: classes/Conversion.php:531
 msgid "Roof Flat"
 msgstr "Appartement sous toit"
 
-#: classes/Conversion.php:530
+#: classes/Conversion.php:532
 msgid "Row House"
 msgstr "Maison en rangée"
 
-#: classes/Conversion.php:531
+#: classes/Conversion.php:533
 msgid "Single Garage"
 msgstr "Garage simple"
 
-#: classes/Conversion.php:532
+#: classes/Conversion.php:534
 msgid "Single House"
 msgstr "Maison simple"
 
-#: classes/Conversion.php:533
+#: classes/Conversion.php:535
 msgid "Single Room"
 msgstr "Chambre indivduelle"
 
-#: classes/Conversion.php:534
+#: classes/Conversion.php:536
 msgid "Terrace Flat"
 msgstr "Appartement avec terrasse"
 
-#: classes/Conversion.php:535
+#: classes/Conversion.php:537
 msgid "Terrace House"
 msgstr "Maison avec terrasse"
 
-#: classes/Conversion.php:536
+#: classes/Conversion.php:538
 msgid "Underground Slot"
 msgstr "Logement sous-terrain"
 
-#: classes/Conversion.php:537
+#: classes/Conversion.php:539
 msgid "Villa"
 msgstr "Villa\t"
 
-#: classes/Conversion.php:538
+#: classes/Conversion.php:540
 msgid "Chalet"
 msgstr "Chalet"
 
-#: classes/Conversion.php:539
+#: classes/Conversion.php:541
 msgid "Studio"
 msgstr "Studio"
 
-#: classes/Conversion.php:540
+#: classes/Conversion.php:542
 msgid "House"
 msgstr "Maison"
 
-#: classes/Conversion.php:541
+#: classes/Conversion.php:543
 msgid "Covered Slot"
 msgstr "Logement couvert"
 
-#: classes/Conversion.php:543 classes/Conversion.php:589
+#: classes/Conversion.php:545 classes/Conversion.php:591
 msgid "Commercial"
 msgstr "Commerce"
 
-#: classes/Conversion.php:544 classes/Conversion.php:590
+#: classes/Conversion.php:546 classes/Conversion.php:592
 msgid "Gastronomy"
 msgstr "Gastronomie"
 
-#: classes/Conversion.php:545 classes/Conversion.php:591
+#: classes/Conversion.php:547 classes/Conversion.php:593
 msgid "Vacation"
 msgstr "Vacances"
 
-#: classes/Conversion.php:546
+#: classes/Conversion.php:548
 msgid "Agriculture"
 msgstr "Agriculture"
 
-#: classes/Conversion.php:547 classes/Conversion.php:593
+#: classes/Conversion.php:549 classes/Conversion.php:595
 msgid "Industrial"
 msgstr "Industrie"
 
-#: classes/Conversion.php:548 classes/Conversion.php:594
+#: classes/Conversion.php:550 classes/Conversion.php:596
 msgid "Residential"
 msgstr "Résidence"
 
-#: classes/Conversion.php:549 classes/Conversion.php:595
+#: classes/Conversion.php:551 classes/Conversion.php:597
 msgid "Storage"
 msgstr "Entrepot"
 
-#: classes/Conversion.php:550 classes/Conversion.php:632
+#: classes/Conversion.php:552 classes/Conversion.php:634
 msgid "Parking space"
 msgstr "Place de parking"
 
-#: classes/Conversion.php:551 classes/Conversion.php:597
+#: classes/Conversion.php:553 classes/Conversion.php:599
 msgid "Building"
 msgstr "Immeuble"
 
-#: classes/Conversion.php:552
+#: classes/Conversion.php:554
 msgid "Advertising Area"
 msgstr "Zone publicitaire"
 
-#: classes/Conversion.php:553
+#: classes/Conversion.php:555
 msgid "Arcade"
 msgstr "Arcade\t"
 
-#: classes/Conversion.php:554
+#: classes/Conversion.php:556
 msgid "Atelier"
 msgstr "Atelier"
 
-#: classes/Conversion.php:555
+#: classes/Conversion.php:557
 msgid "Bakery"
 msgstr "Boulangerie"
 
-#: classes/Conversion.php:556
+#: classes/Conversion.php:558
 msgid "Bar"
 msgstr "Bar"
 
-#: classes/Conversion.php:557
+#: classes/Conversion.php:559
 msgid "Butcher"
 msgstr "Boucher"
 
-#: classes/Conversion.php:558
+#: classes/Conversion.php:560
 msgid "Café"
 msgstr "Café"
 
-#: classes/Conversion.php:559
+#: classes/Conversion.php:561
 msgid "Casino"
 msgstr "Casino"
 
-#: classes/Conversion.php:560
+#: classes/Conversion.php:562
 msgid "Cheese Factory"
 msgstr "Fromagerie"
 
-#: classes/Conversion.php:561
+#: classes/Conversion.php:563
 msgid "Club/Disco"
 msgstr "Club/Disco"
 
-#: classes/Conversion.php:562
+#: classes/Conversion.php:564
 msgid "Fuel Station"
 msgstr "Station service"
 
-#: classes/Conversion.php:563
+#: classes/Conversion.php:565
 msgid "Gardening"
 msgstr "Jardinage"
 
-#: classes/Conversion.php:564
+#: classes/Conversion.php:566
 msgid "Hairdresser"
 msgstr "Coiffeur"
 
-#: classes/Conversion.php:565
+#: classes/Conversion.php:567
 msgid "Kiosk"
 msgstr "Kiosque"
 
-#: classes/Conversion.php:566
+#: classes/Conversion.php:568
 msgid "Movie Theater"
 msgstr "Cinéma"
 
-#: classes/Conversion.php:567
+#: classes/Conversion.php:569
 msgid "Office"
 msgstr "Bureau"
 
-#: classes/Conversion.php:568
+#: classes/Conversion.php:570
 msgid "Practice"
 msgstr "Cabinet"
 
-#: classes/Conversion.php:569
+#: classes/Conversion.php:571
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: classes/Conversion.php:570
+#: classes/Conversion.php:572
 msgid "Shop"
 msgstr "Magasin"
 
-#: classes/Conversion.php:571
+#: classes/Conversion.php:573
 msgid "Shopping Centre"
 msgstr "Centre commercial"
 
-#: classes/Conversion.php:572
+#: classes/Conversion.php:574
 msgid "Hotel"
 msgstr "Hotel\t"
 
-#: classes/Conversion.php:592
+#: classes/Conversion.php:594
 #, fuzzy
 #| msgid "Agriculture"
 msgid "Agricultural"
 msgstr "Agriculture"
 
-#: classes/Conversion.php:596
+#: classes/Conversion.php:598
 #, fuzzy
 #| msgid "Parking Space"
 msgid "Parking"
 msgstr "Place de parc"
 
-#: classes/Conversion.php:598
+#: classes/Conversion.php:600
 msgid "Investment"
 msgstr ""
 
-#: classes/Conversion.php:611
+#: classes/Conversion.php:613
 msgid "Child friendly"
 msgstr "Adapté aux enfants"
 
-#: classes/Conversion.php:614
+#: classes/Conversion.php:616
 #, php-format
 msgid "%d garages"
 msgstr "%d garages"
 
-#: classes/Conversion.php:621
+#: classes/Conversion.php:623
 #, php-format
 msgid "%dx balconies"
 msgstr "%d x balcons"
 
-#: classes/Conversion.php:623
+#: classes/Conversion.php:625
 msgid "Balcony"
 msgstr "Balcon"
 
-#: classes/Conversion.php:626
+#: classes/Conversion.php:628
 msgid "Vista"
 msgstr "Vue"
 
-#: classes/Conversion.php:627
+#: classes/Conversion.php:629
 msgid "Cable TV"
 msgstr "TV par câble"
 
-#: classes/Conversion.php:630
+#: classes/Conversion.php:632
 #, php-format
 msgid "%d Parking spaces"
 msgstr "%d places de parc"
 
-#: classes/Conversion.php:637
+#: classes/Conversion.php:639
 #, php-format
 msgid "%d Pets allowed"
 msgstr "%d animaux acceptés"
 
-#: classes/Conversion.php:639
+#: classes/Conversion.php:641
 msgid "Pets allowed"
 msgstr "Animaux acceptés"
 
-#: classes/Conversion.php:642
+#: classes/Conversion.php:644
 msgid "ISDN Anschluss"
 msgstr "Connexion ISDN"
 
-#: classes/Conversion.php:646
+#: classes/Conversion.php:648
 #, php-format
 msgid "%d Restrooms"
 msgstr "%d toilettes"
 
-#: classes/Conversion.php:648
+#: classes/Conversion.php:650
 msgid "Restrooms"
 msgstr "Toilettes"
 
-#: classes/Conversion.php:653
+#: classes/Conversion.php:655
 #, php-format
 msgid "%d elevators"
 msgstr "%d ascenseurs"
 
-#: classes/Conversion.php:655
+#: classes/Conversion.php:657
 msgid "Elevator"
 msgstr "Ascenseur"
 
-#: classes/Conversion.php:659
+#: classes/Conversion.php:661
 msgid "Fireplace"
 msgstr "Cheminée"
 
-#: classes/Conversion.php:660
+#: classes/Conversion.php:662
 msgid "wheelchair accessible"
 msgstr "Accessible en fauteuil roulant"
 
-#: classes/Conversion.php:661
+#: classes/Conversion.php:663
 msgid "Ramp"
 msgstr "Rampe"
 
-#: classes/Conversion.php:662
+#: classes/Conversion.php:664
 msgid "lifting platform"
 msgstr "Plate-forme de levage"
 
-#: classes/Conversion.php:663
+#: classes/Conversion.php:665
 msgid "Railway terminal"
 msgstr "Terminal ferroviaire"
 
-#: classes/Conversion.php:664
+#: classes/Conversion.php:666
 msgid "Water Supply"
 msgstr "Approvisionnement en eau"
 
-#: classes/Conversion.php:665
+#: classes/Conversion.php:667
 msgid "Sewage supply"
 msgstr "Installations sanitaires"
 
-#: classes/Conversion.php:666
+#: classes/Conversion.php:668
 msgid "Power Supply"
 msgstr "Source d'alimentation"
 
-#: classes/Conversion.php:667
+#: classes/Conversion.php:669
 msgid "Gas supply"
 msgstr "Approvisionnement en gaz"
 
-#: classes/Conversion.php:668
+#: classes/Conversion.php:670
 msgid "Corner house"
 msgstr "Maison d'angle"
 
-#: classes/Conversion.php:669
+#: classes/Conversion.php:671
 msgid "Middle house"
 msgstr "Maison du milieu"
 
-#: classes/Conversion.php:670
+#: classes/Conversion.php:672
 msgid "Gardenhouse"
 msgstr "Cabanon de jardin"
 
-#: classes/Conversion.php:671
+#: classes/Conversion.php:673
 msgid "Raised ground floor"
 msgstr "Rez de chaussée supérieur"
 
-#: classes/Conversion.php:672
+#: classes/Conversion.php:674
 msgid "New building"
 msgstr "Nouveau bâtiment"
 
-#: classes/Conversion.php:673
+#: classes/Conversion.php:675
 msgid "Old building"
 msgstr "Ancien bâtiment"
 
-#: classes/Conversion.php:674
+#: classes/Conversion.php:676
 msgid "Under roof"
 msgstr "Sous le toit"
 
-#: classes/Conversion.php:675
+#: classes/Conversion.php:677
 msgid "Swimmingpool"
 msgstr "Piscine"
 
-#: classes/Conversion.php:676
+#: classes/Conversion.php:678
 msgid "Minergie general"
 msgstr "Minergie"
 
-#: classes/Conversion.php:677
+#: classes/Conversion.php:679
 msgid "Minergie certified"
 msgstr "Certifié Minergie"
 
-#: classes/Conversion.php:678
+#: classes/Conversion.php:680
 msgid "Under building laws"
 msgstr "En vertu des lois de construction"
 
-#: classes/Conversion.php:679
+#: classes/Conversion.php:681
 msgid "Building land connected"
 msgstr "Terrain à bâtir connecté"
 
-#: classes/Conversion.php:680
+#: classes/Conversion.php:682
 msgid "Flat sharing community"
 msgstr "Appartement communautaire"
 
