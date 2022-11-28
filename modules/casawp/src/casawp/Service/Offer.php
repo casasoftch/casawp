@@ -748,6 +748,7 @@ class Offer{
 
     public function renderNumvalValue($numval){
         $decimals = 0;
+        $currency = $this->getFieldValue('price_currency', 'CHF');
         if (in_array($numval->getKey(), ['ceiling_height', 'hall_height'])) {
             $decimals = 2;
         }
@@ -756,6 +757,7 @@ class Offer{
             case 'm2': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') . ' m<sup>2</sup>'; break;
             case 'm':  return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' m'; break;
             case 'kg': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' kg'; break;
+            case 'currency': return $currency . ' ' . number_format($numval->getValue(), 0, '.', "'") . '.–'; break;
             case '%':  return $numval->getValue() .' %'; break;
             default:   return $numval->getValue(); break;
         }
