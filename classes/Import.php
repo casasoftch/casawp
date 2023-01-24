@@ -1584,7 +1584,11 @@ class Import {
     $offerDatas = array();
     if ($property_xml->offers) {
         foreach ($property_xml->offers->offer as $offer_xml) {
-            $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
+            if (get_option('casawp_force_lang')) {
+              $offerData['lang'] =  get_option('casawp_force_lang');
+            } else {
+              $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
+            }
             $offerData['type'] =  $property_xml->type->__toString();
             if ($property_xml->start) {
               $offerData['start'] =  new \DateTime($property_xml->start->__toString());

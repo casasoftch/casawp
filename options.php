@@ -131,6 +131,7 @@
 					'casawp_permanently_delete_properties',
 					'casawp_auto_translate_properties',
 					'casawp_custom_slug',
+					'casawp_force_lang',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
 					'casawp_remCat',
@@ -1407,7 +1408,13 @@
 									<?php $text = 'Custom Slug'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
 									<input type="text" placeholder="Custom Slug definieren" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
-
+									<legend class="screen-reader-text"><span>Objektsprache im XML forcieren</span></legend>
+									<?php $name = 'casawp_force_lang'; ?>
+									<?php $text = 'Objektsprache im XML forcieren'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
+									<input type="text" placeholder="de, fr, it oder en" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
+									<p class="description" id="tagline-description">Nur angeben, wenn Webseite einsprachig und XML-Objekte mehrsprachig sind</p>
+									
 								</td>
 							</tr>
 							<tr valign="top">
