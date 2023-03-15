@@ -2432,10 +2432,11 @@ class Plugin {
             ),
             'layout' => 'horizontal',
         );
+
         $fields[] = array(
             'key' => 'field_casawp_offer_'.'netPrice_timesegment',
             'label' => __('Net price time segment', 'casawp'),
-            'name' => 'netPrice_propertysegment',
+            'name' => 'netPrice_timesegment',
             'type' => 'radio',
             'required' => 0,
             'choices' => array(
@@ -3149,6 +3150,7 @@ class Plugin {
             'property_geo_longitude',
             'netPrice',
             'netPrice_propertysegment',
+            'netPrice_timesegment',
             'price_currency',
             'price_propertysegment',
             'grossPrice',
