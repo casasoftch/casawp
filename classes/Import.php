@@ -1017,6 +1017,11 @@ class Import {
       $this->transcript[$casawp_id]['locations'][]['from'] = $old_terms;
       $this->transcript[$casawp_id]['locations'][]['to'] = $new_terms;
       wp_set_object_terms( $wp_post->ID, $new_terms, 'casawp_location' );
+      if (defined('WPSEO_VERSION') && $wp_lvl2) {
+        // Yoast SEO is active, so use its primary term feature
+        $yoast_primary_term = new \WPSEO_Primary_Term('casawp_location', $wp_post->ID);
+        $yoast_primary_term->set_primary_term($wp_lvl2->term_id);
+      }
     }
 
   }
