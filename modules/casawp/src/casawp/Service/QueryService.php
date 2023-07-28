@@ -41,6 +41,7 @@ class QueryService{
             'price_to' => null,
             'price_range' => null,
             'price_range_custom' => null,
+            'price_for_order' => null,
             'filter_meta_key' => null,
             'filter_meta_key_not' => null,
             'filter_meta_compare' => null,
@@ -349,6 +350,31 @@ class QueryService{
                 'type' => 'NUMERIC'
             );
         }
+
+        //Price for Order
+        if ($this->query['price_for_order']  ) {
+            $price_seek_part = $this->query['price_for_order'];
+            // $price_seek_parts = explode('-', $this->query['price_for_order']);
+            // $range_seek_from = $price_seek_parts[0];
+            // $range_seek_to = $price_seek_parts[1];
+            if ($price_seek_part) {
+                $meta_query_items_new[] = array(
+                    array(
+                        'relation' => 'OR',
+                        array(
+                            'key' => 'priceForOrder',
+                            //'value' => $price_seek_part,
+                            'value' => 9999999999,
+                            'compare'   => '==',
+                            'type' => 'NUMERIC'
+                        ),
+                    ),                        
+                );
+            }
+        } else{
+
+        
+
         if (in_array('rent', $this->query['salestypes'])) {
           if ($this->query['price_from']) {
               $meta_query_items_new[] = array(
@@ -506,6 +532,7 @@ class QueryService{
                     );
                 }
             }
+        }
 
         }
 
