@@ -2146,6 +2146,7 @@ class Import {
 
         $found_posts[] = $wp_post->ID;
 
+
         $this->updateOffer($casawp_id, $offer_pos, $propertyData, $offerData, $wp_post);
         
         $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $propertyData['exportproperty_id']);
@@ -2754,6 +2755,11 @@ class Import {
 
     $new_meta_data['referenceId']                    = $property['referenceId'];
     $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
+
+    if(isset($property['zoneTypes']) && $property['zoneTypes']){
+      $new_meta_data['zoneTypes']              = $property['zoneTypes'];
+    }
+
     if (!$new_meta_data['referenceId']) {
       echo '<div id="message" class="error">Warning! no referenceId found. for:'.$casawp_id.' This could cause problems when sending inquiries</div>';
     }
