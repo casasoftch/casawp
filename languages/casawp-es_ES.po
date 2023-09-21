@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -2826,25 +2826,25 @@ msgid "Ground floor"
 msgstr "Planta baja"
 
 msgid "Choose order"
-msgstr ""
+msgstr "Elegir pedido"
 
 msgid "Order by"
-msgstr ""
+msgstr "Pedir por"
 
 msgid "Ascending"
-msgstr ""
+msgstr "Ascendente"
 
 msgid "Descending"
-msgstr ""
+msgstr "Descendente"
 
 msgid "Order direction"
-msgstr ""
+msgstr "Dirección del pedido"
 
 msgid "Choose order direction"
-msgstr ""
+msgstr "Seleccione la dirección del pedido"
 
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 msgid "Load distance map"
 msgstr ""
