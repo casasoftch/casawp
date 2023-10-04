@@ -1274,6 +1274,7 @@ class Import {
         //add_action('asynchronous_import', array($this,'updateOffers'));
         //wp_schedule_single_event(time(), 'asynchronous_import');
       }
+      do_action('casawp_import_finished');
     }
   }
 
@@ -1374,6 +1375,7 @@ class Import {
         $this->addToLog('import start');
         $this->updateOffers();
         $this->addToLog('import end');
+        do_action('casawp_import_finished');
       }
 
 
