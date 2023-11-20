@@ -11,6 +11,7 @@ class NumvalService {
 
     public $items = [];
     private $template;
+    private $translator;
 
     public function __construct($translator){
         $this->translator = $translator;

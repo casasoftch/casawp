@@ -189,7 +189,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->sort();
         reset($this->items);
@@ -198,7 +198,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function current()
+    public function current(): mixed
     {
         $this->sorted || $this->sort();
         $node = current($this->items);
@@ -209,7 +209,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function key()
+    public function key(): mixed
     {
         $this->sorted || $this->sort();
         return key($this->items);
@@ -218,17 +218,15 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function next()
+    public function next(): void
     {
-        $node = next($this->items);
-
-        return $node ? $node['data'] : false;
+        next($this->items);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         return current($this->items) !== false;
     }
@@ -244,7 +242,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return $this->count;
     }

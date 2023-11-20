@@ -10,6 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class UtilityService{
 
     public $items = array();
+    private $translator;
 
     public function __construct($translator){
         $this->translator = $translator;
