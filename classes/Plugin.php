@@ -23,16 +23,16 @@ class Plugin {
     public $translator = null;
     public $locale = 'de';
     public $configuration = array();
-    private $MVCtranslator;
-    private $renderer;
-    private $serviceManager;
-    private $queryService;
-    private $categoryService;
-    private $utilityService;
-    private $numvalService;
-    private $featureService;
-    private $formSettingService;
-    private $formService;
+    public $MVCtranslator;
+    public $renderer;
+    public $serviceManager;
+    public $queryService;
+    public $categoryService;
+    public $utilityService;
+    public $numvalService;
+    public $featureService;
+    public $formSettingService;
+    public $formService;
 
     public function __construct($configuration){
         $this->configuration = $configuration;

@@ -11,7 +11,7 @@ class CategoryService {
 
     public $items = array();
     public $groups = array();
-    private $translator;
+    public $translator;
 
     public function __construct($translator){
         $this->translator = $translator;
