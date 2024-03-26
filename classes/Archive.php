@@ -307,65 +307,60 @@
         return $options;
     }
     public function getLocationsOptionsHyr() {
-        $locations = array();
         $locations = $this->getCorrectTaxQuery('casawp_location');
-       
+
         $return = '';
-        $terms_lvl1 = get_terms('casawp_location',array('parent'=>0));
+        $terms_lvl1 = get_terms('casawp_location', array('parent' => 0));
         $no_child_lvl1 = '';
-        $no_child_lvl2 = '';
+        $otherCountry = [];
+
         foreach ($terms_lvl1 as $term) {
             $terms_lvl1_has_children = false;
-            
-            
-            $terms_lvl2 = get_terms('casawp_location',array('parent'=>$term->term_id));
+
+            $terms_lvl2 = get_terms('casawp_location', array('parent' => $term->term_id));
             foreach ($terms_lvl2 as $term2) {
                 $terms_lvl1_has_children = true;
-                
-                $terms_lvl3 = get_terms('casawp_location',array('parent' => $term2->term_id));
+
+                $terms_lvl3 = get_terms('casawp_location', array('parent' => $term2->term_id));
                 $store = '';
                 $terms_lvl2_has_children = false;
                 foreach ($terms_lvl3 as $term3) {
                     $terms_lvl2_has_children = true;
-                    //$store .= "<option class='lvl3' value='" . $term3->slug . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term3->name . ' (' . $term3->count . ')' . "</option>";
-                    $store .= "<option class='lvl3' value='" . $term3->slug . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $term3->name . "</option>";
+                    $store .= "<option class='lvl3' value='" . esc_attr($term3->slug) . "' " . (in_array($term3->slug, $locations) ? 'SELECTED' : '') . ">" . esc_html($term3->name) . "</option>";
                 }
                 if ($terms_lvl2_has_children) {
-                    $return .= "<optgroup label='" . $term2->name . "'>";
+                    $return .= "<optgroup label='" . esc_attr($term2->name) . "'>";
                     $return .= $store;
                     $return .= "</optgroup>";
                 } else {
-                    //must be another country?
                     $otherCountry[$term->name][] = $term2;
                 }
             }
 
-            //list all other countries in seperate optgroup
-            if (isset($otherCountry)) {
-                foreach ( $otherCountry as $countryCode => $country ) {
-                    $return .= "<optgroup label='" . $this->conversion->countrycode_to_countryname($countryCode)  . "'>";
-                    foreach ( $country as $location ) {
-                        //$return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . ' (' . $location->count . ')' . "</option>";      
-                        $return .= "<option class='lvl2' value='" . $location->slug . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . '' . $location->name . "</option>";      
+            // List all other countries in separate optgroup
+            if (!empty($otherCountry)) {
+                foreach ($otherCountry as $countryCode => $country) {
+                    $return .= "<optgroup label='" . esc_attr($this->conversion->countrycode_to_countryname($countryCode)) . "'>";
+                    foreach ($country as $location) {
+                        $return .= "<option class='lvl2' value='" . esc_attr($location->slug) . "' " . (in_array($location->slug, $locations) ? 'SELECTED' : '') . ">" . esc_html($location->name) . "</option>";
                     }
                     $return .= "</optgroup>";
                 }
-            }   
+            }
             unset($otherCountry);
 
             if (!$terms_lvl1_has_children) {
-                //$no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . ' (' . $term->count . ')' . "</option>";
-                $no_child_lvl1 .=  "<option value='" . $term->slug . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . $term->name . "</option>";
-
+                $no_child_lvl1 .= "<option value='" . esc_attr($term->slug) . "' " . (in_array($term->slug, $locations) ? 'SELECTED' : '') . ">" . esc_html($term->name) . "</option>";
             }
         }
         if ($no_child_lvl1) {
-            $return .= "<optgroup label='Sonstige Ortschaften'>";
+            $return .= "<optgroup label='" . esc_attr__('Other locations', 'casawp') . "'>";
             $return .= $no_child_lvl1;
             $return .= "</optgroup>";
         }
         return $return;
     }
+
     public function getSalestypeOptions() {
         $salestypes = array();
         $salestypes = $this->getCorrectTaxQuery('casawp_salestype');
