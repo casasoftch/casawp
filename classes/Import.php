@@ -917,12 +917,12 @@ class Import {
     $lvl1_arr = false;
     $lvl2_arr = false;
     if ($region) {
-      $lvl1_arr = array($region, 'region_'.sanitize_title_with_dashes($region));
+      $lvl1_arr = array($region, 'region_'.sanitize_title_with_dashes(remove_accents($region)));
       if ($locality) {
-        $lvl2_arr = array($locality, 'locality_'.sanitize_title_with_dashes($locality));
+        $lvl2_arr = array($locality, 'locality_'.sanitize_title_with_dashes(remove_accents($locality)));
       }
     } elseif($locality) {
-      $lvl1_arr = array($locality, 'locality_'.sanitize_title_with_dashes($locality));
+      $lvl1_arr = array($locality, 'locality_'.sanitize_title_with_dashes(remove_accents($locality)));
       $lvl2_arr = false;
     }
 

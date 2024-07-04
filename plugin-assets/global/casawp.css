@@ -32,3 +32,21 @@ background-color: #eeeeee; }
   .casadistance__placeholder {
     height: 785px;
     line-height: 785px; } }
+
+
+.casawp-checkbox{
+  position: relative;
+}
+
+.casawp-checkbox label{
+  position: relative;
+  padding-left: 30px;
+}
+#contactFormdataprotection{
+  position: absolute;
+  top: 6px;
+  left: 0;
+  margin-right: 30px;
+  width: 18px;
+  height: 18px;
+}

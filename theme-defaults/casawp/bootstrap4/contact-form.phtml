@@ -39,6 +39,16 @@
 	<?= $renderobject->renderContactFormElement($form->get('emailreal'), $form) ?>
 	<?= $renderobject->renderContactFormElement($form->get('message'), $form) ?>
 
+	<?php if (get_option('casawp_form_dataprotection_checkbox')): ?>
+	<div class="casawp-row">
+		<div class="col-12">
+			<div class="casawp-checkbox">
+				<?= $renderobject->renderContactFormElement($form->get('dataprotection'), $form) ?>
+			</div>
+		</div>
+	</div>
+	<?php endif ?>
+
 	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && !get_option('casawp_recaptcha_v3')): ?>
 		<div class="g-recaptcha" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
 		<div id="recaptchaerror" <?php echo (!$invalidCaptcha ? 'style="display: none;"' : '') ?> class="alert alert-danger" role="alert">

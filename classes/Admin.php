@@ -59,7 +59,7 @@ class Admin {
 		add_option('casawp_form_phone_required', '1');
 		add_option('casawp_form_email_required', '1');
 		add_option('casawp_form_message_required', '1');
-
+		add_option('casawp_form_dataprotection_checkbox', '0');
 	}
 
 	public function casawp_remove() {

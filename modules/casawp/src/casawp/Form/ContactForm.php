@@ -197,6 +197,19 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_message_required', false),
             )
         ));
+
+        if(get_option('casawp_form_dataprotection_checkbox') == true) {
+            $this->add(array(
+                'name' => 'dataprotection',
+                'type' => 'Checkbox',
+                'options' => array(
+                    'label' => __('I accept the general terms and conditions and agree to the privacy policy', 'casawp')
+                ),
+                'attributes' => array(
+                    'required' => true,
+                )
+            ));
+        }
     }
 
     public function escapeJavaScriptText($string){

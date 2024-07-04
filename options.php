@@ -120,7 +120,8 @@
 					'casawp_form_email_required',
 					'casawp_form_message_required',
 					'casawp_casamail_direct_recipient',
-					'casawp_form_gender_neutral'
+					'casawp_form_gender_neutral',
+					'casawp_form_dataprotection_checkbox'
 				);
 				break;
 			case 'general':
@@ -1155,11 +1156,18 @@
 											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
 										</label>
 									</fieldset>
-									<fieldset class="margin-top">
+									<fieldset class="">
 										<label>
 											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
 										</label>
 									</fieldset>
+									<fieldset class="">
+										<label>
+											<input type="checkbox" name="casawp_form_dataprotection_checkbox" value="1" <?php echo (get_option('casawp_form_dataprotection_checkbox') == '1' ? 'checked="checked"' : ''); ?>> "Datenschutz akzeptieren" Checkbox aktivieren
+										</label>
+									</fieldset>
+
+									
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
