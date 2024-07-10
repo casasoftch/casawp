@@ -47,7 +47,7 @@
 			function get_custom_dataprotectiontext($name) {
 				$dataprotectiontext = __('I accept the general terms and conditions and agree to the privacy policy', 'casawp');
 				
-				// Apply the 'custom_greeting' filter to the greeting message
+				// Apply the 'custom_dataprotectiontext' filter to the dataprotectiontext message
 				$dataprotectiontext = apply_filters('custom_dataprotectiontext', $dataprotectiontext, $name);
 				
 				return $dataprotectiontext;
