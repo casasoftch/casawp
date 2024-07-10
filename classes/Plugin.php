@@ -3227,4 +3227,5 @@ class Plugin {
         $service->setPost($post);
         return $service->getCurrent();
     }
+    
 }

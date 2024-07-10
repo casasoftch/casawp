@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CASAWP\n"
-"POT-Creation-Date: 2024-07-03 17:23+0200\n"
+"POT-Creation-Date: 2024-07-10 14:15+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2575,13 +2575,6 @@ msgstr "Telefono mobile"
 msgid "Message"
 msgstr "Messaggio"
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:205
-msgid ""
-"I accept the general terms and conditions and agree to the privacy policy"
-msgstr ""
-"Accetto i termini e le condizioni generali e accetto l’informativa sulla "
-"privacy"
-
 #: modules/casawp/src/casawp/Form/FilterForm.php:78
 #: modules/casawp/src/casawp/Form/FilterForm.php:87
 msgid "Sales type"
@@ -2809,13 +2802,13 @@ msgstr ""
 
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:33
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:96
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:96
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:124
 msgid "Please fill out all the fields."
 msgstr "Compila tutti i campi richiesti."
 
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:36
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:99
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:99
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:127
 msgid "Send"
 msgstr "Invia"
 
@@ -2939,7 +2932,7 @@ msgid "School"
 msgstr "Scuola"
 
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:45
-#: theme-defaults/casawp/bootstrap4/contact-form.phtml:45
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:73
 msgid "Invalid reCAPTCHA response!"
 msgstr ""
 
@@ -2967,6 +2960,21 @@ msgstr "Mostra la mappa"
 #: theme-defaults/casawp/bootstrap4/shortcode-properties.phtml:37
 msgid "Sorry, no posts matched your criteria."
 msgstr ""
+
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:44
+msgid "Terms and conditions"
+msgstr "Termini e condizioni"
+
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:45
+msgid "Agreed to the general terms and conditions"
+msgstr "Accettate i termini e le condizioni generali"
+
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:48
+msgid ""
+"I accept the general terms and conditions and agree to the privacy policy"
+msgstr ""
+"Accetto i termini e le condizioni generali e accetto l’informativa sulla "
+"privacy"
 
 #~ msgid "Area from"
 #~ msgstr "Superfici da"

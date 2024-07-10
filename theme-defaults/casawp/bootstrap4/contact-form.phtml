@@ -40,13 +40,31 @@
 	<?= $renderobject->renderContactFormElement($form->get('message'), $form) ?>
 
 	<?php if (get_option('casawp_form_dataprotection_checkbox')): ?>
-	<div class="casawp-row">
-		<div class="col-12">
-			<div class="casawp-checkbox">
-				<?= $renderobject->renderContactFormElement($form->get('dataprotection'), $form) ?>
+		<?php 
+			$emaillabel = __('Terms and conditions', 'casawp');
+			$emailvalue = __('Agreed to the general terms and conditions', 'casawp');
+
+			function get_custom_dataprotectiontext($name) {
+				$dataprotectiontext = __('I accept the general terms and conditions and agree to the privacy policy', 'casawp');
+				
+				// Apply the 'custom_greeting' filter to the greeting message
+				$dataprotectiontext = apply_filters('custom_dataprotectiontext', $dataprotectiontext, $name);
+				
+				return $dataprotectiontext;
+			}
+		?>
+		<div class="casawp-row">
+			<div class="col-12">
+				<div class="casawp-checkbox">
+					<div class="form-group is-required ">
+						<label for="contactFormdataprotection" class="control-label">
+							<?php echo get_custom_dataprotectiontext('name'); ?>
+						</label>
+						<input type="checkbox" name="extra_data['<?php echo $emaillabel ?>']" required="required" class="form-control casawp-form-control " id="contactFormdataprotection" value="<?php echo $emailvalue ?>">	
+					</div>				
+				</div>
 			</div>
 		</div>
-	</div>
 	<?php endif ?>
 
 	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && !get_option('casawp_recaptcha_v3')): ?>
