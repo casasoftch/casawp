@@ -33,12 +33,13 @@ class FormService{
 		if (!$formSetting) {
 			$formSetting = new \casawp\Form\DefaultFormSetting();
 		}
-
+		
 		$formSetting->setAdditionalFields($form);
 
-		$customerid = get_option('casawp_customerid');
-		$publisherid = get_option('casawp_publisherid');
+		$customerid = get_option('casawp_customerid') ?: '';
+		$publisherid = get_option('casawp_publisherid') ?: '';
 		$email = get_option('casawp_email_fallback');
+		
 
 		if ($subjectItem instanceof Offer && $subjectItem->getFieldValue('seller_org_customerid', false)) {
 			$customerid = $subjectItem->getFieldValue('seller_org_customerid', false);

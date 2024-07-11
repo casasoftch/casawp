@@ -127,6 +127,7 @@
 			case 'general':
 			default:
 				$checkbox_traps = array(
+					/* 'casawp_manual_usage', */
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
 					'casawp_permanently_delete_properties',
@@ -1127,15 +1128,60 @@
 					?>
 						<?php /******* Kontaktformular *******/ ?>
 						<?php echo $table_start; ?>
-							<tr valign="top">
-								<th scope="row"><label><input name="casawp_inquiry_method" type="hidden" value="casamail"> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
-								<td class="front-static-pages contactform-tab">
-									<label class="block-label" for="<?php echo $name; ?>">Provider Slug</label>
-									<input name="casawp_customerid" type="text" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
-									
-									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Publisher Slug</label>
-									<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+							<script>
+								function rbChange(){
+									if(document.getElementsByName('casawp_inquiry_method')[0].checked){
+										document.getElementById('casamailFields').style.display = 'block';
+										document.getElementById('emailFields').style.display = 'none';
+									} else {
+										document.getElementById('casamailFields').style.display = 'none';
+										document.getElementById('emailFields').style.display = 'block';
+									}
+								}
 
+								window.onload = function() {
+									rbChange();
+								};
+							</script>
+							<tr valign="top">
+								<th scope="row">
+									<label for="casawp_inquiry_method">
+										Anfrage-Methode
+									</label>
+								</th>
+								<td class="front-static-pages contactform-tab">
+									<div style="margin-top: 7px;">
+										<label style="margin-right: 15px;">
+											<input name="casawp_inquiry_method" onCLick="rbChange()" type="radio" value="casamail" <?php echo (get_option('casawp_inquiry_method') == 'casamail' ? 'checked="checked"' : ''); ?>>
+											<strong>CASA</strong><span style="font-weight:100">MAIL</span>
+										</label>
+										<label>
+											<input name="casawp_inquiry_method" onCLick="rbChange()" type="radio" value="email" <?php echo (get_option('casawp_inquiry_method') == 'email' ? 'checked="checked"' : ''); ?>>
+											<strong>E-Mail</strong>
+										</label>
+									</div>
+									<div id="casamailFields" class="margin-top">
+										<label class="block-label" for="<?php echo $name; ?>">Provider Slug</label>
+										<input name="casawp_customerid" type="text" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
+										<label class="block-label block-label--intd" for="<?php echo $name; ?>">Publisher Slug</label>
+										<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+										<label style="display: block; margin-top: 30px;">
+											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
+										</label>
+									</div>
+									<div id="emailFields" class="margin-top" style="display: none;">
+										<label class="block-label" for="<?php echo $name; ?>">E-Mail</label>
+										<input name="casawp_email_fallback" type="text" value="<?= get_option('casawp_email_fallback') ?>" class="regular-text">
+									</div>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">
+									<label>
+										CAPTCHA-Einstellungen
+									</label>
+								</th>
+								<td class="front-static-pages contactform-tab">	
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Key</label>
 									<input name="casawp_recaptcha" type="text" value="<?= get_option('casawp_recaptcha') ?>" class="regular-text">
 
@@ -1151,23 +1197,6 @@
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA v3 score</label>
 									<input name="casawp_recaptcha_v3_score" type="number" step="0.1" <?php echo (get_option('casawp_recaptcha_v3_score') ? 'value="' . get_option('casawp_recaptcha_v3_score') . '"' : 'value="0.4"'); ?> class="regular-text">
 
-									<fieldset class="margin-top">
-										<label>
-											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
-										</label>
-									</fieldset>
-									<fieldset class="">
-										<label>
-											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
-										</label>
-									</fieldset>
-									<fieldset class="">
-										<label>
-											<input type="checkbox" name="casawp_form_dataprotection_checkbox" value="1" <?php echo (get_option('casawp_form_dataprotection_checkbox') == '1' ? 'checked="checked"' : ''); ?>> "Datenschutz akzeptieren" Checkbox aktivieren
-										</label>
-									</fieldset>
-
-									
 								</td>
 							</tr>
 						<?php echo $table_end; ?>
@@ -1189,6 +1218,16 @@
 										<?php $text = 'E-Mail der Kontaktperson anzeigen'; ?>
 										<label>
 											<input name="<?php echo $name ?>" type="checkbox" value="1" <?php echo (get_option($name) == '1' ? 'checked="checked"' : ''); ?>> <?php echo $text ?>
+										</label>
+									</fieldset>
+									<fieldset class="">
+										<label>
+											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
+										</label>
+									</fieldset>
+									<fieldset class="">
+										<label>
+											<input type="checkbox" name="casawp_form_dataprotection_checkbox" value="1" <?php echo (get_option('casawp_form_dataprotection_checkbox') == '1' ? 'checked="checked"' : ''); ?>> "Datenschutz akzeptieren" Checkbox aktivieren
 										</label>
 									</fieldset>
 								</td>
@@ -1425,6 +1464,19 @@
 									
 								</td>
 							</tr>
+							<!-- <tr valign="top">
+								<th scope="row">Manuelle Erfassung</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Manuelle Objekterfassung aktivieren</span></legend>
+										<?php #$name = 'casawp_manual_usage'; ?>
+										<?php #$text = 'Manuelle Objekterfassung aktivieren'; ?>
+										<p><label>
+											<input id="ckMan" name="<?php #echo $name ?>" type="checkbox" value="1" class="tog" <?php #echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()" >Manuelle Objekterfassung aktivieren
+										</label></p>
+									</fieldset>
+								</td>
+							</tr> -->
 							<tr valign="top">
 								<th scope="row">Import</th>
 								<td class="front-static-pages">
@@ -1467,20 +1519,44 @@
 
 									<script>
 									function ckChange(){
-									    var ckCDN = document.getElementById('ckCDN');
-									    var ckRef = document.getElementById('ckRef');
+										var ckMan = document.getElementById('ckMan');
+										var ckCDN = document.getElementById('ckCDN');
+										var ckRef = document.getElementById('ckRef');
+										var ckDel = document.getElementById('ckDel');
+										var ckTrans = document.getElementById('ckTrans');
+										var casawp_force_lang = document.getElementById('casawp_force_lang');
+										var casawp_api_key = document.getElementById('casawp_api_key');
+										var casawp_private_key = document.getElementById('casawp_private_key');
 
-									    if (ckRef.checked) {
-									    	ckCDN.disabled = true; 
-									    } else {
-									    	ckCDN.disabled = false; 
-									    } 
+										if (ckRef.checked) {
+											ckCDN.disabled = true; 
+										} else {
+											ckCDN.disabled = false; 
+										} 
 
-									    if (ckCDN.checked) {
-									    	ckRef.disabled = true; 
-									    } else {
-									    	ckRef.disabled = false; 
-									    } 
+										if (ckCDN.checked) {
+											ckRef.disabled = true; 
+										} else {
+											ckRef.disabled = false; 
+										} 
+
+										if (ckMan.checked) {
+											ckRef.disabled = true; 
+											ckCDN.disabled = true; 
+											ckDel.disabled = true; 
+											ckTrans.disabled = true; 
+											casawp_force_lang.disabled = true; 
+											casawp_api_key.disabled = true; 
+											casawp_private_key.disabled = true; 
+										} else {
+											ckRef.disabled = false; 
+											ckCDN.disabled = false; 
+											ckDel.disabled = false; 
+											ckTrans.disabled = false; 
+											casawp_force_lang.disabled = false; 
+											casawp_api_key.disabled = false; 
+											casawp_private_key.disabled = false; 
+										} 
 									}
 
 									window.onload = function() {
@@ -1513,7 +1589,7 @@
 												<?php else: ?>
 													<td><strike><code>data.xml</code></strike></td>
 												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $manually  ?>">Import ausführen</a></td>
+												<td><a id="dataDone" class="button-primary" href="<?php echo $manually  ?>">Import ausführen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
@@ -1521,7 +1597,7 @@
 												<?php else: ?>
 													<td><strike><code>data-done.xml</code></strike></td>
 												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $force_last  ?>">Letzer Import erneut ausführen</a></td>
+												<td><a id="dataDoneAgain" class="button-primary" href="<?php echo $force_last  ?>">Letzer Import erneut ausführen</a></td>
 											</tr>
 											<tr>
 												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
