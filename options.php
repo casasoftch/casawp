@@ -127,6 +127,7 @@
 			case 'general':
 			default:
 				$checkbox_traps = array(
+					'casawp_manual_usage',
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
 					'casawp_permanently_delete_properties',
@@ -1416,18 +1417,33 @@
 									<?php $text = 'Custom Slug'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
 									<input type="text" placeholder="Custom Slug definieren" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
-									<legend class="screen-reader-text"><span>Objektsprache im XML forcieren</span></legend>
-									<?php $name = 'casawp_force_lang'; ?>
-									<?php $text = 'Objektsprache im XML forcieren'; ?>
-									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
-									<input type="text" placeholder="de, fr, it oder en" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
-									<p class="description" id="tagline-description">Nur angeben, wenn Webseite einsprachig und XML-Objekte mehrsprachig sind</p>
 									
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row">Manuelle Erfassung</th>
+								<td class="front-static-pages">
+									<fieldset>
+										<legend class="screen-reader-text"><span>Manuelle Objekterfassung aktivieren</span></legend>
+										<?php $name = 'casawp_manual_usage'; ?>
+										<?php $text = 'Manuelle Objekterfassung aktivieren'; ?>
+										<p><label>
+											<input id="ckMan" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()" >Manuelle Objekterfassung aktivieren
+										</label></p>
+									</fieldset>
 								</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row">Import</th>
 								<td class="front-static-pages">
+
+									<legend class="screen-reader-text"><span>Objektsprache im XML forcieren</span></legend>
+									<?php $name = 'casawp_force_lang'; ?>
+									<?php $text = 'Objektsprache im XML forcieren'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>" style="margin-top: 0;"><?php echo $text; ?></label>
+									<input type="text" placeholder="de, fr, it oder en" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
+									<p class="description" id="tagline-description" style="margin-bottom: 30px;">Nur angeben, wenn Webseite einsprachig und XML-Objekte mehrsprachig sind</p>
+									
 
 									<fieldset>
 										<legend class="screen-reader-text"><span><a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> als CDN für Bilder verwenden.</span></legend>
@@ -1467,8 +1483,12 @@
 
 									<script>
 									function ckChange(){
+										var ckMan = document.getElementById('ckMan');
 									    var ckCDN = document.getElementById('ckCDN');
 									    var ckRef = document.getElementById('ckRef');
+										var ckDel = document.getElementById('ckDel');
+										var ckTrans = document.getElementById('ckTrans');
+										var casawp_force_lang = document.getElementById('casawp_force_lang');
 
 									    if (ckRef.checked) {
 									    	ckCDN.disabled = true; 
@@ -1481,6 +1501,20 @@
 									    } else {
 									    	ckRef.disabled = false; 
 									    } 
+
+										if (ckMan.checked) {
+											ckRef.disabled = true; 
+											ckCDN.disabled = true; 
+											ckDel.disabled = true; 
+											ckTrans.disabled = true; 
+											casawp_force_lang.disabled = true; 
+										} else {
+											ckRef.disabled = false; 
+											ckCDN.disabled = false; 
+											ckDel.disabled = false; 
+											ckTrans.disabled = false; 
+											casawp_force_lang.disabled = false; 
+										} 
 									}
 
 									window.onload = function() {
