@@ -198,7 +198,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function current(): mixed
+    public function current()
     {
         $this->sorted || $this->sort();
         $node = current($this->items);
@@ -209,7 +209,7 @@ class PriorityList implements Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    public function key(): mixed
+    public function key()
     {
         $this->sorted || $this->sort();
         return key($this->items);
