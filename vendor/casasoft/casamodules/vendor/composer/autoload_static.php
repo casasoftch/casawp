@@ -43,18 +43,11 @@ class ComposerStaticInit7ff8e0515f9b65ecd4726e9bda19fcfc
             'CasasoftAuth\\' => 
             array (
                 0 => __DIR__ . '/../..' . '/src',
-            ),
-            'CasaLogService\\' => 
-            array (
-                0 => __DIR__ . '/../..' . '/src',
-            ),
+            )
         ),
     );
 
     public static $classMap = array (
-        'CasaLogService\\Module' => __DIR__ . '/../..' . '/src/CasaLogService/Module.php',
-        'CasaLogService\\Service\\LogService' => __DIR__ . '/../..' . '/src/CasaLogService/src/CasaLogService/Service/LogService.php',
-        'CasaLogService\\Service\\LogServiceFactory' => __DIR__ . '/../..' . '/src/CasaLogService/src/CasaLogService/Service/LogServiceFactory.php',
         'CasasoftAuth\\Controller\\UserController' => __DIR__ . '/../..' . '/src/CasasoftAuth/src/CasasoftAuth/Controller/UserController.php',
         'CasasoftAuth\\Controller\\UserControllerFactory' => __DIR__ . '/../..' . '/src/CasasoftAuth/src/CasasoftAuth/Controller/UserControllerFactory.php',
         'CasasoftAuth\\Form\\UserFieldset' => __DIR__ . '/../..' . '/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php',

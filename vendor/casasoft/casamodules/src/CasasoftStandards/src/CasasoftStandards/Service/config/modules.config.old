@@ -43,7 +43,6 @@ return [
     'Application',
     'Gateway',
     'CasasoftStandards',
-    'CasaLogService',
     'DoctrineModule',
     'DoctrineMongoODMModule'
 ];

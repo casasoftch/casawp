@@ -35,7 +35,6 @@ return array(
     'Application',
     'Gateway',
     'CasasoftStandards',
-    'CasaLogService',
     'DoctrineModule',
     'DoctrineMongoODMModule',
     'Api',

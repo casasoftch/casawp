@@ -6,9 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'CasaLogService\\Module' => $baseDir . '/src/CasaLogService/Module.php',
-    'CasaLogService\\Service\\LogService' => $baseDir . '/src/CasaLogService/src/CasaLogService/Service/LogService.php',
-    'CasaLogService\\Service\\LogServiceFactory' => $baseDir . '/src/CasaLogService/src/CasaLogService/Service/LogServiceFactory.php',
     'CasasoftAuth\\Controller\\UserController' => $baseDir . '/src/CasasoftAuth/src/CasasoftAuth/Controller/UserController.php',
     'CasasoftAuth\\Controller\\UserControllerFactory' => $baseDir . '/src/CasasoftAuth/src/CasasoftAuth/Controller/UserControllerFactory.php',
     'CasasoftAuth\\Form\\UserFieldset' => $baseDir . '/src/CasasoftAuth/src/CasasoftAuth/Form/UserFieldset.php',

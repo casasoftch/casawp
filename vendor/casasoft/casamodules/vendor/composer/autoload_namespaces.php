@@ -14,5 +14,4 @@ return array(
     'CasasoftGeo\\' => array($baseDir . '/src'),
     'CasasoftEmail\\' => array($baseDir . '/src'),
     'CasasoftAuth\\' => array($baseDir . '/src'),
-    'CasaLogService\\' => array($baseDir . '/src'),
 );

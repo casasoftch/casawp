@@ -20,8 +20,6 @@
     },
     "suggest": {
     },
-    "autoload": {
-    },
     "config": {
     },
     "extra": {
@@ -31,7 +29,6 @@
     },
     "autoload":{
         "psr-0": {
-            "CasaLogService\\": "src/",
             "CasasoftAuth\\": "src/",
             "CasasoftEmail\\": "src/",
             "CasasoftHelpers\\": "src/",
@@ -40,8 +37,7 @@
             "DbGenerator\\": "src/",
             "CasasoftMessenger\\": "src/",
             "CasasoftGeo\\": "src/"
-        },
-        "classmap" : ["src/CasaLogService/src/CasaLogService/Service/LogService.php"]
+        }
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

@@ -1,62 +1,66 @@
 <?php
 /*
- *	Plugin Name: 	CASAWP
- *  Plugin URI: 	http://immobilien-plugin.ch
- *	Description:    Import your properties directly from your real-estate managment software!
- *	Author:         Casasoft AG
- *	Author URI:     https://casasoft.ch
- *	Version: 	    2.6.0
- *	Text Domain: 	casawp
- *	Domain Path: 	languages/
- *	License: 		GPL2
+ * Plugin Name: CASAWP
+ * Plugin URI: http://immobilien-plugin.ch
+ * Description: Import your properties directly from your real-estate management software!
+ * Author: Casasoft AG
+ * Author URI: https://casasoft.ch
+ * Version: 2.6.0
+ * Text Domain: casawp
+ * Domain Path: languages/
+ * License: GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-//update system
-require_once ( 'wp_autoupdate.php' );
+// Include Action Scheduler
+require_once __DIR__ . '/action-scheduler/action-scheduler.php';
+
+// Ensure Action Scheduler is initialized
+add_action('plugins_loaded', function() {
+	if (!class_exists('ActionScheduler')) {
+		do_action('action_scheduler_initialize');
+	}
+});
+
+// Update system
+require_once('wp_autoupdate.php');
 $plugin_current_version = '2.6.0';
-$plugin_slug = plugin_basename( __FILE__ );
+$plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
 $license_key = 'abcd';
-new WP_AutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );
+new WP_AutoUpdate($plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key);
 
-function casawpPostInstall( $true, $hook_extra, $result ) {
+function casawpPostInstall($true, $hook_extra, $result) {
   // Remember if our plugin was previously activated
-  $wasActivated = is_plugin_active( 'casawp' );
+  $wasActivated = is_plugin_active('casawp');
 
   // Since we are hosted in GitHub, our plugin folder would have a dirname of
   // reponame-tagname change it to our original one:
   global $wp_filesystem;
-  $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname( 'casawp' );
-  $wp_filesystem->move( $result['destination'], $pluginFolder );
+  $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname('casawp');
+  $wp_filesystem->move($result['destination'], $pluginFolder);
   $result['destination'] = $pluginFolder;
 
   // Re-activate plugin if needed
-  if ( $wasActivated ) {
-      $activate = activate_plugin( 'casawp'  );
+  if ($wasActivated) {
+	  $activate = activate_plugin('casawp');
   }
 
   return $result;
 }
 
-add_filter( "upgrader_post_install", "casawpPostInstall", 10, 3 );
-
-
-/* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
-$dummy_desc = __( 'Import your properties directly from your real-estate managment software!', 'casawp' );
+add_filter("upgrader_post_install", "casawpPostInstall", 10, 3);
 
 define('CASASYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 
 $upload = wp_upload_dir();
-define('CASASYNC_CUR_UPLOAD_PATH', $upload['path'] );
-define('CASASYNC_CUR_UPLOAD_URL', $upload['url'] );
-define('CASASYNC_CUR_UPLOAD_BASEDIR', $upload['basedir'] );
-define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl'] );
-
-// chdir(dirname(__DIR__));
+define('CASASYNC_CUR_UPLOAD_PATH', $upload['path']);
+define('CASASYNC_CUR_UPLOAD_URL', $upload['url']);
+define('CASASYNC_CUR_UPLOAD_BASEDIR', $upload['basedir']);
+define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 
 // Setup autoloading
 include 'vendor/autoload.php';
@@ -98,17 +102,12 @@ if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
 	$import->addToLog('Update from casagateway caused import');;
-	//]\$import = new casawp\Import(true, false);
 }
 
 if (isset($_GET['gatewaypoke'])) {
-	//$import = new casawp\Import(false, true);
 	$import = new casawp\Import(false, true);
 	$import->addToLog('Poke from casagateway caused import');
-
-	//$import = new casawp\Import(true, false);
 }
-
 
 function this_plugin_after_wpml() {
 	// ensure path to this file is via main wp plugin path
@@ -136,6 +135,19 @@ function this_plugin_after_wpml() {
 	update_option('active_plugins', $new_sort);
 }
 add_action("activated_plugin", "this_plugin_after_wpml");
+
+// Placeholder for Action Scheduler usage in the future
+
+// Function to be scheduled
+function my_custom_action_function($arg1, $arg2) {
+	// Your custom code here
+}
+add_action('my_custom_action_hook', 'my_custom_action_function');
+
+// Example of scheduling an action
+// if (function_exists('as_schedule_single_action')) {
+//     as_schedule_single_action(time() + 3600, 'my_custom_action_hook', ['arg1_value', 'arg2_value']);
+// }
 
 function casawp_unicode_dirty_replace($str)
 {

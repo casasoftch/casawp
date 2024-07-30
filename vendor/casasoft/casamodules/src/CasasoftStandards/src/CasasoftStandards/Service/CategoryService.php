@@ -11,7 +11,6 @@ class CategoryService {
 
     public $items = array();
     public $groups = array();
-    public $translator;
 
     public function __construct($translator){
         $this->translator = $translator;
@@ -43,7 +42,6 @@ class CategoryService {
             'multiple-dwelling' => array('label' => $this->translator->translate('Multiple dwelling', 'casasoft-standards'),),
             'open-slot' => array('label' => $this->translator->translate('Open slot', 'casasoft-standards'),),
             'parking-space' => array('label' => $this->translator->translate('Parking space', 'casasoft-standards'),),
-            'parking' => array('label' => $this->translator->translate('Parking', 'casasoft-standards'),),
             'plot' => array('label' => $this->translator->translate('Plot', 'casasoft-standards'),),
             'roof-flat' => array('label' => $this->translator->translate('Roof flat', 'casasoft-standards'),),
             'row-house' => array('label' => $this->translator->translate('Row house', 'casasoft-standards'),),
@@ -110,6 +108,35 @@ class CategoryService {
             'boat-mooring' => array('label' => $this->translator->translate('Boat mooring', 'casasoft-standards'),),
             'cellar-compartment' => array('label' => $this->translator->translate('Cellar compartment', 'casasoft-standards'),),
             'attic-compartment' => array('label' => $this->translator->translate('Attic compartment', 'casasoft-standards'),),
+
+            'agricultural-land' => array('label' => $this->translator->translate('Agricultural land', 'casasoft-standards'),),
+            'arcade' => array('label' => $this->translator->translate('Arcade', 'casasoft-standards'),),
+            'bakery' => array('label' => $this->translator->translate('Bakery', 'casasoft-standards'),),
+            'butcher' => array('label' => $this->translator->translate('Butcher', 'casasoft-standards'),),
+            'car-repair-shop' => array('label' => $this->translator->translate('Car repair shop', 'casasoft-standards'),),
+            'carpentry-shop' => array('label' => $this->translator->translate('Carpentry shop', 'casasoft-standards'),),
+            'casino' => array('label' => $this->translator->translate('Casino', 'casasoft-standards'),),
+            'cheese-factory' => array('label' => $this->translator->translate('Cheese factory', 'casasoft-standards'),),
+            'club-disco' => array('label' => $this->translator->translate('Club disco', 'casasoft-standards'),),
+            'commercial-lot' => array('label' => $this->translator->translate('Commercial lot', 'casasoft-standards'),),
+            'commercial-space' => array('label' => $this->translator->translate('Commercial space', 'casasoft-standards'),),
+            'doctors-office' => array('label' => $this->translator->translate('Doctors office', 'casasoft-standards'),),
+            'earth-sheltered-dwelling' => array('label' => $this->translator->translate('Earth sheltered dwelling', 'casasoft-standards'),),
+            'hairdresser' => array('label' => $this->translator->translate('Hairdresser', 'casasoft-standards'),),
+            'industrial-lot' => array('label' => $this->translator->translate('Industrial lot', 'casasoft-standards'),),
+            'industrial-object' => array('label' => $this->translator->translate('Industrial object', 'casasoft-standards'),),
+            'kiosk' => array('label' => $this->translator->translate('Kiosk', 'casasoft-standards'),),
+            'laboratory' => array('label' => $this->translator->translate('Laboratory', 'casasoft-standards'),),
+            'library' => array('label' => $this->translator->translate('Library', 'casasoft-standards'),),
+            'market-garden' => array('label' => $this->translator->translate('Market garden', 'casasoft-standards'),),
+            'motel' => array('label' => $this->translator->translate('Motel', 'casasoft-standards'),),
+            'movie-theater' => array('label' => $this->translator->translate('Movie theater', 'casasoft-standards'),),
+            'multistorey-car-park' => array('label' => $this->translator->translate('Multistorey car park', 'casasoft-standards'),),
+            'orphanage' => array('label' => $this->translator->translate('Orphanage', 'casasoft-standards'),),
+            'party-room' => array('label' => $this->translator->translate('Party room', 'casasoft-standards'),),
+            'pub' => array('label' => $this->translator->translate('Pub', 'casasoft-standards'),),
+            'stoeckli' => array('label' => $this->translator->translate('Stoeckli', 'casasoft-standards'),),
+            'storage-room' => array('label' => $this->translator->translate('Storage room', 'casasoft-standards'),),
 
             //idx legacy support
             'restaurant' => array('label' => $this->translator->translate('Restaurant', 'casasoft-standards'),),

@@ -11,8 +11,9 @@ use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 use Zend\Mime\Mime;
- 
-class EmailService {
+
+class EmailService implements EmailServiceInterface
+{
     protected $translator;
     protected $viewRender;
     protected $defaultTemplate = 'message';
@@ -111,8 +112,6 @@ class EmailService {
                     $honorificPrefix = 'Mr';
                 } elseif($gender === 2) {
                     $honorificPrefix = 'Mrs';
-                } elseif($gender === 0) {
-                    $honorificPrefix = '*';
                 } else {
                     $honorificPrefix = 'not specified';
                 }
@@ -211,7 +210,7 @@ class EmailService {
                         'header' => 'Message',
                         'txt' => $emailOptions['msg']->getMessage_plain(),
                     ]
-                ];    
+                ];
             } elseif ($this->templateGroup == 'homestreet') {
                 $data = [
                     "logo" => "https://homestreet.ch/images/logo_de_CH.png",
@@ -219,9 +218,9 @@ class EmailService {
                         'header' => 'Message',
                         'txt' => $emailOptions['msg']->getMessage_plain(),
                     ]
-                ];    
+                ];
             }
-            
+
 
             if ($person) {
                 $data['person'] = [
@@ -280,7 +279,7 @@ class EmailService {
             } else {
                 throw new \Exception("neither " . "email/".$this->templateGroup."/".$template . ' or ' . "email/default/".$template . ' is available', 1);
             }
-            
+
             $layout->setVariable("content", $contentView);
 
             $content = $this->viewRender->render($layout);
@@ -293,7 +292,7 @@ class EmailService {
 
     public function sendMandrill($template = 'message', $emailOptions = array(), $content = null){
         try {
-            $mandrill = new \Mandrill($emailOptions['mandrill']['key']); 
+            $mandrill = new \Mandrill($emailOptions['mandrill']['key']);
             $message = array(
                 'subject' => $emailOptions['subject'],
                 //'from_email' => $emailOptions['from'],
@@ -350,17 +349,17 @@ class EmailService {
                 case 'rejected':
                 case 'invalid':
                     echo print_r($mandrill_result, true). "\n";
-                    $this->sendEmail('error', array(
-                      'to' => 'js@casasoft.ch',
-                      'from' => 'alert@cassaoft.com',
-                      'subject' => 'Mandrill Fehler',
-                      'error' => print_r(array_merge($emailOptionsSave, $mandrill_result), true),
-                      'domain' => 'casamail.local'
-                    ));
+//                    $this->sendEmail('error', array(
+//                      'to' => 'js@casasoft.ch',
+//                      'from' => 'alert@cassaoft.com',
+//                      'subject' => 'Mandrill Fehler',
+//                      'error' => print_r(array_merge($emailOptionsSave, $mandrill_result), true),
+//                      'domain' => 'casamail.local'
+//                    ));
                     return 'mandrill:'.$mandrill_result[0]['status'];
 
                     break;
-                
+
                 default:
                     return 'mandrill:?'.$mandrill_result[0]['status'];
                     break;
@@ -372,7 +371,7 @@ class EmailService {
         } catch (\Exception $e) {
             return $this->sendSMTP($template, $emailOptions, $content);
         }
-       
+
     }
 
     public function sendSMTP($template = 'message', $emailOptions = array(), $content = null){
@@ -402,9 +401,9 @@ class EmailService {
             // HTML part iso-8859-1
             $htmlPart           = new MimePart($content);
             $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type     = "text/html; charset=".$this->encoding;    
+            $htmlPart->type     = "text/html; charset=".$this->encoding;
         }
-        
+
 
         // Plain text part
         $textPart           = new MimePart(strip_tags($content));
@@ -416,7 +415,7 @@ class EmailService {
         $body = new MimeMessage();
         if ($attachments) {
             // With attachments, we need a multipart/related email. First part
-            // is itself a multipart/alternative message        
+            // is itself a multipart/alternative message
             $content = new MimeMessage();
             $content->addPart($textPart);
             if ($this->html) {
@@ -450,7 +449,7 @@ class EmailService {
                 $body->setParts(array($textPart));
                 $messageType = 'text/plain';
             }
-            
+
         }
 
         // attach the body to the message and set the content-type
@@ -493,7 +492,7 @@ class EmailService {
     }
 
     public function sendEmail($template = 'message', $emailOptions = array(), $content = null){
-        
+
         $mandrillOptions = [];
         if (isset($emailOptions['mandrill']) && $emailOptions['mandrill']) {
             $mandrillOptions = array_merge($this->config['mandrill'], $emailOptions['mandrill']);
@@ -521,7 +520,7 @@ class EmailService {
         if (!$content) {
             $content = $this->renderEmail($template, $emailOptions);
         }
-        
+
 
         if ($emailOptions['debug']) {
             $displays = array();
@@ -532,8 +531,8 @@ class EmailService {
                     } else {
                         $displays[] = $key . ': <strong>OBJ</strong>';
                     }
-                    
-                    
+
+
                 }
             }
             echo '<div style="
@@ -566,16 +565,16 @@ class EmailService {
                                 padding: 15px;
                     " >Mit Anhang</div>' : '')
                 .'</div>';
-            
-            
+
+
         }
         if (isset($emailOptions['mandrill']) && $this->encoding == 'UTF-8') {
             return $this->sendMandrill($template, $emailOptions, $content);
         } else {
             return $this->sendSMTP($template, $emailOptions, $content);
         }
-        
-        
+
+
 
         //return $content;
         return true;

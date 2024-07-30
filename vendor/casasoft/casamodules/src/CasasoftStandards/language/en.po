@@ -1045,8 +1045,8 @@ msgid "Storage"
 msgstr "Storage"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:66
-msgid "Building"
-msgstr "Building"
+msgid "Construction"
+msgstr "Construction"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
@@ -1475,4 +1475,154 @@ msgstr ""
 #: 
 msgid "Number of showers"
 msgstr ""
+
+#:
+msgid "Minergie-A"
+msgstr "Minergie-A"
+
+#:
+msgid "Minergie-A-ECO"
+msgstr "Minergie-A-ECO"
+
+#:
+msgid "Minergie-Areal"
+msgstr "Minergie-Areal"
+
+#:
+msgid "MQS Bau"
+msgstr "MQS Bau"
+
+#:
+msgid "MQS Betrieb"
+msgstr "MQS Betrieb"
+
+#:
+msgid "Fiber optic connection"
+msgstr "Fiber optic connection"
+
+#:
+msgid "Multimedia wiring"
+msgstr "Multimedia wiring"
+
+#:
+msgid "Charging station for electric car"
+msgstr "Charging station for electric car"
+
+#:
+msgid "Temporary use"
+msgstr "Temporary use"
+
+#:
+msgid "Agricultural land"
+msgstr "Agricultural land"
+
+#:
+msgid "Arcade"
+msgstr "Arcade"
+
+#:
+msgid "Bakery"
+msgstr "Bakery"
+
+#:
+msgid "Butcher"
+msgstr "Butcher"
+
+#:
+msgid "Car repair shop"
+msgstr "Car repair shop"
+
+#:
+msgid "Carpentry shop"
+msgstr "Carpentry shop"
+
+#:
+msgid "Casino"
+msgstr "Casino"
+
+#:
+msgid "Cheese factory"
+msgstr "Cheese factory"
+
+#:
+msgid "Club disco"
+msgstr "Club disco"
+
+#:
+msgid "Commercial lot"
+msgstr "Commercial lot"
+
+#:
+msgid "Commercial space"
+msgstr "Commercial space"
+
+#:
+msgid "Doctors office"
+msgstr "Doctors office"
+
+#:
+msgid "Earth sheltered dwelling"
+msgstr "Earth sheltered dwelling"
+
+#:
+msgid "Hairdresser"
+msgstr "Hairdresser"
+
+#:
+msgid "Industrial lot"
+msgstr "Industrial lot"
+
+#:
+msgid "Industrial object"
+msgstr "Industrial object"
+
+#:
+msgid "Kiosk"
+msgstr "Kiosk"
+
+#:
+msgid "Laboratory"
+msgstr "Laboratory"
+
+#:
+msgid "Library"
+msgstr "Library"
+
+#:
+msgid "Market garden"
+msgstr "Market garden"
+
+#:
+msgid "Motel"
+msgstr "Motel"
+
+#:
+msgid "Movie theater"
+msgstr "Movie theater"
+
+#:
+msgid "Multistorey car park"
+msgstr "Multistorey car park"
+
+#:
+msgid "Orphanage"
+msgstr "Orphanage"
+
+#:
+msgid "Party room"
+msgstr "Party room"
+
+#:
+msgid "Pub"
+msgstr "Pub"
+
+#:
+msgid "Stoeckli"
+msgstr "Stoeckli"
+
+#:
+msgid "Storage room"
+msgstr "Storage room"
+
+
 

@@ -10,7 +10,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class FeatureService {
 
     public $items = [];
-    public $translator;
 
     public function __construct($translator){
         $this->translator = $translator;
@@ -66,6 +65,22 @@ class FeatureService {
             ),
             'is-under-roof' => array(
                 'label' => $this->translator->translate('Is under roof', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-fiber-optic-connection ' => array(
+                'label' => $this->translator->translate('Fiber optic connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-multimedia-wiring' => array(
+                'label' => $this->translator->translate('Multimedia wiring', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-charging-station-for-electric-car' => array(
+                'label' => $this->translator->translate('Charging station for electric car', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-temporary-use' => array(
+                'label' => $this->translator->translate('Temporary use', 'casasoft-standards'),
                 'icon' => '',
             ),
 
@@ -275,6 +290,22 @@ class FeatureService {
                 'label' => $this->translator->translate('Minergie-ECO', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-minergie-a-eco' => array(
+                'label' => $this->translator->translate('Minergie-A-ECO', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-minergie-areal' => array(
+                'label' => $this->translator->translate('Minergie-Areal', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-mqs-bau' => array(
+                'label' => $this->translator->translate('MQS Bau', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'is-mqs-betrieb' => array(
+                'label' => $this->translator->translate('MQS Betrieb', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'is-minergie-p-eco' => array(
                 'label' => $this->translator->translate('Minergie-P-ECO', 'casasoft-standards'),
                 'icon' => '',
@@ -422,15 +453,15 @@ class FeatureService {
                 'icon' => '',
             ),
 
-            'is-vat-opted' => [
+            'is-vat-opted' => array(
                 'label' => $this->translator->translate('VAT opted', 'casasoft-standards'),
                 'icon' => '',
-            ],
+            ),
 
-            'is-share-deal' => [
+            'is-share-deal' => array(
                 'label' => $this->translator->translate('Share deal', 'casasoft-standards'),
                 'icon' => '',
-            ],
+            ),
 
         );
     }
