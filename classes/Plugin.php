@@ -2485,7 +2485,7 @@ class Plugin {
         $fields[] = array(
             'key' => 'field_casawp_offer_'.'grossPrice_timesegment',
             'label' => __('Gross price time segment', 'casawp'),
-            'name' => 'grossPrice_propertysegment',
+            'name' => 'grossPrice_timesegment',
             'type' => 'radio',
             'required' => 0,
             'choices' => array(
@@ -3167,6 +3167,7 @@ class Plugin {
             'price_propertysegment',
             'grossPrice',
             'grossPrice_propertysegment',
+            'grossPrice_timesegment',
             'start',
             'casawp_id',
             'referenceId'
