@@ -2841,7 +2841,8 @@ class Plugin {
             'menu_position'      => null,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'page-attributes', 'revisions' ),
             'menu_icon'          => 'dashicons-admin-home',
-            'show_in_nav_menus'  => true
+            'show_in_nav_menus'  => true,
+            'show_in_rest' => true
         );
         register_post_type( 'casawp_property', $args );
 
@@ -2942,6 +2943,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-kategorie' )
         );
         register_taxonomy( 'casawp_category', array( 'casawp_property' ), $args );
@@ -2967,6 +2969,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => false,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-eigenschaft' )
         );
         register_taxonomy( 'casawp_feature', array( 'casawp_property' ), $args );
@@ -2993,6 +2996,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-nutzung' )
         );
         register_taxonomy( 'casawp_utility', array( 'casawp_property' ), $args );
@@ -3019,6 +3023,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-ortschaft' )
         );
         register_taxonomy( 'casawp_location', array( 'casawp_property' ), $args );
@@ -3048,6 +3053,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-vermarktungsart' )
         );
         register_taxonomy( 'casawp_salestype', array( 'casawp_property' ), $args );
@@ -3077,6 +3083,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-verfuegbarkeit' )
         );
         register_taxonomy( 'casawp_availability', array( 'casawp_property' ), $args );
@@ -3106,6 +3113,7 @@ class Plugin {
             'show_ui'           => true,
             'show_admin_column' => false,
             'query_var'         => true,
+            'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'immobilien-regions' )
         );
         register_taxonomy( 'casawp_region', array( 'casawp_property' ), $args );
@@ -3131,6 +3139,7 @@ class Plugin {
             'labels'            => $labels,
             'show_ui'           => true,
             'show_admin_column' => true,
+            'show_in_rest'      => true,
             'query_var'         => true,
             'rewrite'           => array( 'slug' => 'immobilien-anhangstyp' )
         );
