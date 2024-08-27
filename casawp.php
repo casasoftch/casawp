@@ -116,6 +116,21 @@ if (isset($_GET['gatewaypoke'])) {
 	$import->addToLog('Poke from casagateway caused import');
 }
 
+add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
+
+function casawp_get_import_progress() {
+	$total_batches = get_option('casawp_total_batches', 0);
+	$completed_batches = get_option('casawp_completed_batches', 0);
+
+	if ($total_batches > 0) {
+		$progress = ($completed_batches / $total_batches) * 100;
+	} else {
+		$progress = 0;
+	}
+
+	wp_send_json_success(['progress' => $progress]);
+}
+
 function this_plugin_after_wpml() {
 	// ensure path to this file is via main wp plugin path
 	$wp_path_to_this_file = preg_replace('/(.*)plugins\/(.*)$/', WP_PLUGIN_DIR."/$2", __FILE__);

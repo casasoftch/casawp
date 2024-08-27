@@ -23,8 +23,9 @@ class Import
     }
   }
 
-  public function register_hooks() {
-      add_action('casawp_batch_import_hook', array($this, 'handle_properties_import_batch'));
+  public function register_hooks()
+  {
+    add_action('casawp_batch_import_hook', array($this, 'handle_properties_import_batch'));
   }
 
   public function getImportFile()
@@ -1360,7 +1361,6 @@ class Import
 
       $ch = curl_init();
       try {
-        //$url = 'http://casacloud.cloudcontrolapp.com' . '/rest/provider-properties?' . http_build_query($query);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -1388,7 +1388,7 @@ class Import
       curl_close($ch);
 
       $this->addToLog('gateway start update: ' . time());
-      //UPDATE OFFERS NOW!!!!
+
       if ($this->getImportFile()) {
         $this->addToLog('import start');
         //$this->handle_properties_import_batch(1);
@@ -1398,9 +1398,6 @@ class Import
         $this->addToLog('import end');
         do_action('casawp_import_finished');
       }
-
-
-      //echo '<div id="message" class="updated">XML wurde aktualisiert</div>';
     } else {
       $this->addToLog('gateway keys missing: ' . time());
       echo '<div id="message" class="updated"> API Keys missing</div>';
@@ -1515,7 +1512,7 @@ class Import
     $xmlString = file_get_contents($this->getImportFile());
 
     if ($xmlString === false) {
-        return;
+      return;
     }
 
     // Convert the XML string into a SimpleXMLElement object
@@ -1524,7 +1521,7 @@ class Import
     $properties = $xml->properties->property;
 
     if ($properties === null) {
-        return;
+      return;
     }
 
     $properties_array = array();
@@ -1534,6 +1531,11 @@ class Import
 
     $total_items = count($properties_array);
     $total_batches = ceil($total_items / $batch_size);
+
+    if ($batch_number == 1) {
+      update_option('casawp_total_batches', $total_batches);
+      update_option('casawp_completed_batches', 0);
+    }
 
     $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
 
@@ -1548,11 +1550,17 @@ class Import
       custom_log("Exception during sbbproperties update: " . $e->getMessage());
     }
 
+    // Update the number of completed batches in the database
+    update_option('casawp_completed_batches', $batch_number);
+
     if ($batch_number >= $total_batches) {
-      $this->finalize_import_cleanup($this->ranksort);
+        $this->finalize_import_cleanup($this->ranksort);
+        // Reset batch progress after completion
+        delete_option('casawp_total_batches');
+        delete_option('casawp_completed_batches');
     } else {
-      $next_batch_number = $batch_number + 1;
-      as_schedule_single_action(time() + 30, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+        $next_batch_number = $batch_number + 1;
+        as_schedule_single_action(time() + 30, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
     }
   }
 
@@ -2206,22 +2214,22 @@ class Import
             'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
             'post_type'   => 'casawp_property',
             'meta_query'  => [
-                [
-                    'key'   => 'casawp_id',
-                    'value' => $casawp_id,
-                ],
+              [
+                'key'   => 'casawp_id',
+                'value' => $casawp_id,
+              ],
             ],
             'posts_per_page' => 1,
             'suppress_filters' => true,
             'language' => 'ALL',
-        ]);
+          ]);
 
-        if ($the_query->have_posts()) {
+          if ($the_query->have_posts()) {
             $the_query->the_post();
             global $post;
             $wp_post = $post;
             $this->transcript[$casawp_id]['action'] = 'update';
-        } else {
+          } else {
             $this->transcript[$casawp_id]['action'] = 'new';
             $the_post['post_title'] = $offerData['name'];
             $the_post['post_content'] = 'unsaved property';
@@ -2238,7 +2246,7 @@ class Import
             update_post_meta($insert_id, 'is_active', true);
             $wp_post = get_post($insert_id, OBJECT, 'raw');
             $this->addToLog('new property: ' . $casawp_id);
-        }
+          }
 
           $ranksort[$wp_post->ID] = $curRank;
 
@@ -2252,9 +2260,7 @@ class Import
 
           wp_reset_postdata();
         }
-
       }
-
     }
 
     if (!$found_posts) {

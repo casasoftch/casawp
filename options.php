@@ -1488,20 +1488,7 @@
 									};
 									</script>
 
-
-									<fieldset>
-										<table>
-											<tr>
-												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
-													<td><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>
-												<?php else: ?>
-													<td><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Daten von CASAGATEWAY beziehen</a></td>
-											</tr>
-										</table>
-									</fieldset>
-									<legend class="screen-reader-text"><span>API-Key</span></legend>
+<legend class="screen-reader-text"><span>API-Key</span></legend>
 									<?php $name = 'casawp_api_key'; ?>
 									<?php $text = 'API-Key'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
@@ -1512,6 +1499,47 @@
 									<?php $text = 'Private-Key'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
 									<input type="text" placeholder="CASAGATEWAY Private-Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+
+									<div style="margin: 30px 0;">
+									<a class="button-primary" href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Daten von CASAGATEWAY beziehen</a>
+									</div>
+
+									<div style="margin-bottom: 10px;">
+										<strong>Import Progress:</strong>
+									</div>
+									<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
+										<div id="casawp-progress-bar" style="width: 100%; height: 30px; background-color: #4caf50; line-height: 30px;">
+											<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">100%</span>
+										</div>
+									</div>
+
+									<script type="text/javascript">
+										function updateProgressBar() {
+											jQuery.ajax({
+												url: ajaxurl,
+												type: 'POST',
+												data: {
+													action: 'casawp_get_import_progress'
+												},
+												success: function(response) {
+													if (response.success) {
+														var progress = response.data.progress;
+
+														// Update the progress bar only if the progress is less than 100%
+														if (progress < 100) {
+															jQuery('#casawp-progress-bar').css('width', progress + '%');
+															jQuery('#casawp-progress-percent').text(Math.round(progress) + '%');
+														}
+													}
+												}
+											});
+										}
+
+										// Update the progress bar every 5 seconds
+										setInterval(updateProgressBar, 5000);
+									</script>
+
+									
 								</td>
 							</tr>
 							<!-- <tr valign="top">
