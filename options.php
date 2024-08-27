@@ -1488,49 +1488,9 @@
 									};
 									</script>
 
-									<fieldset style="opacity: 0; position: absolute; left: -9999px; top: -9999px; max-height: 0; overflow: hidden;">
-										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
-										<?php $name = 'casawp_live_import'; ?>
-										<?php $text = 'Datei <code>/wp-content/uploads/casawp/import/data.xml</code> automatisch bei jedem Seitenaufruf überprüfen und importieren.'; ?>
-										<p><label>
-											<?php
-												$url = get_admin_url('', 'admin.php?page=casawp');
-												$manually = $url . '&do_import=true';
-												$force_last = $manually . '&force_last_import=true';
-												$forced = $manually . '&force_all_properties=true&force_last_import=true';
-											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label></p>
-									</fieldset>
-
-
 
 									<fieldset>
 										<table>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml'; if (file_exists($file)) : ?>
-													<td><code>data.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $manually  ?>">Import ausführen</a></td>
-											</tr>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td><code>data-done.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data-done.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $force_last  ?>">Letzer Import erneut ausführen</a></td>
-											</tr>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td><code>data-done.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data-done.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $forced  ?>">Importierte Objekte überschreiben</a></td>
-											</tr>
 											<tr>
 												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
 													<td><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>

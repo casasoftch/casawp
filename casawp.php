@@ -23,6 +23,10 @@ add_action('plugins_loaded', function() {
 	}
 });
 
+add_filter('action_scheduler_retention_period', function() {
+	return 7 * DAY_IN_SECONDS; // Keep logs for 7 days
+});
+
 // Update system
 require_once('wp_autoupdate.php');
 $plugin_current_version = '2.6.0';
@@ -95,10 +99,13 @@ if (is_admin()) {
 	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casawp_remove'));
 }
 
-if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
+$import = new casawp\Import(false, false);
+$import->register_hooks();
+
+/* if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
 	$import = new casawp\Import(true, false);
 }
-
+ */
 if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
 	$import->addToLog('Update from casagateway caused import');;
