@@ -106,10 +106,10 @@ $import->register_hooks();
 	$import = new casawp\Import(true, false);
 }
  */
-if (isset($_GET['gatewayupdate'])) {
+/* if (isset($_GET['gatewayupdate'])) {
 	$import = new casawp\Import(false, true);
 	$import->addToLog('Update from casagateway caused import');;
-}
+} */
 
 if (isset($_GET['gatewaypoke'])) {
 	$import = new casawp\Import(false, true);
@@ -130,6 +130,26 @@ function casawp_get_import_progress() {
 
 	wp_send_json_success(['progress' => $progress]);
 }
+
+add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
+
+function casawp_start_import() {
+
+	if (!current_user_can('manage_options')) {
+		wp_send_json_error(['message' => 'Unauthorized']);
+		return;
+	}
+
+	// Start the import process
+	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
+		$import = new casawp\Import(false, true); // Adjust this line as needed
+		$import->addToLog('Update from casagateway caused import');
+		wp_send_json_success(['message' => 'Import started successfully']);
+	} else {
+		wp_send_json_error(['message' => 'Invalid request']);
+	}
+}
+
 
 function this_plugin_after_wpml() {
 	// ensure path to this file is via main wp plugin path

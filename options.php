@@ -1501,19 +1501,58 @@
 									<input type="text" placeholder="CASAGATEWAY Private-Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
 
 									<div style="margin: 30px 0;">
-									<a class="button-primary" href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Daten von CASAGATEWAY beziehen</a>
+										<button id="casawp-import-button" class="button-primary">Daten von CASAGATEWAY beziehen</button>
 									</div>
 
-									<div style="margin-bottom: 10px;">
-										<strong>Import Progress:</strong>
-									</div>
-									<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
-										<div id="casawp-progress-bar" style="width: 100%; height: 30px; background-color: #4caf50; line-height: 30px;">
-											<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">100%</span>
+									<div id="casawp-progress-wrapper" style="display: none;">
+										<strong style="display: block; margin-bottom: 10px;">Import Progress</strong>
+										<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
+											<div id="casawp-progress-bar" style="width: 0%; height: 30px; background-color: #4caf50; line-height: 30px;">
+												<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">0%</span>
+											</div>
 										</div>
 									</div>
 
 									<script type="text/javascript">
+										var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+										jQuery(function($) {
+											$('#casawp-import-button').on('click', function(e) {
+												e.preventDefault(); // Prevent default behavior
+
+												// Reset the progress bar to 0% and make it visible
+												$('#casawp-progress-wrapper').show();
+												$('#casawp-progress-bar').css('width', '0%');
+												$('#casawp-progress-percent').text('0%');
+
+												// Disable the button to prevent multiple clicks
+												$(this).attr('disabled', true);
+
+												// Trigger the import process via AJAX
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_start_import',
+														gatewayupdate: 1
+													},
+													success: function(response) {
+														if (response.success) {
+															console.log(response.data.message);
+															// Optionally, handle a successful start (e.g., show a message)
+														} else {
+															alert('Error: ' + response.data.message);
+														}
+													},
+													error: function() {
+														alert('An error occurred while starting the import.');
+													},
+													complete: function() {
+														
+													}
+												});
+											});
+										});
+
 										function updateProgressBar() {
 											jQuery.ajax({
 												url: ajaxurl,
@@ -1525,10 +1564,14 @@
 													if (response.success) {
 														var progress = response.data.progress;
 
-														// Update the progress bar only if the progress is less than 100%
-														if (progress < 100) {
+														if (progress > 0 && progress < 100) {
+															jQuery('#casawp-progress-wrapper').show();
 															jQuery('#casawp-progress-bar').css('width', progress + '%');
 															jQuery('#casawp-progress-percent').text(Math.round(progress) + '%');
+														} else if (progress === 100) {
+															jQuery('#casawp-progress-wrapper').show();
+															jQuery('#casawp-progress-bar').css('width', '100%');
+															jQuery('#casawp-progress-percent').text('100%');
 														}
 													}
 												}
@@ -1537,6 +1580,9 @@
 
 										// Update the progress bar every 5 seconds
 										setInterval(updateProgressBar, 5000);
+
+										// Ensure the progress bar is shown on page load if import is in progress
+										updateProgressBar();
 									</script>
 
 									

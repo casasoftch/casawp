@@ -19,7 +19,7 @@ class Import
       add_action('init', array($this, 'casawpImport'));
     } */
     if ($casagatewayupdate) {
-      add_action('init', array($this, 'updateImportFileThroughCasaGateway'));
+      $this->updateImportFileThroughCasaGateway();
     }
   }
 
@@ -1274,7 +1274,7 @@ class Import
     file_put_contents($dir . "/" . get_date_from_gmt('', 'Ym') . '.log', "\n" . json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
-  public function casawpImport()
+/*   public function casawpImport()
   {
 
 
@@ -1285,14 +1285,10 @@ class Import
       } else {
         $this->updateOffers();
         $this->transcript;
-        //echo '<div id="message" class="updated"><p>casawp <strong>updated</strong>.</p><pre>' . print_r($this->transcript, true) . '</pre></div>';
-        //do task in the background
-        //add_action('asynchronous_import', array($this,'updateOffers'));
-        //wp_schedule_single_event(time(), 'asynchronous_import');
       }
       do_action('casawp_import_finished');
     }
-  }
+  } */
 
   public function gatewaypoke()
   {
@@ -1306,7 +1302,7 @@ class Import
     $this->addToLog('gateway call file: ' . time());
     $this->updateImportFileThroughCasaGateway();
     $this->addToLog('gateway import answer: ' . time());
-    $this->updateOffers();
+    #$this->updateOffers();
   }
 
   public function updateImportFileThroughCasaGateway()
@@ -1555,6 +1551,8 @@ class Import
 
     if ($batch_number >= $total_batches) {
         $this->finalize_import_cleanup($this->ranksort);
+        // Ensure progress is set to 100% on completion
+        update_option('casawp_completed_batches', $total_batches);
         // Reset batch progress after completion
         delete_option('casawp_total_batches');
         delete_option('casawp_completed_batches');
