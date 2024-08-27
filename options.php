@@ -1514,20 +1514,29 @@
 									</div>
 
 									<script type="text/javascript">
-										var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-										jQuery(function($) {
-											$('#casawp-import-button').on('click', function(e) {
-												e.preventDefault(); // Prevent default behavior
 
-												// Reset the progress bar to 0% and make it visible
-												$('#casawp-progress-wrapper').show();
+										var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+
+										jQuery(function($) {
+
+											var progressInterval;
+
+											function resetProgressBar() {
+												$('#casawp-progress-wrapper').hide();
 												$('#casawp-progress-bar').css('width', '0%');
 												$('#casawp-progress-percent').text('0%');
+											}
 
-												// Disable the button to prevent multiple clicks
+											resetProgressBar();
+
+											$('#casawp-import-button').on('click', function(e) {
+												e.preventDefault();
+
+												resetProgressBar();
+												$('#casawp-progress-wrapper').show();
+
 												$(this).attr('disabled', true);
 
-												// Trigger the import process via AJAX
 												$.ajax({
 													url: ajaxurl,
 													type: 'POST',
@@ -1538,51 +1547,76 @@
 													success: function(response) {
 														if (response.success) {
 															console.log(response.data.message);
-															// Optionally, handle a successful start (e.g., show a message)
 														} else {
 															alert('Error: ' + response.data.message);
 														}
 													},
 													error: function() {
 														alert('An error occurred while starting the import.');
-													},
-													complete: function() {
-														
 													}
 												});
 											});
+
+											function updateProgressBar() {
+												jQuery.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_get_import_progress'
+													},
+													success: function(response) {
+														if (response.success) {
+															var progress = response.data.progress;
+															console.log(progress);
+															if (progress > 0 && progress < 100) {
+																jQuery('#casawp-progress-wrapper').show();
+																jQuery('#casawp-progress-bar').css('width', progress + '%');
+																jQuery('#casawp-progress-percent').text(Math.round(progress) + '%');
+															} else if (progress === 100) {
+																jQuery('#casawp-progress-wrapper').show();
+																jQuery('#casawp-progress-bar').css('width', '100%');
+																jQuery('#casawp-progress-percent').text('100%');
+																$('#casawp-import-button').removeAttr('disabled'); // Re-enable the button
+																clearInterval(progressInterval); // Stop updating the progress bar after import is complete
+
+																// Trigger the reset of import progress options via AJAX
+																$.ajax({
+																	url: ajaxurl,
+																	type: 'POST',
+																	data: {
+																		action: 'casawp_reset_import_progress'
+																	},
+																	success: function(response) {
+																		if (response.success) {
+																			console.log(response.data.message);
+																		} else {
+																			console.log('Error resetting import progress: ' + response.data.message);
+																		}
+																	},
+																	error: function() {
+																		console.log('An error occurred while resetting the import progress.');
+																	}
+																});
+															}
+														} else {
+															resetProgressBar(); // Reset progress if no import is running
+															$('#casawp-import-button').removeAttr('disabled');
+															clearInterval(progressInterval);
+														}
+													},
+													error: function() {
+														resetProgressBar();
+														$('#casawp-import-button').removeAttr('disabled');
+														clearInterval(progressInterval);
+													}
+												});
+											}
+
+											progressInterval = setInterval(updateProgressBar, 5000);
+
+											updateProgressBar();
 										});
 
-										function updateProgressBar() {
-											jQuery.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_get_import_progress'
-												},
-												success: function(response) {
-													if (response.success) {
-														var progress = response.data.progress;
-
-														if (progress > 0 && progress < 100) {
-															jQuery('#casawp-progress-wrapper').show();
-															jQuery('#casawp-progress-bar').css('width', progress + '%');
-															jQuery('#casawp-progress-percent').text(Math.round(progress) + '%');
-														} else if (progress === 100) {
-															jQuery('#casawp-progress-wrapper').show();
-															jQuery('#casawp-progress-bar').css('width', '100%');
-															jQuery('#casawp-progress-percent').text('100%');
-														}
-													}
-												}
-											});
-										}
-
-										// Update the progress bar every 5 seconds
-										setInterval(updateProgressBar, 5000);
-
-										// Ensure the progress bar is shown on page load if import is in progress
-										updateProgressBar();
 									</script>
 
 									

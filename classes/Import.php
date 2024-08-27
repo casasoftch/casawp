@@ -1553,9 +1553,6 @@ class Import
         $this->finalize_import_cleanup($this->ranksort);
         // Ensure progress is set to 100% on completion
         update_option('casawp_completed_batches', $total_batches);
-        // Reset batch progress after completion
-        delete_option('casawp_total_batches');
-        delete_option('casawp_completed_batches');
     } else {
         $next_batch_number = $batch_number + 1;
         as_schedule_single_action(time() + 30, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');

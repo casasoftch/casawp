@@ -131,6 +131,8 @@ function casawp_get_import_progress() {
 	wp_send_json_success(['progress' => $progress]);
 }
 
+
+
 add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
 
 function casawp_start_import() {
@@ -139,6 +141,9 @@ function casawp_start_import() {
 		wp_send_json_error(['message' => 'Unauthorized']);
 		return;
 	}
+
+	update_option('casawp_total_batches', 0);
+	update_option('casawp_completed_batches', 0);
 
 	// Start the import process
 	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
@@ -149,6 +154,23 @@ function casawp_start_import() {
 		wp_send_json_error(['message' => 'Invalid request']);
 	}
 }
+
+add_action('wp_ajax_casawp_reset_import_progress', 'casawp_reset_import_progress');
+
+function casawp_reset_import_progress() {
+	if (!current_user_can('manage_options')) {
+		wp_send_json_error(['message' => 'Unauthorized']);
+		return;
+	}
+
+	// Delete the options to reset the progress
+	delete_option('casawp_total_batches');
+	delete_option('casawp_completed_batches');
+
+	wp_send_json_success(['message' => 'Import progress reset']);
+}
+
+
 
 
 function this_plugin_after_wpml() {
