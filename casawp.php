@@ -112,7 +112,9 @@ $import->register_hooks();
 } */
 
 if (isset($_GET['gatewaypoke'])) {
-	$import = new casawp\Import(false, true);
+	update_option('casawp_total_batches', 0);
+	update_option('casawp_completed_batches', 0);
+	$import = new casawp\Import(true, false);
 	$import->addToLog('Poke from casagateway caused import');
 }
 

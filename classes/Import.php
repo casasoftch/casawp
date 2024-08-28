@@ -13,11 +13,11 @@ class Import
 
   private $ranksort = array();
 
-  public function __construct($doimport = true, $casagatewayupdate = false)
+  public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
-    /* if ($doimport) {
-      add_action('init', array($this, 'casawpImport'));
-    } */
+    if ($casagatewaypoke) {
+      add_action('init', array($this, 'updateImportFileThroughCasaGateway'));
+    }
     if ($casagatewayupdate) {
       $this->updateImportFileThroughCasaGateway();
     }
@@ -1502,7 +1502,11 @@ class Import
   public function handle_properties_import_batch($batch_number)
   {
 
-    $batch_size = 5;
+    if (get_option('casawp_use_casagateway_cdn', false)) {
+      $batch_size = 4;
+    } else {
+      $batch_size = 1;
+    }
 
     // Load the XML file
     $xmlString = file_get_contents($this->getImportFile());
