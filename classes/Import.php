@@ -1568,7 +1568,7 @@ class Import
         update_option('casawp_completed_batches', $total_batches);
     } else {
         $next_batch_number = $batch_number + 1;
-        as_schedule_single_action(time() + 30, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+        as_schedule_single_action(time() + 10, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
     }
   }
 
