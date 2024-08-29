@@ -279,66 +279,75 @@ class Import
 
   public function casawpUploadAttachmentFromGateway($property_id, $fileurl)
   {
-    if (strpos($fileurl, '://')) {
-      $parsed_url = parse_url(urldecode($fileurl));
-    } else {
-      $parsed_url = [];
-    }
-    if (isset($parsed_url['query']) && $parsed_url['query']) {
-      $file_parts = pathinfo($parsed_url['path']);
-
-      $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-      $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-      $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-      $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-      $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
-      $pass     = ($user || $pass) ? "$pass@" : '';
-      $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-
-      $extension = $file_parts['extension'];
-      $pathWithoutExtension = str_replace('.' . $file_parts['extension'], '', $path);
-
-      $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-      $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
-
-      $converted = $scheme . $user . $pass . $host . $port . $pathWithoutExtension . str_replace(['?', '&', '#', '='], '-', $query . $fragment) . '.' . $extension;
-
-      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($converted);
-    } else {
-      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
-    }
-
-    //extention is required
-    $file_parts = pathinfo($filename);
-    if (!isset($file_parts['extension'])) {
-      $filename = $filename . '.jpg';
-    }
-    if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
-      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync')) {
-        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync');
+      if (strpos($fileurl, '://')) {
+          $parsed_url = parse_url(urldecode($fileurl));
+      } else {
+          $parsed_url = [];
       }
-      if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id)) {
-        mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/attachment/externalsync/' . $property_id);
-      }
-      if (!is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename)) {
-        if (!isset($this->transcript['attachments'][$property_id]["uploaded_from_gateway"])) {
-          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
-        }
-        $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
 
-        if (strpos($fileurl, '://')) {
-          $could_copy = copy(urldecode($fileurl), CASASYNC_CUR_UPLOAD_BASEDIR . $filename);
-        } else {
-          $could_copy = copy($fileurl, CASASYNC_CUR_UPLOAD_BASEDIR . $filename);
-        }
-        if (!$could_copy) {
-          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' . $filename;
-          $filename = false;
-        }
+      if (isset($parsed_url['query']) && $parsed_url['query']) {
+          $file_parts = pathinfo($parsed_url['path']);
+
+          $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+          $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+          $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+          $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+          $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+          $pass     = ($user || $pass) ? "$pass@" : '';
+          $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+
+          $extension = $file_parts['extension'];
+          $pathWithoutExtension = str_replace('.' . $file_parts['extension'], '', $path);
+
+          $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+          $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
+          $converted = $scheme . $user . $pass . $host . $port . $pathWithoutExtension . str_replace(['?', '&', '#', '='], '-', $query . $fragment) . '.' . $extension;
+
+          $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($converted);
+      } else {
+          $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
       }
-    }
-    return $filename;
+
+      // Extension is required
+      $file_parts = pathinfo($filename);
+      if (!isset($file_parts['extension'])) {
+          $filename = $filename . '.jpg';
+      }
+
+      $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
+
+      // Create the directory if it doesn't exist, recursively
+      $directory = dirname($full_path);
+      if (!is_dir($directory)) {
+          if (!mkdir($directory, 0755, true)) {
+              #error_log("Failed to create directory: $directory");
+              return false;
+          }
+      }
+
+      if (!is_file($full_path)) {
+          if (!isset($this->transcript['attachments'][$property_id]["uploaded_from_gateway"])) {
+              $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
+          }
+          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
+
+          if (strpos($fileurl, '://')) {
+              $could_copy = copy(urldecode($fileurl), $full_path);
+          } else {
+              $could_copy = copy($fileurl, $full_path);
+          }
+
+          if (!$could_copy) {
+              $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' . $filename;
+              #error_log("Failed to copy file from $fileurl to $full_path");
+              return false;
+          }
+      }
+
+      return $filename;
   }
+
 
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id)
   {
@@ -607,8 +616,8 @@ class Import
   {
     ### future task: for better performace compare new and old data ###
 
+    #error_log(print_r($offer_medias, true));
 
-    //get xml media files
     $the_casawp_attachments = array();
     if ($offer_medias) {
       $o = 0;
@@ -2616,11 +2625,11 @@ class Import
     //generate import hash
     $cleanPropertyData = $property;
     //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
-    unset($cleanPropertyData['last_update']);
+    /* unset($cleanPropertyData['last_update']);
     unset($cleanPropertyData['last_import_hash']);
     if (isset($cleanPropertyData['modified'])) {
       unset($cleanPropertyData['modified']);
-    }
+    } */
     $curImportHash = md5(serialize($cleanPropertyData));
 
     if (!isset($old_meta_data['last_import_hash'])) {
@@ -2628,12 +2637,12 @@ class Import
     }
 
     //skip if is the same as before (accept if was trashed (reactivation))
-    if ($wp_post->post_status == 'publish' && isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
+    /* if ($wp_post->post_status == 'publish' && isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
       if ($curImportHash == $old_meta_data['last_import_hash']) {
         $this->addToLog('skipped property: ' . $casawp_id);
         return 'skipped';
       }
-    }
+    } */
 
     $this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
     $this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
