@@ -16,26 +16,11 @@ class Import
   public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
     if ($casagatewaypoke) {
-      add_action('init', array($this, 'maybe_updateImportFileThroughCasaGateway'));
+      add_action('init', array($this, 'updateImportFileThroughCasaGateway'));
     }
     if ($casagatewayupdate) {
       $this->updateImportFileThroughCasaGateway();
     }
-  }
-
-  public function maybe_updateImportFileThroughCasaGateway()
-  {
-      // Use a static variable to track whether the import has already been run during this request
-      static $import_executed = false;
-
-      if ($import_executed) {
-          return; // Prevent multiple imports from running within the same request
-      }
-
-      $this->updateImportFileThroughCasaGateway();
-        
-      // Mark the import as executed
-      $import_executed = true;
   }
 
   public function register_hooks()
