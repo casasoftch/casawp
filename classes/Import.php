@@ -1059,78 +1059,75 @@ class Import
 
   public function setOfferCategories($wp_post, $categories, $customCategories, $casawp_id)
   {
-    $new_categories = array();
-    $old_categories = array();
+      $new_categories = array();
+      $old_categories = array();
 
-    //set post category
-    $old_categories = array();
-    $wp_category_terms = wp_get_object_terms($wp_post->ID, 'casawp_category');
-    foreach ($wp_category_terms as $term) {
-      $old_categories[] = $term->slug;
-    }
-
-    //supported
-    if ($categories) {
-      foreach ($categories as $category) {
-        $new_categories[] = $category;
+      // Get existing categories (terms) from the post
+      $wp_category_terms = wp_get_object_terms($wp_post->ID, 'casawp_category');
+      foreach ($wp_category_terms as $term) {
+          $old_categories[] = $term->slug;
       }
-    }
-    //custom
-    if (isset($customCategories)) {
-      $custom_categories = $customCategories;
-      sort($custom_categories);
-      foreach ($custom_categories as $custom_category) {
-        $new_categories[] = 'custom_' . $custom_category['slug'];
-      }
-    }
 
-    // TODO: non official cateogries cause weird updates!!!!
-    // if (in_array('PARKING', $new_categories) ) {
-    //   print_r($new_categories);
-    //   print_r($old_categories);
-    //   die();
-    // }
-
-
-    //have categories changed?
-    if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
-      $slugs_to_remove = array_diff($old_categories, $new_categories);
-      $slugs_to_add    = array_diff($new_categories, $old_categories);
-      $this->transcript[$casawp_id]['categories_changed']['removed_category'] = $slugs_to_remove;
-      $this->transcript[$casawp_id]['categories_changed']['added_category'] = $slugs_to_add;
-
-      //get the custom labels they need them
-      $custom_categorylabels = array();
-      if (isset($customCategories)) {
-        foreach ($customCategories as $custom) {
-          if (isset($custom['label'])) {
-            $custom_categorylabels[$custom['slug']] = $custom['label'];
-          } else {
-            $custom_categorylabels[$custom['slug']] = $custom['slug'];
+      // Supported categories
+      if (!empty($categories)) {
+          foreach ($categories as $category) {
+              $new_categories[] = $category;
           }
-        }
       }
 
-      //make sure the categories exist first
-      foreach ($slugs_to_add as $new_term_slug) {
-        $label = (array_key_exists($new_term_slug, $custom_categorylabels) ? $custom_categorylabels[$new_term_slug] : false);
-        $this->setcasawpCategoryTerm($new_term_slug, $label);
+      // Custom categories
+      if (!empty($customCategories)) {
+          $custom_categories = $customCategories;
+          sort($custom_categories); // Sorting the custom categories
+          foreach ($custom_categories as $custom_category) {
+              $new_categories[] = 'custom_' . $custom_category['slug'];
+          }
       }
 
-      //add the new ones
-      $connect_term_ids = array();
-      $category_terms = get_terms(array('casawp_category'), array('hide_empty' => false));
-      $connect_term_ids = array();
-      foreach ($category_terms as $term) {
-        if (in_array($term->slug, $new_categories)) {
-          $connect_term_ids[] = (int) $term->term_id;
-        }
+      // Have categories changed?
+      if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
+          $slugs_to_remove = array_diff($old_categories, $new_categories);
+          $slugs_to_add = array_diff($new_categories, $old_categories);
+
+          $this->transcript[$casawp_id]['categories_changed']['removed_category'] = $slugs_to_remove;
+          $this->transcript[$casawp_id]['categories_changed']['added_category'] = $slugs_to_add;
+
+          // Get custom labels for custom categories
+          $custom_categorylabels = array();
+          if (!empty($customCategories)) {
+              foreach ($customCategories as $custom) {
+                  if (isset($custom['label'])) {
+                      $custom_categorylabels[$custom['slug']] = $custom['label'];
+                  } else {
+                      $custom_categorylabels[$custom['slug']] = $custom['slug'];
+                  }
+              }
+          }
+
+          // Ensure the categories exist before adding
+          foreach ($slugs_to_add as $new_term_slug) {
+              $label = (array_key_exists($new_term_slug, $custom_categorylabels) ? $custom_categorylabels[$new_term_slug] : false);
+              $this->setcasawpCategoryTerm($new_term_slug, $label);
+          }
+
+          // Add the new ones if applicable
+          $connect_term_ids = array();
+          $category_terms = get_terms(array('taxonomy' => 'casawp_category'), array('hide_empty' => false));
+          foreach ($category_terms as $term) {
+              if (in_array($term->slug, $new_categories)) {
+                  $connect_term_ids[] = (int) $term->term_id;
+              }
+          }
+
+          // If no new categories are provided, remove all categories
+          if (empty($connect_term_ids)) {
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_category');
+          } else {
+              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_category');
+          }
       }
-      if ($connect_term_ids) {
-        wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_category');
-      }
-    }
   }
+
 
   public function setOfferFeatures($wp_post, $features, $casawp_id)
   {
@@ -1185,108 +1182,112 @@ class Import
 
   public function setOfferUtilities($wp_post, $utilities, $casawp_id)
   {
-    $new_utilities = array();
-    $old_utilities = array();
+      $new_utilities = array();
+      $old_utilities = array();
 
-    //set post feature
-    $old_utilities = array();
-    $wp_utility_terms = wp_get_object_terms($wp_post->ID, 'casawp_utility');
-    foreach ($wp_utility_terms as $term) {
-      $old_utilities[] = $term->slug;
-    }
-
-    //supported
-    if ($utilities) {
-      foreach ($utilities as $utility) {
-        $new_utilities[] = $utility;
-      }
-    }
-
-    //have utilities changed?
-    if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
-      $slugs_to_remove = array_diff($old_utilities, $new_utilities);
-      $slugs_to_add    = array_diff($new_utilities, $old_utilities);
-      $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
-      $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
-
-      //make sure the utilities exist first
-      foreach ($slugs_to_add as $new_term_slug) {
-        $label = false;
-        $this->setcasawputilityTerm($new_term_slug, $label);
+      // Get existing utilities (terms) from the post
+      $wp_utility_terms = wp_get_object_terms($wp_post->ID, 'casawp_utility');
+      foreach ($wp_utility_terms as $term) {
+          $old_utilities[] = $term->slug;
       }
 
-      //add the new ones
-      $utility_terms = get_terms(array('casawp_utility'), array('hide_empty' => false));
-      $connect_term_ids = array();
-      foreach ($utility_terms as $term) {
-        if (in_array($term->slug, $new_utilities)) {
-          $connect_term_ids[] = (int) $term->term_id;
-        }
+      // If new utilities are provided, populate the new utilities array
+      if (!empty($utilities)) {
+          foreach ($utilities as $utility) {
+              $new_utilities[] = $utility;
+          }
       }
-      if ($connect_term_ids) {
-        wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_utility');
+
+      // Handle the case where utilities have changed (or are missing)
+      if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
+          $slugs_to_remove = array_diff($old_utilities, $new_utilities);
+          $slugs_to_add = array_diff($new_utilities, $old_utilities);
+
+          $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
+          $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
+
+          // Ensure the utilities exist before adding
+          foreach ($slugs_to_add as $new_term_slug) {
+              $label = false;
+              $this->setcasawputilityTerm($new_term_slug, $label);
+          }
+
+          // Add the new ones if applicable
+          $utility_terms = get_terms(array('taxonomy' => 'casawp_utility'), array('hide_empty' => false));
+          $connect_term_ids = array();
+          foreach ($utility_terms as $term) {
+              if (in_array($term->slug, $new_utilities)) {
+                  $connect_term_ids[] = (int) $term->term_id;
+              }
+          }
+
+          // If there are no new terms, remove all terms (handles case when no utilities are provided)
+          if (empty($connect_term_ids)) {
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_utility');
+          } else {
+              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_utility');
+          }
       }
-    }
   }
-
 
   public function setOfferRegions($wp_post, $terms, $casawp_id)
   {
-    $new_terms = array();
-    $old_terms = array();
+      $new_terms = array();
+      $old_terms = array();
 
-    //set post term
-    $old_terms = array();
-    $wp_term_terms = wp_get_object_terms($wp_post->ID, 'casawp_region');
-    foreach ($wp_term_terms as $term) {
-      $old_terms[] = $term->slug;
-    }
-
-    //supported
-    if ($terms) {
-      foreach ($terms as $term) {
-        $new_terms[] = $term['slug'];
+      // Get existing regions (terms) from the post
+      $wp_term_terms = wp_get_object_terms($wp_post->ID, 'casawp_region');
+      foreach ($wp_term_terms as $term) {
+          $old_terms[] = $term->slug;
       }
-    }
 
-    //have terms changed?
-    if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
-      $slugs_to_remove = array_diff($old_terms, $new_terms);
-      $slugs_to_add    = array_diff($new_terms, $old_terms);
-      $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
-      $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
-
-      //get the custom labels they need them
-      $custom_labels = array();
-      if (isset($terms)) {
-        foreach ($terms as $custom) {
-          if (isset($custom['label'])) {
-            $custom_labels[$custom['slug']] = $custom['label'];
-          } else {
-            $custom_labels[$custom['slug']] = $custom['slug'];
+      // Supported terms
+      if (!empty($terms)) {
+          foreach ($terms as $term) {
+              $new_terms[] = $term['slug'];
           }
-        }
       }
 
-      //make sure the terms exist first
-      foreach ($slugs_to_add as $new_term_slug) {
-        $label = (array_key_exists($new_term_slug, $custom_labels) ? $custom_labels[$new_term_slug] : false);
-        $this->setcasawpRegionTerm($new_term_slug, $label);
-      }
+      // Have terms changed?
+      if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
+          $slugs_to_remove = array_diff($old_terms, $new_terms);
+          $slugs_to_add = array_diff($new_terms, $old_terms);
 
-      //add the new ones
-      $term_terms = get_terms(array('casawp_region'), array('hide_empty' => false));
-      $connect_term_ids = array();
-      foreach ($term_terms as $term) {
-        if (in_array($term->slug, $new_terms)) {
-          $connect_term_ids[] = (int) $term->term_id;
-        }
+          $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
+          $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
+
+          // Get custom labels if provided
+          $custom_labels = array();
+          if (!empty($terms)) {
+              foreach ($terms as $custom) {
+                  $custom_labels[$custom['slug']] = isset($custom['label']) ? $custom['label'] : $custom['slug'];
+              }
+          }
+
+          // Ensure the terms exist before adding
+          foreach ($slugs_to_add as $new_term_slug) {
+              $label = (array_key_exists($new_term_slug, $custom_labels) ? $custom_labels[$new_term_slug] : false);
+              $this->setcasawpRegionTerm($new_term_slug, $label);
+          }
+
+          // Add the new ones if applicable
+          $term_terms = get_terms(array('taxonomy' => 'casawp_region'), array('hide_empty' => false));
+          $connect_term_ids = array();
+          foreach ($term_terms as $term) {
+              if (in_array($term->slug, $new_terms)) {
+                  $connect_term_ids[] = (int) $term->term_id;
+              }
+          }
+
+          // If no new terms, remove all terms (handles case when no regions are provided)
+          if (empty($connect_term_ids)) {
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_region');
+          } else {
+              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_region');
+          }
       }
-      if ($connect_term_ids) {
-        wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_region');
-      }
-    }
   }
+
 
   public function addToLog($transcript)
   {
