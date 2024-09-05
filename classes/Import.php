@@ -15,12 +15,21 @@ class Import
 
   public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
+    /* $full_url = $this->getCurrentUrl();
+    error_log('Request URL: ' . $full_url); */
     if ($casagatewaypoke) {
       add_action('init', array($this, 'updateImportFileThroughCasaGateway'));
     }
     if ($casagatewayupdate) {
       $this->updateImportFileThroughCasaGateway();
     }
+  }
+
+  private function getCurrentUrl()
+  {
+      $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+      $url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+      return $url;
   }
 
   public function register_hooks()
@@ -1125,49 +1134,54 @@ class Import
 
   public function setOfferFeatures($wp_post, $features, $casawp_id)
   {
-    $new_features = array();
-    $old_features = array();
+      $new_features = array();
+      $old_features = array();
 
-    //set post feature
-    $old_features = array();
-    $wp_feature_terms = wp_get_object_terms($wp_post->ID, 'casawp_feature');
-    foreach ($wp_feature_terms as $term) {
-      $old_features[] = $term->slug;
-    }
-
-    //supported
-    if ($features) {
-      foreach ($features as $feature) {
-        $new_features[] = $feature;
-      }
-    }
-
-    //have features changed?
-    if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
-      $slugs_to_remove = array_diff($old_features, $new_features);
-      $slugs_to_add    = array_diff($new_features, $old_features);
-      $this->transcript[$casawp_id]['features_changed']['removed_feature'] = $slugs_to_remove;
-      $this->transcript[$casawp_id]['features_changed']['added_feature'] = $slugs_to_add;
-
-      //make sure the features exist first
-      foreach ($slugs_to_add as $new_term_slug) {
-        $label = false;
-        $this->setcasawpFeatureTerm($new_term_slug, $label);
+      // Get existing features (terms) from the post
+      $wp_feature_terms = wp_get_object_terms($wp_post->ID, 'casawp_feature');
+      foreach ($wp_feature_terms as $term) {
+          $old_features[] = $term->slug;
       }
 
-      //add the new ones
-      $feature_terms = get_terms(array('casawp_feature'), array('hide_empty' => false));
-      $connect_term_ids = array();
-      foreach ($feature_terms as $term) {
-        if (in_array($term->slug, $new_features)) {
-          $connect_term_ids[] = (int) $term->term_id;
-        }
+      // If new features are provided, populate the new features array
+      if (!empty($features)) {
+          foreach ($features as $feature) {
+              $new_features[] = $feature;
+          }
       }
-      if ($connect_term_ids) {
-        wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_feature');
+
+      // Handle the case where features have changed (or are missing)
+      if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
+          $slugs_to_remove = array_diff($old_features, $new_features);
+          $slugs_to_add = array_diff($new_features, $old_features);
+
+          $this->transcript[$casawp_id]['features_changed']['removed_feature'] = $slugs_to_remove;
+          $this->transcript[$casawp_id]['features_changed']['added_feature'] = $slugs_to_add;
+
+          // Ensure the features exist before adding
+          foreach ($slugs_to_add as $new_term_slug) {
+              $label = false;
+              $this->setcasawpFeatureTerm($new_term_slug, $label);
+          }
+
+          // Add the new ones if applicable
+          $feature_terms = get_terms(array('taxonomy' => 'casawp_feature'), array('hide_empty' => false));
+          $connect_term_ids = array();
+          foreach ($feature_terms as $term) {
+              if (in_array($term->slug, $new_features)) {
+                  $connect_term_ids[] = (int) $term->term_id;
+              }
+          }
+
+          // If there are no new terms, remove all terms (handles case when no features are provided)
+          if (empty($connect_term_ids)) {
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_feature');
+          } else {
+              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_feature');
+          }
       }
-    }
   }
+
 
   public function setOfferUtilities($wp_post, $utilities, $casawp_id)
   {
