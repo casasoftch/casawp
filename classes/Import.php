@@ -1483,7 +1483,7 @@ class Import
       wp_delete_post($post_id, true);
     }
 
-    $args = array(
+    /* $args = array(
       'posts_per_page' => -1,
       'post_type'      => 'casawp_property',
       'post_status'    => 'publish',
@@ -1491,20 +1491,41 @@ class Import
       'post__in'       => $all_valid_ids,
       'suppress_filters' => true,
       'language' => 'ALL',
-    );
+    ); */
+
+    $args = array(
+      'posts_per_page' => -1,
+      'post_type'      => 'casawp_property',
+      'post_status'    => 'publish',
+      'suppress_filters' => true,
+      'language'       => 'ALL',
+  );
 
     $properties_to_sort = get_posts($args);
 
+    #error_log(print_r($properties_to_sort, true));
+
+    #error_log(print_r($ranksort, true));
+
     $sortsUpdated = 0;
     foreach ($properties_to_sort as $prop_to_sort) {
-      if (isset($ranksort[$prop_to_sort->ID]) && $prop_to_sort->menu_order != $ranksort[$prop_to_sort->ID]) {
-        $sortsUpdated++;
-        wp_update_post(array(
-          'ID' => $prop_to_sort->ID,
-          'menu_order' => $ranksort[$prop_to_sort->ID]
-        ));
+      if (isset($ranksort[$prop_to_sort->ID])) {
+          $new_menu_order = $ranksort[$prop_to_sort->ID];
+
+          // Always apply the rank from ranksort
+          #error_log("Updating Property ID: " . $prop_to_sort->ID . " with menu_order: " . $new_menu_order);
+
+          wp_update_post(array(
+              'ID' => $prop_to_sort->ID,
+              'menu_order' => $new_menu_order
+          ));
+
+          $sortsUpdated++;
+      } else {
+          #error_log("Property ID " . $prop_to_sort->ID . " not found in ranksort.");
       }
-    }
+  }
+
 
     $this->transcript['sorts_updated'] = $sortsUpdated;
 
@@ -1531,6 +1552,8 @@ class Import
     } else {
       $batch_size = 1;
     }
+
+    $this->ranksort = get_option('casawp_ranksort', array());
 
     // Load the XML file
     $xmlString = file_get_contents($this->getImportFile());
@@ -1574,6 +1597,8 @@ class Import
       custom_log("Exception during sbbproperties update: " . $e->getMessage());
     }
 
+    update_option('casawp_ranksort', $this->ranksort);
+
     // Update the number of completed batches in the database
     update_option('casawp_completed_batches', $batch_number);
 
@@ -1581,6 +1606,8 @@ class Import
         $this->finalize_import_cleanup($this->ranksort);
         // Ensure progress is set to 100% on completion
         update_option('casawp_completed_batches', $total_batches);
+      delete_option('casawp_current_rank');
+      delete_option('casawp_ranksort');
     } else {
         $next_batch_number = $batch_number + 1;
         as_schedule_single_action(time() + 10, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
@@ -2198,7 +2225,7 @@ class Import
 
     global $wpdb;
     $found_posts = array();
-    $curRank = 0;
+    $curRank = get_option('casawp_current_rank', 0);
 
     if (isset($batched_file) && !empty($batched_file)) {
 
@@ -2271,7 +2298,7 @@ class Import
             $this->addToLog('new property: ' . $casawp_id);
           }
 
-          $ranksort[$wp_post->ID] = $curRank;
+          $this->ranksort[$wp_post->ID] = $curRank;
 
           $found_posts[] = $wp_post->ID;
 
@@ -2285,6 +2312,8 @@ class Import
         }
       }
     }
+
+    update_option('casawp_current_rank', $curRank);
 
     if (!$found_posts) {
       $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
