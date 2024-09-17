@@ -313,15 +313,29 @@ class Plugin {
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon) {
         if (get_option('casawp_use_casagateway_cdn', false)) {
             $orig = get_post_meta($attachment_id, '_origin', true);
-            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/')) ) {
+            if (
+                $orig &&
+                strpos($orig, 'casagateway.ch') !== false &&
+                (strpos($orig, '/media-thumb/') !== false || strpos($orig, '/media/') !== false)
+            ) {
                 $remoteSrcArr = $this->origToGwSrc($orig, $size);
+
+                // Ensure $image is an array
+                if (!is_array($image)) {
+                    $image = array();
+                }
+
+                // Assign values
                 $image[0] = $remoteSrcArr['src'];
                 $image[1] = $remoteSrcArr['width'];
                 $image[2] = $remoteSrcArr['height'];
+                // Optionally, set is_intermediate (index 3)
+                $image[3] = false; // or true, depending on your context
             }
         }
         return $image;
     }
+
 
     public function modifyPostThumbnailHtml($html, $post_id, $post_thumbnail_id, $size, $attr){
         if (get_option('casawp_use_casagateway_cdn', false)) {

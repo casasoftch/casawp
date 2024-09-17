@@ -25,13 +25,6 @@ class Import
     }
   }
 
-  private function getCurrentUrl()
-  {
-      $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-      $url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-      return $url;
-  }
-
   public function register_hooks()
   {
     add_action('casawp_batch_import_hook', array($this, 'handle_properties_import_batch'));
@@ -56,13 +49,13 @@ class Import
       } else {
         //if force last check for last
         $this->addToLog('file was missing ' . time());
-        if (isset($_GET['force_last_import'])) {
+        /* if (isset($_GET['force_last_import'])) {
           $this->addToLog('importing last file based on force_last_import: ' . time());
           $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml';
           if (file_exists($file)) {
             $good_to_go = true;
           }
-        }
+        } */
       }
       if ($good_to_go) {
         $this->importFile = $file;
@@ -1395,6 +1388,8 @@ class Import
       }
 
       if ($response) {
+        error_log(print_r($response, true));
+        //die();
         if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
           mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import');
         }
@@ -1493,19 +1488,19 @@ class Import
       'language' => 'ALL',
     ); */
 
-    $args = array(
+    /* $args = array(
       'posts_per_page' => -1,
       'post_type'      => 'casawp_property',
       'post_status'    => 'publish',
       'suppress_filters' => true,
       'language'       => 'ALL',
-  );
+    );
 
     $properties_to_sort = get_posts($args);
 
-    #error_log(print_r($properties_to_sort, true));
+    $this->addToLog(print_r($properties_to_sort, true));
 
-    #error_log(print_r($ranksort, true));
+    $this->addToLog(print_r($ranksort, true));
 
     $sortsUpdated = 0;
     foreach ($properties_to_sort as $prop_to_sort) {
@@ -1513,7 +1508,7 @@ class Import
           $new_menu_order = $ranksort[$prop_to_sort->ID];
 
           // Always apply the rank from ranksort
-          #error_log("Updating Property ID: " . $prop_to_sort->ID . " with menu_order: " . $new_menu_order);
+          $this->addToLog("Updating Property ID: " . $prop_to_sort->ID . " with menu_order: " . $new_menu_order);
 
           wp_update_post(array(
               'ID' => $prop_to_sort->ID,
@@ -1522,12 +1517,11 @@ class Import
 
           $sortsUpdated++;
       } else {
-          #error_log("Property ID " . $prop_to_sort->ID . " not found in ranksort.");
+        $this->addToLog("Property ID " . $prop_to_sort->ID . " not found in ranksort.");
       }
-  }
+    }
 
-
-    $this->transcript['sorts_updated'] = $sortsUpdated;
+    $this->transcript['sorts_updated'] = $sortsUpdated; */
 
     flush_rewrite_rules();
 
@@ -1582,6 +1576,7 @@ class Import
     if ($batch_number == 1) {
       update_option('casawp_total_batches', $total_batches);
       update_option('casawp_completed_batches', 0);
+      update_option('casawp_current_rank', 0);
     }
 
     $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
@@ -1642,8 +1637,17 @@ class Import
       'lng'           => ($property_xml->address->geo ? $property_xml->address->geo->longitude->__toString() : ''),
       'lat'           => ($property_xml->address->geo ? $property_xml->address->geo->latitude->__toString() : ''),
     );
-    $propertydata['creation'] = (isset($property_xml->softwareInformation->creation) ? new \DateTime($property_xml->softwareInformation->creation->__toString()) : '');
-    $propertydata['last_update'] = (isset($property_xml->softwareInformation->lastUpdate) ? new \DateTime($property_xml->softwareInformation->lastUpdate->__toString()) : '');
+
+    $creation = isset($property_xml->softwareInformation->creation)
+        ? new \DateTime($property_xml->softwareInformation->creation->__toString())
+        : null;
+
+    $last_update = isset($property_xml->softwareInformation->lastUpdate)
+        ? new \DateTime($property_xml->softwareInformation->lastUpdate->__toString())
+        : null;
+
+    $propertydata['creation'] = $creation;
+    $propertydata['last_update'] = $last_update;
     $propertydata['exportproperty_id'] = (isset($property_xml['id']) ? $property_xml['id']->__toString() : '');
     $propertydata['referenceId'] = (isset($property_xml->referenceId) ? $property_xml->referenceId->__toString() : '');
     $propertydata['visualReferenceId'] = (isset($property_xml->visualReferenceId) ? $property_xml->visualReferenceId->__toString() : '');
@@ -2716,6 +2720,39 @@ class Import
       $excerpt = $excerpt[0];
     }
 
+    $curRank = $this->ranksort[$wp_post->ID];
+
+    $site_timezone = wp_timezone(); // Returns a DateTimeZone object
+
+    // Prepare post_date and post_date_gmt
+    if ($property['creation']) {
+        // Clone DateTime objects to prevent modifying the original
+        $post_date = clone $property['creation'];
+        $post_date_gmt = clone $property['creation'];
+    } elseif ($property['last_update']) {
+        $post_date = clone $property['last_update'];
+        $post_date_gmt = clone $property['last_update'];
+    } else {
+        // Use current time if no dates are provided
+        $post_date = new \DateTime('now', $site_timezone);
+        $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
+    }
+
+    // Adjust time zones
+    $post_date->setTimezone($site_timezone);
+    $post_date_gmt->setTimezone(new \DateTimeZone('UTC'));
+
+    // Format dates
+    $post_date_formatted = $post_date->format('Y-m-d H:i:s');
+    $post_date_gmt_formatted = $post_date_gmt->format('Y-m-d H:i:s');
+
+    $current_time = new \DateTime('now', $site_timezone);
+    if ($post_date > $current_time) {
+        // Set post_date to current time
+        $post_date_formatted = $current_time->format('Y-m-d H:i:s');
+        $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+    }
+
     /* main post data */
     $new_main_data = array(
       'ID'            => $wp_post->ID,
@@ -2724,7 +2761,9 @@ class Import
       'post_status'   => 'publish',
       'post_type'     => 'casawp_property',
       'post_excerpt'  => $excerpt,
-      'post_date' => $wp_post->post_date,
+      'post_date'      => $post_date_formatted,
+      'post_date_gmt'  => $post_date_gmt_formatted,
+      'menu_order'   => $curRank,
       //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
       /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
     );
@@ -2736,7 +2775,9 @@ class Import
       'post_status'   => $wp_post->post_status,
       'post_type'     => $wp_post->post_type,
       'post_excerpt'  => $wp_post->post_excerpt,
-      'post_date' => $wp_post->post_date
+      'post_date'      => $wp_post->post_date,
+      'post_date_gmt'  => $wp_post->post_date_gmt,
+      'menu_order'   => $wp_post->menu_order
       //'post_date'     => $wp_post->post_date    ,
       /*'post_modified' => $wp_post->post_modified,*/
     );
