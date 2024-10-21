@@ -281,73 +281,73 @@ class Import
 
   public function casawpUploadAttachmentFromGateway($property_id, $fileurl)
   {
+    if (strpos($fileurl, '://')) {
+      $parsed_url = parse_url(urldecode($fileurl));
+    } else {
+      $parsed_url = [];
+    }
+
+    if (isset($parsed_url['query']) && $parsed_url['query']) {
+      $file_parts = pathinfo($parsed_url['path']);
+
+      $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+      $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+      $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+      $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+      $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+      $pass     = ($user || $pass) ? "$pass@" : '';
+      $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+
+      $extension = $file_parts['extension'];
+      $pathWithoutExtension = str_replace('.' . $file_parts['extension'], '', $path);
+
+      $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+      $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
+      $converted = $scheme . $user . $pass . $host . $port . $pathWithoutExtension . str_replace(['?', '&', '#', '='], '-', $query . $fragment) . '.' . $extension;
+
+      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($converted);
+    } else {
+      $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
+    }
+
+    // Extension is required
+    $file_parts = pathinfo($filename);
+    if (!isset($file_parts['extension'])) {
+      $filename = $filename . '.jpg';
+    }
+
+    $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
+
+    // Create the directory if it doesn't exist, recursively
+    $directory = dirname($full_path);
+    if (!is_dir($directory)) {
+      if (!mkdir($directory, 0755, true)) {
+        #error_log("Failed to create directory: $directory");
+        return false;
+      }
+    }
+
+    if (!is_file($full_path)) {
+      if (!isset($this->transcript['attachments'][$property_id]["uploaded_from_gateway"])) {
+        $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
+      }
+      $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
+
       if (strpos($fileurl, '://')) {
-          $parsed_url = parse_url(urldecode($fileurl));
+        $could_copy = copy(urldecode($fileurl), $full_path);
       } else {
-          $parsed_url = [];
+        $could_copy = copy($fileurl, $full_path);
       }
 
-      if (isset($parsed_url['query']) && $parsed_url['query']) {
-          $file_parts = pathinfo($parsed_url['path']);
-
-          $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-          $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-          $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-          $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-          $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
-          $pass     = ($user || $pass) ? "$pass@" : '';
-          $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-
-          $extension = $file_parts['extension'];
-          $pathWithoutExtension = str_replace('.' . $file_parts['extension'], '', $path);
-
-          $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-          $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
-
-          $converted = $scheme . $user . $pass . $host . $port . $pathWithoutExtension . str_replace(['?', '&', '#', '='], '-', $query . $fragment) . '.' . $extension;
-
-          $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($converted);
-      } else {
-          $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
+      if (!$could_copy) {
+        $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' . $filename;
+        #error_log("Failed to copy file from $fileurl to $full_path");
+        return false;
       }
+    }
 
-      // Extension is required
-      $file_parts = pathinfo($filename);
-      if (!isset($file_parts['extension'])) {
-          $filename = $filename . '.jpg';
-      }
-
-      $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
-
-      // Create the directory if it doesn't exist, recursively
-      $directory = dirname($full_path);
-      if (!is_dir($directory)) {
-          if (!mkdir($directory, 0755, true)) {
-              #error_log("Failed to create directory: $directory");
-              return false;
-          }
-      }
-
-      if (!is_file($full_path)) {
-          if (!isset($this->transcript['attachments'][$property_id]["uploaded_from_gateway"])) {
-              $this->transcript['attachments'][$property_id]["uploaded_from_gateway"] = array();
-          }
-          $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
-
-          if (strpos($fileurl, '://')) {
-              $could_copy = copy(urldecode($fileurl), $full_path);
-          } else {
-              $could_copy = copy($fileurl, $full_path);
-          }
-
-          if (!$could_copy) {
-              $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' . $filename;
-              #error_log("Failed to copy file from $fileurl to $full_path");
-              return false;
-          }
-      }
-
-      return $filename;
+    return $filename;
   }
 
 
@@ -852,434 +852,558 @@ class Import
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id)
   {
-    $new_salestype = null;
-    $old_salestype = null;
+      // Initialize term IDs
+      $new_term_id = null;
+      $old_term_id = null;
 
-    if ($salestype) {
-      $new_salestype = get_term_by('slug', $salestype, 'casawp_salestype', OBJECT, 'raw');
-      if (!$new_salestype) {
-        $options = array(
-          'description' => '',
-          'slug' => $salestype
-        );
-        $id = wp_insert_term(
-          $salestype,
-          'casawp_salestype',
-          $options
-        );
-        $new_salestype = get_term($id, 'casawp_salestype', OBJECT, 'raw');
+      // Process new salestype term
+      if ($salestype) {
+          $salestype_slug = sanitize_title($salestype);
+          $salestype_label = sanitize_text_field($salestype);
+
+          // Get or create the term
+          $term = get_term_by('slug', $salestype_slug, 'casawp_salestype');
+          if (!$term || is_wp_error($term)) {
+              // Term doesn't exist, create it
+              $inserted_term = wp_insert_term($salestype_label, 'casawp_salestype', array('slug' => $salestype_slug));
+              if (is_wp_error($inserted_term)) {
+                  $this->addToLog('Error inserting salestype term "' . $salestype_label . '": ' . $inserted_term->get_error_message());
+                  $new_term_id = null;
+              } else {
+                  $new_term_id = $inserted_term['term_id'];
+                  $term = get_term($new_term_id, 'casawp_salestype');
+                  if (is_wp_error($term)) {
+                      $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+                      $new_term_id = null;
+                  }
+              }
+          } else {
+              $new_term_id = $term->term_id;
+          }
       }
-    }
 
-    $wp_salestype_terms = wp_get_object_terms($wp_post->ID, 'casawp_salestype');
-    if ($wp_salestype_terms) {
-      $old_salestype = $wp_salestype_terms[0];
-    }
+      // Get existing salestype term assigned to the post
+      $current_terms = wp_get_object_terms($wp_post->ID, 'casawp_salestype', array('fields' => 'ids'));
+      if (is_wp_error($current_terms)) {
+          $this->addToLog('Error retrieving current salestype terms: ' . $current_terms->get_error_message());
+          $current_terms = array();
+      }
 
-    if ($old_salestype != $new_salestype) {
-      $this->transcript[$casawp_id]['salestype']['from'] = ($old_salestype ? $old_salestype->name : 'none');
-      $this->transcript[$casawp_id]['salestype']['to'] =   ($new_salestype ? $new_salestype->name : 'none');
-      wp_set_object_terms($wp_post->ID, ($new_salestype ? $new_salestype->term_id : NULL), 'casawp_salestype');
-    }
+      if (!empty($current_terms)) {
+          $old_term_id = $current_terms[0];
+      }
+
+      // Check if salestype has changed
+      if ($old_term_id !== $new_term_id) {
+          // Get term names for transcript
+          $old_term_name = 'none';
+          if ($old_term_id) {
+              $old_term = get_term($old_term_id, 'casawp_salestype');
+              if (!is_wp_error($old_term)) {
+                  $old_term_name = $old_term->name;
+              }
+          }
+
+          $new_term_name = 'none';
+          if ($new_term_id) {
+              $new_term = get_term($new_term_id, 'casawp_salestype');
+              if (!is_wp_error($new_term)) {
+                  $new_term_name = $new_term->name;
+              }
+          }
+
+          $this->transcript[$casawp_id]['salestype']['from'] = $old_term_name;
+          $this->transcript[$casawp_id]['salestype']['to'] = $new_term_name;
+
+          // Set the new term on the post
+          $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_salestype');
+          if (is_wp_error($result)) {
+              $this->addToLog('Error assigning salestype term to post: ' . $result->get_error_message());
+          } else {
+              $this->addToLog('Salestype updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+          }
+      } else {
+          $this->addToLog('No salestype changes detected.');
+      }
   }
 
 
   public function setOfferAvailability($wp_post, $availability, $casawp_id)
   {
-    $new_term = null;
-    $old_term = null;
+      // Define allowed availabilities
+      $allowed_availabilities = array(
+          'active',
+          'taken',
+          'reserved',
+          'private',
+          'reference'
+      );
 
-    //backward compadable
-    if ($availability == 'available') {
-      $availability = 'active';
-    }
-
-    if (!in_array($availability, array(
-      'active',
-      'taken',
-      'reserved',
-      'private',
-      'reference'
-    ))) {
-      $availability = null;
-    }
-
-    if ($availability) {
-      $new_term = get_term_by('slug', $availability, 'casawp_availability', OBJECT, 'raw');
-      if (!$new_term) {
-        $options = array(
-          'description' => '',
-          'slug' => $availability
-        );
-        $id = wp_insert_term(
-          $availability,
-          'casawp_availability',
-          $options
-        );
-        $new_term = get_term($id, 'casawp_availability', OBJECT, 'raw');
+      // Backward compatibility
+      if ($availability === 'available') {
+          $availability = 'active';
       }
-    }
 
-    $wp_post_terms = wp_get_object_terms($wp_post->ID, 'casawp_availability');
-    if ($wp_post_terms) {
-      $old_term = $wp_post_terms[0];
-    }
+      // Validate availability
+      if (!in_array($availability, $allowed_availabilities)) {
+          $availability = null;
+      }
 
-    if ($old_term != $new_term) {
-      $this->transcript[$casawp_id]['availability']['from'] = ($old_term ? $old_term->name : 'none');
-      $this->transcript[$casawp_id]['availability']['to'] =   ($new_term ? $new_term->name : 'none');
-      wp_set_object_terms($wp_post->ID, ($new_term ? $new_term->term_id : NULL), 'casawp_availability');
-    }
+      // Initialize term IDs
+      $new_term_id = null;
+      $old_term_id = null;
+
+      // Process new availability term
+      if ($availability) {
+          $availability_slug = sanitize_title($availability);
+          $availability_label = sanitize_text_field($availability);
+
+          // Get or create the term
+          $term = get_term_by('slug', $availability_slug, 'casawp_availability');
+          if (!$term || is_wp_error($term)) {
+              // Term doesn't exist, create it
+              $inserted_term = wp_insert_term($availability_label, 'casawp_availability', array('slug' => $availability_slug));
+              if (is_wp_error($inserted_term)) {
+                  $this->addToLog('Error inserting availability term "' . $availability_label . '": ' . $inserted_term->get_error_message());
+                  $new_term_id = null;
+              } else {
+                  $new_term_id = $inserted_term['term_id'];
+                  $term = get_term($new_term_id, 'casawp_availability');
+                  if (is_wp_error($term)) {
+                      $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+                      $new_term_id = null;
+                  }
+              }
+          } else {
+              $new_term_id = $term->term_id;
+          }
+      }
+
+      // Get existing availability term assigned to the post
+      $current_terms = wp_get_object_terms($wp_post->ID, 'casawp_availability', array('fields' => 'ids'));
+      if (is_wp_error($current_terms)) {
+          $this->addToLog('Error retrieving current availability terms: ' . $current_terms->get_error_message());
+          $current_terms = array();
+      }
+
+      if (!empty($current_terms)) {
+          $old_term_id = $current_terms[0];
+      }
+
+      // Check if availability has changed
+      if ($old_term_id !== $new_term_id) {
+          // Get term names for transcript
+          $old_term_name = 'none';
+          if ($old_term_id) {
+              $old_term = get_term($old_term_id, 'casawp_availability');
+              if (!is_wp_error($old_term)) {
+                  $old_term_name = $old_term->name;
+              }
+          }
+
+          $new_term_name = 'none';
+          if ($new_term_id) {
+              $new_term = get_term($new_term_id, 'casawp_availability');
+              if (!is_wp_error($new_term)) {
+                  $new_term_name = $new_term->name;
+              }
+          }
+
+          $this->transcript[$casawp_id]['availability']['from'] = $old_term_name;
+          $this->transcript[$casawp_id]['availability']['to'] = $new_term_name;
+
+          // Set the new term on the post
+          $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_availability');
+          if (is_wp_error($result)) {
+              $this->addToLog('Error assigning availability term to post: ' . $result->get_error_message());
+          } else {
+              $this->addToLog('Availability updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+          }
+      } else {
+          $this->addToLog('No availability changes detected.');
+      }
   }
 
+  
   public function setOfferLocalities($wp_post, $address, $casawp_id)
   {
-    $country  = strtoupper($address['country']);
-    $region   = $address['region'];
-    $locality = $address['locality'];
+      // Extract address components
+      $country  = strtoupper($address['country']);
+      $region   = $address['region'];
+      $locality = $address['locality'];
 
-    $country_arr = array($country, 'country_' . strtolower($country));
-    $lvl1_arr = false;
-    $lvl2_arr = false;
-    if ($region) {
-      $lvl1_arr = array($region, 'region_' . sanitize_title_with_dashes(remove_accents($region)));
+      // Initialize arrays
+      $term_ids = array();
+      $parent_term_ids = array();
+
+      // Function to sanitize slug
+      $sanitize_slug = function($prefix, $name) {
+          return sanitize_title($prefix . '_' . $name);
+      };
+
+      // Sanitize names
+      $sanitize_name = function($name) {
+          return sanitize_text_field($name);
+      };
+
+      // Process Country
+      if ($country) {
+          $country_slug = $sanitize_slug('country', $country);
+          $country_label = $sanitize_name($country);
+
+          $term = $this->ensureTermExists('casawp_location', $country_slug, $country_label, 0);
+          if ($term) {
+              $term_ids[] = $term->term_id;
+              $parent_term_ids[$country_slug] = $term->term_id;
+          }
+      }
+
+      // Process Region
+      if ($region) {
+          $region_slug = $sanitize_slug('region', $region);
+          $region_label = $sanitize_name($region);
+          $parent_id = isset($parent_term_ids[$country_slug]) ? $parent_term_ids[$country_slug] : 0;
+
+          $term = $this->ensureTermExists('casawp_location', $region_slug, $region_label, $parent_id);
+          if ($term) {
+              $term_ids[] = $term->term_id;
+              $parent_term_ids[$region_slug] = $term->term_id;
+          }
+      }
+
+      // Process Locality
       if ($locality) {
-        $lvl2_arr = array($locality, 'locality_' . sanitize_title_with_dashes(remove_accents($locality)));
+          $locality_slug = $sanitize_slug('locality', $locality);
+          $locality_label = $sanitize_name($locality);
+          $parent_id = isset($parent_term_ids[$region_slug]) ? $parent_term_ids[$region_slug] : (isset($parent_term_ids[$country_slug]) ? $parent_term_ids[$country_slug] : 0);
+
+          $term = $this->ensureTermExists('casawp_location', $locality_slug, $locality_label, $parent_id);
+          if ($term) {
+              $term_ids[] = $term->term_id;
+              $parent_term_ids[$locality_slug] = $term->term_id;
+          }
       }
-    } elseif ($locality) {
-      $lvl1_arr = array($locality, 'locality_' . sanitize_title_with_dashes(remove_accents($locality)));
-      $lvl2_arr = false;
-    }
 
+      // Remove duplicates and sort term IDs
+      $term_ids = array_unique($term_ids);
+      asort($term_ids);
+      $term_ids = array_values($term_ids);
 
-    //make sure country exists
-    $wp_country = false;
-    if ($country_arr) {
-      $wp_country = get_term_by('slug', $country_arr[1], 'casawp_location', OBJECT, 'raw');
-
-      if (!$wp_country || $wp_country instanceof WP_Error) {
-        $options = array(
-          'description' => '',
-          'slug' => $country_arr[1]
-        );
-        $new_term = wp_insert_term(
-          $country_arr[0],
-          'casawp_location',
-          $options
-        );
-        delete_option("casawp_location_children");
-        $wp_country = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
-        $this->transcript['new_locations'][] = $country_arr;
+      // Get existing term IDs assigned to the post
+      $old_terms = wp_get_object_terms($wp_post->ID, 'casawp_location', array('fields' => 'ids'));
+      if (is_wp_error($old_terms)) {
+          $old_terms = array();
       }
-    }
+      asort($old_terms);
+      $old_terms = array_values($old_terms);
 
-    //make sure lvl1 exists
-    $wp_lvl1 = false;
-    if ($lvl1_arr) {
-      $wp_lvl1 = get_term_by('slug', $lvl1_arr[1], 'casawp_location', OBJECT, 'raw');
+      // Compare new terms with old terms
+      if ($term_ids != $old_terms) {
+          $this->transcript[$casawp_id]['locations'][] = array('from' => $old_terms, 'to' => $term_ids);
 
-      if (!$wp_lvl1 || $wp_lvl1 instanceof WP_Error) {
-
-        $options = array(
-          'description' => '',
-          'slug' => $lvl1_arr[1],
-          'parent' => ($wp_country ? (int) $wp_country->term_id : 0)
-        );
-        $new_term = wp_insert_term(
-          $lvl1_arr[0],
-          'casawp_location',
-          $options
-        );
-        delete_option("casawp_location_children");
-        $wp_lvl1 = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
-        $this->transcript['new_locations'][] = $lvl1_arr;
+          $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_location');
+          if (is_wp_error($result)) {
+              $this->addToLog('Error assigning location terms to post: ' . $result->get_error_message());
+          } else {
+              if (defined('WPSEO_VERSION') && isset($parent_term_ids[$locality_slug])) {
+                  // Yoast SEO is active, so use its primary term feature
+                  $primary_term_id = $parent_term_ids[$locality_slug];
+                  $yoast_primary_term = new \WPSEO_Primary_Term('casawp_location', $wp_post->ID);
+                  $yoast_primary_term->set_primary_term($primary_term_id);
+              }
+          }
+      } else {
+          $this->addToLog('No location changes detected.');
       }
-    }
-
-    //make sure lvl2 exists
-    $wp_lvl2 = false;
-    if ($lvl2_arr) {
-      $wp_lvl2 = get_term_by('slug', $lvl2_arr[1], 'casawp_location', OBJECT, 'raw');
-      if (!$wp_lvl2 || $wp_lvl2 instanceof WP_Error) {
-        $options = array(
-          'description' => '',
-          'slug' => $lvl2_arr[1],
-          'parent' => ($wp_lvl1 ? (int) $wp_lvl1->term_id : 0)
-        );
-        $new_term = wp_insert_term(
-          $lvl2_arr[0],
-          'casawp_location',
-          $options
-        );
-        delete_option("casawp_location_children");
-        $wp_lvl2 = get_term($new_term['term_id'], 'casawp_location', OBJECT, 'raw');
-        $this->transcript['new_locations'][] = $lvl2_arr;
-      }
-    }
-
-    $new_terms = array();
-    if ($wp_country) {
-      $new_terms[] = $wp_country->term_id;
-    }
-    if ($wp_lvl1) {
-      $new_terms[] = $wp_lvl1->term_id;
-    }
-    if ($wp_lvl2) {
-      $new_terms[] = $wp_lvl2->term_id;
-    }
-    asort($new_terms);
-    $new_terms = array_values($new_terms);
-
-    $old_terms = array();
-    $old_terms_obj = wp_get_object_terms($wp_post->ID, 'casawp_location');
-    foreach ($old_terms_obj as $old_term) {
-      $old_terms[] = $old_term->term_id;
-    }
-    asort($old_terms);
-    $old_terms = array_values($old_terms);
-
-    if ($new_terms != $old_terms) {
-      $this->transcript[$casawp_id]['locations'][]['from'] = $old_terms;
-      $this->transcript[$casawp_id]['locations'][]['to'] = $new_terms;
-      wp_set_object_terms($wp_post->ID, $new_terms, 'casawp_location');
-      if (defined('WPSEO_VERSION') && $wp_lvl2) {
-        // Yoast SEO is active, so use its primary term feature
-        $yoast_primary_term = new \WPSEO_Primary_Term('casawp_location', $wp_post->ID);
-        $yoast_primary_term->set_primary_term($wp_lvl2->term_id);
-      }
-    }
   }
+
+  // Helper function to ensure a term exists, create it if necessary
+  private function ensureTermExists($taxonomy, $slug, $label, $parent_id = 0)
+  {
+      $term = get_term_by('slug', $slug, $taxonomy);
+      if (!$term || is_wp_error($term)) {
+          // Create term
+          $args = array(
+              'slug'   => $slug,
+              'parent' => $parent_id
+          );
+          $inserted_term = wp_insert_term($label, $taxonomy, $args);
+          if (is_wp_error($inserted_term)) {
+              $this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
+              return null;
+          } else {
+              $term_id = $inserted_term['term_id'];
+              $this->transcript['new_locations'][] = array($label, $slug);
+              // Retrieve the term object
+              $term = get_term($term_id, $taxonomy);
+              if (is_wp_error($term)) {
+                  $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+                  return null;
+              }
+              return $term;
+          }
+      } else {
+          return $term;
+      }
+  }
+
 
   public function setOfferCategories($wp_post, $categories, $customCategories, $casawp_id)
   {
+      // Get existing categories (slugs) from the post
+      $old_categories = wp_get_object_terms($wp_post->ID, 'casawp_category', array('fields' => 'slugs'));
+      if (is_wp_error($old_categories)) {
+          $old_categories = array();
+      }
+
+      // Collect new categories
       $new_categories = array();
-      $old_categories = array();
 
-      // Get existing categories (terms) from the post
-      $wp_category_terms = wp_get_object_terms($wp_post->ID, 'casawp_category');
-      foreach ($wp_category_terms as $term) {
-          $old_categories[] = $term->slug;
-      }
-
-      // Supported categories
+      // Add standard categories
       if (!empty($categories)) {
-          foreach ($categories as $category) {
-              $new_categories[] = $category;
-          }
+          $new_categories = array_merge($new_categories, $categories);
       }
 
-      // Custom categories
+      // Process custom categories
+      $custom_categorylabels = array();
       if (!empty($customCategories)) {
-          $custom_categories = $customCategories;
-          sort($custom_categories); // Sorting the custom categories
-          foreach ($custom_categories as $custom_category) {
-              $new_categories[] = 'custom_' . $custom_category['slug'];
+          foreach ($customCategories as $custom_category) {
+              $slug = 'custom_' . $custom_category['slug'];
+              $label = isset($custom_category['label']) ? $custom_category['label'] : $custom_category['slug'];
+              $new_categories[] = $slug;
+              $custom_categorylabels[$slug] = $label;
           }
       }
 
-      // Have categories changed?
+      // Determine if categories have changed
       if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
-          $slugs_to_remove = array_diff($old_categories, $new_categories);
           $slugs_to_add = array_diff($new_categories, $old_categories);
+          $slugs_to_remove = array_diff($old_categories, $new_categories);
 
           $this->transcript[$casawp_id]['categories_changed']['removed_category'] = $slugs_to_remove;
           $this->transcript[$casawp_id]['categories_changed']['added_category'] = $slugs_to_add;
 
-          // Get custom labels for custom categories
-          $custom_categorylabels = array();
-          if (!empty($customCategories)) {
-              foreach ($customCategories as $custom) {
-                  if (isset($custom['label'])) {
-                      $custom_categorylabels[$custom['slug']] = $custom['label'];
-                  } else {
-                      $custom_categorylabels[$custom['slug']] = $custom['slug'];
-                  }
-              }
-          }
-
-          // Ensure the categories exist before adding
+          // Ensure the terms exist
           foreach ($slugs_to_add as $new_term_slug) {
-              $label = (array_key_exists($new_term_slug, $custom_categorylabels) ? $custom_categorylabels[$new_term_slug] : false);
-              $this->setcasawpCategoryTerm($new_term_slug, $label);
-          }
-
-          // Add the new ones if applicable
-          $connect_term_ids = array();
-          $category_terms = get_terms(array('taxonomy' => 'casawp_category'), array('hide_empty' => false));
-          foreach ($category_terms as $term) {
-              if (in_array($term->slug, $new_categories)) {
-                  $connect_term_ids[] = (int) $term->term_id;
+              $label = isset($custom_categorylabels[$new_term_slug]) ? $custom_categorylabels[$new_term_slug] : $new_term_slug;
+              // Check if term exists
+              if (!term_exists($new_term_slug, 'casawp_category')) {
+                  // Create term
+                  wp_insert_term($label, 'casawp_category', array('slug' => $new_term_slug));
               }
+              // If you have custom logic in setcasawpCategoryTerm, you can call it here
+              // $this->setcasawpCategoryTerm($new_term_slug, $label);
           }
 
-          // If no new categories are provided, remove all categories
-          if (empty($connect_term_ids)) {
-              wp_set_object_terms($wp_post->ID, array(), 'casawp_category');
-          } else {
-              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_category');
-          }
+          // Set the terms on the post using slugs
+          wp_set_object_terms($wp_post->ID, $new_categories, 'casawp_category', false);
       }
   }
 
 
   public function setOfferFeatures($wp_post, $features, $casawp_id)
   {
-      $new_features = array();
-      $old_features = array();
-
-      // Get existing features (terms) from the post
-      $wp_feature_terms = wp_get_object_terms($wp_post->ID, 'casawp_feature');
-      foreach ($wp_feature_terms as $term) {
-          $old_features[] = $term->slug;
+      // Get existing features (slugs) from the post
+      $old_features = wp_get_object_terms($wp_post->ID, 'casawp_feature', array('fields' => 'slugs'));
+      if (is_wp_error($old_features)) {
+          $old_features = array();
       }
 
-      // If new features are provided, populate the new features array
-      if (!empty($features)) {
-          foreach ($features as $feature) {
-              $new_features[] = $feature;
-          }
-      }
+      // Collect new features
+      $new_features = !empty($features) ? $features : array();
 
-      // Handle the case where features have changed (or are missing)
+      // Determine if features have changed
       if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
-          $slugs_to_remove = array_diff($old_features, $new_features);
           $slugs_to_add = array_diff($new_features, $old_features);
+          $slugs_to_remove = array_diff($old_features, $new_features);
 
           $this->transcript[$casawp_id]['features_changed']['removed_feature'] = $slugs_to_remove;
           $this->transcript[$casawp_id]['features_changed']['added_feature'] = $slugs_to_add;
 
-          // Ensure the features exist before adding
-          foreach ($slugs_to_add as $new_term_slug) {
-              $label = false;
-              $this->setcasawpFeatureTerm($new_term_slug, $label);
-          }
+          // Ensure the terms exist and collect term IDs
+          $term_ids = array();
 
-          // Add the new ones if applicable
-          $feature_terms = get_terms(array('taxonomy' => 'casawp_feature'), array('hide_empty' => false));
-          $connect_term_ids = array();
-          foreach ($feature_terms as $term) {
-              if (in_array($term->slug, $new_features)) {
-                  $connect_term_ids[] = (int) $term->term_id;
+          foreach ($new_features as $feature_slug) {
+              // Check if term exists
+              $term = get_term_by('slug', $feature_slug, 'casawp_feature');
+              if (!$term) {
+                  // Create term
+                  $label = ucwords(str_replace('-', ' ', $feature_slug)); // Generate a label if needed
+                  $inserted_term = wp_insert_term($label, 'casawp_feature', array('slug' => $feature_slug));
+                  if (is_wp_error($inserted_term)) {
+                      $this->addToLog('Error inserting feature term "' . $label . '": ' . $inserted_term->get_error_message());
+                      continue; // Skip this term if there's an error
+                  } else {
+                      $term_id = $inserted_term['term_id'];
+                      $this->addToLog('Inserted new feature term "' . $label . '" with ID ' . $term_id);
+                  }
+              } else {
+                  $term_id = $term->term_id;
+                  $this->addToLog('Feature term already exists: "' . $term->name . '" with ID ' . $term_id);
               }
+
+              // Add term ID to the list
+              $term_ids[] = (int) $term_id;
           }
 
-          // If there are no new terms, remove all terms (handles case when no features are provided)
-          if (empty($connect_term_ids)) {
-              wp_set_object_terms($wp_post->ID, array(), 'casawp_feature');
+          // Set the terms on the post using term IDs
+          if (!empty($term_ids)) {
+              $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_feature');
+              if (is_wp_error($result)) {
+                  $this->addToLog('Error assigning features to post: ' . $result->get_error_message());
+              } else {
+                  $this->addToLog('Assigned features to post successfully.');
+              }
           } else {
-              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_feature');
+              // If no terms to assign, remove all terms
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_feature');
+              $this->addToLog('Removed all features from post.');
           }
+      } else {
+          $this->addToLog('No feature changes detected.');
       }
   }
+
 
 
   public function setOfferUtilities($wp_post, $utilities, $casawp_id)
   {
-      $new_utilities = array();
-      $old_utilities = array();
-
-      // Get existing utilities (terms) from the post
-      $wp_utility_terms = wp_get_object_terms($wp_post->ID, 'casawp_utility');
-      foreach ($wp_utility_terms as $term) {
-          $old_utilities[] = $term->slug;
+      // Get existing utilities (slugs) from the post
+      $old_utilities = wp_get_object_terms($wp_post->ID, 'casawp_utility', array('fields' => 'slugs'));
+      if (is_wp_error($old_utilities)) {
+          $old_utilities = array();
       }
 
-      // If new utilities are provided, populate the new utilities array
-      if (!empty($utilities)) {
-          foreach ($utilities as $utility) {
-              $new_utilities[] = $utility;
-          }
-      }
+      // Collect new utilities
+      $new_utilities = !empty($utilities) ? $utilities : array();
 
-      // Handle the case where utilities have changed (or are missing)
+      // Determine if utilities have changed
       if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
-          $slugs_to_remove = array_diff($old_utilities, $new_utilities);
           $slugs_to_add = array_diff($new_utilities, $old_utilities);
+          $slugs_to_remove = array_diff($old_utilities, $new_utilities);
 
           $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
           $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
 
-          // Ensure the utilities exist before adding
-          foreach ($slugs_to_add as $new_term_slug) {
-              $label = false;
-              $this->setcasawputilityTerm($new_term_slug, $label);
-          }
+          // Ensure the terms exist and collect term IDs
+          $term_ids = array();
 
-          // Add the new ones if applicable
-          $utility_terms = get_terms(array('taxonomy' => 'casawp_utility'), array('hide_empty' => false));
-          $connect_term_ids = array();
-          foreach ($utility_terms as $term) {
-              if (in_array($term->slug, $new_utilities)) {
-                  $connect_term_ids[] = (int) $term->term_id;
+          foreach ($new_utilities as $utility_slug) {
+              // Check if term exists
+              $term = get_term_by('slug', $utility_slug, 'casawp_utility');
+              if (!$term) {
+                  // Create term
+                  $label = ucwords(str_replace('-', ' ', $utility_slug)); // Generate a label if needed
+                  $inserted_term = wp_insert_term($label, 'casawp_utility', array('slug' => $utility_slug));
+                  if (is_wp_error($inserted_term)) {
+                      $this->addToLog('Error inserting utility term "' . $label . '": ' . $inserted_term->get_error_message());
+                      continue; // Skip this term if there's an error
+                  } else {
+                      $term_id = $inserted_term['term_id'];
+                      $this->addToLog('Inserted new utility term "' . $label . '" with ID ' . $term_id);
+                  }
+              } else {
+                  $term_id = $term->term_id;
+                  $this->addToLog('Utility term already exists: "' . $term->name . '" with ID ' . $term_id);
               }
+
+              // Add term ID to the list
+              $term_ids[] = (int) $term_id;
           }
 
-          // If there are no new terms, remove all terms (handles case when no utilities are provided)
-          if (empty($connect_term_ids)) {
-              wp_set_object_terms($wp_post->ID, array(), 'casawp_utility');
+          // Set the terms on the post using term IDs
+          if (!empty($term_ids)) {
+              $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_utility');
+              if (is_wp_error($result)) {
+                  $this->addToLog('Error assigning utilities to post: ' . $result->get_error_message());
+              } else {
+                  $this->addToLog('Assigned utilities to post successfully.');
+              }
           } else {
-              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_utility');
+              // If no terms to assign, remove all terms
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_utility');
+              $this->addToLog('Removed all utilities from post.');
           }
+      } else {
+          $this->addToLog('No utility changes detected.');
       }
   }
 
+
   public function setOfferRegions($wp_post, $terms, $casawp_id)
   {
-      $new_terms = array();
-      $old_terms = array();
-
-      // Get existing regions (terms) from the post
-      $wp_term_terms = wp_get_object_terms($wp_post->ID, 'casawp_region');
-      foreach ($wp_term_terms as $term) {
-          $old_terms[] = $term->slug;
+      // Get existing regions (slugs) from the post
+      $old_terms = wp_get_object_terms($wp_post->ID, 'casawp_region', array('fields' => 'slugs'));
+      if (is_wp_error($old_terms)) {
+          $old_terms = array();
       }
 
-      // Supported terms
+      // Collect new terms and labels
+      $new_terms = array();
+      $custom_labels = array();
+
       if (!empty($terms)) {
           foreach ($terms as $term) {
-              $new_terms[] = $term['slug'];
+              $slug = $term['slug'];
+              $label = isset($term['label']) ? $term['label'] : $slug;
+              $new_terms[] = $slug;
+              $custom_labels[$slug] = $label;
           }
       }
 
-      // Have terms changed?
+      // Determine if terms have changed
       if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
-          $slugs_to_remove = array_diff($old_terms, $new_terms);
           $slugs_to_add = array_diff($new_terms, $old_terms);
+          $slugs_to_remove = array_diff($old_terms, $new_terms);
 
           $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
           $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
 
-          // Get custom labels if provided
-          $custom_labels = array();
-          if (!empty($terms)) {
-              foreach ($terms as $custom) {
-                  $custom_labels[$custom['slug']] = isset($custom['label']) ? $custom['label'] : $custom['slug'];
+          // Ensure the terms exist and collect term IDs
+          $term_ids = array();
+
+          foreach ($new_terms as $term_slug) {
+              $label = isset($custom_labels[$term_slug]) ? $custom_labels[$term_slug] : $term_slug;
+
+              // Check if term exists
+              $term = get_term_by('slug', $term_slug, 'casawp_region');
+              if (!$term) {
+                  // Create term
+                  $inserted_term = wp_insert_term($label, 'casawp_region', array('slug' => $term_slug));
+                  if (is_wp_error($inserted_term)) {
+                      $this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
+                      continue; // Skip this term if there's an error
+                  } else {
+                      $term_id = $inserted_term['term_id'];
+                      $this->addToLog('Inserted new term "' . $label . '" with ID ' . $term_id);
+                  }
+              } else {
+                  $term_id = $term->term_id;
+                  $this->addToLog('Term already exists: "' . $term->name . '" with ID ' . $term_id);
               }
+
+              // Add term ID to the list
+              $term_ids[] = (int) $term_id;
           }
 
-          // Ensure the terms exist before adding
-          foreach ($slugs_to_add as $new_term_slug) {
-              $label = (array_key_exists($new_term_slug, $custom_labels) ? $custom_labels[$new_term_slug] : false);
-              $this->setcasawpRegionTerm($new_term_slug, $label);
-          }
-
-          // Add the new ones if applicable
-          $term_terms = get_terms(array('taxonomy' => 'casawp_region'), array('hide_empty' => false));
-          $connect_term_ids = array();
-          foreach ($term_terms as $term) {
-              if (in_array($term->slug, $new_terms)) {
-                  $connect_term_ids[] = (int) $term->term_id;
+          // Set the terms on the post using term IDs
+          if (!empty($term_ids)) {
+              $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_region');
+              if (is_wp_error($result)) {
+                  $this->addToLog('Error assigning terms to post: ' . $result->get_error_message());
+              } else {
+                  $this->addToLog('Assigned regions to post successfully.');
               }
-          }
-
-          // If no new terms, remove all terms (handles case when no regions are provided)
-          if (empty($connect_term_ids)) {
-              wp_set_object_terms($wp_post->ID, array(), 'casawp_region');
           } else {
-              wp_set_object_terms($wp_post->ID, $connect_term_ids, 'casawp_region');
+              // If no terms to assign, remove all terms
+              wp_set_object_terms($wp_post->ID, array(), 'casawp_region');
+              $this->addToLog('Removed all regions from post.');
           }
+      } else {
+          $this->addToLog('No region changes detected.');
       }
   }
+
 
 
   public function addToLog($transcript)
@@ -1291,7 +1415,7 @@ class Import
     file_put_contents($dir . "/" . get_date_from_gmt('', 'Ym') . '.log', "\n" . json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
-/*   public function casawpImport()
+  /*   public function casawpImport()
   {
 
 
@@ -1598,14 +1722,14 @@ class Import
     update_option('casawp_completed_batches', $batch_number);
 
     if ($batch_number >= $total_batches) {
-        $this->finalize_import_cleanup($this->ranksort);
-        // Ensure progress is set to 100% on completion
-        update_option('casawp_completed_batches', $total_batches);
+      $this->finalize_import_cleanup($this->ranksort);
+      // Ensure progress is set to 100% on completion
+      update_option('casawp_completed_batches', $total_batches);
       delete_option('casawp_current_rank');
       delete_option('casawp_ranksort');
     } else {
-        $next_batch_number = $batch_number + 1;
-        as_schedule_single_action(time() + 10, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+      $next_batch_number = $batch_number + 1;
+      as_schedule_single_action(time() + 10, 'casawp_batch_import_hook', array('batch_number' => $next_batch_number), 'casawp_batch_import');
     }
   }
 
@@ -1639,12 +1763,12 @@ class Import
     );
 
     $creation = isset($property_xml->softwareInformation->creation)
-        ? new \DateTime($property_xml->softwareInformation->creation->__toString())
-        : null;
+      ? new \DateTime($property_xml->softwareInformation->creation->__toString())
+      : null;
 
     $last_update = isset($property_xml->softwareInformation->lastUpdate)
-        ? new \DateTime($property_xml->softwareInformation->lastUpdate->__toString())
-        : null;
+      ? new \DateTime($property_xml->softwareInformation->lastUpdate->__toString())
+      : null;
 
     $propertydata['creation'] = $creation;
     $propertydata['last_update'] = $last_update;
@@ -2302,6 +2426,11 @@ class Import
             $this->addToLog('new property: ' . $casawp_id);
           }
 
+          wp_update_post(array(
+            'ID' => $wp_post->ID,
+            'menu_order' => $curRank,
+          ));
+
           $this->ranksort[$wp_post->ID] = $curRank;
 
           $found_posts[] = $wp_post->ID;
@@ -2659,25 +2788,17 @@ class Import
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post)
   {
 
-
     $new_meta_data = array();
-
-    //load meta data
     $old_meta_data = array();
+
     $meta_values = get_post_meta($wp_post->ID, null, true);
-    foreach ($meta_values as $key => $meta_value) {
-      $old_meta_data[$key] = $meta_value[0];
+
+    foreach ($meta_values as $key => $values) {
+      $old_meta_data[$key] = maybe_unserialize($values[0]);
     }
     ksort($old_meta_data);
 
-    //generate import hash
     $cleanPropertyData = $property;
-    //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
-    /* unset($cleanPropertyData['last_update']);
-    unset($cleanPropertyData['last_import_hash']);
-    if (isset($cleanPropertyData['modified'])) {
-      unset($cleanPropertyData['modified']);
-    } */
     $curImportHash = md5(serialize($cleanPropertyData));
 
     if (!isset($old_meta_data['last_import_hash'])) {
@@ -2726,16 +2847,16 @@ class Import
 
     // Prepare post_date and post_date_gmt
     if ($property['creation']) {
-        // Clone DateTime objects to prevent modifying the original
-        $post_date = clone $property['creation'];
-        $post_date_gmt = clone $property['creation'];
+      // Clone DateTime objects to prevent modifying the original
+      $post_date = clone $property['creation'];
+      $post_date_gmt = clone $property['creation'];
     } elseif ($property['last_update']) {
-        $post_date = clone $property['last_update'];
-        $post_date_gmt = clone $property['last_update'];
+      $post_date = clone $property['last_update'];
+      $post_date_gmt = clone $property['last_update'];
     } else {
-        // Use current time if no dates are provided
-        $post_date = new \DateTime('now', $site_timezone);
-        $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
+      // Use current time if no dates are provided
+      $post_date = new \DateTime('now', $site_timezone);
+      $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
     // Adjust time zones
@@ -2748,12 +2869,11 @@ class Import
 
     $current_time = new \DateTime('now', $site_timezone);
     if ($post_date > $current_time) {
-        // Set post_date to current time
-        $post_date_formatted = $current_time->format('Y-m-d H:i:s');
-        $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+      // Set post_date to current time
+      $post_date_formatted = $current_time->format('Y-m-d H:i:s');
+      $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 
-    /* main post data */
     $new_main_data = array(
       'ID'            => $wp_post->ID,
       'post_title'    => ($name ? $name : 'Objekt'),
@@ -2763,9 +2883,7 @@ class Import
       'post_excerpt'  => $excerpt,
       'post_date'      => $post_date_formatted,
       'post_date_gmt'  => $post_date_gmt_formatted,
-      'menu_order'   => $curRank,
-      //'post_date'     => ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s')),
-      /*'post_modified' => $property['last_update']->format('Y-m-d H:i:s'),*/
+      'menu_order'   => $curRank
     );
 
     $old_main_data = array(
@@ -2778,33 +2896,7 @@ class Import
       'post_date'      => $wp_post->post_date,
       'post_date_gmt'  => $wp_post->post_date_gmt,
       'menu_order'   => $wp_post->menu_order
-      //'post_date'     => $wp_post->post_date    ,
-      /*'post_modified' => $wp_post->post_modified,*/
     );
-    if ($new_main_data != $old_main_data) {
-      foreach ($old_main_data as $key => $value) {
-        if ($new_main_data[$key] != $old_main_data[$key]) {
-          $this->transcript[$casawp_id]['main_data'][$key]['from'] = $old_main_data[$key];
-          $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
-          $this->addToLog('updating main data (' . $key . '): ' . $old_main_data[$key] . ' -> ' . $new_main_data[$key]);
-        }
-      }
-
-
-      //manage post_name and post_date (if new)
-      if (!$wp_post->post_name) {
-        $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
-        //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
-      } else {
-        $new_main_data['post_name'] = $wp_post->post_name;
-        //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
-      }
-
-      //persist change
-      $newPostID = wp_insert_post($new_main_data);
-    }
-
-
 
     //$casawp_visitInformation = $property->visitInformation->__toString();
     //$casawp_property_url = $property->url->__toString();
@@ -2894,8 +2986,6 @@ class Import
       $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
       $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
     }
-
-
 
 
     //urls
@@ -3095,47 +3185,70 @@ class Import
     }
     ksort($new_meta_data);
 
+
     if ($new_meta_data != $old_meta_data) {
       $this->addToLog('updating metadata');
       foreach ($new_meta_data as $key => $value) {
-        $newval = $value;
+          $newval = $value;
 
-        if ($newval === true) {
-          $newval = "1";
-        }
-        if (is_numeric($value)) {
-          $newval = (string) $value;
-        }
-        if ($key == "floor" && $newval == 0) {
-          $newval = "EG"; // TODO Translate
-        }
+          if ($newval === true) {
+              $newval = "1";
+          }
+          if (is_numeric($newval)) {
+              $newval = (string) $newval;
+          }
+          if ($key == "floor" && $newval == 0) {
+              $newval = "EG"; // TODO Translate
+          }
 
-        $oldval = (isset($old_meta_data[$key]) ? maybe_unserialize($old_meta_data[$key]) : '');
-        if (function_exists("casawp_unicode_dirty_replace") && !is_array($oldval)) {
-          $oldval = casawp_unicode_dirty_replace($oldval);
-        }
+          if (function_exists("casawp_unicode_dirty_replace") && !is_array($newval)) {
+              $newval = casawp_unicode_dirty_replace($newval);
+          }
 
-        if (($oldval || $newval || $newval === 0) && $oldval !== $newval) {
-          update_post_meta($wp_post->ID, $key, $newval);
-          $this->transcript[$casawp_id]['meta_data'][$key]['from'] = $oldval;
-          $this->transcript[$casawp_id]['meta_data'][$key]['to'] = $newval;
-        }
+          // **Assign the processed value back to new_meta_data**
+          $new_meta_data[$key] = $newval;
+      }
+  }
+
+
+    $new_main_data['meta_input'] = $new_meta_data;
+
+    $main_data_changed = ($new_main_data != $old_main_data);
+    $meta_data_changed = ($new_meta_data != $old_meta_data);
+
+    if ($main_data_changed || $meta_data_changed) {
+      // Update transcript and logs if main data changed
+      if ($main_data_changed) {
+          foreach ($old_main_data as $key => $value) {
+              if ($new_main_data[$key] != $value) {
+                  $this->transcript[$casawp_id]['main_data'][$key]['from'] = $value;
+                  $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
+                  $this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
+              }
+          }
       }
 
-      //remove supurflous meta_data
-      $this->addToLog('removing supurflous metadata');
-      foreach ($old_meta_data as $key => $value) {
-        if (
-          !isset($new_meta_data[$key])
-          && !in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort'))
-          && strpos($key, '_') !== 0
-        ) {
-          //remove
-          delete_post_meta($wp_post->ID, $key, $value);
-          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
-        }
+      // Manage post_name
+      if (!$wp_post->post_name) {
+          $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
+      } else {
+          $new_main_data['post_name'] = $wp_post->post_name;
+      }
+
+      // **Point 9: Consider Using Transactions (if possible)**
+      // Update the post with main data and meta data in one call
+      wp_update_post($new_main_data);
+
+      // Remove surplus meta data
+      $keys_to_delete = array_diff(array_keys($old_meta_data), array_keys($new_meta_data));
+      foreach ($keys_to_delete as $key) {
+          if (!in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort')) && strpos($key, '_') !== 0) {
+              delete_post_meta($wp_post->ID, $key);
+              $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $old_meta_data[$key];
+          }
       }
     }
+
 
     if (isset($property['property_categories'])) {
       $this->addToLog('updating categories');
@@ -3180,8 +3293,6 @@ class Import
 
 
     $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
-
-
 
     $this->addToLog('updating features');
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
