@@ -87,6 +87,7 @@ class QueryService{
                 'locations_not',
                 'countries_not',
                 'salestypes_not',
+                'availabilities',
                 'availabilities_not',
                 'regions_not',
                 'features',
