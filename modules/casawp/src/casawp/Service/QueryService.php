@@ -72,32 +72,40 @@ class QueryService{
     public function setCustomQuery($query){
         foreach ($query as $key => $value) {
             if (!array_key_exists($key, $this->defaultQuery)) {
-              unset($query[$key]);
+                unset($query[$key]);
             } else {
-              if (strpos($value, ',')) {
-                $query[$key] = array_map('trim', explode(',', $value));
-              } elseif (is_string($value) && in_array($key, [
-                'categories',
-                'utilities',
-                'locations',
-                'countries',
-                'regions',
-                'salestypes',
-                'categories_not',
-                'locations_not',
-                'countries_not',
-                'salestypes_not',
-                'availabilities',
-                'availabilities_not',
-                'regions_not',
-                'features',
-                'features_not'])) {
-                  $query[$key] = [$value];
-              }
+                if (is_string($value)) { // Ensure $value is a string before using strpos
+                    if (strpos($value, ',') !== false) { // Check for comma in string
+                        $query[$key] = array_map('trim', explode(',', $value));
+                    } elseif (in_array($key, [
+                        'categories',
+                        'utilities',
+                        'locations',
+                        'countries',
+                        'regions',
+                        'salestypes',
+                        'categories_not',
+                        'locations_not',
+                        'countries_not',
+                        'salestypes_not',
+                        'availabilities',
+                        'availabilities_not',
+                        'regions_not',
+                        'features',
+                        'features_not'
+                    ])) {
+                        $query[$key] = [$value];
+                    }
+                } else {
+                    // Handle cases where $value is an array, if necessary
+                    // For example, you might want to validate arrays or leave them as-is
+                    // Currently, no action is taken for non-string $value
+                }
             }
         }
         $this->query = array_merge($this->query, $query);
     }
+
 
     public function createWpQuery($args = false){
         if ($args) {
