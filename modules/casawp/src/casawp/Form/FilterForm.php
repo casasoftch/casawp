@@ -2,7 +2,7 @@
 namespace casawp\Form;
 use casawp\Conversion;
 
-use Zend\Form\Form;
+use Laminas\Form\Form;
 
 class FilterForm extends Form
 {
@@ -327,7 +327,7 @@ class FilterForm extends Form
                 }
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\MultiCheckbox',
+                    'type' => 'Laminas\Form\Element\MultiCheckbox',
                     'options' => array(
                         'label' => $label,
                         'value_options' => $value_options,
@@ -350,7 +350,7 @@ class FilterForm extends Form
                 }
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\Radio',
+                    'type' => 'Laminas\Form\Element\Radio',
                     'options' => array(
                         'label' => $label,
                         'value_options' => $value_options,
@@ -363,7 +363,7 @@ class FilterForm extends Form
             case 'hidden':
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\Hidden',
+                    'type' => 'Laminas\Form\Element\Hidden',
                     'options' => array(
                         'label' => $label,
                         'label_attributes' => array(

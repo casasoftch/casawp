@@ -21,7 +21,7 @@ return array(
     "'%value%' contains non alphabetic characters" => "'%value%' содержит не буквенные символы",
     "'%value%' is an empty string" => "'%value%' - пустая строка",
     
-    // Zend\I18n\Validator\PhoneNumber
+    // Laminas\I18n\Validator\PhoneNumber
     "The input does not match a phone number format" => "Неправильный формат номера телефона",
     "The country provided is currently unsupported" => "Страна в настоящее время не поддерживается",
     "Invalid type given. String expected" => "Недопустимый тип данных, значение должно быть строкой",

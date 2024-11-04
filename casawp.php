@@ -84,9 +84,16 @@ $configuration = array(
 				__DIR__.'/vendor',
 		),
 	),
+	'service_manager' => array(
+		'factories' => array(
+			'ModuleManager' => Laminas\Mvc\Service\ModuleManagerFactory::class,
+			// Add other necessary factories here
+		),
+	),
 );
 
-use Zend\Loader\AutoloaderFactory;
+
+use Laminas\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
 $casawp = new casawp\Plugin($configuration);

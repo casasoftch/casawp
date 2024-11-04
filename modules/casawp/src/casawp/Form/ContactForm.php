@@ -1,7 +1,7 @@
 <?php
 namespace casawp\Form;
 
-use Zend\Form\Form;
+use Laminas\Form\Form;
 use casawp\Conversion;
 
 class ContactForm extends Form
@@ -219,7 +219,7 @@ class ContactForm extends Form
     }
 
     public function getFilter(){
-        $filter = new \Zend\InputFilter\InputFilter();
+        $filter = new \Laminas\InputFilter\InputFilter();
         if (!$this->isInCustomFilters('firstname')) {
             $filter->add(array(
                 'name' => 'firstname',

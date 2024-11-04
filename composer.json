@@ -14,21 +14,20 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "zendframework/zend-loader": "2.*",
-        "zendframework/zend-mvc": "2.*",
-        "zendframework/zend-i18n": "2.*",
-        "zendframework/zend-modulemanager": "2.*",
-        "zendframework/zend-view": "2.*",
-        "zendframework/zend-serializer": "2.*",
-        "zendframework/zend-log": "2.*",
-        "zendframework/zend-servicemanager": "2.*",
-        "zendframework/zend-escaper" : "2.*",
-        "casasoft/casamodules": "dev-master"
+        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
+        "laminas/laminas-loader": "^2.0",
+        "laminas/laminas-mvc": "^3.7",
+        "laminas/laminas-i18n": "^2.0",
+        "laminas/laminas-modulemanager": "^2.16",
+        "laminas/laminas-view": "^2.0",
+        "laminas/laminas-serializer": "^2.0",
+        "laminas/laminas-log": "^2.0",
+        "laminas/laminas-servicemanager": "^3.23",
+        "laminas/laminas-escaper": "^2.0",
+        "casasoft/casamodules": "dev-laminas",
+        "laminas/laminas-mvc-i18n": "^1.9"
     },
-    "require-dev": {
-    },
-    "autoload":{
+    "autoload": {
         "psr-4": {
             "casawp\\": "classes/"
         }

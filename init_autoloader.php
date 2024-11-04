@@ -21,7 +21,7 @@ if (file_exists(CASASYNC_PLUGIN_DIR . 'vendor/autoload.php')) {
     $loader = include CASASYNC_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
-if (class_exists('Zend\Loader\AutoloaderFactory')) {
+if (class_exists('Laminas\Loader\AutoloaderFactory')) {
     return;
 }
 
@@ -36,19 +36,19 @@ if (getenv('ZF2_PATH')) {            // Support for ZF2_PATH environment variabl
 if ($zf2Path) {
     if (isset($loader)) {
         $loader->add('Zend', $zf2Path);
-        $loader->add('ZendXml', $zf2Path);
+        $loader->add('Laminas\Xml', $zf2Path);
         
     } else {
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-        Zend\Loader\AutoloaderFactory::factory(array(
-            'Zend\Loader\StandardAutoloader' => array(
+        Laminas\Loader\AutoloaderFactory::factory(array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'autoregister_zf' => true
             )
         ));
     }
 }
 
-if (!class_exists('Zend\Loader\AutoloaderFactory')) {
+if (!class_exists('Laminas\Loader\AutoloaderFactory')) {
     throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
 }
 

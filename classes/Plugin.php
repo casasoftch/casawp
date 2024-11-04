@@ -1,16 +1,16 @@
 <?php
 namespace casawp;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver;
-use Zend\EventManager\EventManager;
-use Zend\Http\PhpEnvironment;
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\I18n\Translator\Translator;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver;
+use Laminas\EventManager\EventManager;
+use Laminas\Http\PhpEnvironment;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\MvcEvent;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Mvc\Service\ServiceManagerConfig;
+use Laminas\I18n\Translator\Translator;
 
 class Plugin {
     public $textids = false;
@@ -567,47 +567,87 @@ class Plugin {
         wp_localize_script( 'casawp', 'casawpParams', $query);
     }
 
+    private function getDefaultServiceConfig()
+    {
+        return [
+            'factories' => [
+                'ModuleManager' => \Laminas\Mvc\Service\ModuleManagerFactory::class,
+                'ServiceListener' => \Laminas\Mvc\Service\ServiceListenerFactory::class,
+                'SharedEventManager' => \Laminas\EventManager\SharedEventManagerFactory::class,
+                'Application' => \Laminas\Mvc\Service\ApplicationFactory::class,
+                'Config' => \Laminas\Mvc\Service\ConfigFactory::class,
+                'EventManager' => \Laminas\Mvc\Service\EventManagerFactory::class,
+                // Add other default factories as needed
+            ],
+            'aliases' => [
+                'Configuration' => 'Config',
+                'EventManagerInterface' => 'EventManager',
+                'SharedEventManagerInterface' => 'SharedEventManager',
+                // Add other aliases as needed
+            ],
+            // Include 'abstract_factories', 'initializers', etc., if necessary
+        ];
+    }
 
-    private function bootstrap($configuration){
 
-        // setup service manager
-        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+
+    private function bootstrap($configuration)
+    {
+        $defaultServiceConfig = $this->getDefaultServiceConfig();
+
+        $serviceManagerConfig = array_merge_recursive(
+            $defaultServiceConfig,
+            $configuration['service_manager'] ?? []
+        );
+
+        $serviceManager = new ServiceManager($serviceManagerConfig);
         $serviceManager->setService('ApplicationConfig', $configuration);
 
-        // set translator
+        // Set translator
         $translator = new Translator();
-        $translator->addTranslationFilePattern('gettext', CASASYNC_PLUGIN_DIR. 'vendor/casasoft/casamodules/src/CasasoftStandards/language/', '%s.mo', 'casasoft-standards');
+        $translator->addTranslationFilePattern(
+            'gettext',
+            CASASYNC_PLUGIN_DIR . 'vendor/casasoft/casamodules/src/CasasoftStandards/language/',
+            '%s.mo',
+            'casasoft-standards'
+        );
         $translator->setLocale($this->locale);
         $serviceManager->setService('translator', $translator);
 
-        // mvc translator
-        $MVCtranslator = new \Zend\Mvc\I18n\Translator($translator);
-        $MVCtranslator->addTranslationFile('phpArray', CASASYNC_PLUGIN_DIR. 'resources/languages/'.substr(get_bloginfo('language'), 0, 2).'/Zend_Validate.php', 'default');
-        \Zend\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
+        // MVC translator
+        $MVCtranslator = new \Laminas\Mvc\I18n\Translator($translator);
+        $MVCtranslator->addTranslationFile(
+            'phpArray',
+            CASASYNC_PLUGIN_DIR . 'resources/languages/' . substr(get_bloginfo('language'), 0, 2) . '/Zend_Validate.php',
+            'default'
+        );
+        \Laminas\Validator\AbstractValidator::setDefaultTranslator($MVCtranslator);
         $this->MVCtranslator = $MVCtranslator;
 
         $this->translator = $translator;
 
-        // load modules -- which will provide services, configuration, and more
-        $serviceManager->get('ModuleManager')->loadModules();
+        // Load modules
+        $moduleManager = $serviceManager->get('ModuleManager');
+        $moduleManager->loadModules();
 
-        //renderer
+        // Renderer
         $this->renderer = new PhpRenderer();
         $pluginManager = $this->renderer->getHelperPluginManager();
 
-        //view helper plugins
+        // View helper plugins
         $defaultHelperMapClasses = [
-            'Zend\Form\View\HelperConfig',
-            'Zend\I18n\View\HelperConfig',
-            'Zend\Navigation\View\HelperConfig'
+            'Laminas\Form\View\HelperConfig',
+            'Laminas\I18n\View\HelperConfig',
+            'Laminas\Navigation\View\HelperConfig'
         ];
         foreach ($defaultHelperMapClasses as $configClass) {
             if (is_string($configClass) && class_exists($configClass)) {
-                $config = new $configClass;
+                $config = new $configClass();
                 $config->configureServiceManager($pluginManager);
             }
         }
 
+        // Set services
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get('casawpQuery');
         $this->categoryService = $this->serviceManager->get('CasasoftCategory');
@@ -617,11 +657,11 @@ class Plugin {
         $this->formSettingService = $this->serviceManager->get('casawpFormSettingService');
         $this->formService = $this->serviceManager->get('casawpFormService');
 
-        add_action('after_setup_theme', function(){
+        add_action('after_setup_theme', function () {
             do_action('casawp_register_forms', $this->formSettingService);
         });
-
     }
+
 
     public function getQueryService(){
         return $this->queryService;
