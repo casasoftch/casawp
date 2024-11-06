@@ -1502,6 +1502,7 @@
 
 									<div style="margin: 30px 0;">
 										<button id="casawp-import-button" class="button-primary">Daten von CASAGATEWAY beziehen</button>
+										<button id="casawp-cancel-import-button" class="button-secondary" style="display: none; margin-left: 10px;">Import abbrechen</button>
 									</div>
 
 									<div id="casawp-progress-wrapper" style="display: none;">
@@ -1525,6 +1526,16 @@
 												$('#casawp-progress-wrapper').hide();
 												$('#casawp-progress-bar').css('width', '0%');
 												$('#casawp-progress-percent').text('0%');
+												$('#casawp-cancel-import-button').hide();
+												$('#casawp-import-button').removeAttr('disabled');
+											}
+
+											function showCancelButton() {
+												$('#casawp-cancel-import-button').show();
+											}
+
+											function hideCancelButton() {
+												$('#casawp-cancel-import-button').hide();
 											}
 
 											resetProgressBar();
@@ -1532,10 +1543,11 @@
 											$('#casawp-import-button').on('click', function(e) {
 												e.preventDefault();
 
+												$(this).attr('disabled', true);
+												showCancelButton();
+
 												resetProgressBar();
 												$('#casawp-progress-wrapper').show();
-
-												$(this).attr('disabled', true);
 
 												$.ajax({
 													url: ajaxurl,
@@ -1549,10 +1561,50 @@
 															console.log(response.data.message);
 														} else {
 															alert('Error: ' + response.data.message);
+															// Re-enable the button if import couldn't start
+															$('#casawp-import-button').removeAttr('disabled');
+															hideCancelButton();
 														}
 													},
 													error: function() {
 														alert('An error occurred while starting the import.');
+														// Re-enable the button on error
+														$('#casawp-import-button').removeAttr('disabled');
+														hideCancelButton();
+													}
+												});
+											});
+
+											$('#casawp-cancel-import-button').on('click', function(e) {
+												e.preventDefault();
+
+												if (!confirm('Möchten Sie den laufenden Import wirklich abbrechen?')) {
+													return;
+												}
+
+												$(this).attr('disabled', true);
+												$('#casawp-import-button').attr('disabled', true);
+
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_cancel_import'
+													},
+													success: function(response) {
+														if (response.success) {
+															clearInterval(progressInterval);
+															resetProgressBar();
+														} else {
+															alert('Fehler beim Abbrechen des Imports: ' + response.data.message);
+															$('#casawp-cancel-import-button').removeAttr('disabled');
+															$('#casawp-import-button').removeAttr('disabled');
+														}
+													},
+													error: function() {
+														alert('Beim Abbrechen des Imports ist ein Fehler aufgetreten.');
+														$('#casawp-cancel-import-button').removeAttr('disabled');
+														$('#casawp-import-button').removeAttr('disabled');
 													}
 												});
 											});
@@ -1569,14 +1621,16 @@
 															var progress = response.data.progress;
 															console.log(progress);
 															if (progress > 0 && progress < 100) {
-																jQuery('#casawp-progress-wrapper').show();
-																jQuery('#casawp-progress-bar').css('width', progress + '%');
-																jQuery('#casawp-progress-percent').text(Math.round(progress) + '%');
+																$('#casawp-progress-wrapper').show();
+																$('#casawp-progress-bar').css('width', progress + '%');
+																$('#casawp-progress-percent').text(Math.round(progress) + '%');
+																showCancelButton();
 															} else if (progress === 100) {
-																jQuery('#casawp-progress-wrapper').show();
-																jQuery('#casawp-progress-bar').css('width', '100%');
-																jQuery('#casawp-progress-percent').text('100%');
+																$('#casawp-progress-wrapper').show();
+																$('#casawp-progress-bar').css('width', '100%');
+																$('#casawp-progress-percent').text('100%');
 																$('#casawp-import-button').removeAttr('disabled'); // Re-enable the button
+																hideCancelButton();
 																clearInterval(progressInterval); // Stop updating the progress bar after import is complete
 
 																// Trigger the reset of import progress options via AJAX
@@ -1600,6 +1654,7 @@
 															}
 														} else {
 															resetProgressBar(); // Reset progress if no import is running
+															hideCancelButton();
 															$('#casawp-import-button').removeAttr('disabled');
 															clearInterval(progressInterval);
 														}
@@ -1607,6 +1662,7 @@
 													error: function() {
 														resetProgressBar();
 														$('#casawp-import-button').removeAttr('disabled');
+														hideCancelButton();
 														clearInterval(progressInterval);
 													}
 												});
