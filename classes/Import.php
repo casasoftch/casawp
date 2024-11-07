@@ -1790,7 +1790,21 @@ class Import
     $this->addToLog('Handling import batch number: ' . $batch_number);
 
     if (get_option('casawp_use_casagateway_cdn', false)) {
-      $batch_size = 2;
+      $language_count = 1; // Default to 1 language if WPML is not active
+
+      if (function_exists('icl_get_languages')) {
+        $languages = icl_get_languages();
+        $language_count = count($languages);
+      }
+
+      // Set batch size based on language count
+      if ($language_count <= 2) {
+        $batch_size = 4;
+      } elseif ($language_count === 3) {
+        $batch_size = 3;
+      } else {
+        $batch_size = 2;
+      }
     } else {
       $batch_size = 1;
     }
