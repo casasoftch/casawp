@@ -1,6 +1,7 @@
 <?php
 namespace casawp;
 use Laminas\View\Model\ViewModel;
+use Laminas\Form\ConfigProvider;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver;
 use Laminas\EventManager\EventManager;
@@ -17,6 +18,9 @@ use Laminas\Form\View\Helper\Form as FormHelper;
 use Laminas\Form\View\Helper\FormElement;
 use Laminas\Form\View\Helper\FormElementErrors;
 use Laminas\View\HelperPluginManager;
+
+use Laminas\Form\View\Helper as FormViewHelper;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 class Plugin {
     public $textids = false;
@@ -597,7 +601,6 @@ class Plugin {
     }
 
 
-
     private function bootstrap($configuration)
     {
         $defaultServiceConfig = $this->getDefaultServiceConfig();
@@ -653,33 +656,21 @@ class Plugin {
         $moduleManager = $serviceManager->get('ModuleManager');
         $moduleManager->loadModules();
 
-        // Renderer setup
         $this->renderer = new PhpRenderer();
         $pluginManager = $this->renderer->getHelperPluginManager();
 
+        // Set allow_override to true
+        $pluginManager->setAllowOverride(true);
 
-        // Explicitly register the Form helper
-        $pluginManager->setService('form', new FormHelper());
+        // Get the default form view helper configuration
+        $formConfigProvider = new ConfigProvider();
+        $viewHelperConfig = $formConfigProvider->getViewHelperConfig();
 
-        $pluginManager->setService('formElement', new FormElement());
+        // Configure the HelperPluginManager with the default form view helpers
+        $pluginManager->configure($viewHelperConfig);
 
-        $pluginManager->setFactory('formElementErrors', function () {
-            return new FormElementErrors();
-        });
-
-
-        // View helper plugins
-        $defaultHelperMapClasses = [
-            'Laminas\Form\View\HelperConfig',
-            'Laminas\I18n\View\HelperConfig',
-            'Laminas\Navigation\View\HelperConfig'
-        ];
-        foreach ($defaultHelperMapClasses as $configClass) {
-            if (is_string($configClass) && class_exists($configClass)) {
-                $config = new $configClass();
-                $config->configureServiceManager($pluginManager);
-            }
-        }
+        // Set allow_override back to false for safety
+        $pluginManager->setAllowOverride(false);
 
         // Set services
         $this->serviceManager = $serviceManager;
@@ -697,16 +688,9 @@ class Plugin {
     }
 
 
-
-
-
-
     public function getQueryService(){
         return $this->queryService;
     }
-
-
-
 
     public function casawp_right_now() {
         $num = wp_count_posts( 'casawp_property' );
