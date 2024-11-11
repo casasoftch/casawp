@@ -9,6 +9,14 @@ return array(
             'casawpFormService' => 'casawp\Service\FormServiceFactory',
             'casawpFormSettingService' => 'casawp\Service\FormSettingServiceFactory',
             //'casawpCollection' => 'casawp\Service\OfferCollectionServiceFactory',
+
+            // Add the Casasoft services
+            'CasasoftCategory' => \CasasoftStandards\Service\CategoryServiceFactory::class,
+            'CasasoftNumval' => \CasasoftStandards\Service\NumvalServiceFactory::class,
+            'CasasoftFeature' => \CasasoftStandards\Service\FeatureServiceFactory::class,
+            'CasasoftUtility' => \CasasoftStandards\Service\UtilityServiceFactory::class,
+            'CasasoftIntegratedOffer' => \CasasoftStandards\Service\IntegratedOfferServiceFactory::class,
+            'CasasoftMessenger' => \CasasoftMessenger\Service\MessengerServiceFactory::class,
         )
     ),
     'view_manager' => array(

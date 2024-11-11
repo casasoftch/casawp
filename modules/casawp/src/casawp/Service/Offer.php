@@ -24,19 +24,21 @@ class Offer{
     function __get($name){
         switch ($name) {
             case 'utilityService':
+                return $this->offerService->getUtilityService();
             case 'categoryService':
+                return $this->offerService->getCategoryService();
             case 'numvalService':
-                case 'integratedOfferService':
+                return $this->offerService->getNumvalService();
+            case 'integratedOfferService':
+                return $this->offerService->getIntegratedOfferService();
             case 'featureService':
+                return $this->offerService->getFeatureService();
             case 'messengerService':
+                return $this->offerService->getMessengerService();
             case 'formService':
-                return $this->offerService->{$name};
-            break;
-
-            //deligate the rest to the Offer Object
+                return $this->offerService->getFormService();
             default:
                 return $this->post->{$name};
-                break;
         }
 
     }

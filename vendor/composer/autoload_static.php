@@ -54,6 +54,11 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
             'Laminas\\DependencyPlugin\\' => 25,
             'Laminas\\Config\\' => 15,
         ),
+        'C' => 
+        array (
+            'CasasoftStandards\\' => 18,
+            'CasasoftMessenger\\' => 18,
+        ),
         'B' => 
         array (
             'Brick\\VarExporter\\' => 18,
@@ -184,6 +189,14 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         'Laminas\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-config/src',
+        ),
+        'CasasoftStandards\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/casasoft/casamodules/CasasoftStandards/src',
+        ),
+        'CasasoftMessenger\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/casasoft/casamodules/CasasoftMessenger/src',
         ),
         'Brick\\VarExporter\\' => 
         array (

@@ -26,13 +26,13 @@ class OfferService{
     private $currentOffer = null;
     private $collection = array();
 
-	private UtilityService $utilityService;
-	private CategoryService $categoryService;
-	private NumvalService $numvalService;
-	private FeatureService $featureService;
-	private MessengerService $messengerService;
-	private IntegratedOfferService $integratedOfferService;
-	private FormService $formService;
+	private $utilityService;
+	private $categoryService;
+	private $numvalService;
+	private $featureService;
+	private $messengerService;
+	private $integratedOfferService;
+	private $formService;
 
 	public function __construct(
 		CategoryService $categoryService,
@@ -50,6 +50,34 @@ class OfferService{
 		$this->messengerService = $messengerService;
 		$this->integratedOfferService = $integratedOfferService;
 		$this->formService = $formService;
+	}
+
+	public function getUtilityService() {
+		return $this->utilityService;
+	}
+
+	public function getCategoryService() {
+		return $this->categoryService;
+	}
+
+	public function getNumvalService() {
+		return $this->numvalService;
+	}
+
+	public function getFeatureService() {
+		return $this->featureService;
+	}
+
+	public function getMessengerService() {
+		return $this->messengerService;
+	}
+
+	public function getIntegratedOfferService() {
+		return $this->integratedOfferService;
+	}
+
+	public function getFormService() {
+		return $this->formService;
 	}
 
 

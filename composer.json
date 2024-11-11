@@ -30,7 +30,9 @@
     },
     "autoload": {
         "psr-4": {
-            "casawp\\": "classes/"
+            "casawp\\": "classes/",
+            "CasasoftStandards\\": "vendor/casasoft/casamodules/CasasoftStandards/src/",
+            "CasasoftMessenger\\": "vendor/casasoft/casamodules/CasasoftMessenger/src/"
         }
     },
     "config": {
