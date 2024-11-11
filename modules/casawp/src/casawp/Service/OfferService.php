@@ -1,6 +1,15 @@
 <?php
 namespace casawp\Service;
 
+use CasasoftStandards\Service\CategoryService;
+use CasasoftStandards\Service\NumvalService;
+use CasasoftMessenger\Service\MessengerService;
+use CasasoftStandards\Service\UtilityService;
+use CasasoftStandards\Service\FeatureService;
+use CasasoftStandards\Service\IntegratedOfferService;
+
+use casawp\Service\FormService;
+
 class OfferService{
     public $post = null;
     private $categories = null; //lazy
@@ -17,15 +26,31 @@ class OfferService{
     private $currentOffer = null;
     private $collection = array();
 
-    public function __construct($categoryService, $numvalService, $messengerService, $utilityService, $featureService, $integratedOfferService, $formService){
-    	$this->utilityService = $utilityService;
-    	$this->categoryService = $categoryService;
-    	$this->numvalService = $numvalService;
-        $this->featureService = $featureService;
-    	$this->messengerService = $messengerService;
-    	$this->integratedOfferService = $integratedOfferService;
-        $this->formService = $formService;
-    }
+	private UtilityService $utilityService;
+	private CategoryService $categoryService;
+	private NumvalService $numvalService;
+	private FeatureService $featureService;
+	private MessengerService $messengerService;
+	private IntegratedOfferService $integratedOfferService;
+	private FormService $formService;
+
+	public function __construct(
+		CategoryService $categoryService,
+		NumvalService $numvalService,
+		MessengerService $messengerService,
+		UtilityService $utilityService,
+		FeatureService $featureService,
+		IntegratedOfferService $integratedOfferService,
+		FormService $formService
+	) {
+		$this->utilityService = $utilityService;
+		$this->categoryService = $categoryService;
+		$this->numvalService = $numvalService;
+		$this->featureService = $featureService;
+		$this->messengerService = $messengerService;
+		$this->integratedOfferService = $integratedOfferService;
+		$this->formService = $formService;
+	}
 
 
     //deligate all other gets to the Offer Object 

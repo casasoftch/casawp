@@ -1,0 +1,77 @@
+{
+    "name": "laminas/laminas-inputfilter",
+    "description": "Normalize and validate input sets from the web, APIs, the CLI, and more, including files",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "laminas",
+        "inputfilter"
+    ],
+    "homepage": "https://laminas.dev",
+    "support": {
+        "docs": "https://docs.laminas.dev/laminas-inputfilter/",
+        "issues": "https://github.com/laminas/laminas-inputfilter/issues",
+        "source": "https://github.com/laminas/laminas-inputfilter",
+        "rss": "https://github.com/laminas/laminas-inputfilter/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.99"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "extra": {
+        "laminas": {
+            "component": "Laminas\\InputFilter",
+            "config-provider": "Laminas\\InputFilter\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "laminas/laminas-filter": "^2.19",
+        "laminas/laminas-servicemanager": "^3.21.0",
+        "laminas/laminas-stdlib": "^3.0",
+        "laminas/laminas-validator": "^2.52"
+    },
+    "require-dev": {
+        "ext-json": "*",
+        "laminas/laminas-coding-standard": "~2.5.0",
+        "phpunit/phpunit": "^10.5.15",
+        "psalm/plugin-phpunit": "^0.19.0",
+        "psr/http-message": "^2.0",
+        "vimeo/psalm": "^5.23.1",
+        "webmozart/assert": "^1.11"
+    },
+    "suggest": {
+        "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laminas\\InputFilter\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaminasTest\\InputFilter\\": "test/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@static-analysis",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "static-analysis": "psalm --shepherd --stats"
+    },
+    "conflict": {
+        "zendframework/zend-inputfilter": "*"
+    }
+}

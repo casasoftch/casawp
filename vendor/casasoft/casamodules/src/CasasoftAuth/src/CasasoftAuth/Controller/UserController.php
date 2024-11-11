@@ -1,19 +1,19 @@
 <?php
 namespace CasasoftAuth\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Factory as InputFactory;
 
 use CasasoftAuth\Form\UserForgotPasswordForm;
 
 use CasasoftAuth\Entity\User;
 
-use Zend\Cache\StorageFactory;
-use Zend\Session\SaveHandler\Cache;
-use Zend\Mvc\MvcEvent;
+use Laminas\Cache\StorageFactory;
+use Laminas\Session\SaveHandler\Cache;
+use Laminas\Mvc\MvcEvent;
 
 class UserController extends AbstractActionController {
     function __construct($em, $authService, $emailService, $translator){
@@ -21,7 +21,7 @@ class UserController extends AbstractActionController {
         $this->authService = $authService;
         $this->emailService = $emailService;
         $this->translator = $translator;
-        $this->sessionManager = new \Zend\Session\SessionManager;
+        $this->sessionManager = new \Laminas\Session\SessionManager;
     }
 
     public function onDispatch(MvcEvent $e){

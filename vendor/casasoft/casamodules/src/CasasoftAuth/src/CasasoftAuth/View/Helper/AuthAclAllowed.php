@@ -1,7 +1,7 @@
 <?php
 namespace CasasoftAuth\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;  
+use Laminas\View\Helper\AbstractHelper;  
 
 class AuthAclAllowed extends AbstractHelper{ 
 

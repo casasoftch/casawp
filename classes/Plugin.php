@@ -9,8 +9,14 @@ use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Config;
 use Laminas\Mvc\Service\ServiceManagerConfig;
 use Laminas\I18n\Translator\Translator;
+
+use Laminas\Form\View\Helper\Form as FormHelper;
+use Laminas\Form\View\Helper\FormElement;
+use Laminas\Form\View\Helper\FormElementErrors;
+use Laminas\View\HelperPluginManager;
 
 class Plugin {
     public $textids = false;
@@ -577,15 +583,16 @@ class Plugin {
                 'Application' => \Laminas\Mvc\Service\ApplicationFactory::class,
                 'Config' => \Laminas\Mvc\Service\ConfigFactory::class,
                 'EventManager' => \Laminas\Mvc\Service\EventManagerFactory::class,
-                // Add other default factories as needed
+                'ServiceListenerManager' => \Laminas\Mvc\Service\ServiceListenerManagerFactory::class,
             ],
             'aliases' => [
                 'Configuration' => 'Config',
                 'EventManagerInterface' => 'EventManager',
                 'SharedEventManagerInterface' => 'SharedEventManager',
-                // Add other aliases as needed
             ],
-            // Include 'abstract_factories', 'initializers', etc., if necessary
+            'services' => [
+                'ApplicationConfig' => $this->configuration,  // Ensure ApplicationConfig is directly provided
+            ],
         ];
     }
 
@@ -594,14 +601,30 @@ class Plugin {
     private function bootstrap($configuration)
     {
         $defaultServiceConfig = $this->getDefaultServiceConfig();
-
-        $serviceManagerConfig = array_merge_recursive(
+        $serviceManagerConfig = array_merge(
             $defaultServiceConfig,
             $configuration['service_manager'] ?? []
         );
 
         $serviceManager = new ServiceManager($serviceManagerConfig);
-        $serviceManager->setService('ApplicationConfig', $configuration);
+
+        // Set ApplicationConfig explicitly if it doesn’t exist
+        if (!$serviceManager->has('ApplicationConfig')) {
+            $serviceManager->setService('ApplicationConfig', $configuration['application_config']);
+        }
+
+        // Ensure other configurations are accessible
+        if (isset($configuration['application_config'])) {
+            $serviceManager->setService('ApplicationConfig', $configuration['application_config']);
+        }
+        $serviceManager->setService('SharedEventManager', new \Laminas\EventManager\SharedEventManager());
+
+        // Continue with the rest of your bootstrap process, loading modules, etc.
+        $moduleManager = $serviceManager->get('ModuleManager');
+        $moduleManager->loadModules();
+
+
+        // No need to set 'ApplicationConfig' here as it's already included in the 'services' key
 
         // Set translator
         $translator = new Translator();
@@ -626,13 +649,24 @@ class Plugin {
 
         $this->translator = $translator;
 
-        // Load modules
+        // Initialize and load modules
         $moduleManager = $serviceManager->get('ModuleManager');
         $moduleManager->loadModules();
 
-        // Renderer
+        // Renderer setup
         $this->renderer = new PhpRenderer();
         $pluginManager = $this->renderer->getHelperPluginManager();
+
+
+        // Explicitly register the Form helper
+        $pluginManager->setService('form', new FormHelper());
+
+        $pluginManager->setService('formElement', new FormElement());
+
+        $pluginManager->setFactory('formElementErrors', function () {
+            return new FormElementErrors();
+        });
+
 
         // View helper plugins
         $defaultHelperMapClasses = [
@@ -661,6 +695,10 @@ class Plugin {
             do_action('casawp_register_forms', $this->formSettingService);
         });
     }
+
+
+
+
 
 
     public function getQueryService(){

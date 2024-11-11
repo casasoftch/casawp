@@ -1,14 +1,14 @@
 <?php
 namespace CasasoftAuth\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 use CasasoftAuth\Entity\User;
 
 
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 
 class AclService {
     public $config = array(

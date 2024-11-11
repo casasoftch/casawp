@@ -1,14 +1,14 @@
 <?php
 namespace casawp\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 
 class QueryServiceFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $service = new QueryService();
-        return $service;
+        // Instantiate and configure the QueryService if needed
+        return new QueryService();
     }
 }

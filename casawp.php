@@ -69,35 +69,50 @@ define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 // Setup autoloading
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
-$configuration = array(
-	'modules' => array(
+
+$applicationConfig = [
+	'modules' => [
 		'CasasoftStandards',
 		'CasasoftMessenger',
-		'casawp'
-	),
-	'module_listener_options' => array(
-		'config_glob_paths'    => array(
-				__DIR__.'/config/autoload/{,*.}{global,local}.php',
-		),
-		'module_paths' => array(
-				__DIR__.'/module',
-				__DIR__.'/vendor',
-		),
-	),
-	'service_manager' => array(
-		'factories' => array(
-			'ModuleManager' => Laminas\Mvc\Service\ModuleManagerFactory::class,
-			// Add other necessary factories here
-		),
-	),
-);
+		'casawp',
+	],
+	'module_listener_options' => [
+		'config_glob_paths' => [],
+		'module_paths' => [
+			__DIR__ . '/module',
+			__DIR__ . '/vendor',
+		],
+	],
+];
 
+// Define service manager configuration separately
+$serviceManagerConfig = [
+	'factories' => [
+		'ModuleManager' => Laminas\Mvc\Service\ModuleManagerFactory::class,
+		'ServiceListener' => Laminas\Mvc\Service\ServiceListenerFactory::class,
+		'SharedEventManager' => Laminas\EventManager\SharedEventManagerFactory::class,
+		'Application' => Laminas\Mvc\Service\ApplicationFactory::class,
+		'Config' => Laminas\Mvc\Service\ConfigFactory::class,
+		'EventManager' => Laminas\Mvc\Service\EventManagerFactory::class,
+		'MvcTranslator' => Laminas\Mvc\I18n\TranslatorFactory::class,
+	],
+	'services' => [
+		'ApplicationConfig' => $applicationConfig,
+	],
+];
 
+// Combine into the final configuration array for Plugin.php
+$configuration = [
+	'service_manager' => $serviceManagerConfig,
+	// No separate 'application_config'
+];
+
+// Initialize Autoloader
 use Laminas\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
+// Instantiate the Plugin with the configuration
 $casawp = new casawp\Plugin($configuration);
-
 global $casawp;
 
 if (is_admin()) {

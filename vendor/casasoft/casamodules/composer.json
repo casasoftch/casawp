@@ -14,20 +14,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
+        "laminas/laminas-dependency-plugin": "2.6.0"
     },
-    "require-dev": {
-    },
-    "suggest": {
-    },
-    "config": {
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    },
-    "autoload":{
+    "require-dev": {},
+    "suggest": {},
+    "autoload": {
         "psr-0": {
             "CasasoftAuth\\": "src/",
             "CasasoftEmail\\": "src/",
@@ -37,6 +29,15 @@
             "DbGenerator\\": "src/",
             "CasasoftMessenger\\": "src/",
             "CasasoftGeo\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true
+        }},
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
         }
     },
     "prefer-stable": true,

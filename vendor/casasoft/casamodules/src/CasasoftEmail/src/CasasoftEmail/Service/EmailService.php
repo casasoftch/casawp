@@ -1,19 +1,18 @@
 <?php
 namespace CasasoftEmail\Service;
 
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
-use Zend\Mail\Message as Message;
-use Zend\Mail\Transport\Sendmail as SendmailTransport;
-use Zend\Mail\Transport\SmtpOptions as SmtpOptions;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Message as Message;
+use Laminas\Mail\Transport\Sendmail as SendmailTransport;
+use Laminas\Mail\Transport\SmtpOptions as SmtpOptions;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
 
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mime\Mime;
-
-class EmailService implements EmailServiceInterface
-{
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mime\Mime;
+ 
+class EmailService {
     protected $translator;
     protected $viewRender;
     protected $defaultTemplate = 'message';
@@ -210,7 +209,7 @@ class EmailService implements EmailServiceInterface
                         'header' => 'Message',
                         'txt' => $emailOptions['msg']->getMessage_plain(),
                     ]
-                ];
+                ];    
             } elseif ($this->templateGroup == 'homestreet') {
                 $data = [
                     "logo" => "https://homestreet.ch/images/logo_de_CH.png",
@@ -218,9 +217,9 @@ class EmailService implements EmailServiceInterface
                         'header' => 'Message',
                         'txt' => $emailOptions['msg']->getMessage_plain(),
                     ]
-                ];
+                ];    
             }
-
+            
 
             if ($person) {
                 $data['person'] = [
@@ -279,7 +278,7 @@ class EmailService implements EmailServiceInterface
             } else {
                 throw new \Exception("neither " . "email/".$this->templateGroup."/".$template . ' or ' . "email/default/".$template . ' is available', 1);
             }
-
+            
             $layout->setVariable("content", $contentView);
 
             $content = $this->viewRender->render($layout);
@@ -292,7 +291,7 @@ class EmailService implements EmailServiceInterface
 
     public function sendMandrill($template = 'message', $emailOptions = array(), $content = null){
         try {
-            $mandrill = new \Mandrill($emailOptions['mandrill']['key']);
+            $mandrill = new \Mandrill($emailOptions['mandrill']['key']); 
             $message = array(
                 'subject' => $emailOptions['subject'],
                 //'from_email' => $emailOptions['from'],
@@ -359,7 +358,7 @@ class EmailService implements EmailServiceInterface
                     return 'mandrill:'.$mandrill_result[0]['status'];
 
                     break;
-
+                
                 default:
                     return 'mandrill:?'.$mandrill_result[0]['status'];
                     break;
@@ -371,7 +370,7 @@ class EmailService implements EmailServiceInterface
         } catch (\Exception $e) {
             return $this->sendSMTP($template, $emailOptions, $content);
         }
-
+       
     }
 
     public function sendSMTP($template = 'message', $emailOptions = array(), $content = null){
@@ -401,9 +400,9 @@ class EmailService implements EmailServiceInterface
             // HTML part iso-8859-1
             $htmlPart           = new MimePart($content);
             $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type     = "text/html; charset=".$this->encoding;
+            $htmlPart->type     = "text/html; charset=".$this->encoding;    
         }
-
+        
 
         // Plain text part
         $textPart           = new MimePart(strip_tags($content));
@@ -415,7 +414,7 @@ class EmailService implements EmailServiceInterface
         $body = new MimeMessage();
         if ($attachments) {
             // With attachments, we need a multipart/related email. First part
-            // is itself a multipart/alternative message
+            // is itself a multipart/alternative message        
             $content = new MimeMessage();
             $content->addPart($textPart);
             if ($this->html) {
@@ -449,7 +448,7 @@ class EmailService implements EmailServiceInterface
                 $body->setParts(array($textPart));
                 $messageType = 'text/plain';
             }
-
+            
         }
 
         // attach the body to the message and set the content-type
@@ -492,7 +491,7 @@ class EmailService implements EmailServiceInterface
     }
 
     public function sendEmail($template = 'message', $emailOptions = array(), $content = null){
-
+        
         $mandrillOptions = [];
         if (isset($emailOptions['mandrill']) && $emailOptions['mandrill']) {
             $mandrillOptions = array_merge($this->config['mandrill'], $emailOptions['mandrill']);
@@ -520,7 +519,7 @@ class EmailService implements EmailServiceInterface
         if (!$content) {
             $content = $this->renderEmail($template, $emailOptions);
         }
-
+        
 
         if ($emailOptions['debug']) {
             $displays = array();
@@ -531,8 +530,8 @@ class EmailService implements EmailServiceInterface
                     } else {
                         $displays[] = $key . ': <strong>OBJ</strong>';
                     }
-
-
+                    
+                    
                 }
             }
             echo '<div style="
@@ -565,16 +564,16 @@ class EmailService implements EmailServiceInterface
                                 padding: 15px;
                     " >Mit Anhang</div>' : '')
                 .'</div>';
-
-
+            
+            
         }
         if (isset($emailOptions['mandrill']) && $this->encoding == 'UTF-8') {
             return $this->sendMandrill($template, $emailOptions, $content);
         } else {
             return $this->sendSMTP($template, $emailOptions, $content);
         }
-
-
+        
+        
 
         //return $content;
         return true;

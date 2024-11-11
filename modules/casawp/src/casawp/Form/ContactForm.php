@@ -226,14 +226,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_firstname_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -243,14 +237,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_lastname_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -266,14 +254,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_street_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -283,10 +265,10 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_postalcode_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
                     array(
-                        'name' => 'string_length',
+                        'name' => 'Laminas\Validator\StringLength',
                         'options' => array(
                             'min' => 4
                         ),
@@ -300,14 +282,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_locality_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -317,14 +293,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_phone_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -334,14 +304,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_mobile_required', false),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -351,7 +315,7 @@ class ContactForm extends Form
                 'required' => true,
                 'validators' => array(
                     array(
-                        'name' => 'email_address',
+                        'name' => 'Laminas\Validator\EmailAddress',
                         'options' => array(
                             //'allow' => ALLOW_DNS,
                             'deep' => true,

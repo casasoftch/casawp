@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftStandards\View\Helper;
  
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Model\ViewModel;
 
 class Utility extends AbstractHelper{ 
     public $translator = false;

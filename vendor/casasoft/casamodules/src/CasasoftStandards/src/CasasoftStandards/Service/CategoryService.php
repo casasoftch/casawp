@@ -1,13 +1,15 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
+use Laminas\Http\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\Translator;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class CategoryService {
+
+    /** @var Translator */
+    private $translator;
 
     public $items = array();
     public $groups = array();
@@ -110,6 +112,7 @@ class CategoryService {
             'attic-compartment' => array('label' => $this->translator->translate('Attic compartment', 'casasoft-standards'),),
 
             'agricultural-land' => array('label' => $this->translator->translate('Agricultural land', 'casasoft-standards'),),
+            'agricultural-lot' => array('label' => $this->translator->translate('Agricultural land', 'casasoft-standards'),),
             'arcade' => array('label' => $this->translator->translate('Arcade', 'casasoft-standards'),),
             'bakery' => array('label' => $this->translator->translate('Bakery', 'casasoft-standards'),),
             'butcher' => array('label' => $this->translator->translate('Butcher', 'casasoft-standards'),),
@@ -118,13 +121,13 @@ class CategoryService {
             'casino' => array('label' => $this->translator->translate('Casino', 'casasoft-standards'),),
             'cheese-factory' => array('label' => $this->translator->translate('Cheese factory', 'casasoft-standards'),),
             'club-disco' => array('label' => $this->translator->translate('Club disco', 'casasoft-standards'),),
-            'commercial-lot' => array('label' => $this->translator->translate('Commercial lot', 'casasoft-standards'),),
-            'commercial-space' => array('label' => $this->translator->translate('Commercial space', 'casasoft-standards'),),
+            'commercial-lot' => array('label' => $this->translator->translate('Commercial building plot', 'casasoft-standards'),),
+            'commercial-space' => array('label' => $this->translator->translate('Commercial premises', 'casasoft-standards'),),
             'doctors-office' => array('label' => $this->translator->translate('Doctors office', 'casasoft-standards'),),
             'earth-sheltered-dwelling' => array('label' => $this->translator->translate('Earth sheltered dwelling', 'casasoft-standards'),),
-            'hairdresser' => array('label' => $this->translator->translate('Hairdresser', 'casasoft-standards'),),
-            'industrial-lot' => array('label' => $this->translator->translate('Industrial lot', 'casasoft-standards'),),
-            'industrial-object' => array('label' => $this->translator->translate('Industrial object', 'casasoft-standards'),),
+            'hairdresser' => array('label' => $this->translator->translate('Hair salon', 'casasoft-standards'),),
+            'industrial-lot' => array('label' => $this->translator->translate('Industrial building plot', 'casasoft-standards'),),
+            'industrial-object' => array('label' => $this->translator->translate('Industrial property', 'casasoft-standards'),),
             'kiosk' => array('label' => $this->translator->translate('Kiosk', 'casasoft-standards'),),
             'laboratory' => array('label' => $this->translator->translate('Laboratory', 'casasoft-standards'),),
             'library' => array('label' => $this->translator->translate('Library', 'casasoft-standards'),),

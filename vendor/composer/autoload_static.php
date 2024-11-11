@@ -17,6 +17,7 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         ),
         'W' => 
         array (
+            'Webmozart\\Assert\\' => 17,
             'Webimpress\\SafeWriter\\' => 22,
         ),
         'P' => 
@@ -42,10 +43,15 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
             'Laminas\\Log\\' => 12,
             'Laminas\\Loader\\' => 15,
             'Laminas\\Json\\' => 13,
+            'Laminas\\InputFilter\\' => 20,
             'Laminas\\I18n\\' => 13,
+            'Laminas\\Hydrator\\' => 17,
             'Laminas\\Http\\' => 13,
+            'Laminas\\Form\\' => 13,
+            'Laminas\\Filter\\' => 15,
             'Laminas\\EventManager\\' => 21,
             'Laminas\\Escaper\\' => 16,
+            'Laminas\\DependencyPlugin\\' => 25,
             'Laminas\\Config\\' => 15,
         ),
         'B' => 
@@ -58,6 +64,10 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         'casawp\\' => 
         array (
             0 => __DIR__ . '/../..' . '/classes',
+        ),
+        'Webmozart\\Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
         'Webimpress\\SafeWriter\\' => 
         array (
@@ -135,13 +145,29 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-json/src',
         ),
+        'Laminas\\InputFilter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-inputfilter/src',
+        ),
         'Laminas\\I18n\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-i18n/src',
         ),
+        'Laminas\\Hydrator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-hydrator/src',
+        ),
         'Laminas\\Http\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-http/src',
+        ),
+        'Laminas\\Form\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-form/src',
+        ),
+        'Laminas\\Filter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-filter/src',
         ),
         'Laminas\\EventManager\\' => 
         array (
@@ -150,6 +176,10 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         'Laminas\\Escaper\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
+        ),
+        'Laminas\\DependencyPlugin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-dependency-plugin/src',
         ),
         'Laminas\\Config\\' => 
         array (

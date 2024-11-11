@@ -1,13 +1,15 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
+use Laminas\Http\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\Translator;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UtilityService{
+
+     /** @var Translator */
+     private $translator;
 
     public $items = array();
 

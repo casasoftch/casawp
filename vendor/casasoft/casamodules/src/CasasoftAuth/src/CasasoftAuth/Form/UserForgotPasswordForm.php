@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftAuth\Form;
 
-use Zend\Form\Form;
-use Zend\Form\Element;
+use Laminas\Form\Form;
+use Laminas\Form\Element;
 
 class UserForgotPasswordForm extends Form
 {
@@ -44,7 +44,7 @@ class UserForgotPasswordForm extends Form
 
         $this->add(array(
             'name'       => 'submit',
-            'type'       => 'Zend\Form\Element\Submit',
+            'type'       => 'Laminas\Form\Element\Submit',
             'attributes' => array(
                 'class' => 'btn-primary'
             ),
