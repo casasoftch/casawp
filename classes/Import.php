@@ -1544,19 +1544,6 @@ class Import
     $this->addToLog('gateway file retrieval start: ' . time());
 
     if (get_transient('casawp_import_in_progress')) {
-      $this->addToLog('Import already in progress. Scheduling new import after current one completes.');
-
-      // Schedule a new import to start after the current one finishes
-      $scheduled_time = time() + 10;
-
-      // Check if the action is already scheduled to prevent duplicates
-      $pending_imports = as_next_scheduled_action('casawp_schedule_import', null, 'casawp_batch_import');
-      if (!$pending_imports) {
-        as_schedule_single_action($scheduled_time, 'casawp_schedule_import', array(), 'casawp_batch_import');
-        $this->addToLog('Scheduled a new import in 10 seconds.');
-      } else {
-        $this->addToLog('Import already scheduled. Aborting additional scheduling.');
-      }
       return;
     }
 
@@ -1773,15 +1760,6 @@ class Import
 
     $this->addToLog('Import completed and lock cleared.');
 
-    // Check if there's a scheduled import waiting
-    $pending_imports = as_next_scheduled_action('casawp_schedule_import', null, 'casawp_batch_import');
-    if ($pending_imports) {
-      $this->addToLog('Starting scheduled import.');
-      // Start the next import
-      $this->updateImportFileThroughCasaGateway();
-    } else {
-      $this->addToLog('No scheduled imports pending.');
-    }
   }
 
 
