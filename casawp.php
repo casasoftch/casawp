@@ -277,6 +277,19 @@ function casawp_get_import_progress() {
 }
 
 
+add_action('wp_ajax_casawp_check_no_properties_alert', 'casawp_check_no_properties_alert');
+
+function casawp_check_no_properties_alert() {
+	$alert_message = get_transient('casawp_no_properties_alert');
+	if ($alert_message) {
+		delete_transient('casawp_no_properties_alert');
+		wp_send_json_success(['message' => $alert_message]);
+	} else {
+		wp_send_json_success(['message' => '']);
+	}
+}
+
+
 
 add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
 

@@ -1795,20 +1795,20 @@ class Import
       $xmlString = file_get_contents($this->getImportFile());
 
       if ($xmlString === false) {
-        throw new Exception('Failed to read import file.');
+        throw new \Exception('Failed to read import file.');
       }
 
       // Convert the XML string into a SimpleXMLElement object
       $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
 
       if ($xml === false) {
-        throw new Exception('Failed to parse XML.');
+        throw new \Exception('Failed to parse XML.');
       }
 
       $properties = $xml->properties->property;
 
       if ($properties === null) {
-        throw new Exception('No properties found in XML.');
+        throw new \Exception('No properties found in XML.');
       }
 
       $properties_array = array();
@@ -1855,9 +1855,14 @@ class Import
           $this->addToLog('Next batch number ' . $next_batch_number . ' is already scheduled.');
         }
       }
-    } catch (Exception $e) {
-      $this->addToLog('Error in batch ' . $batch_number . ': ' . $e->getMessage());
-      // Optionally, notify administrators or take corrective actions
+    } catch (\Exception $e) {
+      $this->addToLog('Error: ' . $e->getMessage());
+
+      if ($e->getMessage() === 'No properties found in XML.') {
+          // Set the transient for alert in the interface
+          set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
+          delete_transient('casawp_import_in_progress');
+      }
     }
   }
 

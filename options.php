@@ -1658,10 +1658,28 @@
 												});
 											}
 
-											progressInterval = setInterval(updateProgressBar, 5000);
+											function checkForNoPropertiesAlert() {
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: { action: 'casawp_check_no_properties_alert' },
+													success: function(response) {
+														if (response.success && response.data.message) {
+															alert(response.data.message);
+															resetProgressBar();
+														}
+													}
+												});
+											}
+
+											progressInterval = setInterval(function() {
+												updateProgressBar();
+												checkForNoPropertiesAlert();
+											}, 5000);
 
 											updateProgressBar();
 										});
+
 
 									</script>
 
