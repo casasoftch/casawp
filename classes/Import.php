@@ -1079,6 +1079,7 @@ class Import
     // Initialize arrays
     $term_ids = array();
     $parent_term_ids = array();
+    $region_slug = '';
 
     // Function to sanitize slug
     $sanitize_slug = function ($prefix, $name) {
