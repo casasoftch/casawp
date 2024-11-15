@@ -1641,6 +1641,7 @@ class Import
         $this->addToLog('gateway start update: ' . time());
 
         if ($this->getImportFile()) {
+          delete_option('casawp_import_canceled');
           $this->addToLog('import start');
           $this->deactivate_all_properties();
           as_schedule_single_action(time(), 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
@@ -1656,10 +1657,6 @@ class Import
       $this->addToLog('Import failed: ' . $e->getMessage());
     } finally {
       // Ensure the lock is cleared in all cases
-      /*  if (get_transient('casawp_import_in_progress')) {
-              delete_transient('casawp_import_in_progress');
-              $this->addToLog('Import lock cleared in finally block.');
-          } */
     }
   }
 
@@ -1767,6 +1764,11 @@ class Import
   public function handle_properties_import_batch($batch_number)
   {
     $this->addToLog('Handling import batch number: ' . $batch_number);
+
+    if (get_option('casawp_import_canceled', false)) {
+      $this->addToLog('Import has been canceled. Skipping batch number: ' . $batch_number);
+      return;
+    }
 
     if (get_option('casawp_use_casagateway_cdn', false)) {
       $language_count = 1; // Default to 1 language if WPML is not active
