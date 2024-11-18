@@ -1,9 +1,9 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -67,7 +67,7 @@ class Numval {
             'km_convert_at' => 501
         ], $options);
 
-        $number_filter = new \Zend\I18n\Filter\NumberFormat("de_CH");
+        $number_filter = new \Laminas\I18n\Filter\NumberFormat("de_CH");
 
         $val = $this->getValue();
         $km = false;

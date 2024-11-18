@@ -3,8 +3,8 @@ namespace CasasoftAuth\Form;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 
 class UserProfileForm extends Form

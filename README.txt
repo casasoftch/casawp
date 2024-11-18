@@ -1,13 +1,13 @@
 === CASAWP ===
 Contributors: casasoft
 Donate link: https://immobilien-plugin.ch
-Tags: immobilien, real estate, openimmo, idx, casaXML
+Tags: immobilien, real estate, openimmo, idx, casaXML, SwissRETS
 Requires at least: 4.0.0
-Tested up to: 5.8
+Tested up to: 6.7
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 2.6.0
+Stable tag: 3.0.0
 
 Import your properties directly from your real-estate management software!
 
@@ -15,7 +15,7 @@ Import your properties directly from your real-estate management software!
 
 Synchronize your properties directly to CASAWP, and let them be automatically categorized. Adjust the plugin to any theme. CASAWP imports the most common standards with the help of CASAGATEWAY without a hitch.
 
-*** This plugin requires at least PHP 5.5.0
+*** This plugin requires at least PHP 8.1
 
 *** For further technical infos concerning this plugin refer to the readme.md file included within the plugin files.
 
@@ -37,6 +37,33 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 3.0.0 =
+
+* new: Asynchronous queue importer with integrated Action Scheduler & progress bar
+* new: Option to automatically set property translations 
+* new: Recaptcha V3 integration option
+* new: Option to force XML language of properties
+* new: Option to add data protection checkbox for forms
+* update: Migrated Zend Framework 2 to Laminas framework
+* update: Casamodules for Laminas
+* update: Conversion service & sanitizer updates
+* update: Rooms & area considered for order
+* update: Location filter can now also filter lvl 1 & 2 (country / region)
+* update: Various translation updates
+* update: Added various new numvals
+* update: Added new action hook when import is finished (casawp_import_finished)
+* update: New filter routes for price querying
+* update: Registerted post type & taxonomies to be available in WP rest API
+* fix: Various translation fixes
+* fix: PHP 8.2 compatibility issues
+* fix: Some filter reductions in plugin.php
+* fix: Fixed field name for net & gross price segment
+* fix: Location import now sets lvl 3 locality as primary, if Yoast is active
+* fix: Import of zone types to meta field was not working
+* fix: Various warnings
+* fix: Removal of all features on a property did not update correctly
+* fix: Availabilities did not always filter utilities
 
 = 2.6.0 =
 

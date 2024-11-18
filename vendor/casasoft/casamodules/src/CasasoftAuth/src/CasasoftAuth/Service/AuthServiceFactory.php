@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftAuth\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class AuthServiceFactory implements FactoryInterface
 {
@@ -13,7 +13,7 @@ class AuthServiceFactory implements FactoryInterface
         $storage = $serviceLocator->get('doctrine.authenticationstorage.orm_default');
         $request = $serviceLocator->get('request');
         $aclService = $serviceLocator->get('aclService');
-        //$session = $serviceLocator->get('Zend\Session\SessionManager');
+        //$session = $serviceLocator->get('Laminas\Session\SessionManager');
         $session = false;
         
         //$blamableListener = $serviceLocator->get('Gedmo\Blameable\BlameableListener');

@@ -1,9 +1,9 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /*
 echo $this->casasoftConversion->setProperty(['array_of_property']);
@@ -495,6 +495,7 @@ class ConversionService {
             ['number_of_rooms', 'numeric_value'],
             ['number_of_bathrooms', 'numeric_value'],
             ['number_of_apartments','numeric_value'],
+            ['number_of_commercial_units','numeric_value'],
             ['number_of_floors','numeric_value'],
             ['number_of_guest_toilets','numeric_value'],
             ['year_built','numeric_value'],
@@ -533,6 +534,8 @@ class ConversionService {
             ['priceRange', 'special'],
             ['gross_premium', 'numeric_value'],
             ['net_premium', 'numeric_value'],
+            ['bidding_start_price', 'numeric_value'],
+            ['auction_start_price', 'numeric_value'],
             ['property_land_price', 'numeric_value'],
             ['building_insurance_value', 'numeric_value'],
             ['official_tax_value', 'numeric_value'],

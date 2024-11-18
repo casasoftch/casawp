@@ -1,16 +1,16 @@
 <?php
 namespace CasasoftEmail\Service;
 
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
-use Zend\Mail\Message as Message;
-use Zend\Mail\Transport\Sendmail as SendmailTransport;
-use Zend\Mail\Transport\SmtpOptions as SmtpOptions;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Message as Message;
+use Laminas\Mail\Transport\Sendmail as SendmailTransport;
+use Laminas\Mail\Transport\SmtpOptions as SmtpOptions;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
 
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mime\Mime;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mime\Mime;
  
 class EmailService {
     protected $translator;
@@ -111,8 +111,6 @@ class EmailService {
                     $honorificPrefix = 'Mr';
                 } elseif($gender === 2) {
                     $honorificPrefix = 'Mrs';
-                } elseif($gender === 0) {
-                    $honorificPrefix = '*';
                 } else {
                     $honorificPrefix = 'not specified';
                 }
@@ -350,13 +348,13 @@ class EmailService {
                 case 'rejected':
                 case 'invalid':
                     echo print_r($mandrill_result, true). "\n";
-                    $this->sendEmail('error', array(
-                      'to' => 'js@casasoft.ch',
-                      'from' => 'alert@cassaoft.com',
-                      'subject' => 'Mandrill Fehler',
-                      'error' => print_r(array_merge($emailOptionsSave, $mandrill_result), true),
-                      'domain' => 'casamail.local'
-                    ));
+//                    $this->sendEmail('error', array(
+//                      'to' => 'js@casasoft.ch',
+//                      'from' => 'alert@cassaoft.com',
+//                      'subject' => 'Mandrill Fehler',
+//                      'error' => print_r(array_merge($emailOptionsSave, $mandrill_result), true),
+//                      'domain' => 'casamail.local'
+//                    ));
                     return 'mandrill:'.$mandrill_result[0]['status'];
 
                     break;

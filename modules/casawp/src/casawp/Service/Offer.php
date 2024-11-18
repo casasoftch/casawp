@@ -24,19 +24,21 @@ class Offer{
     function __get($name){
         switch ($name) {
             case 'utilityService':
+                return $this->offerService->getUtilityService();
             case 'categoryService':
+                return $this->offerService->getCategoryService();
             case 'numvalService':
-                case 'integratedOfferService':
+                return $this->offerService->getNumvalService();
+            case 'integratedOfferService':
+                return $this->offerService->getIntegratedOfferService();
             case 'featureService':
+                return $this->offerService->getFeatureService();
             case 'messengerService':
+                return $this->offerService->getMessengerService();
             case 'formService':
-                return $this->offerService->{$name};
-            break;
-
-            //deligate the rest to the Offer Object
+                return $this->offerService->getFormService();
             default:
                 return $this->post->{$name};
-                break;
         }
 
     }
@@ -748,6 +750,7 @@ class Offer{
 
     public function renderNumvalValue($numval){
         $decimals = 0;
+        $currency = $this->getFieldValue('price_currency', 'CHF');
         if (in_array($numval->getKey(), ['ceiling_height', 'hall_height'])) {
             $decimals = 2;
         }
@@ -756,6 +759,7 @@ class Offer{
             case 'm2': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') . ' m<sup>2</sup>'; break;
             case 'm':  return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' m'; break;
             case 'kg': return number_format(round($numval->getValue(), $decimals), $decimals, '.', '\'') .' kg'; break;
+            case 'currency': return $currency . ' ' . number_format($numval->getValue(), 0, '.', "'") . '.–'; break;
             case '%':  return $numval->getValue() .' %'; break;
             default:   return $numval->getValue(); break;
         }
@@ -1158,7 +1162,8 @@ class Offer{
         return $this->render('contact-form', array(
             'form' => $formResult['form'],
             'offer' => $this,
-            'sent' => $formResult['sent']
+            'sent' => $formResult['sent'],
+            'invalidCaptcha' => $formResult['invalidCaptcha']
         ));
     }
 

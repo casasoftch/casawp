@@ -1,88 +1,118 @@
 <?php
 /*
- *	Plugin Name: 	CASAWP
- *  Plugin URI: 	http://immobilien-plugin.ch
- *	Description:    Import your properties directly from your real-estate managment software!
- *	Author:         Casasoft AG
- *	Author URI:     https://casasoft.ch
- *	Version: 	    2.6.0
- *	Text Domain: 	casawp
- *	Domain Path: 	languages/
- *	License: 		GPL2
+ * Plugin Name: CASAWP
+ * Plugin URI: http://immobilien-plugin.ch
+ * Description: Import your properties directly from your real-estate management software!
+ * Author: Casasoft AG
+ * Author URI: https://casasoft.ch
+ * Version: 3.0.0
+ * Text Domain: casawp
+ * Domain Path: languages/
+ * License: GPL2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-//update system
-require_once ( 'wp_autoupdate.php' );
-$plugin_current_version = '2.6.0';
-$plugin_slug = plugin_basename( __FILE__ );
+// Include Action Scheduler
+require_once __DIR__ . '/action-scheduler/action-scheduler.php';
+
+// Ensure Action Scheduler is initialized
+add_action('plugins_loaded', function() {
+	if (!class_exists('ActionScheduler')) {
+		do_action('action_scheduler_initialize');
+	}
+});
+
+add_filter('action_scheduler_retention_period', function() {
+	return 7 * DAY_IN_SECONDS; // Keep logs for 7 days
+});
+
+// Update system
+require_once('wp_autoupdate.php');
+$plugin_current_version = '3.0.0';
+$plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
 $license_key = 'abcd';
-new WP_AutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );
+new WP_AutoUpdate($plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key);
 
-function casawpPostInstall( $true, $hook_extra, $result ) {
+function casawpPostInstall($true, $hook_extra, $result) {
   // Remember if our plugin was previously activated
-  $wasActivated = is_plugin_active( 'casawp' );
+  $wasActivated = is_plugin_active('casawp');
 
   // Since we are hosted in GitHub, our plugin folder would have a dirname of
   // reponame-tagname change it to our original one:
   global $wp_filesystem;
-  $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname( 'casawp' );
-  $wp_filesystem->move( $result['destination'], $pluginFolder );
+  $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname('casawp');
+  $wp_filesystem->move($result['destination'], $pluginFolder);
   $result['destination'] = $pluginFolder;
 
   // Re-activate plugin if needed
-  if ( $wasActivated ) {
-      $activate = activate_plugin( 'casawp'  );
+  if ($wasActivated) {
+	  $activate = activate_plugin('casawp');
   }
 
   return $result;
 }
 
-add_filter( "upgrader_post_install", "casawpPostInstall", 10, 3 );
-
-
-/* Das WP Immobilien-Plugin für Ihre Website importiert Immobilien aus Ihrer Makler-Software! */
-$dummy_desc = __( 'Import your properties directly from your real-estate managment software!', 'casawp' );
+add_filter("upgrader_post_install", "casawpPostInstall", 10, 3);
 
 define('CASASYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');
 
 $upload = wp_upload_dir();
-define('CASASYNC_CUR_UPLOAD_PATH', $upload['path'] );
-define('CASASYNC_CUR_UPLOAD_URL', $upload['url'] );
-define('CASASYNC_CUR_UPLOAD_BASEDIR', $upload['basedir'] );
-define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl'] );
-
-// chdir(dirname(__DIR__));
+define('CASASYNC_CUR_UPLOAD_PATH', $upload['path']);
+define('CASASYNC_CUR_UPLOAD_URL', $upload['url']);
+define('CASASYNC_CUR_UPLOAD_BASEDIR', $upload['basedir']);
+define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 
 // Setup autoloading
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
-$configuration = array(
-	'modules' => array(
+
+$applicationConfig = [
+	'modules' => [
 		'CasasoftStandards',
 		'CasasoftMessenger',
-		'casawp'
-	),
-	'module_listener_options' => array(
-		'config_glob_paths'    => array(
-				__DIR__.'/config/autoload/{,*.}{global,local}.php',
-		),
-		'module_paths' => array(
-				__DIR__.'/module',
-				__DIR__.'/vendor',
-		),
-	),
-);
+		'casawp',
+	],
+	'module_listener_options' => [
+		'config_glob_paths' => [],
+		'module_paths' => [
+			__DIR__ . '/module',
+			__DIR__ . '/vendor',
+		],
+	],
+];
 
-use Zend\Loader\AutoloaderFactory;
+// Define service manager configuration separately
+$serviceManagerConfig = [
+	'factories' => [
+		'ModuleManager' => Laminas\Mvc\Service\ModuleManagerFactory::class,
+		'ServiceListener' => Laminas\Mvc\Service\ServiceListenerFactory::class,
+		'SharedEventManager' => Laminas\EventManager\SharedEventManagerFactory::class,
+		'Application' => Laminas\Mvc\Service\ApplicationFactory::class,
+		'Config' => Laminas\Mvc\Service\ConfigFactory::class,
+		'EventManager' => Laminas\Mvc\Service\EventManagerFactory::class,
+		'MvcTranslator' => Laminas\Mvc\I18n\TranslatorFactory::class,
+	],
+	'services' => [
+		'ApplicationConfig' => $applicationConfig,
+	],
+];
+
+// Combine into the final configuration array for Plugin.php
+$configuration = [
+	'service_manager' => $serviceManagerConfig,
+	// No separate 'application_config'
+];
+
+// Initialize Autoloader
+use Laminas\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
+// Instantiate the Plugin with the configuration
 $casawp = new casawp\Plugin($configuration);
-
 global $casawp;
 
 if (is_admin()) {
@@ -91,23 +121,216 @@ if (is_admin()) {
 	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casawp_remove'));
 }
 
-if (get_option('casawp_live_import') || isset($_GET['do_import']) ) {
-	$import = new casawp\Import(true, false);
+$import = new casawp\Import(false, false);
+$import->register_hooks();
+casawp_schedule_cron_events();
+
+function casawp_schedule_cron_events() {
+	if (!wp_next_scheduled('casawp_import_midnight')) {
+		$midnight = strtotime('tomorrow midnight');
+		wp_schedule_event($midnight, 'daily', 'casawp_import_midnight');
+	}
+
 }
 
-if (isset($_GET['gatewayupdate'])) {
+add_action('casawp_import_midnight', 'casawp_trigger_import_midnight');
+
+
+register_deactivation_hook(__FILE__, 'casawp_unschedule_cron_events');
+
+function casawp_unschedule_cron_events() {
+	// Unschedule Midnight Import
+	$timestamp = wp_next_scheduled('casawp_import_midnight');
+	if ($timestamp) {
+		wp_unschedule_event($timestamp, 'casawp_import_midnight');
+	}
+
+}
+
+function casawp_start_new_import($source = '') {
+	// Cancel any ongoing import
+	if (get_transient('casawp_import_in_progress')) {
+		casawp_cancel_import();
+	}
+
+	// Reset batch counts
+	update_option('casawp_total_batches', 0);
+	update_option('casawp_completed_batches', 0);
+
+	// Clear the import canceled flag
+	delete_option('casawp_import_canceled');
+
+	// Start the import process
 	$import = new casawp\Import(false, true);
-	$import->addToLog('Update from casagateway caused import');;
-	//]\$import = new casawp\Import(true, false);
+	$import->addToLog($source . ' import started');
+
+	return $import;
 }
 
-if (isset($_GET['gatewaypoke'])) {
-	//$import = new casawp\Import(false, true);
-	$import = new casawp\Import(false, true);
-	$import->addToLog('Poke from casagateway caused import');
 
-	//$import = new casawp\Import(true, false);
+add_action('init', 'casawp_initialize_cleanup_cron');
+
+function casawp_initialize_cleanup_cron() {
+	// Schedule Cleanup if not already scheduled
+	if (!wp_next_scheduled('casawp_cleanup_logs')) {
+		wp_schedule_event(time(), 'monthly', 'casawp_cleanup_logs');
+	}
 }
+
+register_deactivation_hook(__FILE__, 'casawp_unschedule_cleanup_cron');
+
+function casawp_unschedule_cleanup_cron() {
+	// Unschedule Cleanup Cron Event
+	$timestamp = wp_next_scheduled('casawp_cleanup_logs');
+	if ($timestamp) {
+		wp_unschedule_event($timestamp, 'casawp_cleanup_logs');
+	}
+}
+
+add_action('casawp_cleanup_logs', 'casawp_cleanup_log_files');
+
+function casawp_cleanup_log_files() {
+	$import = new casawp\Import(false, false);
+	$import->cleanup_log_files();
+}
+
+add_filter('cron_schedules', 'casawp_add_cron_schedule');
+
+function casawp_add_cron_schedule($schedules) {
+	if (!isset($schedules['monthly'])) {
+		$schedules['monthly'] = array(
+			'interval' => 30 * DAY_IN_SECONDS, // Approximate 1 month (30 days)
+			'display'  => __('Once Monthly')
+		);
+	}
+	return $schedules;
+}
+
+
+add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_handler');
+
+function casawp_cancel_import_handler() {
+	if (casawp_cancel_import()) {
+		wp_send_json_success(['message' => 'Import wurde abgebrochen.']);
+	} else {
+		wp_send_json_error(['message' => 'Action Scheduler nicht gefunden.']);
+	}
+}
+
+
+function casawp_cancel_import() {
+	// Ensure the Action Scheduler classes are loaded
+	if ( class_exists( 'ActionScheduler' ) ) {
+		// Retrieve the action store
+		$store = ActionScheduler::store();
+
+		// Define the hook name of the actions you want to cancel
+		$hook = 'casawp_batch_import';
+
+		// Fetch pending actions for the specified hook
+		$pending_actions = $store->query_actions(
+			array(
+				'hook'   => $hook,
+				'status' => 'pending',
+			)
+		);
+
+		// Loop through each pending action and cancel it
+		foreach ( $pending_actions as $action_id ) {
+			$store->cancel_action( $action_id );
+		}
+
+		// Set the import canceled flag
+		update_option('casawp_import_canceled', true);
+
+		// Clear the import in-progress transient
+		delete_transient('casawp_import_in_progress');
+		update_option('casawp_total_batches', 0); // Reset total batches
+		update_option('casawp_completed_batches', 0);
+
+		// Optional log entry
+		$import = new casawp\Import(false, false);
+		$import->addToLog('All pending import actions canceled, and import transient cleared.');
+
+		return true;
+	} else {
+		error_log('Action Scheduler class not found. Could not cancel pending import actions.');
+		return false;
+	}
+}
+
+add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
+
+function casawp_get_import_progress() {
+	$total_batches = get_option('casawp_total_batches', 0);
+	$completed_batches = get_option('casawp_completed_batches', 0);
+
+	if ($total_batches > 0) {
+		$progress = ($completed_batches / $total_batches) * 100;
+	} else {
+		$progress = 0;
+	}
+
+	wp_send_json_success(['progress' => $progress]);
+}
+
+add_action('wp_ajax_casawp_check_no_properties_alert', 'casawp_check_no_properties_alert');
+
+function casawp_check_no_properties_alert() {
+	$alert_message = get_transient('casawp_no_properties_alert');
+	if ($alert_message) {
+		delete_transient('casawp_no_properties_alert');
+		wp_send_json_success(['message' => $alert_message]);
+	} else {
+		wp_send_json_success(['message' => '']);
+	}
+}
+
+add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
+
+function casawp_start_import() {
+	if (!current_user_can('manage_options')) {
+		wp_send_json_error(['message' => 'Unauthorized']);
+		return;
+	}
+
+	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
+		casawp_start_new_import('Update from casagateway');
+		wp_send_json_success(['message' => 'Import started successfully']);
+	} else {
+		wp_send_json_error(['message' => 'Invalid request']);
+	}
+}
+
+
+add_action('wp_ajax_casawp_reset_import_progress', 'casawp_reset_import_progress');
+
+function casawp_reset_import_progress() {
+	if (!current_user_can('manage_options')) {
+		wp_send_json_error(['message' => 'Unauthorized']);
+		return;
+	}
+
+	// Delete the options to reset the progress
+	delete_option('casawp_total_batches');
+	delete_option('casawp_completed_batches');
+
+	wp_send_json_success(['message' => 'Import progress reset']);
+}
+
+
+add_action('init', 'casawp_handle_gatewaypoke');
+
+function casawp_handle_gatewaypoke() {
+	if (isset($_GET['gatewaypoke'])) {
+		casawp_start_new_import('Poke from CasaGateway');
+	}
+}
+
+function casawp_trigger_import_midnight() {
+	casawp_start_new_import('Midnight');
+}
+
 
 
 function this_plugin_after_wpml() {
@@ -136,6 +359,19 @@ function this_plugin_after_wpml() {
 	update_option('active_plugins', $new_sort);
 }
 add_action("activated_plugin", "this_plugin_after_wpml");
+
+// Placeholder for Action Scheduler usage in the future
+
+// Function to be scheduled
+function my_custom_action_function($arg1, $arg2) {
+	// Your custom code here
+}
+add_action('my_custom_action_hook', 'my_custom_action_function');
+
+// Example of scheduling an action
+// if (function_exists('as_schedule_single_action')) {
+//     as_schedule_single_action(time() + 3600, 'my_custom_action_hook', ['arg1_value', 'arg2_value']);
+// }
 
 function casawp_unicode_dirty_replace($str)
 {
@@ -2172,10 +2408,10 @@ function casawp_unicode_dirty_replace($str)
 		"￥" => "uffe5", // (alt-065509)	FULLWIDTH YEN SIGN
 		"￦" => "uffe6", // (alt-065510)	FULLWIDTH WON SIGN
 	];
-
+	
 	foreach ($charset as $rChar => $unicode) {
 		$str = str_replace($unicode, "\\" . $unicode, $str);
 	}
-
+	
 	return $str;
 }

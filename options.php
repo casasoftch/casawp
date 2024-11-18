@@ -120,7 +120,8 @@
 					'casawp_form_email_required',
 					'casawp_form_message_required',
 					'casawp_casamail_direct_recipient',
-					'casawp_form_gender_neutral'
+					'casawp_form_gender_neutral',
+					'casawp_form_dataprotection_checkbox'
 				);
 				break;
 			case 'general':
@@ -128,6 +129,9 @@
 				$checkbox_traps = array(
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
+					'casawp_auto_translate_properties',
+					'casawp_custom_slug',
+					'casawp_force_lang',
 					'casawp_live_import',
 					'casawp_sellerfallback_email_use',
 					'casawp_remCat',
@@ -1060,15 +1064,21 @@
 
 										<?php 
 											$finalArray = [];
+											$shouldSort = false;
 										 ?>
 
 										<?php foreach ($dynamicFields as $field): ?>
 											<?php $finalArray[$field['field']]['field'] = $field['field'] ?>
 											<?php $finalArray[$field['field']]['order'] = get_option($field['order']) ?>
 											<?php $finalArray[$field['field']]['label'] = $field['label'] ?>
+											<?php if (get_option($field['order'])): ?>
+												<?php $shouldSort = true; ?>
+											<?php endif; ?>
 										<?php endforeach ?>
 
-										<?php usort($finalArray, function ($a, $b) { return $a['order'] - $b['order']; }); ?>
+										<?php if ($shouldSort): ?>
+											<?php usort($finalArray, function ($a, $b) { return $a['order'] - $b['order']; }); ?>
+										<?php endif; ?>
 
 										<?php foreach ($finalArray as $field): ?>
 											<div class="draggable-list-item" id="<?php echo $field['field'] ?>">
@@ -1124,16 +1134,38 @@
 									
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Publisher Slug</label>
 									<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Key</label>
+									<input name="casawp_recaptcha" type="text" value="<?= get_option('casawp_recaptcha') ?>" class="regular-text">
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA Secret</label>
+									<input name="casawp_recaptcha_secret" type="text" value="<?= get_option('casawp_recaptcha_secret') ?>" class="regular-text">
+									
+									<fieldset class="margin-top">
+										<label>
+											<input type="checkbox" name="casawp_recaptcha_v3" value="1" <?php echo (get_option('casawp_recaptcha_v3') == '1' ? 'checked="checked"' : ''); ?>> Google reCAPTCHA v3 aktivieren
+										</label>
+									</fieldset>
+
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>">Google reCAPTCHA v3 score</label>
+									<input name="casawp_recaptcha_v3_score" type="number" step="0.1" <?php echo (get_option('casawp_recaptcha_v3_score') ? 'value="' . get_option('casawp_recaptcha_v3_score') . '"' : 'value="0.4"'); ?> class="regular-text">
+
 									<fieldset class="margin-top">
 										<label>
 											<input type="checkbox" name="casawp_casamail_direct_recipient" value="1" <?php echo (get_option('casawp_casamail_direct_recipient') == '1' ? 'checked="checked"' : ''); ?>> Objekt-Anfragen als E-Mail senden
 										</label>
 									</fieldset>
-									<fieldset class="margin-top">
+									<fieldset class="">
 										<label>
 											<input type="checkbox" name="casawp_form_gender_neutral" value="1" <?php echo (get_option('casawp_form_gender_neutral') == '1' ? 'checked="checked"' : ''); ?>> Neutrale Anrede aktivieren
 										</label>
 									</fieldset>
+									<fieldset class="">
+										<label>
+											<input type="checkbox" name="casawp_form_dataprotection_checkbox" value="1" <?php echo (get_option('casawp_form_dataprotection_checkbox') == '1' ? 'checked="checked"' : ''); ?>> "Datenschutz akzeptieren" Checkbox aktivieren
+										</label>
+									</fieldset>
+
 									
 								</td>
 							</tr>
@@ -1378,6 +1410,18 @@
 										</label></p>
 										<p class="description" id="tagline-description">Erlaubt ist nur der div-Tag mit den Attributen id und class.</p>
 									</fieldset>
+									<legend class="screen-reader-text"><span>Custom Slug</span></legend>
+									<?php $name = 'casawp_custom_slug'; ?>
+									<?php $text = 'Custom Slug'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
+									<input type="text" placeholder="Custom Slug definieren" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
+									<legend class="screen-reader-text"><span>Objektsprache im XML forcieren</span></legend>
+									<?php $name = 'casawp_force_lang'; ?>
+									<?php $text = 'Objektsprache im XML forcieren'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
+									<input type="text" placeholder="de, fr, it oder en" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text"  />
+									<p class="description" id="tagline-description">Nur angeben, wenn Webseite einsprachig und XML-Objekte mehrsprachig sind</p>
+									
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1399,6 +1443,15 @@
 										<?php $text = 'Max. 1 Bild für Referenzobjekte importieren (kann nicht mit Gateway CDN kombiniert werden).'; ?>
 										<p><label>
 											<input id="ckRef" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Max. 1 Bild für Referenz-Objekte importieren (nicht möglich mit <a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> CDN).
+										</label></p>
+									</fieldset>
+
+									<fieldset>
+										<legend class="screen-reader-text"><span>Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).</span></legend>
+										<?php $name = 'casawp_auto_translate_properties'; ?>
+										<?php $text = 'Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).'; ?>
+										<p><label>
+											<input id="ckTrans" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).
 										</label></p>
 									</fieldset>
 
@@ -1425,60 +1478,7 @@
 									};
 									</script>
 
-									<fieldset style="opacity: 0; position: absolute; left: -9999px; top: -9999px; max-height: 0; overflow: hidden;">
-										<legend class="screen-reader-text"><span>Synchronisation mit Exporter/Marklersoftware</span></legend>
-										<?php $name = 'casawp_live_import'; ?>
-										<?php $text = 'Datei <code>/wp-content/uploads/casawp/import/data.xml</code> automatisch bei jedem Seitenaufruf überprüfen und importieren.'; ?>
-										<p><label>
-											<?php
-												$url = get_admin_url('', 'admin.php?page=casawp');
-												$manually = $url . '&do_import=true';
-												$force_last = $manually . '&force_last_import=true';
-												$forced = $manually . '&force_all_properties=true&force_last_import=true';
-											?>
-											<input name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> > <?php echo $text ?>
-										</label></p>
-									</fieldset>
-
-
-
-									<fieldset>
-										<table>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml'; if (file_exists($file)) : ?>
-													<td><code>data.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $manually  ?>">Import ausführen</a></td>
-											</tr>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td><code>data-done.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data-done.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $force_last  ?>">Letzer Import erneut ausführen</a></td>
-											</tr>
-											<tr>
-												<?php $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml'; if (file_exists($file)) : ?>
-													<td><code>data-done.xml</code></td>
-												<?php else: ?>
-													<td><strike><code>data-done.xml</code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo $forced  ?>">Importierte Objekte überschreiben</a></td>
-											</tr>
-											<tr>
-												<?php if (get_option('casawp_api_key') && get_option('casawp_private_key')): ?>
-													<td><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></td>
-												<?php else: ?>
-													<td><strike><code><strong>CASA</strong><span style="font-weight:100">GATEWAY</span></code></strike></td>
-												<?php endif ?>
-												<td><a class="button-primary" href="<?php echo  get_admin_url('', 'admin.php?page=casawp&gatewayupdate=1'); ?>">Daten von CASAGATEWAY beziehen</a></td>
-											</tr>
-										</table>
-									</fieldset>
-									<legend class="screen-reader-text"><span>API-Key</span></legend>
+<legend class="screen-reader-text"><span>API-Key</span></legend>
 									<?php $name = 'casawp_api_key'; ?>
 									<?php $text = 'API-Key'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
@@ -1489,6 +1489,201 @@
 									<?php $text = 'Private-Key'; ?>
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
 									<input type="text" placeholder="CASAGATEWAY Private-Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+
+									<div style="margin: 30px 0;">
+										<button id="casawp-import-button" class="button-primary">Daten von CASAGATEWAY beziehen</button>
+										<button id="casawp-cancel-import-button" class="button-secondary" style="display: none; margin-left: 10px;">Import abbrechen</button>
+									</div>
+
+									<div id="casawp-progress-wrapper" style="display: none;">
+										<strong style="display: block; margin-bottom: 10px;">Import Progress</strong>
+										<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
+											<div id="casawp-progress-bar" style="width: 0%; height: 30px; background-color: #4caf50; line-height: 30px;">
+												<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">0%</span>
+											</div>
+										</div>
+									</div>
+
+									<script type="text/javascript">
+
+										var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+
+										jQuery(function($) {
+
+											var progressInterval;
+
+											function resetProgressBar() {
+												$('#casawp-progress-wrapper').hide();
+												$('#casawp-progress-bar').css('width', '0%');
+												$('#casawp-progress-percent').text('0%');
+												$('#casawp-cancel-import-button').hide();
+												$('#casawp-import-button').removeAttr('disabled');
+											}
+
+											function showCancelButton() {
+												$('#casawp-cancel-import-button').show();
+											}
+
+											function hideCancelButton() {
+												$('#casawp-cancel-import-button').hide();
+											}
+
+											resetProgressBar();
+
+											$('#casawp-import-button').on('click', function(e) {
+												e.preventDefault();
+
+												$(this).attr('disabled', true);
+												showCancelButton();
+
+												resetProgressBar();
+												$('#casawp-progress-wrapper').show();
+
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_start_import',
+														gatewayupdate: 1
+													},
+													success: function(response) {
+														if (response.success) {
+															console.log(response.data.message);
+														} else {
+															alert('Error: ' + response.data.message);
+															// Re-enable the button if import couldn't start
+															$('#casawp-import-button').removeAttr('disabled');
+															hideCancelButton();
+														}
+													},
+													error: function() {
+														alert('An error occurred while starting the import.');
+														// Re-enable the button on error
+														$('#casawp-import-button').removeAttr('disabled');
+														hideCancelButton();
+													}
+												});
+											});
+
+											$('#casawp-cancel-import-button').on('click', function(e) {
+												e.preventDefault();
+
+												if (!confirm('Möchten Sie den laufenden Import wirklich abbrechen?')) {
+													return;
+												}
+
+												$(this).attr('disabled', true);
+												$('#casawp-import-button').attr('disabled', true);
+
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_cancel_import'
+													},
+													success: function(response) {
+														if (response.success) {
+															clearInterval(progressInterval);
+															resetProgressBar();
+														} else {
+															alert('Fehler beim Abbrechen des Imports: ' + response.data.message);
+															$('#casawp-cancel-import-button').removeAttr('disabled');
+															$('#casawp-import-button').removeAttr('disabled');
+														}
+													},
+													error: function() {
+														alert('Beim Abbrechen des Imports ist ein Fehler aufgetreten.');
+														$('#casawp-cancel-import-button').removeAttr('disabled');
+														$('#casawp-import-button').removeAttr('disabled');
+													}
+												});
+											});
+
+											function updateProgressBar() {
+												jQuery.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: {
+														action: 'casawp_get_import_progress'
+													},
+													success: function(response) {
+														if (response.success) {
+															var progress = response.data.progress;
+															console.log(progress);
+															if (progress > 0 && progress < 100) {
+																$('#casawp-progress-wrapper').show();
+																$('#casawp-progress-bar').css('width', progress + '%');
+																$('#casawp-progress-percent').text(Math.round(progress) + '%');
+																showCancelButton();
+															} else if (progress === 100) {
+																$('#casawp-progress-wrapper').show();
+																$('#casawp-progress-bar').css('width', '100%');
+																$('#casawp-progress-percent').text('100%');
+																$('#casawp-import-button').removeAttr('disabled'); // Re-enable the button
+																hideCancelButton();
+																clearInterval(progressInterval); // Stop updating the progress bar after import is complete
+
+																// Trigger the reset of import progress options via AJAX
+																$.ajax({
+																	url: ajaxurl,
+																	type: 'POST',
+																	data: {
+																		action: 'casawp_reset_import_progress'
+																	},
+																	success: function(response) {
+																		if (response.success) {
+																			console.log(response.data.message);
+																		} else {
+																			console.log('Error resetting import progress: ' + response.data.message);
+																		}
+																	},
+																	error: function() {
+																		console.log('An error occurred while resetting the import progress.');
+																	}
+																});
+															}
+														} else {
+															resetProgressBar(); // Reset progress if no import is running
+															hideCancelButton();
+															$('#casawp-import-button').removeAttr('disabled');
+															clearInterval(progressInterval);
+														}
+													},
+													error: function() {
+														resetProgressBar();
+														$('#casawp-import-button').removeAttr('disabled');
+														hideCancelButton();
+														clearInterval(progressInterval);
+													}
+												});
+											}
+
+											function checkForNoPropertiesAlert() {
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: { action: 'casawp_check_no_properties_alert' },
+													success: function(response) {
+														if (response.success && response.data.message) {
+															alert(response.data.message);
+															resetProgressBar();
+														}
+													}
+												});
+											}
+
+											progressInterval = setInterval(function() {
+												updateProgressBar();
+												checkForNoPropertiesAlert();
+											}, 5000);
+
+											updateProgressBar();
+										});
+
+
+									</script>
+
+									
 								</td>
 							</tr>
 							<!-- <tr valign="top">

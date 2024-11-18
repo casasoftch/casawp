@@ -14,5 +14,4 @@ return array(
     'CasasoftGeo\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftEmail\\' => array($vendorDir . '/casasoft/casamodules/src'),
     'CasasoftAuth\\' => array($vendorDir . '/casasoft/casamodules/src'),
-    'CasaLogService\\' => array($vendorDir . '/casasoft/casamodules/src'),
 );

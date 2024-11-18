@@ -11,71 +11,71 @@
  * EN-Revision: 16.Oct.2013
  */
 return array(
-    // Zend\I18n\Validator\Alnum
+    // Laminas\I18n\Validator\Alnum
     "Invalid type given. String, integer or float expected" => "Podana wartość powinna być ciągiem znaków, liczbą całkowitą lub liczbą zmiennoprzecinkową",
     "The input contains characters which are non alphabetic and no digits" => "Podana wartość powinna zawierać znaki z alfabetu lub cyfry",
     "The input is an empty string" => "Podana wartość jest pustym ciągiem znaków",
 
-    // Zend\I18n\Validator\Alpha
+    // Laminas\I18n\Validator\Alpha
     "Invalid type given. String expected" => "Podana wartość nie jest ciągiem znaków",
     "The input contains non alphabetic characters" => "Podana wartość zawiera znaki spoza alfabetu",
 
-    // Zend\I18n\Validator\DateTime
+    // Laminas\I18n\Validator\DateTime
     "The input does not appear to be a valid datetime" => "Podana wartość nie jest poprawną datą",
 
-    // Zend\I18n\Validator\Float
+    // Laminas\I18n\Validator\Float
     "The input does not appear to be a float" => "Podana wartość nie jest liczbą zmiennoprzecinkową",
 
-    // Zend\I18n\Validator\Int
+    // Laminas\I18n\Validator\Int
     "Invalid type given. String or integer expected" => "Podana wartość powinna być ciągiem znaków lub liczbą całkowitą",
     "The input does not appear to be an integer" => "Podana wartość nie jest liczbą całkowitą",
 
-    // Zend\I18n\Validator\PhoneNumber
+    // Laminas\I18n\Validator\PhoneNumber
     "The input does not match a phone number format" => "Wartość nie pasuje do formatu numeru telefonu",
     "The country provided is currently unsupported" => "Ten kraj nie jest wspierany",
 
-    // Zend\I18n\Validator\PostCode
+    // Laminas\I18n\Validator\PostCode
     "The input does not appear to be a postal code" => "Podana wartość nie jest kodem pocztowym",
     "An exception has been raised while validating the input" => "Wystąpił błąd podczas sprawdzania danych",
 
-    // Zend\Validator\Barcode
+    // Laminas\Validator\Barcode
     "The input failed checksum validation" => "Błędna suma kontrolna dla wartości",
     "The input contains invalid characters" => "Wartość zawiera niedozwolone znaki",
     "The input should have a length of %length% characters" => "Wartość powinna być długości %length% znaków",
 
-    // Zend\Validator\Between
+    // Laminas\Validator\Between
     "The input is not between '%min%' and '%max%', inclusively" => "Podana wartość nie zawiera się w przedziale od '%min%' do '%max%' włącznie",
     "The input is not strictly between '%min%' and '%max%'" => "Podana wartość nie zawiera się w przedziale od '%min%' do '%max%'",
 
-    // Zend\Validator\Callback
+    // Laminas\Validator\Callback
     "The input is not valid" => "Podana wartość jest nie poprawna",
     "An exception has been raised within the callback" => "Wystąpił błąd podczas działania funkcji sprawdzającej",
 
-    // Zend\Validator\CreditCard
+    // Laminas\Validator\CreditCard
     "The input seems to contain an invalid checksum" => "Numer zawiera niepoprawną sumę kontrolną",
     "The input must contain only digits" => "Podana wartość może zawierać tylko cyfry",
     "The input contains an invalid amount of digits" => "Numer zawiera niepoprawną liczbę cyfr",
     "The input is not from an allowed institute" => "Numer nie jest z dozwolonej instytucji",
     "The input seems to be an invalid credit card number" => "Podana wartość jest niepoprawnym numerem karty",
 
-    // Zend\Validator\Csrf
+    // Laminas\Validator\Csrf
     "The form submitted did not originate from the expected site" => "Przesłany formularz nie pochodzi z oczekiwanej strony",
 
-    // Zend\Validator\Date
+    // Laminas\Validator\Date
     "Invalid type given. String, integer, array or DateTime expected" => "Podana wartość powinna być ciągiem znaków, liczbą, tablicą lub obiektem DateTime",
     "The input does not appear to be a valid date" => "Podana wartość nie jest poprawną datą",
     "The input does not fit the date format '%format%'" => "Data nie jest w formacie '%format%'",
 
-    // Zend\Validator\DateStep
+    // Laminas\Validator\DateStep
     "The input is not a valid step" => "Wartość nie jest poprawnym krokiem",
 
-    // Zend\Validator\Db\AbstractDb
+    // Laminas\Validator\Db\AbstractDb
     "No record matching the input was found" => "Nie znaleziono rekordu dla podanej wartości",
     "A record matching the input was found" => "Znaleziono rekord dla podanej wartośći",
 
-    // Zend\Validator\Digits
+    // Laminas\Validator\Digits
 
-    // Zend\Validator\EmailAddress
+    // Laminas\Validator\EmailAddress
     "The input is not a valid email address. Use the basic format local-part@hostname" => "Podana wartość nie jest poprawnym adresem email w formacie nazwa@serwer",
     "'%hostname%' is not a valid hostname for the email address" => "Adres email zawiera niepoprawną nazwę serwera '%hostname%'",
     "'%hostname%' does not appear to have any valid MX or A records for the email address" => "Serwer '%hostname%' nie posiada poprawnie zdefiniowanego rekordu MX dla adresu email",
@@ -85,19 +85,19 @@ return array(
     "'%localPart%' is not a valid local part for the email address" => "'%localPart%' nie jest poprawną nazwą.",
     "The input exceeds the allowed length" => "Podana wartość przekroczyła dozwoloną długość",
 
-    // Zend\Validator\Explode
+    // Laminas\Validator\Explode
     "Invalid type given" => "Nieprawiłowy typ",
 
-    // Zend\Validator\File\Count
+    // Laminas\Validator\File\Count
     "Too many files, maximum '%max%' are allowed but '%count%' are given" => "Wybrano '%count%' plików. Dopuszczalna liczba plików to '%max%'",
     "Too few files, minimum '%min%' are expected but '%count%' are given" => "Wybrano '%count%' plików. Minimalna liczba plików to '%min%'",
 
-    // Zend\Validator\File\Crc32
+    // Laminas\Validator\File\Crc32
     "File does not match the given crc32 hashes" => "Błędna suma kontrolna pliku",
     "A crc32 hash could not be evaluated for the given file" => "Nie można obliczyć sumy kontrolnej dla podanego pliku",
     "File is not readable or does not exist" => "Plik nie istnieje lub nie można go odczytać",
 
-    // Zend\Validator\File\ExcludeExtension
+    // Laminas\Validator\File\ExcludeExtension
     "File has an incorrect extension" => "Plik ma niepoprawne rozszerzenie",
     "File is not readable or does not exist" => "Plik  nie istnieje lub nie można go odczytać",
 
@@ -106,56 +106,56 @@ return array(
     "The mimetype of file '%value%' could not be detected" => "Nie można wykryć typu MIME dla pliku '%value%'",
     "File '%value%' is not readable or does not exist" => "Plik '%value%' nie istnieje lub nie można go odczytać",
 
-    // Zend\Validator\File\Exists
+    // Laminas\Validator\File\Exists
     "File does not exist" => "Plik nie istnieje",
 
-    // Zend\Validator\File\Extension
+    // Laminas\Validator\File\Extension
     "File has an incorrect extension" => "Plik ma niepoprawne rozszerzenie",
 
-    // Zend\Validator\File\FilesSize
+    // Laminas\Validator\File\FilesSize
     "All files in sum should have a maximum size of '%max%' but '%size%' were detected" => "Wybrane pliki łącznie zajmują '%size%'. Maksymalny łączny rozmiar to '%max%'",
     "All files in sum should have a minimum size of '%min%' but '%size%' were detected" => "Wybrane pliki łącznie zajmują '%size%'. Minimalny łączny rozmiar to '%min%'",
     "One or more files can not be read" => "Jeden lub więcej plików nie mogą zostać odczytane",
 
-    // Zend\Validator\File\Hash
+    // Laminas\Validator\File\Hash
     "File does not match the given hashes" => "Plik ma niedopuszczalny hash",
     "A hash could not be evaluated for the given file" => "Nie można obliczyć funkcji haszującej dla podanego pliku",
 
-    // Zend\Validator\File\ImageSize
+    // Laminas\Validator\File\ImageSize
     "Maximum allowed width for image should be '%maxwidth%' but '%width%' detected" => "Plik ma szerokość '%width%'. Maksymalna szerokość to '%maxwidth%'",
     "Minimum expected width for image should be '%minwidth%' but '%width%' detected" => "Plik ma szerokość '%width%'. Minimalna szerokość to '%minwidth%'",
     "Maximum allowed height for image should be '%maxheight%' but '%height%' detected" => "Plik ma wysokość '%height%'. Maksymalna wysokość to '%maxheight%'",
     "Minimum expected height for image should be '%minheight%' but '%height%' detected" => "Plik ma wysokość '%height%'. Minimalna wysokość to '%minheight%'",
     "The size of image could not be detected" => "Nie można określić rozmiaru pliku",
 
-    // Zend\Validator\File\IsCompressed
+    // Laminas\Validator\File\IsCompressed
     "File is not compressed, '%type%' detected" => "Plik typu '%type%' nie jest skompresowany",
     "The mimetype could not be detected from the file" => "Nie można wykryć typu MIME dla pliku",
 
-    // Zend\Validator\File\IsImage
+    // Laminas\Validator\File\IsImage
     "File is no image, '%type%' detected" => "Plik typu '%type%' nie jest obrazem",
     "The mimetype could not be detected from the file" => "Nie można wykryć typu MIME dla pliku",
 
-    // Zend\Validator\File\Md5
+    // Laminas\Validator\File\Md5
     "File does not match the given md5 hashes" => "Plik ma niedopuszczalny hash md5",
     "An md5 hash could not be evaluated for the given file" => "Nie można obliczyć funkcji haszującej md5 dla podanego pliku",
 
-    // Zend\Validator\File\MimeType
+    // Laminas\Validator\File\MimeType
     "File has an incorrect mimetype of '%type%'" => "Plik ma niepoprawny typ MIME '%type%'",
     "The mimetype could not be detected from the file" => "Nie można wykryć typu MIME dla pliku",
 
-    // Zend\Validator\File\NotExists
+    // Laminas\Validator\File\NotExists
     "File exists" => "Plik istnieje",
 
-    // Zend\Validator\File\Sha1
+    // Laminas\Validator\File\Sha1
     "File does not match the given sha1 hashes" => "Plik ma niedopuszczalny hash sha1",
     "A sha1 hash could not be evaluated for the given file" => "Nie można obliczyć funkcji haszującej sha1 dla podanego pliku",
 
-    // Zend\Validator\File\Size
+    // Laminas\Validator\File\Size
     "Maximum allowed size for file is '%max%' but '%size%' detected" => "Podany plik ma rozmiar '%size%'. Maksymalny rozmiar pliku to '%max%'",
     "Minimum expected size for file is '%min%' but '%size%' detected" => "Podany plik ma rozmiar '%size%'. Minimalny rozmiar pliku to '%min%'",
 
-    // Zend\Validator\File\Upload
+    // Laminas\Validator\File\Upload
     "File '%value%' exceeds the defined ini size" => "Rozmiar pliku '%value%' przekroczył zdefiniowaną wartość w ini",
     "File '%value%' exceeds the defined form size" => "Rozmiar pliku '%value%' przekroczył zdefiniowaną wartość w formularzu",
     "File '%value%' was only partially uploaded" => "Plik '%value%' nie został całkowicie wysłany",
@@ -167,7 +167,7 @@ return array(
     "File '%value%' was not found" => "Nie znaleziono pliku '%value%'",
     "Unknown error while uploading file '%value%'" => "Nieznany błąd podczas wysyłania pliku '%value%'",
 
-    // Zend\Validator\File\UploadFile
+    // Laminas\Validator\File\UploadFile
     "File exceeds the defined ini size" => "Rozmiar pliku przekroczył zdefiniowaną wartość w ini",
     "File exceeds the defined form size" => "Rozmiar pliku przekroczył zdefiniowaną wartość w formularzu",
     "File was only partially uploaded" => "Plik nie został całkowicie wysłany",
@@ -179,19 +179,19 @@ return array(
     "File was not found" => "Nie znaleziono pliku",
     "Unknown error while uploading file" => "Nieznany błąd podczas wysyłania pliku",
 
-    // Zend\Validator\File\WordCount
+    // Laminas\Validator\File\WordCount
     "Too many words, maximum '%max%' are allowed but '%count%' were counted" => "Podano '%count%' słów. Maksymalna liczba słów to '%max%'",
     "Too few words, minimum '%min%' are expected but '%count%' were counted" => "Podano '%count%' słów. Minimalna liczba słów to '%min%'",
     "File is not readable or does not exist" => "Plik nie istnieje lub nie można go odczytać",
 
-    // Zend\Validator\GreaterThan
+    // Laminas\Validator\GreaterThan
     "The input is not greater than '%min%'" => "Podana wartość nie jest większa niż '%min%'",
     "The input is not greater or equal than '%min%'" => "Podana wartość nie jest większa lub równa od '%min%'",
 
-    // Zend\Validator\Hex
+    // Laminas\Validator\Hex
     "The input contains non-hexadecimal characters" => "Wartość nie jest wartością heksadecymalną",
 
-    // Zend\Validator\Hostname
+    // Laminas\Validator\Hostname
     "The input appears to be a DNS hostname but contains a dash in an invalid position" => "Nazwa hosta zawiera znak '-' w złym miejscu",
     "The input appears to be a DNS hostname but cannot extract TLD part" => "Nie można rozpoznać TLD dla nazwy hosta",
     "The input does not match the expected structure for a DNS hostname" => "Podana wartość nie jest poprawną nazwą hosta",
@@ -203,61 +203,61 @@ return array(
     "The input appears to be a DNS hostname but cannot extract TLD part" => "Nie można wyodrębnić TLD",
     "The input appears to be a DNS hostname but cannot match TLD against known list" => "Nazwa hosta zawiera nieznane TLD",
 
-    // Zend\Validator\Iban
+    // Laminas\Validator\Iban
     "Unknown country within the IBAN" => "Niepoprawny kraj w IBAN",
     "Countries outside the Single Euro Payments Area (SEPA) are not supported" => "Kraje spoza Jednolitego Obszaru Płatniczego w Euro (SEPA) nie są obsługiwane",
     "The input has a false IBAN format" => "Wartość nie jest w formacie IBAN",
     "The input has failed the IBAN check" => "Wystąpił błąd podczas sprawdzania IBAN",
 
-    // Zend\Validator\Identical
+    // Laminas\Validator\Identical
     "The two given tokens do not match" => "Podane wartości nie są takie same",
     "No token was provided to match against" => "Nie podano wartości do porównania",
 
-    // Zend\Validator\InArray
+    // Laminas\Validator\InArray
     "The input was not found in the haystack" => "Nie znaleziono wartości",
 
-    // Zend\Validator\Ip
+    // Laminas\Validator\Ip
     "The input does not appear to be a valid IP address" => "Podana wartość nie jest poprawnym adresem IP",
 
-    // Zend\Validator\IsInstanceOf
+    // Laminas\Validator\IsInstanceOf
     "The input is not an instance of '%className%'" => "Wartość nie jest instancją '%className%'",
 
-    // Zend\Validator\Isbn
+    // Laminas\Validator\Isbn
     "The input is not a valid ISBN number" => "Podana wartość nie jest poprawnym ISBN",
 
-    // Zend\Validator\LessThan
+    // Laminas\Validator\LessThan
     "The input is not less than '%max%'" => "Podana wartość nie jest mniejsze niż '%max%'",
     "The input is not less or equal than '%max%'" => "Podana wartość nie jest mniejsze lub równa '%max%'",
 
-    // Zend\Validator\NotEmpty
+    // Laminas\Validator\NotEmpty
     "Value is required and can't be empty" => "To pole jest wymagane",
     "Invalid type given. String, integer, float, boolean or array expected" => "Podana wartość powinna być ciągiem znaków, liczbą całkowitą, liczbą zmiennoprzecinkową, wartością logiczną lub tablicą",
 
-    // Zend\Validator\Regex
+    // Laminas\Validator\Regex
     "The input does not match against pattern '%pattern%'" => "Podana wartość  nie pasuje do wzorca '%pattern%'",
     "There was an internal error while using the pattern '%pattern%'" => "Wystąpił błąd podczas dopasowania wyrażenia '%pattern%'",
 
-    // Zend\Validator\Sitemap\Changefreq
+    // Laminas\Validator\Sitemap\Changefreq
     "The input is not a valid sitemap changefreq" => "Podana wartość nie jest poprawną wartością changefreq",
 
-    // Zend\Validator\Sitemap\Lastmod
+    // Laminas\Validator\Sitemap\Lastmod
     "The input is not a valid sitemap lastmod" => "Podana wartość nie jest poprawną wartością lastmod",
 
-    // Zend\Validator\Sitemap\Loc
+    // Laminas\Validator\Sitemap\Loc
     "The input is not a valid sitemap location" => "Podana wartość nie jest poprawną lokalizacją mapy strony",
 
-    // Zend\Validator\Sitemap\Priority
+    // Laminas\Validator\Sitemap\Priority
     "The input is not a valid sitemap priority" => "Podana wartość nie jest poprawną wartością priorytetu",
     "Invalid type given. Numeric string, integer or float expected" => "Podana wartość powinna być ciągiem znaków, liczbą całkowitą lub liczbą zmiennoprzecinkową",
 
-    // Zend\Validator\Step
+    // Laminas\Validator\Step
     "Invalid value given. Scalar expected" => "Nie poprawna wartość skalarna",
     "The input is not a valid step" => "Wartość nie jest poprawnym krokiem",
 
-    // Zend\Validator\StringLength
+    // Laminas\Validator\StringLength
     "The input is less than %min% characters long" => "Podana wartość zawiera mniej niż %min% znaków",
     "The input is more than %max% characters long" => "Podana wartość zawiera więcej niż %max% znaków",
 
-    // Zend\Validator\Uri
+    // Laminas\Validator\Uri
     "The input does not appear to be a valid Uri" => "Wartość nie jest poprawnym Uri",
 );

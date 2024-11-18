@@ -39,6 +39,86 @@
 	<?= $renderobject->renderContactFormElement($form->get('emailreal'), $form) ?>
 	<?= $renderobject->renderContactFormElement($form->get('message'), $form) ?>
 
+	<?php if (get_option('casawp_form_dataprotection_checkbox')): ?>
+		<?php 
+			$emaillabel = __('Terms and conditions', 'casawp');
+			$emailvalue = __('Agreed to the general terms and conditions', 'casawp');
+
+			function get_custom_dataprotectiontext($name) {
+				$dataprotectiontext = __('I accept the general terms and conditions and agree to the privacy policy', 'casawp');
+				
+				// Apply the 'custom_dataprotectiontext' filter to the dataprotectiontext message
+				$dataprotectiontext = apply_filters('custom_dataprotectiontext', $dataprotectiontext, $name);
+				
+				return $dataprotectiontext;
+			}
+		?>
+		<div class="casawp-row">
+			<div class="col-12">
+				<div class="casawp-checkbox">
+					<div class="form-group is-required ">
+						<label for="contactFormdataprotection" class="control-label">
+							<?php echo get_custom_dataprotectiontext('name'); ?>
+						</label>
+						<input type="checkbox" name="extra_data[<?php echo $emaillabel ?>:]" required="required" class="form-control casawp-form-control " id="contactFormdataprotection" value="<?php echo $emailvalue ?>">
+					</div>				
+				</div>
+			</div>
+		</div>
+	<?php endif ?>
+
+	<?php if (get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && !get_option('casawp_recaptcha_v3')): ?>
+		<div class="g-recaptcha" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
+		<div id="recaptchaerror" <?php echo (!$invalidCaptcha ? 'style="display: none;"' : '') ?> class="alert alert-danger" role="alert">
+			<?php echo __('Invalid reCAPTCHA response!', 'casawp') ?>
+		</div>
+		<div id="casawpRecaptcha"></div>
+		<script>
+			window.captchaKey = '<?php echo escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+		</script>
+		<script>
+			var onloadCallback = function() {
+				grecaptcha.render('casawpRecaptcha', {
+				'sitekey' : window.captchaKey
+				});
+			};
+		</script>
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+			async defer>
+		</script>
+	<?php elseif(get_option('casawp_recaptcha') && get_option('casawp_recaptcha_secret') && get_option('casawp_recaptcha_v3')): ?>
+		<div class="g-recaptcha-v3" data-sitekey="<?php echo get_option('casawp_recaptcha') ?>"></div>
+		<script src="https://www.google.com/recaptcha/api.js?render=<?php echo get_option('casawp_recaptcha') ?>"></script>
+		<input type="hidden" id="gRecaptchaResponse" name="g-recaptcha-response">
+		<script>
+			window.captchaKey = '<?php echo $form->escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+		</script>
+		<script>
+
+			var form = document.getElementById("casawpPropertyContactForm");
+
+			form.addEventListener('submit', event => {
+				event.preventDefault()
+				validate(form)
+			});
+
+			function validate(form) {
+				getRecaptchaToken(form)
+			}
+
+			function getRecaptchaToken(form) {
+				grecaptcha.ready(function() {
+					grecaptcha.execute(window.captchaKey, {action: 'casawpPropertyContactForm'}).then(function(token) {
+						gRecaptchaResponse.value = token //set the value of the hidden field
+						form.submit() //submit the form
+					});
+				});
+			}
+			
+		</script>
+
+	<?php endif; ?>
+
 	<div class="row">
 	    <div class="col-md-7 casawp-input-left">
 	        <p class="casawp-form-control-static casawp-text-muted casawp-small"><?= __("Please fill out all the fields.", "casawp") ?></p>
@@ -48,6 +128,12 @@
 	    </div>
 	    <div class="clearBoth"></div>
 	</div>
+
+	<?php 
+	/*echo '<pre>';
+		print_r($form->getMessages());
+	echo '</pre>';*/
+	 ?>
 
 	<?= $this->form()->closeTag(); ?>
 

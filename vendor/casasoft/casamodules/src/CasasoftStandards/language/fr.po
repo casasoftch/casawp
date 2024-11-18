@@ -49,7 +49,7 @@ msgstr "Ferme"
 msgid "Farm house"
 msgstr "Ferme"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:47
+#: 
 msgid "Furnished flat"
 msgstr "Appartement meublé"
 
@@ -73,7 +73,7 @@ msgstr "Ferme de montagne"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:52
 msgid "Multiple dwelling"
-msgstr "Immeuble"
+msgstr "Immeuble d'habitation"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:53
 msgid "Open slot"
@@ -123,7 +123,7 @@ msgstr "Parking souterrain"
 msgid "Villa"
 msgstr "Villa"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:65
+#: 
 msgid "Chalet"
 msgstr "Chalet"
 
@@ -306,7 +306,7 @@ msgstr "Vitrine"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:115
 msgid "Granny flat"
-msgstr "Dépendance"
+msgstr "Logement indépendant"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:116
 msgid "Boat landing stage"
@@ -320,7 +320,7 @@ msgstr "Box à chevaux"
 msgid "Boat mooring"
 msgstr "Place à bâteau balisée"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:119
+#: 
 msgid "Cellar compartment"
 msgstr "Cave"
 
@@ -332,7 +332,7 @@ msgstr "Grenier"
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: ../src/CasasoftStandards/Service/CategoryService.php:124
+#: 
 msgid "Shopping center"
 msgstr "Centre commercial"
 
@@ -362,13 +362,12 @@ msgid "Condition"
 msgstr "Etat actuel"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:450
-#, fuzzy
 msgid "Plot no."
-msgstr "Nr. parcelle"
+msgstr "N° parcelle"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:452
 msgid "Zone type"
-msgstr ""
+msgstr "Zone"
 
 #: ../src/CasasoftStandards/Service/ConversionService.php:453
 msgid "Key facts"
@@ -449,7 +448,7 @@ msgstr "Garantie de loyer"
 #: ../src/CasasoftStandards/Service/FeatureService.php:88
 #: ../src/CasasoftStandards/Service/FeatureService.php:362
 msgid "Raised ground floor"
-msgstr "Rez-de-chaussée élevé"
+msgstr "Rez-de-chaussée surélevé"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:93
 msgid "Has elevator"
@@ -570,7 +569,7 @@ msgstr "Construction ancienne"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:251
 msgid "has building law restrictions"
-msgstr "Autorisation de construire"
+msgstr "En droit de superficie"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:256
 msgid "Swimmingpool"
@@ -618,7 +617,7 @@ msgstr "Modernisé"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:300
 msgid "Dilapidated"
-msgstr "Dilapidé"
+msgstr "Délabré"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:304
 msgid "Renovation indigent"
@@ -646,7 +645,7 @@ msgstr "Séchoir à linge"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:328
 msgid "Kachelofen"
-msgstr "Poêle en faïence"
+msgstr "Poêle"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:332
 msgid "Secondary residency"
@@ -658,7 +657,7 @@ msgstr "Résidence principale"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:340
 msgid "Foreign quota"
-msgstr "Quota étranger"
+msgstr "Vente aux étrangers"
 
 #: ../src/CasasoftStandards/Service/FeatureService.php:346
 msgid "Attic"
@@ -698,7 +697,7 @@ msgstr "Place(s) de parc extérieure(s)"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:46
 msgid "Carport"
-msgstr "Carport(s)"
+msgstr "Carport"
 
 #: ../src/CasasoftStandards/Service/IntegratedOfferService.php:50
 msgid "Connected garage"
@@ -831,11 +830,11 @@ msgstr "Surface terrain"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:341
 msgid "Total floor area"
-msgstr "Surface totale"
+msgstr "Surface de plancher"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:347
 msgid "Net floor area"
-msgstr "Surface principale"
+msgstr "Surface nette"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:353
 msgid "Floorspace"
@@ -843,11 +842,11 @@ msgstr "Surface utile"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:359
 msgid "Main floor space"
-msgstr "Surface étage principal"
+msgstr "Surface utile principale"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:365
 msgid "Secondary usable area"
-msgstr "Surface secondaire"
+msgstr "Surface utile secondaire"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:372
 msgid "Traffic area"
@@ -962,19 +961,19 @@ msgstr "Cubage ECA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:596
 msgid "Cubature SIA"
-msgstr "Cubature SIA"
+msgstr "Cubage SIA"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:605
 msgid "Utilization number"
-msgstr "Indice d'utilisation"
+msgstr "IUS - Indice d'utilisation au sol"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:611
 msgid "Construction utilization number"
-msgstr "Indice d'utilisation (construction)"
+msgstr "ISB - Indice de surface bâtie"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:617
 msgid "Total living area"
-msgstr "Surface habitable"
+msgstr "Surface habitable brute"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:623
 msgid "Net living area"
@@ -991,7 +990,7 @@ msgstr "Année de rénovation"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:653
 msgid "Ceiling height"
-msgstr "Hauteur du plafond"
+msgstr "Hauteur sous plafond"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:659
 msgid "Hall height"
@@ -1015,7 +1014,7 @@ msgstr "Prix du terrain"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:691
 msgid "Gross premium"
-msgstr "Rendement brut en %"
+msgstr "Rendement brut"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:698
 msgid "Rental deposit"
@@ -1045,9 +1044,10 @@ msgstr "Habitation"
 msgid "Storage"
 msgstr "Entrepôt"
 
+#. This can probably be deleted. It's probably not used anymore. "Construction" has been added instead, which is a better translation.
 #: ../src/CasasoftStandards/Service/UtilityService.php:66
 msgid "Building"
-msgstr "Bâtiment"
+msgstr "Construction"
 
 #: ../src/CasasoftStandards/Service/UtilityService.php:70
 msgid "Investment"
@@ -1159,7 +1159,7 @@ msgstr "Parking(s) / Garage(s)"
 
 #: 
 msgid "Extra Costs"
-msgstr "Coûts supplémentaires"
+msgstr "Charges"
 
 #: 
 msgid "Engadine house"
@@ -1207,7 +1207,7 @@ msgstr "Chauffage à mazout"
 
 #: 
 msgid "Pellet heating"
-msgstr "Chaudières à pellets"
+msgstr "Chaudière à pellets"
 
 #: 
 msgid "Heatpump heating"
@@ -1323,7 +1323,7 @@ msgstr "Revenu de location (brut)"
 
 #: 
 msgid "Rental income (net)"
-msgstr "Revenu de location (net)"
+msgstr "Loyer annuel net (réel)"
 
 #: 
 msgid "Renewal fund input"
@@ -1351,11 +1351,11 @@ msgstr "Facteur de construction"
 
 #: 
 msgid "GEAK exterior"
-msgstr "CECB extérieur"
+msgstr "CECB efficacité de l'enveloppe"
 
 #: 
 msgid "GEAK total"
-msgstr "CECB total"
+msgstr "CECB efficacité totale"
 
 #: 
 msgid "Renewal fund value"
@@ -1363,7 +1363,7 @@ msgstr "Valeur du fond de rénovation"
 
 #: 
 msgid "Number of guest toilets"
-msgstr "Nombre de toilettes d’invité"
+msgstr "Nombre de WC séparés"
 
 #: 
 msgid "Starting from"
@@ -1459,21 +1459,433 @@ msgstr "Solaire photovoltaïque"
 
 #: 
 msgid "Dishwasher"
-msgstr ""
+msgstr "Machine à vaisselle"
 
 #: 
 msgid "Charging station"
-msgstr ""
+msgstr "Station de chargement"
 
 #: 
 msgid "Cellar"
-msgstr ""
+msgstr "Cave"
 
 #: 
 msgid "Number of toilets"
-msgstr ""
+msgstr "Nombre de salles de bain"
 
 #: 
 msgid "Number of showers"
-msgstr ""
+msgstr "Nombre de douches"
 
+#: 
+msgid "Playground"
+msgstr "Place de jeux"
+
+#: 
+msgid "Garage underground"
+msgstr "Garage souterrain"
+
+#: 
+msgid "per year"
+msgstr "par année"
+
+#: 
+msgid "Remote viewing"
+msgstr "Visite à distance"
+
+#: 
+msgid "Number of residential units"
+msgstr "Nombre de logements"
+
+#: 
+msgid "Number of buildings"
+msgstr "Nombre d’immeubles"
+
+#: 
+msgid "Number of commercial units"
+msgstr "Nombre de surfaces commerciales"
+
+#: 
+msgid "Rental income (potential)"
+msgstr "Loyer annuel net (objectif)"
+
+#: 
+msgid "Current occupancy"
+msgstr "Taux d'occupation"
+
+#: 
+msgid "Current occupancy (date)"
+msgstr "Occupation actuelle (date)"
+
+#: 
+msgid "Gross premium (target)"
+msgstr "Rendement brut"
+
+#: 
+msgid "Operation and maintenance cost"
+msgstr "Coûts de maintenance et d'opération (annuellement)"
+
+#: 
+msgid "VAT opted"
+msgstr "assujetti"
+
+#: 
+msgid "Sales method"
+msgstr "Méthodes de vente"
+
+#: 
+msgid "Fixed pricing"
+msgstr "Prix fixe"
+
+#: 
+msgid "Auction"
+msgstr "Enchères"
+
+#: 
+msgid "Bidding process"
+msgstr "Processus d'enchère"
+
+#: 
+msgid "Auction start price"
+msgstr "Enchère de départ"
+
+#: 
+msgid "Auction start"
+msgstr "Départ de l'enchère"
+
+#: 
+msgid "Auction end"
+msgstr "Fin de l'enchère"
+
+#: 
+msgid "Auction minimal increase"
+msgstr "Offre minimum"
+
+#: 
+msgid "Bidding start price"
+msgstr "Prix de départ"
+
+#: 
+msgid "Bidding start"
+msgstr "Début de l'enchère"
+
+#: 
+msgid "Bidding start (binding)"
+msgstr "Début de l'enchère"
+
+#: 
+msgid "Bidding end"
+msgstr "Fin de l'enchère"
+
+#: 
+msgid "Sales start"
+msgstr "Début des ventes"
+
+#: 
+msgid "Sales end"
+msgstr "Fin des ventes"
+
+#: 
+msgid "Share deal"
+msgstr "Transaction partagée"
+
+#: 
+msgid "Sales deal type"
+msgstr "Type de transaction"
+
+#: 
+msgid "Asset deal"
+msgstr "Accord d'actifs"
+
+#: 
+msgid "Brine-water heat pump"
+msgstr "Pompe à chaleur eau glycolée/eau"
+
+#: 
+msgid "Block-type thermal power station"
+msgstr "Centrale thermique de type bloc"
+
+#: 
+msgid "Coal"
+msgstr "Charbon"
+
+#: 
+msgid "VAT not opted"
+msgstr "non assujetti"
+
+#: 
+msgid "Number of rooms from"
+msgstr "Nombre de pièces de"
+
+#: 
+msgid "Number of rooms to"
+msgstr "Nombre de pièces à"
+
+#: 
+msgid "Construction status"
+msgstr "État de la construction"
+
+#: 
+msgid "Floorspace from"
+msgstr "Surface utile de"
+
+#: 
+msgid "Floorspace to"
+msgstr "Surface utile jusqu'à"
+
+#: 
+msgid "Living area from"
+msgstr "Surface habitable de"
+
+#: 
+msgid "Living area to"
+msgstr "Surface habitable à"
+
+#: 
+msgid "per"
+msgstr "par"
+
+#: 
+msgid "Temporary use"
+msgstr "Urbanisme temporaire"
+
+#: 
+msgid "Fiber optic connection"
+msgstr "Connexion fibre optique"
+
+#: 
+msgid "Multimedia wiring"
+msgstr "Câblage multimédia"
+
+#: 
+msgid "Charging station for electric car"
+msgstr "Chargeur pour voiture électrique"
+
+#: 
+msgid "Construction"
+msgstr "Construction"
+
+#: 
+msgid "Agricultural land"
+msgstr "Terrain agricole"
+
+#: 
+msgid "Arcade"
+msgstr "Arcade"
+
+#: 
+msgid "Bakery"
+msgstr "Boulangerie"
+
+#: 
+msgid "Butcher"
+msgstr "Boucherie"
+
+#: 
+msgid "Car repair shop"
+msgstr "Garage automobile"
+
+#: 
+msgid "Carpentry shop"
+msgstr "Menuiserie"
+
+#: 
+msgid "Casino"
+msgstr "Casino"
+
+#: 
+msgid "Cheese factory"
+msgstr "Fromagerie"
+
+#: 
+msgid "Club / Disco"
+msgstr "Club / Disco"
+
+#: 
+msgid "Commercial building plot"
+msgstr "Terrain à bâtir commercial"
+
+#: 
+msgid "Commercial premises"
+msgstr "Local commercial"
+
+#: 
+msgid "Doctors office"
+msgstr "Établissement médico-social"
+
+#: 
+msgid "Earth sheltered dwelling"
+msgstr "Maison troglodyte/organique"
+
+#: 
+msgid "Hair salon"
+msgstr "Salon de coiffure"
+
+#: 
+msgid "Industrial building plot"
+msgstr "Terrain à bâtir industriel"
+
+#: 
+msgid "Industrial property"
+msgstr "Objet industriel"
+
+#: 
+msgid "Kiosk"
+msgstr "Kiosque"
+
+#: 
+msgid "Laboratory"
+msgstr "Laboratoire"
+
+#: 
+msgid "Library"
+msgstr "Bibliothèque"
+
+#: 
+msgid "Market garden"
+msgstr "Pépinière"
+
+#: 
+msgid "Motel"
+msgstr "Motel"
+
+#: 
+msgid "Movie theatre"
+msgstr "Cinéma"
+
+#: 
+msgid "Multistorey car park"
+msgstr "Parking à étages"
+
+#: 
+msgid "Orphanage"
+msgstr "Foyer"
+
+#: 
+msgid "Party room"
+msgstr "Salle des fêtes"
+
+#: 
+msgid "Pub"
+msgstr "Pub"
+
+#: 
+msgid "Stoeckli"
+msgstr "Dépendance"
+
+#: 
+msgid "Squash badminton"
+msgstr "Terrain de squash/badminton couvert"
+
+#: 
+msgid "Storage room"
+msgstr "Espace de stockage"
+
+
+msgid "Temporary use"
+msgstr "Urbanisme temporaire"
+
+msgid "Fiber optic connection"
+msgstr "Connexion fibre optique"
+
+msgid "Multimedia wiring"
+msgstr "Câblage multimédia"
+
+msgid "Charging station for electric car"
+msgstr "Chargeur pour voiture électrique"
+
+msgid "Minergie-A"
+msgstr "Minergie-A"
+
+msgid "Minergie-A-ECO"
+msgstr "Minergie-A-ECO"
+
+msgid "Construction"
+msgstr "Construction"
+
+msgid "Agricultural lot"
+msgstr "Terrain agricole"
+
+msgid "Arcade"
+msgstr "Arcade"
+
+msgid "Bakery"
+msgstr "Boulangerie"
+
+msgid "Butcher"
+msgstr "Boucherie"
+
+msgid "Car repair shop"
+msgstr "Garage automobile"
+
+msgid "Carpentry shop"
+msgstr "Menuiserie"
+
+msgid "Casino"
+msgstr "Casino"
+
+msgid "Cheese factory"
+msgstr "Fromagerie"
+
+msgid "Club disco"
+msgstr "Club/Disco"
+
+msgid "Commercial lot"
+msgstr "Terrain à bâtir commercial"
+
+msgid "Commercial space"
+msgstr "Local commercial"
+
+msgid "Doctors office"
+msgstr "Établissement médico-social"
+
+msgid "Earth sheltered dwelling"
+msgstr "Maison troglodyte/organique"
+
+msgid "Hairdresser"
+msgstr "Salon de coiffure"
+
+msgid "Industrial lot"
+msgstr "Terrain à bâtir industriel"
+
+msgid "Industrial object"
+msgstr "Objet industriel"
+
+msgid "Kiosk"
+msgstr "Kiosque"
+
+msgid "Laboratory"
+msgstr "Laboratoire"
+
+msgid "Library"
+msgstr "Bibliothèque"
+
+msgid "Market garden"
+msgstr "Pépinière"
+
+msgid "Motel"
+msgstr "Motel"
+
+msgid "Movie theater"
+msgstr "Cinéma"
+
+msgid "Multistorey car park"
+msgstr "Parking à étages"
+
+msgid "Orphanage"
+msgstr "Foyer"
+
+msgid "Party room"
+msgstr "Salle des fêtes"
+
+msgid "Pub"
+msgstr "Pub"
+
+msgid "Stoeckli"
+msgstr "Dépendance"
+
+msgid "Squash badminton"
+msgstr "Terrain de squash/badminton couvert"
+
+msgid "Storage room"
+msgstr "Entrepôt"

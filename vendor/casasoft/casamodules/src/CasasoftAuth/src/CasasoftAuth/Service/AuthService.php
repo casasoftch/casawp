@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftAuth\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 use CasasoftAuth\Entity\User;
 
@@ -10,16 +10,16 @@ use CasasoftAuth\Form\UserLoginForm;
 use CasasoftAuth\Form\UserRegisterForm;
 use CasasoftAuth\Form\UserForgotPasswordForm;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Factory as InputFactory;
 
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 
-use Zend\Http\Header\SetCookie;
+use Laminas\Http\Header\SetCookie;
 
 class AuthService {
     protected $user;
@@ -217,7 +217,7 @@ class AuthService {
             'required' => true,
             'validators' => array(
                 array(
-                    'name'      => 'Zend\Validator\Identical',
+                    'name'      => 'Laminas\Validator\Identical',
                     'options' => array(
                         'token' => 'password1',
                     ),
@@ -231,7 +231,7 @@ class AuthService {
     }
 
     public function registerUser($postdata, $session = null){
-        if ($postdata instanceof \Zend\Stdlib\Parameters) {
+        if ($postdata instanceof \Laminas\Stdlib\Parameters) {
             $postdata = $postdata->toArray();
         }
 

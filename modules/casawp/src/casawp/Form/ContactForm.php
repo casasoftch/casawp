@@ -1,7 +1,7 @@
 <?php
 namespace casawp\Form;
 
-use Zend\Form\Form;
+use Laminas\Form\Form;
 use casawp\Conversion;
 
 class ContactForm extends Form
@@ -101,7 +101,7 @@ class ContactForm extends Form
                 'label' => __('ZIP', 'casawp'),
             ),
             'attributes' => array(
-                'required' => get_option('casawp_form_postal_code_required', false),
+                'required' => get_option('casawp_form_postalcode_required', false),
             ),
         ));
 
@@ -199,6 +199,10 @@ class ContactForm extends Form
         ));
     }
 
+    public function escapeJavaScriptText($string){
+        return str_replace("\n", '\n', str_replace('"', '\"', addcslashes(str_replace("\r", '', (string)$string), "\0..\37'\\")));
+    }
+
     public function setCustomFilters($filters){
         $this->customFilters = $filters;
     }
@@ -215,21 +219,15 @@ class ContactForm extends Form
     }
 
     public function getFilter(){
-        $filter = new \Zend\InputFilter\InputFilter();
+        $filter = new \Laminas\InputFilter\InputFilter();
         if (!$this->isInCustomFilters('firstname')) {
             $filter->add(array(
                 'name' => 'firstname',
                 'required' => get_option('casawp_form_firstname_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -239,14 +237,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_lastname_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -262,14 +254,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_street_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -279,10 +265,10 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_postalcode_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
                     array(
-                        'name' => 'string_length',
+                        'name' => 'Laminas\Validator\StringLength',
                         'options' => array(
                             'min' => 4
                         ),
@@ -296,14 +282,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_locality_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -313,14 +293,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_phone_required', true),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -330,14 +304,8 @@ class ContactForm extends Form
                 'required' => get_option('casawp_form_mobile_required', false),
                 'validators' => array(
                     array(
-                        'name' => 'not_empty',
+                        'name' => 'Laminas\Validator\NotEmpty',
                     ),
-                    /*array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 2
-                        ),
-                    ),*/
                 ),
             ));
         }
@@ -347,7 +315,7 @@ class ContactForm extends Form
                 'required' => true,
                 'validators' => array(
                     array(
-                        'name' => 'email_address',
+                        'name' => 'Laminas\Validator\EmailAddress',
                         'options' => array(
                             //'allow' => ALLOW_DNS,
                             'deep' => true,

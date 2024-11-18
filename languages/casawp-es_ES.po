@@ -1,11 +1,15 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: CASAWP\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: CASAWP\n"
-"Language: es\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -2600,7 +2604,7 @@ msgstr "Rango de precios"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:162
 msgid "to %1$s %2$.1f million"
-msgstr "hasta %1$s %20,1f millones de $"
+msgstr "hasta %1$s %2$.1f millones de $"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:163
 #: modules/casawp/src/casawp/Form/FilterForm.php:164
@@ -2614,11 +2618,11 @@ msgstr "hasta %1$s %20,1f millones de $"
 #: modules/casawp/src/casawp/Form/FilterForm.php:172
 #: modules/casawp/src/casawp/Form/FilterForm.php:173
 msgid "from %1$s %2$.1f to %3$.1f million"
-msgstr "desde %1$s %20,1f de $ hasta %30,1f millones de $"
+msgstr "desde %1$s %2$.1f de $ hasta %3$.1f millones de $"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:174
 msgid "from %1$s %2$.1f million"
-msgstr "desde %1$s %20,1f millones de $"
+msgstr "desde %1$s %2$.1f millones de $"
 
 #: modules/casawp/src/casawp/Service/FormService.php:206
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:15
@@ -2806,63 +2810,47 @@ msgstr "Lo sentimos, no hay publicaciones que coincidan con sus criterios."
 msgid "rent"
 msgstr "alquiler"
 
-#: 
 msgid "School"
 msgstr ""
 
-#: 
 msgid "Choose country"
 msgstr ""
 
-#: 
 msgid "Countries"
 msgstr ""
 
-#: 
 msgid "Extra Costs"
 msgstr "Costes adicionales"
 
-#: 
 msgid "Ground floor"
 msgstr "Planta baja"
 
-#: 
 msgid "Choose order"
-msgstr ""
+msgstr "Elegir pedido"
 
-#: 
 msgid "Order by"
-msgstr ""
+msgstr "Pedir por"
 
-#: 
 msgid "Ascending"
-msgstr ""
+msgstr "Ascendente"
 
-#: 
 msgid "Descending"
-msgstr ""
+msgstr "Descendente"
 
-#: 
 msgid "Order direction"
-msgstr ""
+msgstr "Dirección del pedido"
 
-#: 
 msgid "Choose order direction"
-msgstr ""
+msgstr "Seleccione la dirección del pedido"
 
-#: 
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
-#: 
 msgid "Load distance map"
 msgstr ""
 
-#: 
 msgid "Load map"
 msgstr ""
 
-#: 
 msgid "Guest toilets"
 msgstr ""
-

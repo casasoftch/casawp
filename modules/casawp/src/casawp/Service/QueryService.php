@@ -7,7 +7,7 @@ class QueryService{
 
     public function __construct(){
         $this->defaultQuery = array(
-            'post-type' => 'casawp_property',
+            'post_type' => 'casawp_property',
             'posts_per_page' => get_option('posts_per_page', 10),
             'order' => get_option('casawp_archive_order', 'DESC'),
             'ignore_sticky_posts' => 0,
@@ -21,6 +21,7 @@ class QueryService{
             'salestypes' => array(),
             'availabilities' => array('active'),
             'categories_not' => array(),
+            'utilities_not' => array(),
             'locations_not' => array(),
             'countries_not' => array(),
             'salestypes_not' => array(),
@@ -40,6 +41,10 @@ class QueryService{
             'price_to' => null,
             'price_range' => null,
             'price_range_custom' => null,
+            'price_for_order' => null,
+            'price_for_order_to' => null,
+            'price_for_order_from' => null,
+            'price_for_order_not' => null,
             'filter_meta_key' => null,
             'filter_meta_key_not' => null,
             'filter_meta_compare' => null,
@@ -67,31 +72,40 @@ class QueryService{
     public function setCustomQuery($query){
         foreach ($query as $key => $value) {
             if (!array_key_exists($key, $this->defaultQuery)) {
-              unset($query[$key]);
+                unset($query[$key]);
             } else {
-              if (strpos($value, ',')) {
-                $query[$key] = array_map('trim', explode(',', $value));
-              } elseif (is_string($value) && in_array($key, [
-                'categories',
-                'utilities',
-                'locations',
-                'countries',
-                'regions',
-                'salestypes',
-                'categories_not',
-                'locations_not',
-                'countries_not',
-                'salestypes_not',
-                'availabilities_not',
-                'regions_not',
-                'features',
-                'features_not'])) {
-                  $query[$key] = [$value];
-              }
+                if (is_string($value)) { // Ensure $value is a string before using strpos
+                    if (strpos($value, ',') !== false) { // Check for comma in string
+                        $query[$key] = array_map('trim', explode(',', $value));
+                    } elseif (in_array($key, [
+                        'categories',
+                        'utilities',
+                        'locations',
+                        'countries',
+                        'regions',
+                        'salestypes',
+                        'categories_not',
+                        'locations_not',
+                        'countries_not',
+                        'salestypes_not',
+                        'availabilities',
+                        'availabilities_not',
+                        'regions_not',
+                        'features',
+                        'features_not'
+                    ])) {
+                        $query[$key] = [$value];
+                    }
+                } else {
+                    // Handle cases where $value is an array, if necessary
+                    // For example, you might want to validate arrays or leave them as-is
+                    // Currently, no action is taken for non-string $value
+                }
             }
         }
         $this->query = array_merge($this->query, $query);
     }
+
 
     public function createWpQuery($args = false){
         if ($args) {
@@ -218,7 +232,7 @@ class QueryService{
 
     public function getArgs(){
         $args = array();
-        $args['post-type'] = $this->query['post-type'];
+        $args['post_type'] = $this->query['post_type'];
         $args['posts_per_page'] = $this->query['posts_per_page'];
         $args['order'] = $this->query['order'];
 
@@ -242,13 +256,21 @@ class QueryService{
                 $args['meta_key'] = 'property_address_locality';
                 $args['orderby'] = 'meta_value';
                 break;
+            case 'rooms':
+                $args['meta_key'] = 'number_of_rooms';
+                $args['orderby'] = 'meta_value_num';
+                break;
+            case 'area':
+                $args['meta_key'] = 'areaForOrder';
+                $args['orderby'] = 'meta_value_num';
+                break;
             case 'price':
                 $args['meta_key'] = 'priceForOrder';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'start':
                 $args['meta_key'] = 'priceForOrder';
-                $args['orderby'] = 'meta_value';
+                $args['orderby'] = 'meta_value_num';
                 break;
             case 'menu_order':
                 $args['orderby'] = 'menu_order date';
@@ -340,215 +362,219 @@ class QueryService{
                 'type' => 'NUMERIC'
             );
         }
-        if (in_array('rent', $this->query['salestypes'])) {
-          if ($this->query['price_from']) {
-              $meta_query_items_new[] = array(
-                  'key' => 'grossPrice',
-                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
-                  'compare'   => '>=',
-                  'type' => 'NUMERIC'
-              );
-          }
-          if ($this->query['price_to']) {
-            if (strpos($this->query['price_to'], '-') !== false) {
-              $price_parts = explode('-', $this->query['price_to']);
-              if ($price_parts[0]) {
+
+        if (isset($this->query['price_for_order_to'])) {
+            $price_to_seek_part = $this->query['price_for_order_to'];
+            if ($price_to_seek_part) {
+                $meta_query_items_new[] = array(
+                    array(
+                        'key' => 'priceForOrder',
+                        'value' => $price_to_seek_part,
+                        'compare' => '<=',
+                        'type' => 'NUMERIC'
+                    ),
+                );
+            }
+        }
+
+        if (isset($this->query['price_for_order_from'])) {
+            $price_from_seek_part = $this->query['price_for_order_from'];
+            if ($price_from_seek_part) {
+                $meta_query_items_new[] = array(
+                    array(
+                        'key' => 'priceForOrder',
+                        'value' => $price_from_seek_part,
+                        'compare' => '>=',
+                        'type' => 'NUMERIC'
+                    ),
+                );
+            }
+        }
+
+        //Price for Order
+        if (isset($this->query['price_for_order'])) {
+            $price_seek_part = $this->query['price_for_order'];
+            if ($price_seek_part) {
+                $meta_query_items_new[] = array(
+                    array(
+                        'key' => 'priceForOrder',
+                        'value' => $price_seek_part,
+                        'compare' => '==',
+                        'type' => 'NUMERIC'
+                    ),
+                );
+            }
+        } elseif(isset($this->query['price_for_order_not'])) {
+            $price_seek_part_not = $this->query['price_for_order_not'];
+            if ($price_seek_part_not) {
+                $meta_query_items_new[] = array(
+                    array(
+                        'key' => 'priceForOrder',
+                        'value' => $price_seek_part_not,
+                        'compare' => '!=',
+                        'type' => 'NUMERIC'
+                    ),
+                );
+            }
+        } else {
+            if (in_array('rent', $this->query['salestypes'])) {
+            if ($this->query['price_from']) {
                 $meta_query_items_new[] = array(
                     'key' => 'grossPrice',
-                    'value' => $price_parts[0],
+                    'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
                     'compare'   => '>=',
                     'type' => 'NUMERIC'
                 );
-              }
-              if ($price_parts[1]) {
-                $meta_query_items_new[] = array(
-                    'key' => 'grossPrice',
-                    'value' => $price_parts[1],
-                    'compare'   => '<=',
-                    'type' => 'NUMERIC'
-                );
-              }
-            } else {
-              $meta_query_items_new[] = array(
-                  'key' => 'grossPrice',
-                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
-                  'compare'   => '<=',
-                  'type' => 'NUMERIC'
-              );
             }
-          }
-        } else if(in_array('buy', $this->query['salestypes'])){
-          if ($this->query['price_from']) {
-              $meta_query_items_new[] = array(
-                  'key' => 'price',
-                  'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
-                  'compare'   => '>=',
-                  'type' => 'NUMERIC'
-              );
-          }
-          if ($this->query['price_to']) {
-            if (strpos($this->query['price_to'], '-') !== false) {
-              $price_parts = explode('-', $this->query['price_to']);
-              if ($price_parts[0]) {
-                $meta_query_items_new[] = array(
-                    'key' => 'price',
-                    'value' => $price_parts[0],
-                    'compare'   => '>=',
-                    'type' => 'NUMERIC'
-                );
-              }
-              if ($price_parts[1]) {
-                $meta_query_items_new[] = array(
-                    'key' => 'price',
-                    'value' => $price_parts[1],
-                    'compare'   => '<=',
-                    'type' => 'NUMERIC'
-                );
-              }
-            } else {
-              $meta_query_items_new[] = array(
-                  'key' => 'price',
-                  'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
-                  'compare'   => '<=',
-                  'type' => 'NUMERIC'
-              );
-            }
-          }
-
-
-
-            if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
-                $price_seek_parts = explode('-', $this->query['price_range']);
-                $range_seek_from = $price_seek_parts[0];
-                $range_seek_to = $price_seek_parts[1];
-
-
-                if ($range_seek_from && $range_seek_to) {
-                // $meta_query_items_new[] = array(
-                //   'key' => 'price_range_from',
-                //   'value' => (int) $range_seek_to,
-                //   'compare'   => '<='
-                // );
-                // $meta_query_items_new[] = array(
-                //   'key' => 'price_range_to',
-                //   'value' => (int) $range_seek_from,
-                //   'compare'   => '>='
-                // );
-                
-
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_from',
-                    'value' => 0,
-                    'compare'   => '>',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_to',
-                    'value' => 0,
-                    'compare'   => '>',
-                    'type' => 'UNSIGNED'
-                    )
-                );
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_from',
-                    'value' => array($range_seek_from, $range_seek_to),
-                    'compare'   => 'BETWEEN',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_from',
-                    'compare'   => 'NOT EXISTS'
-                    )
-                );
-                $meta_query_items_new[] = array(
-                    'relation' => 'OR',
-                    array(
-                    'key' => 'price_range_to',
-                    'value' => array($range_seek_from, $range_seek_to),
-                    'compare'   => 'BETWEEN',
-                    'type' => 'UNSIGNED'
-                    ),
-                    array(
-                    'key' => 'price_range_to',
-                    'compare'   => 'NOT EXISTS'
-                    )
-                );
-
-
-                // $meta_query_items_new[] = array(
-                //   array(
-                //     'relation' => 'OR',
-                //     array(
-                //       'relation' => 'AND',
-                //       array(
-                //         'key' => 'price_range_from',
-                //         'value' => array($range_seek_from, $range_seek_to),
-                //         'compare'   => 'BETWEEN'
-                //       ),
-                //       array(
-                //         'key' => 'price_range_to',
-                //         'value' => array($range_seek_from, $range_seek_to),
-                //         'compare'   => 'BETWEEN'
-                //       )
-                //     ),
-                //     array(
-                //       'key' => 'price',
-                //       'value' => array($range_seek_from, $range_seek_to),
-                //       'compare'   => 'BETWEEN'
-                //     )
-                //   )
-                // );
-                }
-            }
-
-            //Define custom ranges in theme and search all prices. Did this for Property One
-            if ($this->query['price_range_custom'] && strpos($this->query['price_range_custom'], '-') !== false ) {
-                $price_seek_parts = explode('-', $this->query['price_range_custom']);
-                $range_seek_from = $price_seek_parts[0];
-                $range_seek_to = $price_seek_parts[1];
-
-                #die('billburr' . print_r($price_seek_parts));
-
-                /* if ($range_seek_from && $range_seek_to) {
+            if ($this->query['price_to']) {
+                if (strpos($this->query['price_to'], '-') !== false) {
+                $price_parts = explode('-', $this->query['price_to']);
+                if ($price_parts[0]) {
                     $meta_query_items_new[] = array(
-                        'key' => 'price',
-                        'value' => $price_seek_parts,
-                        'compare'   => 'BETWEEN',
+                        'key' => 'grossPrice',
+                        'value' => $price_parts[0],
+                        'compare'   => '>=',
                         'type' => 'NUMERIC'
                     );
-                } */
-
-                if ($range_seek_from && $range_seek_to) {
+                }
+                if ($price_parts[1]) {
                     $meta_query_items_new[] = array(
-                        array(
-                            'relation' => 'OR',
-                            array(
-                                'key' => 'price',
-                                'value' => $price_seek_parts,
-                                'compare'   => 'BETWEEN',
-                                'type' => 'NUMERIC'
-                            ),
-                            array(
-                                'key' => 'price_range_from',
-                                'value' => $price_seek_parts,
-                                'compare'   => 'BETWEEN',
-                                'type' => 'NUMERIC'
-                            ),
-                            array(
-                                'key' => 'price_range_to',
-                                'value' => $price_seek_parts,
-                                'compare'   => 'BETWEEN',
-                                'type' => 'NUMERIC'
-                            ),
-                        ),                        
+                        'key' => 'grossPrice',
+                        'value' => $price_parts[1],
+                        'compare'   => '<=',
+                        'type' => 'NUMERIC'
                     );
+                }
+                } else {
+                $meta_query_items_new[] = array(
+                    'key' => 'grossPrice',
+                    'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
+                );
+                }
+            }
+            } else if(in_array('buy', $this->query['salestypes'])){
+            if ($this->query['price_from']) {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => (is_array($this->query['price_from']) ? $this->query['price_from'][0] : $this->query['price_from']),
+                    'compare'   => '>=',
+                    'type' => 'NUMERIC'
+                );
+            }
+            if ($this->query['price_to']) {
+                if (strpos($this->query['price_to'], '-') !== false) {
+                $price_parts = explode('-', $this->query['price_to']);
+                if ($price_parts[0]) {
+                    $meta_query_items_new[] = array(
+                        'key' => 'price',
+                        'value' => $price_parts[0],
+                        'compare'   => '>=',
+                        'type' => 'NUMERIC'
+                    );
+                }
+                if ($price_parts[1]) {
+                    $meta_query_items_new[] = array(
+                        'key' => 'price',
+                        'value' => $price_parts[1],
+                        'compare'   => '<=',
+                        'type' => 'NUMERIC'
+                    );
+                }
+                } else {
+                $meta_query_items_new[] = array(
+                    'key' => 'price',
+                    'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
+                    'compare'   => '<=',
+                    'type' => 'NUMERIC'
+                );
                 }
             }
 
+
+
+                if ($this->query['price_range'] && strpos($this->query['price_range'], '-') !== false ) {
+                    $price_seek_parts = explode('-', $this->query['price_range']);
+                    $range_seek_from = $price_seek_parts[0];
+                    $range_seek_to = $price_seek_parts[1];
+                    if ($range_seek_from && $range_seek_to) {               
+                        $meta_query_items_new[] = array(
+                            'relation' => 'OR',
+                            array(
+                            'key' => 'price_range_from',
+                            'value' => 0,
+                            'compare'   => '>',
+                            'type' => 'UNSIGNED'
+                            ),
+                            array(
+                            'key' => 'price_range_to',
+                            'value' => 0,
+                            'compare'   => '>',
+                            'type' => 'UNSIGNED'
+                            )
+                        );
+                        $meta_query_items_new[] = array(
+                            'relation' => 'OR',
+                            array(
+                            'key' => 'price_range_from',
+                            'value' => array($range_seek_from, $range_seek_to),
+                            'compare'   => 'BETWEEN',
+                            'type' => 'UNSIGNED'
+                            ),
+                            array(
+                            'key' => 'price_range_from',
+                            'compare'   => 'NOT EXISTS'
+                            )
+                        );
+                        $meta_query_items_new[] = array(
+                            'relation' => 'OR',
+                            array(
+                            'key' => 'price_range_to',
+                            'value' => array($range_seek_from, $range_seek_to),
+                            'compare'   => 'BETWEEN',
+                            'type' => 'UNSIGNED'
+                            ),
+                            array(
+                            'key' => 'price_range_to',
+                            'compare'   => 'NOT EXISTS'
+                            )
+                        );
+                    }
+                }
+
+                //Define custom ranges in theme and search all prices. Did this for Property One
+                if ($this->query['price_range_custom'] && strpos($this->query['price_range_custom'], '-') !== false ) {
+                    $price_seek_parts = explode('-', $this->query['price_range_custom']);
+                    $range_seek_from = $price_seek_parts[0];
+                    $range_seek_to = $price_seek_parts[1];
+                    if ($range_seek_from && $range_seek_to) {
+                        $meta_query_items_new[] = array(
+                            array(
+                                'relation' => 'OR',
+                                array(
+                                    'key' => 'price',
+                                    'value' => $price_seek_parts,
+                                    'compare'   => 'BETWEEN',
+                                    'type' => 'NUMERIC'
+                                ),
+                                array(
+                                    'key' => 'price_range_from',
+                                    'value' => $price_seek_parts,
+                                    'compare'   => 'BETWEEN',
+                                    'type' => 'NUMERIC'
+                                ),
+                                array(
+                                    'key' => 'price_range_to',
+                                    'value' => $price_seek_parts,
+                                    'compare'   => 'BETWEEN',
+                                    'type' => 'NUMERIC'
+                                ),
+                            ),                        
+                        );
+                    }
+                }
+            }
         }
 
 
@@ -557,6 +583,30 @@ class QueryService{
 
             $meta_query_items_new['relation'] = 'AND';
             $args['meta_query'] = $meta_query_items_new;
+        }
+
+        if ($this->query['my_lng'] && $this->query['my_lat'] && $this->query['radius_km']) {
+
+            $mylng = $this->query['my_lng'];
+            $mylat = $this->query['my_lat'];
+            $radius = $this->query['radius_km'];
+            global $wpdb;
+
+            $sql = "SELECT ID from wp_posts 
+            LEFT JOIN wp_postmeta AS latitude ON wp_posts.ID = latitude.post_id AND latitude.meta_key = 'property_geo_latitude'
+            LEFT JOIN wp_postmeta AS longitude ON wp_posts.ID = longitude.post_id AND longitude.meta_key = 'property_geo_longitude'
+            WHERE ( 6371 * acos( cos( radians(".$mylat.") )
+                                            * cos( radians( latitude.meta_value ) )
+                                            * cos( radians( longitude.meta_value ) - radians(".$mylng.") )
+                                            + sin( radians(".$mylat.") )
+                                            * sin( radians( latitude.meta_value ) ) ) <= ".$radius.") ";
+
+            $results = $wpdb->get_results( $sql, ARRAY_A );
+
+            $post_ids = wp_list_pluck( $results, 'ID' );
+            
+            $args['post__in'] = empty( $post_ids ) ? [ 0 ] : $post_ids;
+            
         }
 
 
@@ -654,6 +704,15 @@ class QueryService{
                 'field'            => 'slug',
                 'operator'         => 'NOT IN'
 
+            );
+        }
+        if ($this->query['utilities_not']) {
+            $taxquery_new[] = array(
+                'taxonomy'         => 'casawp_utility',
+                'terms'            => $this->query['utilities_not'],
+                'include_children' => 1,
+                'field'            => 'slug',
+                'operator'         => 'NOT IN'
             );
         }
         if ($this->query['locations_not']) {

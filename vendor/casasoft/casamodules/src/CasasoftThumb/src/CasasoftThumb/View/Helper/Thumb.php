@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftThumb\View\Helper;
  
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Model\ViewModel;
 
 class Thumb extends AbstractHelper{ 
     public $thumbService = false;

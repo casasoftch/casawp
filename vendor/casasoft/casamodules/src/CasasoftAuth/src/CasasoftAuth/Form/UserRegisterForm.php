@@ -3,8 +3,8 @@ namespace CasasoftAuth\Form;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 
 class UserRegisterForm extends Form implements InputFilterProviderInterface
@@ -73,7 +73,7 @@ class UserRegisterForm extends Form implements InputFilterProviderInterface
                 'required' => true,
                 'validators' => array(
                     array(
-                        'name'      => 'Zend\Validator\Identical',
+                        'name'      => 'Laminas\Validator\Identical',
                         'options' => array(
                             'token' => 'password1',
                         ),

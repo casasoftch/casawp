@@ -11,12 +11,12 @@
  * EN-Revision: 30.Jul.2011
  */
 return array(
-    // Zend\Captcha\ReCaptcha
+    // Laminas\Captcha\ReCaptcha
     "Missing captcha fields" => "Hiányzó captcha mezők",
     "Failed to validate captcha" => "Érvénytelen captcha",
     "Captcha value is wrong: %value%" => "Captcha érték hibás: %value%",
 
-    // Zend\Captcha\Word
+    // Laminas\Captcha\Word
     "Empty captcha value" => "Hiányzó captcha érték",
     "Captcha ID field is missing" => "Hiányzó captcha ID mező",
     "Captcha value is wrong" => "Captcha érték hibás",

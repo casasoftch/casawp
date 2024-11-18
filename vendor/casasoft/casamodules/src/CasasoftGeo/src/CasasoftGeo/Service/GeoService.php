@@ -1,9 +1,9 @@
 <?php
 namespace CasasoftGeo\Service;
 
-use Zend\Http\Client;
-use Zend\Http\Request;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
