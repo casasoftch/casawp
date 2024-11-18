@@ -1,9 +1,9 @@
 <?php
 namespace CasasoftMessenger\Service;
 
-use Zend\Http\Request;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 

@@ -1,0 +1,71 @@
+{
+    "name": "laminas/laminas-serializer",
+    "description": "Serialize and deserialize PHP structures to a variety of representations",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "laminas",
+        "serializer"
+    ],
+    "homepage": "https://laminas.dev",
+    "support": {
+        "docs": "https://docs.laminas.dev/laminas-serializer/",
+        "issues": "https://github.com/laminas/laminas-serializer/issues",
+        "source": "https://github.com/laminas/laminas-serializer",
+        "rss": "https://github.com/laminas/laminas-serializer/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "8.0.99"
+        }
+    },
+    "extra": {
+        "laminas": {
+            "component": "Laminas\\Serializer",
+            "config-provider": "Laminas\\Serializer\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
+        "laminas/laminas-json": "^3.1",
+        "laminas/laminas-stdlib": "^3.2"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~2.4.0",
+        "laminas/laminas-math": "^3.6",
+        "laminas/laminas-servicemanager": "~3.19.0",
+        "phpunit/phpunit": "~9.6.0"
+    },
+    "suggest": {
+        "laminas/laminas-math": "(^3.3) To support Python Pickle serialization",
+        "laminas/laminas-servicemanager": "(^3.6) To support plugin manager support"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laminas\\Serializer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaminasTest\\Serializer\\": "test/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "conflict": {
+        "zendframework/zend-serializer": "*"
+    }
+}

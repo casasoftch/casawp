@@ -2,7 +2,9 @@
 namespace casawp\Form;
 use casawp\Conversion;
 
-use Zend\Form\Form;
+use Laminas\Form\Form;
+
+use Traversable;
 
 class FilterForm extends Form
 {
@@ -11,6 +13,10 @@ class FilterForm extends Form
     public $salestypes = array();
     public $locations = array();
     public $availabilities = array();
+    public $utilities = [];      // Add this line
+    public $regions = [];        // Add this line
+    public $features = [];       // Add this line
+    public $options = [];        // Add this line
 
     public function __construct($options, $categories = array(), $utilities = array(), $salestypes = array(), $locations = array(), $availabilities = array(), $regions = array(), $features = array()){
         $this->converter = new Conversion;
@@ -327,7 +333,7 @@ class FilterForm extends Form
                 }
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\MultiCheckbox',
+                    'type' => 'Laminas\Form\Element\MultiCheckbox',
                     'options' => array(
                         'label' => $label,
                         'value_options' => $value_options,
@@ -350,7 +356,7 @@ class FilterForm extends Form
                 }
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\Radio',
+                    'type' => 'Laminas\Form\Element\Radio',
                     'options' => array(
                         'label' => $label,
                         'value_options' => $value_options,
@@ -363,7 +369,7 @@ class FilterForm extends Form
             case 'hidden':
                 $this->add(array(
                     'name' => $name,
-                    'type' => 'Zend\Form\Element\Hidden',
+                    'type' => 'Laminas\Form\Element\Hidden',
                     'options' => array(
                         'label' => $label,
                         'label_attributes' => array(
@@ -751,7 +757,7 @@ class FilterForm extends Form
     }*/
 
     // yes onlybase is not used but required to be interface compatible (keep it!!!)
-    public function populateValues($data, $onlyBase = false)
+    public function populateValues(iterable $data, bool $onlyBase = false): void
     {
         if (!is_array($data) && !$data instanceof Traversable) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -767,42 +773,29 @@ class FilterForm extends Form
             if ($valueExists) {
                 $value = $data[$name];
                 if (
-                    $name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'regions' && in_array($this->options['casawp_filter_regions_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'countries' && in_array($this->options['casawp_filter_countries_elementtype'], ['singleselect', 'radio', 'hidden'])
-                    ||
-                    $name == 'rooms_from'
-                    ||
-                    $name == 'rooms_to'
-                    ||
-                    $name == 'areas_from'
-                    ||
-                    $name == 'areas_to'
+                    ($name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'regions' && in_array($this->options['casawp_filter_regions_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    ($name == 'countries' && in_array($this->options['casawp_filter_countries_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
+                    $name == 'rooms_from' || $name == 'rooms_to' || $name == 'areas_from' || $name == 'areas_to'
                 ) {
                     if ($data[$name] && is_array($data[$name])) {
                         $value = $data[$name][0];
-                    } else if($data[$name]){
-                      $value = $data[$name];
+                    } elseif ($data[$name]) {
+                        $value = $data[$name];
                     } else {
                         $value = '';
                     }
                 }
 
-
                 $elementOrFieldset->setValue($value);
             }
         }
     }
+
 
     /*public function populateValues($data, $onlyBase = false)
     {

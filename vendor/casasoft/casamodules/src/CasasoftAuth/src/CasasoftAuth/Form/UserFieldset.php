@@ -4,8 +4,8 @@ namespace CasasoftAuth\Form;
 use CasasoftAuth\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Fieldset;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 class UserFieldset extends Fieldset implements InputFilterProviderInterface
 {
@@ -37,7 +37,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
         parent::__construct('user');
         $this->setAttribute('method', 'post');
         $this->add(array(
-            'type' => 'Zend\Form\Element\Hidden',
+            'type' => 'Laminas\Form\Element\Hidden',
             'name' => 'id',
         ));
 
@@ -45,7 +45,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
              ->setObject(new User());
         $this->add(array(
             'name' => 'email',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('Email')
             ),
@@ -53,7 +53,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'name',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('Full name')
             ),
@@ -61,7 +61,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'username',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('Username')
             ),
@@ -69,7 +69,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'postalcode',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('ZIP')
             ),
@@ -77,7 +77,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'locality',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('Locality')
             ),
@@ -85,7 +85,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'mobilephone',
-            'type'       => 'Zend\Form\Element\Text',
+            'type'       => 'Laminas\Form\Element\Text',
             'options' => array(
                 'label' => _('Mobile number')
             ),
@@ -93,7 +93,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
 
         $this->add(array(
-             'type' => 'Zend\Form\Element\Select',
+             'type' => 'Laminas\Form\Element\Select',
              'name' => 'locale',
              'options' => array(
                 'label' => _('Language'),
@@ -107,7 +107,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
         ));
 
         $this->add(array(
-             'type' => 'Zend\Form\Element\Select',
+             'type' => 'Laminas\Form\Element\Select',
              'name' => 'role',
              'options' => array(
                 'label' => _('Role'),
@@ -127,7 +127,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface
 
       /*  $addressFieldset = new AddressFieldset($em, $lang);
         $this->add(array(
-            'type'    => 'Zend\Form\Element\Collection',
+            'type'    => 'Laminas\Form\Element\Collection',
             'name'    => 'addresses',
             'options' => array(
                 'count'           => 1, 

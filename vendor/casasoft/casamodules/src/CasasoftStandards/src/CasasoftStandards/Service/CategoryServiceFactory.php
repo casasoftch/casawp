@@ -1,25 +1,17 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 
 class CategoryServiceFactory implements FactoryInterface
 {
-
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
-      $translator = $container->get('MvcTranslator');
-      //$viewRenderer = $serviceLocator->get('viewRenderer');
-
-      $service = new CategoryService($translator);
-
-      return $service;
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        $translator = $serviceLocator->get('Translator');
-        //$viewRenderer = $serviceLocator->get('viewRenderer');
+        $translator = $container->get('MvcTranslator');
+        if ($translator === null) {
+            throw new \Exception('MvcTranslator service is null in CategoryServiceFactory');
+        }
 
         $service = new CategoryService($translator);
 

@@ -8,8 +8,8 @@
 return [
     // Additional modules to include when in development mode
     'modules' => [
-        'ZF\Apigility\Admin',
-        'ZF\Apigility\Admin\Ui'
+        'Laminas\ApiTools\Admin',
+        'Laminas\ApiTools\Admin\Ui'
     ],
     // Configuration overrides during development mode
     'module_listener_options' => [

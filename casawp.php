@@ -5,7 +5,7 @@
  * Description: Import your properties directly from your real-estate management software!
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
- * Version: 2.6.0
+ * Version: 3.0.0
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2
@@ -29,7 +29,7 @@ add_filter('action_scheduler_retention_period', function() {
 
 // Update system
 require_once('wp_autoupdate.php');
-$plugin_current_version = '2.6.0';
+$plugin_current_version = '3.0.0';
 $plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
@@ -69,28 +69,50 @@ define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 // Setup autoloading
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
-$configuration = array(
-	'modules' => array(
+
+$applicationConfig = [
+	'modules' => [
 		'CasasoftStandards',
 		'CasasoftMessenger',
-		'casawp'
-	),
-	'module_listener_options' => array(
-		'config_glob_paths'    => array(
-				__DIR__.'/config/autoload/{,*.}{global,local}.php',
-		),
-		'module_paths' => array(
-				__DIR__.'/module',
-				__DIR__.'/vendor',
-		),
-	),
-);
+		'casawp',
+	],
+	'module_listener_options' => [
+		'config_glob_paths' => [],
+		'module_paths' => [
+			__DIR__ . '/module',
+			__DIR__ . '/vendor',
+		],
+	],
+];
 
-use Zend\Loader\AutoloaderFactory;
+// Define service manager configuration separately
+$serviceManagerConfig = [
+	'factories' => [
+		'ModuleManager' => Laminas\Mvc\Service\ModuleManagerFactory::class,
+		'ServiceListener' => Laminas\Mvc\Service\ServiceListenerFactory::class,
+		'SharedEventManager' => Laminas\EventManager\SharedEventManagerFactory::class,
+		'Application' => Laminas\Mvc\Service\ApplicationFactory::class,
+		'Config' => Laminas\Mvc\Service\ConfigFactory::class,
+		'EventManager' => Laminas\Mvc\Service\EventManagerFactory::class,
+		'MvcTranslator' => Laminas\Mvc\I18n\TranslatorFactory::class,
+	],
+	'services' => [
+		'ApplicationConfig' => $applicationConfig,
+	],
+];
+
+// Combine into the final configuration array for Plugin.php
+$configuration = [
+	'service_manager' => $serviceManagerConfig,
+	// No separate 'application_config'
+];
+
+// Initialize Autoloader
+use Laminas\Loader\AutoloaderFactory;
 AutoloaderFactory::factory();
 
+// Instantiate the Plugin with the configuration
 $casawp = new casawp\Plugin($configuration);
-
 global $casawp;
 
 if (is_admin()) {
@@ -109,17 +131,10 @@ function casawp_schedule_cron_events() {
 		wp_schedule_event($midnight, 'daily', 'casawp_import_midnight');
 	}
 
-	if (!wp_next_scheduled('casawp_import_noon')) {
-		$noon = strtotime('today noon');
-		if ($noon <= time()) {
-			$noon = strtotime('tomorrow noon');
-		}
-		wp_schedule_event($noon, 'daily', 'casawp_import_noon');
-	}
 }
 
 add_action('casawp_import_midnight', 'casawp_trigger_import_midnight');
-add_action('casawp_import_noon', 'casawp_trigger_import_noon');
+
 
 register_deactivation_hook(__FILE__, 'casawp_unschedule_cron_events');
 
@@ -130,21 +145,26 @@ function casawp_unschedule_cron_events() {
 		wp_unschedule_event($timestamp, 'casawp_import_midnight');
 	}
 
-	// Unschedule Noon Import
-	$timestamp = wp_next_scheduled('casawp_import_noon');
-	if ($timestamp) {
-		wp_unschedule_event($timestamp, 'casawp_import_noon');
+}
+
+function casawp_start_new_import($source = '') {
+	// Cancel any ongoing import
+	if (get_transient('casawp_import_in_progress')) {
+		casawp_cancel_import();
 	}
-}
 
-function casawp_trigger_import_midnight() {
-	$import = new casawp\Import(false, true);
-	$import->addToLog('Midnight import started');
-}
+	// Reset batch counts
+	update_option('casawp_total_batches', 0);
+	update_option('casawp_completed_batches', 0);
 
-function casawp_trigger_import_noon() {
+	// Clear the import canceled flag
+	delete_option('casawp_import_canceled');
+
+	// Start the import process
 	$import = new casawp\Import(false, true);
-	$import->addToLog('Noon import started');
+	$import->addToLog($source . ' import started');
+
+	return $import;
 }
 
 
@@ -187,21 +207,18 @@ function casawp_add_cron_schedule($schedules) {
 }
 
 
-if (isset($_GET['gatewaypoke'])) {
-	if (get_transient('casawp_import_in_progress')) {
-		$import->addToLog('Import already in progress. Gateway poke ignored.');
+add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_handler');
+
+function casawp_cancel_import_handler() {
+	if (casawp_cancel_import()) {
+		wp_send_json_success(['message' => 'Import wurde abgebrochen.']);
 	} else {
-		update_option('casawp_total_batches', 0);
-		update_option('casawp_completed_batches', 0);
-		$import = new casawp\Import(true, false);
-		$import->addToLog('Poke from CasaGateway caused import');
+		wp_send_json_error(['message' => 'Action Scheduler nicht gefunden.']);
 	}
 }
 
 
-add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_handler');
-
-function casawp_cancel_import_handler() {
+function casawp_cancel_import() {
 	// Ensure the Action Scheduler classes are loaded
 	if ( class_exists( 'ActionScheduler' ) ) {
 		// Retrieve the action store
@@ -223,6 +240,9 @@ function casawp_cancel_import_handler() {
 			$store->cancel_action( $action_id );
 		}
 
+		// Set the import canceled flag
+		update_option('casawp_import_canceled', true);
+
 		// Clear the import in-progress transient
 		delete_transient('casawp_import_in_progress');
 		update_option('casawp_total_batches', 0); // Reset total batches
@@ -231,13 +251,13 @@ function casawp_cancel_import_handler() {
 		// Optional log entry
 		$import = new casawp\Import(false, false);
 		$import->addToLog('All pending import actions canceled, and import transient cleared.');
-		wp_send_json_success(['message' => 'Import wurde abgebrochen.']);
+
+		return true;
 	} else {
 		error_log('Action Scheduler class not found. Could not cancel pending import actions.');
-		wp_send_json_error(['message' => 'Action Scheduler nicht gefunden.']);
+		return false;
 	}
 }
-
 
 add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
 
@@ -254,7 +274,17 @@ function casawp_get_import_progress() {
 	wp_send_json_success(['progress' => $progress]);
 }
 
+add_action('wp_ajax_casawp_check_no_properties_alert', 'casawp_check_no_properties_alert');
 
+function casawp_check_no_properties_alert() {
+	$alert_message = get_transient('casawp_no_properties_alert');
+	if ($alert_message) {
+		delete_transient('casawp_no_properties_alert');
+		wp_send_json_success(['message' => $alert_message]);
+	} else {
+		wp_send_json_success(['message' => '']);
+	}
+}
 
 add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
 
@@ -264,20 +294,8 @@ function casawp_start_import() {
 		return;
 	}
 
-	// Check if an import is already running
-	if (get_transient('casawp_import_in_progress')) {
-		wp_send_json_error(['message' => 'An import is already in progress. Please wait until it completes.']);
-		return;
-	}
-
-	// Reset batch counts
-	update_option('casawp_total_batches', 0);
-	update_option('casawp_completed_batches', 0);
-
-	// Start the import process
 	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
-		$import = new casawp\Import(false, true); // Adjust this line as needed
-		$import->addToLog('Update from casagateway caused import');
+		casawp_start_new_import('Update from casagateway');
 		wp_send_json_success(['message' => 'Import started successfully']);
 	} else {
 		wp_send_json_error(['message' => 'Invalid request']);
@@ -300,6 +318,18 @@ function casawp_reset_import_progress() {
 	wp_send_json_success(['message' => 'Import progress reset']);
 }
 
+
+add_action('init', 'casawp_handle_gatewaypoke');
+
+function casawp_handle_gatewaypoke() {
+	if (isset($_GET['gatewaypoke'])) {
+		casawp_start_new_import('Poke from CasaGateway');
+	}
+}
+
+function casawp_trigger_import_midnight() {
+	casawp_start_new_import('Midnight');
+}
 
 
 

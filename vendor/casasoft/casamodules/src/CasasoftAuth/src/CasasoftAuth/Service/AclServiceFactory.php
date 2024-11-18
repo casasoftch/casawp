@@ -1,10 +1,10 @@
 <?php
 namespace CasasoftAuth\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
-use Zend\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Acl;
 
 class AclServiceFactory implements FactoryInterface
 {

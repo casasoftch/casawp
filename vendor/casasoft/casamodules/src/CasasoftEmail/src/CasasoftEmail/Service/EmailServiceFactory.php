@@ -1,8 +1,8 @@
 <?php
 namespace CasasoftEmail\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class EmailServiceFactory implements FactoryInterface
 {
@@ -16,7 +16,7 @@ class EmailServiceFactory implements FactoryInterface
         }
       
 
-        $resolver = $container->get('Zend\View\Resolver\TemplatePathStack');
+        $resolver = $container->get('Laminas\View\Resolver\TemplatePathStack');
 
         try {
             $casasoftMailTemplate = $container->get('CasasoftMailTemplate');
@@ -46,7 +46,7 @@ class EmailServiceFactory implements FactoryInterface
         
       
 
-        $resolver = $serviceLocator->get('Zend\View\Resolver\TemplatePathStack');
+        $resolver = $serviceLocator->get('Laminas\View\Resolver\TemplatePathStack');
 
         try {
             $casasoftMailTemplate = $serviceLocator->get('CasasoftMailTemplate');

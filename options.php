@@ -129,7 +129,6 @@
 				$checkbox_traps = array(
 					'casawp_use_casagateway_cdn',
 					'casawp_limit_reference_images',
-					'casawp_permanently_delete_properties',
 					'casawp_auto_translate_properties',
 					'casawp_custom_slug',
 					'casawp_force_lang',
@@ -1448,15 +1447,6 @@
 									</fieldset>
 
 									<fieldset>
-										<legend class="screen-reader-text"><span>Zu löschende Objekte direkt löschen (Papierkorb überspringen).</span></legend>
-										<?php $name = 'casawp_permanently_delete_properties'; ?>
-										<?php $text = 'Zu löschende Objekte direkt löschen (Papierkorb überspringen).'; ?>
-										<p><label>
-											<input id="ckDel" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()">Zu löschende Objekte direkt löschen (Papierkorb überspringen).
-										</label></p>
-									</fieldset>
-
-									<fieldset>
 										<legend class="screen-reader-text"><span>Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).</span></legend>
 										<?php $name = 'casawp_auto_translate_properties'; ?>
 										<?php $text = 'Objekte mit dynamischem Inhalt übersetzen (falls keine Übersetzung vorhanden).'; ?>
@@ -1668,10 +1658,28 @@
 												});
 											}
 
-											progressInterval = setInterval(updateProgressBar, 5000);
+											function checkForNoPropertiesAlert() {
+												$.ajax({
+													url: ajaxurl,
+													type: 'POST',
+													data: { action: 'casawp_check_no_properties_alert' },
+													success: function(response) {
+														if (response.success && response.data.message) {
+															alert(response.data.message);
+															resetProgressBar();
+														}
+													}
+												});
+											}
+
+											progressInterval = setInterval(function() {
+												updateProgressBar();
+												checkForNoPropertiesAlert();
+											}, 5000);
 
 											updateProgressBar();
 										});
+
 
 									</script>
 

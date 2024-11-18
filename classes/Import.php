@@ -1079,6 +1079,7 @@ class Import
     // Initialize arrays
     $term_ids = array();
     $parent_term_ids = array();
+    $region_slug = '';
 
     // Function to sanitize slug
     $sanitize_slug = function ($prefix, $name) {
@@ -1544,7 +1545,6 @@ class Import
     $this->addToLog('gateway file retrieval start: ' . time());
 
     if (get_transient('casawp_import_in_progress')) {
-      $this->addToLog('Import already in progress.');
       return;
     }
 
@@ -1641,6 +1641,7 @@ class Import
         $this->addToLog('gateway start update: ' . time());
 
         if ($this->getImportFile()) {
+          delete_option('casawp_import_canceled');
           $this->addToLog('import start');
           $this->deactivate_all_properties();
           as_schedule_single_action(time(), 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
@@ -1656,10 +1657,6 @@ class Import
       $this->addToLog('Import failed: ' . $e->getMessage());
     } finally {
       // Ensure the lock is cleared in all cases
-      /*  if (get_transient('casawp_import_in_progress')) {
-              delete_transient('casawp_import_in_progress');
-              $this->addToLog('Import lock cleared in finally block.');
-          } */
     }
   }
 
@@ -1768,6 +1765,11 @@ class Import
   {
     $this->addToLog('Handling import batch number: ' . $batch_number);
 
+    if (get_option('casawp_import_canceled', false)) {
+      $this->addToLog('Import has been canceled. Skipping batch number: ' . $batch_number);
+      return;
+    }
+
     if (get_option('casawp_use_casagateway_cdn', false)) {
       $language_count = 1; // Default to 1 language if WPML is not active
 
@@ -1795,20 +1797,20 @@ class Import
       $xmlString = file_get_contents($this->getImportFile());
 
       if ($xmlString === false) {
-        throw new Exception('Failed to read import file.');
+        throw new \Exception('Failed to read import file.');
       }
 
       // Convert the XML string into a SimpleXMLElement object
       $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
 
       if ($xml === false) {
-        throw new Exception('Failed to parse XML.');
+        throw new \Exception('Failed to parse XML.');
       }
 
       $properties = $xml->properties->property;
 
       if ($properties === null) {
-        throw new Exception('No properties found in XML.');
+        throw new \Exception('No properties found in XML.');
       }
 
       $properties_array = array();
@@ -1855,9 +1857,14 @@ class Import
           $this->addToLog('Next batch number ' . $next_batch_number . ' is already scheduled.');
         }
       }
-    } catch (Exception $e) {
-      $this->addToLog('Error in batch ' . $batch_number . ': ' . $e->getMessage());
-      // Optionally, notify administrators or take corrective actions
+    } catch (\Exception $e) {
+      $this->addToLog('Error: ' . $e->getMessage());
+
+      if ($e->getMessage() === 'No properties found in XML.') {
+          // Set the transient for alert in the interface
+          set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
+          delete_transient('casawp_import_in_progress');
+      }
     }
   }
 

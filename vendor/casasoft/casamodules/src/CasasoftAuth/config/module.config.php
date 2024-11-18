@@ -22,7 +22,7 @@ return array(
         ),
     ),
     /*'router' => array(
-        'router_class' => 'Zend\Mvc\Router\Http\TranslatorAwareTreeRouteStack',
+        'router_class' => 'Laminas\Mvc\Router\Http\TranslatorAwareTreeRouteStack',
         'routes' => array(
             'user' => array(
                 'type' => 'segment',
