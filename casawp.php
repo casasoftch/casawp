@@ -5,7 +5,7 @@
  * Description: Import your properties directly from your real-estate management software!
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
- * Version: 3.0.0
+ * Version: 3.1.0
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2
@@ -29,7 +29,7 @@ add_filter('action_scheduler_retention_period', function() {
 
 // Update system
 require_once('wp_autoupdate.php');
-$plugin_current_version = '3.0.0';
+$plugin_current_version = '3.1.0';
 $plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
@@ -70,6 +70,7 @@ define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
 
+
 $applicationConfig = [
 	'modules' => [
 		'CasasoftStandards',
@@ -108,8 +109,8 @@ $configuration = [
 ];
 
 // Initialize Autoloader
-use Laminas\Loader\AutoloaderFactory;
-AutoloaderFactory::factory();
+/* use Laminas\Loader\AutoloaderFactory;
+AutoloaderFactory::factory(); */
 
 // Instantiate the Plugin with the configuration
 $casawp = new casawp\Plugin($configuration);
@@ -123,9 +124,9 @@ if (is_admin()) {
 
 $import = new casawp\Import(false, false);
 $import->register_hooks();
-casawp_schedule_cron_events();
+/* casawp_schedule_cron_events(); */
 
-function casawp_schedule_cron_events() {
+/* function casawp_schedule_cron_events() {
 	if (!wp_next_scheduled('casawp_import_midnight')) {
 		$midnight = strtotime('tomorrow midnight');
 		wp_schedule_event($midnight, 'daily', 'casawp_import_midnight');
@@ -133,19 +134,17 @@ function casawp_schedule_cron_events() {
 
 }
 
-add_action('casawp_import_midnight', 'casawp_trigger_import_midnight');
+add_action('casawp_import_midnight', 'casawp_trigger_import_midnight'); */
 
 
-register_deactivation_hook(__FILE__, 'casawp_unschedule_cron_events');
+/* register_deactivation_hook(__FILE__, 'casawp_unschedule_cron_events');
 
 function casawp_unschedule_cron_events() {
-	// Unschedule Midnight Import
 	$timestamp = wp_next_scheduled('casawp_import_midnight');
 	if ($timestamp) {
 		wp_unschedule_event($timestamp, 'casawp_import_midnight');
 	}
-
-}
+} */
 
 function casawp_start_new_import($source = '') {
 	// Cancel any ongoing import
@@ -327,10 +326,10 @@ function casawp_handle_gatewaypoke() {
 	}
 }
 
-function casawp_trigger_import_midnight() {
+/* function casawp_trigger_import_midnight() {
 	casawp_start_new_import('Midnight');
 }
-
+ */
 
 
 function this_plugin_after_wpml() {

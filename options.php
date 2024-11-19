@@ -1490,6 +1490,14 @@
 									<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
 									<input type="text" placeholder="CASAGATEWAY Private-Key einfügen" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
 
+									<legend class="screen-reader-text"><span>Batch Size Override</span></legend>
+									<?php $override_name = 'casawp_batch_size_override'; ?>
+									<?php $override_text = 'Override Batch Size'; ?>
+									<label class="block-label block-label--intd" for="<?php echo $override_name; ?>"><?php echo $override_text; ?></label>
+									<input type="number" min="1" placeholder="Default: based on languages & CDN" name="<?php echo $override_name; ?>" value="<?= esc_attr(get_option($override_name, '')) ?>" id="<?php echo $override_name; ?>" class="regular-text" />
+									<p class="description">Enter a custom batch size to override the default calculation. Leave blank to use the default logic.</p>
+							
+
 									<div style="margin: 30px 0;">
 										<button id="casawp-import-button" class="button-primary">Daten von CASAGATEWAY beziehen</button>
 										<button id="casawp-cancel-import-button" class="button-secondary" style="display: none; margin-left: 10px;">Import abbrechen</button>

@@ -14,8 +14,7 @@ use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 
-use function gettype;
-use function is_object;
+use function get_debug_type;
 use function sprintf;
 
 /**
@@ -93,7 +92,7 @@ class InputFilterPluginManager extends AbstractPluginManager
      */
     public function __construct($configOrContainer = null, array $v3config = [])
     {
-        $this->initializers[] = [$this, 'populateFactory'];
+        $this->initializers[] = $this->populateFactory(...);
         parent::__construct($configOrContainer, $v3config);
     }
 
@@ -158,7 +157,7 @@ class InputFilterPluginManager extends AbstractPluginManager
 
         throw new InvalidServiceException(sprintf(
             'Plugin of type %s is invalid; must implement %s or %s',
-            is_object($instance) ? $instance::class : gettype($instance),
+            get_debug_type($instance),
             InputFilterInterface::class,
             InputInterface::class
         ));

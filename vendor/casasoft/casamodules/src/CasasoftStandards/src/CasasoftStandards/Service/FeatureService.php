@@ -5,6 +5,7 @@ use Laminas\Http\Request;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\I18n\Translator\Translator;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class FeatureService {
 
@@ -13,7 +14,7 @@ class FeatureService {
 
     public $items = [];
 
-    public function __construct($translator){
+    public function __construct(TranslatorInterface $translator){
         $this->translator = $translator;
     }
 

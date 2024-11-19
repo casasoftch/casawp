@@ -8,6 +8,7 @@ use Laminas\Hydrator\Exception\InvalidArgumentException;
 use ReflectionException;
 use ReflectionMethod;
 
+use function method_exists;
 use function sprintf;
 
 final class NumberOfParameterFilter implements FilterInterface
@@ -31,7 +32,10 @@ final class NumberOfParameterFilter implements FilterInterface
         try {
             $reflectionMethod = $instance !== null
                 ? new ReflectionMethod($instance, $property)
-                : new ReflectionMethod($property);
+                : (method_exists(ReflectionMethod::class, 'createFromMethodName')
+                    ? ReflectionMethod::createFromMethodName($property)
+                    : new ReflectionMethod($property)
+                );
         } catch (ReflectionException) {
             throw new InvalidArgumentException(sprintf(
                 'Method %s does not exist',

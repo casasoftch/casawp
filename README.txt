@@ -38,6 +38,12 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 
+= 3.1.0 =
+
+* new: Option to override dynamic batch sizes for import
+* update: remove midnight cron for import
+* fix: Laminas Services & Factories
+
 = 3.0.0 =
 
 * new: Asynchronous queue importer with integrated Action Scheduler & progress bar
