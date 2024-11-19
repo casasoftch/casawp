@@ -1770,24 +1770,32 @@ class Import
       return;
     }
 
-    if (get_option('casawp_use_casagateway_cdn', false)) {
-      $language_count = 1; // Default to 1 language if WPML is not active
+    $batch_size_override = get_option('casawp_batch_size_override', '');
 
-      if (function_exists('icl_get_languages')) {
-        $languages = icl_get_languages();
-        $language_count = count($languages);
-      }
-
-      // Set batch size based on language count
-      if ($language_count <= 2) {
-        $batch_size = 4;
-      } elseif ($language_count === 3) {
-        $batch_size = 3;
-      } else {
-        $batch_size = 2;
-      }
+    if (!empty($batch_size_override) && is_numeric($batch_size_override) && (int)$batch_size_override > 0) {
+        $batch_size = (int)$batch_size_override;
+        $this->addToLog('Using overridden batch size: ' . $batch_size);
     } else {
-      $batch_size = 1;
+        if (get_option('casawp_use_casagateway_cdn', false)) {
+            $language_count = 1; // Default to 1 language if WPML is not active
+
+            if (function_exists('icl_get_languages')) {
+                $languages = icl_get_languages();
+                $language_count = count($languages);
+            }
+
+            // Set batch size based on language count
+            if ($language_count <= 2) {
+                $batch_size = 4;
+            } elseif ($language_count === 3) {
+                $batch_size = 3;
+            } else {
+                $batch_size = 2;
+            }
+        } else {
+            $batch_size = 1;
+        }
+        $this->addToLog('Using default batch size: ' . $batch_size);
     }
 
     $this->ranksort = get_option('casawp_ranksort', array());
