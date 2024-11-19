@@ -70,6 +70,7 @@ define('CASASYNC_CUR_UPLOAD_BASEURL', $upload['baseurl']);
 include 'vendor/autoload.php';
 include 'modules/casawp/Module.php';
 
+
 $applicationConfig = [
 	'modules' => [
 		'CasasoftStandards',
@@ -108,8 +109,8 @@ $configuration = [
 ];
 
 // Initialize Autoloader
-use Laminas\Loader\AutoloaderFactory;
-AutoloaderFactory::factory();
+/* use Laminas\Loader\AutoloaderFactory;
+AutoloaderFactory::factory(); */
 
 // Instantiate the Plugin with the configuration
 $casawp = new casawp\Plugin($configuration);
