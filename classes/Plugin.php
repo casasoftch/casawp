@@ -705,14 +705,6 @@ class Plugin
         // Set allow_override back to false for safety
         $pluginManager->setAllowOverride(false);
 
-
-/* if (class_exists(\CasasoftStandards\Service\CategoryServiceFactory::class)) {
-    echo "CategoryServiceFactory is autoloaded.";
-} else {
-    echo "CategoryServiceFactory is NOT autoloaded.";
-}
-die(); */
-
         // Set services
         $this->serviceManager = $serviceManager;
         $this->queryService = $this->serviceManager->get(QueryService::class);
