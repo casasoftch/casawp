@@ -74,7 +74,7 @@
 		</div>
 		<div id="casawpRecaptcha"></div>
 		<script>
-			window.captchaKey = '<?php echo escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
+			window.captchaKey = '<?php echo $form->escapeJavaScriptText(get_option('casawp_recaptcha')); ?>';
 		</script>
 		<script>
 			var onloadCallback = function() {
