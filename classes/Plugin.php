@@ -34,6 +34,7 @@ use casawp\Service\FormSettingService;
 use casawp\Service\OfferService;
 
 use CasasoftMessenger\Service\MessengerService;
+use casawp\Service\ProjectService;
 
 class Plugin
 {
@@ -3533,7 +3534,7 @@ class Plugin
 
     public function prepareProject($post)
     {
-        $service = $this->serviceManager->get('casawpProject');
+        $service = $this->serviceManager->get(ProjectService::class);
         $service->setPost($post);
         return $service->getCurrent();
     }
