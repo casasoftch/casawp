@@ -32,9 +32,6 @@ class Input implements
     /** @var null|FilterChain */
     protected $filterChain;
 
-    /** @var null|string */
-    protected $name;
-
     /** @var bool */
     protected $notEmptyValidator = false;
 
@@ -61,9 +58,8 @@ class Input implements
     protected $hasFallback = false;
 
     /** @param null|string $name */
-    public function __construct($name = null)
+    public function __construct(protected $name = null)
     {
-        $this->name = $name;
     }
 
     /**

@@ -37,7 +37,5 @@ return array(
     'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
     'Laminas\\DependencyPlugin\\' => array($vendorDir . '/laminas/laminas-dependency-plugin/src'),
     'Laminas\\Config\\' => array($vendorDir . '/laminas/laminas-config/src'),
-    'CasasoftStandards\\' => array($vendorDir . '/casasoft/casamodules/CasasoftStandards/src'),
-    'CasasoftMessenger\\' => array($vendorDir . '/casasoft/casamodules/CasasoftMessenger/src'),
     'Brick\\VarExporter\\' => array($vendorDir . '/brick/varexporter/src'),
 );

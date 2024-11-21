@@ -1,23 +1,17 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use CasasoftStandards\Service\IntegratedOfferService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class IntegratedOfferServiceFactory implements FactoryInterface
 {
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
-        $translator = $container->get('MvcTranslator');
-        //$viewRenderer = $serviceLocator->get('viewRenderer');
-        $service = new IntegratedOfferService($translator);
-        return $service;
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $translator = $serviceLocator->get('Translator');
-        $service = new IntegratedOfferService($translator);
-        return $service;
+        /** @var TranslatorInterface $translator */
+        $translator = $container->get('translator');
+        return new IntegratedOfferService($translator);
     }
 }

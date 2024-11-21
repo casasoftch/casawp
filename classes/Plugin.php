@@ -24,6 +24,17 @@ use Laminas\View\HelperPluginManager;
 use Laminas\Form\View\Helper as FormViewHelper;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
+use CasasoftStandards\Service\CategoryService;
+use CasasoftStandards\Service\UtilityService;
+use CasasoftStandards\Service\NumvalService;
+use CasasoftStandards\Service\FeatureService;
+use casawp\Service\QueryService;
+use casawp\Service\FormService;
+use casawp\Service\FormSettingService;
+use casawp\Service\OfferService;
+
+use CasasoftMessenger\Service\MessengerService;
+
 class Plugin
 {
     public $textids = false;
@@ -696,13 +707,14 @@ class Plugin
 
         // Set services
         $this->serviceManager = $serviceManager;
-        $this->queryService = $this->serviceManager->get('casawpQuery');
-        $this->categoryService = $this->serviceManager->get('CasasoftCategory');
-        $this->utilityService = $this->serviceManager->get('CasasoftUtility');
-        $this->numvalService = $this->serviceManager->get('CasasoftNumval');
-        $this->featureService = $this->serviceManager->get('CasasoftFeature');
-        $this->formSettingService = $this->serviceManager->get('casawpFormSettingService');
-        $this->formService = $this->serviceManager->get('casawpFormService');
+        $this->queryService = $this->serviceManager->get(QueryService::class);
+        $this->categoryService = $this->serviceManager->get(CategoryService::class);
+        $this->utilityService = $this->serviceManager->get(UtilityService::class);
+        $this->numvalService = $this->serviceManager->get(NumvalService::class);
+        $this->featureService = $this->serviceManager->get(FeatureService::class);
+        $this->formSettingService = $this->serviceManager->get(FormSettingService::class);
+        $this->formService = $this->serviceManager->get(FormService::class);
+
 
         add_action('after_setup_theme', function () {
             do_action('casawp_register_forms', $this->formSettingService);
@@ -3514,7 +3526,7 @@ class Plugin
 
     public function prepareOffer($post)
     {
-        $offerService = $this->serviceManager->get('casawpOffer');
+        $offerService = $this->serviceManager->get(OfferService::class);
         $offerService->setPost($post);
         return $offerService->getCurrent();
     }

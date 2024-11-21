@@ -15,7 +15,6 @@ use Traversable;
 use function assert;
 use function class_exists;
 use function get_debug_type;
-use function gettype;
 use function is_array;
 use function is_callable;
 use function is_int;
@@ -252,7 +251,7 @@ class Factory
                             '%s expects the value associated with "filters" to be an array/Traversable of filters'
                             . ' or filter specifications, or a FilterChain; received "%s"',
                             __METHOD__,
-                            is_object($value) ? $value::class : gettype($value)
+                            get_debug_type($value)
                         ));
                     }
                     $this->populateFilters($input->getFilterChain(), $value);
@@ -267,7 +266,7 @@ class Factory
                             '%s expects the value associated with "validators" to be an array/Traversable of validators'
                             . ' or validator specifications, or a ValidatorChain; received "%s"',
                             __METHOD__,
-                            is_object($value) ? $value::class : gettype($value)
+                            get_debug_type($value)
                         ));
                     }
 
@@ -285,7 +284,7 @@ class Factory
     /**
      * Factory for input filters
      *
-     * phpcs:ignore Generic.Files.LineLength.TooLong
+     * phpcs:ignore Generic.Files.LineLength.TooLong, SlevomatCodingStandard.Commenting.DocCommentSpacing
      * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
      * @return InputFilterInterface
      * @throws Exception\RuntimeException

@@ -22,7 +22,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 
     /**
      * @param string                  $rName
-     * @param array                   $options
      * @return InputFilterInterface
      */
     public function __invoke(ContainerInterface $services, $rName, ?array $options = null)

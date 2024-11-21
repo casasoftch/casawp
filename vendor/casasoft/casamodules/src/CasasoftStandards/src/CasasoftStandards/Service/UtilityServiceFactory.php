@@ -1,26 +1,17 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use CasasoftStandards\Service\UtilityService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class UtilityServiceFactory implements FactoryInterface
 {
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL){
-      $translator = $container->get('MvcTranslator');
-      //$viewRenderer = $serviceLocator->get('viewRenderer');
-
-      $service = new UtilityService($translator);
-
-      return $service;
-    }
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $translator = $serviceLocator->get('Translator');
-        //$viewRenderer = $serviceLocator->get('viewRenderer');
-
-        $service = new UtilityService($translator);
-
-        return $service;
-    }
+  public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+  {
+      /** @var TranslatorInterface $translator */
+      $translator = $container->get('translator');
+      return new UtilityService($translator);
+  }
 }

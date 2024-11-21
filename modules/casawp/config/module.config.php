@@ -2,21 +2,47 @@
 
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
+use CasasoftStandards\Service\CategoryService;
+use CasasoftStandards\Service\CategoryServiceFactory;
+use CasasoftStandards\Service\UtilityService;
+use CasasoftStandards\Service\UtilityServiceFactory;
+use CasasoftStandards\Service\NumvalService;
+use CasasoftStandards\Service\NumvalServiceFactory;
+use CasasoftStandards\Service\FeatureService;
+use CasasoftStandards\Service\FeatureServiceFactory;
+
+use CasasoftStandards\Service\IntegratedOfferService;
+use CasasoftStandards\Service\IntegratedOfferServiceFactory;
+
+use CasasoftMessenger\Service\MessengerService;
+use CasasoftMessenger\Service\MessengerServiceFactory;
+
+use casawp\Service\OfferService;
+use casawp\Service\OfferServiceFactory;
+use casawp\Service\ProjectService;
+use casawp\Service\ProjectServiceFactory;
+use casawp\Service\QueryService;
+use casawp\Service\QueryServiceFactory;
+use casawp\Service\FormService;
+use casawp\Service\FormServiceFactory;
+use casawp\Service\FormSettingService;
+use casawp\Service\FormSettingServiceFactory;
+
 return [
     'service_manager' => [
         'factories' => [
-            'casawpOffer' => casawp\Service\OfferServiceFactory::class,
-            'casawpProject' => casawp\Service\ProjectServiceFactory::class,
-            'casawpQuery' => casawp\Service\QueryServiceFactory::class,
-            'casawpFormService' => casawp\Service\FormServiceFactory::class,
-            'casawpFormSettingService' => casawp\Service\FormSettingServiceFactory::class,
-            // Casasoft services...
-            'CasasoftCategory' => CasasoftStandards\Service\CategoryServiceFactory::class,
-            'CasasoftNumval' => CasasoftStandards\Service\NumvalServiceFactory::class,
-            'CasasoftFeature' => CasasoftStandards\Service\FeatureServiceFactory::class,
-            'CasasoftUtility' => CasasoftStandards\Service\UtilityServiceFactory::class,
-            'CasasoftIntegratedOffer' => CasasoftStandards\Service\IntegratedOfferServiceFactory::class,
-            'CasasoftMessenger' => CasasoftMessenger\Service\MessengerServiceFactory::class,
+            OfferService::class => OfferServiceFactory::class,
+            ProjectService::class => ProjectServiceFactory::class,
+            QueryService::class => QueryServiceFactory::class,
+            FormService::class => FormServiceFactory::class,
+            FormSettingService::class => FormSettingServiceFactory::class,
+            // Casasoft services
+            CategoryService::class => CategoryServiceFactory::class,
+            UtilityService::class => UtilityServiceFactory::class,
+            NumvalService::class => NumvalServiceFactory::class,
+            FeatureService::class => FeatureServiceFactory::class,
+            MessengerService::class => MessengerServiceFactory::class,
+            IntegratedOfferService::class => IntegratedOfferServiceFactory::class,
         ],
     ],
     'view_manager' => [

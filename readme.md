@@ -150,11 +150,11 @@ function casawp_after_inquirysend($payload) {
 	//(object) $offer
 	extract($payload);
 
-	if ($offer->getFieldValue('seller_org_customerid') == "bento") {
+	if ($offer->getFieldValue('seller_org_customerid') == "slug") {
 
-		$subject = "Info-Meldung bezüglich einer Objekt-Anfrage von zueriimmo.ch: " . $offer->getTitle();
+		$subject = "Info-Meldung bezüglich einer Objekt-Anfrage von website.ch: " . $offer->getTitle();
 
-		$message = 'Eine Anfrage wurde von zueriimmo.ch an die Bento AG gesendet.';
+		$message = 'Eine Anfrage wurde von website.ch an die Test AG gesendet.';
 		$message .= "\n";
 		$message .= "\n";
 		$message .= "Objekt:\n";
@@ -170,7 +170,7 @@ function casawp_after_inquirysend($payload) {
 			$message .= $key . ": " . $value . "\n";
 		}
 
-		wp_mail( 'jstalder@icloud.com, info@zueriimmo.ch', $subject, $message);
+		wp_mail( mail address, $subject, $message);
 	}
 }
 add_action( 'casawp_after_inquirysend', 'casawp_after_inquirysend' );
