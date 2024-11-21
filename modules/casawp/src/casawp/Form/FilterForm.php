@@ -737,24 +737,12 @@ class FilterForm extends Form
       return $options;
     }
 
-   /* public function getAreaOptions(){
-      $options = array();
-      if (in_array('agricultural', $this->options['chosen_utility']) ||
-        in_array('commercial', $this->options['chosen_utility']) ||
-        in_array('gastronomy', $this->options['chosen_utility']) ||
-        in_array('industrial', $this->options['chosen_utility'])) {
-        $options = array(
-          500 => '500',
-          600 => '600',
-        );
-      } else {
-        $options = array(
-          50000 => '50\'000',
-          100000 => '100\'000',
-        );
-      }
-      return $options;
-    }*/
+    private function get_first_element($value, $default = null) {
+        if (is_array($value) && isset($value[0])) {
+            return $value[0];
+        }
+        return $default;
+    }
 
     // yes onlybase is not used but required to be interface compatible (keep it!!!)
     public function populateValues(iterable $data, bool $onlyBase = false): void
@@ -772,7 +760,8 @@ class FilterForm extends Form
 
             if ($valueExists) {
                 $value = $data[$name];
-                if (
+                // Determine if special handling is required based on the field name and options
+                $specialHandling = (
                     ($name == 'salestypes' && in_array($this->options['casawp_filter_salestypes_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
                     ($name == 'categories' && in_array($this->options['casawp_filter_categories_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
                     ($name == 'utilities' && in_array($this->options['casawp_filter_utilities_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
@@ -780,10 +769,12 @@ class FilterForm extends Form
                     ($name == 'features' && in_array($this->options['casawp_filter_features_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
                     ($name == 'locations' && in_array($this->options['casawp_filter_locations_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
                     ($name == 'countries' && in_array($this->options['casawp_filter_countries_elementtype'], ['singleselect', 'radio', 'hidden'])) ||
-                    $name == 'rooms_from' || $name == 'rooms_to' || $name == 'areas_from' || $name == 'areas_to'
-                ) {
+                    in_array($name, ['rooms_from', 'rooms_to', 'areas_from', 'areas_to'])
+                );
+
+                if ($specialHandling) {
                     if ($data[$name] && is_array($data[$name])) {
-                        $value = $data[$name][0];
+                        $value = $this->get_first_element($data[$name], '');
                     } elseif ($data[$name]) {
                         $value = $data[$name];
                     } else {
@@ -796,21 +787,4 @@ class FilterForm extends Form
         }
     }
 
-
-    /*public function populateValues($data, $onlyBase = false)
-    {
-        if ($onlyBase && $this->baseFieldset !== null) {
-            $name = $this->baseFieldset->getName();
-            if (array_key_exists($name, $data)) {
-                if ($name == 'categories' && $options['casawp_filter_categories_elementtype'] == 'singleselect') {
-                    $this->baseFieldset->populateValues($data[$name][0]);
-                } else {
-                    $this->baseFieldset->populateValues($data[$name]);
-                }
-
-            }
-        } else {
-            parent::populateValues($data);
-        }
-    }*/
 }

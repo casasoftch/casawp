@@ -132,15 +132,15 @@ class QueryService{
         foreach ($r_query as $key => $value) {
 
             if ($key == 'casawp_salestype_s') {
-              $key = 'salestypes';
+                $key = 'salestypes';
             }
 
-            //remove legacy prefixes
+            // Remove legacy prefixes
             if (strpos($key, 'casawp_') === 0) {
                 $key = str_replace('casawp_', '', $key);
             }
 
-            //remove legacy postfixes
+            // Remove legacy postfixes
             if (strpos($key, '_not_s') !== false) {
                 $key = str_replace('_not_s', '_not', $key);
             }
@@ -148,35 +148,23 @@ class QueryService{
                 $key = str_replace('_s', '', $key);
             }
 
-            //fix singles
-            if (strpos($key, 'category') !== false) {
-                $key = str_replace('category', 'categories', $key);
-            }
-            if (strpos($key, 'utility') !== false) {
-                $key = str_replace('utility', 'utilities', $key);
-            }
-            if (strpos($key, 'locations') === false && strpos($key, 'location') !== false) {
-                $key = str_replace('location', 'locations', $key);
-            }
-            if (strpos($key, 'countries') === false && strpos($key, 'country') !== false) {
-                $key = str_replace('country', 'countries', $key);
-            }
-            if (strpos($key, 'regions') === false && strpos($key, 'region') !== false) {
-                $key = str_replace('region', 'regions', $key);
-            }
-            if (strpos($key, 'features') === false && strpos($key, 'feature') !== false) {
-                $key = str_replace('feature', 'features', $key);
-            }
-            if (strpos($key, 'salestypes') === false && strpos($key, 'salestype') !== false) {
-                $key = str_replace('salestype', 'salestypes', $key);
-            }
-            if (strpos($key, 'availability') !== false) {
-                $key = str_replace('availability', 'availabilities', $key);
-            }
+            // Fix singular terms
+            $singular_plural_map = [
+                'category'     => 'categories',
+                'utility'      => 'utilities',
+                'location'     => 'locations',
+                'country'      => 'countries',
+                'region'       => 'regions',
+                'feature'      => 'features',
+                'salestype'    => 'salestypes',
+                'availability' => 'availabilities',
+            ];
 
-
-
-
+            foreach ($singular_plural_map as $singular => $plural) {
+                if (strpos($key, $singular) !== false && strpos($key, $plural) === false) {
+                    $key = str_replace($singular, $plural, $key);
+                }
+            }
 
             switch ($key) {
                 case 'categories':
@@ -195,36 +183,33 @@ class QueryService{
                 case 'features_not':
                 case 'salestypes_not':
                 case 'availabilities_not':
+                    // If the value is an array with only one element, simplify it
                     if (is_array($value) && count($value) === 1) {
                         $value = $value[0];
                     }
-                    if (is_string($value) && strpos($value, ",") !== null) {
+
+                    // If the value is a comma-separated string, convert it to an array
+                    if (is_string($value) && strpos($value, ",") !== false) {
                         $value = explode(',', $value);
                     }
-                    $query[$key] = (is_array($value) ? $value : array($value));
-                    $query[$key] = ($query[$key][0] !== '' ? $query[$key] : array());
+
+                    // Ensure the value is an array
+                    $query[$key] = is_array($value) ? $value : array($value);
+
+                    // Check if the first element exists and is not an empty string
+                    if (isset($query[$key][0]) && $query[$key][0] !== '') {
+                        // Keep the array as is
+                    } else {
+                        // Set to an empty array if the first element is not valid
+                        $query[$key] = array();
+                    }
                     break;
+
                 default:
                     $query[$key] = $value;
                     break;
             }
         }
-
-        //tax_queries override this
-        /*if (is_tax('casawp_category')) {
-            $query['categories'] = array(get_query_var( 'casawp_category' ));
-        }
-*/
-        /*
-        if (is_tax('casawp_location')) {
-            $query['locations'] = array(get_query_var( 'casawp_location' ));
-        }
-        if (is_tax('casawp_salestype')) {
-            $query['locations'] = array(get_query_var( 'casawp_salestype' ));
-        }
-        if (is_tax('casawp_availability')) {
-            $query['locations'] = array(get_query_var( 'casawp_availability' ));
-        }*/
 
         return $query;
     }
@@ -330,37 +315,53 @@ class QueryService{
                 'compare'   => '='
             );
         }
-        if ($this->query['rooms_from']) {
-            $meta_query_items_new[] = array(
-                'key' => 'number_of_rooms',
-                'value' => (is_array($this->query['rooms_from']) ? $this->query['rooms_from'][0] : $this->query['rooms_from']),
-                'compare'   => '>=',
-                'type' => 'DECIMAL(10,1)'
-            );
+
+        if (isset($this->query['rooms_from']) && $this->query['rooms_from']) {
+            $rooms_from = $this->get_first_element($this->query['rooms_from']);
+            if ($rooms_from !== null && $rooms_from !== '') {
+                $meta_query_items_new[] = array(
+                    'key' => 'number_of_rooms',
+                    'value' => floatval($rooms_from), // Ensure it's numeric
+                    'compare' => '>=',
+                    'type' => 'DECIMAL(10,1)'
+                );
+            }
         }
-        if ($this->query['rooms_to']) {
-            $meta_query_items_new[] = array(
-                'key' => 'number_of_rooms',
-                'value' => (is_array($this->query['rooms_to']) ? $this->query['rooms_to'][0] : $this->query['rooms_to']),
-                'compare'   => '<=',
-                'type' => 'DECIMAL(10,1)'
-            );
+        
+        if (isset($this->query['rooms_to']) && $this->query['rooms_to']) {
+            $rooms_to = $this->get_first_element($this->query['rooms_to']);
+            if ($rooms_to !== null && $rooms_to !== '') {
+                $meta_query_items_new[] = array(
+                    'key' => 'number_of_rooms',
+                    'value' => floatval($rooms_to), // Ensure it's numeric
+                    'compare' => '<=',
+                    'type' => 'DECIMAL(10,1)'
+                );
+            }
         }
-        if ($this->query['areas_from']) {
-            $meta_query_items_new[] = array(
-                'key' => 'areaForOrder',
-                'value' => (is_array($this->query['areas_from']) ? $this->query['areas_from'][0] : $this->query['areas_from']),
-                'compare'   => '>=',
-                'type' => 'NUMERIC'
-            );
+
+        if (isset($this->query['areas_from']) && $this->query['areas_from']) {
+            $areas_from = $this->get_first_element($this->query['areas_from']);
+            if ($areas_from !== null && $areas_from !== '') {
+                $meta_query_items_new[] = array(
+                    'key' => 'areaForOrder',
+                    'value' => floatval($areas_from), // Ensure it's numeric
+                    'compare' => '>=',
+                    'type' => 'NUMERIC'
+                );
+            }
         }
-        if ($this->query['areas_to']) {
-            $meta_query_items_new[] = array(
-                'key' => 'areaForOrder',
-                'value' => (is_array($this->query['areas_to']) ? $this->query['areas_to'][0] : $this->query['areas_to']),
-                'compare'   => '<=',
-                'type' => 'NUMERIC'
-            );
+
+        if (isset($this->query['areas_to']) && $this->query['areas_to']) {
+            $areas_to = $this->get_first_element($this->query['areas_to']);
+            if ($areas_to !== null && $areas_to !== '') {
+                $meta_query_items_new[] = array(
+                    'key' => 'areaForOrder',
+                    'value' => floatval($areas_to), // Ensure it's numeric
+                    'compare' => '<=',
+                    'type' => 'NUMERIC'
+                );
+            }
         }
 
         if (isset($this->query['price_for_order_to'])) {
@@ -427,31 +428,63 @@ class QueryService{
                 );
             }
             if ($this->query['price_to']) {
-                if (strpos($this->query['price_to'], '-') !== false) {
-                $price_parts = explode('-', $this->query['price_to']);
-                if ($price_parts[0]) {
-                    $meta_query_items_new[] = array(
-                        'key' => 'grossPrice',
-                        'value' => $price_parts[0],
-                        'compare'   => '>=',
-                        'type' => 'NUMERIC'
-                    );
-                }
-                if ($price_parts[1]) {
-                    $meta_query_items_new[] = array(
-                        'key' => 'grossPrice',
-                        'value' => $price_parts[1],
-                        'compare'   => '<=',
-                        'type' => 'NUMERIC'
-                    );
-                }
-                } else {
-                $meta_query_items_new[] = array(
-                    'key' => 'grossPrice',
-                    'value' => (is_array($this->query['price_to']) ? $this->query['price_to'][0] : $this->query['price_to']),
-                    'compare'   => '<=',
-                    'type' => 'NUMERIC'
-                );
+                $price_to = $this->query['price_to'];
+                if (is_array($price_to)) {
+                    foreach ($price_to as $pt) {
+                        if (is_string($pt) && strpos($pt, '-') !== false) {
+                            $price_parts = explode('-', $pt);
+                            if (!empty($price_parts[0])) {
+                                $meta_query_items_new[] = array(
+                                    'key' => 'grossPrice',
+                                    'value' => floatval($price_parts[0]),
+                                    'compare'   => '>=',
+                                    'type' => 'NUMERIC'
+                                );
+                            }
+                            if (!empty($price_parts[1])) {
+                                $meta_query_items_new[] = array(
+                                    'key' => 'grossPrice',
+                                    'value' => floatval($price_parts[1]),
+                                    'compare'   => '<=',
+                                    'type' => 'NUMERIC'
+                                );
+                            }
+                        } elseif (is_numeric($pt)) {
+                            $meta_query_items_new[] = array(
+                                'key' => 'grossPrice',
+                                'value' => floatval($pt),
+                                'compare'   => '<=',
+                                'type' => 'NUMERIC'
+                            );
+                        }
+                    }
+                } elseif (is_string($price_to)) {
+                    if (strpos($price_to, '-') !== false) {
+                        $price_parts = explode('-', $price_to);
+                        if (!empty($price_parts[0])) {
+                            $meta_query_items_new[] = array(
+                                'key' => 'grossPrice',
+                                'value' => floatval($price_parts[0]),
+                                'compare'   => '>=',
+                                'type' => 'NUMERIC'
+                            );
+                        }
+                        if (!empty($price_parts[1])) {
+                            $meta_query_items_new[] = array(
+                                'key' => 'grossPrice',
+                                'value' => floatval($price_parts[1]),
+                                'compare'   => '<=',
+                                'type' => 'NUMERIC'
+                            );
+                        }
+                    } else {
+                        $meta_query_items_new[] = array(
+                            'key' => 'grossPrice',
+                            'value' => floatval($price_to),
+                            'compare'   => '<=',
+                            'type' => 'NUMERIC'
+                        );
+                    }
                 }
             }
             } else if(in_array('buy', $this->query['salestypes'])){
@@ -585,29 +618,76 @@ class QueryService{
             $args['meta_query'] = $meta_query_items_new;
         }
 
-        if ($this->query['my_lng'] && $this->query['my_lat'] && $this->query['radius_km']) {
+        if ( isset($this->query['my_lng'], $this->query['my_lat'], $this->query['radius_km']) &&
+             !empty($this->query['my_lng']) &&
+             !empty($this->query['my_lat']) &&
+             !empty($this->query['radius_km']) ) {
 
-            $mylng = $this->query['my_lng'];
-            $mylat = $this->query['my_lat'];
-            $radius = $this->query['radius_km'];
+            // Sanitize and validate inputs
+            $mylng_raw = $this->query['my_lng'];
+            $mylat_raw = $this->query['my_lat'];
+            $radius_raw = $this->query['radius_km'];
+
+            // Convert to float and validate ranges
+            $mylng = floatval($mylng_raw);
+            $mylat = floatval($mylat_raw);
+            $radius = floatval($radius_raw);
+
+            // Validate latitude and longitude ranges
+            if ( $mylat < -90 || $mylat > 90 ) {
+                // Handle invalid latitude
+                // You can set a default value or skip adding this filter
+                $mylat = 0; // Example default
+            }
+
+            if ( $mylng < -180 || $mylng > 180 ) {
+                // Handle invalid longitude
+                $mylng = 0; // Example default
+            }
+
+            // Validate radius (example: positive and not exceeding 1000 km)
+            if ( $radius <= 0 ) {
+                $radius = 10; // Default radius
+            } elseif ( $radius > 1000 ) {
+                $radius = 1000; // Maximum allowed radius
+            }
+
             global $wpdb;
 
-            $sql = "SELECT ID from wp_posts 
-            LEFT JOIN wp_postmeta AS latitude ON wp_posts.ID = latitude.post_id AND latitude.meta_key = 'property_geo_latitude'
-            LEFT JOIN wp_postmeta AS longitude ON wp_posts.ID = longitude.post_id AND longitude.meta_key = 'property_geo_longitude'
-            WHERE ( 6371 * acos( cos( radians(".$mylat.") )
-                                            * cos( radians( latitude.meta_value ) )
-                                            * cos( radians( longitude.meta_value ) - radians(".$mylng.") )
-                                            + sin( radians(".$mylat.") )
-                                            * sin( radians( latitude.meta_value ) ) ) <= ".$radius.") ";
+            // Prepare the SQL query using placeholders
+            $sql = $wpdb->prepare(
+                "SELECT ID FROM {$wpdb->posts} 
+                LEFT JOIN {$wpdb->postmeta} AS latitude 
+                    ON {$wpdb->posts}.ID = latitude.post_id 
+                    AND latitude.meta_key = %s
+                LEFT JOIN {$wpdb->postmeta} AS longitude 
+                    ON {$wpdb->posts}.ID = longitude.post_id 
+                    AND longitude.meta_key = %s
+                WHERE (6371 * ACOS(
+                    COS(RADIANS(%f)) 
+                    * COS(RADIANS(latitude.meta_value)) 
+                    * COS(RADIANS(longitude.meta_value) - RADIANS(%f)) 
+                    + SIN(RADIANS(%f)) 
+                    * SIN(RADIANS(latitude.meta_value))
+                ) <= %f)",
+                'property_geo_latitude',    // %s for latitude.meta_key
+                'property_geo_longitude',   // %s for longitude.meta_key
+                $mylat,                     // %f for mylat
+                $mylng,                     // %f for mylng
+                $mylat,                     // %f for mylat (again)
+                $radius                     // %f for radius
+            );
 
+            // Execute the prepared query
             $results = $wpdb->get_results( $sql, ARRAY_A );
 
+            // Extract post IDs
             $post_ids = wp_list_pluck( $results, 'ID' );
-            
+
+            // Update the query arguments
             $args['post__in'] = empty( $post_ids ) ? [ 0 ] : $post_ids;
-            
         }
+
 
 
         $taxquery_new = array();
@@ -789,7 +869,12 @@ class QueryService{
         return $args;
     }
 
-
+    private function get_first_element($value, $default = null) {
+        if (is_array($value) && isset($value[0])) {
+            return $value[0];
+        }
+        return $default;
+    }
 
     public function applyToWpQuery($query){
         //tax pages overides
