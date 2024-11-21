@@ -1,20 +1,29 @@
 <?php
 namespace casawp\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ProjectServiceFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-    	$cs = $serviceLocator->get('CasasoftCategory');
-    	$ns = $serviceLocator->get('CasasoftNumval');
-    	$fs = $serviceLocator->get('CasasoftFeature');
-    	$messenger = $serviceLocator->get('CasasoftMessenger');
-    	$us = $serviceLocator->get('CasasoftUtility');
-        $ios = $serviceLocator->get('CasasoftIntegratedOffer');
-        $service = new ProjectService($cs, $ns, $messenger, $us, $fs, $ios);
-        return $service;
+        // Retrieve dependencies from the service container
+        $categoryService = $container->get('CasasoftCategory');
+        $numvalService = $container->get('CasasoftNumval');
+        $featureService = $container->get('CasasoftFeature');
+        $messengerService = $container->get('CasasoftMessenger');
+        $utilityService = $container->get('CasasoftUtility');
+        $integratedOfferService = $container->get('CasasoftIntegratedOffer');
+
+        // Instantiate and return the ProjectService
+        return new ProjectService(
+            $categoryService,
+            $numvalService,
+            $messengerService,
+            $utilityService,
+            $featureService,
+            $integratedOfferService
+        );
     }
 }
