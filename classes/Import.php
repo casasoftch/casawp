@@ -1646,7 +1646,6 @@ class Import
           $this->deactivate_all_properties();
           as_schedule_single_action(time(), 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
           $this->addToLog('import end');
-          do_action('casawp_import_finished');
         }
       } else {
         $this->addToLog('gateway keys missing: ' . time());
@@ -1758,6 +1757,7 @@ class Import
 
     $this->addToLog('Import completed and lock cleared.');
 
+    do_action('casawp_import_finished');
   }
 
 
