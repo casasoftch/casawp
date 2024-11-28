@@ -2409,7 +2409,7 @@ function casawp_unicode_dirty_replace($str)
 	];
 	
 	foreach ($charset as $rChar => $unicode) {
-		$str = str_replace($unicode, "\\" . $unicode, $str);
+		$str = str_replace($unicode, "\\" . $unicode, (string)$str);
 	}
 	
 	return $str;
