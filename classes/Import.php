@@ -30,44 +30,6 @@ class Import
     add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'));
   }
 
-  public function start_import()
-  {
-    $this->addToLog('Import initiation started.');
-
-    // Check if an import is already running
-    if (get_transient('casawp_import_in_progress')) {
-      $this->addToLog('Import already in progress. Skipping new import.');
-      return;
-    }
-
-    // Set the import lock
-    set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-    $this->addToLog('Import lock set.');
-
-    try {
-      // Fetch and save the import file
-      $this->updateImportFileThroughCasaGateway();
-
-      if ($this->getImportFile()) {
-        $this->addToLog('Import file retrieved successfully.');
-        $this->deactivate_all_properties();
-
-        // Schedule the first batch
-        as_schedule_single_action(
-          time(),
-          'casawp_batch_import',
-          [1]
-        );
-        $this->addToLog('Scheduled batch number: 1');
-      }
-    } catch (\Exception $e) {
-      $this->addToLog('Import failed: ' . $e->getMessage());
-      // Clear the import lock on failure
-      $this->clear_import_lock();
-      // Optionally, notify administrators about the failure
-    }
-  }
-
   public function clear_import_lock()
   {
     delete_transient('casawp_import_in_progress');
