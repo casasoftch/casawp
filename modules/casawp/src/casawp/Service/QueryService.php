@@ -318,6 +318,7 @@ class QueryService{
 
         if (isset($this->query['rooms_from']) && $this->query['rooms_from']) {
             $rooms_from = $this->get_first_element($this->query['rooms_from']);
+            error_log('rooms_from: ' . $rooms_from);
             if ($rooms_from !== null && $rooms_from !== '') {
                 $meta_query_items_new[] = array(
                     'key' => 'number_of_rooms',
@@ -870,8 +871,10 @@ class QueryService{
     }
 
     private function get_first_element($value, $default = null) {
-        if (is_array($value) && isset($value[0])) {
-            return $value[0];
+        if (is_array($value)) {
+            return isset($value[0]) ? $value[0] : $default;
+        } elseif (is_scalar($value)) {
+            return $value;
         }
         return $default;
     }
