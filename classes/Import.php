@@ -1577,7 +1577,7 @@ class Import
         }
 
         if ($response && !is_numeric($response)) { // Ensure response is not an error code
-          error_log(print_r($response, true));
+          //error_log(print_r($response, true));
           // Ensure the import directory exists
           if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
             if (mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import', 0755, true)) {
@@ -1721,6 +1721,10 @@ class Import
 
     do_action('casawp_import_finished');
   }
+
+  /* public function handle_properties_import_batch($batch_number) {
+    throw new \Exception('Test failure to check action_scheduler_failed_action.');
+  } */
 
 
   public function handle_properties_import_batch($batch_number)

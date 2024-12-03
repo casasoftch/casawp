@@ -146,6 +146,38 @@ function casawp_unschedule_cron_events() {
 	}
 } */
 
+function eg_increase_time_limit( $time_limit ) {
+	return 60;
+}
+add_filter( 'action_scheduler_queue_runner_time_limit', 'eg_increase_time_limit' );
+
+
+add_action('action_scheduler_failed_execution', 'casawp_handle_failed_action');
+add_action('action_scheduler_failed_action', 'casawp_handle_failed_action');
+add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action' );
+
+function casawp_handle_failed_action($action_id) {
+	error_log('Action Scheduler Failed Hook Triggered for Action ID: ' . $action_id);
+	$action = ActionScheduler::store()->fetch_action($action_id);
+	if ($action && $action->get_hook() == 'casawp_batch_import') {
+		$args = $action->get_args();
+		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
+
+		$site_domain = home_url();
+
+		$to = get_option('admin_email');
+		$subject = 'CasaWP Import Batch Failed on ' . $site_domain;
+		$message = "Batch number " . $batch_number . " has failed after maximum retries.\n\n";
+		$message .= "Site: " . $site_domain;
+
+		wp_mail($to, $subject, $message);
+
+		$import = new casawp\Import(false, false);
+		$import->addToLog('Import canceled due to batch failure on ' . $site_domain . '. Notification sent.');
+	}
+}
+
+
 function casawp_start_new_import($source = '') {
 	// Cancel any ongoing import
 	if (get_transient('casawp_import_in_progress')) {
