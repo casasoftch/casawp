@@ -38,6 +38,13 @@ Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instruc
 
 == Changelog ==
 
+= 3.1.2 =
+
+* update: Import alerting on fail & increase of Action Scheduler timeout
+* update: Translations
+* fix: Security upgrades preventing injections
+* fix: Several PHP warnings
+
 = 3.1.1 =
 
 * fix: Recaptcha V2 integration error
