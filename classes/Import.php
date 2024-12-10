@@ -1347,7 +1347,7 @@ class Import
     }
 
     $current_time = time();
-    $six_months_in_seconds = 6 * MONTH_IN_SECONDS;
+    $six_months_in_seconds = 2 * MONTH_IN_SECONDS;
 
     foreach ($files as $file) {
       $filename = basename($file, '.log');
