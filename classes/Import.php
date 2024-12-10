@@ -79,7 +79,7 @@ class Import
 
       $exportproperty_to_posts = array();
       foreach ($existing_posts as $post_id) {
-          $exportproperty_id = get_post_meta($post_id, 'exportproperty_id', true);
+          $exportproperty_id = (string) get_post_meta($post_id, 'exportproperty_id', true); 
           if ($exportproperty_id) {
               if (!isset($exportproperty_to_posts[$exportproperty_id])) {
                   $exportproperty_to_posts[$exportproperty_id] = array();
@@ -88,7 +88,8 @@ class Import
           }
       }
 
-      $outdated_exportproperty_ids = array_diff(array_keys($exportproperty_to_posts), $xml_property_ids);
+      $existing_exportproperty_ids = array_keys($exportproperty_to_posts);
+      $outdated_exportproperty_ids = array_diff($existing_exportproperty_ids, $xml_property_ids);
       $total_to_delete = count($outdated_exportproperty_ids);
 
       if ($total_to_delete === 0) {
@@ -106,43 +107,62 @@ class Import
                   foreach ($exportproperty_to_posts[$exportproperty_id] as $post_id) {
                       if ($this->hasWPML()) {
                         
-                          $translations = apply_filters('wpml_get_element_translations', null, array(
-                              'element_id'   => $post_id,
-                              'element_type' => 'post_casawp_property',
-                          ));
+                        $trid = apply_filters( 'wpml_element_trid', null, $post_id, 'post_' . get_post_type($post_id) );
 
-                          if ($translations && is_array($translations)) {
-                              foreach ($translations as $lang => $translation) {
-                                  if (isset($translation->element_id)) {
-                                      $trans_post_id = $translation->element_id;
+                        if (!$trid) {
+                          if (isset($this->trid_store[$exportproperty_id])) {
+                              $trid = $this->trid_store[$exportproperty_id];
+                          } else {
+                              error_log("Unable to find TRID for exportproperty_id: {$exportproperty_id}");
+                              continue;
+                          }
+                        }
 
-                                      $attachments = get_posts(array(
-                                          'post_type'      => 'attachment',
-                                          'posts_per_page' => -1,
-                                          'post_status'    => 'any',
-                                          'post_parent'    => $trans_post_id,
-                                          'fields'         => 'ids',
-                                      ));
+                        global $sitepress;
+                        if ( isset($sitepress) ) {
+                            $translations = $sitepress->get_element_translations($trid);
+                        } else {
+                            error_log("SitePress global object not found.");
+                            continue;
+                        }
 
-                                      foreach ($attachments as $attachment_id) {
-                                          if (wp_delete_attachment($attachment_id, true)) {
-                                              #$this->addToLog("Deleted attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
-                                          } else {
-                                              $this->addToLog("Failed to delete attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
-                                          }
-                                      }
+                        if ($translations && is_array($translations)) {
+                          foreach ($translations as $lang => $translation) {
+                              if (isset($translation->element_id)) {
+                                  $trans_post_id = $translation->element_id;
 
-                                      $deleted = wp_delete_post($trans_post_id, true);
-                                      if ($deleted) {
-                                          #$this->addToLog("Deleted translation post ID: {$trans_post_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                  error_log("Deleting post ID: {$trans_post_id} for language: {$lang}");
+
+                                  $attachments = get_posts(array(
+                                      'post_type'      => 'attachment',
+                                      'posts_per_page' => -1,
+                                      'post_status'    => 'any',
+                                      'post_parent'    => $trans_post_id,
+                                      'fields'         => 'ids',
+                                  ));
+
+                                  foreach ($attachments as $attachment_id) {
+                                      if (wp_delete_attachment($attachment_id, true)) {
+                                          error_log("Deleted attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
                                       } else {
-                                          $this->addToLog("Failed to delete translation post ID: {$trans_post_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                          error_log("Failed to delete attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
                                       }
                                   }
+
+                                  // Delete the post
+                                  $deleted = wp_delete_post($trans_post_id, true);
+                                  if ($deleted) {
+                                      error_log("Successfully deleted post ID: {$trans_post_id}");
+                                  } else {
+                                      error_log("Failed to delete post ID: {$trans_post_id}");
+                                  }
+                              } else {
+                                  error_log("Translation data missing for language: {$lang} in exportproperty_id: {$exportproperty_id}");
                               }
-                          } else {
-                              #$this->addToLog("No translations found for post ID: {$post_id} (exportproperty_id: {$exportproperty_id})");
                           }
+                        } else {
+                          error_log("No translations found for TRID: {$trid} in exportproperty_id: {$exportproperty_id}");
+                        } 
                       } else {
                         
                           $attachments = get_posts(array(
