@@ -15,8 +15,6 @@ class Import
 
   public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
-    /* $full_url = $this->getCurrentUrl();
-    error_log('Request URL: ' . $full_url); */
     if ($casagatewaypoke) {
       add_action('init', array($this, 'updateImportFileThroughCasaGateway'));
     }
@@ -28,13 +26,171 @@ class Import
   public function register_hooks()
   {
     add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'));
+    add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'));
   }
 
-  public function clear_import_lock()
+  public function start_import()
   {
-    delete_transient('casawp_import_in_progress');
-    $this->addToLog('Import lock cleared.', 'cleanup');
+      as_schedule_single_action(time(), 'casawp_delete_outdated_properties', array(), 'casawp_delete_outdated_properties');
+      as_schedule_single_action(time() + 60, 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
   }
+
+  public function delete_outdated_properties()
+  {
+      $this->addToLog('Starting deletion of outdated properties.');
+
+      $xml_file_path = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/data.xml';
+      if (!file_exists($xml_file_path)) {
+          $this->addToLog("XML file not found at: $xml_file_path");
+          #error_log("XML file not found at: $xml_file_path");
+          return;
+      }
+
+      libxml_use_internal_errors(true);
+      $xml = simplexml_load_file($xml_file_path);
+      if ($xml === false) {
+          $this->addToLog("Failed to parse XML file.");
+          libxml_clear_errors();
+          return;
+      }
+
+      $xml_property_ids = array();
+      foreach ($xml->properties->property as $property) {
+          $id = (string) $property['id'];
+          if ($id) {
+              $xml_property_ids[] = $id;
+          }
+      }
+
+      if (empty($xml_property_ids)) {
+          #$this->addToLog("No properties found for deletion XML.");
+          return;
+      }
+
+      $args = array(
+          'post_type'      => 'casawp_property',
+          'posts_per_page' => -1,
+          'fields'         => 'ids',
+          'meta_key'       => 'exportproperty_id',
+      );
+
+      $query = new \WP_Query($args);
+      $existing_posts = $query->posts;
+
+      $exportproperty_to_posts = array();
+      foreach ($existing_posts as $post_id) {
+          $exportproperty_id = get_post_meta($post_id, 'exportproperty_id', true);
+          if ($exportproperty_id) {
+              if (!isset($exportproperty_to_posts[$exportproperty_id])) {
+                  $exportproperty_to_posts[$exportproperty_id] = array();
+              }
+              $exportproperty_to_posts[$exportproperty_id][] = $post_id;
+          }
+      }
+
+      $outdated_exportproperty_ids = array_diff(array_keys($exportproperty_to_posts), $xml_property_ids);
+      $total_to_delete = count($outdated_exportproperty_ids);
+
+      if ($total_to_delete === 0) {
+          $this->addToLog("No outdated properties to delete.");
+          return;
+      }
+
+      $batch_size = 50;
+      $batches = array_chunk($outdated_exportproperty_ids, $batch_size);
+      $batch_number = 1;
+
+      foreach ($batches as $batch) {
+          foreach ($batch as $exportproperty_id) {
+              if (isset($exportproperty_to_posts[$exportproperty_id])) {
+                  foreach ($exportproperty_to_posts[$exportproperty_id] as $post_id) {
+                      if ($this->hasWPML()) {
+                        
+                          $translations = apply_filters('wpml_get_element_translations', null, array(
+                              'element_id'   => $post_id,
+                              'element_type' => 'post_casawp_property',
+                          ));
+
+                          if ($translations && is_array($translations)) {
+                              foreach ($translations as $lang => $translation) {
+                                  if (isset($translation->element_id)) {
+                                      $trans_post_id = $translation->element_id;
+
+                                      $attachments = get_posts(array(
+                                          'post_type'      => 'attachment',
+                                          'posts_per_page' => -1,
+                                          'post_status'    => 'any',
+                                          'post_parent'    => $trans_post_id,
+                                          'fields'         => 'ids',
+                                      ));
+
+                                      foreach ($attachments as $attachment_id) {
+                                          if (wp_delete_attachment($attachment_id, true)) {
+                                              #$this->addToLog("Deleted attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                          } else {
+                                              $this->addToLog("Failed to delete attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                          }
+                                      }
+
+                                      $deleted = wp_delete_post($trans_post_id, true);
+                                      if ($deleted) {
+                                          #$this->addToLog("Deleted translation post ID: {$trans_post_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                      } else {
+                                          $this->addToLog("Failed to delete translation post ID: {$trans_post_id} for exportproperty_id: {$exportproperty_id} in language: {$lang}");
+                                      }
+                                  }
+                              }
+                          } else {
+                              #$this->addToLog("No translations found for post ID: {$post_id} (exportproperty_id: {$exportproperty_id})");
+                          }
+                      } else {
+                        
+                          $attachments = get_posts(array(
+                              'post_type'      => 'attachment',
+                              'posts_per_page' => -1,
+                              'post_status'    => 'any',
+                              'post_parent'    => $post_id,
+                              'fields'         => 'ids',
+                          ));
+
+                          foreach ($attachments as $attachment_id) {
+                              if (wp_delete_attachment($attachment_id, true)) {
+                                  #$this->addToLog("Deleted attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id}");
+                              } else {
+                                  $this->addToLog("Failed to delete attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id}");
+                              }
+                          }
+
+                          $deleted = wp_delete_post($post_id, true);
+                          if ($deleted) {
+                              #$this->addToLog("Deleted property post ID: {$post_id} for exportproperty_id: {$exportproperty_id}");
+                          } else {
+                              $this->addToLog("Failed to delete property post ID: {$post_id} for exportproperty_id: {$exportproperty_id}");
+                          }
+                      }
+                  }
+              } else {
+                  #$this->addToLog("No posts found for exportproperty_id: {$exportproperty_id}");
+              }
+          }
+
+          $batch_number++;
+      }
+
+      if (class_exists('\WpeCommon')) {
+          \WpeCommon::purge_varnish_cache();
+          \WpeCommon::purge_memcached();
+          $this->addToLog('Triggered WP Engine cache purge after deletion.');
+      } else {
+          $this->addToLog('WpeCommon class not found. Skipping cache purge.');
+          #error_log('WpeCommon class not found. Skipping cache purge.');
+      }
+
+      $this->addToLog("Deletion of outdated properties completed.");
+      #error_log("Deletion of outdated properties completed.");
+  }
+
+
 
   public function getImportFile()
   {
@@ -51,23 +207,15 @@ class Import
       $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
       if (file_exists($file)) {
         $good_to_go = true;
-        $this->addToLog('file found lets go: ' . time());
+        #$this->addToLog('file found lets go: ' . time());
       } else {
-        //if force last check for last
         $this->addToLog('file was missing ' . time());
-        /* if (isset($_GET['force_last_import'])) {
-          $this->addToLog('importing last file based on force_last_import: ' . time());
-          $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml';
-          if (file_exists($file)) {
-            $good_to_go = true;
-          }
-        } */
       }
       if ($good_to_go) {
         $this->importFile = $file;
       }
     } else {
-      $this->addToLog('importfile already set: ' . time());
+      #$this->addToLog('importfile already set: ' . time());
     }
 
     return $this->importFile;
@@ -130,7 +278,6 @@ class Import
   {
     $descriptionDatas = $offer['descriptions'];
 
-    //add custom_descriptions
     if ($publisher_options && isset($publisher_options['custom_descriptions']) && $publisher_options['custom_descriptions']) {
       if (is_array($publisher_options['custom_descriptions'])) {
         $json = $publisher_options['custom_descriptions'][0];
@@ -169,7 +316,6 @@ class Import
   {
     $label = (!$label ? $term_slug : $label);
     $term = get_term_by('slug', $term_slug, 'casawp_category', OBJECT, 'raw');
-    //$existing_term_id = term_exists( $label, 'casawp_category');
     $existing_term_id = false;
     if ($term) {
       if (
@@ -220,7 +366,7 @@ class Import
         'casawp_region',
         $options
       );
-      $this->addToLog('inserting region ' . $label);
+      #$this->addToLog('inserting region ' . $label);
       return $id;
     }
   }
@@ -229,7 +375,6 @@ class Import
   {
     $label = (!$label ? $term_slug : $label);
     $term = get_term_by('slug', $term_slug, 'casawp_feature', OBJECT, 'raw');
-    //$existing_term_id = term_exists( $label, 'casawp_feature');
     $existing_term_id = false;
     if ($term) {
       if (
@@ -259,7 +404,6 @@ class Import
   {
     $label = (!$label ? $term_slug : $label);
     $term = get_term_by('slug', $term_slug, 'casawp_utility', OBJECT, 'raw');
-    //$existing_term_id = term_exists( $label, 'casawp_utility');
     $existing_term_id = false;
     if ($term) {
       if (
@@ -317,7 +461,6 @@ class Import
       $filename = '/casawp/import/attachment/externalsync/' . $property_id . '/' . basename($fileurl);
     }
 
-    // Extension is required
     $file_parts = pathinfo($filename);
     if (!isset($file_parts['extension'])) {
       $filename = $filename . '.jpg';
@@ -325,11 +468,9 @@ class Import
 
     $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
 
-    // Create the directory if it doesn't exist, recursively
     $directory = dirname($full_path);
     if (!is_dir($directory)) {
       if (!mkdir($directory, 0755, true)) {
-        #error_log("Failed to create directory: $directory");
         return false;
       }
     }
@@ -348,7 +489,6 @@ class Import
 
       if (!$could_copy) {
         $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = 'FAILED: ' . $filename;
-        #error_log("Failed to copy file from $fileurl to $full_path");
         return false;
       }
     }
@@ -356,24 +496,22 @@ class Import
     return $filename;
   }
 
-
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id)
   {
     if ($the_mediaitem['file']) {
       $filename = '/casawp/import/attachment/' . $the_mediaitem['file'];
     } elseif ($the_mediaitem['url']) { //external
       if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
-        // simply don't copy the original file (the orig meta is used for rendering instead)
         $filename = $the_mediaitem['url'];
       } else {
         $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
       }
-    } else { //missing
+    } else {
       $filename = false;
     }
 
     if ($filename && (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename) || get_option('casawp_use_casagateway_cdn', false))) {
-      //new file attachment upload it and attach it fully
+
       $wp_filetype = wp_check_filetype(basename($filename), null);
       $guid = CASASYNC_CUR_UPLOAD_BASEURL . $filename;
       if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
@@ -391,23 +529,19 @@ class Import
       );
 
       $attach_id = wp_insert_attachment($attachment, CASASYNC_CUR_UPLOAD_BASEDIR . $filename, $post_id);
-      // you must first include the image.php file
-      // for the function wp_generate_attachment_metadata() to work
+
       require_once(ABSPATH . 'wp-admin/includes/image.php');
       $attach_data = wp_generate_attachment_metadata($attach_id, CASASYNC_CUR_UPLOAD_BASEDIR . $filename);
       wp_update_attachment_metadata($attach_id, $attach_data);
 
-      //category
       $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
       if ($term) {
         $term_id = $term->term_id;
         wp_set_post_terms($attach_id,  array($term_id), 'casawp_attachment_type');
       }
 
-      //alt
       update_post_meta($attach_id, '_wp_attachment_image_alt', $the_mediaitem['alt']);
 
-      //orig
       update_post_meta($attach_id, '_origin', ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url']));
 
       return $attach_id;
@@ -458,81 +592,6 @@ class Import
     return false;
   }
 
-  //NEW WAY
-  /*public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier){
-    if ($this->hasWPML()) {
-      if ($this->getMainLang() == $lang) {
-        $trid = wpml_get_content_trid('post_'.$wp_post->post_type, $wp_post->ID);
-        if (!$trid) {
-          $trid = ($wp_post->post_type == 'casawp_property' ? 1000 : 2000) . $wp_post->ID;
-        }
-        $this->trid_store[$trid_identifier] = $trid;
-      } else {
-        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
-      }
-      if ($trid) {
-        $_POST['icl_post_language'] = $lang;
-
-        global $wpdb;
-        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE
-          trid = ' . $trid . '
-          AND language_code = \'' . $lang . '\'
-          ', OBJECT );
-
-          $new = array(
-            'trid' => $trid,
-            'element_id' => $wp_post->ID,
-            'element_type' => 'post_'.$wp_post->post_type,
-            'language_code' => $lang
-          );
-          if ($this->getMainLang() != $lang) {
-            $new['source_language_code'] = $this->getMainLang();
-            $this->transcript['wpml_'.$wp_post->post_type][] = 'set alternate language for trid:' . $trid . '(' . $lang . ')';
-          } else {
-            $this->transcript['wpml_'.$wp_post->post_type][] = 'set main language for trid:' . $trid . '(' . $lang . ')';
-          }
-        if (!$existing) {
-          $wpdb->insert( $wpdb->prefix . 'icl_translations', $new );
-        } else {
-          $old = array(
-            'trid'          => $existing[0]->trid,
-            'element_id'    => $existing[0]->element_id,
-            'element_type'  => $existing[0]->element_type,
-            'language_code' => $existing[0]->language_code
-          );
-          if ($this->getMainLang() != $lang) {
-            $old['source_language_code'] = $existing[0]->source_language_code;
-          }
-          if ($new != $old) {
-            $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
-          }
-
-        }
-
-      } else {
-        $this->transcript['wpml_'.$wp_post->post_type][] = 'unable to find trid for ' . $trid_identifier;
-      }
-    }
-  }*/
-
-  //OLD WAY
-  /*public function bhjkfwInsertWPMLconnection($wp_post, $lang, $trid_identifier){
-    if ($this->hasWPML()) {
-      if ($this->getMainLang() == $lang) {
-        $this->curtrid = wpml_get_content_trid('post_casawp_property', $wp_post->ID);
-      }
-      $_POST['icl_post_language'] = $lang;
-
-      global $sitepress;
-      if ($this->getMainLang() != $lang) {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, $sitepress->get_default_language(), true);
-      } else {
-        $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $this->curtrid, $lang, NULL, true);
-      }
-    }
-  }*/
-
-  //HYBRID
   public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier)
   {
     if ($this->hasWPML()) {
@@ -555,44 +614,6 @@ class Import
           $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, NULL, true);
         }
 
-        /*
-        $_POST['icl_post_language'] = $lang;
-
-        global $wpdb;
-        $existing = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'icl_translations WHERE
-          trid = ' . $trid . '
-          AND language_code = \'' . $lang . '\'
-          ', OBJECT );
-
-          $new = array(
-            'trid' => $trid,
-            'element_id' => $wp_post->ID,
-            'element_type' => 'post_'.$wp_post->post_type,
-            'language_code' => $lang
-          );
-          if ($this->getMainLang() != $lang) {
-            $new['source_language_code'] = $this->getMainLang();
-            $this->transcript['wpml_'.$wp_post->post_type][] = 'set alternate language for trid:' . $trid . '(' . $lang . ')';
-          } else {
-            $this->transcript['wpml_'.$wp_post->post_type][] = 'set main language for trid:' . $trid . '(' . $lang . ')';
-          }
-        if (!$existing) {
-          $wpdb->insert( $wpdb->prefix . 'icl_translations', $new );
-        } else {
-          $old = array(
-            'trid'          => $existing[0]->trid,
-            'element_id'    => $existing[0]->element_id,
-            'element_type'  => $existing[0]->element_type,
-            'language_code' => $existing[0]->language_code
-          );
-          if ($this->getMainLang() != $lang) {
-            $old['source_language_code'] = $existing[0]->source_language_code;
-          }
-          if ($new != $old) {
-            $wpdb->update( $wpdb->prefix . 'icl_translations', $new, array('translation_id' => $existing[0]->translation_id) );
-          }
-
-        }*/
       } else {
         $this->transcript['wpml_' . $wp_post->post_type][] = 'unable to find trid for ' . $trid_identifier;
       }
@@ -622,9 +643,6 @@ class Import
 
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property)
   {
-    ### future task: for better performace compare new and old data ###
-
-    #error_log(print_r($offer_medias, true));
 
     $the_casawp_attachments = array();
     if ($offer_medias) {
@@ -660,7 +678,6 @@ class Import
       }
     }
 
-    //get post attachments already attached
     $wp_casawp_attachments = array();
     $args = array(
       'post_type'   => 'attachment',
@@ -683,27 +700,17 @@ class Import
       }
     }
 
-
-    //upload necesary images to wordpress
-    if (isset($the_casawp_attachments)) { // go through each attachment specified in xml
+    if (isset($the_casawp_attachments)) {
       $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
       $dup_checker_arr = [];
-      foreach ($the_casawp_attachments as $the_mediaitem) { // go through each available attachment already in db
-        //look up wp and see if file is already attached
+      foreach ($the_casawp_attachments as $the_mediaitem) {
         $existing = false;
         $existing_attachment = array();
         foreach ($wp_casawp_attachments as $key => $wp_mediaitem) {
           $attachment_customfields = get_post_custom($wp_mediaitem->ID);
           $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-
-          // this checks for duplicates and ignores them if they exist. This can fix duplicates existing in the DB if they where, for instance, created durring run-in imports.
           if (in_array($original_filename, $dup_checker_arr)) {
-            $this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
-            // this file appears to be a duplicate, skip it (that way it will be deleted later) aka. it will remain in $wp_casawp_attachments_to_remove.
-            // because it encountered this file before it must be made existing in the past loop right?
-            // DISABLE FOR NOW
-            // $existing = true;
-            // continue;
+            #$this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
           }
           $dup_checker_arr[] = $original_filename;
 
@@ -714,33 +721,28 @@ class Import
             str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
           ) {
             $existing = true;
-            $this->addToLog('updating attachment ' . $wp_mediaitem->ID);
+            #$this->addToLog('updating attachment ' . $wp_mediaitem->ID);
 
-            //it's here to stay
             unset($wp_casawp_attachments_to_remove[$key]);
 
             $types = wp_get_post_terms($wp_mediaitem->ID, 'casawp_attachment_type');
             if (array_key_exists(0, $types)) {
               $typeslug = $types[0]->slug;
               $alt = get_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', true);
-              //build a proper array out of it
               $existing_attachment = array(
                 'type'    => $typeslug,
                 'alt'     => $alt,
                 'title'   => $wp_mediaitem->post_title,
                 'file'    => $the_mediaitem['file'],
-                //'file'    => maibe? -> (is_file($the_mediaitem['file']) ? $the_mediaitem['file'] : '')
                 'url'     => $the_mediaitem['url'],
                 'caption' => $wp_mediaitem->post_excerpt,
                 'order'   => $wp_mediaitem->menu_order
               );
             }
 
-            //have its values changed?
             if ($existing_attachment != $the_mediaitem) {
               $changed = true;
               $this->transcript[$casawp_id]['attachments']["updated"] = 1;
-              //update attachment data
               if (
                 $existing_attachment['caption'] != $the_mediaitem['caption']
                 || $existing_attachment['title'] != $the_mediaitem['title']
@@ -752,7 +754,7 @@ class Import
                 $att['menu_order']   = $the_mediaitem['order'];
                 $insert_id           = wp_update_post($att);
               }
-              //update attachment category
+              
               if ($existing_attachment['type'] != $the_mediaitem['type']) {
                 $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
                 if ($term) {
@@ -760,7 +762,7 @@ class Import
                   wp_set_post_terms($wp_mediaitem->ID,  array($term_id), 'casawp_attachment_type');
                 }
               }
-              //update attachment alt
+              
               if ($alt != $the_mediaitem['alt']) {
                 update_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', $the_mediaitem['alt']);
               }
@@ -770,9 +772,8 @@ class Import
 
         if (!$existing) {
           if (isset($wp_mediaitem->ID)) {
-            $this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
+            #$this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
           }
-          //insert the new image
           $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
           if (is_int($new_id)) {
             $this->transcript[$casawp_id]['attachments']["created"] = $the_mediaitem['file'];
@@ -781,26 +782,20 @@ class Import
           }
         }
 
-        //tries to fix missing files
         if (! get_option('casawp_use_casagateway_cdn', false) && isset($the_mediaitem['url'])) {
           $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
         }
-      } //foreach ($the_casawp_attachments as $the_mediaitem) {
+      }
 
-      //images to remove
       if ($wp_casawp_attachments_to_remove) {
-        $this->addToLog('removing ' . count($wp_casawp_attachments_to_remove) . ' attachments');
+        #$this->addToLog('removing ' . count($wp_casawp_attachments_to_remove) . ' attachments');
       }
       foreach ($wp_casawp_attachments_to_remove as $attachment) {
-        $this->addToLog('removing ' . $attachment->ID);
+        #$this->addToLog('removing ' . $attachment->ID);
         $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
-
-        // $attachment_customfields = get_post_custom($attachment->ID);
-        // $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
         wp_delete_attachment($attachment->ID);
       }
 
-      //featured image (refetch to avoid setting just removed items or not having new items)
       $args = array(
         'post_type'   => 'attachment',
         'numberposts' => -1,
@@ -815,6 +810,7 @@ class Import
           )
         )
       );
+
       $attachments = get_posts($args);
       if ($attachments) {
         unset($wp_casawp_attachments);
@@ -829,6 +825,7 @@ class Import
           $attachment_image_order[$the_mediaitem['order']] = $the_mediaitem;
         }
       }
+
       if (isset($attachment_image_order) && !empty($attachment_image_order)) {
         ksort($attachment_image_order);
         $attachment_image_order = reset($attachment_image_order);
@@ -851,35 +848,30 @@ class Import
           }
         }
       }
-    } //(isset($the_casawp_attachments)
-
-
+    }
   }
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id)
   {
-    // Initialize term IDs
+
     $new_term_id = null;
     $old_term_id = null;
 
-    // Process new salestype term
     if ($salestype) {
       $salestype_slug = sanitize_title($salestype);
       $salestype_label = sanitize_text_field($salestype);
 
-      // Get or create the term
       $term = get_term_by('slug', $salestype_slug, 'casawp_salestype');
       if (!$term || is_wp_error($term)) {
-        // Term doesn't exist, create it
         $inserted_term = wp_insert_term($salestype_label, 'casawp_salestype', array('slug' => $salestype_slug));
         if (is_wp_error($inserted_term)) {
-          $this->addToLog('Error inserting salestype term "' . $salestype_label . '": ' . $inserted_term->get_error_message());
+          #$this->addToLog('Error inserting salestype term "' . $salestype_label . '": ' . $inserted_term->get_error_message());
           $new_term_id = null;
         } else {
           $new_term_id = $inserted_term['term_id'];
           $term = get_term($new_term_id, 'casawp_salestype');
           if (is_wp_error($term)) {
-            $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+            #$this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
             $new_term_id = null;
           }
         }
@@ -888,10 +880,9 @@ class Import
       }
     }
 
-    // Get existing salestype term assigned to the post
     $current_terms = wp_get_object_terms($wp_post->ID, 'casawp_salestype', array('fields' => 'ids'));
     if (is_wp_error($current_terms)) {
-      $this->addToLog('Error retrieving current salestype terms: ' . $current_terms->get_error_message());
+      #$this->addToLog('Error retrieving current salestype terms: ' . $current_terms->get_error_message());
       $current_terms = array();
     }
 
@@ -899,9 +890,7 @@ class Import
       $old_term_id = $current_terms[0];
     }
 
-    // Check if salestype has changed
     if ($old_term_id !== $new_term_id) {
-      // Get term names for transcript
       $old_term_name = 'none';
       if ($old_term_id) {
         $old_term = get_term($old_term_id, 'casawp_salestype');
@@ -921,22 +910,20 @@ class Import
       $this->transcript[$casawp_id]['salestype']['from'] = $old_term_name;
       $this->transcript[$casawp_id]['salestype']['to'] = $new_term_name;
 
-      // Set the new term on the post
       $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_salestype');
       if (is_wp_error($result)) {
-        $this->addToLog('Error assigning salestype term to post: ' . $result->get_error_message());
+        #$this->addToLog('Error assigning salestype term to post: ' . $result->get_error_message());
       } else {
-        $this->addToLog('Salestype updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+        #$this->addToLog('Salestype updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
       }
     } else {
-      $this->addToLog('No salestype changes detected.');
+      #$this->addToLog('No salestype changes detected.');
     }
   }
 
-
   public function setOfferAvailability($wp_post, $availability, $casawp_id)
   {
-    // Define allowed availabilities
+    
     $allowed_availabilities = array(
       'active',
       'taken',
@@ -945,38 +932,32 @@ class Import
       'reference'
     );
 
-    // Backward compatibility
     if ($availability === 'available') {
       $availability = 'active';
     }
 
-    // Validate availability
     if (!in_array($availability, $allowed_availabilities)) {
       $availability = null;
     }
 
-    // Initialize term IDs
     $new_term_id = null;
     $old_term_id = null;
 
-    // Process new availability term
     if ($availability) {
       $availability_slug = sanitize_title($availability);
       $availability_label = sanitize_text_field($availability);
 
-      // Get or create the term
       $term = get_term_by('slug', $availability_slug, 'casawp_availability');
       if (!$term || is_wp_error($term)) {
-        // Term doesn't exist, create it
         $inserted_term = wp_insert_term($availability_label, 'casawp_availability', array('slug' => $availability_slug));
         if (is_wp_error($inserted_term)) {
-          $this->addToLog('Error inserting availability term "' . $availability_label . '": ' . $inserted_term->get_error_message());
+          #$this->addToLog('Error inserting availability term "' . $availability_label . '": ' . $inserted_term->get_error_message());
           $new_term_id = null;
         } else {
           $new_term_id = $inserted_term['term_id'];
           $term = get_term($new_term_id, 'casawp_availability');
           if (is_wp_error($term)) {
-            $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+            #$this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
             $new_term_id = null;
           }
         }
@@ -985,10 +966,9 @@ class Import
       }
     }
 
-    // Get existing availability term assigned to the post
     $current_terms = wp_get_object_terms($wp_post->ID, 'casawp_availability', array('fields' => 'ids'));
     if (is_wp_error($current_terms)) {
-      $this->addToLog('Error retrieving current availability terms: ' . $current_terms->get_error_message());
+      #$this->addToLog('Error retrieving current availability terms: ' . $current_terms->get_error_message());
       $current_terms = array();
     }
 
@@ -996,9 +976,7 @@ class Import
       $old_term_id = $current_terms[0];
     }
 
-    // Check if availability has changed
     if ($old_term_id !== $new_term_id) {
-      // Get term names for transcript
       $old_term_name = 'none';
       if ($old_term_id) {
         $old_term = get_term($old_term_id, 'casawp_availability');
@@ -1018,42 +996,36 @@ class Import
       $this->transcript[$casawp_id]['availability']['from'] = $old_term_name;
       $this->transcript[$casawp_id]['availability']['to'] = $new_term_name;
 
-      // Set the new term on the post
       $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_availability');
       if (is_wp_error($result)) {
-        $this->addToLog('Error assigning availability term to post: ' . $result->get_error_message());
+        #$this->addToLog('Error assigning availability term to post: ' . $result->get_error_message());
       } else {
-        $this->addToLog('Availability updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+        #$this->addToLog('Availability updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
       }
     } else {
-      $this->addToLog('No availability changes detected.');
+      #$this->addToLog('No availability changes detected.');
     }
   }
 
-
   public function setOfferLocalities($wp_post, $address, $casawp_id)
   {
-    // Extract address components
+
     $country  = strtoupper($address['country']);
     $region   = $address['region'];
     $locality = $address['locality'];
 
-    // Initialize arrays
     $term_ids = array();
     $parent_term_ids = array();
     $region_slug = '';
 
-    // Function to sanitize slug
     $sanitize_slug = function ($prefix, $name) {
       return sanitize_title($prefix . '_' . $name);
     };
 
-    // Sanitize names
     $sanitize_name = function ($name) {
       return sanitize_text_field($name);
     };
 
-    // Process Country
     if ($country) {
       $country_slug = $sanitize_slug('country', $country);
       $country_label = $sanitize_name($country);
@@ -1065,7 +1037,6 @@ class Import
       }
     }
 
-    // Process Region
     if ($region) {
       $region_slug = $sanitize_slug('region', $region);
       $region_label = $sanitize_name($region);
@@ -1078,7 +1049,6 @@ class Import
       }
     }
 
-    // Process Locality
     if ($locality) {
       $locality_slug = $sanitize_slug('locality', $locality);
       $locality_label = $sanitize_name($locality);
@@ -1091,12 +1061,10 @@ class Import
       }
     }
 
-    // Remove duplicates and sort term IDs
     $term_ids = array_unique($term_ids);
     asort($term_ids);
     $term_ids = array_values($term_ids);
 
-    // Get existing term IDs assigned to the post
     $old_terms = wp_get_object_terms($wp_post->ID, 'casawp_location', array('fields' => 'ids'));
     if (is_wp_error($old_terms)) {
       $old_terms = array();
@@ -1104,47 +1072,42 @@ class Import
     asort($old_terms);
     $old_terms = array_values($old_terms);
 
-    // Compare new terms with old terms
     if ($term_ids != $old_terms) {
       $this->transcript[$casawp_id]['locations'][] = array('from' => $old_terms, 'to' => $term_ids);
 
       $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_location');
       if (is_wp_error($result)) {
-        $this->addToLog('Error assigning location terms to post: ' . $result->get_error_message());
+        #$this->addToLog('Error assigning location terms to post: ' . $result->get_error_message());
       } else {
         if (defined('WPSEO_VERSION') && isset($parent_term_ids[$locality_slug])) {
-          // Yoast SEO is active, so use its primary term feature
           $primary_term_id = $parent_term_ids[$locality_slug];
           $yoast_primary_term = new \WPSEO_Primary_Term('casawp_location', $wp_post->ID);
           $yoast_primary_term->set_primary_term($primary_term_id);
         }
       }
     } else {
-      $this->addToLog('No location changes detected.');
+      #$this->addToLog('No location changes detected.');
     }
   }
 
-  // Helper function to ensure a term exists, create it if necessary
   private function ensureTermExists($taxonomy, $slug, $label, $parent_id = 0)
   {
     $term = get_term_by('slug', $slug, $taxonomy);
     if (!$term || is_wp_error($term)) {
-      // Create term
       $args = array(
         'slug'   => $slug,
         'parent' => $parent_id
       );
       $inserted_term = wp_insert_term($label, $taxonomy, $args);
       if (is_wp_error($inserted_term)) {
-        $this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
+        #$this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
         return null;
       } else {
         $term_id = $inserted_term['term_id'];
         $this->transcript['new_locations'][] = array($label, $slug);
-        // Retrieve the term object
         $term = get_term($term_id, $taxonomy);
         if (is_wp_error($term)) {
-          $this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
+          #$this->addToLog('Error retrieving term after creation: ' . $term->get_error_message());
           return null;
         }
         return $term;
@@ -1154,24 +1117,20 @@ class Import
     }
   }
 
-
   public function setOfferCategories($wp_post, $categories, $customCategories, $casawp_id)
   {
-    // Get existing categories (slugs) from the post
+    
     $old_categories = wp_get_object_terms($wp_post->ID, 'casawp_category', array('fields' => 'slugs'));
     if (is_wp_error($old_categories)) {
       $old_categories = array();
     }
 
-    // Collect new categories
     $new_categories = array();
 
-    // Add standard categories
     if (!empty($categories)) {
       $new_categories = array_merge($new_categories, $categories);
     }
 
-    // Process custom categories
     $custom_categorylabels = array();
     if (!empty($customCategories)) {
       foreach ($customCategories as $custom_category) {
@@ -1182,7 +1141,6 @@ class Import
       }
     }
 
-    // Determine if categories have changed
     if (array_diff($new_categories, $old_categories) || array_diff($old_categories, $new_categories)) {
       $slugs_to_add = array_diff($new_categories, $old_categories);
       $slugs_to_remove = array_diff($old_categories, $new_categories);
@@ -1190,36 +1148,25 @@ class Import
       $this->transcript[$casawp_id]['categories_changed']['removed_category'] = $slugs_to_remove;
       $this->transcript[$casawp_id]['categories_changed']['added_category'] = $slugs_to_add;
 
-      // Ensure the terms exist
       foreach ($slugs_to_add as $new_term_slug) {
         $label = isset($custom_categorylabels[$new_term_slug]) ? $custom_categorylabels[$new_term_slug] : $new_term_slug;
-        // Check if term exists
         if (!term_exists($new_term_slug, 'casawp_category')) {
-          // Create term
           wp_insert_term($label, 'casawp_category', array('slug' => $new_term_slug));
         }
-        // If you have custom logic in setcasawpCategoryTerm, you can call it here
-        // $this->setcasawpCategoryTerm($new_term_slug, $label);
       }
-
-      // Set the terms on the post using slugs
       wp_set_object_terms($wp_post->ID, $new_categories, 'casawp_category', false);
     }
   }
 
-
   public function setOfferFeatures($wp_post, $features, $casawp_id)
   {
-    // Get existing features (slugs) from the post
     $old_features = wp_get_object_terms($wp_post->ID, 'casawp_feature', array('fields' => 'slugs'));
     if (is_wp_error($old_features)) {
       $old_features = array();
     }
 
-    // Collect new features
     $new_features = !empty($features) ? $features : array();
-
-    // Determine if features have changed
+    
     if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
       $slugs_to_add = array_diff($new_features, $old_features);
       $slugs_to_remove = array_diff($old_features, $new_features);
@@ -1227,65 +1174,53 @@ class Import
       $this->transcript[$casawp_id]['features_changed']['removed_feature'] = $slugs_to_remove;
       $this->transcript[$casawp_id]['features_changed']['added_feature'] = $slugs_to_add;
 
-      // Ensure the terms exist and collect term IDs
       $term_ids = array();
 
       foreach ($new_features as $feature_slug) {
-        // Check if term exists
         $term = get_term_by('slug', $feature_slug, 'casawp_feature');
         if (!$term) {
-          // Create term
-          #$label = ucwords(str_replace('-', ' ', $feature_slug)); // Generate a label if needed
           $label = $feature_slug;
           $inserted_term = wp_insert_term($feature_slug, 'casawp_feature', array('slug' => $feature_slug));
           if (is_wp_error($inserted_term)) {
-            $this->addToLog('Error inserting feature term "' . $label . '": ' . $inserted_term->get_error_message());
-            continue; // Skip this term if there's an error
+            #$this->addToLog('Error inserting feature term "' . $label . '": ' . $inserted_term->get_error_message());
+            continue;
           } else {
             $term_id = $inserted_term['term_id'];
-            $this->addToLog('Inserted new feature term "' . $label . '" with ID ' . $term_id);
+            #$this->addToLog('Inserted new feature term "' . $label . '" with ID ' . $term_id);
           }
         } else {
           $term_id = $term->term_id;
-          $this->addToLog('Feature term already exists: "' . $term->name . '" with ID ' . $term_id);
+          #$this->addToLog('Feature term already exists: "' . $term->name . '" with ID ' . $term_id);
         }
-
-        // Add term ID to the list
         $term_ids[] = (int) $term_id;
       }
 
-      // Set the terms on the post using term IDs
       if (!empty($term_ids)) {
         $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_feature');
         if (is_wp_error($result)) {
-          $this->addToLog('Error assigning features to post: ' . $result->get_error_message());
+          #$this->addToLog('Error assigning features to post: ' . $result->get_error_message());
         } else {
-          $this->addToLog('Assigned features to post successfully.');
+          #$this->addToLog('Assigned features to post successfully.');
         }
       } else {
-        // If no terms to assign, remove all terms
         wp_set_object_terms($wp_post->ID, array(), 'casawp_feature');
-        $this->addToLog('Removed all features from post.');
+        #$this->addToLog('Removed all features from post.');
       }
     } else {
-      $this->addToLog('No feature changes detected.');
+      #$this->addToLog('No feature changes detected.');
     }
   }
 
-
-
   public function setOfferUtilities($wp_post, $utilities, $casawp_id)
   {
-    // Get existing utilities (slugs) from the post
+
     $old_utilities = wp_get_object_terms($wp_post->ID, 'casawp_utility', array('fields' => 'slugs'));
     if (is_wp_error($old_utilities)) {
       $old_utilities = array();
     }
 
-    // Collect new utilities
     $new_utilities = !empty($utilities) ? $utilities : array();
 
-    // Determine if utilities have changed
     if (array_diff($new_utilities, $old_utilities) || array_diff($old_utilities, $new_utilities)) {
       $slugs_to_add = array_diff($new_utilities, $old_utilities);
       $slugs_to_remove = array_diff($old_utilities, $new_utilities);
@@ -1293,60 +1228,51 @@ class Import
       $this->transcript[$casawp_id]['utilities_changed']['removed_utility'] = $slugs_to_remove;
       $this->transcript[$casawp_id]['utilities_changed']['added_utility'] = $slugs_to_add;
 
-      // Ensure the terms exist and collect term IDs
       $term_ids = array();
 
       foreach ($new_utilities as $utility_slug) {
-        // Check if term exists
         $term = get_term_by('slug', $utility_slug, 'casawp_utility');
         if (!$term) {
-          // Create term
-          $label = ucwords(str_replace('-', ' ', $utility_slug)); // Generate a label if needed
+          $label = ucwords(str_replace('-', ' ', $utility_slug));
           $inserted_term = wp_insert_term($label, 'casawp_utility', array('slug' => $utility_slug));
           if (is_wp_error($inserted_term)) {
-            $this->addToLog('Error inserting utility term "' . $label . '": ' . $inserted_term->get_error_message());
-            continue; // Skip this term if there's an error
+            #$this->addToLog('Error inserting utility term "' . $label . '": ' . $inserted_term->get_error_message());
+            continue;
           } else {
             $term_id = $inserted_term['term_id'];
-            $this->addToLog('Inserted new utility term "' . $label . '" with ID ' . $term_id);
+            #$this->addToLog('Inserted new utility term "' . $label . '" with ID ' . $term_id);
           }
         } else {
           $term_id = $term->term_id;
-          $this->addToLog('Utility term already exists: "' . $term->name . '" with ID ' . $term_id);
+          #$this->addToLog('Utility term already exists: "' . $term->name . '" with ID ' . $term_id);
         }
-
-        // Add term ID to the list
         $term_ids[] = (int) $term_id;
       }
 
-      // Set the terms on the post using term IDs
       if (!empty($term_ids)) {
         $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_utility');
         if (is_wp_error($result)) {
-          $this->addToLog('Error assigning utilities to post: ' . $result->get_error_message());
+          #$this->addToLog('Error assigning utilities to post: ' . $result->get_error_message());
         } else {
-          $this->addToLog('Assigned utilities to post successfully.');
+          #$this->addToLog('Assigned utilities to post successfully.');
         }
       } else {
-        // If no terms to assign, remove all terms
         wp_set_object_terms($wp_post->ID, array(), 'casawp_utility');
-        $this->addToLog('Removed all utilities from post.');
+        #$this->addToLog('Removed all utilities from post.');
       }
     } else {
-      $this->addToLog('No utility changes detected.');
+      #$this->addToLog('No utility changes detected.');
     }
   }
 
-
   public function setOfferRegions($wp_post, $terms, $casawp_id)
   {
-    // Get existing regions (slugs) from the post
+    
     $old_terms = wp_get_object_terms($wp_post->ID, 'casawp_region', array('fields' => 'slugs'));
     if (is_wp_error($old_terms)) {
       $old_terms = array();
     }
 
-    // Collect new terms and labels
     $new_terms = array();
     $custom_labels = array();
 
@@ -1359,7 +1285,6 @@ class Import
       }
     }
 
-    // Determine if terms have changed
     if (array_diff($new_terms, $old_terms) || array_diff($old_terms, $new_terms)) {
       $slugs_to_add = array_diff($new_terms, $old_terms);
       $slugs_to_remove = array_diff($old_terms, $new_terms);
@@ -1367,48 +1292,41 @@ class Import
       $this->transcript[$casawp_id]['regions_changed']['removed_region'] = $slugs_to_remove;
       $this->transcript[$casawp_id]['regions_changed']['added_region'] = $slugs_to_add;
 
-      // Ensure the terms exist and collect term IDs
       $term_ids = array();
 
       foreach ($new_terms as $term_slug) {
         $label = isset($custom_labels[$term_slug]) ? $custom_labels[$term_slug] : $term_slug;
 
-        // Check if term exists
         $term = get_term_by('slug', $term_slug, 'casawp_region');
         if (!$term) {
-          // Create term
           $inserted_term = wp_insert_term($label, 'casawp_region', array('slug' => $term_slug));
           if (is_wp_error($inserted_term)) {
-            $this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
-            continue; // Skip this term if there's an error
+            #$this->addToLog('Error inserting term "' . $label . '": ' . $inserted_term->get_error_message());
+            continue;
           } else {
             $term_id = $inserted_term['term_id'];
-            $this->addToLog('Inserted new term "' . $label . '" with ID ' . $term_id);
+            #$this->addToLog('Inserted new term "' . $label . '" with ID ' . $term_id);
           }
         } else {
           $term_id = $term->term_id;
-          $this->addToLog('Term already exists: "' . $term->name . '" with ID ' . $term_id);
+          #$this->addToLog('Term already exists: "' . $term->name . '" with ID ' . $term_id);
         }
-
-        // Add term ID to the list
         $term_ids[] = (int) $term_id;
       }
 
-      // Set the terms on the post using term IDs
       if (!empty($term_ids)) {
         $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_region');
         if (is_wp_error($result)) {
-          $this->addToLog('Error assigning terms to post: ' . $result->get_error_message());
+          #$this->addToLog('Error assigning terms to post: ' . $result->get_error_message());
         } else {
-          $this->addToLog('Assigned regions to post successfully.');
+          #$this->addToLog('Assigned regions to post successfully.');
         }
       } else {
-        // If no terms to assign, remove all terms
         wp_set_object_terms($wp_post->ID, array(), 'casawp_region');
-        $this->addToLog('Removed all regions from post.');
+        #$this->addToLog('Removed all regions from post.');
       }
     } else {
-      $this->addToLog('No region changes detected.');
+      #$this->addToLog('No region changes detected.');
     }
   }
 
@@ -1421,46 +1339,40 @@ class Import
       return;
     }
 
-    $files = glob($log_dir . '/*.log'); // Get all .log files
+    $files = glob($log_dir . '/*.log');
 
     if (!$files) {
-      $this->addToLog('No log files found for cleanup.');
+      #$this->addToLog('No log files found for cleanup.');
       return;
     }
 
     $current_time = time();
-    $six_months_in_seconds = 6 * MONTH_IN_SECONDS; // Approximate six months
+    $six_months_in_seconds = 6 * MONTH_IN_SECONDS;
 
     foreach ($files as $file) {
-      // Extract the filename without extension
-      $filename = basename($file, '.log'); // e.g., '202304'
+      $filename = basename($file, '.log');
 
-      // Validate filename format (YYYYMM)
       if (!preg_match('/^\d{6}$/', $filename)) {
         continue;
       }
 
-      // Convert filename to timestamp (assume first day of the month)
-      $file_time = strtotime("{$filename}01"); // '20230401'
+      $file_time = strtotime("{$filename}01");
 
       if ($file_time === false) {
         continue;
       }
 
-      // Calculate the age of the file
       $age = $current_time - $file_time;
 
       if ($age > $six_months_in_seconds) {
-        // Attempt to delete the file
         if (unlink($file)) {
-          $this->addToLog("Deleted old log file: {$filename}.log");
+          #$this->addToLog("Deleted old log file: {$filename}.log");
         } else {
-          $this->addToLog("Failed to delete log file: {$filename}.log");
+          #$this->addToLog("Failed to delete log file: {$filename}.log");
         }
       }
     }
   }
-
 
   public function addToLog($transcript)
   {
@@ -1471,35 +1383,18 @@ class Import
     file_put_contents($dir . "/" . get_date_from_gmt('', 'Ym') . '.log', "\n" . json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
-  /*   public function casawpImport()
-  {
-
-
-    if ($this->getImportFile()) {
-      if (is_admin()) {
-        $this->updateOffers();
-        echo '<div id="message" class="updated"><p>casawp <strong>updated</strong>.</p><pre>' . print_r($this->transcript, true) . '</pre></div>';
-      } else {
-        $this->updateOffers();
-        $this->transcript;
-      }
-      do_action('casawp_import_finished');
-    }
-  } */
-
   public function gatewaypoke()
   {
     add_action('asynchronous_gatewayupdate', array($this, 'gatewaypokeanswer'));
-    $this->addToLog('Scheduled an Update on: ' . time());
+    #$this->addToLog('Scheduled an Update on: ' . time());
     wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
   }
 
   public function gatewaypokeanswer()
   {
-    $this->addToLog('gateway call file: ' . time());
+    #$this->addToLog('gateway call file: ' . time());
     $this->updateImportFileThroughCasaGateway();
-    $this->addToLog('gateway import answer: ' . time());
-    #$this->updateOffers();
+    #$this->addToLog('gateway import answer: ' . time());
   }
 
   public function updateImportFileThroughCasaGateway()
@@ -1511,7 +1406,7 @@ class Import
     }
 
     set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-    $this->addToLog('Import lock set.');
+    #$this->addToLog('Import lock set.');
 
     try {
       $apikey = get_option('casawp_api_key');
@@ -1523,30 +1418,25 @@ class Import
       );
 
       if ($apikey && $privatekey) {
-        // Specify the current UnixTimeStamp
+        
         $timestamp = time();
 
-        // Sort the options alphabetically and combine them into the checkstring
         ksort($options);
         $checkstring = '';
         foreach ($options as $key => $value) {
           $checkstring .= $key . $value;
         }
 
-        // Add private key and timestamp at the end of the checkstring
         $checkstring .= $privatekey . $timestamp;
 
-        // Hash it to specify the HMAC
         $hmac = hash('sha256', $checkstring, false);
 
-        // Combine the query (DO NOT INCLUDE THE PRIVATE KEY!!!)
         $query = array(
           'hmac'      => $hmac,
           'apikey'    => $apikey,
           'timestamp' => $timestamp
         ) + $options;
 
-        // Build URL
         $url = $apiurl . '?' . http_build_query($query, '', '&');
 
         $response = false;
@@ -1571,26 +1461,26 @@ class Import
         } catch (Exception $e) {
           $response = $e->getMessage();
           $this->addToLog('gateway ERR (' . $response . '): ' . time());
-          throw $e; // Re-throw to be caught by outer catch
+          throw $e;
         } finally {
           curl_close($ch);
         }
 
-        if ($response && !is_numeric($response)) { // Ensure response is not an error code
-          //error_log(print_r($response, true));
-          // Ensure the import directory exists
+        if ($response && !is_numeric($response)) {
+
           if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
             if (mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import', 0755, true)) {
-              $this->addToLog('Created import directory.');
+              #$this->addToLog('Created import directory.');
             } else {
               $this->addToLog('Failed to create import directory.');
               throw new Exception('Failed to create import directory.');
             }
           }
+
           $file = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/data.xml';
 
           if (file_put_contents($file, $response) !== false) {
-            $this->addToLog('Imported XML file saved.');
+            #$this->addToLog('Imported XML file saved.');
           } else {
             $this->addToLog('Failed to save imported XML file.');
             throw new Exception('Failed to save imported XML file.');
@@ -1600,14 +1490,13 @@ class Import
           throw new Exception('Invalid response from CasaGateway.');
         }
 
-        $this->addToLog('gateway start update: ' . time());
+        #$this->addToLog('gateway start update: ' . time());
 
         if ($this->getImportFile()) {
+          $this->start_import();
           delete_option('casawp_import_canceled');
           $this->addToLog('import start');
-          $this->deactivate_all_properties();
-          as_schedule_single_action(time(), 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
-          $this->addToLog('import end');
+          #$this->addToLog('import end');
         }
       } else {
         $this->addToLog('gateway keys missing: ' . time());
@@ -1617,119 +1506,34 @@ class Import
     } catch (Exception $e) {
       $this->addToLog('Import failed: ' . $e->getMessage());
     } finally {
-      // Ensure the lock is cleared in all cases
-    }
-  }
-
-
-  public function deactivate_all_properties()
-  {
-    $args = array(
-      'posts_per_page' => -1,
-      'post_type'      => 'casawp_property',
-      'post_status'    => array('publish', 'pending', 'draft', 'future', 'trash'),
-      'fields'         => 'ids',
-    );
-
-    $properties = get_posts($args);
-
-    foreach ($properties as $property_id) {
-      update_post_meta($property_id, 'is_active', false);
-    }
-  }
-
-  public function reactivate_properties($current_batch_ids)
-  {
-    foreach ($current_batch_ids as $property_id) {
-      update_post_meta($property_id, 'is_active', true);
+      
     }
   }
 
   public function finalize_import_cleanup($ranksort)
   {
-    $this->addToLog('Finalizing import cleanup.');
-
-    $all_valid_ids = get_option('all_valid_casawp_ids', []);
-
-    $args = array(
-      'posts_per_page' => -1,
-      'post_type'      => 'casawp_property',
-      'post_status'    => 'publish',
-      'fields'         => 'ids',
-      'meta_query'     => array(
-        array(
-          'key'     => 'is_active',
-          'value'   => false,
-          'compare' => '=',
-        ),
-      ),
-    );
-
-    $posts_to_remove = get_posts($args);
-
-    $this->addToLog('Found ' . count($posts_to_remove) . ' inactive properties to remove.');
-
-    foreach ($posts_to_remove as $post_id) {
-      $attachments = get_posts(array(
-        'post_type'      => 'attachment',
-        'posts_per_page' => -1,
-        'post_status'    => 'any',
-        'post_parent'    => $post_id,
-        'fields'         => 'ids',
-      ));
-
-      $this->addToLog('Deleting ' . count($attachments) . ' attachments for property ID: ' . $post_id);
-
-      foreach ($attachments as $attachment_id) {
-        if (wp_delete_attachment($attachment_id, true)) {
-          $this->addToLog('Deleted attachment ID: ' . $attachment_id);
-        } else {
-          $this->addToLog('Failed to delete attachment ID: ' . $attachment_id);
-        }
-      }
-
-      if (wp_delete_post($post_id, true)) {
-        $this->addToLog('Deleted property ID: ' . $post_id);
-      } else {
-        $this->addToLog('Failed to delete property ID: ' . $post_id);
-      }
-    }
-
+    #$this->addToLog('Finalizing import cleanup.');
 
     flush_rewrite_rules();
-    $this->addToLog('Flushed rewrite rules.');
 
-    global $wpe_common;
-    if (isset($wpe_common)) {
-      $this->transcript['wpengine'] = 'cache-cleared';
-      foreach (array('clean_post_cache', 'trashed_posts', 'deleted_posts') as $hook) {
-        add_action($hook, array($wpe_common, 'purge_varnish_cache'));
-      }
+    if (class_exists('\WpeCommon')) {
+      \WpeCommon::purge_varnish_cache();
+      \WpeCommon::purge_memcached();
       $this->addToLog('Triggered WP Engine cache purge.');
     }
 
-    $this->addToLog('Transcript: ' . print_r($this->transcript, true));
-
-    delete_option('all_valid_casawp_ids');
-    $this->addToLog('Deleted option: all_valid_casawp_ids');
-
-    // **Delete** the transient here, after all batches are done
     delete_transient('casawp_import_in_progress');
-    $this->addToLog('Import lock cleared.');
+    #$this->addToLog('Import lock cleared.');
 
     $this->addToLog('Import completed and lock cleared.');
 
     do_action('casawp_import_finished');
   }
 
-  /* public function handle_properties_import_batch($batch_number) {
-    throw new \Exception('Test failure to check action_scheduler_failed_action.');
-  } */
-
 
   public function handle_properties_import_batch($batch_number)
   {
-    $this->addToLog('Handling import batch number: ' . $batch_number);
+    #$this->addToLog('Handling import batch number: ' . $batch_number);
 
     if (get_option('casawp_import_canceled', false)) {
       $this->addToLog('Import has been canceled. Skipping batch number: ' . $batch_number);
@@ -1740,41 +1544,39 @@ class Import
 
     if (!empty($batch_size_override) && is_numeric($batch_size_override) && (int)$batch_size_override > 0) {
         $batch_size = (int)$batch_size_override;
-        $this->addToLog('Using overridden batch size: ' . $batch_size);
+        #$this->addToLog('Using overridden batch size: ' . $batch_size);
     } else {
         if (get_option('casawp_use_casagateway_cdn', false)) {
-            $language_count = 1; // Default to 1 language if WPML is not active
+            $language_count = 1;
 
             if (function_exists('icl_get_languages')) {
                 $languages = icl_get_languages();
                 $language_count = count($languages);
             }
 
-            // Set batch size based on language count
             if ($language_count <= 2) {
-                $batch_size = 4;
+                $batch_size = 8;
             } elseif ($language_count === 3) {
-                $batch_size = 3;
+                $batch_size = 6;
             } else {
-                $batch_size = 2;
+                $batch_size = 4;
             }
         } else {
             $batch_size = 1;
         }
-        $this->addToLog('Using default batch size: ' . $batch_size);
+        #$this->addToLog('Using default batch size: ' . $batch_size);
     }
 
     $this->ranksort = get_option('casawp_ranksort', array());
 
     try {
-      // Load the XML file
+
       $xmlString = file_get_contents($this->getImportFile());
 
       if ($xmlString === false) {
         throw new \Exception('Failed to read import file.');
       }
 
-      // Convert the XML string into a SimpleXMLElement object
       $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
 
       if ($xml === false) {
@@ -1799,49 +1601,43 @@ class Import
         update_option('casawp_total_batches', $total_batches);
         update_option('casawp_completed_batches', 0);
         update_option('casawp_current_rank', 0);
-        $this->addToLog('Initialized import: Total Batches = ' . $total_batches);
+        #$this->addToLog('Initialized import: Total Batches = ' . $total_batches);
       }
 
       $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
 
-      $this->addToLog('Processing batch number: ' . $batch_number . ' with ' . count($items_for_current_batch) . ' properties.');
+      #$this->addToLog('Processing batch number: ' . $batch_number . ' with ' . count($items_for_current_batch) . ' properties.');
 
       $this->updateOffers($items_for_current_batch);
 
       update_option('casawp_ranksort', $this->ranksort);
       update_option('casawp_completed_batches', $batch_number);
-      $this->addToLog('Completed batch number: ' . $batch_number);
+      #$this->addToLog('Completed batch number: ' . $batch_number);
 
       if ($batch_number >= $total_batches) {
         $this->finalize_import_cleanup($this->ranksort);
-        // Ensure progress is set to 100% on completion
         update_option('casawp_completed_batches', $total_batches);
         delete_option('casawp_current_rank');
         delete_option('casawp_ranksort');
         $this->addToLog('Import process completed.');
       } else {
         $next_batch_number = $batch_number + 1;
-
-        // Check if next batch is already scheduled to prevent duplicates
         $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
         if (!$pending_batch) {
           as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
-          $this->addToLog('Scheduled next batch number: ' . $next_batch_number);
+          #$this->addToLog('Scheduled next batch number: ' . $next_batch_number);
         } else {
-          $this->addToLog('Next batch number ' . $next_batch_number . ' is already scheduled.');
+          #$this->addToLog('Next batch number ' . $next_batch_number . ' is already scheduled.');
         }
       }
     } catch (\Exception $e) {
       $this->addToLog('Error: ' . $e->getMessage());
-
       if ($e->getMessage() === 'No properties found in XML.') {
-          // Set the transient for alert in the interface
           set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
           delete_transient('casawp_import_in_progress');
       }
     }
   }
-
 
   public function accumulate_valid_property_ids($current_batch_ids)
   {
@@ -1855,10 +1651,7 @@ class Import
 
   public function property2Array($property_xml)
   {
-    /* echo '<pre>';
-    print_r($property_xml);
-    echo '</pre>';
-    die(); */
+
     $propertydata['address'] = array(
       'country'       => ($property_xml->address->country->__toString() ?: ''),
       'locality'      => ($property_xml->address->locality->__toString() ?: ''),
@@ -1974,12 +1767,10 @@ class Import
       }
     }
 
-    //seller ****************************************************************
     if ($property_xml->seller) {
 
       $propertydata['organization'] = array();
 
-      //organization
       if ($property_xml->seller->organization) {
         if ($property_xml->seller->organization['id']) {
           $propertydata['organization']['id']    = $property_xml->seller->organization['id']->__toString();
@@ -1996,7 +1787,6 @@ class Import
         $propertydata['organization']['website_title'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['title']->__toString() : '');
         $propertydata['organization']['website_label'] = ($property_xml->seller->organization && $property_xml->seller->organization->website ? $property_xml->seller->organization->website['label']->__toString() : '');
 
-        //organization address
         if ($property_xml->seller->organization->address) {
           $propertydata['organization']['postalAddress'] = array();
           $propertydata['organization']['postalAddress']['country'] = $property_xml->seller->organization->address->country->__toString();
@@ -2010,7 +1800,6 @@ class Import
         }
       }
 
-      //viewPerson
       $propertydata['viewPerson'] = array();
       if ($property_xml->seller->viewPerson) {
         $person                                  = $property_xml->seller->viewPerson;
@@ -2025,7 +1814,6 @@ class Import
         $propertydata['viewPerson']['note']      = $person->note->__toString();
       }
 
-      //visitPerson
       $propertydata['visitPerson'] = array();
       if ($property_xml->seller->visitPerson) {
         $person                                   = $property_xml->seller->visitPerson;
@@ -2040,7 +1828,6 @@ class Import
         $propertydata['visitPerson']['note']      = $person->note->__toString();
       }
 
-      //inquiryPerson
       $propertydata['inquiryPerson'] = array();
       if ($property_xml->seller->inquiryPerson) {
         $person                                     = $property_xml->seller->inquiryPerson;
@@ -2055,11 +1842,7 @@ class Import
         $propertydata['inquiryPerson']['note']      = $person->note->__toString();
       }
     }
-    //END sellers ****************************************************************
 
-
-
-    //offers
     $offerDatas = array();
     if ($property_xml->offers) {
       foreach ($property_xml->offers->offer as $offer_xml) {
@@ -2078,7 +1861,6 @@ class Import
         $offerData['name'] = $offer_xml->name->__toString();
         $offerData['excerpt'] = $offer_xml->excerpt->__toString();
 
-        //publisher settings
         $publishingDatas = array();
         if ($offer_xml->publishers) {
           foreach ($offer_xml->publishers->publisher as $publisher_xml) {
@@ -2096,7 +1878,6 @@ class Import
 
         $offerData['publish'] = $publishingDatas;
 
-        //urls
         $urlDatas = array();
         if ($offer_xml->urls) {
           foreach ($offer_xml->urls->url as $xml_url) {
@@ -2116,7 +1897,6 @@ class Import
         }
         $offerData['urls'] = $urlDatas;
 
-        //descriptions
         $descriptionDatas = array();
         if ($offer_xml->descriptions) {
           foreach ($offer_xml->descriptions->description as $xml_description) {
@@ -2131,9 +1911,6 @@ class Import
         }
         $offerData['descriptions'] = $descriptionDatas;
 
-
-
-        //attachments
         $offerData['offer_medias'] = array();
         if ($offer_xml->attachments) {
           foreach ($offer_xml->attachments->media as $xml_media) {
@@ -2145,7 +1922,7 @@ class Import
               $source = str_replace('http%3A//', 'http://', $source);
               $source = str_replace('https%3A//', 'https://', $source);
             } else {
-              $this->addToTranscript("file or url missing from attachment media!");
+              #$this->addToTranscript("file or url missing from attachment media!");
               continue;
             }
             $offerData['offer_medias'][] = array(
@@ -2160,11 +1937,6 @@ class Import
             );
           }
         }
-
-        /*  echo '<pre>';
-            print_r($offerData['offer_medias']);
-            echo '</pre>';
-            die(); */
 
         $offerDatas[] = $offerData;
       }
@@ -2239,7 +2011,6 @@ class Import
 
   public function langifyProject($projectData)
   {
-    //complete missing translations if multilingual
 
     $languages = array(0 => array(
       'language_code' => $this->getMainLang()
@@ -2300,12 +2071,10 @@ class Import
   {
     $translations = array();
     $languages = icl_get_languages('skip_missing=0&orderby=code');
-    //build wish list
     foreach ($languages as $lang) {
       $translations[$lang['language_code']] = false;
     }
 
-    //complete that which is available
     foreach ($theoffers as $offerData) {
       $translations[$offerData['lang']] = $offerData;
     }
@@ -2314,7 +2083,6 @@ class Import
     if ($mainLangKey) {
       $carbon = $translations[$mainLangKey];
     } else {
-      //first
       foreach ($translations as $translation) {
         if ($translation) {
           $carbon = $translation;
@@ -2323,11 +2091,6 @@ class Import
       }
     }
 
-    /* echo '<pre>';
-    print_r($carbon);
-    echo '</pre>';
-    die(); */
-    //copy main language to missing translations
     foreach ($languages as $language) {
       if (!$translations[$language['language_code']]) {
         $copy = $carbon;
@@ -2443,7 +2206,6 @@ class Import
       }
     }
 
-    //find main key and move it to the front key=0
     $key = 0;
     $theoffers = array();
     foreach ($translations as $value) {
@@ -2486,7 +2248,6 @@ class Import
           }
         }
 
-        //complete missing translations if multilingual
         if ($this->hasWPML()) {
           $theoffers = $this->fillMissingTranslations($theoffers);
         }
@@ -2495,7 +2256,6 @@ class Import
         foreach ($theoffers as $offerData) {
           $offer_pos++;
 
-          //is it already in db
           $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
 
           $the_query = new \WP_Query([
@@ -2531,9 +2291,8 @@ class Import
             $_POST['icl_post_language'] = $offerData['lang'];
             $insert_id = wp_insert_post($the_post);
             update_post_meta($insert_id, 'casawp_id', $casawp_id);
-            update_post_meta($insert_id, 'is_active', true);
             $wp_post = get_post($insert_id, OBJECT, 'raw');
-            $this->addToLog('new property: ' . $casawp_id);
+            #$this->addToLog('new property: ' . $casawp_id);
           }
 
           wp_update_post(array(
@@ -2558,21 +2317,7 @@ class Import
 
     update_option('casawp_current_rank', $curRank);
 
-    if (!$found_posts) {
-      $this->transcript['error'] = 'NO PROPERTIES FOUND IN XML!!!';
-      $this->transcript['error_infos'] = [
-        'filesize' => filesize(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml') . ' !'
-      ];
-
-      copy(CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-done.xml', CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data-error.xml');
-
-      wp_mail('alert@casasoft.com', get_bloginfo('name'), 'Dieser Kunde hat alle Objekte von der Webseite gelöscht. Kann das sein? Bitte prüfen.');
-      //die('custom block');
-    }
-
-    $this->reactivate_properties($found_posts);
     $this->accumulate_valid_property_ids($found_posts);
-
 
     $meta_key_area = 'areaForOrder';
     $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
@@ -2580,7 +2325,6 @@ class Import
     $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
     $min_area = $wpdb->get_var($query);
 
-    //5b. fetch max and min options and set them anew
     $meta_key_rooms = 'number_of_rooms';
     $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
     $max_rooms = $wpdb->get_var($query);
@@ -2653,19 +2397,7 @@ class Import
         $this->transcript['projects_removed'] = count($projects_to_remove);
       }
     }
-
-    flush_rewrite_rules();
-
-    global $wpe_common;
-    if (isset($wpe_common)) {
-      $this->transcript['wpengine'] = 'cache-cleared';
-      foreach (array('clean_post_cache', 'trashed_posts', 'deleted_posts') as $hook) {
-        add_action($hook, array($wpe_common, 'purge_varnish_cache'));
-      }
-    }
-
-
-    $this->addToLog($this->transcript); */
+     */
   }
 
   public function simpleXMLget($node, $fallback = false)
@@ -2683,7 +2415,6 @@ class Import
   {
     $new_meta_data = array();
 
-    //load meta data
     $old_meta_data = array();
     $meta_values = get_post_meta($wp_post->ID, null, true);
     foreach ($meta_values as $key => $meta_value) {
@@ -2691,19 +2422,14 @@ class Import
     }
     ksort($old_meta_data);
 
-    //generate import hash
     $cleanProjectData = $projectData;
-    //We dont trust this date – it tends to interfere with serialization because large exporters sometimes refresh this date without reason
+    
     unset($cleanProjectData['last_update']);
     if (isset($cleanProjectData['modified'])) {
       unset($cleanProjectData['modified']);
     }
     $curImportHash = md5(serialize($cleanProjectData));
 
-
-
-
-    //skip if is the same as before (accept if was trashed (reactivation))
     $update = true;
     if ($wp_post->post_status == 'publish') {
       $update = false;
@@ -2714,8 +2440,7 @@ class Import
       ) {
         $update = true;
       } else {
-        //skip if is the same as before
-        $this->addToLog('skipped project: ' . $casawp_id);
+        #$this->addToLog('skipped project: ' . $casawp_id);
       }
     }
 
@@ -2725,22 +2450,13 @@ class Import
         $this->transcript[$casawp_id]['action'] = 'new';
       }
 
-      //set new hash;
       $new_meta_data['last_import_hash'] = $curImportHash;
 
-      //set referenceId
       $new_meta_data['referenceId'] = $projectData['referenceId'];
 
-      // $descriptionParts = [];
-      // foreach ($projectData['detail']['descriptions'] as $desc) {
-      //   $desciptionParts = '<strong>'.$desc['name'].'</strong>' . '<br /><br />' . $desc['text'];
-      // }
-
-      /* main post data */
       $new_main_data = array(
         'ID'            => $wp_post->ID,
         'post_title'    => ($projectData['detail']['name'] ? $projectData['detail']['name'] : $casawp_id),
-        //'post_content'  => implode('<br /><hr /><br />', $descriptionParts),
         'post_content'  => $this->extractDescription($projectData['detail']),
         'post_status'   => 'publish',
         'post_type'     => 'casawp_project',
@@ -2772,15 +2488,12 @@ class Import
         }
 
 
-        //manage post_name and post_date (if new)
         if (!$wp_post->post_name) {
           $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
-          //$new_main_date['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
         } else {
           $new_main_data['post_name'] = $wp_post->post_name;
         }
 
-        //persist change
         $newPostID = wp_insert_post($new_main_data);
       }
 
@@ -2797,21 +2510,8 @@ class Import
             $this->transcript[$casawp_id]['meta_data'][$key]['to'] = $newval;
           }
         }
-
-        //remove supurflous meta_data
-        /*foreach ($old_meta_data as $key => $value) {
-          if (
-            !isset($new_meta_data[$key])
-            && !in_array($key, array('casawp_id'))
-            && strpos($key, '_') !== 0
-          ) {
-            //remove
-            delete_post_meta($wp_post->ID, $key, $value);
-            $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $value;
-          }
-        }*/
       }
-    } //end update
+    } 
 
     $lang = $this->getMainLang();
     if ($this->hasWPML()) {
@@ -2828,7 +2528,6 @@ class Import
     if (isset($projectData['units'])) {
       foreach ($projectData['units'] as $sortu => $unitData) {
 
-        //is unit already in db
         $unit_casawp_id = 'subunit_' . $unitData['ref'] . $lang;
 
         $the_query = new \WP_Query('post_status=publish,pending,draft,future,trash&post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $unit_casawp_id);
@@ -2840,7 +2539,6 @@ class Import
         endwhile;
         wp_reset_postdata();
 
-        //if not create a basic project
         if (!$wp_unit_post) {
           $this->transcript[$unit_casawp_id]['action'] = 'new';
           $the_post['post_title'] = $unitData['detail']['name'];
@@ -2864,14 +2562,10 @@ class Import
 
 
     if ($parent_post && isset($projectData['property_links'])) {
-      //create links to properties
       $sort = 0;
       foreach ($projectData['property_links'] as $sort => $propertyLink) {
         $sort++;
-        //1. find property by casawp_id
-        //is it already in db
         $casawp_id = $propertyLink['ref'] . $lang;
-
         $the_query = new \WP_Query('post_type=casawp_property&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id);
         $wp_property_post = false;
         while ($the_query->have_posts()) :
@@ -2886,8 +2580,6 @@ class Import
           update_post_meta($wp_property_post->ID, 'projectunit_sort', $sort);
         } else {
         }
-
-        //$casawp_id = $propertyData['exportproperty_id'] . $offerData['lang'];
       }
     }
 
@@ -2923,14 +2615,11 @@ class Import
       }
     } */
 
-    $this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
-    $this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
+    #$this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
+    #$this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
 
-    //set new hash;
     $new_meta_data['last_import_hash'] = $curImportHash;
 
-
-    //$publisher_options = $offer->publish;
     $publisher_options = array();
     if (isset($offer['publish'])) {
       foreach ($offer['publish'] as $slug => $content) {
@@ -2953,33 +2642,27 @@ class Import
 
     $curRank = $this->ranksort[$wp_post->ID];
 
-    $site_timezone = wp_timezone(); // Returns a DateTimeZone object
+    $site_timezone = wp_timezone();
 
-    // Prepare post_date and post_date_gmt
     if ($property['creation']) {
-      // Clone DateTime objects to prevent modifying the original
       $post_date = clone $property['creation'];
       $post_date_gmt = clone $property['creation'];
     } elseif ($property['last_update']) {
       $post_date = clone $property['last_update'];
       $post_date_gmt = clone $property['last_update'];
     } else {
-      // Use current time if no dates are provided
       $post_date = new \DateTime('now', $site_timezone);
       $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
-    // Adjust time zones
     $post_date->setTimezone($site_timezone);
     $post_date_gmt->setTimezone(new \DateTimeZone('UTC'));
 
-    // Format dates
     $post_date_formatted = $post_date->format('Y-m-d H:i:s');
     $post_date_gmt_formatted = $post_date_gmt->format('Y-m-d H:i:s');
 
     $current_time = new \DateTime('now', $site_timezone);
     if ($post_date > $current_time) {
-      // Set post_date to current time
       $post_date_formatted = $current_time->format('Y-m-d H:i:s');
       $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
@@ -3008,8 +2691,6 @@ class Import
       'menu_order'   => $wp_post->menu_order
     );
 
-    //$casawp_visitInformation = $property->visitInformation->__toString();
-    //$casawp_property_url = $property->url->__toString();
     $new_meta_data['property_address_country']       = $property['address']['country'];
     $new_meta_data['property_address_locality']      = $property['address']['locality'];
     $new_meta_data['property_address_region']        = $property['address']['region'];
@@ -3028,6 +2709,7 @@ class Import
 
     $new_meta_data['referenceId']                    = $property['referenceId'];
     $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
+    $new_meta_data['exportproperty_id']              = $property['exportproperty_id'];
 
     if (isset($property['zoneTypes']) && $property['zoneTypes']) {
       $new_meta_data['zoneTypes']              = $property['zoneTypes'];
@@ -3037,9 +2719,7 @@ class Import
       echo '<div id="message" class="error">Warning! no referenceId found. for:' . $casawp_id . ' This could cause problems when sending inquiries</div>';
     }
     if (isset($property['organization'])) {
-      //$new_meta_data['seller_org_phone_direct'] = $property['organization'][''];
       $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
-      //$new_meta_data['seller_org_phone_mobile'] = $property['organization'][''];
       $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
       $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
       $new_meta_data['seller_org_customerid']                    = $property['organization']['id'];
@@ -3097,8 +2777,6 @@ class Import
       $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
     }
 
-
-    //urls
     $url = null;
     $the_urls = array();
     if (isset($offer['urls'])) {
@@ -3131,7 +2809,6 @@ class Import
 
     $new_meta_data['price_currency'] = $property['price_currency'];
 
-    //prices
     if (isset($property['price'])) {
       $new_meta_data['price'] = $property['price'];
       $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
@@ -3186,9 +2863,6 @@ class Import
     }
     $new_meta_data['integratedoffers'] = $integratedoffers;
 
-
-    //price for order
-
     if (array_key_exists('price', $new_meta_data) && $new_meta_data['price'] !== "") {
       $tmp_price = $new_meta_data['price'];
     } elseif (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") {
@@ -3201,18 +2875,6 @@ class Import
 
     $new_meta_data['priceForOrder'] = $tmp_price;
 
-    #$tmp_price      = (array_key_exists('price', $new_meta_data)      && $new_meta_data['price'] !== "")      ? ($new_meta_data['price'])      :(9999999999);
-    #$tmp_grossPrice = (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") ? ($new_meta_data['grossPrice']) :(9999999999);
-    #$tmp_netPrice   = (array_key_exists('netPrice', $new_meta_data)   && $new_meta_data['netPrice'] !== "")   ? ($new_meta_data['netPrice'])   :(9999999999);
-    #$new_meta_data['priceForOrder'] = str_pad($tmp_netPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_grossPrice, 10, 0, STR_PAD_LEFT) . str_pad($tmp_price, 10, 0, STR_PAD_LEFT);
-    /* if ($tmp_price) {
-      $new_meta_data['priceForOrder'] = $tmp_price;
-    } else if ($tmp_grossPrice) {
-      $new_meta_data['priceForOrder'] = $tmp_grossPrice;
-    } else if ($tmp_netPrice) {
-      $new_meta_data['priceForOrder'] = $tmp_netPrice;
-    } */
-    //nuvals
     $numericValues = array();
     foreach ($property['numeric_values'] as $numval) {
       $numericValues[$numval['key']] = $numval['value'];
@@ -3230,16 +2892,7 @@ class Import
     } else if ($tmp_area_sia_nf) {
       $new_meta_data['areaForOrder'] = $tmp_area_sia_nf;
     }
-    /* else {
-          $new_meta_data['areaForOrder'] = 0;
-        } */
 
-    //integratedOffers
-    //$integratedOffers = $this->integratedOffersToArray($property->offer->integratedOffers);
-    //$new_meta_data = array_merge($new_meta_data, $integratedOffers);
-
-
-    //custom option metas
     $custom_metas = array();
     foreach ($publisher_options as $key => $value) {
       if (strpos($key, 'custom_option') === 0) {
@@ -3279,25 +2932,20 @@ class Import
     }
 
     if ($custom_metas) {
-      $this->addToLog('_options_================HERE====================');
-      $this->addToLog('_options_' . print_r($custom_metas, true));
+      #$this->addToLog('_options_================HERE====================');
+      #$this->addToLog('_options_' . print_r($custom_metas, true));
     }
 
     foreach ($custom_metas as $key => $value) {
       $new_meta_data['custom_option_' . $key] = $value;
-      $this->addToLog('custom_option_' . $key);
+      #$this->addToLog('custom_option_' . $key);
     }
 
-    foreach ($new_meta_data as $key => $value) {
-      /* if (!$value) {
-        unset($new_meta_data[$key]);
-      }*/
-    }
     ksort($new_meta_data);
 
 
     if ($new_meta_data != $old_meta_data) {
-      $this->addToLog('updating metadata');
+      #$this->addToLog('updating metadata');
       foreach ($new_meta_data as $key => $value) {
         $newval = $value;
 
@@ -3308,14 +2956,13 @@ class Import
           $newval = (string) $newval;
         }
         if ($key == "floor" && $newval == 0) {
-          $newval = "EG"; // TODO Translate
+          $newval = "EG";
         }
 
         if (function_exists("casawp_unicode_dirty_replace") && !is_array($newval)) {
           $newval = casawp_unicode_dirty_replace($newval);
         }
 
-        // **Assign the processed value back to new_meta_data**
         $new_meta_data[$key] = $newval;
       }
     }
@@ -3327,29 +2974,24 @@ class Import
     $meta_data_changed = ($new_meta_data != $old_meta_data);
 
     if ($main_data_changed || $meta_data_changed) {
-      // Update transcript and logs if main data changed
       if ($main_data_changed) {
         foreach ($old_main_data as $key => $value) {
           if ($new_main_data[$key] != $value) {
             $this->transcript[$casawp_id]['main_data'][$key]['from'] = $value;
             $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
-            $this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
+            #$this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
           }
         }
       }
 
-      // Manage post_name
       if (!$wp_post->post_name) {
         $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
       } else {
         $new_main_data['post_name'] = $wp_post->post_name;
       }
 
-      // **Point 9: Consider Using Transactions (if possible)**
-      // Update the post with main data and meta data in one call
       wp_update_post($new_main_data);
 
-      // Remove surplus meta data
       $keys_to_delete = array_diff(array_keys($old_meta_data), array_keys($new_meta_data));
       foreach ($keys_to_delete as $key) {
         if (!in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort')) && strpos($key, '_') !== 0) {
@@ -3359,9 +3001,8 @@ class Import
       }
     }
 
-
     if (isset($property['property_categories'])) {
-      $this->addToLog('updating categories');
+      #$this->addToLog('updating categories');
       $custom_categories = array();
       foreach ($publisher_options as $key => $values) {
         if (strpos($key, 'custom_category') === 0) {
@@ -3370,7 +3011,6 @@ class Import
           $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
           $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
           if (!$values[0] || !$sort) {
-            // skip
           } elseif ($slug) {
             $custom_categories[$sort]['slug'] = $values[0];
           } elseif ($label) {
@@ -3382,8 +3022,7 @@ class Import
       $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
     }
 
-
-    $this->addToLog('updating custom regions');
+    #$this->addToLog('updating custom regions');
     $custom_regions = array();
     foreach ($publisher_options as $key => $values) {
       if (strpos($key, 'custom_region') === 0) {
@@ -3401,27 +3040,26 @@ class Import
       }
     }
 
-
     $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
 
-    $this->addToLog('updating features');
+    #$this->addToLog('updating features');
     $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
 
-    $this->addToLog('updating utilities');
+    #$this->addToLog('updating utilities');
     $this->setOfferUtilities($wp_post, $property['property_utilities'], $casawp_id);
 
-    $this->addToLog('updating salestypes');
+    #$this->addToLog('updating salestypes');
     $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
 
-    $this->addToLog('updating availabilities');
+    #$this->addToLog('updating availabilities');
     $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
 
-    $this->addToLog('updating localities');
+    #$this->addToLog('updating localities');
     $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
 
-    $this->addToLog('updating attachments');
+    #$this->addToLog('updating attachments');
     $this->setOfferAttachments($offer['offer_medias'], $wp_post, $property['exportproperty_id'], $casawp_id, $property);
 
-    $this->addToLog('finish property update: [' . $casawp_id . ']' . time());
+    #$this->addToLog('finish property update: [' . $casawp_id . ']' . time());
   }
 }
