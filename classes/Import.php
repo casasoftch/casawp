@@ -1493,6 +1493,7 @@ class Import
         #$this->addToLog('gateway start update: ' . time());
 
         if ($this->getImportFile()) {
+          $this->deactivate_all_properties();
           $this->start_import();
           delete_option('casawp_import_canceled');
           $this->addToLog('import start');
@@ -1510,9 +1511,74 @@ class Import
     }
   }
 
+  public function deactivate_all_properties()
+  {
+    $args = array(
+      'posts_per_page' => -1,
+      'post_type'      => 'casawp_property',
+      'post_status'    => array('publish', 'pending', 'draft', 'future', 'trash'),
+      'fields'         => 'ids',
+    );
+
+    $properties = get_posts($args);
+
+    foreach ($properties as $property_id) {
+      update_post_meta($property_id, 'is_active', false);
+    }
+  }
+
+  public function reactivate_properties($current_batch_ids)
+  {
+    foreach ($current_batch_ids as $property_id) {
+      update_post_meta($property_id, 'is_active', true);
+    }
+  }
+
   public function finalize_import_cleanup($ranksort)
   {
     #$this->addToLog('Finalizing import cleanup.');
+
+    $args = array(
+      'posts_per_page' => -1,
+      'post_type'      => 'casawp_property',
+      'post_status'    => 'publish',
+      'fields'         => 'ids',
+      'meta_query'     => array(
+        array(
+          'key'     => 'is_active',
+          'value'   => false,
+          'compare' => '=',
+        ),
+      ),
+    );
+
+    $posts_to_remove = get_posts($args);
+
+    foreach ($posts_to_remove as $post_id) {
+      $attachments = get_posts(array(
+        'post_type'      => 'attachment',
+        'posts_per_page' => -1,
+        'post_status'    => 'any',
+        'post_parent'    => $post_id,
+        'fields'         => 'ids',
+      ));
+
+      #$this->addToLog('Deleting ' . count($attachments) . ' attachments for property ID: ' . $post_id);
+
+      foreach ($attachments as $attachment_id) {
+        if (wp_delete_attachment($attachment_id, true)) {
+          #$this->addToLog('Deleted attachment ID: ' . $attachment_id);
+        } else {
+          #$this->addToLog('Failed to delete attachment ID: ' . $attachment_id);
+        }
+      }
+
+      if (wp_delete_post($post_id, true)) {
+        #$this->addToLog('Deleted property ID: ' . $post_id);
+      } else {
+       #$this->addToLog('Failed to delete property ID: ' . $post_id);
+      }
+    }
 
     flush_rewrite_rules();
 
@@ -1637,11 +1703,6 @@ class Import
           delete_transient('casawp_import_in_progress');
       }
     }
-  }
-
-  public function accumulate_valid_property_ids($current_batch_ids)
-  {
-    update_option('all_valid_casawp_ids', $current_batch_ids);
   }
 
   public function addToTranscript($msg)
@@ -2291,6 +2352,7 @@ class Import
             $_POST['icl_post_language'] = $offerData['lang'];
             $insert_id = wp_insert_post($the_post);
             update_post_meta($insert_id, 'casawp_id', $casawp_id);
+            update_post_meta($insert_id, 'is_active', true);
             $wp_post = get_post($insert_id, OBJECT, 'raw');
             #$this->addToLog('new property: ' . $casawp_id);
           }
@@ -2317,7 +2379,7 @@ class Import
 
     update_option('casawp_current_rank', $curRank);
 
-    $this->accumulate_valid_property_ids($found_posts);
+    $this->reactivate_properties($found_posts);
 
     $meta_key_area = 'areaForOrder';
     $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
