@@ -113,7 +113,7 @@ class Import
                           if (isset($this->trid_store[$exportproperty_id])) {
                               $trid = $this->trid_store[$exportproperty_id];
                           } else {
-                              error_log("Unable to find TRID for exportproperty_id: {$exportproperty_id}");
+                              #error_log("Unable to find TRID for exportproperty_id: {$exportproperty_id}");
                               continue;
                           }
                         }
@@ -122,7 +122,7 @@ class Import
                         if ( isset($sitepress) ) {
                             $translations = $sitepress->get_element_translations($trid);
                         } else {
-                            error_log("SitePress global object not found.");
+                            #error_log("SitePress global object not found.");
                             continue;
                         }
 
@@ -131,7 +131,7 @@ class Import
                               if (isset($translation->element_id)) {
                                   $trans_post_id = $translation->element_id;
 
-                                  error_log("Deleting post ID: {$trans_post_id} for language: {$lang}");
+                                  #error_log("Deleting post ID: {$trans_post_id} for language: {$lang}");
 
                                   $attachments = get_posts(array(
                                       'post_type'      => 'attachment',
@@ -143,25 +143,25 @@ class Import
 
                                   foreach ($attachments as $attachment_id) {
                                       if (wp_delete_attachment($attachment_id, true)) {
-                                          error_log("Deleted attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
+                                          #error_log("Deleted attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
                                       } else {
-                                          error_log("Failed to delete attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
+                                          #error_log("Failed to delete attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
                                       }
                                   }
 
                                   // Delete the post
                                   $deleted = wp_delete_post($trans_post_id, true);
                                   if ($deleted) {
-                                      error_log("Successfully deleted post ID: {$trans_post_id}");
+                                      #error_log("Successfully deleted post ID: {$trans_post_id}");
                                   } else {
-                                      error_log("Failed to delete post ID: {$trans_post_id}");
+                                      #error_log("Failed to delete post ID: {$trans_post_id}");
                                   }
                               } else {
-                                  error_log("Translation data missing for language: {$lang} in exportproperty_id: {$exportproperty_id}");
+                                  #error_log("Translation data missing for language: {$lang} in exportproperty_id: {$exportproperty_id}");
                               }
                           }
                         } else {
-                          error_log("No translations found for TRID: {$trid} in exportproperty_id: {$exportproperty_id}");
+                          #error_log("No translations found for TRID: {$trid} in exportproperty_id: {$exportproperty_id}");
                         } 
                       } else {
                         
