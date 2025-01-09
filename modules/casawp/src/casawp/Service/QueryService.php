@@ -267,6 +267,9 @@ class QueryService{
             case 'modified':
                 $args['orderby'] = 'modified';
                 break;
+            case 'rand':
+                $args['orderby'] = 'rand';
+                break;
             case 'date':
             default:
                 $args['orderby'] = 'date';
