@@ -1,11 +1,15 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: CASASTANDARDS\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_CH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: CASASTANDARDS\n"
-"Language: it-ch\n"
+"X-Generator: Poedit 3.5\n"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -49,7 +53,6 @@ msgstr "Fattoria"
 msgid "Farm house"
 msgstr "Stalla"
 
-#: 
 msgid "Furnished flat"
 msgstr "Appartamento ammobiliato"
 
@@ -124,7 +127,6 @@ msgstr "Posteggio in autorimessa"
 msgid "Villa"
 msgstr "Villa"
 
-#: 
 msgid "Chalet"
 msgstr "Chalet"
 
@@ -321,9 +323,13 @@ msgstr "Box coperto per cavalli"
 msgid "Boat mooring"
 msgstr "Boa di ormeggio per barca"
 
-#: 
+#, fuzzy
 msgid "Cellar compartment"
-msgstr "Cantina"
+msgstr ""
+"#-#-#-#-#  catalog.po (CASASTANDARDS)  #-#-#-#-#\n"
+"Cantina\n"
+"#-#-#-#-#  catalog.po (CASASTANDARDS)  #-#-#-#-#\n"
+"Scomparto cantina"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:120
 msgid "Attic compartment"
@@ -333,7 +339,6 @@ msgstr "Solaio"
 msgid "Restaurant"
 msgstr "Ristorante"
 
-#: 
 msgid "Shopping center"
 msgstr "Centro commerciale"
 
@@ -873,11 +878,14 @@ msgstr "Superficie di costruzione non portante SCN"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:414
 msgid "SIA-AGF"
-msgstr "Superficie esterna e superficie utile secondaria esterna all’appartamento"
+msgstr ""
+"Superficie esterna e superficie utile secondaria esterna all’appartamento"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:420
 msgid "SIA-ANGF"
-msgstr "Superficie esterna e superficie utile secondaria esterna all’appartamento (netta)"
+msgstr ""
+"Superficie esterna e superficie utile secondaria esterna all’appartamento "
+"(netta)"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:426
 msgid "SIA-ANF"
@@ -930,7 +938,9 @@ msgstr "Superfice del lotto"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:530
 msgid "SIA-UO"
-msgstr "Superficie esterna e superficie utile secondaria esterna all’appartamento (netta)"
+msgstr ""
+"Superficie esterna e superficie utile secondaria esterna all’appartamento "
+"(netta)"
 
 #: ../src/CasasoftStandards/Service/NumvalService.php:536
 msgid "SIA-BUF"
@@ -1056,11 +1066,9 @@ msgstr "Costruzione"
 msgid "Investment"
 msgstr "Stabile di reddito"
 
-#: 
 msgid "Gross rent / m² / month"
 msgstr "Affitto lordo / m² / mese"
 
-#: 
 msgid "Gross rent / m² / year"
 msgstr "Affitto lordo / m² / anno"
 
@@ -1068,19 +1076,15 @@ msgstr "Affitto lordo / m² / anno"
 msgid "Gross rent / month"
 msgstr "Affitto lordo / mensile"
 
-#: 
 msgid "Gross rent / year"
 msgstr "Affitto netto / annuale"
 
-#: 
 msgid "Gross price"
 msgstr "Affitto lordo"
 
-#: 
 msgid "Net rent / m² / month"
 msgstr "Affitto netto / m² / mese"
 
-#: 
 msgid "Net rent / m² / year"
 msgstr "Affitto netto / m² / anno"
 
@@ -1092,7 +1096,6 @@ msgstr "Affitto netto / annuale"
 msgid "Net rent / month"
 msgstr "Affitto netto / mensile"
 
-#: 
 msgid "Net price"
 msgstr "Affitto netto"
 
@@ -1140,808 +1143,523 @@ msgstr "Affitto netto / m² / anno"
 msgid "Sales price"
 msgstr "Prezzo di vendita"
 
-#: 
 msgid "Category"
 msgstr "Categoria"
 
-#: 
 msgid "Part of a house"
 msgstr "Porzione di casa"
 
-#: 
 msgid "Immediate"
 msgstr "Immediata"
 
-#: 
 msgid "Gastronomy / Hotel"
 msgstr "Ristorazione / Hotel"
 
-#: 
 msgid "Parking / Garage"
 msgstr "Posteggio / Garage"
 
-#: 
 msgid "Extra Costs"
 msgstr "Acconto spese accessorie"
 
-#: 
 msgid "Engadine house"
 msgstr "Casa engadinese"
 
-#: 
 msgid "Patrician house"
 msgstr "Casa patriziale"
 
-#: 
 msgid "Volumes"
 msgstr "Volumi"
 
-#: 
 msgid "Guest toilets"
 msgstr "WC separato"
 
-#: 
 msgid "Electric heating"
 msgstr "Riscaldamento elettrico"
 
-#: 
 msgid "Geothermal-probe heating"
 msgstr "Riscaldamento con sonda geotermica"
 
-#: 
 msgid "District heating"
 msgstr "Teleriscaldamento"
 
-#: 
 msgid "Gas heating"
 msgstr "Riscaldamento a gas metano"
 
-#: 
 msgid "Wood heating"
 msgstr "Riscaldamento a legna"
 
-#: 
 msgid "Air-water-heatpump heating"
 msgstr "Riscaldamento con pompa di calore aria-acqua"
 
-#: 
 msgid "Oil heating"
 msgstr "Riscaldamento a olio combustibile"
 
-#: 
 msgid "Pellet heating"
 msgstr "Riscaldamento a pellet"
 
-#: 
 msgid "Heatpump heating"
 msgstr "Riscaldamento con pompa di calore"
 
-#: 
 msgid "Floor heating"
 msgstr "Riscaldamento a pavimento"
 
-#: 
 msgid "Radiators"
 msgstr "Radiatori"
 
-#: 
 msgid "Heat generation"
 msgstr "Generazione di calore"
 
-#: 
 msgid "Heat distribution"
 msgstr "Distribuzione di calore"
 
-#: 
 msgid "Egid"
 msgstr "EGID"
 
-#: 
 msgid "Ewid"
 msgstr "EWID"
 
-#: 
 msgid "Official building number"
 msgstr "Numero immobile registro edifici"
 
-#: 
 msgid "Ownership share"
 msgstr "Quota di proprietà"
 
-#: 
 msgid "Property development"
 msgstr "Allacciamento"
 
-#: 
 msgid "S-Number"
 msgstr "Numero fornitura"
 
-#: 
 msgid "Unit number"
 msgstr "Numero Immobile"
 
-#: 
 msgid "Renewal fund date"
 msgstr "Data Fondo di Rinnovamento"
 
-#: 
 msgid "Price range"
 msgstr "Fascia di prezzo"
 
-#: 
 msgid "Energy"
 msgstr "Energia"
 
-#: 
 msgid "Fully developed"
 msgstr "Completamente allacciato"
 
-#: 
 msgid "Partialy Developed"
 msgstr "Parzialmente allacciato"
 
-#: 
 msgid "Undeveloped"
 msgstr "Non allacciato"
 
-#: 
 msgid "From"
 msgstr "da"
 
-#: 
 msgid "To"
 msgstr "fino a"
 
-#: 
 msgid "Balcony space"
 msgstr "Superfice balcone"
 
-#: 
 msgid "Cellar space"
 msgstr "Superfice cantina"
 
-#: 
 msgid "Garden space"
 msgstr "Superfice giardino"
 
-#: 
 msgid "Loggia space"
 msgstr "Superfice loggia / veranda"
 
-#: 
 msgid "Terrace space"
 msgstr "Superficie terrazza"
 
-#: 
 msgid "Year of last modernization"
 msgstr "Anno ultimo rinnovo"
 
-#: 
 msgid "Year of last restoration"
 msgstr "Anno ultimo restauro"
 
-#: 
 msgid "Rental income (gross)"
 msgstr "Reddito locativo (lordo)"
 
-#: 
 msgid "Rental income (net)"
 msgstr "Affitto netto annuale (effettivo)"
 
-#: 
 msgid "Renewal fund input"
 msgstr "Quota fondo di rinnovamento"
 
-#: 
 msgid "Official tax value"
 msgstr "Valore fiscale ufficiale"
 
-#: 
 msgid "Imputed rent value"
 msgstr "Valore locativo proprio"
 
-#: 
 msgid "Net premium"
 msgstr "Rendimento netto"
 
-#: 
 msgid "Building insurance value"
 msgstr "Valore assicurativo dello stabile"
 
-#: 
 msgid "Constructed factor"
 msgstr "Indice di occupazione"
 
-#: 
 msgid "GEAK exterior"
 msgstr "Efficienza dell'involucro dell'edificio CECE"
 
-#: 
 msgid "GEAK total"
 msgstr "Efficienza energetica globale CECE"
 
-#: 
 msgid "Renewal fund value"
 msgstr "Valore fondo di rinnovamento"
 
-#: 
 msgid "Number of guest toilets"
 msgstr "Numero di servizi per gli ospiti"
 
-#: 
 msgid "Starting from"
 msgstr "A partire da"
 
-#: 
 msgid "Mr."
 msgstr "Signor"
 
-#: 
 msgid "Ms."
 msgstr "Signora"
 
-#: 
 msgid "Infrared"
 msgstr "Infrarosso"
 
-#: 
 msgid "Minergie-ECO"
 msgstr "Minergie-ECO"
 
-#: 
 msgid "Minergie-P-ECO"
 msgstr "Minergie-P-ECO"
 
-#: 
 msgid "GVA"
 msgstr "GVA"
 
-#: 
 msgid "Availability"
 msgstr "Disponibilità"
 
-#: 
 msgid "Active"
 msgstr "Attivo"
 
-#: 
 msgid "Inactive"
 msgstr "Inattivo"
 
-#: 
 msgid "Reference"
 msgstr "Referenza"
 
-#: 
 msgid "Reserved"
 msgstr "Riservato"
 
-#: 
 msgid "Draft"
 msgstr "In elaborazione"
 
-#: 
 msgid "Private"
 msgstr "Privato"
 
-#: 
 msgid "In acquisition"
 msgstr "In acquisizione"
 
-#: 
 msgid "Sold"
 msgstr "Venduto"
 
-#: 
 msgid "Rented"
 msgstr "Affittato"
 
-#: 
 msgid "Taken"
 msgstr "Non più diponibile"
 
-#: 
 msgid "Residential / commercial building"
 msgstr "Immobile misto commerciale/residenziale"
 
-#: 
 msgid "day"
 msgstr "Giorno"
 
-#: 
 msgid "Wall heating"
 msgstr "Riscaldamento a parete"
 
-#: 
 msgid "Solar Thermal"
 msgstr "Solare termico"
 
-#: 
 msgid "Photovoltaics"
 msgstr "Solare fotovoltaico"
 
-#: 
 msgid "Dishwasher"
 msgstr "Lavastoviglie"
 
-#: 
 msgid "Charging station"
 msgstr "Stazione di ricarica elettrica"
 
-#: 
 msgid "Cellar"
 msgstr "Cantina"
 
-#: 
 msgid "Number of toilets"
 msgstr "Numero servizi igienici"
 
-#: 
 msgid "Number of showers"
 msgstr "Numero docce"
 
-#: 
 msgid "Playground"
 msgstr "Terreno di gioco"
 
-#: 
 msgid "Garage underground"
 msgstr "Garage sotterraneo"
 
-#: 
 msgid "per year"
 msgstr "per anno"
 
-#: 
 msgid "Remote viewing"
 msgstr "Visite a distanza"
 
-#: 
 msgid "Number of residential units"
 msgstr "Numero unità abitative"
 
-#: 
 msgid "Number of buildings"
 msgstr "Numero di edifici"
 
-#: 
 msgid "Number of commercial units"
 msgstr "Numero superfici commerciali"
 
-#: 
 msgid "Rental income (potential)"
 msgstr "Affitto netto annuale (obiettivo)"
 
-#: 
 msgid "Current occupancy"
 msgstr "Occupazione attuale"
 
-#: 
 msgid "Current occupancy (date)"
 msgstr "Occupazione attuale (data)"
 
-#: 
 msgid "Gross premium (target)"
 msgstr "Rendimento lordo"
 
-#: 
 msgid "Operation and maintenance cost"
 msgstr "Costi di proprietà (annuale)"
 
-#: 
 msgid "VAT opted"
 msgstr "optata"
 
-#: 
 msgid "Sales method"
 msgstr "Metodo di vendita"
 
-#: 
 msgid "Fixed pricing"
 msgstr "Prezzo fisso"
 
-#: 
 msgid "Auction"
 msgstr "Asta"
 
-#: 
 msgid "Bidding process"
 msgstr "Processo di offerta"
 
-#: 
 msgid "Auction start price"
 msgstr "Prezzo di partenza dell'asta"
 
-#: 
 msgid "Auction start"
 msgstr "Inizio asta"
 
-#: 
 msgid "Auction end"
 msgstr "Fine dell'asta"
 
-#: 
 msgid "Auction minimal increase"
 msgstr "Aumento minimo dell'asta"
 
-#: 
 msgid "Bidding start price"
 msgstr "Prezzo iniziale dell'offerta"
 
-#: 
 msgid "Bidding start"
 msgstr "Inizio dell'offerta"
 
-#: 
 msgid "Bidding start (binding)"
 msgstr "Inizio dell'offerta (vincolante)"
 
-#: 
 msgid "Bidding end"
 msgstr "Fine dell' offerta"
 
-#: 
 msgid "Sales start"
 msgstr "Inizio vendita"
 
-#: 
 msgid "Sales end"
 msgstr "fine della vendita"
 
-#: 
 msgid "Share deal"
 msgstr "Accordo di condivisione"
 
-#: 
 msgid "Sales deal type"
 msgstr "Tipo di accordo di vendita"
 
-#: 
 msgid "Asset deal"
 msgstr "Accordo di asset"
 
-#: 
 msgid "Brine-water heat pump"
 msgstr "Pompa di calore ad acqua salina"
 
-#: 
 msgid "Block-type thermal power station"
 msgstr "Centrale termica a blocco"
 
-#: 
 msgid "Coal"
 msgstr "Carbone"
 
-#: 
 msgid "VAT not opted"
 msgstr "non optata"
 
-#: 
 msgid "Number of rooms from"
 msgstr "Numero di locali da"
 
-#: 
 msgid "Number of rooms to"
 msgstr "Numero di locali fino a"
 
-#: 
 msgid "Construction status"
 msgstr "Stato della costruzione"
 
-#: 
 msgid "Floorspace from"
 msgstr "Superfice utile da"
 
-#: 
 msgid "Floorspace to"
 msgstr "Superfice utile fino a"
 
-#: 
 msgid "Living area from"
 msgstr "Superficie abitabile da"
 
-#: 
 msgid "Living area to"
 msgstr "Superficie abitabile fino a"
 
-#: 
 msgid "per"
 msgstr "per"
 
-#: 
 msgid "Temporary use"
 msgstr "Recupero urbano"
 
-#: 
 msgid "Fiber optic connection"
 msgstr "Connessione in fibra ottica"
 
-#: 
 msgid "Multimedia wiring"
 msgstr "Cablaggio multimediale"
 
-#: 
 msgid "Charging station for electric car"
 msgstr "Caricatore per auto elettriche"
 
-#: 
 msgid "Construction"
 msgstr "Costruzione"
 
-#: 
 msgid "Agricultural land"
 msgstr "Terreno agricolo"
 
-#: 
 msgid "Arcade"
 msgstr "Porticato"
 
-#: 
 msgid "Bakery"
 msgstr "Panificio"
 
-#: 
 msgid "Butcher"
 msgstr "Macelleria"
 
-#: 
 msgid "Car repair shop"
 msgstr "Garage"
 
-#: 
 msgid "Carpentry shop"
 msgstr "Falegnameria"
 
-#: 
 msgid "Casino"
 msgstr "Casino"
 
-#: 
 msgid "Cheese factory"
 msgstr "Caseificio"
 
-#: 
 msgid "Club / Disco"
 msgstr "Club / Disco"
 
-#: 
 msgid "Commercial building plot"
 msgstr "Terreno edificabile commerciale"
 
-#: 
 msgid "Commercial premises"
 msgstr "Locale commerciale"
 
-#: 
 msgid "Doctors office"
 msgstr "Ambulatorio"
 
-#: 
 msgid "Earth sheltered dwelling"
 msgstr "Casa nella caverna/terra"
 
-#: 
 msgid "Hair salon"
 msgstr "Salone di parrucchiere"
 
-#: 
 msgid "Industrial building plot"
 msgstr "Terreno edificabile industriale"
 
-#: 
 msgid "Industrial property"
 msgstr "Oggetto industriale"
 
-#: 
 msgid "Kiosk"
 msgstr "Chiosco"
 
-#: 
 msgid "Laboratory"
 msgstr "Laboratoriio"
 
-#: 
 msgid "Library"
 msgstr "Biblioteca"
 
-#: 
 msgid "Market garden"
 msgstr "Vivaio"
 
-#: 
 msgid "Motel"
 msgstr "Motel"
 
-#: 
 msgid "Movie theatre"
 msgstr "Cinema"
 
-#: 
 msgid "Multistorey car park"
 msgstr "Autosilo"
 
-#: 
 msgid "Orphanage"
 msgstr "Instituto"
 
-#: 
 msgid "Party room"
 msgstr "Salone per feste"
 
-#: 
 msgid "Pub"
 msgstr "Pub"
 
-#: 
 msgid "Stoeckli"
 msgstr "Dipendenza"
 
-#: 
 msgid "Squash badminton"
 msgstr "Capannone squash/badminton"
 
-#: 
+#, fuzzy
 msgid "Storage room"
-msgstr "Deposito"
+msgstr ""
+"#-#-#-#-#  catalog.po (CASASTANDARDS)  #-#-#-#-#\n"
+"Deposito\n"
+"#-#-#-#-#  catalog.po (CASASTANDARDS)  #-#-#-#-#\n"
+"Magazzino"
 
-#:
-msgid "Temporary use"
-msgstr "Recupero urbano"
-
-#:
-msgid "Fiber optic connection"
-msgstr "Connessione in fibra ottica"
-
-#:
-msgid "Multimedia wiring"
-msgstr "Cablaggio multimediale"
-
-#:
-msgid "Charging station for electric car"
-msgstr "Caricatore per auto elettriche"
-
-#:
 msgid "Minergie A"
 msgstr "Minergie-A"
 
-#:
 msgid "Minergie-A-ECO"
 msgstr "Minergie-A-ECO"
 
-#:
-msgid "Construction"
-msgstr "Costruzione"
-
-#:
 msgid "Agricultural lot"
 msgstr "Terreno agricolo"
 
-#:
-msgid "Arcade"
-msgstr "Porticato"
-
-#:
-msgid "Bakery"
-msgstr "Panificio"
-
-#:
-msgid "Butcher"
-msgstr "Macelleria"
-
-#:
-msgid "Car repair shop"
-msgstr "Garage"
-
-#:
-msgid "Carpentry shop"
-msgstr "Falegnameria"
-
-#:
-msgid "Casino"
-msgstr "Casino"
-
-#:
-msgid "Cellar compartment"
-msgstr "Scomparto cantina"
-
-#:
-msgid "Chalet"
-msgstr "Chalet"
-
-#:
-msgid "Cheese factory"
-msgstr "Caseificio"
-
-#:
 msgid "Club disco"
 msgstr "Club/Disco"
 
-#:
 msgid "Commercial lot"
 msgstr "Terreno edificabile commerciale"
 
-#:
 msgid "Commercial space"
 msgstr "Locale commerciale"
 
-#:
-msgid "Doctors office"
-msgstr "Ambulatorio"
-
-#:
-msgid "Earth sheltered dwelling"
-msgstr "Casa nella caverna/terra"
-
-#:
-msgid "Furnished flat"
-msgstr "Appartamento ammobiliato"
-
-#:
 msgid "Hairdresser"
 msgstr "Salone di parrucchiere"
 
-#:
 msgid "Industrial lot"
 msgstr "Terreno edificabile industriale"
 
-#:
 msgid "Industrial object"
 msgstr "Oggetto industriale"
 
-#:
-msgid "Kiosk"
-msgstr "Chiosco"
-
-#:
-msgid "Laboratory"
-msgstr "Laboratoriio"
-
-#:
-msgid "Library"
-msgstr "Biblioteca"
-
-#:
-msgid "Market garden"
-msgstr "Vivaio"
-
-#:
-msgid "Motel"
-msgstr "Motel"
-
-#:
 msgid "Movie theater"
 msgstr "Cinema"
 
-#:
-msgid "Multistorey car park"
-msgstr "Autosilo"
-
-#:
-msgid "Orphanage"
-msgstr "Instituto"
-
-#:
-msgid "Party room"
-msgstr "Salone per feste"
-
-#:
-msgid "Pub"
-msgstr "Pub"
-
-#:
-msgid "Stoeckli"
-msgstr "Dipendenza"
-
-#:
 msgid "Shopping-center"
 msgstr "Centro commerciale"
-
-#:
-msgid "Squash badminton"
-msgstr "Capannone squash/badminton"
-
-#:
-msgid "Storage room"
-msgstr "Magazzino"
-
-

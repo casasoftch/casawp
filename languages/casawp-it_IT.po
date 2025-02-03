@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CASAWP\n"
-"POT-Creation-Date: 2024-07-10 14:15+0200\n"
+"POT-Creation-Date: 2025-02-03 16:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,37 +10,753 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: vendor\n"
 
-#: casawp.php:48
-msgid ""
-"Import your properties directly from your real-estate managment software!"
+#: action-scheduler/classes/ActionScheduler_ActionFactory.php:233
+msgid "Invalid action - must be a recurring action."
 msgstr ""
-"Importare le proprietà direttamente dal vostro software di gestione "
-"immobiliare!"
 
-#: classes/Archive.php:374 classes/Conversion.php:606 classes/Plugin.php:1322
-#: classes/Plugin.php:2400
+#: action-scheduler/classes/ActionScheduler_ActionFactory.php:324
+#, php-format
+msgid "Caught exception while enqueuing action \"%1$s\": %2$s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:60
+#: action-scheduler/classes/ActionScheduler_AdminView.php:75
+#: action-scheduler/classes/ActionScheduler_AdminView.php:76
+#: action-scheduler/classes/ActionScheduler_ListTable.php:89
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:19
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:30
+#, fuzzy
+#| msgid "Search Locations"
+msgid "Scheduled Actions"
+msgstr "Percorsi di ricerca"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:197
+#, php-format
+msgid ""
+"<strong>Action Scheduler:</strong> %1$d <a href=\"%2$s\">past-due action</a> "
+"found; something may be wrong. <a href=\"https://actionscheduler.org/faq/#my-"
+"site-has-past-due-actions-what-can-i-do\" target=\"_blank\">Read "
+"documentation &raquo;</a>"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:225
+#, fuzzy
+#| msgid "Djibouti"
+msgid "About"
+msgstr "Gibuti"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:228
+#, php-format
+msgid "About Action Scheduler %s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:230
+msgid ""
+"Action Scheduler is a scalable, traceable job queue for background "
+"processing large sets of actions. Action Scheduler works by triggering an "
+"action hook to run at some time in the future. Scheduled actions can also be "
+"scheduled to run on a recurring schedule."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:238
+#, fuzzy
+#| msgid "Volume"
+msgid "Columns"
+msgstr "Cubatura"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:240
+msgid "Scheduled Action Columns"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:242
+#: action-scheduler/classes/ActionScheduler_ListTable.php:96
+msgid "Hook"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:242
+msgid "Name of the action hook that will be triggered."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:243
+#: action-scheduler/classes/ActionScheduler_ListTable.php:97
+msgid "Status"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:243
+msgid "Action statuses are Pending, Complete, Canceled, Failed"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:244
+#: action-scheduler/classes/ActionScheduler_ListTable.php:98
+#, fuzzy
+#| msgid "Documents"
+msgid "Arguments"
+msgstr "Documenti"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:244
+msgid "Optional data array passed to the action hook."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:245
+#: action-scheduler/classes/ActionScheduler_ListTable.php:99
+#, fuzzy
+#| msgid "Ground"
+msgid "Group"
+msgstr "Terrestri"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:245
+msgid "Optional action group."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:246
+#: action-scheduler/classes/ActionScheduler_ListTable.php:100
+#, fuzzy
+#| msgid "Reference"
+msgid "Recurrence"
+msgstr "Numero di referenza"
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:246
+msgid "The action's schedule frequency."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:247
+msgid "Scheduled"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:247
+msgid "The date/time the action is/was scheduled to run."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:248
+#: action-scheduler/classes/ActionScheduler_ListTable.php:102
+msgid "Log"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_AdminView.php:248
+msgid "Activity log for the action."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_DataController.php:133
+#, php-format
+msgid "Stopped the insanity for %d second"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_DataController.php:137
+msgid "Attempting to reduce used memory..."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
+#, php-format
+msgid "Action [%1$s] has an invalid schedule: %2$s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
+#, php-format
+msgid ""
+"Action [%1$s] has invalid arguments. It cannot be JSON decoded to an array. "
+"$args = %2$s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:92
+msgid "Delete"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:101
+msgid "Scheduled Date"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:122
+msgid "Claim ID"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:129
+#, fuzzy
+#| msgid "Reunion"
+msgid "Run"
+msgstr "Reunion"
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:130
+msgid "Process the action now as if it were run as part of a queue"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:133
+#, fuzzy
+#| msgid "France"
+msgid "Cancel"
+msgstr "Francia"
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:134
+msgid "Cancel the action now to avoid it being run in future"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:224
+msgid "Now!"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:260
+#, php-format
+msgid "Every %s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:266
+msgid "Non-repeating"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:364
+msgid ""
+"It appears one or more database tables were missing. Attempting to re-create "
+"the missing table(s)."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:381
+#, php-format
+msgid ""
+"Maximum simultaneous queues already in progress (%s queue). No additional "
+"queues will begin processing until the current queues are complete."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:397
+#, php-format
+msgid ""
+"A new queue has begun processing. <a href=\"%s\">View actions in-progress "
+"&raquo;</a>"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:400
+#, php-format
+msgid "The next queue will begin processing in approximately %d seconds."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:421
+#, php-format
+msgid "Successfully executed action: %s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:425
+#, php-format
+msgid "Successfully canceled action: %s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:429
+#, php-format
+msgid "Successfully processed change for action: %s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:435
+#, php-format
+msgid "Could not process change for action: \"%1$s\" (ID: %2$d). Error: %3$s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:471
+msgid "async"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:485
+#, php-format
+msgid " (%s ago)"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:488
+#, php-format
+msgid " (%s)"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:513
+#, php-format
+msgid "Action Scheduler was unable to delete action %1$d. Reason: %2$s"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_ListTable.php:661
+msgid "Search hook, args and claim ID"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_QueueRunner.php:224
+msgid "Every minute"
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
+#, php-format
+msgid "This data will be deleted in %s."
+msgstr ""
+
+#: action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
+#, php-format
+msgid ""
+"Action Scheduler has migrated data to custom tables; however, orphaned log "
+"entries exist in the WordPress Comments table. %1$s <a href=\"%2$s\">Learn "
+"more &raquo;</a>"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:88
+#, php-format
+msgid "%d batch processed."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:105
+#, php-format
+msgid "There was an error deleting an action: %s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:120
+#, php-format
+msgid "%d action deleted."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
+#: action-scheduler/classes/WP_CLI/ProgressBar.php:47
+#, php-format
+msgid "The %s class can only be run within WP CLI."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
+msgid ""
+"There are too many concurrent batches, but the run is forced to continue."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
+msgid "There are too many concurrent batches."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
+#, fuzzy, php-format
+#| msgid "Russian Federation"
+msgid "Running %d action"
+msgstr "Federazione Russa"
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
+msgid "The claim has been lost. Aborting current batch."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
+#, php-format
+msgid "Started processing action %s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
+#, php-format
+msgid "Completed processing action %1$s with hook: %2$s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
+#, php-format
+msgid "Error processing action %1$s: %2$s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:30
+#, php-format
+msgid "Registered schema for %s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:152
+#, php-format
+msgid "Found %d scheduled task"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:169
+#, php-format
+msgid "%d batch executed."
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:188
+#, php-format
+msgid "There was an error running the action scheduler: %s"
+msgstr ""
+
+#: action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:205
+#, php-format
+msgid "%d scheduled task completed."
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler.php:226
+#, php-format
+msgid "%s() was called before the Action Scheduler data store was initialized"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:668
+#, php-format
+msgid "Search results for \"%s\""
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Abstract_QueueRunner.php:155
+msgid ""
+"This action appears to be consistently failing. A new instance will not be "
+"scheduled."
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
+msgid "action created"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
+#: action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:142
+msgid "action canceled"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
+#, php-format
+msgid "action started via %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
+msgid "action started"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
+#, php-format
+msgid "action complete via %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
+msgid "action complete"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
+#, php-format
+msgid "action failed via %1$s: %2$s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
+#, php-format
+msgid "action failed: %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
+#, php-format
+msgid ""
+"action marked as failed after %s seconds. Unknown error occurred. Check "
+"server, PHP and database error logs to diagnose cause."
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
+#, php-format
+msgid "unexpected shutdown: PHP Fatal error %1$s in %2$s on line %3$s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
+#, fuzzy
+#| msgid "Vacation"
+msgid "action reset"
+msgstr "Vacanza"
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
+#, php-format
+msgid "action ignored via %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
+msgid "action ignored"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
+#, php-format
+msgid "There was a failure fetching this action: %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
+msgid "There was a failure fetching this action"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
+#, php-format
+msgid "There was a failure scheduling the next instance of this action: %s"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:330
+#, php-format
+msgid ""
+"ActionScheduler_Action::$args too long. To ensure the args column can be "
+"indexed, action args should not be more than %d characters when encoded as "
+"JSON."
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:406
+msgid "Complete"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:407
+msgid "Pending"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:408
+msgid "In-progress"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:409
+msgid "Failed"
+msgstr ""
+
+#: action-scheduler/classes/abstracts/ActionScheduler_Store.php:410
+msgid "Canceled"
+msgstr ""
+
+#: action-scheduler/classes/actions/ActionScheduler_Action.php:50
+#, php-format
+msgid ""
+"Scheduled action for %1$s will not be executed as no callbacks are "
+"registered."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:118
+msgid "Database error."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:126
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:49
+#: action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:45
+#, php-format
+msgid "Error saving action: %s"
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:396
+msgid "Invalid value for select or count parameter. Cannot query actions."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:454
+msgid ""
+"JSON partial matching not supported in your environment. Please check your "
+"MySQL/MariaDB version."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:471
+#, php-format
+msgid ""
+"The value type for the JSON partial matching is not supported. Must be "
+"either integer, boolean, double or string. %s type provided."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:492
+msgid "Unknown partial args matching value."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:653
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:515
+#, php-format
+msgid ""
+"Unidentified action %s: we were unable to cancel this action. It may may "
+"have been deleted by another process."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:746
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:534
+#, php-format
+msgid ""
+"Unidentified action %s: we were unable to delete this action. It may may "
+"have been deleted by another process."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:778
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:564
+#, php-format
+msgid ""
+"Unidentified action %s: we were unable to determine the date of this action. "
+"It may may have been deleted by another process."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:913
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:717
+#, php-format
+msgid "The group \"%s\" does not exist."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:947
+#, php-format
+msgid "Unable to claim actions. Database error: %s."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1045
+#, php-format
+msgid "Unable to release actions from claim id %d."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1089
+#, php-format
+msgid ""
+"Unidentified action %s: we were unable to mark this action as having failed. "
+"It may may have been deleted by another process."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1116
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:967
+#, php-format
+msgid "Unable to update the status of action %1$d to %2$s."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1148
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:987
+#, php-format
+msgid ""
+"Unidentified action %s: we were unable to mark this action as having "
+"completed. It may may have been deleted by another process."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1178
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:904
+msgid "Invalid action ID. No status found."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1180
+msgid "Unknown status found for action."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:101
+msgid "Unable to save action."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:318
+msgid "Invalid schedule. Cannot save action."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:696
+msgid "Unable to claim actions. Database error."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:824
+#, php-format
+msgid "Unable to unlock claim %s. Database error."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:852
+#, php-format
+msgid "Unable to unlock claim on action %s. Database error."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:878
+#, php-format
+msgid "Unable to mark failure on action %s. Database error."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:1068
+#, php-format
+msgid ""
+"%s Support for strings longer than this will be removed in a future version."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
+msgid "Scheduled actions are hooks triggered on a certain date and time."
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
+msgid "Scheduled Action"
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
+#, fuzzy
+#| msgid "Address"
+msgid "Add"
+msgstr "Indirizzo"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
+#, fuzzy
+#| msgid "Add New Location"
+msgid "Add New Scheduled Action"
+msgstr "Aggiungi nuova Località"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
+msgid "Edit"
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
+msgid "Edit Scheduled Action"
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
+msgid "New Scheduled Action"
+msgstr ""
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
+#, fuzzy
+#| msgid "Vacation"
+msgid "View Action"
+msgstr "Vacanza"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
+#, fuzzy
+#| msgid "Search Locations"
+msgid "Search Scheduled Actions"
+msgstr "Percorsi di ricerca"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
+#, fuzzy
+#| msgid "No properties found"
+msgid "No actions found"
+msgstr "Nessun immobile trovato"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
+#, fuzzy
+#| msgid "No properties found in Trash"
+msgid "No actions found in trash"
+msgstr "Nessun immobile trovato nel cestino"
+
+#: action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
+msgid "Action Group"
+msgstr ""
+
+#: action-scheduler/classes/migration/ActionMigrator.php:96
+#, php-format
+msgid "Unable to remove source migrated action %s"
+msgstr ""
+
+#: action-scheduler/classes/migration/Config.php:52
+msgid "Source store must be configured before running a migration"
+msgstr ""
+
+#: action-scheduler/classes/migration/Config.php:74
+msgid "Source logger must be configured before running a migration"
+msgstr ""
+
+#: action-scheduler/classes/migration/Config.php:96
+msgid "Destination store must be configured before running a migration"
+msgstr ""
+
+#: action-scheduler/classes/migration/Config.php:118
+msgid "Destination logger must be configured before running a migration"
+msgstr ""
+
+#: action-scheduler/classes/migration/Runner.php:82
+#, fuzzy, php-format
+#| msgid "Train station"
+msgid "Migrating %d action"
+msgstr "Stazione ferroviaria"
+
+#: action-scheduler/classes/migration/Runner.php:107
+#, php-format
+msgid "Migrated action with ID %1$d in %2$s to ID %3$d in %4$s"
+msgstr ""
+
+#: action-scheduler/functions.php:287
+#, php-format
+msgid "Caught exception while cancelling action \"%1$s\": %2$s"
+msgstr ""
+
+#: casawp.php:202
+msgid "Once Monthly"
+msgstr ""
+
+#: classes/Archive.php:374 classes/Conversion.php:671 classes/Plugin.php:1522
+#: classes/Plugin.php:2689
 msgid "Buy"
 msgstr "Acquistare"
 
-#: classes/Archive.php:376 classes/Conversion.php:607 classes/Plugin.php:1321
-#: classes/Plugin.php:2503
+#: classes/Archive.php:376 classes/Conversion.php:672 classes/Plugin.php:1519
+#: classes/Plugin.php:2792
 msgid "Rent"
 msgstr "Affittare"
 
-#: classes/Archive.php:396 classes/Plugin.php:1336
+#: classes/Archive.php:396 classes/Plugin.php:1541
 msgid "Active"
 msgstr "Attivo"
 
-#: classes/Archive.php:398 classes/Conversion.php:385 classes/Plugin.php:1337
-#: modules/casawp/src/casawp/Service/Offer.php:259
+#: classes/Archive.php:398 classes/Conversion.php:385 classes/Plugin.php:1544
 #: modules/casawp/src/casawp/Service/Offer.php:261
+#: modules/casawp/src/casawp/Service/Offer.php:263
 #: modules/casawp/src/casawp/Service/Project.php:190
 #: modules/casawp/src/casawp/Service/Project.php:192
 #: theme-defaults/casawp/bootstrap2/datatable-property.phtml:3
@@ -50,7 +766,7 @@ msgid "Reference"
 msgstr "Numero di referenza"
 
 #: classes/Archive.php:400 classes/Conversion.php:382
-#: modules/casawp/src/casawp/Service/Offer.php:257
+#: modules/casawp/src/casawp/Service/Offer.php:259
 #: modules/casawp/src/casawp/Service/Project.php:188
 msgid "Reserved"
 msgstr "Riservato"
@@ -65,15 +781,15 @@ msgstr "Presi"
 msgid "Advanced Search"
 msgstr "Erweiterte Suche"
 
-#: classes/Archive.php:484 modules/casawp/src/casawp/Form/FilterForm.php:88
+#: classes/Archive.php:484 modules/casawp/src/casawp/Form/FilterForm.php:94
 msgid "Choose offer"
 msgstr "Scegli l'offerta"
 
-#: classes/Archive.php:491 modules/casawp/src/casawp/Form/FilterForm.php:99
+#: classes/Archive.php:491 modules/casawp/src/casawp/Form/FilterForm.php:105
 msgid "Choose category"
 msgstr "Scegli la categoria"
 
-#: classes/Archive.php:501 modules/casawp/src/casawp/Form/FilterForm.php:135
+#: classes/Archive.php:501 modules/casawp/src/casawp/Form/FilterForm.php:141
 msgid "Choose locality"
 msgstr "Scegli la località"
 
@@ -136,7 +852,7 @@ msgstr "Argentina"
 msgid "American Samoa"
 msgstr "Samoa Americane"
 
-#: classes/Conversion.php:32 modules/casawp/src/casawp/Service/Offer.php:140
+#: classes/Conversion.php:32 modules/casawp/src/casawp/Service/Offer.php:142
 #: modules/casawp/src/casawp/Service/Project.php:133
 #: theme-defaults/casawp/bootstrap2/address.phtml:14
 #: theme-defaults/casawp/bootstrap3/address.phtml:14
@@ -252,7 +968,7 @@ msgstr "Repubblica Centrafricana"
 msgid "Congo"
 msgstr "Congo"
 
-#: classes/Conversion.php:60 modules/casawp/src/casawp/Service/Offer.php:138
+#: classes/Conversion.php:60 modules/casawp/src/casawp/Service/Offer.php:140
 #: modules/casawp/src/casawp/Service/Project.php:131
 #: theme-defaults/casawp/bootstrap2/address.phtml:12
 #: theme-defaults/casawp/bootstrap3/address.phtml:12
@@ -308,7 +1024,7 @@ msgstr "Cipro"
 msgid "Czech Republic"
 msgstr "Repubblica Ceca"
 
-#: classes/Conversion.php:73 modules/casawp/src/casawp/Service/Offer.php:139
+#: classes/Conversion.php:73 modules/casawp/src/casawp/Service/Offer.php:141
 #: modules/casawp/src/casawp/Service/Project.php:132
 #: theme-defaults/casawp/bootstrap2/address.phtml:13
 #: theme-defaults/casawp/bootstrap3/address.phtml:13
@@ -384,7 +1100,7 @@ msgstr "Micronesia, Stati Federati di"
 msgid "Faroe Islands"
 msgstr "Isole Faroe"
 
-#: classes/Conversion.php:91 modules/casawp/src/casawp/Service/Offer.php:142
+#: classes/Conversion.php:91 modules/casawp/src/casawp/Service/Offer.php:144
 #: modules/casawp/src/casawp/Service/Project.php:135
 #: theme-defaults/casawp/bootstrap2/address.phtml:16
 #: theme-defaults/casawp/bootstrap3/address.phtml:16
@@ -524,7 +1240,7 @@ msgstr "Iran, Islamic Republic of"
 msgid "Iceland"
 msgstr "Islanda"
 
-#: classes/Conversion.php:125 modules/casawp/src/casawp/Service/Offer.php:141
+#: classes/Conversion.php:125 modules/casawp/src/casawp/Service/Offer.php:143
 #: modules/casawp/src/casawp/Service/Project.php:134
 #: theme-defaults/casawp/bootstrap2/address.phtml:15
 #: theme-defaults/casawp/bootstrap3/address.phtml:15
@@ -1335,14 +2051,14 @@ msgstr "Molo per la barca"
 msgid "Airport"
 msgstr "Aeroporto"
 
-#: classes/Conversion.php:376 modules/casawp/src/casawp/Service/Offer.php:93
-#: modules/casawp/src/casawp/Service/Offer.php:101
-#: modules/casawp/src/casawp/Service/Offer.php:109
-#: modules/casawp/src/casawp/Service/Offer.php:806
-#: modules/casawp/src/casawp/Service/Offer.php:827
-#: modules/casawp/src/casawp/Service/Offer.php:930
-#: modules/casawp/src/casawp/Service/Offer.php:962
-#: modules/casawp/src/casawp/Service/Offer.php:981
+#: classes/Conversion.php:376 modules/casawp/src/casawp/Service/Offer.php:95
+#: modules/casawp/src/casawp/Service/Offer.php:103
+#: modules/casawp/src/casawp/Service/Offer.php:111
+#: modules/casawp/src/casawp/Service/Offer.php:808
+#: modules/casawp/src/casawp/Service/Offer.php:829
+#: modules/casawp/src/casawp/Service/Offer.php:932
+#: modules/casawp/src/casawp/Service/Offer.php:964
+#: modules/casawp/src/casawp/Service/Offer.php:983
 #: modules/casawp/src/casawp/Service/Project.php:86
 #: modules/casawp/src/casawp/Service/Project.php:94
 #: modules/casawp/src/casawp/Service/Project.php:102
@@ -1363,21 +2079,21 @@ msgstr "Su richiesta"
 msgid "By Agreement"
 msgstr "su richiesta"
 
-#: classes/Conversion.php:378 modules/casawp/src/casawp/Service/Offer.php:829
+#: classes/Conversion.php:378 modules/casawp/src/casawp/Service/Offer.php:831
 msgid "Immediate"
 msgstr "Immediata"
 
-#: classes/Conversion.php:381 modules/casawp/src/casawp/Service/Offer.php:258
+#: classes/Conversion.php:381 modules/casawp/src/casawp/Service/Offer.php:260
 #: modules/casawp/src/casawp/Service/Project.php:189
 msgid "Available"
 msgstr "Disponibile da"
 
-#: classes/Conversion.php:383 modules/casawp/src/casawp/Service/Offer.php:266
+#: classes/Conversion.php:383 modules/casawp/src/casawp/Service/Offer.php:268
 #: modules/casawp/src/casawp/Service/Project.php:197
 msgid "Sold"
 msgstr "Venduto"
 
-#: classes/Conversion.php:384 modules/casawp/src/casawp/Service/Offer.php:264
+#: classes/Conversion.php:384 modules/casawp/src/casawp/Service/Offer.php:266
 #: modules/casawp/src/casawp/Service/Project.php:195
 msgid "Rented"
 msgstr "Affittato"
@@ -1395,420 +2111,680 @@ msgid "Apartment"
 msgstr "Appartamenti"
 
 #: classes/Conversion.php:514
-msgid "Attic Flat"
-msgstr "Mansarda"
+msgid "Attic flat"
+msgstr "Appartamento attico"
 
 #: classes/Conversion.php:515
-msgid "Bachelor Flat"
-msgstr "garconnière"
+msgid "Bachelor flat"
+msgstr "Monolocale / Studio"
 
 #: classes/Conversion.php:516
-msgid "Bifamiliar House"
-msgstr "Casa bifamigliare"
+msgid "Bifamiliar house"
+msgstr "Casa unifamiliare doppia"
 
 #: classes/Conversion.php:517
-msgid "Building Land"
-msgstr "terreno fabbricabile"
+msgid "Bed and breakfast"
+msgstr "Bed & Breakfast"
 
 #: classes/Conversion.php:518
-msgid "Double Garage"
-msgstr "Garage doppio"
+msgid "Building land"
+msgstr "Terreno edificabile"
 
 #: classes/Conversion.php:519
+msgid "Boat dry dock"
+msgstr "Darsena"
+
+#: classes/Conversion.php:520
+msgid "Boat landing stage"
+msgstr "Attracco barca al pontile"
+
+#: classes/Conversion.php:521
+msgid "Boat mooring"
+msgstr "Boa di ormeggio per barca"
+
+#: classes/Conversion.php:522
+msgid "Double garage"
+msgstr "Garage doppio"
+
+#: classes/Conversion.php:523
+msgid "Campground / Tent camping"
+msgstr "Campeggio"
+
+#: classes/Conversion.php:524
 msgid "Duplex"
 msgstr "Duplex"
 
-#: classes/Conversion.php:520
+#: classes/Conversion.php:525
+msgid "Car park"
+msgstr "Parcheggio"
+
+#: classes/Conversion.php:526
+msgid "Car repair shop"
+msgstr "Garage"
+
+#: classes/Conversion.php:527
 msgid "Factory"
 msgstr "Fabbrica"
 
-#: classes/Conversion.php:521
+#: classes/Conversion.php:528
 msgid "Farm"
 msgstr "Fattoria"
 
-#: classes/Conversion.php:522
-msgid "Farm House"
-msgstr "cascina"
+#: classes/Conversion.php:529
+msgid "Farm house"
+msgstr "Stalla"
 
-#: classes/Conversion.php:523
-msgid "Furnished Flat"
+#: classes/Conversion.php:530
+msgid "Furnished flat"
 msgstr "Appartamento ammobiliato"
 
-#: classes/Conversion.php:524 classes/Conversion.php:618
+#: classes/Conversion.php:531 classes/Conversion.php:683
 msgid "Garage"
 msgstr "Garage"
 
-#: classes/Conversion.php:525
+#: classes/Conversion.php:532
 msgid "Loft"
 msgstr "Loft"
 
-#: classes/Conversion.php:526
-msgid "Mountain Farm"
-msgstr "Fattoria di montagna"
+#: classes/Conversion.php:533
+msgid "Multiple dwelling"
+msgstr "Casa plurifamiliare"
 
-#: classes/Conversion.php:527
-msgid "Multiple Dwelling"
-msgstr "Plurifamiliari"
-
-#: classes/Conversion.php:528
-msgid "Open Slot"
-msgstr "Apri slot"
-
-#: classes/Conversion.php:529
+#: classes/Conversion.php:534
 msgid "Parking Space"
 msgstr "Posto auto."
 
-#: classes/Conversion.php:530
+#: classes/Conversion.php:535
 msgid "Plot"
 msgstr "Terreno"
 
-#: classes/Conversion.php:531
-msgid "Roof Flat"
-msgstr "Tetto piatto"
-
-#: classes/Conversion.php:532
-msgid "Row House"
-msgstr "Casa a schiera"
-
-#: classes/Conversion.php:533
-msgid "Single Garage"
-msgstr "Garage singolo"
-
-#: classes/Conversion.php:534
-msgid "Single House"
-msgstr "Casa singola"
-
-#: classes/Conversion.php:535
-msgid "Single Room"
-msgstr "Camera Singola"
-
 #: classes/Conversion.php:536
-msgid "Terrace Flat"
-msgstr "Terrazza appartamento"
-
-#: classes/Conversion.php:537
-msgid "Terrace House"
-msgstr "Casa a schiera"
-
-#: classes/Conversion.php:538
-msgid "Underground Slot"
-msgstr "Slot della metropolitana"
-
-#: classes/Conversion.php:539
 msgid "Villa"
 msgstr "Villa"
 
-#: classes/Conversion.php:540
+#: classes/Conversion.php:537
 msgid "Chalet"
 msgstr "Chalet"
 
-#: classes/Conversion.php:541
+#: classes/Conversion.php:538
 msgid "Studio"
 msgstr "Monolocale"
 
-#: classes/Conversion.php:542
+#: classes/Conversion.php:539
 msgid "House"
 msgstr "Case"
 
-#: classes/Conversion.php:543
-msgid "Covered Slot"
-msgstr ""
-
-#: classes/Conversion.php:545 classes/Conversion.php:591
+#: classes/Conversion.php:541 classes/Conversion.php:655
 msgid "Commercial"
 msgstr "Ufficio"
 
-#: classes/Conversion.php:546 classes/Conversion.php:592
+#: classes/Conversion.php:542 classes/Conversion.php:656
 msgid "Gastronomy"
 msgstr "Gastronomia"
 
-#: classes/Conversion.php:547 classes/Conversion.php:593
+#: classes/Conversion.php:543 classes/Conversion.php:657
 msgid "Vacation"
 msgstr "Vacanza"
 
-#: classes/Conversion.php:548
+#: classes/Conversion.php:544
 msgid "Agriculture"
 msgstr "Agricola"
 
-#: classes/Conversion.php:549 classes/Conversion.php:595
+#: classes/Conversion.php:545
+msgid "Agricultural land"
+msgstr "Terreno agricolo"
+
+#: classes/Conversion.php:546
+msgid "Agricultural lot"
+msgstr "Terreno agricolo"
+
+#: classes/Conversion.php:547
+msgid "Allotment garden"
+msgstr "Giardino privato"
+
+#: classes/Conversion.php:548 classes/Conversion.php:556
+msgid "Arcade"
+msgstr "Porticato"
+
+#: classes/Conversion.php:549
+msgid "Attic compartment"
+msgstr "Solaio"
+
+#: classes/Conversion.php:550 classes/Conversion.php:659
 msgid "Industrial"
 msgstr "IndustrialeIndustria/Commercio"
 
-#: classes/Conversion.php:550 classes/Conversion.php:596
+#: classes/Conversion.php:551 classes/Conversion.php:660
 msgid "Residential"
 msgstr "Residenziale"
 
-#: classes/Conversion.php:551 classes/Conversion.php:597
+#: classes/Conversion.php:552 classes/Conversion.php:661
 msgid "Storage"
 msgstr "Conservazione"
 
-#: classes/Conversion.php:552 classes/Conversion.php:634
+#: classes/Conversion.php:553 classes/Conversion.php:699
 msgid "Parking space"
 msgstr "Posteggio esterno"
 
-#: classes/Conversion.php:553 classes/Conversion.php:599
+#: classes/Conversion.php:554 classes/Conversion.php:663
 msgid "Building"
 msgstr "Costruzione"
 
-#: classes/Conversion.php:554
+#: classes/Conversion.php:555
 msgid "Advertising Area"
 msgstr "Spazio pubblicitario"
 
-#: classes/Conversion.php:555
-msgid "Arcade"
-msgstr "Arcade"
-
-#: classes/Conversion.php:556
+#: classes/Conversion.php:557
 msgid "Atelier"
 msgstr "Atelier"
 
-#: classes/Conversion.php:557
+#: classes/Conversion.php:558
 msgid "Bakery"
 msgstr "Pasticceria"
 
-#: classes/Conversion.php:558
+#: classes/Conversion.php:559
 msgid "Bar"
 msgstr "Bar"
 
-#: classes/Conversion.php:559
+#: classes/Conversion.php:560
 msgid "Butcher"
 msgstr "Macellaio"
 
-#: classes/Conversion.php:560
+#: classes/Conversion.php:561
 msgid "Café"
 msgstr "Caffetteria"
 
-#: classes/Conversion.php:561
+#: classes/Conversion.php:562
 msgid "Casino"
 msgstr "Casa da gioco"
 
-#: classes/Conversion.php:562
-msgid "Cheese Factory"
-msgstr "casera"
-
 #: classes/Conversion.php:563
-msgid "Club/Disco"
-msgstr "Discoteca/Club"
+msgid "Club disco"
+msgstr "Club/Disco"
 
 #: classes/Conversion.php:564
-msgid "Fuel Station"
-msgstr "Stazione di servizio"
-
-#: classes/Conversion.php:565
 msgid "Gardening"
 msgstr "Giardinaggio"
 
-#: classes/Conversion.php:566
+#: classes/Conversion.php:565
 msgid "Hairdresser"
 msgstr "Parrucchiere"
 
-#: classes/Conversion.php:567
+#: classes/Conversion.php:566
 msgid "Kiosk"
 msgstr "Chiosco"
 
-#: classes/Conversion.php:568
-msgid "Movie Theater"
-msgstr "Sala cinematografica"
-
-#: classes/Conversion.php:569
+#: classes/Conversion.php:567
 msgid "Office"
 msgstr "Ufficio"
 
-#: classes/Conversion.php:570
+#: classes/Conversion.php:568
 msgid "Practice"
 msgstr "Pratica"
 
-#: classes/Conversion.php:571
+#: classes/Conversion.php:569
 msgid "Restaurant"
 msgstr "Ristorante"
 
-#: classes/Conversion.php:572
+#: classes/Conversion.php:570
 msgid "Shop"
 msgstr "Negozio"
 
-#: classes/Conversion.php:573
+#: classes/Conversion.php:571
 msgid "Shopping Centre"
 msgstr "centro commerciale"
 
-#: classes/Conversion.php:574
+#: classes/Conversion.php:572
 msgid "Hotel"
 msgstr "Hotel"
 
+#: classes/Conversion.php:573
+msgid "Carpentry shop"
+msgstr "Falegnameria"
+
+#: classes/Conversion.php:574
+msgid "Castle"
+msgstr "Castello"
+
+#: classes/Conversion.php:575
+msgid "Cellar compartment"
+msgstr "Cantina"
+
+#: classes/Conversion.php:576
+msgid "Cheese factory"
+msgstr "Caseificio"
+
+#: classes/Conversion.php:577
+msgid "Commercial building plot"
+msgstr "Terreno edificabile commerciale"
+
+#: classes/Conversion.php:578
+msgid "Commercial plot"
+msgstr "Terreno edificabile in zona commerciale"
+
+#: classes/Conversion.php:579
+msgid "Commercial premises"
+msgstr "Locale commerciale"
+
+#: classes/Conversion.php:580
+msgid "Construction project"
+msgstr "Progetto edilizio"
+
+#: classes/Conversion.php:581
+msgid "Covered bike space"
+msgstr "Posteggio motociclette"
+
+#: classes/Conversion.php:582
+msgid "Covered slot"
+msgstr "Rifugio"
+
+#: classes/Conversion.php:583
+msgid "Display window"
+msgstr "Bacheca con vetrina"
+
+#: classes/Conversion.php:584
+msgid "Doctors office"
+msgstr "Ambulatorio"
+
+#: classes/Conversion.php:585
+msgid "Earth sheltered dwelling"
+msgstr "Casa nella caverna/terra"
+
+#: classes/Conversion.php:586
+msgid "Ground floor flat"
+msgstr "Appartamento al piano terra"
+
+#: classes/Conversion.php:587
+msgid "Engadine house"
+msgstr "Casa engadinese"
+
+#: classes/Conversion.php:588
+msgid "Exhibition space"
+msgstr "Spazio espositivo"
+
+#: classes/Conversion.php:589
+msgid "Flat"
+msgstr "Appartamento al piano superiore"
+
+#: classes/Conversion.php:590
+msgid "Fuel station"
+msgstr "Stazione di servizio"
+
+#: classes/Conversion.php:591
+msgid "Garden apartment"
+msgstr "Appartamento con giardino"
+
+#: classes/Conversion.php:592
+msgid "Golf course"
+msgstr "Campo da golf"
+
+#: classes/Conversion.php:593
+msgid "Granny flat"
+msgstr "Alloggio indipendente"
+
 #: classes/Conversion.php:594
-#, fuzzy
-#| msgid "Agriculture"
-msgid "Agricultural"
-msgstr "Agricola"
+msgid "Hair salon"
+msgstr "Salone di parrucchiere"
+
+#: classes/Conversion.php:595
+msgid "Home"
+msgstr "Istituto"
+
+#: classes/Conversion.php:596
+msgid "Horse box"
+msgstr "Box coperto per cavalli"
+
+#: classes/Conversion.php:597
+msgid "Hospital"
+msgstr "Ospedale"
 
 #: classes/Conversion.php:598
-#, fuzzy
-#| msgid "Parking Space"
-msgid "Parking"
-msgstr "Posto auto."
+msgid "Indoor swimming pool"
+msgstr "Piscina coperta"
+
+#: classes/Conversion.php:599
+msgid "Indoor tennis court"
+msgstr "Campo da tennis coperto"
 
 #: classes/Conversion.php:600
-msgid "Investment"
+msgid "Industrial building plot"
+msgstr "Terreno edificabile industriale"
+
+#: classes/Conversion.php:601
+msgid "Industrial property"
+msgstr "Oggetto industriale"
+
+#: classes/Conversion.php:602
+msgid "Laboratory"
+msgstr "Laboratoriio"
+
+#: classes/Conversion.php:603
+msgid "Library"
+msgstr "Biblioteca"
+
+#: classes/Conversion.php:604
+msgid "Residential / commercial building"
+msgstr "Immobile misto commerciale/residenziale"
+
+#: classes/Conversion.php:605
+msgid "Maisonette"
 msgstr ""
 
+#: classes/Conversion.php:606
+msgid "Market garden"
+msgstr "Vivaio"
+
+#: classes/Conversion.php:607
+msgid "Mini-golf course"
+msgstr "Campo da minigolf"
+
+#: classes/Conversion.php:608
+msgid "Mountain farm"
+msgstr "Fattoria di montagna"
+
+#: classes/Conversion.php:609
+msgid "Movie theater"
+msgstr "Cinema"
+
+#: classes/Conversion.php:610
+msgid "Multistorey car park"
+msgstr "Autosilo"
+
+#: classes/Conversion.php:611
+msgid "Nursing home"
+msgstr "Casa di cura"
+
+#: classes/Conversion.php:612
+msgid "Old-age home"
+msgstr "Casa per anziani"
+
 #: classes/Conversion.php:613
+msgid "Open slot"
+msgstr "Posteggio esterno"
+
+#: classes/Conversion.php:614
+msgid "Orphanage"
+msgstr "Instituto"
+
+#: classes/Conversion.php:615
+msgid "Outdoor swimming pool"
+msgstr "Piscina esterna"
+
+#: classes/Conversion.php:616
+msgid "Part of a house"
+msgstr "Porzione di casa"
+
+#: classes/Conversion.php:617
+msgid "Party room"
+msgstr "Salone per feste"
+
+#: classes/Conversion.php:618
+msgid "Patrician house"
+msgstr "Casa patriziale"
+
+#: classes/Conversion.php:619
+msgid "Penthouse"
+msgstr "Attico"
+
+#: classes/Conversion.php:620
+msgid "Pub"
+msgstr ""
+
+#: classes/Conversion.php:621
+msgid "Retail"
+msgstr "Al dettaglio"
+
+#: classes/Conversion.php:622
+msgid "Retail space"
+msgstr "Superficie commerciale"
+
+#: classes/Conversion.php:623
+msgid "Riding hall"
+msgstr "Maneggio"
+
+#: classes/Conversion.php:624
+msgid "Roof flat"
+msgstr "Appartamento mansardato"
+
+#: classes/Conversion.php:625
+msgid "Row house"
+msgstr "Casa a schiera"
+
+#: classes/Conversion.php:626
+msgid "Sanatorium"
+msgstr "Sanatorio"
+
+#: classes/Conversion.php:627
+msgid "Sauna"
+msgstr ""
+
+#: classes/Conversion.php:628
+msgid "Shopping center"
+msgstr "Centro commerciale"
+
+#: classes/Conversion.php:629
+msgid "Single garage"
+msgstr "Garage singolo"
+
+#: classes/Conversion.php:630
+msgid "Single house"
+msgstr "Casa unifamiliare"
+
+#: classes/Conversion.php:631
+msgid "Single room"
+msgstr "Camera singola"
+
+#: classes/Conversion.php:632
+msgid "Solarium"
+msgstr ""
+
+#: classes/Conversion.php:633
+msgid "Sports hall"
+msgstr "Centro sportivo"
+
+#: classes/Conversion.php:634
+msgid "Storage room"
+msgstr "Deposito"
+
+#: classes/Conversion.php:635
+msgid "Tennis court"
+msgstr "Campo da tennis"
+
+#: classes/Conversion.php:636
+msgid "Terrace flat"
+msgstr "Appartamento terrazzato"
+
+#: classes/Conversion.php:637
+msgid "Terrace house"
+msgstr "Casa terrazzata"
+
+#: classes/Conversion.php:638
+msgid "Underground slot"
+msgstr "Posteggio in autorimessa"
+
+#: classes/Conversion.php:639
+msgid "Warehouse"
+msgstr "Magazzino"
+
+#: classes/Conversion.php:640
+msgid "Workshop"
+msgstr "Officina / Atelier"
+
+#: classes/Conversion.php:658
+msgid "Agricultural"
+msgstr "Agricoltura"
+
+#: classes/Conversion.php:662
+msgid "Parking"
+msgstr "Parcheggio"
+
+#: classes/Conversion.php:664
+msgid "Investment"
+msgstr "Stabile di reddito"
+
+#: classes/Conversion.php:665
+msgid "Construction"
+msgstr "Costruzione"
+
+#: classes/Conversion.php:678
 msgid "Child friendly"
 msgstr "Adatto ai bambini"
 
-#: classes/Conversion.php:616
+#: classes/Conversion.php:681
 #, php-format
 msgid "%d garages"
 msgstr "%d garage"
 
-#: classes/Conversion.php:623
+#: classes/Conversion.php:688
 #, php-format
 msgid "%dx balconies"
 msgstr "%d x balcone"
 
-#: classes/Conversion.php:625
+#: classes/Conversion.php:690
 msgid "Balcony"
 msgstr "Balcone"
 
-#: classes/Conversion.php:628
+#: classes/Conversion.php:693
 msgid "Vista"
 msgstr "Vista"
 
-#: classes/Conversion.php:629
+#: classes/Conversion.php:694
 msgid "Cable TV"
 msgstr "TV via cavo"
 
-#: classes/Conversion.php:632
+#: classes/Conversion.php:697
 #, php-format
 msgid "%d Parking spaces"
 msgstr "%d Parcheggi"
 
-#: classes/Conversion.php:639
+#: classes/Conversion.php:704
 #, php-format
 msgid "%d Pets allowed"
 msgstr "%d accettano animali domestici"
 
-#: classes/Conversion.php:641
+#: classes/Conversion.php:706
 msgid "Pets allowed"
 msgstr "Animali domestici ammessi"
 
-#: classes/Conversion.php:644
+#: classes/Conversion.php:709
 msgid "ISDN Anschluss"
 msgstr "Connessione ISDN"
 
-#: classes/Conversion.php:648
+#: classes/Conversion.php:713
 #, php-format
 msgid "%d Restrooms"
 msgstr "%d Toilette"
 
-#: classes/Conversion.php:650
+#: classes/Conversion.php:715
 msgid "Restrooms"
 msgstr "Toilette"
 
-#: classes/Conversion.php:655
+#: classes/Conversion.php:720
 #, php-format
 msgid "%d elevators"
 msgstr "%d ascensori"
 
-#: classes/Conversion.php:657
+#: classes/Conversion.php:722
 msgid "Elevator"
 msgstr "Ascensore"
 
-#: classes/Conversion.php:661
+#: classes/Conversion.php:726
 msgid "Fireplace"
 msgstr "Camino"
 
-#: classes/Conversion.php:662
+#: classes/Conversion.php:727
 msgid "wheelchair accessible"
 msgstr "accessibile ai disabili"
 
-#: classes/Conversion.php:663
+#: classes/Conversion.php:728
 msgid "Ramp"
 msgstr "Rampa"
 
-#: classes/Conversion.php:664
+#: classes/Conversion.php:729
 msgid "lifting platform"
 msgstr "Ponte sollevatore"
 
-#: classes/Conversion.php:665
+#: classes/Conversion.php:730
 msgid "Railway terminal"
 msgstr "Collegamento ferroviario"
 
-#: classes/Conversion.php:666
+#: classes/Conversion.php:731
 msgid "Water Supply"
 msgstr "Allacciamento acqua"
 
-#: classes/Conversion.php:667
+#: classes/Conversion.php:732
 msgid "Sewage supply"
 msgstr "Allacciamento canalizzazione"
 
-#: classes/Conversion.php:668
+#: classes/Conversion.php:733
 msgid "Power Supply"
 msgstr "Allacciamento corrente"
 
-#: classes/Conversion.php:669
+#: classes/Conversion.php:734
 msgid "Gas supply"
 msgstr "Allacciamento gas"
 
-#: classes/Conversion.php:670
+#: classes/Conversion.php:735
 msgid "Corner house"
 msgstr "Casa ad angolo"
 
-#: classes/Conversion.php:671
+#: classes/Conversion.php:736
 msgid "Middle house"
 msgstr "Casa centrale"
 
-#: classes/Conversion.php:672
+#: classes/Conversion.php:737
 msgid "Gardenhouse"
 msgstr "Casetta in giardino"
 
-#: classes/Conversion.php:673
+#: classes/Conversion.php:738
 msgid "Raised ground floor"
 msgstr "Parterre rialzato"
 
-#: classes/Conversion.php:674
+#: classes/Conversion.php:739
 msgid "New building"
 msgstr "Nuova costruzione"
 
-#: classes/Conversion.php:675
+#: classes/Conversion.php:740
 msgid "Old building"
 msgstr "Casa d'epoca"
 
-#: classes/Conversion.php:676
+#: classes/Conversion.php:741
 msgid "Under roof"
 msgstr "Parcheggio coperto"
 
-#: classes/Conversion.php:677
+#: classes/Conversion.php:742
 msgid "Swimmingpool"
 msgstr "Piscina"
 
-#: classes/Conversion.php:678
+#: classes/Conversion.php:743
 msgid "Minergie general"
 msgstr "Costruzione Minergie"
 
-#: classes/Conversion.php:679
+#: classes/Conversion.php:744
 msgid "Minergie certified"
 msgstr "Certificato Minergie"
 
-#: classes/Conversion.php:680
+#: classes/Conversion.php:745
 msgid "Under building laws"
 msgstr "Diritto edilizio"
 
-#: classes/Conversion.php:681
+#: classes/Conversion.php:746
 msgid "Building land connected"
 msgstr "Terreno fabbricabile"
 
-#: classes/Conversion.php:682
+#: classes/Conversion.php:747
 msgid "Flat sharing community"
 msgstr "In condivisione"
 
-#: classes/Plugin.php:165
+#: classes/Plugin.php:192
 msgid "Gennerated login page"
 msgstr ""
 
-#: classes/Plugin.php:188
+#: classes/Plugin.php:215
 msgid "Gennerated logout page"
 msgstr ""
 
-#: classes/Plugin.php:623 classes/Plugin.php:2813
+#: classes/Plugin.php:736 classes/Plugin.php:3108
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:10
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:4
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:10
@@ -1818,92 +2794,92 @@ msgstr ""
 msgid "Property"
 msgstr "Proprietà"
 
-#: classes/Plugin.php:848 classes/Plugin.php:2455 classes/Plugin.php:2492
+#: classes/Plugin.php:974 classes/Plugin.php:2744 classes/Plugin.php:2781
 #: classes/Single.php:832 classes/Single.php:942
 msgid "month"
 msgstr "al mese"
 
-#: classes/Plugin.php:849 classes/Plugin.php:2456 classes/Plugin.php:2493
+#: classes/Plugin.php:975 classes/Plugin.php:2745 classes/Plugin.php:2782
 #: classes/Single.php:833 classes/Single.php:943
 msgid "week"
 msgstr "settimana"
 
-#: classes/Plugin.php:850 classes/Plugin.php:2457 classes/Plugin.php:2494
+#: classes/Plugin.php:976 classes/Plugin.php:2746 classes/Plugin.php:2783
 #: classes/Single.php:834 classes/Single.php:944
 msgid "day"
 msgstr "giorno"
 
-#: classes/Plugin.php:851 classes/Plugin.php:2458 classes/Plugin.php:2495
+#: classes/Plugin.php:977 classes/Plugin.php:2747 classes/Plugin.php:2784
 #: classes/Single.php:835 classes/Single.php:945
 msgid "year"
 msgstr "all'anno"
 
-#: classes/Plugin.php:852 classes/Plugin.php:2459 classes/Plugin.php:2496
+#: classes/Plugin.php:978 classes/Plugin.php:2748 classes/Plugin.php:2785
 #: classes/Single.php:836 classes/Single.php:946
 msgid "hour"
 msgstr "ora"
 
-#: classes/Plugin.php:1966
+#: classes/Plugin.php:2232
 msgid "Custom Text Field"
 msgstr "Campo di testo personalizzato"
 
-#: classes/Plugin.php:1970
+#: classes/Plugin.php:2236
 msgid "Original filename"
 msgstr "Original filename"
 
-#: classes/Plugin.php:2201 classes/Plugin.php:2773
+#: classes/Plugin.php:2490 classes/Plugin.php:3068
 msgid "CASAWP ID"
 msgstr ""
 
-#: classes/Plugin.php:2208 classes/Plugin.php:2780
+#: classes/Plugin.php:2497 classes/Plugin.php:3075
 msgid "Reference Nr."
 msgstr "Riferimento Nr."
 
-#: classes/Plugin.php:2215 classes/Plugin.php:2787
+#: classes/Plugin.php:2504 classes/Plugin.php:3082
 msgid "Identifiers"
 msgstr "Identificatori"
 
-#: classes/Plugin.php:2237 classes/Plugin.php:2551
+#: classes/Plugin.php:2526 classes/Plugin.php:2840
 #: modules/casawp/src/casawp/Form/ContactForm.php:90
-#: modules/casawp/src/casawp/Service/Offer.php:899
+#: modules/casawp/src/casawp/Service/Offer.php:901
 msgid "Street"
 msgstr "Indirizzo"
 
-#: classes/Plugin.php:2244
+#: classes/Plugin.php:2533
 msgid "Nr."
 msgstr "N."
 
-#: classes/Plugin.php:2251
+#: classes/Plugin.php:2540
 msgid "Addition"
 msgstr "Addizione"
 
-#: classes/Plugin.php:2258 classes/Plugin.php:2565
+#: classes/Plugin.php:2547 classes/Plugin.php:2854
 msgid "Postal Code"
 msgstr "C.A.P."
 
-#: classes/Plugin.php:2265
+#: classes/Plugin.php:2554
 msgid "City"
 msgstr "Città"
 
-#: classes/Plugin.php:2272 classes/Plugin.php:2579
-#: modules/casawp/src/casawp/Form/FilterForm.php:116
+#: classes/Plugin.php:2561 classes/Plugin.php:2868
+#: modules/casawp/src/casawp/Form/FilterForm.php:122
 msgid "Region"
 msgstr "Regione"
 
-#: classes/Plugin.php:2279 classes/Plugin.php:2586
+#: classes/Plugin.php:2568 classes/Plugin.php:2875
 #: modules/casawp/src/casawp/Form/ContactForm.php:148
 msgid "Country"
 msgstr "Paese"
 
-#: classes/Plugin.php:2286
+#: classes/Plugin.php:2575
 msgid "Latitude"
 msgstr "Latitudine"
 
-#: classes/Plugin.php:2293
+#: classes/Plugin.php:2582
 msgid "Longitude"
 msgstr "Longitudine"
 
-#: classes/Plugin.php:2300
+#: classes/Plugin.php:2589
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap2/datatable-property.phtml:10
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -1913,94 +2889,94 @@ msgstr "Longitudine"
 msgid "Address"
 msgstr "Indirizzo"
 
-#: classes/Plugin.php:2323
+#: classes/Plugin.php:2612
 msgid "Start"
 msgstr "Inizio"
 
-#: classes/Plugin.php:2335
+#: classes/Plugin.php:2624
 msgid "Currency"
 msgstr "Valuta"
 
-#: classes/Plugin.php:2349
+#: classes/Plugin.php:2638
 msgid "Last Import Hash"
 msgstr ""
 
-#: classes/Plugin.php:2356
+#: classes/Plugin.php:2645
 msgid "General settings"
 msgstr "Configurazione generale"
 
-#: classes/Plugin.php:2379 modules/casawp/src/casawp/Form/FilterForm.php:255
+#: classes/Plugin.php:2668 modules/casawp/src/casawp/Form/FilterForm.php:261
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:27
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:27
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:27
 msgid "Price"
 msgstr "Prezzo"
 
-#: classes/Plugin.php:2388
+#: classes/Plugin.php:2677
 msgid "Price property segment"
 msgstr "Segmento di prezzo proprietà"
 
-#: classes/Plugin.php:2393 classes/Plugin.php:2442 classes/Plugin.php:2480
+#: classes/Plugin.php:2682 classes/Plugin.php:2731 classes/Plugin.php:2769
 msgid "All"
 msgstr "Tutti"
 
-#: classes/Plugin.php:2428
+#: classes/Plugin.php:2717
 msgid "Net Price"
 msgstr "Affitto netto"
 
-#: classes/Plugin.php:2437
+#: classes/Plugin.php:2726
 msgid "Net price property segment"
 msgstr "Segmento di proprietà prezzo netto"
 
-#: classes/Plugin.php:2450
+#: classes/Plugin.php:2739
 msgid "Net price time segment"
 msgstr "Segmento di tempo prezzo netto"
 
-#: classes/Plugin.php:2466
+#: classes/Plugin.php:2755
 msgid "Gross Price"
 msgstr "Affitto lordo"
 
-#: classes/Plugin.php:2475
+#: classes/Plugin.php:2764
 msgid "Gross price property segment"
 msgstr "Segmento di proprietà prezzo lordo"
 
-#: classes/Plugin.php:2487
+#: classes/Plugin.php:2776
 msgid "Gross price time segment"
 msgstr "Segmento di tempo prezzo lordo"
 
-#: classes/Plugin.php:2530 modules/casawp/src/casawp/Form/ContactForm.php:79
+#: classes/Plugin.php:2819 modules/casawp/src/casawp/Form/ContactForm.php:79
 msgid "Legal name"
 msgstr "Nome Azienda"
 
-#: classes/Plugin.php:2537
+#: classes/Plugin.php:2826
 msgid "Brand"
 msgstr "Marchio"
 
-#: classes/Plugin.php:2544 modules/casawp/src/casawp/Form/ContactForm.php:160
+#: classes/Plugin.php:2833 modules/casawp/src/casawp/Form/ContactForm.php:160
 #: theme-defaults/casawp/bootstrap2/seller.phtml:22
 #: theme-defaults/casawp/bootstrap3/seller.phtml:22
 #: theme-defaults/casawp/bootstrap4/seller.phtml:22
 msgid "Phone"
 msgstr "Telefono"
 
-#: classes/Plugin.php:2558
+#: classes/Plugin.php:2847
 msgid "Street addition"
 msgstr "Aggiunta di strada"
 
-#: classes/Plugin.php:2572 modules/casawp/src/casawp/Form/ContactForm.php:113
-#: modules/casawp/src/casawp/Service/Offer.php:906
+#: classes/Plugin.php:2861 modules/casawp/src/casawp/Form/ContactForm.php:113
+#: modules/casawp/src/casawp/Service/Offer.php:908
 msgid "Locality"
 msgstr "Località"
 
-#: classes/Plugin.php:2593
+#: classes/Plugin.php:2882
 msgid "P.O. Box"
 msgstr "Casella postale"
 
-#: classes/Plugin.php:2600
+#: classes/Plugin.php:2889
 msgid "Organization"
 msgstr "Organizzazione"
 
-#: classes/Plugin.php:2625 modules/casawp/src/casawp/Form/ContactForm.php:182
+#: classes/Plugin.php:2914 modules/casawp/src/casawp/Form/ContactForm.php:182
 #: theme-defaults/casawp/bootstrap2/sales-person.phtml:18
 #: theme-defaults/casawp/bootstrap3/sales-person.phtml:28
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:23
@@ -2009,488 +2985,488 @@ msgstr "Organizzazione"
 msgid "Email"
 msgstr "E-mail"
 
-#: classes/Plugin.php:2632
+#: classes/Plugin.php:2921
 msgid "Function"
 msgstr "Funzione"
 
-#: classes/Plugin.php:2639
+#: classes/Plugin.php:2928
 msgid "Firstname"
 msgstr "Cognome"
 
-#: classes/Plugin.php:2646
+#: classes/Plugin.php:2935
 msgid "Lastname"
 msgstr ""
 
-#: classes/Plugin.php:2653 theme-defaults/casawp/bootstrap2/seller.phtml:28
+#: classes/Plugin.php:2942 theme-defaults/casawp/bootstrap2/seller.phtml:28
 #: theme-defaults/casawp/bootstrap3/seller.phtml:28
 #: theme-defaults/casawp/bootstrap4/seller.phtml:28
 msgid "Fax"
 msgstr "Fax"
 
-#: classes/Plugin.php:2660
+#: classes/Plugin.php:2949
 msgid "Direct phone"
 msgstr "Telefono diretto"
 
-#: classes/Plugin.php:2667
+#: classes/Plugin.php:2956
 msgid "Mobile phone"
 msgstr "Telefono cellulare"
 
-#: classes/Plugin.php:2674
+#: classes/Plugin.php:2963
 msgid "Gender"
 msgstr "Sesso"
 
-#: classes/Plugin.php:2679
+#: classes/Plugin.php:2968
 msgid "Unknown"
 msgstr "non noto"
 
-#: classes/Plugin.php:2680
+#: classes/Plugin.php:2969
 msgid "Male"
 msgstr "Maschio"
 
-#: classes/Plugin.php:2681
+#: classes/Plugin.php:2970
 msgid "Female"
 msgstr "Femmina"
 
-#: classes/Plugin.php:2688
+#: classes/Plugin.php:2977
 msgid "Note"
 msgstr "Nota"
 
-#: classes/Plugin.php:2696
+#: classes/Plugin.php:2986
 msgid "Display person"
 msgstr "Persona di visualizzazione"
 
-#: classes/Plugin.php:2697
+#: classes/Plugin.php:2989
 msgid "Inquiry recipient"
 msgstr "Destinatario della tua richiesta"
 
-#: classes/Plugin.php:2698
+#: classes/Plugin.php:2992
 #: theme-defaults/casawp/bootstrap3/visit-person.phtml:7
 #: theme-defaults/casawp/bootstrap4/visit-person.phtml:7
 msgid "Visit person"
 msgstr "Visitare di persona"
 
-#: classes/Plugin.php:2812 classes/Plugin.php:2823
+#: classes/Plugin.php:3107 classes/Plugin.php:3118
 msgid "Properties"
 msgstr "Proprietà"
 
-#: classes/Plugin.php:2814 classes/Plugin.php:2854
+#: classes/Plugin.php:3109 classes/Plugin.php:3150
 msgid "Add New"
 msgstr "Aggiungi nuovo"
 
-#: classes/Plugin.php:2815
+#: classes/Plugin.php:3110
 msgid "Add New Property"
 msgstr "Aggiungi Nuova proprietà"
 
-#: classes/Plugin.php:2816
+#: classes/Plugin.php:3111
 msgid "Edit Property"
 msgstr "Modifica proprietà"
 
-#: classes/Plugin.php:2817
+#: classes/Plugin.php:3112
 msgid "New Property"
 msgstr "Nuova proprietà"
 
-#: classes/Plugin.php:2818
+#: classes/Plugin.php:3113
 msgid "All Properties"
 msgstr "Tutte le proprietà"
 
-#: classes/Plugin.php:2819
+#: classes/Plugin.php:3114
 msgid "View Property"
 msgstr "Vedi proprietà"
 
-#: classes/Plugin.php:2820
+#: classes/Plugin.php:3115
 msgid "Search Properties"
 msgstr "Ricerca Proprietà"
 
-#: classes/Plugin.php:2821 classes/Plugin.php:2861
+#: classes/Plugin.php:3116 classes/Plugin.php:3157
 msgid "No properties found"
 msgstr "Nessun immobile trovato"
 
-#: classes/Plugin.php:2822 classes/Plugin.php:2862
+#: classes/Plugin.php:3117 classes/Plugin.php:3158
 msgid "No properties found in Trash"
 msgstr "Nessun immobile trovato nel cestino"
 
-#: classes/Plugin.php:2852 classes/Plugin.php:2863
+#: classes/Plugin.php:3148 classes/Plugin.php:3159
 msgid "Projects"
 msgstr ""
 
-#: classes/Plugin.php:2853
+#: classes/Plugin.php:3149
 msgid "Project"
 msgstr ""
 
-#: classes/Plugin.php:2855
+#: classes/Plugin.php:3151
 msgid "Add New Project"
 msgstr ""
 
-#: classes/Plugin.php:2856
+#: classes/Plugin.php:3152
 msgid "Edit Project"
 msgstr ""
 
-#: classes/Plugin.php:2857
+#: classes/Plugin.php:3153
 msgid "New Project"
 msgstr ""
 
-#: classes/Plugin.php:2858
+#: classes/Plugin.php:3154
 msgid "All Projects"
 msgstr ""
 
-#: classes/Plugin.php:2859
+#: classes/Plugin.php:3155
 msgid "View Project"
 msgstr ""
 
-#: classes/Plugin.php:2860
+#: classes/Plugin.php:3156
 msgid "Search Projects"
 msgstr ""
 
-#: classes/Plugin.php:2927
+#: classes/Plugin.php:3223
 msgid "Property categories"
 msgstr "Categorie di proprietà"
 
-#: classes/Plugin.php:2928 classes/Plugin.php:2937
-#: modules/casawp/src/casawp/Form/FilterForm.php:98
+#: classes/Plugin.php:3224 classes/Plugin.php:3233
+#: modules/casawp/src/casawp/Form/FilterForm.php:104
 msgid "Category"
 msgstr "Categoria"
 
-#: classes/Plugin.php:2929 classes/Plugin.php:2954
+#: classes/Plugin.php:3225 classes/Plugin.php:3251
 msgid "Search Categories"
 msgstr "Cerca Categorie"
 
-#: classes/Plugin.php:2930 classes/Plugin.php:2955
+#: classes/Plugin.php:3226 classes/Plugin.php:3252
 msgid "All Categories"
 msgstr "Tutte le categorie"
 
-#: classes/Plugin.php:2931
+#: classes/Plugin.php:3227
 msgid "Parent Category"
 msgstr "Categoria principale"
 
-#: classes/Plugin.php:2932
+#: classes/Plugin.php:3228
 msgid "Parent Category:"
 msgstr "Categoria principale:"
 
-#: classes/Plugin.php:2933
+#: classes/Plugin.php:3229
 msgid "Edit Category"
 msgstr "Modifica categoria"
 
-#: classes/Plugin.php:2934
+#: classes/Plugin.php:3230
 msgid "Update Category"
 msgstr "Aggiornamento Categoria"
 
-#: classes/Plugin.php:2935
+#: classes/Plugin.php:3231
 msgid "Add New Category"
 msgstr "Aggiungi Nuova Categoria"
 
-#: classes/Plugin.php:2936
+#: classes/Plugin.php:3232
 msgid "New Category Name"
 msgstr "Nuova Categoria Nome"
 
-#: classes/Plugin.php:2952
+#: classes/Plugin.php:3249
 msgid "Property features"
 msgstr ""
 
-#: classes/Plugin.php:2953 classes/Plugin.php:2962
-#: modules/casawp/src/casawp/Form/FilterForm.php:125
+#: classes/Plugin.php:3250 classes/Plugin.php:3259
+#: modules/casawp/src/casawp/Form/FilterForm.php:131
 msgid "Feature"
 msgstr "Caratteristica"
 
-#: classes/Plugin.php:2956
+#: classes/Plugin.php:3253
 msgid "Parent Feature"
 msgstr ""
 
-#: classes/Plugin.php:2957
+#: classes/Plugin.php:3254
 msgid "Parent Feature:"
 msgstr ""
 
-#: classes/Plugin.php:2958
+#: classes/Plugin.php:3255
 msgid "Edit Feature"
 msgstr "Modifica Caratteristica"
 
-#: classes/Plugin.php:2959
+#: classes/Plugin.php:3256
 msgid "Update Feature"
 msgstr ""
 
-#: classes/Plugin.php:2960
+#: classes/Plugin.php:3257
 msgid "Add New Feature"
 msgstr ""
 
-#: classes/Plugin.php:2961
+#: classes/Plugin.php:3258
 msgid "New Feature Name"
 msgstr ""
 
-#: classes/Plugin.php:2978
+#: classes/Plugin.php:3276
 msgid "Property utilities"
 msgstr ""
 
-#: classes/Plugin.php:2979 classes/Plugin.php:2988
-#: modules/casawp/src/casawp/Form/FilterForm.php:107
+#: classes/Plugin.php:3277 classes/Plugin.php:3286
+#: modules/casawp/src/casawp/Form/FilterForm.php:113
 msgid "Utility"
 msgstr "Scopo"
 
-#: classes/Plugin.php:2980
+#: classes/Plugin.php:3278
 msgid "Search Utilities"
 msgstr ""
 
-#: classes/Plugin.php:2981
+#: classes/Plugin.php:3279
 msgid "All Utilities"
 msgstr ""
 
-#: classes/Plugin.php:2982
+#: classes/Plugin.php:3280
 msgid "Parent Utility"
 msgstr ""
 
-#: classes/Plugin.php:2983
+#: classes/Plugin.php:3281
 msgid "Parent Utility:"
 msgstr ""
 
-#: classes/Plugin.php:2984
+#: classes/Plugin.php:3282
 msgid "Edit Utility"
 msgstr ""
 
-#: classes/Plugin.php:2985
+#: classes/Plugin.php:3283
 msgid "Update Utility"
 msgstr ""
 
-#: classes/Plugin.php:2986
+#: classes/Plugin.php:3284
 msgid "Add New Utility"
 msgstr ""
 
-#: classes/Plugin.php:2987
+#: classes/Plugin.php:3285
 msgid "New Utility Name"
 msgstr ""
 
-#: classes/Plugin.php:3004
+#: classes/Plugin.php:3303
 msgid "Property locations"
 msgstr "Posizioni degli immobili per"
 
-#: classes/Plugin.php:3005 classes/Plugin.php:3014
-#: modules/casawp/src/casawp/Form/FilterForm.php:134
-#: modules/casawp/src/casawp/Form/FilterForm.php:253
+#: classes/Plugin.php:3304 classes/Plugin.php:3313
+#: modules/casawp/src/casawp/Form/FilterForm.php:140
+#: modules/casawp/src/casawp/Form/FilterForm.php:259
 msgid "Location"
 msgstr "Località"
 
-#: classes/Plugin.php:3006
+#: classes/Plugin.php:3305
 msgid "Search Locations"
 msgstr "Percorsi di ricerca"
 
-#: classes/Plugin.php:3007
+#: classes/Plugin.php:3306
 msgid "All Locations"
 msgstr "Tutte le Località"
 
-#: classes/Plugin.php:3008
+#: classes/Plugin.php:3307
 msgid "Parent Location"
 msgstr "Parent Localit"
 
-#: classes/Plugin.php:3009
+#: classes/Plugin.php:3308
 msgid "Parent Location:"
 msgstr "Parent Località:"
 
-#: classes/Plugin.php:3010
+#: classes/Plugin.php:3309
 msgid "Edit Location"
 msgstr "Modifica Località"
 
-#: classes/Plugin.php:3011
+#: classes/Plugin.php:3310
 msgid "Update Location"
 msgstr "Aggiorna Località"
 
-#: classes/Plugin.php:3012
+#: classes/Plugin.php:3311
 msgid "Add New Location"
 msgstr "Aggiungi nuova Località"
 
-#: classes/Plugin.php:3013
+#: classes/Plugin.php:3312
 msgid "New Location Name"
 msgstr "New Posizione Nome"
 
-#: classes/Plugin.php:3030
+#: classes/Plugin.php:3330
 msgid "Property salestypes"
 msgstr "Salestypes strutturaLe"
 
-#: classes/Plugin.php:3031 classes/Plugin.php:3043
+#: classes/Plugin.php:3331 classes/Plugin.php:3343
 msgid "Salestype"
 msgstr "Tipo di vendita"
 
-#: classes/Plugin.php:3032
+#: classes/Plugin.php:3332
 msgid "Search Salestypes"
 msgstr "Cerca Salestypes"
 
-#: classes/Plugin.php:3033
+#: classes/Plugin.php:3333
 msgid "Popular Salestypes"
 msgstr "Salestypes popolari"
 
-#: classes/Plugin.php:3034
+#: classes/Plugin.php:3334
 msgid "All Salestypes"
 msgstr "Tutti Salestypes"
 
-#: classes/Plugin.php:3035
+#: classes/Plugin.php:3335
 msgid "Edit Salestype"
 msgstr "Modifica Tipo di vendita"
 
-#: classes/Plugin.php:3036
+#: classes/Plugin.php:3336
 msgid "Update Salestype"
 msgstr "Aggiornamento Tipo di vendita"
 
-#: classes/Plugin.php:3037
+#: classes/Plugin.php:3337
 msgid "Add New Salestype"
 msgstr "Aggiungi nuovo Tipo di vendita"
 
-#: classes/Plugin.php:3038
+#: classes/Plugin.php:3338
 msgid "New Salestype Name"
 msgstr "Nuovo Nome Tipo di vendita"
 
-#: classes/Plugin.php:3039
+#: classes/Plugin.php:3339
 msgid "Separate salestypes with commas"
 msgstr "Salestypes separati con virgole"
 
-#: classes/Plugin.php:3040
+#: classes/Plugin.php:3340
 msgid "Add or remove salestypes"
 msgstr "Aggiungere o rimuovere salestypes"
 
-#: classes/Plugin.php:3041 classes/Plugin.php:3099
+#: classes/Plugin.php:3341 classes/Plugin.php:3401
 msgid "Choose from the most used salestypes"
 msgstr "Scegliere tra le salestypes più utilizzati"
 
-#: classes/Plugin.php:3042
+#: classes/Plugin.php:3342
 msgid "No Salestypes found."
 msgstr "Nessun Salestypes trovato."
 
-#: classes/Plugin.php:3059
+#: classes/Plugin.php:3360
 msgid "Property availability"
 msgstr ""
 
-#: classes/Plugin.php:3060 classes/Plugin.php:3072
+#: classes/Plugin.php:3361 classes/Plugin.php:3373
 msgid "Availability"
 msgstr "Disponibilità"
 
-#: classes/Plugin.php:3061
+#: classes/Plugin.php:3362
 msgid "Search availabilities"
 msgstr ""
 
-#: classes/Plugin.php:3062
+#: classes/Plugin.php:3363
 msgid "Popular Availabilities"
 msgstr ""
 
-#: classes/Plugin.php:3063
+#: classes/Plugin.php:3364
 msgid "All Availabilities"
 msgstr ""
 
-#: classes/Plugin.php:3064
+#: classes/Plugin.php:3365
 msgid "Edit Availability"
 msgstr ""
 
-#: classes/Plugin.php:3065
+#: classes/Plugin.php:3366
 msgid "Update Availability"
 msgstr ""
 
-#: classes/Plugin.php:3066
+#: classes/Plugin.php:3367
 msgid "Add New Availability"
 msgstr ""
 
-#: classes/Plugin.php:3067
+#: classes/Plugin.php:3368
 msgid "New Availability Name"
 msgstr ""
 
-#: classes/Plugin.php:3068
+#: classes/Plugin.php:3369
 msgid "Separate availabilities with commas"
 msgstr ""
 
-#: classes/Plugin.php:3069
+#: classes/Plugin.php:3370
 msgid "Add or remove availabilities"
 msgstr ""
 
-#: classes/Plugin.php:3070
+#: classes/Plugin.php:3371
 msgid "Choose from the most used availabilities"
 msgstr ""
 
-#: classes/Plugin.php:3071
+#: classes/Plugin.php:3372
 msgid "No Availabilities found."
 msgstr ""
 
-#: classes/Plugin.php:3088
+#: classes/Plugin.php:3390
 msgid "Property regions"
 msgstr ""
 
-#: classes/Plugin.php:3089 classes/Plugin.php:3101
+#: classes/Plugin.php:3391 classes/Plugin.php:3403
 msgid "Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:3090
+#: classes/Plugin.php:3392
 msgid "Search Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:3091
+#: classes/Plugin.php:3393
 msgid "Popular Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:3092
+#: classes/Plugin.php:3394
 msgid "All Region Segments"
 msgstr ""
 
-#: classes/Plugin.php:3093
+#: classes/Plugin.php:3395
 msgid "Edit Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:3094
+#: classes/Plugin.php:3396
 msgid "Update Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:3095
+#: classes/Plugin.php:3397
 msgid "Add New Region Segment"
 msgstr ""
 
-#: classes/Plugin.php:3096
+#: classes/Plugin.php:3398
 msgid "New Region Segment Name"
 msgstr ""
 
-#: classes/Plugin.php:3097
+#: classes/Plugin.php:3399
 msgid "Separate regions with commas"
 msgstr ""
 
-#: classes/Plugin.php:3098
+#: classes/Plugin.php:3400
 msgid "Add or remove regions"
 msgstr ""
 
-#: classes/Plugin.php:3100
+#: classes/Plugin.php:3402
 msgid "No Region Segments found."
 msgstr ""
 
-#: classes/Plugin.php:3117
+#: classes/Plugin.php:3420
 msgid "Property Attachment Types"
 msgstr "Tipi di allegati Proprietà"
 
-#: classes/Plugin.php:3118 classes/Plugin.php:3127
+#: classes/Plugin.php:3421 classes/Plugin.php:3430
 msgid "Attachment Type"
 msgstr "Tipo di allegato"
 
-#: classes/Plugin.php:3119
+#: classes/Plugin.php:3422
 msgid "Search Attachment Types"
 msgstr "Tipi di Ricerca allegati"
 
-#: classes/Plugin.php:3120
+#: classes/Plugin.php:3423
 msgid "All Attachment Types"
 msgstr "Tutti i tipi di allegati"
 
-#: classes/Plugin.php:3121
+#: classes/Plugin.php:3424
 msgid "Parent Attachment Type"
 msgstr "Parent Attachment Type"
 
-#: classes/Plugin.php:3122
+#: classes/Plugin.php:3425
 msgid "Parent Attachment Type:"
 msgstr "Parent Tipo Allegato:"
 
-#: classes/Plugin.php:3123
+#: classes/Plugin.php:3426
 msgid "Edit Attachment Type"
 msgstr "Modifica Attachment Type"
 
-#: classes/Plugin.php:3124
+#: classes/Plugin.php:3427
 msgid "Update Attachment Type"
 msgstr "Aggiornamento Attachment Type"
 
-#: classes/Plugin.php:3125
+#: classes/Plugin.php:3428
 msgid "Add New Attachment Type"
 msgstr "Aggiungi nuovo tipo allegato"
 
-#: classes/Plugin.php:3126
+#: classes/Plugin.php:3429
 msgid "New Attachment Type Name"
 msgstr "Nuovo allegato Tipo Nome"
 
-#: classes/Plugin.php:3147
+#: classes/Plugin.php:3452
 msgid "Additional Meta Fields"
 msgstr ""
 
@@ -2575,131 +3551,131 @@ msgstr "Telefono mobile"
 msgid "Message"
 msgstr "Messaggio"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:78
-#: modules/casawp/src/casawp/Form/FilterForm.php:87
+#: modules/casawp/src/casawp/Form/FilterForm.php:84
+#: modules/casawp/src/casawp/Form/FilterForm.php:93
 msgid "Sales type"
 msgstr "Tipo Vendita"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:108
+#: modules/casawp/src/casawp/Form/FilterForm.php:114
 msgid "Choose utility"
 msgstr "Scegli scopo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:117
+#: modules/casawp/src/casawp/Form/FilterForm.php:123
 msgid "Choose region"
 msgstr "Scegli regione"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:126
+#: modules/casawp/src/casawp/Form/FilterForm.php:132
 msgid "Choose feature"
 msgstr "Scegli caratteristica"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:143
+#: modules/casawp/src/casawp/Form/FilterForm.php:149
 msgid "Countries"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:144
+#: modules/casawp/src/casawp/Form/FilterForm.php:150
 msgid "Choose country"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:152
-#: modules/casawp/src/casawp/Form/FilterForm.php:153
+#: modules/casawp/src/casawp/Form/FilterForm.php:158
+#: modules/casawp/src/casawp/Form/FilterForm.php:159
 msgid "Rooms from"
 msgstr "Locali da"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:159
-#: modules/casawp/src/casawp/Form/FilterForm.php:160
+#: modules/casawp/src/casawp/Form/FilterForm.php:165
+#: modules/casawp/src/casawp/Form/FilterForm.php:166
 msgid "Rooms to"
 msgstr "Locali a"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:169
-#: modules/casawp/src/casawp/Form/FilterForm.php:170
+#: modules/casawp/src/casawp/Form/FilterForm.php:175
+#: modules/casawp/src/casawp/Form/FilterForm.php:176
 msgid "Areas from"
 msgstr "Superfici da"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:176
-#: modules/casawp/src/casawp/Form/FilterForm.php:177
+#: modules/casawp/src/casawp/Form/FilterForm.php:182
+#: modules/casawp/src/casawp/Form/FilterForm.php:183
 msgid "Areas to"
 msgstr "Superfici a"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:186
-#: modules/casawp/src/casawp/Form/FilterForm.php:187
+#: modules/casawp/src/casawp/Form/FilterForm.php:192
+#: modules/casawp/src/casawp/Form/FilterForm.php:193
 msgid "Price from"
 msgstr "Da prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:193
-#: modules/casawp/src/casawp/Form/FilterForm.php:194
+#: modules/casawp/src/casawp/Form/FilterForm.php:199
+#: modules/casawp/src/casawp/Form/FilterForm.php:200
 msgid "Price to"
 msgstr "A prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:203
-#: modules/casawp/src/casawp/Form/FilterForm.php:204
-#: modules/casawp/src/casawp/Form/FilterForm.php:226
-#: modules/casawp/src/casawp/Form/FilterForm.php:227
+#: modules/casawp/src/casawp/Form/FilterForm.php:209
+#: modules/casawp/src/casawp/Form/FilterForm.php:210
+#: modules/casawp/src/casawp/Form/FilterForm.php:232
+#: modules/casawp/src/casawp/Form/FilterForm.php:233
 msgid "Price range"
 msgstr "Fascia di prezzo"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:206
-#: modules/casawp/src/casawp/Form/FilterForm.php:229
+#: modules/casawp/src/casawp/Form/FilterForm.php:212
+#: modules/casawp/src/casawp/Form/FilterForm.php:235
 #, php-format
 msgid "to %1$s %2$.1f million"
 msgstr "fino a %1$s %2$.1f milioni"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:207
-#: modules/casawp/src/casawp/Form/FilterForm.php:208
-#: modules/casawp/src/casawp/Form/FilterForm.php:209
-#: modules/casawp/src/casawp/Form/FilterForm.php:210
-#: modules/casawp/src/casawp/Form/FilterForm.php:211
-#: modules/casawp/src/casawp/Form/FilterForm.php:212
 #: modules/casawp/src/casawp/Form/FilterForm.php:213
 #: modules/casawp/src/casawp/Form/FilterForm.php:214
 #: modules/casawp/src/casawp/Form/FilterForm.php:215
 #: modules/casawp/src/casawp/Form/FilterForm.php:216
 #: modules/casawp/src/casawp/Form/FilterForm.php:217
-#: modules/casawp/src/casawp/Form/FilterForm.php:230
-#: modules/casawp/src/casawp/Form/FilterForm.php:231
-#: modules/casawp/src/casawp/Form/FilterForm.php:232
-#: modules/casawp/src/casawp/Form/FilterForm.php:233
-#: modules/casawp/src/casawp/Form/FilterForm.php:234
-#: modules/casawp/src/casawp/Form/FilterForm.php:235
+#: modules/casawp/src/casawp/Form/FilterForm.php:218
+#: modules/casawp/src/casawp/Form/FilterForm.php:219
+#: modules/casawp/src/casawp/Form/FilterForm.php:220
+#: modules/casawp/src/casawp/Form/FilterForm.php:221
+#: modules/casawp/src/casawp/Form/FilterForm.php:222
+#: modules/casawp/src/casawp/Form/FilterForm.php:223
 #: modules/casawp/src/casawp/Form/FilterForm.php:236
 #: modules/casawp/src/casawp/Form/FilterForm.php:237
 #: modules/casawp/src/casawp/Form/FilterForm.php:238
 #: modules/casawp/src/casawp/Form/FilterForm.php:239
 #: modules/casawp/src/casawp/Form/FilterForm.php:240
+#: modules/casawp/src/casawp/Form/FilterForm.php:241
+#: modules/casawp/src/casawp/Form/FilterForm.php:242
+#: modules/casawp/src/casawp/Form/FilterForm.php:243
+#: modules/casawp/src/casawp/Form/FilterForm.php:244
+#: modules/casawp/src/casawp/Form/FilterForm.php:245
+#: modules/casawp/src/casawp/Form/FilterForm.php:246
 #, php-format
 msgid "from %1$s %2$.1f to %3$.1f million"
 msgstr "%1$s %2$.1f - %3$.1f milioni"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:218
-#: modules/casawp/src/casawp/Form/FilterForm.php:241
+#: modules/casawp/src/casawp/Form/FilterForm.php:224
+#: modules/casawp/src/casawp/Form/FilterForm.php:247
 #, php-format
 msgid "from %1$s %2$.1f million"
 msgstr "oltre %1$s %2$.1f milioni"
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:250
+#: modules/casawp/src/casawp/Form/FilterForm.php:256
 msgid "Order by"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:251
+#: modules/casawp/src/casawp/Form/FilterForm.php:257
 msgid "Choose order"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:254
+#: modules/casawp/src/casawp/Form/FilterForm.php:260
 msgid "Date"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:263
+#: modules/casawp/src/casawp/Form/FilterForm.php:269
 msgid "Order direction"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:264
+#: modules/casawp/src/casawp/Form/FilterForm.php:270
 msgid "Choose order direction"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:266
+#: modules/casawp/src/casawp/Form/FilterForm.php:272
 msgid "Ascending"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:267
+#: modules/casawp/src/casawp/Form/FilterForm.php:273
 msgid "Descending"
 msgstr ""
 
@@ -2716,9 +3692,9 @@ msgstr ""
 "Sono interessato a questa offerta. Vi chiedo cortesemente di contattarmi. "
 "Grazie"
 
-#: modules/casawp/src/casawp/Service/Offer.php:95
-#: modules/casawp/src/casawp/Service/Offer.php:924
-#: modules/casawp/src/casawp/Service/Offer.php:928
+#: modules/casawp/src/casawp/Service/Offer.php:97
+#: modules/casawp/src/casawp/Service/Offer.php:926
+#: modules/casawp/src/casawp/Service/Offer.php:930
 #: modules/casawp/src/casawp/Service/Project.php:88
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:4
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:4
@@ -2726,9 +3702,9 @@ msgstr ""
 msgid "Sales price"
 msgstr "Prezzo di vendita"
 
-#: modules/casawp/src/casawp/Service/Offer.php:103
-#: modules/casawp/src/casawp/Service/Offer.php:953
-#: modules/casawp/src/casawp/Service/Offer.php:967
+#: modules/casawp/src/casawp/Service/Offer.php:105
+#: modules/casawp/src/casawp/Service/Offer.php:955
+#: modules/casawp/src/casawp/Service/Offer.php:969
 #: modules/casawp/src/casawp/Service/Project.php:96
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:35
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:13
@@ -2739,9 +3715,9 @@ msgstr "Prezzo di vendita"
 msgid "Gross price"
 msgstr "Affitto lordo"
 
-#: modules/casawp/src/casawp/Service/Offer.php:111
-#: modules/casawp/src/casawp/Service/Offer.php:938
-#: modules/casawp/src/casawp/Service/Offer.php:973
+#: modules/casawp/src/casawp/Service/Offer.php:113
+#: modules/casawp/src/casawp/Service/Offer.php:940
+#: modules/casawp/src/casawp/Service/Offer.php:975
 #: modules/casawp/src/casawp/Service/Project.php:104
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:38
 #: theme-defaults/casawp/bootstrap2/datatable-offer.phtml:21
@@ -2752,16 +3728,16 @@ msgstr "Affitto lordo"
 msgid "Net price"
 msgstr "Affitto netto"
 
-#: modules/casawp/src/casawp/Service/Offer.php:260
+#: modules/casawp/src/casawp/Service/Offer.php:262
 #: modules/casawp/src/casawp/Service/Project.php:191
 msgid "Private"
 msgstr "Privato"
 
-#: modules/casawp/src/casawp/Service/Offer.php:384
+#: modules/casawp/src/casawp/Service/Offer.php:386
 msgid "Ground floor"
 msgstr "Piano terreno"
 
-#: modules/casawp/src/casawp/Service/Offer.php:945
+#: modules/casawp/src/casawp/Service/Offer.php:947
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:48
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:47
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:48
@@ -2769,8 +3745,8 @@ msgstr "Piano terreno"
 msgid "Extra Costs:"
 msgstr "Acconto spese:"
 
-#: modules/casawp/src/casawp/Service/Offer.php:960
-#: modules/casawp/src/casawp/Service/Offer.php:979
+#: modules/casawp/src/casawp/Service/Offer.php:962
+#: modules/casawp/src/casawp/Service/Offer.php:981
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:41
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:41
 #: theme-defaults/casawp/bootstrap3/datatable-offer.phtml:33
@@ -2779,15 +3755,15 @@ msgstr "Acconto spese:"
 msgid "Rent price"
 msgstr "Canone d'affitto"
 
-#: modules/casawp/src/casawp/Service/Offer.php:999
+#: modules/casawp/src/casawp/Service/Offer.php:1001
 msgid "Available from"
 msgstr "Disponibile da"
 
-#: options.php:160
+#: options.php:159
 msgid "Einstellungen gespeichert.."
 msgstr ""
 
-#: options.php:166
+#: options.php:165
 msgid "Daten wurden importiert.."
 msgstr ""
 
@@ -2975,6 +3951,12 @@ msgid ""
 msgstr ""
 "Accetto i termini e le condizioni generali e accetto l’informativa sulla "
 "privacy"
+
+#~ msgid ""
+#~ "Import your properties directly from your real-estate managment software!"
+#~ msgstr ""
+#~ "Importare le proprietà direttamente dal vostro software di gestione "
+#~ "immobiliare!"
 
 #~ msgid "Area from"
 #~ msgstr "Superfici da"
