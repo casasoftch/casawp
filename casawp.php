@@ -206,6 +206,16 @@ function casawp_add_cron_schedule($schedules) {
 }
 
 
+add_action('action_scheduler_failed_action', 'casawp_handle_failed_import_action', 10, 2);
+function casawp_handle_failed_import_action($action, $exception) {
+	if ($action->get_hook() === 'casawp_batch_import') {
+		$import = new casawp\Import(false, false);
+		$import->addToLog('casawp_batch_import failed: ' . $exception->getMessage());
+		update_option('casawp_import_failed', true);
+		delete_transient('casawp_import_in_progress');
+	}
+}
+
 add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_handler');
 
 /* function casawp_cancel_import_handler() {

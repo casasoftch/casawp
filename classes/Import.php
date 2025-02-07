@@ -273,6 +273,15 @@ class Import
   {
     $this->addToLog('Finalizing import cleanup.');
 
+    if (get_option('casawp_import_failed')) {
+      $this->addToLog('Import marked as failed. Skipping deletion of inactive properties.');
+      delete_option('casawp_import_failed');
+      flush_rewrite_rules();
+      delete_transient('casawp_import_in_progress');
+      $this->addToLog('Import lock cleared.');
+      return;
+  }
+
     $all_valid_ids = get_option('all_valid_casawp_ids', []);
 
     $args = array(
@@ -290,7 +299,6 @@ class Import
     );
 
     $posts_to_remove = get_posts($args);
-
     $this->addToLog('Found ' . count($posts_to_remove) . ' inactive properties to remove.');
 
     foreach ($posts_to_remove as $post_id) {
@@ -319,7 +327,6 @@ class Import
       }
     }
 
-
     flush_rewrite_rules();
     $this->addToLog('Flushed rewrite rules.');
 
@@ -337,10 +344,8 @@ class Import
     delete_option('all_valid_casawp_ids');
     $this->addToLog('Deleted option: all_valid_casawp_ids');
 
-    // **Delete** the transient here, after all batches are done
     delete_transient('casawp_import_in_progress');
     $this->addToLog('Import lock cleared.');
-
     $this->addToLog('Import completed and lock cleared.');
 
     do_action('casawp_import_finished');
@@ -367,14 +372,13 @@ class Import
       $this->addToLog('Using overridden batch size: ' . $batch_size);
     } else {
       if (get_option('casawp_use_casagateway_cdn', false)) {
-        $language_count = 1; // Default to 1 language if WPML is not active
+        $language_count = 1; 
 
         if (function_exists('icl_get_languages')) {
           $languages = icl_get_languages();
           $language_count = count($languages);
         }
 
-        // Set batch size based on language count
         if ($language_count <= 2) {
           $batch_size = 4;
         } elseif ($language_count === 3) {
@@ -391,21 +395,18 @@ class Import
     $this->ranksort = get_option('casawp_ranksort', array());
 
     try {
-      
-      $xmlString = file_get_contents($this->getImportFile());
 
+      $xmlString = file_get_contents($this->getImportFile());
       if ($xmlString === false) {
         throw new \Exception('Failed to read import file.');
       }
 
       $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
-
       if ($xml === false) {
         throw new \Exception('Failed to parse XML.');
       }
 
       $properties = $xml->properties->property;
-
       if ($properties === null) {
         throw new \Exception('No properties found in XML.');
       }
@@ -426,7 +427,6 @@ class Import
       }
 
       $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
-
       $this->addToLog('Processing batch number: ' . $batch_number . ' with ' . count($items_for_current_batch) . ' properties.');
 
       if (get_transient('casawp_import_in_progress') !== $current_import_id) {
@@ -435,7 +435,6 @@ class Import
       }
 
       $this->updateOffers($items_for_current_batch);
-
       update_option('casawp_ranksort', $this->ranksort);
       update_option('casawp_completed_batches', $batch_number);
       $this->addToLog('Completed batch number: ' . $batch_number);
@@ -448,7 +447,6 @@ class Import
         $this->addToLog('Import process completed.');
       } else {
         $next_batch_number = $batch_number + 1;
-
         $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
         if (!$pending_batch) {
           as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
@@ -459,11 +457,9 @@ class Import
       }
     } catch (\Exception $e) {
       $this->addToLog('Error: ' . $e->getMessage());
-
-      if ($e->getMessage() === 'No properties found in XML.') {
-        set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
-        delete_transient('casawp_import_in_progress');
-      }
+      set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
+      update_option('casawp_import_failed', true);
+      delete_transient('casawp_import_in_progress');
     }
   }
 
