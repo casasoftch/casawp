@@ -3,11 +3,11 @@ Contributors: casasoft
 Donate link: https://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML, SwissRETS
 Requires at least: 4.0.0
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.1.1
+Stable tag: 3.1.4
 
 Import your properties directly from your real-estate management software!
 
@@ -37,6 +37,23 @@ You will then only need to add the API and SECRET keys to the plugin's options.
 Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
 
 == Changelog ==
+
+= 3.1.4 =
+
+* update: Adjusted import process for additional early property deletion
+* update: Heavily reduced creation of logs / duration of logs being saved
+* fix: Updated method to purge WPEngine caches
+
+= 3.1.3 =
+
+* fix: remove unused crons
+
+= 3.1.2 =
+
+* update: Import alerting on fail & increase of Action Scheduler timeout
+* update: Translations
+* fix: Security upgrades preventing injections
+* fix: Several PHP warnings
 
 = 3.1.1 =
 

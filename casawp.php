@@ -5,7 +5,7 @@
  * Description: Import your properties directly from your real-estate management software!
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
- * Version: 3.1.1
+ * Version: 3.1.4
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2
@@ -29,7 +29,7 @@ add_filter('action_scheduler_retention_period', function() {
 
 // Update system
 require_once('wp_autoupdate.php');
-$plugin_current_version = '3.1.1';
+$plugin_current_version = '3.1.4';
 $plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
@@ -124,27 +124,53 @@ if (is_admin()) {
 
 $import = new casawp\Import(false, false);
 $import->register_hooks();
-/* casawp_schedule_cron_events(); */
 
-/* function casawp_schedule_cron_events() {
-	if (!wp_next_scheduled('casawp_import_midnight')) {
-		$midnight = strtotime('tomorrow midnight');
-		wp_schedule_event($midnight, 'daily', 'casawp_import_midnight');
+function casawp_remove_old_crons() {
+	$cron_hooks = [
+		'casawp_import_midnight',
+		'casawp_import_noon',
+	];
+
+	foreach ($cron_hooks as $hook) {
+		while (wp_next_scheduled($hook)) {
+			wp_clear_scheduled_hook($hook);
+		}
 	}
-
 }
 
-add_action('casawp_import_midnight', 'casawp_trigger_import_midnight'); */
+add_action('init', 'casawp_remove_old_crons');
+
+function eg_increase_time_limit( $time_limit ) {
+	return 60;
+}
+add_filter( 'action_scheduler_queue_runner_time_limit', 'eg_increase_time_limit' );
 
 
-/* register_deactivation_hook(__FILE__, 'casawp_unschedule_cron_events');
+add_action('action_scheduler_failed_execution', 'casawp_handle_failed_action');
+add_action('action_scheduler_failed_action', 'casawp_handle_failed_action');
+add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action' );
 
-function casawp_unschedule_cron_events() {
-	$timestamp = wp_next_scheduled('casawp_import_midnight');
-	if ($timestamp) {
-		wp_unschedule_event($timestamp, 'casawp_import_midnight');
+function casawp_handle_failed_action($action_id) {
+	error_log('Action Scheduler Failed Hook Triggered for Action ID: ' . $action_id);
+	$action = ActionScheduler::store()->fetch_action($action_id);
+	if ($action && $action->get_hook() == 'casawp_batch_import') {
+		$args = $action->get_args();
+		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
+
+		$site_domain = home_url();
+
+		$to = get_option('admin_email');
+		$subject = 'CASAWP Import Batch Failed on ' . $site_domain;
+		$message = "Batch number " . $batch_number . " has failed after maximum retries.\n\n";
+		$message .= "Site: " . $site_domain;
+
+		wp_mail($to, $subject, $message);
+
+		$import = new casawp\Import(false, false);
+		$import->addToLog('Import canceled due to batch failure on ' . $site_domain . '. Notification sent.');
 	}
-} */
+}
+
 
 function casawp_start_new_import($source = '') {
 	// Cancel any ongoing import
@@ -2438,7 +2464,7 @@ function casawp_unicode_dirty_replace($str)
 	];
 	
 	foreach ($charset as $rChar => $unicode) {
-		$str = str_replace($unicode, "\\" . $unicode, $str);
+		$str = str_replace($unicode, "\\" . $unicode, (string)$str);
 	}
 	
 	return $str;
