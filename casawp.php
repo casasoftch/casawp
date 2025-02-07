@@ -173,19 +173,16 @@ function casawp_handle_failed_action($action_id) {
 
 
 function casawp_start_new_import($source = '') {
-	// Cancel any ongoing import
+
 	if (get_transient('casawp_import_in_progress')) {
 		casawp_cancel_import();
 	}
 
-	// Reset batch counts
 	update_option('casawp_total_batches', 0);
 	update_option('casawp_completed_batches', 0);
 
-	// Clear the import canceled flag
 	delete_option('casawp_import_canceled');
 
-	// Start the import process
 	$import = new casawp\Import(false, true);
 	$import->addToLog($source . ' import started');
 
@@ -196,7 +193,6 @@ function casawp_start_new_import($source = '') {
 add_action('init', 'casawp_initialize_cleanup_cron');
 
 function casawp_initialize_cleanup_cron() {
-	// Schedule Cleanup if not already scheduled
 	if (!wp_next_scheduled('casawp_cleanup_logs')) {
 		wp_schedule_event(time(), 'monthly', 'casawp_cleanup_logs');
 	}
