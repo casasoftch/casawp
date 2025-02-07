@@ -131,9 +131,9 @@ class Import
         #$this->addToLog('gateway start update: ' . time());
 
         if ($this->getImportFile()) {
+          delete_option('casawp_import_canceled');
           $this->deactivate_all_properties();
           $this->start_import();
-          delete_option('casawp_import_canceled');
           $this->addToLog('import start');
           #$this->addToLog('import end');
         }
@@ -144,6 +144,7 @@ class Import
       }
     } catch (Exception $e) {
       $this->addToLog('Import failed: ' . $e->getMessage());
+      update_option('casawp_import_failed', true);
     } finally {
     }
   }
@@ -174,6 +175,13 @@ class Import
   public function finalize_import_cleanup($ranksort)
   {
     #$this->addToLog('Finalizing import cleanup.');
+
+    if (get_option('casawp_import_failed')) {
+      $this->addToLog('Import marked as failed. Skipping deletion of inactive properties.');
+      delete_option('casawp_import_failed');
+      delete_transient('casawp_import_in_progress');
+      return;
+    }
 
     $args = array(
       'posts_per_page' => -1,
@@ -275,19 +283,16 @@ class Import
     try {
 
       $xmlString = file_get_contents($this->getImportFile());
-
       if ($xmlString === false) {
         throw new \Exception('Failed to read import file.');
       }
 
       $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
-
       if ($xml === false) {
         throw new \Exception('Failed to parse XML.');
       }
 
       $properties = $xml->properties->property;
-
       if ($properties === null) {
         throw new \Exception('No properties found in XML.');
       }
