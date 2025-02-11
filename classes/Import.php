@@ -246,6 +246,11 @@ class Import
   {
     #$this->addToLog('Handling import batch number: ' . $batch_number);
 
+    if ( get_option('casawp_import_failed') ) {
+      $this->addToLog('Import already marked as failed. Skipping batch number: ' . $batch_number);
+      return;
+    }
+
     if (get_option('casawp_import_canceled', false)) {
       $this->addToLog('Import has been canceled. Skipping batch number: ' . $batch_number);
       return;
