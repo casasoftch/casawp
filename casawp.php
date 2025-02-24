@@ -227,54 +227,18 @@ function casawp_add_cron_schedule($schedules) {
 }
 
 
-
-/* function casawp_cancel_import_handler() {
-	if (casawp_cancel_import()) {
-		wp_send_json_success(['message' => 'Import wurde abgebrochen.']);
-	} else {
-		wp_send_json_error(['message' => 'Action Scheduler nicht gefunden.']);
-	}
-} */
-
-/* function casawp_cancel_import_handler() {
-	if (class_exists('ActionScheduler')) {
-		$store = ActionScheduler::store();
-		$pending_actions = $store->query_actions(array(
-			'hook'   => 'casawp_batch_import',
-			'status' => 'pending',
-		));
-		foreach ($pending_actions as $action_id) {
-			$store->cancel_action($action_id);
-		}
-		delete_transient('casawp_import_in_progress');
-		delete_option('casawp_current_import_id');
-		update_option('casawp_total_batches', 0);
-		update_option('casawp_completed_batches', 0);
-
-		$import = new casawp\Import(false, false);
-		$import->addToLog('All pending import actions canceled, import lock and current import ID cleared.');
-		wp_send_json_success(['message' => 'Import wurde abgebrochen.']);
-		return true;
-	} else {
-		error_log('Action Scheduler class not found. Could not cancel pending import actions.');
-		wp_send_json_error(['message' => 'Action Scheduler nicht gefunden.']);
-		return false;
-	}
-} */
-
-
 function casawp_cancel_import() {
 	if (class_exists('ActionScheduler')) {
 		$store = ActionScheduler::store();
 		$pending_actions = $store->query_actions(array(
 			'hook'   => 'casawp_batch_import',
-			'status' => 'pending',
+			'status' => ['pending','in-progress'],
 		));
 		foreach ($pending_actions as $action_id) {
 			$store->cancel_action($action_id);
 		}
+		update_option('casawp_import_canceled', true);
 		delete_transient('casawp_import_in_progress');
-		delete_option('casawp_import_canceled');
 		delete_option('casawp_import_failed');
 		$import = new casawp\Import(false, false);
 		$import->addToLog('All pending import actions canceled and import lock cleared.');

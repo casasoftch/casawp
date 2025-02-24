@@ -265,9 +265,14 @@ class Import
       if (get_option('casawp_use_casagateway_cdn', false)) {
         $language_count = 1;
 
-        if (function_exists('icl_get_languages')) {
-          $languages = icl_get_languages();
-          $language_count = count($languages);
+        if ( function_exists('icl_get_languages') ) {
+          $langs = icl_get_languages();
+          if ( ! is_array($langs) ) {
+              $langs = [];
+          }
+            $language_count = count($langs);
+        } else {
+            $language_count = 1;
         }
 
         if ($language_count <= 2) {
@@ -2160,8 +2165,17 @@ class Import
 
   public function fillMissingTranslations($theoffers)
   {
+
+    $languages = array();
+    if (function_exists('icl_get_languages')) {
+        $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
+        // WPML sometimes returns false if it's not fully configured or no languages exist
+        if (is_array($maybe_languages)) {
+            $languages = $maybe_languages;
+        }
+    }
+
     $translations = array();
-    $languages = icl_get_languages('skip_missing=0&orderby=code');
     foreach ($languages as $lang) {
       $translations[$lang['language_code']] = false;
     }
