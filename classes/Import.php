@@ -241,7 +241,6 @@ class Import
     do_action('casawp_import_finished');
   }
 
-
   public function handle_properties_import_batch($batch_number)
   {
     #$this->addToLog('Handling import batch number: ' . $batch_number);
@@ -532,6 +531,80 @@ class Import
     #error_log("Deletion of outdated properties completed.");
   }
 
+  public function accumulate_valid_property_ids($current_batch_ids)
+  {
+    update_option('all_valid_casawp_ids', $current_batch_ids);
+  }
+
+  public function getMainLang()
+  {
+    global $sitepress;
+    if (!$this->main_lang) {
+      $main_lang = 'de';
+      if ($this->hasWPML()) {
+        if (function_exists("wpml_get_default_language")) {
+          $main_lang = wpml_get_default_language();
+          $this->WPML = true;
+        }
+      } else {
+        if (get_locale()) {
+          $main_lang = substr(get_locale(), 0, 2);
+          //if (get_bloginfo('language')) {
+          //  $main_lang = substr(get_bloginfo('language'), 0, 2);
+        }
+      }
+      $this->main_lang = $main_lang;
+    }
+    return $this->main_lang;
+  }
+
+  public function hasWPML()
+  {
+    if ($this->WPML !== true && $this->WPML !== false) {
+      $this->WPML = $this->loadWPML();
+    }
+    return $this->WPML;
+  }
+
+  public function loadWPML()
+  {
+    global $sitepress;
+    if ($sitepress && is_object($sitepress) && method_exists($sitepress, 'get_language_details')) {
+      if (is_file(WP_PLUGIN_DIR . '/sitepress-multilingual-cms/inc/wpml-api.php')) {
+        require_once(WP_PLUGIN_DIR . '/sitepress-multilingual-cms/inc/wpml-api.php');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier)
+  {
+    if ($this->hasWPML()) {
+      if ($this->getMainLang() == $lang) {
+        $trid = wpml_get_content_trid('post_' . $wp_post->post_type, $wp_post->ID);
+        if (!$trid) {
+          $trid = ($wp_post->post_type == 'casawp_property' ? 1000 : 2000) . $wp_post->ID;
+        }
+        $this->trid_store[$trid_identifier] = $trid;
+      } else {
+        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
+      }
+      if ($trid) {
+        $_POST['icl_post_language'] = $lang;
+
+        global $sitepress;
+        if ($this->getMainLang() != $lang) {
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, $sitepress->get_default_language(), true);
+        } else {
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, NULL, true);
+        }
+      } else {
+        $this->transcript['wpml_' . $wp_post->post_type][] = 'unable to find trid for ' . $trid_identifier;
+      }
+    }
+  }
+
   public function getImportFile()
   {
     if (!$this->importFile) {
@@ -573,11 +646,6 @@ class Import
   {
     copy($this->getImportFile(), CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . get_date_from_gmt('', 'Y_m_d_H_i_s') . '_completed.xml');
     return true;
-  }
-
-  public function accumulate_valid_property_ids($current_batch_ids)
-  {
-    update_option('all_valid_casawp_ids', $current_batch_ids);
   }
 
   public function casawp_sanitize_title($result)
@@ -892,75 +960,6 @@ class Import
       return $attach_id;
     } else {
       return $filename . " could not be found!";
-    }
-  }
-
-  public function getMainLang()
-  {
-    global $sitepress;
-    if (!$this->main_lang) {
-      $main_lang = 'de';
-      if ($this->hasWPML()) {
-        if (function_exists("wpml_get_default_language")) {
-          $main_lang = wpml_get_default_language();
-          $this->WPML = true;
-        }
-      } else {
-        if (get_locale()) {
-          $main_lang = substr(get_locale(), 0, 2);
-          //if (get_bloginfo('language')) {
-          //  $main_lang = substr(get_bloginfo('language'), 0, 2);
-        }
-      }
-      $this->main_lang = $main_lang;
-    }
-    return $this->main_lang;
-  }
-
-  public function hasWPML()
-  {
-    if ($this->WPML !== true && $this->WPML !== false) {
-      $this->WPML = $this->loadWPML();
-    }
-    return $this->WPML;
-  }
-
-  public function loadWPML()
-  {
-    global $sitepress;
-    if ($sitepress && is_object($sitepress) && method_exists($sitepress, 'get_language_details')) {
-      if (is_file(WP_PLUGIN_DIR . '/sitepress-multilingual-cms/inc/wpml-api.php')) {
-        require_once(WP_PLUGIN_DIR . '/sitepress-multilingual-cms/inc/wpml-api.php');
-      }
-      return true;
-    }
-    return false;
-  }
-
-  public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier)
-  {
-    if ($this->hasWPML()) {
-      if ($this->getMainLang() == $lang) {
-        $trid = wpml_get_content_trid('post_' . $wp_post->post_type, $wp_post->ID);
-        if (!$trid) {
-          $trid = ($wp_post->post_type == 'casawp_property' ? 1000 : 2000) . $wp_post->ID;
-        }
-        $this->trid_store[$trid_identifier] = $trid;
-      } else {
-        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
-      }
-      if ($trid) {
-        $_POST['icl_post_language'] = $lang;
-
-        global $sitepress;
-        if ($this->getMainLang() != $lang) {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, $sitepress->get_default_language(), true);
-        } else {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, NULL, true);
-        }
-      } else {
-        $this->transcript['wpml_' . $wp_post->post_type][] = 'unable to find trid for ' . $trid_identifier;
-      }
     }
   }
 
