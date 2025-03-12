@@ -31,8 +31,88 @@ class Import
 
   public function start_import()
   {
-    as_schedule_single_action(time(), 'casawp_delete_outdated_properties', array(), 'casawp_delete_outdated_properties');
     as_schedule_single_action(time() + 60, 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
+  }
+
+
+  private function fetchFileFromCasaGateway(): string
+  {
+      $this->addToLog('CASAWP: Start fetching fresh XML from CasaGateway at ' . time());
+
+      $apikey     = get_option('casawp_api_key');
+      $privatekey = get_option('casawp_private_key');
+      $apiurl     = 'https://casagateway.ch/rest/publisher-properties';
+      $options    = [
+          'format' => 'casa-xml',
+          'debug'  => 1,
+      ];
+
+      if (!$apikey || !$privatekey) {
+          $this->addToLog('CASAWP: gateway keys missing');
+          throw new \Exception('API Keys missing.');
+      }
+      if (!function_exists('curl_version')) {
+          $this->addToLog('CASAWP: gateway ERR (CURL MISSING!!!)');
+          throw new \Exception('CURL is missing.');
+      }
+
+      $timestamp   = time();
+      ksort($options);
+      $checkstring = '';
+      foreach ($options as $key => $value) {
+          $checkstring .= $key . $value;
+      }
+      $checkstring .= $privatekey . $timestamp;
+      $hmac = hash('sha256', $checkstring, false);
+
+      $query = [
+          'hmac'      => $hmac,
+          'apikey'    => $apikey,
+          'timestamp' => $timestamp
+      ] + $options;
+
+      $url      = $apiurl . '?' . http_build_query($query, '', '&');
+      $response = false;
+
+      $ch = curl_init();
+      try {
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+          $response = curl_exec($ch);
+          $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          if ($httpCode == 404) {
+              throw new \Exception('Received 404 from CasaGateway.');
+          }
+      } catch (\Exception $e) {
+          $this->addToLog('CASAWP: cURL Exception: ' . $e->getMessage());
+          throw $e;
+      } finally {
+          curl_close($ch);
+      }
+
+      if (!$response || is_numeric($response)) {
+          $this->addToLog('CASAWP: Invalid response from gateway');
+          throw new \Exception('Invalid response from CasaGateway.');
+      }
+
+      $importDir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import';
+      if (!is_dir($importDir)) {
+          if (!mkdir($importDir, 0755, true)) {
+              $this->addToLog('CASAWP: Failed to create import directory.');
+              throw new \Exception('Failed to create import directory.');
+          }
+      }
+
+      $filePath = $importDir . '/data.xml';
+      if (file_put_contents($filePath, $response) === false) {
+          $this->addToLog('CASAWP: Failed to save XML file');
+          throw new \Exception('Failed to save imported XML file.');
+      }
+
+      $this->addToLog('CASAWP: File fetched & saved to ' . $filePath . ' at ' . time());
+
+      return $filePath;
   }
 
   public function updateImportFileThroughCasaGateway()
@@ -44,108 +124,25 @@ class Import
     }
 
     set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-    #$this->addToLog('Import lock set.');
 
     try {
-      $apikey = get_option('casawp_api_key');
-      $privatekey = get_option('casawp_private_key');
-      $apiurl = 'https://casagateway.ch/rest/publisher-properties';
-      $options = array(
-        'format' => 'casa-xml',
-        'debug'  => 1
-      );
 
-      if ($apikey && $privatekey) {
+      $filePath = $this->fetchFileFromCasaGateway();
 
-        $timestamp = time();
+      if ($filePath && $this->getImportFile()) {
 
-        ksort($options);
-        $checkstring = '';
-        foreach ($options as $key => $value) {
-          $checkstring .= $key . $value;
-        }
+        as_schedule_single_action(time(), 'casawp_delete_outdated_properties', [], 'casawp_delete_outdated_properties');
 
-        $checkstring .= $privatekey . $timestamp;
+        delete_option('casawp_import_canceled');
+        $this->deactivate_all_properties();
+        $this->start_import();
+        $this->addToLog('import start');
 
-        $hmac = hash('sha256', $checkstring, false);
-
-        $query = array(
-          'hmac'      => $hmac,
-          'apikey'    => $apikey,
-          'timestamp' => $timestamp
-        ) + $options;
-
-        $url = $apiurl . '?' . http_build_query($query, '', '&');
-
-        $response = false;
-
-        if (!function_exists('curl_version')) {
-          $this->addToLog('gateway ERR (CURL MISSING!!!): ' . time());
-          echo '<div id="message" class="updated"> CURL MISSING!!!</div>';
-          throw new Exception('CURL is missing.');
-        }
-
-        $ch = curl_init();
-        try {
-          curl_setopt($ch, CURLOPT_URL, $url);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-          curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-          $response = curl_exec($ch);
-          $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-          if ($httpCode == 404) {
-            $response = $httpCode;
-            throw new Exception('Received 404 from CasaGateway.');
-          }
-        } catch (Exception $e) {
-          $response = $e->getMessage();
-          $this->addToLog('gateway ERR (' . $response . '): ' . time());
-          throw $e;
-        } finally {
-          curl_close($ch);
-        }
-
-        if ($response && !is_numeric($response)) {
-
-          if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import')) {
-            if (mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import', 0755, true)) {
-              #$this->addToLog('Created import directory.');
-            } else {
-              $this->addToLog('Failed to create import directory.');
-              throw new Exception('Failed to create import directory.');
-            }
-          }
-
-          $file = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/data.xml';
-
-          if (file_put_contents($file, $response) !== false) {
-            #$this->addToLog('Imported XML file saved.');
-          } else {
-            $this->addToLog('Failed to save imported XML file.');
-            throw new Exception('Failed to save imported XML file.');
-          }
-        } else {
-          $this->addToLog('ERR no valid response from gateway: ' . time());
-          throw new Exception('Invalid response from CasaGateway.');
-        }
-
-        #$this->addToLog('gateway start update: ' . time());
-
-        if ($this->getImportFile()) {
-          delete_option('casawp_import_canceled');
-          $this->deactivate_all_properties();
-          $this->start_import();
-          $this->addToLog('import start');
-          #$this->addToLog('import end');
-        }
-      } else {
-        $this->addToLog('gateway keys missing: ' . time());
-        echo '<div id="message" class="updated"> API Keys missing</div>';
-        throw new Exception('API Keys missing.');
       }
-    } catch (Exception $e) {
-      $this->addToLog('Import failed: ' . $e->getMessage());
-      update_option('casawp_import_failed', true);
-    } finally {
+
+    } catch (\Exception $e) {
+        $this->addToLog('Import failed: ' . $e->getMessage());
+        update_option('casawp_import_failed', true);
     }
   }
 
@@ -172,9 +169,9 @@ class Import
     }
   }
 
-  public function finalize_import_cleanup($ranksort)
+  public function finalize_import_cleanup()
   {
-    #$this->addToLog('Finalizing import cleanup.');
+    $this->addToLog('Finalizing import cleanup.');
 
     if (get_option('casawp_import_failed')) {
       $this->addToLog('Import marked as failed. Skipping deletion of inactive properties.');
@@ -208,20 +205,20 @@ class Import
         'fields'         => 'ids',
       ));
 
-      #$this->addToLog('Deleting ' . count($attachments) . ' attachments for property ID: ' . $post_id);
+      $this->addToLog('Deleting ' . count($attachments) . ' attachments for property ID: ' . $post_id);
 
       foreach ($attachments as $attachment_id) {
         if (wp_delete_attachment($attachment_id, true)) {
-          #$this->addToLog('Deleted attachment ID: ' . $attachment_id);
+          $this->addToLog('Deleted attachment ID: ' . $attachment_id);
         } else {
-          #$this->addToLog('Failed to delete attachment ID: ' . $attachment_id);
+          $this->addToLog('Failed to delete attachment ID: ' . $attachment_id);
         }
       }
 
       if (wp_delete_post($post_id, true)) {
-        #$this->addToLog('Deleted property ID: ' . $post_id);
+        $this->addToLog('Deleted property ID: ' . $post_id);
       } else {
-        #$this->addToLog('Failed to delete property ID: ' . $post_id);
+        $this->addToLog('Failed to delete property ID: ' . $post_id);
       }
     }
 
@@ -234,7 +231,7 @@ class Import
     }
 
     delete_transient('casawp_import_in_progress');
-    #$this->addToLog('Import lock cleared.');
+    $this->addToLog('Import lock cleared.');
 
     $this->addToLog('Import completed and lock cleared.');
 
@@ -332,7 +329,7 @@ class Import
       #$this->addToLog('Completed batch number: ' . $batch_number);
 
       if ($batch_number >= $total_batches) {
-        $this->finalize_import_cleanup($this->ranksort);
+        $this->finalize_import_cleanup();
         update_option('casawp_completed_batches', $total_batches);
         delete_option('casawp_current_rank');
         delete_option('casawp_ranksort');
@@ -355,6 +352,56 @@ class Import
       }
     }
   }
+
+  public function handle_single_request_import()
+  {
+      try {
+          if (!get_transient('casawp_import_in_progress')) {
+              set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
+          }
+
+          $this->fetchFileFromCasaGateway();
+
+          $xmlString = file_get_contents($this->getImportFile());
+          if ($xmlString === false) {
+              throw new Exception('Failed to read import file.');
+          }
+
+          $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
+          if ($xml === false) {
+              throw new Exception('Failed to parse XML.');
+          }
+
+          if (!$xml->properties || !$xml->properties->property) {
+              throw new Exception('No properties found in XML.');
+          }
+
+          $properties_array = [];
+          foreach ($xml->properties->property as $property) {
+              $properties_array[] = $this->property2Array($property);
+          }
+
+          update_option('casawp_total_batches', 1);
+          update_option('casawp_completed_batches', 0);
+
+          $this->updateOffers($properties_array); 
+
+          update_option('casawp_completed_batches', 1);
+
+          $this->finalize_import_cleanup();
+
+          delete_transient('casawp_import_in_progress');
+
+      } catch (Exception $e) {
+          $this->addToLog('Error in single-request import: ' . $e->getMessage());
+          if ($e->getMessage() === 'No properties found in XML.') {
+              set_transient('casawp_no_properties_alert', 'No properties found in the import.', 60);
+          }
+          update_option('casawp_import_failed', true);
+          delete_transient('casawp_import_in_progress');
+      }
+  }
+
 
   public function delete_outdated_properties()
   {
@@ -536,6 +583,20 @@ class Import
     update_option('all_valid_casawp_ids', $current_batch_ids);
   }
 
+  public function gatewaypoke()
+  {
+    add_action('asynchronous_gatewayupdate', array($this, 'gatewaypokeanswer'));
+    #$this->addToLog('Scheduled an Update on: ' . time());
+    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
+  }
+
+  public function gatewaypokeanswer()
+  {
+    #$this->addToLog('gateway call file: ' . time());
+    $this->updateImportFileThroughCasaGateway();
+    #$this->addToLog('gateway import answer: ' . time());
+  }
+
   public function getMainLang()
   {
     global $sitepress;
@@ -646,6 +707,865 @@ class Import
   {
     copy($this->getImportFile(), CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . get_date_from_gmt('', 'Y_m_d_H_i_s') . '_completed.xml');
     return true;
+  }
+
+  public function findLangKey($lang, $array)
+  {
+    foreach ($array as $key => $value) {
+      if (isset($value['lang'])) {
+        if ($lang == $value['lang']) {
+          return $key;
+        }
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  public function fillMissingTranslations($theoffers)
+  {
+
+    $languages = array();
+    if (function_exists('icl_get_languages')) {
+        $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
+        // WPML sometimes returns false if it's not fully configured or no languages exist
+        if (is_array($maybe_languages)) {
+            $languages = $maybe_languages;
+        }
+    }
+
+    $translations = array();
+    foreach ($languages as $lang) {
+      $translations[$lang['language_code']] = false;
+    }
+
+    foreach ($theoffers as $offerData) {
+      $translations[$offerData['lang']] = $offerData;
+    }
+
+    $mainLangKey = $this->findLangKey($this->getMainLang(), $translations);
+    if ($mainLangKey) {
+      $carbon = $translations[$mainLangKey];
+    } else {
+      foreach ($translations as $translation) {
+        if ($translation) {
+          $carbon = $translation;
+          break;
+        }
+      }
+    }
+
+    foreach ($languages as $language) {
+      if (!$translations[$language['language_code']]) {
+        $copy = $carbon;
+        $copy['lang'] = $language['language_code'];
+
+        if (get_option('casawp_auto_translate_properties')) {
+
+          if ($copy['urls']) {
+            foreach ($copy['urls'] as $i => $url) {
+              $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
+              $urlString = strtok($urlString, '/');
+              $copy['urls'][$i]['title'] = $urlString;
+            }
+          }
+
+          if ($language['language_code'] == 'de') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Dokument #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Bild #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($language['language_code'] == 'fr') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($language['language_code'] == 'en') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Property for rent in ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Property for sale in ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($language['language_code'] == 'it') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Documento #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Piano #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Immagine #' . $img;
+                  $img++;
+                }
+              }
+            }
+          }
+          $copy['descriptions'] = array();
+          $copy['excerpt'] = '';
+        }
+        $translations[$language['language_code']] = $copy;
+      }
+    }
+
+    $key = 0;
+    $theoffers = array();
+    foreach ($translations as $value) {
+      $key++;
+      if ($value['lang'] == $this->getMainLang()) {
+        $theoffers[0] = $value;
+      } else {
+        $theoffers[$key] = $value;
+      }
+    }
+    ksort($theoffers);
+    return $theoffers;
+  }
+
+  public function updateOffers($batched_file)
+  {
+
+    global $wpdb;
+    $found_posts = array();
+    $curRank = get_option('casawp_current_rank', 0);
+
+    $enable_hash = get_option('casawp_enable_import_hash', false);
+
+    if (isset($batched_file) && !empty($batched_file)) {
+
+      $final_array = $batched_file;
+
+      foreach ($final_array as $propertyID => $property) {
+        $curRank++;
+        $theoffers = array();
+        $i = 0;
+        foreach ($property['offers'] as $offer) {
+          $i++;
+          if ($offer['lang'] == $this->getMainLang()) {
+            $theoffers[0] = $offer;
+            $theoffers[0]['locality'] = $property['address']['locality'];
+          } else {
+            if ($this->hasWPML()) {
+              $theoffers[$i] = $offer;
+              $theoffers[$i]['locality'] = $property['address']['locality'];
+            }
+          }
+        }
+
+        if ($this->hasWPML()) {
+          $theoffers = $this->fillMissingTranslations($theoffers);
+        }
+
+        $offer_pos = 0;
+        foreach ($theoffers as $offerData) {
+          $offer_pos++;
+
+          $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
+
+          $the_query = new \WP_Query([
+            'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
+            'post_type'   => 'casawp_property',
+            'meta_query'  => [
+              [
+                'key'   => 'casawp_id',
+                'value' => $casawp_id,
+              ],
+            ],
+            'posts_per_page' => 1,
+            'suppress_filters' => true,
+            'language' => 'ALL',
+          ]);
+
+          if ($the_query->have_posts()) {
+            $the_query->the_post();
+            global $post;
+            $wp_post = $post;
+            $this->transcript[$casawp_id]['action'] = 'update';
+          } else {
+            $this->transcript[$casawp_id]['action'] = 'new';
+            
+            $the_post = [
+              'post_title'   => $offerData['name'],
+              'post_content' => 'unsaved property',
+              'post_status'  => 'publish',
+              'post_type'    => 'casawp_property',
+              'menu_order'   => $curRank,
+              'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
+              'post_date'    => (
+                  $property['creation']
+                  ? $property['creation']->format('Y-m-d H:i:s')
+                  : $property['last_update']->format('Y-m-d H:i:s')
+              ),
+          ];
+
+
+            $_POST['icl_post_language'] = $offerData['lang'];
+
+            $insert_id = wp_insert_post($the_post);
+            update_post_meta($insert_id, 'casawp_id', $casawp_id);
+            update_post_meta($insert_id, 'is_active', true);
+
+            $wp_post = get_post($insert_id, OBJECT, 'raw');
+            #$this->addToLog('new property: ' . $casawp_id);
+          }
+
+          wp_reset_postdata();
+
+          wp_update_post(array(
+            'ID' => $wp_post->ID,
+            'menu_order' => $curRank,
+          ));
+
+          $this->ranksort[$wp_post->ID] = $curRank;
+
+          $found_posts[] = $wp_post->ID;
+
+          if ($enable_hash) {
+
+              $cleanPropertyData = $property;
+
+              $newHash = md5(serialize($cleanPropertyData));
+              $oldHash = get_post_meta($wp_post->ID, 'last_import_hash', true);
+
+              if ($oldHash && $oldHash === $newHash) {
+                  update_post_meta($wp_post->ID, 'is_active', true);
+                  $this->transcript[$casawp_id]['action'] = 'skipped (hash match)';
+              } else {
+                  $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
+                  update_post_meta($wp_post->ID, 'last_import_hash', $newHash);
+              }
+          } else {
+              $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
+          }
+
+          $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+
+        }
+      }
+    }
+
+    update_option('casawp_current_rank', $curRank);
+
+    $this->reactivate_properties($found_posts);
+
+    $meta_key_area = 'areaForOrder';
+    $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
+    $max_area = $wpdb->get_var($query);
+    $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
+    $min_area = $wpdb->get_var($query);
+
+    $meta_key_rooms = 'number_of_rooms';
+    $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
+    $max_rooms = $wpdb->get_var($query);
+    $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
+    $min_rooms = $wpdb->get_var($query);
+
+    update_option('casawp_archive_area_min', $min_area);
+    update_option('casawp_archive_area_max', $max_area);
+    update_option('casawp_archive_rooms_min', $min_rooms);
+    update_option('casawp_archive_rooms_max', $max_rooms);
+
+
+    //projects
+    /* if ($xml->projects) {
+
+      $found_posts = array();
+      $sorti = 0;
+      foreach ($xml->projects->project as $project) {
+        $sorti++;
+
+        $projectData = $this->project2Array($project);
+        $projectDataLangified = $this->langifyProject($projectData);
+
+        foreach ($projectDataLangified as $projectData) {
+          $lang = $projectData['lang'];
+          $casawp_id = $projectData['ref'] . $projectData['lang'];
+
+          $the_query = new \WP_Query('post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id);
+          $wp_post = false;
+          while ($the_query->have_posts()) :
+            $the_query->the_post();
+            global $post;
+            $wp_post = $post;
+          endwhile;
+          wp_reset_postdata();
+          if (!$wp_post) {
+            $this->transcript[$casawp_id]['action'] = 'new';
+            $the_post['post_title'] = $projectData['detail']['name'];
+            $the_post['post_content'] = 'unsaved project';
+            $the_post['post_status'] = 'publish';
+            $the_post['post_type'] = 'casawp_project';
+            $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
+            $_POST['icl_post_language'] = $lang;
+            $insert_id = wp_insert_post($the_post);
+
+            update_post_meta($insert_id, 'casawp_id', $casawp_id);
+            $wp_post = get_post($insert_id, OBJECT, 'raw');
+          }
+          $found_posts[] = $wp_post->ID;
+
+
+          $found_posts = $this->updateProject($sorti, $casawp_id, $projectData, $wp_post, false, $found_posts);
+          $this->updateInsertWPMLconnection($wp_post, $lang, 'project_' . $projectData['ref']);
+        }
+      }
+
+
+      $projects_to_remove = get_posts(
+        array(
+          'suppress_filters' => true,
+          'language' => 'ALL',
+          'numberposts' =>  100,
+          'exclude'     =>  $found_posts,
+          'post_type'   =>  'casawp_project',
+          'post_status' =>  'publish'
+        )
+      );
+      foreach ($projects_to_remove as $prop_to_rm) {
+        wp_trash_post($prop_to_rm->ID);
+        $this->transcript['projects_removed'] = count($projects_to_remove);
+      }
+    }
+     */
+  }
+
+  public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post)
+  {
+
+    $new_meta_data = array();
+    $old_meta_data = array();
+
+    $meta_values = get_post_meta($wp_post->ID, null, true);
+
+    foreach ($meta_values as $key => $values) {
+      $old_meta_data[$key] = maybe_unserialize($values[0]);
+    }
+    ksort($old_meta_data);
+
+    $cleanPropertyData = $property;
+    $curImportHash = md5(serialize($cleanPropertyData));
+
+    if (!isset($old_meta_data['last_import_hash'])) {
+      $old_meta_data['last_import_hash'] = 'no_hash';
+    }
+
+    //skip if is the same as before (accept if was trashed (reactivation))
+    /* if ($wp_post->post_status == 'publish' && isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
+      if ($curImportHash == $old_meta_data['last_import_hash']) {
+        $this->addToLog('skipped property: ' . $casawp_id);
+        return 'skipped';
+      }
+    } */
+
+    #$this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
+    #$this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
+
+    $new_meta_data['last_import_hash'] = $curImportHash;
+
+    $publisher_options = array();
+    if (isset($offer['publish'])) {
+      foreach ($offer['publish'] as $slug => $content) {
+        if (isset($content['options'])) {
+          foreach ($content['options'] as $key => $value) {
+            $publisher_options[$key] = $value;
+          }
+        }
+      }
+    }
+
+    $name = (isset($publisher_options['override_name']) && $publisher_options['override_name'] ? $publisher_options['override_name'] : $offer['name']);
+    if (is_array($name)) {
+      $name = $name[0];
+    }
+    $excerpt = (isset($publisher_options['override_excerpt']) && $publisher_options['override_excerpt'] ? $publisher_options['override_excerpt'] : $offer['excerpt']);
+    if (is_array($excerpt)) {
+      $excerpt = $excerpt[0];
+    }
+
+    $curRank = $this->ranksort[$wp_post->ID];
+
+    $site_timezone = wp_timezone();
+
+    if ($property['creation']) {
+      $post_date = clone $property['creation'];
+      $post_date_gmt = clone $property['creation'];
+    } elseif ($property['last_update']) {
+      $post_date = clone $property['last_update'];
+      $post_date_gmt = clone $property['last_update'];
+    } else {
+      $post_date = new \DateTime('now', $site_timezone);
+      $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
+    }
+
+    $post_date->setTimezone($site_timezone);
+    $post_date_gmt->setTimezone(new \DateTimeZone('UTC'));
+
+    $post_date_formatted = $post_date->format('Y-m-d H:i:s');
+    $post_date_gmt_formatted = $post_date_gmt->format('Y-m-d H:i:s');
+
+    $current_time = new \DateTime('now', $site_timezone);
+    if ($post_date > $current_time) {
+      $post_date_formatted = $current_time->format('Y-m-d H:i:s');
+      $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+    }
+
+    $new_main_data = array(
+      'ID'            => $wp_post->ID,
+      'post_title'    => ($name ? $name : 'Objekt'),
+      'post_content'  => $this->extractDescription($offer, $publisher_options),
+      'post_status'   => 'publish',
+      'post_type'     => 'casawp_property',
+      'post_excerpt'  => $excerpt,
+      'post_date'      => $post_date_formatted,
+      'post_date_gmt'  => $post_date_gmt_formatted,
+      'menu_order'   => $curRank
+    );
+
+    $old_main_data = array(
+      'ID'            => $wp_post->ID,
+      'post_title'    => $wp_post->post_title,
+      'post_content'  => $wp_post->post_content,
+      'post_status'   => $wp_post->post_status,
+      'post_type'     => $wp_post->post_type,
+      'post_excerpt'  => $wp_post->post_excerpt,
+      'post_date'      => $wp_post->post_date,
+      'post_date_gmt'  => $wp_post->post_date_gmt,
+      'menu_order'   => $wp_post->menu_order
+    );
+
+    $new_meta_data['property_address_country']       = $property['address']['country'];
+    $new_meta_data['property_address_locality']      = $property['address']['locality'];
+    $new_meta_data['property_address_region']        = $property['address']['region'];
+    $new_meta_data['property_address_postalcode']    = $property['address']['postal_code'];
+    $new_meta_data['property_address_streetaddress'] = $property['address']['street'];
+    $new_meta_data['property_address_streetnumber']  = $property['address']['streetNumber'];
+    $new_meta_data['property_address_streetaddition']  = $property['address']['streetAddition'];
+    $new_meta_data['property_geo_latitude']          = $property['address']['lat'];
+    $new_meta_data['property_geo_longitude']         = $property['address']['lng'];
+
+    if ($offer['start']) {
+      $new_meta_data['start']                          = $offer['start']->format('Y-m-d H:i:s');
+    } else {
+      $new_meta_data['start']                          = null;
+    }
+
+    $new_meta_data['referenceId']                    = $property['referenceId'];
+    $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
+    $new_meta_data['exportproperty_id']              = $property['exportproperty_id'];
+
+    if (isset($property['zoneTypes']) && $property['zoneTypes']) {
+      $new_meta_data['zoneTypes']              = $property['zoneTypes'];
+    }
+
+    if (!$new_meta_data['referenceId']) {
+      echo '<div id="message" class="error">Warning! no referenceId found. for:' . $casawp_id . ' This could cause problems when sending inquiries</div>';
+    }
+    if (isset($property['organization'])) {
+      $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
+      $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
+      $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
+      $new_meta_data['seller_org_customerid']                    = $property['organization']['id'];
+
+      if (isset($property['organization']['postalAddress'])) {
+        $new_meta_data['seller_org_address_country']               = $property['organization']['postalAddress']['country'];
+        $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
+        $new_meta_data['seller_org_address_region']                = $property['organization']['postalAddress']['region'];
+        $new_meta_data['seller_org_address_postalcode']            = $property['organization']['postalAddress']['postal_code'];
+        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['post_office_box_number'];
+        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'] . ' ' . $property['organization']['postalAddress']['street_number'];
+        $new_meta_data['seller_org_address_streetaddition']         = $property['organization']['postalAddress']['street_addition'];
+      }
+    }
+
+    $personType = 'view';
+    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
+      $prefix = 'seller_' . $personType . '_person_';
+      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
+      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
+      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
+      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
+      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
+      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
+      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
+      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
+      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
+    }
+
+    $personType = 'inquiry';
+    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
+      $prefix = 'seller_' . $personType . '_person_';
+      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
+      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
+      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
+      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
+      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
+      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
+      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
+      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
+      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
+    }
+
+    $personType = 'visit';
+    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
+      $prefix = 'seller_' . $personType . '_person_';
+      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
+      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
+      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
+      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
+      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
+      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
+      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
+      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
+      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
+    }
+
+    $url = null;
+    $the_urls = array();
+    if (isset($offer['urls'])) {
+      foreach ($offer['urls'] as $url) {
+        $href = $url['url'];
+        if (! (substr($href, 0, 7) === "http://" || substr($href, 0, 8) === "https://")) {
+          $href = 'http://' . $href;
+        }
+
+        $label = (isset($url['label']) ? $url['label'] : false);
+        $title = (isset($url['title']) ? $url['title'] : false);
+        $type =  (isset($url['type'])  ? (string) $url['type'] : false);
+        if ($type) {
+          $the_urls[$type][] = array(
+            'href' => $href,
+            'label' => $label,
+            'title' => $title
+          );
+        } else {
+          $the_urls[] = array(
+            'href' => $href,
+            'label' => $label,
+            'title' =>  $title
+          );
+        }
+      }
+      ksort($the_urls);
+      $new_meta_data['the_urls'] = $the_urls;
+    }
+
+    $new_meta_data['price_currency'] = $property['price_currency'];
+
+    if (isset($property['price'])) {
+      $new_meta_data['price'] = $property['price'];
+      $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
+    }
+    if (isset($property['price_range_from'])) {
+      $new_meta_data['price_range_from'] = $property['price_range_from'];
+    }
+    if (isset($property['price_range_to'])) {
+      $new_meta_data['price_range_to'] = $property['price_range_to'];
+    }
+
+
+    if (isset($property['net_price'])) {
+      $new_meta_data['netPrice'] = $property['net_price'];
+      $new_meta_data['netPrice_timesegment'] = $property['net_price_time_segment'];
+      $new_meta_data['netPrice_propertysegment'] = $property['net_price_property_segment'];
+    }
+
+    if (isset($property['gross_price'])) {
+      $new_meta_data['grossPrice'] = $property['gross_price'];
+      $new_meta_data['grossPrice_timesegment'] = $property['gross_price_time_segment'];
+      $new_meta_data['grossPrice_propertysegment'] = $property['gross_price_property_segment'];
+    }
+
+    $extraPrice = array();
+    if (isset($property['extracosts'])) {
+      foreach ($property['extracosts'] as $extra) {
+        $extraPrice[] = array(
+          'price' => $extra['cost'],
+          'timesegment' => $extra['time_segment'],
+          'propertysegment' => $extra['property_segment'],
+          'currency' => $new_meta_data['price_currency'],
+          'frequency' => $extra['frequency']
+        );
+      }
+    }
+    $new_meta_data['extraPrice'] = $extraPrice;
+
+    $integratedoffers = array();
+    if (isset($property['integratedoffers'])) {
+      foreach ($property['integratedoffers'] as $integratedoffer) {
+        $integratedoffers[] = array(
+          'type' => $integratedoffer['type'],
+          'price' => $integratedoffer['cost'],
+          'timesegment' => $integratedoffer['time_segment'],
+          'propertysegment' => $integratedoffer['property_segment'],
+          'currency' => $new_meta_data['price_currency'],
+          'frequency' => $integratedoffer['frequency'],
+          'inclusive' => $integratedoffer['inclusive']
+        );
+      }
+    }
+    $new_meta_data['integratedoffers'] = $integratedoffers;
+
+    if (array_key_exists('price', $new_meta_data) && $new_meta_data['price'] !== "") {
+      $tmp_price = $new_meta_data['price'];
+    } elseif (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") {
+      $tmp_price = $new_meta_data['grossPrice'];
+    } elseif (array_key_exists('netPrice', $new_meta_data) && $new_meta_data['netPrice'] !== "") {
+      $tmp_price = $new_meta_data['netPrice'];
+    } else {
+      $tmp_price = 9999999999;
+    }
+
+    $new_meta_data['priceForOrder'] = $tmp_price;
+
+    $numericValues = array();
+    foreach ($property['numeric_values'] as $numval) {
+      $numericValues[$numval['key']] = $numval['value'];
+    }
+    $new_meta_data = array_merge($new_meta_data, $numericValues);
+
+
+    $tmp_area_bwf      = (array_key_exists('area_bwf', $new_meta_data)      && $new_meta_data['area_bwf'] !== "")      ? ($new_meta_data['area_bwf'])      : null;
+    $tmp_area_nwf      = (array_key_exists('area_nwf', $new_meta_data)      && $new_meta_data['area_nwf'] !== "")      ? ($new_meta_data['area_nwf'])      : null;
+    $tmp_area_sia_nf      = (array_key_exists('area_sia_nf', $new_meta_data)      && $new_meta_data['area_sia_nf'] !== "")      ? ($new_meta_data['area_sia_nf'])      : null;
+    if ($tmp_area_bwf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_bwf;
+    } else if ($tmp_area_nwf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_nwf;
+    } else if ($tmp_area_sia_nf) {
+      $new_meta_data['areaForOrder'] = $tmp_area_sia_nf;
+    }
+
+    $custom_metas = array();
+    foreach ($publisher_options as $key => $value) {
+      if (strpos($key, 'custom_option') === 0) {
+        $parts = explode('_', $key);
+        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+        $meta_key = (isset($parts[3]) && $parts[3] == 'key' ? true : false);
+        $meta_value = (isset($parts[3]) && $parts[3] == 'value' ? true : false);
+
+        if ($meta_key) {
+          foreach ($publisher_options as $key2 => $value2) {
+            if (strpos($key2, 'custom_option') === 0) {
+              $parts2 = explode('_', $key2);
+              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
+              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
+              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
+              if ($meta_value2 && $sort2 == $sort) {
+                $custom_metas[$value[0]] = $value2[0];
+                break;
+              }
+            }
+          }
+        } elseif ($meta_value) {
+          foreach ($publisher_options as $key2 => $value2) {
+            if (strpos($key2, 'custom_option') === 0) {
+              $parts2 = explode('_', $key2);
+              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
+              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
+              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
+              if ($meta_key2 && $sort2 == $sort) {
+                $custom_metas[$value2[0]] = $value[0];
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if ($custom_metas) {
+      #$this->addToLog('_options_================HERE====================');
+      #$this->addToLog('_options_' . print_r($custom_metas, true));
+    }
+
+    foreach ($custom_metas as $key => $value) {
+      $new_meta_data['custom_option_' . $key] = $value;
+      #$this->addToLog('custom_option_' . $key);
+    }
+
+    ksort($new_meta_data);
+
+
+    if ($new_meta_data != $old_meta_data) {
+      #$this->addToLog('updating metadata');
+      foreach ($new_meta_data as $key => $value) {
+        $newval = $value;
+
+        if ($newval === true) {
+          $newval = "1";
+        }
+        if (is_numeric($newval)) {
+          $newval = (string) $newval;
+        }
+        if ($key == "floor" && $newval == 0) {
+          $newval = "EG";
+        }
+
+        if (function_exists("casawp_unicode_dirty_replace") && !is_array($newval)) {
+          $newval = casawp_unicode_dirty_replace($newval);
+        }
+
+        $new_meta_data[$key] = $newval;
+      }
+    }
+
+
+    $new_main_data['meta_input'] = $new_meta_data;
+
+    $main_data_changed = ($new_main_data != $old_main_data);
+    $meta_data_changed = ($new_meta_data != $old_meta_data);
+
+    if ($main_data_changed || $meta_data_changed) {
+      if ($main_data_changed) {
+        foreach ($old_main_data as $key => $value) {
+          if ($new_main_data[$key] != $value) {
+            $this->transcript[$casawp_id]['main_data'][$key]['from'] = $value;
+            $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
+            #$this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
+          }
+        }
+      }
+
+      if (!$wp_post->post_name) {
+        $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
+      } else {
+        $new_main_data['post_name'] = $wp_post->post_name;
+      }
+
+      wp_update_post($new_main_data);
+
+      $keys_to_delete = array_diff(array_keys($old_meta_data), array_keys($new_meta_data));
+      foreach ($keys_to_delete as $key) {
+        if (!in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort')) && strpos($key, '_') !== 0) {
+          delete_post_meta($wp_post->ID, $key);
+          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $old_meta_data[$key];
+        }
+      }
+    }
+
+    if (isset($property['property_categories'])) {
+      #$this->addToLog('updating categories');
+      $custom_categories = array();
+      foreach ($publisher_options as $key => $values) {
+        if (strpos($key, 'custom_category') === 0) {
+          $parts = explode('_', $key);
+          $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+          $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
+          $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
+          if (!$values[0] || !$sort) {
+          } elseif ($slug) {
+            $custom_categories[$sort]['slug'] = $values[0];
+          } elseif ($label) {
+            $custom_categories[$sort]['label'] = $values[0];
+          }
+        }
+      }
+
+      $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
+    }
+
+    #$this->addToLog('updating custom regions');
+    $custom_regions = array();
+    foreach ($publisher_options as $key => $values) {
+      if (strpos($key, 'custom_region') === 0) {
+        $parts = explode('_', $key);
+        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
+        $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
+        $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
+        if (!$values[0] || !$sort) {
+          // skip
+        } elseif ($slug) {
+          $custom_regions[$sort]['slug'] = $values[0];
+        } elseif ($label) {
+          $custom_regions[$sort]['label'] = $values[0];
+        }
+      }
+    }
+
+    $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
+
+    #$this->addToLog('updating features');
+    $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
+
+    #$this->addToLog('updating utilities');
+    $this->setOfferUtilities($wp_post, $property['property_utilities'], $casawp_id);
+
+    #$this->addToLog('updating salestypes');
+    $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
+
+    #$this->addToLog('updating availabilities');
+    $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
+
+    #$this->addToLog('updating localities');
+    $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
+
+    #$this->addToLog('updating attachments');
+    $this->setOfferAttachments($offer['offer_medias'], $wp_post, $property['exportproperty_id'], $casawp_id, $property);
+
+    #$this->addToLog('finish property update: [' . $casawp_id . ']' . time());
   }
 
   public function casawp_sanitize_title($result)
@@ -1725,20 +2645,6 @@ class Import
     file_put_contents($dir . "/" . get_date_from_gmt('', 'Ym') . '.log', "\n" . json_encode(array(get_date_from_gmt('', 'Y-m-d H:i') => $transcript)), FILE_APPEND);
   }
 
-  public function gatewaypoke()
-  {
-    add_action('asynchronous_gatewayupdate', array($this, 'gatewaypokeanswer'));
-    #$this->addToLog('Scheduled an Update on: ' . time());
-    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
-  }
-
-  public function gatewaypokeanswer()
-  {
-    #$this->addToLog('gateway call file: ' . time());
-    $this->updateImportFileThroughCasaGateway();
-    #$this->addToLog('gateway import answer: ' . time());
-  }
-
   public function addToTranscript($msg)
   {
     $this->transcript[] = $msg;
@@ -2148,363 +3054,6 @@ class Import
     return $translations;
   }
 
-  public function findLangKey($lang, $array)
-  {
-    foreach ($array as $key => $value) {
-      if (isset($value['lang'])) {
-        if ($lang == $value['lang']) {
-          return $key;
-        }
-      } else {
-        return false;
-      }
-    }
-    return false;
-  }
-
-  public function fillMissingTranslations($theoffers)
-  {
-
-    $languages = array();
-    if (function_exists('icl_get_languages')) {
-        $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
-        // WPML sometimes returns false if it's not fully configured or no languages exist
-        if (is_array($maybe_languages)) {
-            $languages = $maybe_languages;
-        }
-    }
-
-    $translations = array();
-    foreach ($languages as $lang) {
-      $translations[$lang['language_code']] = false;
-    }
-
-    foreach ($theoffers as $offerData) {
-      $translations[$offerData['lang']] = $offerData;
-    }
-
-    $mainLangKey = $this->findLangKey($this->getMainLang(), $translations);
-    if ($mainLangKey) {
-      $carbon = $translations[$mainLangKey];
-    } else {
-      foreach ($translations as $translation) {
-        if ($translation) {
-          $carbon = $translation;
-          break;
-        }
-      }
-    }
-
-    foreach ($languages as $language) {
-      if (!$translations[$language['language_code']]) {
-        $copy = $carbon;
-        $copy['lang'] = $language['language_code'];
-
-        if (get_option('casawp_auto_translate_properties')) {
-
-          if ($copy['urls']) {
-            foreach ($copy['urls'] as $i => $url) {
-              $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
-              $urlString = strtok($urlString, '/');
-              $copy['urls'][$i]['title'] = $urlString;
-            }
-          }
-
-          if ($language['language_code'] == 'de') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Dokument #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Bild #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'fr') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'en') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Property for rent in ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Property for sale in ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'it') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Documento #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Piano #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Immagine #' . $img;
-                  $img++;
-                }
-              }
-            }
-          }
-          $copy['descriptions'] = array();
-          $copy['excerpt'] = '';
-        }
-        $translations[$language['language_code']] = $copy;
-      }
-    }
-
-    $key = 0;
-    $theoffers = array();
-    foreach ($translations as $value) {
-      $key++;
-      if ($value['lang'] == $this->getMainLang()) {
-        $theoffers[0] = $value;
-      } else {
-        $theoffers[$key] = $value;
-      }
-    }
-    ksort($theoffers);
-    return $theoffers;
-  }
-
-  public function updateOffers($batched_file)
-  {
-
-    global $wpdb;
-    $found_posts = array();
-    $curRank = get_option('casawp_current_rank', 0);
-
-    if (isset($batched_file) && !empty($batched_file)) {
-
-      $final_array = $batched_file;
-
-      foreach ($final_array as $propertyID => $property) {
-        $curRank++;
-        $theoffers = array();
-        $i = 0;
-        foreach ($property['offers'] as $offer) {
-          $i++;
-          if ($offer['lang'] == $this->getMainLang()) {
-            $theoffers[0] = $offer;
-            $theoffers[0]['locality'] = $property['address']['locality'];
-          } else {
-            if ($this->hasWPML()) {
-              $theoffers[$i] = $offer;
-              $theoffers[$i]['locality'] = $property['address']['locality'];
-            }
-          }
-        }
-
-        if ($this->hasWPML()) {
-          $theoffers = $this->fillMissingTranslations($theoffers);
-        }
-
-        $offer_pos = 0;
-        foreach ($theoffers as $offerData) {
-          $offer_pos++;
-
-          $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
-
-          $the_query = new \WP_Query([
-            'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
-            'post_type'   => 'casawp_property',
-            'meta_query'  => [
-              [
-                'key'   => 'casawp_id',
-                'value' => $casawp_id,
-              ],
-            ],
-            'posts_per_page' => 1,
-            'suppress_filters' => true,
-            'language' => 'ALL',
-          ]);
-
-          if ($the_query->have_posts()) {
-            $the_query->the_post();
-            global $post;
-            $wp_post = $post;
-            $this->transcript[$casawp_id]['action'] = 'update';
-          } else {
-            $this->transcript[$casawp_id]['action'] = 'new';
-            $the_post['post_title'] = $offerData['name'];
-            $the_post['post_content'] = 'unsaved property';
-            $the_post['post_status'] = 'publish';
-            $the_post['post_type'] = 'casawp_property';
-            $the_post['menu_order'] = $curRank;
-            $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']);
-
-            $the_post['post_date'] = ($property['creation'] ? $property['creation']->format('Y-m-d H:i:s') : $property['last_update']->format('Y-m-d H:i:s'));
-
-            $_POST['icl_post_language'] = $offerData['lang'];
-            $insert_id = wp_insert_post($the_post);
-            update_post_meta($insert_id, 'casawp_id', $casawp_id);
-            update_post_meta($insert_id, 'is_active', true);
-            $wp_post = get_post($insert_id, OBJECT, 'raw');
-            #$this->addToLog('new property: ' . $casawp_id);
-          }
-
-          wp_update_post(array(
-            'ID' => $wp_post->ID,
-            'menu_order' => $curRank,
-          ));
-
-          $this->ranksort[$wp_post->ID] = $curRank;
-
-          $found_posts[] = $wp_post->ID;
-
-
-          $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
-
-          $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
-
-
-          wp_reset_postdata();
-        }
-      }
-    }
-
-    update_option('casawp_current_rank', $curRank);
-
-    $this->reactivate_properties($found_posts);
-
-    $meta_key_area = 'areaForOrder';
-    $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
-    $max_area = $wpdb->get_var($query);
-    $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
-    $min_area = $wpdb->get_var($query);
-
-    $meta_key_rooms = 'number_of_rooms';
-    $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
-    $max_rooms = $wpdb->get_var($query);
-    $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
-    $min_rooms = $wpdb->get_var($query);
-
-    update_option('casawp_archive_area_min', $min_area);
-    update_option('casawp_archive_area_max', $max_area);
-    update_option('casawp_archive_rooms_min', $min_rooms);
-    update_option('casawp_archive_rooms_max', $max_rooms);
-
-
-    //projects
-    /* if ($xml->projects) {
-
-      $found_posts = array();
-      $sorti = 0;
-      foreach ($xml->projects->project as $project) {
-        $sorti++;
-
-        $projectData = $this->project2Array($project);
-        $projectDataLangified = $this->langifyProject($projectData);
-
-        foreach ($projectDataLangified as $projectData) {
-          $lang = $projectData['lang'];
-          $casawp_id = $projectData['ref'] . $projectData['lang'];
-
-          $the_query = new \WP_Query('post_type=casawp_project&suppress_filters=true&meta_key=casawp_id&meta_value=' . $casawp_id);
-          $wp_post = false;
-          while ($the_query->have_posts()) :
-            $the_query->the_post();
-            global $post;
-            $wp_post = $post;
-          endwhile;
-          wp_reset_postdata();
-          if (!$wp_post) {
-            $this->transcript[$casawp_id]['action'] = 'new';
-            $the_post['post_title'] = $projectData['detail']['name'];
-            $the_post['post_content'] = 'unsaved project';
-            $the_post['post_status'] = 'publish';
-            $the_post['post_type'] = 'casawp_project';
-            $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
-            $_POST['icl_post_language'] = $lang;
-            $insert_id = wp_insert_post($the_post);
-
-            update_post_meta($insert_id, 'casawp_id', $casawp_id);
-            $wp_post = get_post($insert_id, OBJECT, 'raw');
-          }
-          $found_posts[] = $wp_post->ID;
-
-
-          $found_posts = $this->updateProject($sorti, $casawp_id, $projectData, $wp_post, false, $found_posts);
-          $this->updateInsertWPMLconnection($wp_post, $lang, 'project_' . $projectData['ref']);
-        }
-      }
-
-
-      $projects_to_remove = get_posts(
-        array(
-          'suppress_filters' => true,
-          'language' => 'ALL',
-          'numberposts' =>  100,
-          'exclude'     =>  $found_posts,
-          'post_type'   =>  'casawp_project',
-          'post_status' =>  'publish'
-        )
-      );
-      foreach ($projects_to_remove as $prop_to_rm) {
-        wp_trash_post($prop_to_rm->ID);
-        $this->transcript['projects_removed'] = count($projects_to_remove);
-      }
-    }
-     */
-  }
-
   public function simpleXMLget($node, $fallback = false)
   {
     if ($node) {
@@ -2690,481 +3239,5 @@ class Import
 
 
     return $found_posts;
-  }
-
-  public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post)
-  {
-
-    $new_meta_data = array();
-    $old_meta_data = array();
-
-    $meta_values = get_post_meta($wp_post->ID, null, true);
-
-    foreach ($meta_values as $key => $values) {
-      $old_meta_data[$key] = maybe_unserialize($values[0]);
-    }
-    ksort($old_meta_data);
-
-    $cleanPropertyData = $property;
-    $curImportHash = md5(serialize($cleanPropertyData));
-
-    if (!isset($old_meta_data['last_import_hash'])) {
-      $old_meta_data['last_import_hash'] = 'no_hash';
-    }
-
-    //skip if is the same as before (accept if was trashed (reactivation))
-    /* if ($wp_post->post_status == 'publish' && isset($old_meta_data['last_import_hash']) && !isset($_GET['force_all_properties'])) {
-      if ($curImportHash == $old_meta_data['last_import_hash']) {
-        $this->addToLog('skipped property: ' . $casawp_id);
-        return 'skipped';
-      }
-    } */
-
-    #$this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
-    #$this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
-
-    $new_meta_data['last_import_hash'] = $curImportHash;
-
-    $publisher_options = array();
-    if (isset($offer['publish'])) {
-      foreach ($offer['publish'] as $slug => $content) {
-        if (isset($content['options'])) {
-          foreach ($content['options'] as $key => $value) {
-            $publisher_options[$key] = $value;
-          }
-        }
-      }
-    }
-
-    $name = (isset($publisher_options['override_name']) && $publisher_options['override_name'] ? $publisher_options['override_name'] : $offer['name']);
-    if (is_array($name)) {
-      $name = $name[0];
-    }
-    $excerpt = (isset($publisher_options['override_excerpt']) && $publisher_options['override_excerpt'] ? $publisher_options['override_excerpt'] : $offer['excerpt']);
-    if (is_array($excerpt)) {
-      $excerpt = $excerpt[0];
-    }
-
-    $curRank = $this->ranksort[$wp_post->ID];
-
-    $site_timezone = wp_timezone();
-
-    if ($property['creation']) {
-      $post_date = clone $property['creation'];
-      $post_date_gmt = clone $property['creation'];
-    } elseif ($property['last_update']) {
-      $post_date = clone $property['last_update'];
-      $post_date_gmt = clone $property['last_update'];
-    } else {
-      $post_date = new \DateTime('now', $site_timezone);
-      $post_date_gmt = new \DateTime('now', new \DateTimeZone('UTC'));
-    }
-
-    $post_date->setTimezone($site_timezone);
-    $post_date_gmt->setTimezone(new \DateTimeZone('UTC'));
-
-    $post_date_formatted = $post_date->format('Y-m-d H:i:s');
-    $post_date_gmt_formatted = $post_date_gmt->format('Y-m-d H:i:s');
-
-    $current_time = new \DateTime('now', $site_timezone);
-    if ($post_date > $current_time) {
-      $post_date_formatted = $current_time->format('Y-m-d H:i:s');
-      $post_date_gmt_formatted = $current_time->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-    }
-
-    $new_main_data = array(
-      'ID'            => $wp_post->ID,
-      'post_title'    => ($name ? $name : 'Objekt'),
-      'post_content'  => $this->extractDescription($offer, $publisher_options),
-      'post_status'   => 'publish',
-      'post_type'     => 'casawp_property',
-      'post_excerpt'  => $excerpt,
-      'post_date'      => $post_date_formatted,
-      'post_date_gmt'  => $post_date_gmt_formatted,
-      'menu_order'   => $curRank
-    );
-
-    $old_main_data = array(
-      'ID'            => $wp_post->ID,
-      'post_title'    => $wp_post->post_title,
-      'post_content'  => $wp_post->post_content,
-      'post_status'   => $wp_post->post_status,
-      'post_type'     => $wp_post->post_type,
-      'post_excerpt'  => $wp_post->post_excerpt,
-      'post_date'      => $wp_post->post_date,
-      'post_date_gmt'  => $wp_post->post_date_gmt,
-      'menu_order'   => $wp_post->menu_order
-    );
-
-    $new_meta_data['property_address_country']       = $property['address']['country'];
-    $new_meta_data['property_address_locality']      = $property['address']['locality'];
-    $new_meta_data['property_address_region']        = $property['address']['region'];
-    $new_meta_data['property_address_postalcode']    = $property['address']['postal_code'];
-    $new_meta_data['property_address_streetaddress'] = $property['address']['street'];
-    $new_meta_data['property_address_streetnumber']  = $property['address']['streetNumber'];
-    $new_meta_data['property_address_streetaddition']  = $property['address']['streetAddition'];
-    $new_meta_data['property_geo_latitude']          = $property['address']['lat'];
-    $new_meta_data['property_geo_longitude']         = $property['address']['lng'];
-
-    if ($offer['start']) {
-      $new_meta_data['start']                          = $offer['start']->format('Y-m-d H:i:s');
-    } else {
-      $new_meta_data['start']                          = null;
-    }
-
-    $new_meta_data['referenceId']                    = $property['referenceId'];
-    $new_meta_data['visualReferenceId']              = $property['visualReferenceId'];
-    $new_meta_data['exportproperty_id']              = $property['exportproperty_id'];
-
-    if (isset($property['zoneTypes']) && $property['zoneTypes']) {
-      $new_meta_data['zoneTypes']              = $property['zoneTypes'];
-    }
-
-    if (!$new_meta_data['referenceId']) {
-      echo '<div id="message" class="error">Warning! no referenceId found. for:' . $casawp_id . ' This could cause problems when sending inquiries</div>';
-    }
-    if (isset($property['organization'])) {
-      $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
-      $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
-      $new_meta_data['seller_org_brand']                         = $property['organization']['addition'];
-      $new_meta_data['seller_org_customerid']                    = $property['organization']['id'];
-
-      if (isset($property['organization']['postalAddress'])) {
-        $new_meta_data['seller_org_address_country']               = $property['organization']['postalAddress']['country'];
-        $new_meta_data['seller_org_address_locality']              = $property['organization']['postalAddress']['locality'];
-        $new_meta_data['seller_org_address_region']                = $property['organization']['postalAddress']['region'];
-        $new_meta_data['seller_org_address_postalcode']            = $property['organization']['postalAddress']['postal_code'];
-        $new_meta_data['seller_org_address_postofficeboxnumber']   = $property['organization']['postalAddress']['post_office_box_number'];
-        $new_meta_data['seller_org_address_streetaddress']         = $property['organization']['postalAddress']['street'] . ' ' . $property['organization']['postalAddress']['street_number'];
-        $new_meta_data['seller_org_address_streetaddition']         = $property['organization']['postalAddress']['street_addition'];
-      }
-    }
-
-    $personType = 'view';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
-    }
-
-    $personType = 'inquiry';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
-    }
-
-    $personType = 'visit';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
-    }
-
-    $url = null;
-    $the_urls = array();
-    if (isset($offer['urls'])) {
-      foreach ($offer['urls'] as $url) {
-        $href = $url['url'];
-        if (! (substr($href, 0, 7) === "http://" || substr($href, 0, 8) === "https://")) {
-          $href = 'http://' . $href;
-        }
-
-        $label = (isset($url['label']) ? $url['label'] : false);
-        $title = (isset($url['title']) ? $url['title'] : false);
-        $type =  (isset($url['type'])  ? (string) $url['type'] : false);
-        if ($type) {
-          $the_urls[$type][] = array(
-            'href' => $href,
-            'label' => $label,
-            'title' => $title
-          );
-        } else {
-          $the_urls[] = array(
-            'href' => $href,
-            'label' => $label,
-            'title' =>  $title
-          );
-        }
-      }
-      ksort($the_urls);
-      $new_meta_data['the_urls'] = $the_urls;
-    }
-
-    $new_meta_data['price_currency'] = $property['price_currency'];
-
-    if (isset($property['price'])) {
-      $new_meta_data['price'] = $property['price'];
-      $new_meta_data['price_propertysegment'] = $property['price_property_segment'];
-    }
-    if (isset($property['price_range_from'])) {
-      $new_meta_data['price_range_from'] = $property['price_range_from'];
-    }
-    if (isset($property['price_range_to'])) {
-      $new_meta_data['price_range_to'] = $property['price_range_to'];
-    }
-
-
-    if (isset($property['net_price'])) {
-      $new_meta_data['netPrice'] = $property['net_price'];
-      $new_meta_data['netPrice_timesegment'] = $property['net_price_time_segment'];
-      $new_meta_data['netPrice_propertysegment'] = $property['net_price_property_segment'];
-    }
-
-    if (isset($property['gross_price'])) {
-      $new_meta_data['grossPrice'] = $property['gross_price'];
-      $new_meta_data['grossPrice_timesegment'] = $property['gross_price_time_segment'];
-      $new_meta_data['grossPrice_propertysegment'] = $property['gross_price_property_segment'];
-    }
-
-    $extraPrice = array();
-    if (isset($property['extracosts'])) {
-      foreach ($property['extracosts'] as $extra) {
-        $extraPrice[] = array(
-          'price' => $extra['cost'],
-          'timesegment' => $extra['time_segment'],
-          'propertysegment' => $extra['property_segment'],
-          'currency' => $new_meta_data['price_currency'],
-          'frequency' => $extra['frequency']
-        );
-      }
-    }
-    $new_meta_data['extraPrice'] = $extraPrice;
-
-    $integratedoffers = array();
-    if (isset($property['integratedoffers'])) {
-      foreach ($property['integratedoffers'] as $integratedoffer) {
-        $integratedoffers[] = array(
-          'type' => $integratedoffer['type'],
-          'price' => $integratedoffer['cost'],
-          'timesegment' => $integratedoffer['time_segment'],
-          'propertysegment' => $integratedoffer['property_segment'],
-          'currency' => $new_meta_data['price_currency'],
-          'frequency' => $integratedoffer['frequency'],
-          'inclusive' => $integratedoffer['inclusive']
-        );
-      }
-    }
-    $new_meta_data['integratedoffers'] = $integratedoffers;
-
-    if (array_key_exists('price', $new_meta_data) && $new_meta_data['price'] !== "") {
-      $tmp_price = $new_meta_data['price'];
-    } elseif (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") {
-      $tmp_price = $new_meta_data['grossPrice'];
-    } elseif (array_key_exists('netPrice', $new_meta_data) && $new_meta_data['netPrice'] !== "") {
-      $tmp_price = $new_meta_data['netPrice'];
-    } else {
-      $tmp_price = 9999999999;
-    }
-
-    $new_meta_data['priceForOrder'] = $tmp_price;
-
-    $numericValues = array();
-    foreach ($property['numeric_values'] as $numval) {
-      $numericValues[$numval['key']] = $numval['value'];
-    }
-    $new_meta_data = array_merge($new_meta_data, $numericValues);
-
-
-    $tmp_area_bwf      = (array_key_exists('area_bwf', $new_meta_data)      && $new_meta_data['area_bwf'] !== "")      ? ($new_meta_data['area_bwf'])      : null;
-    $tmp_area_nwf      = (array_key_exists('area_nwf', $new_meta_data)      && $new_meta_data['area_nwf'] !== "")      ? ($new_meta_data['area_nwf'])      : null;
-    $tmp_area_sia_nf      = (array_key_exists('area_sia_nf', $new_meta_data)      && $new_meta_data['area_sia_nf'] !== "")      ? ($new_meta_data['area_sia_nf'])      : null;
-    if ($tmp_area_bwf) {
-      $new_meta_data['areaForOrder'] = $tmp_area_bwf;
-    } else if ($tmp_area_nwf) {
-      $new_meta_data['areaForOrder'] = $tmp_area_nwf;
-    } else if ($tmp_area_sia_nf) {
-      $new_meta_data['areaForOrder'] = $tmp_area_sia_nf;
-    }
-
-    $custom_metas = array();
-    foreach ($publisher_options as $key => $value) {
-      if (strpos($key, 'custom_option') === 0) {
-        $parts = explode('_', $key);
-        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-        $meta_key = (isset($parts[3]) && $parts[3] == 'key' ? true : false);
-        $meta_value = (isset($parts[3]) && $parts[3] == 'value' ? true : false);
-
-        if ($meta_key) {
-          foreach ($publisher_options as $key2 => $value2) {
-            if (strpos($key2, 'custom_option') === 0) {
-              $parts2 = explode('_', $key2);
-              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
-              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
-              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
-              if ($meta_value2 && $sort2 == $sort) {
-                $custom_metas[$value[0]] = $value2[0];
-                break;
-              }
-            }
-          }
-        } elseif ($meta_value) {
-          foreach ($publisher_options as $key2 => $value2) {
-            if (strpos($key2, 'custom_option') === 0) {
-              $parts2 = explode('_', $key2);
-              $sort2 = (isset($parts2[2]) && is_numeric($parts2[2]) ? $parts2[2] : false);
-              $meta_key2 = (isset($parts2[3]) && $parts2[3] == 'key' ? true : false);
-              $meta_value2 = (isset($parts2[3]) && $parts2[3] == 'value' ? true : false);
-              if ($meta_key2 && $sort2 == $sort) {
-                $custom_metas[$value2[0]] = $value[0];
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if ($custom_metas) {
-      #$this->addToLog('_options_================HERE====================');
-      #$this->addToLog('_options_' . print_r($custom_metas, true));
-    }
-
-    foreach ($custom_metas as $key => $value) {
-      $new_meta_data['custom_option_' . $key] = $value;
-      #$this->addToLog('custom_option_' . $key);
-    }
-
-    ksort($new_meta_data);
-
-
-    if ($new_meta_data != $old_meta_data) {
-      #$this->addToLog('updating metadata');
-      foreach ($new_meta_data as $key => $value) {
-        $newval = $value;
-
-        if ($newval === true) {
-          $newval = "1";
-        }
-        if (is_numeric($newval)) {
-          $newval = (string) $newval;
-        }
-        if ($key == "floor" && $newval == 0) {
-          $newval = "EG";
-        }
-
-        if (function_exists("casawp_unicode_dirty_replace") && !is_array($newval)) {
-          $newval = casawp_unicode_dirty_replace($newval);
-        }
-
-        $new_meta_data[$key] = $newval;
-      }
-    }
-
-
-    $new_main_data['meta_input'] = $new_meta_data;
-
-    $main_data_changed = ($new_main_data != $old_main_data);
-    $meta_data_changed = ($new_meta_data != $old_meta_data);
-
-    if ($main_data_changed || $meta_data_changed) {
-      if ($main_data_changed) {
-        foreach ($old_main_data as $key => $value) {
-          if ($new_main_data[$key] != $value) {
-            $this->transcript[$casawp_id]['main_data'][$key]['from'] = $value;
-            $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
-            #$this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
-          }
-        }
-      }
-
-      if (!$wp_post->post_name) {
-        $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
-      } else {
-        $new_main_data['post_name'] = $wp_post->post_name;
-      }
-
-      wp_update_post($new_main_data);
-
-      $keys_to_delete = array_diff(array_keys($old_meta_data), array_keys($new_meta_data));
-      foreach ($keys_to_delete as $key) {
-        if (!in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort')) && strpos($key, '_') !== 0) {
-          delete_post_meta($wp_post->ID, $key);
-          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $old_meta_data[$key];
-        }
-      }
-    }
-
-    if (isset($property['property_categories'])) {
-      #$this->addToLog('updating categories');
-      $custom_categories = array();
-      foreach ($publisher_options as $key => $values) {
-        if (strpos($key, 'custom_category') === 0) {
-          $parts = explode('_', $key);
-          $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-          $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-          $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-          if (!$values[0] || !$sort) {
-          } elseif ($slug) {
-            $custom_categories[$sort]['slug'] = $values[0];
-          } elseif ($label) {
-            $custom_categories[$sort]['label'] = $values[0];
-          }
-        }
-      }
-
-      $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
-    }
-
-    #$this->addToLog('updating custom regions');
-    $custom_regions = array();
-    foreach ($publisher_options as $key => $values) {
-      if (strpos($key, 'custom_region') === 0) {
-        $parts = explode('_', $key);
-        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-        $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-        $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-        if (!$values[0] || !$sort) {
-          // skip
-        } elseif ($slug) {
-          $custom_regions[$sort]['slug'] = $values[0];
-        } elseif ($label) {
-          $custom_regions[$sort]['label'] = $values[0];
-        }
-      }
-    }
-
-    $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
-
-    #$this->addToLog('updating features');
-    $this->setOfferFeatures($wp_post, $property['features'], $casawp_id);
-
-    #$this->addToLog('updating utilities');
-    $this->setOfferUtilities($wp_post, $property['property_utilities'], $casawp_id);
-
-    #$this->addToLog('updating salestypes');
-    $this->setOfferSalestype($wp_post, $property['type'], $casawp_id);
-
-    #$this->addToLog('updating availabilities');
-    $this->setOfferAvailability($wp_post, $property['availability'], $casawp_id);
-
-    #$this->addToLog('updating localities');
-    $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
-
-    #$this->addToLog('updating attachments');
-    $this->setOfferAttachments($offer['offer_medias'], $wp_post, $property['exportproperty_id'], $casawp_id, $property);
-
-    #$this->addToLog('finish property update: [' . $casawp_id . ']' . time());
   }
 }
