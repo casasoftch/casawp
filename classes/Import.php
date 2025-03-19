@@ -2,6 +2,8 @@
 
 namespace casawp;
 
+use Exception;
+
 class Import
 {
   public $importFile = false;
@@ -355,53 +357,57 @@ class Import
 
   public function handle_single_request_import()
   {
-      try {
-          if (!get_transient('casawp_import_in_progress')) {
-              set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-          }
-
-          $this->fetchFileFromCasaGateway();
-
-          $xmlString = file_get_contents($this->getImportFile());
-          if ($xmlString === false) {
-              throw new Exception('Failed to read import file.');
-          }
-
-          $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
-          if ($xml === false) {
-              throw new Exception('Failed to parse XML.');
-          }
-
-          if (!$xml->properties || !$xml->properties->property) {
-              throw new Exception('No properties found in XML.');
-          }
-
-          $properties_array = [];
-          foreach ($xml->properties->property as $property) {
-              $properties_array[] = $this->property2Array($property);
-          }
-
-          update_option('casawp_total_batches', 1);
-          update_option('casawp_completed_batches', 0);
-
-          $this->updateOffers($properties_array); 
-
-          update_option('casawp_completed_batches', 1);
-
-          $this->finalize_import_cleanup();
-
-          delete_transient('casawp_import_in_progress');
-
-      } catch (Exception $e) {
-          $this->addToLog('Error in single-request import: ' . $e->getMessage());
-          if ($e->getMessage() === 'No properties found in XML.') {
-              set_transient('casawp_no_properties_alert', 'No properties found in the import.', 60);
-          }
-          update_option('casawp_import_failed', true);
-          delete_transient('casawp_import_in_progress');
+      // No top-level try/catch here. Let exceptions bubble up.
+      if (!get_transient('casawp_import_in_progress')) {
+          set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
       }
-  }
 
+      // Possibly throws exceptions if something goes wrong
+      $this->fetchFileFromCasaGateway(); 
+
+      // Read the file or throw an exception
+      $xmlString = file_get_contents($this->getImportFile());
+      if ($xmlString === false) {
+          $this->addToLog('Failed to read import file.');
+          throw new Exception('Failed to read import file.');
+      }
+
+      $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
+      if ($xml === false) {
+          $this->addToLog('Failed to parse XML.');
+          throw new Exception('Failed to parse XML.');
+      }
+
+      // Another example check
+      if (!$xml->properties || !$xml->properties->property) {
+          $this->addToLog('No properties found in XML.');
+          throw new Exception('No properties found in XML.');
+      }
+
+      // If we get here, parse the properties and import
+      $properties_array = [];
+      foreach ($xml->properties->property as $property) {
+          $properties_array[] = $this->property2Array($property);
+      }
+
+      // Mark single batch for consistency
+      update_option('casawp_total_batches', 1);
+      update_option('casawp_completed_batches', 0);
+
+      // Do the update
+      $this->updateOffers($properties_array);
+
+      // Mark done
+      update_option('casawp_completed_batches', 1);
+
+      // Clean up leftover properties
+      $this->finalize_import_cleanup();
+
+      // Clear lock
+      delete_transient('casawp_import_in_progress');
+
+      // No exception thrown means success
+  }
 
   public function delete_outdated_properties()
   {

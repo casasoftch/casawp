@@ -125,6 +125,70 @@ if (is_admin()) {
 $import = new casawp\Import(false, false);
 $import->register_hooks();
 
+add_action('admin_init', function() {
+	if (get_option('casawp_single_request_import', '') === '') {
+		update_option('casawp_single_request_import', '1');
+	}
+	if (get_option('casawp_enable_import_hash', '') === '') {
+		update_option('casawp_enable_import_hash', '1');
+	}
+});
+
+add_action('admin_init', 'casawp_handle_import_requests');
+function casawp_handle_import_requests() {
+	if (!is_admin() || !current_user_can('manage_options')) {
+		return;
+	}
+
+	if (isset($_GET['casawp_run_single_import']) && $_GET['casawp_run_single_import'] == '1') {
+		check_admin_referer('casawp_single_import');
+
+		try {
+			// If an import is in progress, cancel it:
+			if (get_transient('casawp_import_in_progress')) {
+				casawp_cancel_import();
+				sleep(2);
+			}
+
+			// *** Now we call the Import method that can throw exceptions
+			casawp_start_single_request_import('Manual single request import');
+
+			// If no exception was thrown = success
+			set_transient('casawp_single_import_result', [
+				'status'  => 'success',
+				'message' => 'Import erfolgreich ausgeführt!'
+			], 60);
+
+		} catch (Exception $e) {
+			// If an exception was thrown in handle_single_request_import()
+			set_transient('casawp_single_import_result', [
+				'status'  => 'error',
+				'message' => 'Fehler beim Import: ' . esc_html($e->getMessage())
+			], 60);
+		}
+
+		// Redirect to remove the query args so refresh won't re-import
+		wp_safe_redirect(remove_query_arg(['casawp_run_single_import','_wpnonce']));
+		exit;
+	}
+}
+
+add_action('admin_notices', 'casawp_display_single_import_notice');
+function casawp_display_single_import_notice() {
+	$result = get_transient('casawp_single_import_result');
+	if ($result) {
+		// Delete so it only shows once
+		delete_transient('casawp_single_import_result');
+
+		$status_class = ($result['status'] === 'success') ? 'notice-success' : 'notice-error';
+
+		echo '<div class="notice ' . esc_attr($status_class) . ' is-dismissible">'
+		   . '<p>' . esc_html($result['message']) . '</p>'
+		   . '</div>';
+	}
+}
+
+
 function casawp_remove_old_crons() {
 	$cron_hooks = [
 		'casawp_import_midnight',
