@@ -9,7 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
+
+#: ../src/CasasoftStandards/Service/FeatureService.php:178
+msgid "Photovoltaics"
+msgstr "Solare fotovoltaico"
+
+#: ../src/CasasoftStandards/Service/FeatureService.php:255
+msgid "Tiled stove"
+msgstr "Stufa in maiolica"
 
 #: ../src/CasasoftStandards/Service/CategoryService.php:37
 #: ../src/CasasoftStandards/Service/CategoryService.php:294
@@ -1379,9 +1387,6 @@ msgstr "Riscaldamento a parete"
 
 msgid "Solar Thermal"
 msgstr "Solare termico"
-
-msgid "Photovoltaics"
-msgstr "Solare fotovoltaico"
 
 msgid "Dishwasher"
 msgstr "Lavastoviglie"

@@ -170,6 +170,14 @@ class FeatureService {
                 'label' => $this->translator->translate('Double garage', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-garage-double' => array(
+                'label' => $this->translator->translate('Double garage', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-photovoltaic' => array(
+                'label' => $this->translator->translate('Photovoltaics', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
             //alpha
             'has-car-port' => array(
@@ -237,6 +245,14 @@ class FeatureService {
             ),
             'has-gas-supply' => array(
                 'label' => $this->translator->translate('Gas supply', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-supply-gas' => array(
+                'label' => $this->translator->translate('Gas supply', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-tiled-stove' => array(
+                'label' => $this->translator->translate('Tiled stove', 'casasoft-standards'),
                 'icon' => '',
             ),
 
