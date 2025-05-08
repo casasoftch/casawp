@@ -134,6 +134,10 @@ add_action('admin_init', function() {
 	}
 });
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	WP_CLI::add_command( 'casawp import', [ '\casawp\CLI', 'import' ] );
+}
+
 add_action('admin_init', 'casawp_handle_import_requests');
 function casawp_handle_import_requests() {
 	if (!is_admin() || !current_user_can('manage_options')) {
@@ -234,23 +238,25 @@ function casawp_handle_failed_action($action_id) {
 }
 
 
-function casawp_start_new_import($source = '') {
+function casawp_start_new_import( $source = '' ) {
 
-	if (get_transient('casawp_import_in_progress')) {
-		casawp_cancel_import();
-		sleep(2);
-	}
+	// clear any stale lock first
+	delete_transient( 'casawp_import_in_progress' );
 
-	update_option('casawp_total_batches', 0);
-	update_option('casawp_completed_batches', 0);
-	delete_option('casawp_import_failed');
-	delete_option('casawp_import_canceled');
+	update_option( 'casawp_total_batches', 0 );
+	update_option( 'casawp_completed_batches', 0 );
+	delete_option( 'casawp_import_failed'   );
+	delete_option( 'casawp_import_canceled' );
 
-	$import = new casawp\Import(false, true);
-	$import->addToLog($source . ' import started');
+	$import = new casawp\Import( false, false );  // constructor no longer auto-runs
+	$import->addToLog( $source . ' import started' );
+
+	$import->updateImportFileThroughCasaGateway(); // fetch XML
+	$import->start_import();                       // ← schedule chunks
+
 	return $import;
-
 }
+
 
 
 add_action('init', 'casawp_initialize_cleanup_cron');
@@ -291,27 +297,55 @@ function casawp_add_cron_schedule($schedules) {
 }
 
 
-function casawp_cancel_import() {
-	if (class_exists('ActionScheduler')) {
+function casawp_cancel_import(): bool {
+
+	// 1) mark canceled so a running chunk exits ASAP
+	update_option( 'casawp_import_canceled', true );
+
+	// 2) cancel every pending / in-progress action in the group
+	if ( class_exists( 'ActionScheduler' ) ) {
 		$store = ActionScheduler::store();
-		$pending_actions = $store->query_actions(array(
-			'hook'   => 'casawp_batch_import',
-			'status' => ['pending','in-progress'],
-		));
-		foreach ($pending_actions as $action_id) {
-			$store->cancel_action($action_id);
+
+		// first wave: anything already in the DB
+		$ids = $store->query_actions( [
+			'group'  => 'casawp_batch_import',
+			'status' => [ 'pending', 'in-progress', 'running' ],
+		] );
+		foreach ( $ids as $id ) {
+			$store->cancel_action( $id );
 		}
-		update_option('casawp_import_canceled', true);
-		delete_transient('casawp_import_in_progress');
-		delete_option('casawp_import_failed');
-		$import = new casawp\Import(false, false);
-		$import->addToLog('All pending import actions canceled and import lock cleared.');
-		return true;
-	} else {
-		error_log('Action Scheduler class not found. Could not cancel pending import actions.');
-		return false;
+
+		// second wave: catch rows inserted milliseconds later
+		as_unschedule_all_actions(
+			'',                       // any hook
+			[],                       // any args
+			'casawp_batch_import',    // our group
+			true                      // force cancel
+		);
 	}
+
+	// 3) clear locks & progress so progress-bar shows 0 %
+	delete_transient( 'casawp_import_in_progress' );
+	delete_option   ( 'casawp_total_batches'     );
+	delete_option   ( 'casawp_completed_batches' );
+	delete_option   ( 'casawp_import_failed'     );
+
+	// 4) wipe leftover JSON chunks
+	$dir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/chunks';
+	if ( is_dir( $dir ) ) {
+		foreach ( glob( $dir . '/batch_*.json' ) as $f ) {
+			@unlink( $f );
+		}
+	}
+
+	// 5) log
+	( new \casawp\Import( false, false ) )
+		->addToLog( 'Import canceled: all scheduled chunks removed, progress reset.' );
+
+	return true;
 }
+
+
 
 add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
 
@@ -340,7 +374,82 @@ function casawp_check_no_properties_alert() {
 	}
 }
 
-add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
+/**
+ * Try to spawn `wp casawp import` in the background.
+ * Returns true if the process was started; false if CLI is unavailable.
+ */
+function casawp_try_cli_import(): bool {
+
+	// (a) exec/proc_open available?
+	if ( ! function_exists( 'proc_open' ) && ! function_exists( 'exec' ) ) {
+		return false;
+	}
+
+	// (b) locate the wp binary
+	$wp_bin = trim( shell_exec( 'command -v wp' ) );
+	if ( ! $wp_bin || ! is_executable( $wp_bin ) ) {
+		return false;
+	}
+
+	// (c) build command (add --url for multisite safety)
+	$site = site_url();
+	$cmd  = escapeshellcmd( "$wp_bin casawp import --quiet --url=$site" ) . ' > /dev/null 2>&1 &';
+
+	// (d) fire and forget
+	if ( function_exists( 'proc_open' ) ) {
+		$p = proc_open( $cmd, [], $pipes );
+		if ( is_resource( $p ) ) {
+			proc_close( $p );
+			return true;
+		}
+	} else {
+		@exec( $cmd, $o, $code );
+		return $code === 0;
+	}
+
+	return false;
+}
+
+/**
+ * Add the composite index WPML is missing.
+ * Runs on plugin activation; skips if it already exists or if DB user lacks ALTER privileges.
+ */
+function casawp_ensure_wpml_index() {
+
+	global $wpdb;
+
+	// Is WPML even installed?
+	if ( ! $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}icl_translations'" ) ) {
+		return;
+	}
+
+	// Index already present?
+	$index = $wpdb->get_row(
+		$wpdb->prepare(
+			"SHOW INDEX FROM {$wpdb->prefix}icl_translations WHERE Key_name = %s",
+			'idx_element_type'
+		)
+	);
+
+	if ( $index ) {
+		return; // nothing to do
+	}
+
+	// Create the index – wrapped in try/catch style error handling
+	$sql = "ALTER TABLE {$wpdb->prefix}icl_translations
+			ADD INDEX idx_element_type (element_id, element_type)";
+
+	$wpdb->query( $sql ); // suppressed errors are OK; if it fails, we still fall back to caching
+}
+register_activation_hook( __FILE__, 'casawp_ensure_wpml_index' );
+
+add_filter(
+	'action_scheduler_queue_runner_concurrent_batches',
+	fn () => 1
+);
+
+
+add_action( 'wp_ajax_casawp_start_import', 'casawp_start_import' );
 function casawp_start_import() {
 	if (!current_user_can('manage_options')) {
 		wp_send_json_error(['message' => 'Unauthorized']);
@@ -362,6 +471,7 @@ function casawp_start_import() {
 		wp_send_json_error(['message' => 'Invalid request']);
 	}
 }
+
 
 function casawp_start_single_request_import($source = '') {
 
