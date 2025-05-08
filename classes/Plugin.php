@@ -849,11 +849,27 @@ class Plugin
         return $project->render('project-single', array('project' => $project));
     }
 
-    public function renderArchiveSingle($post)
-    {
-        $offer = $this->prepareOffer($post);
-        return $offer->render('single-archive', array('offer' => $offer));
+    public function renderArchiveSingle( $post, $layout = 'cards', $args = array() ) {
+
+        $offer = $this->prepareOffer( $post );
+
+        $template = ( $layout === 'cards' )
+            ? 'single-archive'              
+            : 'single-archive-' . $layout;   
+
+
+        $template = apply_filters( 'casawp_single_archive_template', $template, $layout );
+
+        return $offer->render(
+            $template,
+            [
+                'offer'  => $offer,
+                'layout' => $layout,
+                'args' => $args,
+            ]
+        );
     }
+
 
     public function renderProjectArchiveSingle($post)
     {
