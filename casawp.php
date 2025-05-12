@@ -13,19 +13,6 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-// Include Action Scheduler
-require_once __DIR__ . '/action-scheduler/action-scheduler.php';
-
-// Ensure Action Scheduler is initialized
-add_action('plugins_loaded', function() {
-	if (!class_exists('ActionScheduler')) {
-		do_action('action_scheduler_initialize');
-	}
-});
-
-add_filter('action_scheduler_retention_period', function() {
-	return 7 * DAY_IN_SECONDS; // Keep logs for 7 days
-});
 
 // Update system
 require_once('wp_autoupdate.php');
@@ -122,140 +109,115 @@ if (is_admin()) {
 	register_deactivation_hook(__FILE__, array($casaSyncAdmin, 'casawp_remove'));
 }
 
-$import = new casawp\Import(false, false);
-$import->register_hooks();
 
 add_action('admin_init', function() {
-	if (get_option('casawp_single_request_import', '') === '') {
-		update_option('casawp_single_request_import', '1');
-	}
 	if (get_option('casawp_enable_import_hash', '') === '') {
 		update_option('casawp_enable_import_hash', '1');
 	}
 });
 
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	WP_CLI::add_command( 'casawp import', [ '\casawp\CLI', 'import' ] );
+function casawp_ensure_unique_meta_index() {
+	global $wpdb;
+
+	$idx = $wpdb->get_var(
+		"SHOW INDEX FROM {$wpdb->postmeta} WHERE Key_name = 'casawp_unique'"
+	);
+	if ( $idx ) { return; }
+
+	$wpdb->query(
+		"ALTER TABLE {$wpdb->postmeta}
+		 ADD UNIQUE KEY casawp_unique (meta_key, meta_value(191))"
+	);
 }
+register_activation_hook( __FILE__, 'casawp_ensure_unique_meta_index' );
 
-add_action('admin_init', 'casawp_handle_import_requests');
-function casawp_handle_import_requests() {
-	if (!is_admin() || !current_user_can('manage_options')) {
-		return;
-	}
 
-	if (isset($_GET['casawp_run_single_import']) && $_GET['casawp_run_single_import'] == '1') {
-		check_admin_referer('casawp_single_import');
+//WP CLI command for manual import
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	\WP_CLI::add_command( 'casawp import', function( $args, $assoc_args ) {
+		set_time_limit(0);
+		$importer = new \casawp\Import( false, false );
+		$importer->delete_orphan_casawp_properties();  
+		delete_option( 'casawp_import_canceled' ); 
+
+		// 1) Early deletion: deactivate & delete outdated
+		WP_CLI::log("⏳ Deactivating all properties…");
+		#$importer->deactivate_all_properties();
 
 		try {
-			// If an import is in progress, cancel it:
-			if (get_transient('casawp_import_in_progress')) {
-				casawp_cancel_import();
-				sleep(2);
+			// 2) Fetch & split
+			WP_CLI::log("🔄 Fetching XML from CasaGateway…");
+			$importer->fetchFileFromCasaGateway();
+			WP_CLI::log("🗜 Splitting into chunks…");
+			$total = $importer->splitXmlIntoChunks();
+			if ( ! $total ) {
+				WP_CLI::warning("No chunks generated; nothing to do.");
+				return;
+			}
+			WP_CLI::success("Generated {$total} chunks.");
+
+			// 3) Process each chunk in-process
+			WP_CLI::log("🚀 Processing chunks…");
+			for ( $batch = 1; $batch <= $total; $batch++ ) {
+				WP_CLI::log(" • Chunk {$batch}/{$total}");
+				$importer->handle_chunk( $batch );
 			}
 
-			// *** Now we call the Import method that can throw exceptions
-			casawp_start_single_request_import('Manual single request import');
+			// 4) Final cleanup
+			WP_CLI::log("🧹 Finalizing import cleanup…");
+			$importer->finalize_import_cleanup();
 
-			// If no exception was thrown = success
-			set_transient('casawp_single_import_result', [
-				'status'  => 'success',
-				'message' => 'Import erfolgreich ausgeführt!'
-			], 60);
-
-		} catch (Exception $e) {
-			// If an exception was thrown in handle_single_request_import()
-			set_transient('casawp_single_import_result', [
-				'status'  => 'error',
-				'message' => 'Fehler beim Import: ' . esc_html($e->getMessage())
-			], 60);
+			WP_CLI::success("🎉 Import complete.");
+		} catch ( \Throwable $e ) {
+			$msg = $e->getMessage();
+			// send email notification on failure
+			wp_mail(
+				get_option('admin_email'),
+				'CASAWP CLI Import Failure',
+				"CASAWP CLI import failed:\n\n{$msg}\n\nSee your logs for details."
+			);
+			WP_CLI::error("Import failed: {$msg}");
 		}
-
-		// Redirect to remove the query args so refresh won't re-import
-		wp_safe_redirect(remove_query_arg(['casawp_run_single_import','_wpnonce']));
-		exit;
-	}
-}
-
-add_action('admin_notices', 'casawp_display_single_import_notice');
-function casawp_display_single_import_notice() {
-	$result = get_transient('casawp_single_import_result');
-	if ($result) {
-		// Delete so it only shows once
-		delete_transient('casawp_single_import_result');
-
-		$status_class = ($result['status'] === 'success') ? 'notice-success' : 'notice-error';
-
-		echo '<div class="notice ' . esc_attr($status_class) . ' is-dismissible">'
-		   . '<p>' . esc_html($result['message']) . '</p>'
-		   . '</div>';
-	}
+	} );
 }
 
 
-function casawp_remove_old_crons() {
-	$cron_hooks = [
-		'casawp_import_midnight',
-		'casawp_import_noon',
-	];
+function casawp_start_new_import( string $source = '' ) {
+	// clear any stale lock
+	delete_option( 'casawp_import_canceled' );  
+	delete_transient('casawp_import_in_progress');
 
-	foreach ($cron_hooks as $hook) {
-		while (wp_next_scheduled($hook)) {
-			wp_clear_scheduled_hook($hook);
-		}
-	}
-}
+	// mark that we’re running (6h TTL)
+	set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
 
-add_action('init', 'casawp_remove_old_crons');
+	try {
+		/** @var \casawp\Import $importer */
+		$importer = new \casawp\Import(false, false);
+		$importer->delete_orphan_casawp_properties();  
+		$importer->addToLog("{$source} import (single-request) started");
 
-function eg_increase_time_limit( $time_limit ) {
-	return 60;
-}
-add_filter( 'action_scheduler_queue_runner_time_limit', 'eg_increase_time_limit' );
+		// deactivate + import in one go
+		#$importer->deactivate_all_properties();
+		$importer->handle_single_request_import();
+		$importer->finalize_import_cleanup();
 
-
-add_action('action_scheduler_failed_execution', 'casawp_handle_failed_action');
-add_action('action_scheduler_failed_action', 'casawp_handle_failed_action');
-add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action' );
-
-function casawp_handle_failed_action($action_id) {
-	error_log('Action Scheduler Failed Hook Triggered for Action ID: ' . $action_id);
-	$action = ActionScheduler::store()->fetch_action($action_id);
-	if ($action && $action->get_hook() == 'casawp_batch_import') {
-		$args = $action->get_args();
-		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
-		$site_domain = home_url();
-		$to = get_option('admin_email');
-		$subject = 'CASAWP Import Batch Failed on ' . $site_domain;
-		$message = "Batch number " . $batch_number . " has failed after maximum retries.\n\nSite: " . $site_domain;
-		wp_mail($to, $subject, $message);
-
-		$import = new casawp\Import(false, false);
-		$import->addToLog('Import canceled due to batch failure on ' . $site_domain . '. Notification sent.');
-		update_option('casawp_import_failed', true);
+		$importer->addToLog('Single-request import completed');
+	} catch (\Throwable $e) {
+		// log & email on failure
+		$msg = $e->getMessage();
+		(new \casawp\Import(false,false))
+			->addToLog("Single-request import failed: {$msg}");
+		wp_mail(
+			get_option('admin_email'),
+			'CASAWP import failed',
+			"Single-request import error:\n\n{$msg}"
+		);
+		throw $e;
+	} finally {
 		delete_transient('casawp_import_in_progress');
 	}
 }
 
-
-function casawp_start_new_import( $source = '' ) {
-
-	// clear any stale lock first
-	delete_transient( 'casawp_import_in_progress' );
-
-	update_option( 'casawp_total_batches', 0 );
-	update_option( 'casawp_completed_batches', 0 );
-	delete_option( 'casawp_import_failed'   );
-	delete_option( 'casawp_import_canceled' );
-
-	$import = new casawp\Import( false, false );  // constructor no longer auto-runs
-	$import->addToLog( $source . ' import started' );
-
-	$import->updateImportFileThroughCasaGateway(); // fetch XML
-	$import->start_import();                       // ← schedule chunks
-
-	return $import;
-}
 
 
 
@@ -297,118 +259,28 @@ function casawp_add_cron_schedule($schedules) {
 }
 
 
+/**
+ * Cancel any running import – Scheduler + optional CLI process.
+ */
 function casawp_cancel_import(): bool {
 
-	// 1) mark canceled so a running chunk exits ASAP
+	/* mark canceled so a running chunk exits quickly */
 	update_option( 'casawp_import_canceled', true );
 
-	// 2) cancel every pending / in-progress action in the group
-	if ( class_exists( 'ActionScheduler' ) ) {
-		$store = ActionScheduler::store();
-
-		// first wave: anything already in the DB
-		$ids = $store->query_actions( [
-			'group'  => 'casawp_batch_import',
-			'status' => [ 'pending', 'in-progress', 'running' ],
-		] );
-		foreach ( $ids as $id ) {
-			$store->cancel_action( $id );
-		}
-
-		// second wave: catch rows inserted milliseconds later
-		as_unschedule_all_actions(
-			'',                       // any hook
-			[],                       // any args
-			'casawp_batch_import',    // our group
-			true                      // force cancel
-		);
-	}
-
-	// 3) clear locks & progress so progress-bar shows 0 %
+	/* clear locks & progress */
 	delete_transient( 'casawp_import_in_progress' );
 	delete_option   ( 'casawp_total_batches'     );
 	delete_option   ( 'casawp_completed_batches' );
 	delete_option   ( 'casawp_import_failed'     );
 
-	// 4) wipe leftover JSON chunks
-	$dir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/chunks';
-	if ( is_dir( $dir ) ) {
-		foreach ( glob( $dir . '/batch_*.json' ) as $f ) {
-			@unlink( $f );
-		}
-	}
-
-	// 5) log
+	/* log */
 	( new \casawp\Import( false, false ) )
-		->addToLog( 'Import canceled: all scheduled chunks removed, progress reset.' );
+		->addToLog( 'Import canceled – all chunks & CLI process terminated.' );
 
 	return true;
 }
 
 
-
-add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
-
-function casawp_get_import_progress() {
-	$total_batches = get_option('casawp_total_batches', 0);
-	$completed_batches = get_option('casawp_completed_batches', 0);
-
-	if ($total_batches > 0) {
-		$progress = ($completed_batches / $total_batches) * 100;
-	} else {
-		$progress = 0;
-	}
-
-	wp_send_json_success(['progress' => $progress]);
-}
-
-add_action('wp_ajax_casawp_check_no_properties_alert', 'casawp_check_no_properties_alert');
-
-function casawp_check_no_properties_alert() {
-	$alert_message = get_transient('casawp_no_properties_alert');
-	if ($alert_message) {
-		delete_transient('casawp_no_properties_alert');
-		wp_send_json_success(['message' => $alert_message]);
-	} else {
-		wp_send_json_success(['message' => '']);
-	}
-}
-
-/**
- * Try to spawn `wp casawp import` in the background.
- * Returns true if the process was started; false if CLI is unavailable.
- */
-function casawp_try_cli_import(): bool {
-
-	// (a) exec/proc_open available?
-	if ( ! function_exists( 'proc_open' ) && ! function_exists( 'exec' ) ) {
-		return false;
-	}
-
-	// (b) locate the wp binary
-	$wp_bin = trim( shell_exec( 'command -v wp' ) );
-	if ( ! $wp_bin || ! is_executable( $wp_bin ) ) {
-		return false;
-	}
-
-	// (c) build command (add --url for multisite safety)
-	$site = site_url();
-	$cmd  = escapeshellcmd( "$wp_bin casawp import --quiet --url=$site" ) . ' > /dev/null 2>&1 &';
-
-	// (d) fire and forget
-	if ( function_exists( 'proc_open' ) ) {
-		$p = proc_open( $cmd, [], $pipes );
-		if ( is_resource( $p ) ) {
-			proc_close( $p );
-			return true;
-		}
-	} else {
-		@exec( $cmd, $o, $code );
-		return $code === 0;
-	}
-
-	return false;
-}
 
 /**
  * Add the composite index WPML is missing.
@@ -443,125 +315,64 @@ function casawp_ensure_wpml_index() {
 }
 register_activation_hook( __FILE__, 'casawp_ensure_wpml_index' );
 
-add_filter(
-	'action_scheduler_queue_runner_concurrent_batches',
-	fn () => 1
-);
 
+// Manual import via ?casawp_run_import=1&_wpnonce=…
+add_action('admin_init','casawp_handle_manual_import');
+function casawp_handle_manual_import() {
+	if (
+		is_admin() && current_user_can('manage_options')
+		&& isset($_GET['casawp_run_import'], $_GET['_wpnonce'])
+		&& $_GET['casawp_run_import']==='1'
+		&& wp_verify_nonce($_GET['_wpnonce'],'casawp_import')
+	) {
+		// cancel any in-flight
+		if (get_transient('casawp_import_in_progress')) {
+			casawp_cancel_import();
+			sleep(2);
+		}
 
-add_action( 'wp_ajax_casawp_start_import', 'casawp_start_import' );
-function casawp_start_import() {
-	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
-		return;
-	}
+		try {
+			casawp_start_new_import('Manual import from UI');
+			set_transient('casawp_import_result', [
+				'status'=>'success',
+				'message'=>'Import erfolgreich ausgeführt!',
+			], 60);
+		} catch (\Exception $e) {
+			set_transient('casawp_import_result', [
+				'status'=>'error',
+				'message'=>'Fehler beim Import: '.esc_html($e->getMessage()),
+			], 60);
+		}
 
-	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
-	$use_single_request = get_option('casawp_single_request_import', false);
-
-	if ($use_single_request) {
-		casawp_start_single_request_import('Update from CASAGATEWAY');
-		wp_send_json_success(['message' => 'Single-request import started/finished']);
-	} else {
-		casawp_start_new_import('Update from CASAGATEWAY');
-		wp_send_json_success(['message' => 'Batch import started successfully']);
-	}
-
-	} else {
-		wp_send_json_error(['message' => 'Invalid request']);
-	}
-}
-
-
-function casawp_start_single_request_import($source = '') {
-
-	if (get_transient('casawp_import_in_progress')) {
-		casawp_cancel_import();
-		sleep(2);
-	}
-
-	update_option('casawp_total_batches', 1); 
-	update_option('casawp_completed_batches', 0);
-	delete_option('casawp_import_failed');
-	delete_option('casawp_import_canceled');
-	set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-
-	$import = new \casawp\Import(false, true);
-	$import->addToLog($source . ' import (single-request) started');
-
-	$import->deactivate_all_properties();
-
-	$import->handle_single_request_import();
-
-	$import->finalize_import_cleanup([]);
-
-	$import->addToLog('Single-request import completed');
-	delete_transient('casawp_import_in_progress');
-}
-
-add_action('admin_init', function() {
-	if (!is_admin() || !current_user_can('manage_options')) {
-		return;
-	}
-
-	if (isset($_GET['casawp_run_single_import']) && $_GET['casawp_run_single_import'] == '1') {
-
-		check_admin_referer('casawp_single_import');
-
-		casawp_start_single_request_import('Manual GET link');
-
-		add_action('admin_notices', function() {
-			echo '<div class="notice notice-success is-dismissible">'
-			   . '<p>Single-request Import erfolgreich ausgeführt!</p>'
-			   . '</div>';
-		});
-
-		wp_safe_redirect(remove_query_arg(['casawp_run_single_import','_wpnonce']));
+		wp_safe_redirect( remove_query_arg(['casawp_run_import','_wpnonce']) );
 		exit;
 	}
-});
+}
 
-
-
-add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_ajax');
-function casawp_cancel_import_ajax() {
-	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
-		return;
-	}
-	if (casawp_cancel_import()) {
-		wp_send_json_success(['message' => 'Import canceled successfully.']);
-	} else {
-		wp_send_json_error(['message' => 'Failed to cancel the current import.']);
+// show the notice once
+add_action('admin_notices','casawp_show_import_notice');
+function casawp_show_import_notice() {
+	if ( $r = get_transient('casawp_import_result') ) {
+		delete_transient('casawp_import_result');
+		$class = $r['status']==='success' ? 'notice-success' : 'notice-error';
+		echo "<div class='notice {$class} is-dismissible'><p>"
+			 . esc_html($r['message'])
+			 . "</p></div>";
 	}
 }
 
 
-add_action('wp_ajax_casawp_reset_import_progress', 'casawp_reset_import_progress');
-function casawp_reset_import_progress() {
-	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
-		return;
-	}
-
-	// Delete the options to reset the progress
-	delete_option('casawp_total_batches');
-	delete_option('casawp_completed_batches');
-
-	wp_send_json_success(['message' => 'Import progress reset']);
-}
-
-add_action('init', 'casawp_handle_gatewaypoke');
+add_action('init','casawp_handle_gatewaypoke');
 function casawp_handle_gatewaypoke() {
 	if ( isset($_GET['gatewaypoke']) ) {
-		$use_single = get_option('casawp_single_request_import', false);
-		if ($use_single) {
-			casawp_start_single_request_import('Poke from CasaGateway');
-		} else {
-			casawp_start_new_import('Poke from CasaGateway');
+		if ( get_transient('casawp_import_in_progress') ) {
+			casawp_cancel_import();
+			sleep(2);
 		}
+		casawp_start_new_import('Poke from CasaGateway');
 	}
 }
+
 
 function this_plugin_after_wpml() {
 	$wp_path_to_this_file = preg_replace('/(.*)plugins\/(.*)$/', WP_PLUGIN_DIR."/$2", __FILE__);

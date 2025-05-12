@@ -34,7 +34,10 @@ You can place the XML file through FTP/Rsync or something similar.
 If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly.
 You will then only need to add the API and SECRET keys to the plugin's options.
 
-Please refer to casasoft.ch[https://casasoft.ch/casagateway] for further instructions.
+Please refer to https://help.casasoft.ch/hc/de/articles/22037480338845-CASAGATEWAY-API for further instructions.
+
+How to trigger the import through WP CLI (--url for Multisites)
+wp casawp import --url=https://example.com
 
 == Changelog ==
 

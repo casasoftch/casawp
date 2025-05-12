@@ -1,6 +1,5 @@
 <?php
 if (! defined('ABSPATH')) exit; // Exit if accessed directly
-$single_request_import_enabled = get_option('casawp_single_request_import', false);
 if (isset($_POST['casawp_submit'])) {
 	$saved_custom_categories = array();
 	foreach ($_POST as $key => $value) {
@@ -127,7 +126,6 @@ if (isset($_POST['casawp_submit'])) {
 		case 'general':
 		default:
 			$checkbox_traps = array(
-				'casawp_single_request_import',
 				'casawp_enable_import_hash',
 				'casawp_use_casagateway_cdn',
 				'casawp_limit_reference_images',
@@ -1431,17 +1429,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 					</td>
 				</tr>
+
 				<tr valign="top">
 					<th scope="row">Import</th>
-					<td>
-						<fieldset>
-							<?php $name = 'casawp_single_request_import'; ?>
-							<label>
-								<input type="checkbox" name="<?php echo $name; ?>" value="1"
-									<?php checked(get_option($name), 1); ?>>
-								Import everything in a single request (disable batch scheduling).
-							</label>
-						</fieldset>
+					<td class="front-static-pages">
 
 						<fieldset>
 							<?php $name = 'casawp_enable_import_hash'; ?>
@@ -1451,13 +1442,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								Skip unchanged properties using an import hash.
 							</label>
 						</fieldset>
-					</td>
-				</tr>
-
-				<tr valign="top">
-					<th scope="row"></th>
-					<td class="front-static-pages">
-
 						<fieldset>
 							<legend class="screen-reader-text"><span><a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> als CDN für Bilder verwenden.</span></legend>
 							<?php $name = 'casawp_use_casagateway_cdn'; ?>
@@ -1527,219 +1511,19 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<input type="number" min="1" placeholder="Default: based on languages & CDN" name="<?php echo $override_name; ?>" value="<?= esc_attr(get_option($override_name, '')) ?>" id="<?php echo $override_name; ?>" class="regular-text" />
 						<p class="description">Enter a custom batch size to override the default calculation. Leave blank to use the default logic.</p>
 
-
-
-
 						<div style="margin: 30px 0;">
+							<?php
+							  $import_url = add_query_arg([
+								'casawp_run_import' => 1,
+								'_wpnonce'         => wp_create_nonce('casawp_import'),
+							  ], admin_url('admin.php?page=casawp'));
 
-							<?php if ($single_request_import_enabled) : ?>
-								<?php
-								  $import_nonce = wp_create_nonce('casawp_single_import');
-								  $import_url = add_query_arg([
-									'casawp_run_single_import' => 1,
-									'_wpnonce'                 => $import_nonce,
-								  ], admin_url('admin.php?page=casawp'));
-								?>
-
-								<a href="<?php echo esc_url($import_url); ?>" class="button-primary">
-								  Daten von CASAGATEWAY beziehen
-								</a>
-							<?php else : ?>
-								<button id="casawp-import-button" class="button-primary">Daten von CASAGATEWAY beziehen</button>
-								<button id="casawp-cancel-import-button" class="button-secondary" style="display: none; margin-left: 10px;">Import abbrechen</button>
-
-								<script type="text/javascript">
-									var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-
-									jQuery(function($) {
-
-										var progressInterval;
-
-										function resetProgressBar() {
-											$('#casawp-progress-wrapper').hide();
-											$('#casawp-progress-bar').css('width', '0%');
-											$('#casawp-progress-percent').text('0%');
-											$('#casawp-cancel-import-button').hide();
-											$('#casawp-import-button').removeAttr('disabled');
-										}
-
-										function showCancelButton() {
-											$('#casawp-cancel-import-button').show();
-										}
-
-										function hideCancelButton() {
-											$('#casawp-cancel-import-button').hide();
-										}
-
-										resetProgressBar();
-
-										$('#casawp-import-button').on('click', function(e) {
-											e.preventDefault();
-
-											$(this).attr('disabled', true);
-											showCancelButton();
-
-											resetProgressBar();
-											$('#casawp-progress-wrapper').show();
-
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_start_import',
-													gatewayupdate: 1
-												},
-												success: function(response) {
-													if (response.success) {
-														console.log(response.data.message);
-													} else {
-														alert('Error: ' + response.data.message);
-														// Re-enable the button if import couldn't start
-														$('#casawp-import-button').removeAttr('disabled');
-														hideCancelButton();
-													}
-												},
-												error: function() {
-													alert('An error occurred while starting the import.');
-													// Re-enable the button on error
-													$('#casawp-import-button').removeAttr('disabled');
-													hideCancelButton();
-												}
-											});
-										});
-
-										$('#casawp-cancel-import-button').on('click', function(e) {
-											e.preventDefault();
-
-											if (!confirm('Möchten Sie den laufenden Import wirklich abbrechen?')) {
-												return;
-											}
-
-											$(this).attr('disabled', true);
-											$('#casawp-import-button').attr('disabled', true);
-
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_cancel_import'
-												},
-												success: function(response) {
-													if (response.success) {
-														clearInterval(progressInterval);
-														resetProgressBar();
-													} else {
-														alert('Fehler beim Abbrechen des Imports: ' + response.data.message);
-														$('#casawp-cancel-import-button').removeAttr('disabled');
-														$('#casawp-import-button').removeAttr('disabled');
-													}
-												},
-												error: function() {
-													alert('Beim Abbrechen des Imports ist ein Fehler aufgetreten.');
-													$('#casawp-cancel-import-button').removeAttr('disabled');
-													$('#casawp-import-button').removeAttr('disabled');
-												}
-											});
-										});
-
-										function updateProgressBar() {
-											jQuery.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_get_import_progress'
-												},
-												success: function(response) {
-													if (response.success) {
-														var progress = response.data.progress;
-														console.log(progress);
-														if (progress > 0 && progress < 100) {
-															$('#casawp-progress-wrapper').show();
-															$('#casawp-progress-bar').css('width', progress + '%');
-															$('#casawp-progress-percent').text(Math.round(progress) + '%');
-															showCancelButton();
-														} else if (progress === 100) {
-															$('#casawp-progress-wrapper').show();
-															$('#casawp-progress-bar').css('width', '100%');
-															$('#casawp-progress-percent').text('100%');
-															$('#casawp-import-button').removeAttr('disabled'); // Re-enable the button
-															hideCancelButton();
-															clearInterval(progressInterval); // Stop updating the progress bar after import is complete
-
-															// Trigger the reset of import progress options via AJAX
-															$.ajax({
-																url: ajaxurl,
-																type: 'POST',
-																data: {
-																	action: 'casawp_reset_import_progress'
-																},
-																success: function(response) {
-																	if (response.success) {
-																		console.log(response.data.message);
-																	} else {
-																		console.log('Error resetting import progress: ' + response.data.message);
-																	}
-																},
-																error: function() {
-																	console.log('An error occurred while resetting the import progress.');
-																}
-															});
-														}
-													} else {
-														resetProgressBar(); // Reset progress if no import is running
-														hideCancelButton();
-														$('#casawp-import-button').removeAttr('disabled');
-														clearInterval(progressInterval);
-													}
-												},
-												error: function() {
-													resetProgressBar();
-													$('#casawp-import-button').removeAttr('disabled');
-													hideCancelButton();
-													clearInterval(progressInterval);
-												}
-											});
-										}
-
-										function checkForNoPropertiesAlert() {
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_check_no_properties_alert'
-												},
-												success: function(response) {
-													if (response.success && response.data.message) {
-														alert(response.data.message);
-														resetProgressBar();
-													}
-												}
-											});
-										}
-
-										progressInterval = setInterval(function() {
-											updateProgressBar();
-											checkForNoPropertiesAlert();
-										}, 5000);
-
-										updateProgressBar();
-									});
-								</script>
-							<?php endif; ?>
+							  echo '<a href="'.esc_url($import_url).'" class="button-primary">'
+								 . 'Daten von CASAGATEWAY beziehen'
+								 . '</a>';
+							?>
 
 						</div>
-
-						<div id="casawp-progress-wrapper" style="display: none;">
-							<strong style="display: block; margin-bottom: 10px;">Import Progress</strong>
-							<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
-								<div id="casawp-progress-bar" style="width: 0%; height: 30px; background-color: #4caf50; line-height: 30px;">
-									<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">0%</span>
-								</div>
-							</div>
-						</div>
-
-
-
 					</td>
 				</tr>
 
