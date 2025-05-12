@@ -126,6 +126,7 @@ if (isset($_POST['casawp_submit'])) {
 		case 'general':
 		default:
 			$checkbox_traps = array(
+				'casawp_use_cli_import',
 				'casawp_enable_import_hash',
 				'casawp_use_casagateway_cdn',
 				'casawp_limit_reference_images',
@@ -1429,10 +1430,22 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 					</td>
 				</tr>
-
 				<tr valign="top">
 					<th scope="row">Import</th>
-					<td class="front-static-pages">
+					<td>
+						<fieldset>
+							<?php $name = 'casawp_use_cli_import'; ?>
+							<label>
+								<input type="checkbox" name="<?php echo $name; ?>" value="1"
+									   <?php checked( get_option( $name ), 1 ); ?>>
+								Run imports via WP-CLI instead of background HTTP requests
+								(requires <code>wp</code> binary on the server)
+							</label>
+							<p class="description" style="margin-bottom: 15px;">
+								When checked, each manual or gateway-triggered import is executed
+								in a detached WP-CLI process.
+							</p>
+						</fieldset>
 
 						<fieldset>
 							<?php $name = 'casawp_enable_import_hash'; ?>
@@ -1442,6 +1455,13 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								Skip unchanged properties using an import hash.
 							</label>
 						</fieldset>
+					</td>
+				</tr>
+
+				<tr valign="top">
+					<th scope="row"></th>
+					<td class="front-static-pages">
+
 						<fieldset>
 							<legend class="screen-reader-text"><span><a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> als CDN für Bilder verwenden.</span></legend>
 							<?php $name = 'casawp_use_casagateway_cdn'; ?>
