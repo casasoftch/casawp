@@ -4,6 +4,50 @@ namespace casawp;
 
 use Exception;
 
+if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
+  final class CASAWP_Bulk_Meta {
+    public static function sync( int $post_id, array $new ): void {
+      global $wpdb;
+      $tbl = $wpdb->postmeta;
+
+      $current = $wpdb->get_results(
+        $wpdb->prepare( "SELECT meta_key, meta_value FROM $tbl WHERE post_id=%d", $post_id ),
+        OBJECT_K
+      );
+
+      $ins = [];
+      foreach ( $new as $k => $v ) {
+        $v = maybe_serialize( $v );
+        if ( isset( $current[ $k ] ) ) {
+          if ( $current[ $k ]->meta_value !== $v ) {
+            $ins[] = $wpdb->prepare( "(%d,%s,%s)", $post_id, $k, $v );
+          }
+          unset( $current[ $k ] );
+        } else {
+          $ins[] = $wpdb->prepare( "(%d,%s,%s)", $post_id, $k, $v );
+        }
+      }
+
+      if ( $current ) {
+        $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
+        foreach ( $protected as $keep ) {
+            unset( $current[ $keep ] ); 
+        }
+        $in = "'" . implode( "','", array_map( 'esc_sql', array_keys( $current ) ) ) . "'";
+        $wpdb->query( "DELETE FROM $tbl WHERE post_id=$post_id AND meta_key IN ($in)" );
+      }
+
+      if ( $ins ) {
+        $wpdb->query(
+          "INSERT INTO $tbl (post_id,meta_key,meta_value) VALUES " .
+          implode( ',', $ins ) .
+          " ON DUPLICATE KEY UPDATE meta_value = VALUES(meta_value)"
+        );
+      }
+    }
+  }
+}
+
 class Import
 {
   public $importFile = false;
@@ -25,117 +69,102 @@ class Import
     }
   }
 
-  public function start_import(): void
+  public function register_hooks()
   {
-
-    // cancel any stale runs
-    if (get_transient('casawp_import_in_progress')) {
-      return;
-    }
-    set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-
-    if ( get_option( 'casawp_use_cli_import', '0' ) === '1' && ! defined( 'WP_CLI' ) ) {
-      $wp = defined( 'WP_CLI' ) ? 'wp' : 'wp';  // adjust path if necessary
-      $site = get_site_url();
-      // this launches the background CLI import and captures its PID
-      $cmd = "( {$wp} casawp import --url={$site} --quiet ) > /dev/null 2>&1 & echo $!";
-      $pid = (int) shell_exec( $cmd );
-      update_option( 'casawp_cli_pid', $pid );
-      return;
+    add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'));
+    add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'));
   }
 
-    // 3-A  split the XML into JSON chunks
-    $total = $this->splitXmlIntoChunks();               // creates chunks/…
-
-    update_option('casawp_total_batches',     $total);
-    update_option('casawp_completed_batches', 0);
-
+  public function start_import()
+  {
+    as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
   }
 
-
-  public function fetchFileFromCasaGateway(): string
+  private function fetchFileFromCasaGateway(): string
   {
-    $this->addToLog('CASAWP: Start fetching fresh XML from CasaGateway at ' . time());
+      $this->addToLog('CASAWP: Start fetching fresh XML from CasaGateway at ' . time());
 
-    $apikey     = get_option('casawp_api_key');
-    $privatekey = get_option('casawp_private_key');
-    $apiurl     = 'https://casagateway.ch/rest/publisher-properties';
-    $options    = [
-      'format' => 'casa-xml',
-      'debug'  => 1,
-    ];
+      $apikey     = get_option('casawp_api_key');
+      $privatekey = get_option('casawp_private_key');
+      $apiurl     = 'https://casagateway.ch/rest/publisher-properties';
+      $options    = [
+          'format' => 'casa-xml',
+          'debug'  => 1,
+      ];
 
-    if (!$apikey || !$privatekey) {
-      $this->addToLog('CASAWP: gateway keys missing');
-      throw new \Exception('API Keys missing.');
-    }
-    if (!function_exists('curl_version')) {
-      $this->addToLog('CASAWP: gateway ERR (CURL MISSING!!!)');
-      throw new \Exception('CURL is missing.');
-    }
-
-    $timestamp   = time();
-    ksort($options);
-    $checkstring = '';
-    foreach ($options as $key => $value) {
-      $checkstring .= $key . $value;
-    }
-    $checkstring .= $privatekey . $timestamp;
-    $hmac = hash('sha256', $checkstring, false);
-
-    $query = [
-      'hmac'      => $hmac,
-      'apikey'    => $apikey,
-      'timestamp' => $timestamp
-    ] + $options;
-
-    $url      = $apiurl . '?' . http_build_query($query, '', '&');
-    $response = false;
-
-    $ch = curl_init();
-    try {
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-      $response = curl_exec($ch);
-      $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      if ($httpCode == 404) {
-        throw new \Exception('Received 404 from CasaGateway.');
+      if (!$apikey || !$privatekey) {
+          $this->addToLog('CASAWP: gateway keys missing');
+          throw new \Exception('API Keys missing.');
       }
-    } catch (\Exception $e) {
-      $this->addToLog('CASAWP: cURL Exception: ' . $e->getMessage());
-      throw $e;
-    } finally {
-      curl_close($ch);
-    }
-
-    if (!$response || is_numeric($response)) {
-      $this->addToLog('CASAWP: Invalid response from gateway');
-      throw new \Exception('Invalid response from CasaGateway.');
-    }
-
-    $importDir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import';
-    if (!is_dir($importDir)) {
-      if (!mkdir($importDir, 0755, true)) {
-        $this->addToLog('CASAWP: Failed to create import directory.');
-        throw new \Exception('Failed to create import directory.');
+      if (!function_exists('curl_version')) {
+          $this->addToLog('CASAWP: gateway ERR (CURL MISSING!!!)');
+          throw new \Exception('CURL is missing.');
       }
-    }
 
-    $filePath = $importDir . '/data.xml';
-    if (file_put_contents($filePath, $response) === false) {
-      $this->addToLog('CASAWP: Failed to save XML file');
-      throw new \Exception('Failed to save imported XML file.');
-    }
+      $timestamp   = time();
+      ksort($options);
+      $checkstring = '';
+      foreach ($options as $key => $value) {
+          $checkstring .= $key . $value;
+      }
+      $checkstring .= $privatekey . $timestamp;
+      $hmac = hash('sha256', $checkstring, false);
 
-    $this->addToLog('CASAWP: File fetched & saved to ' . $filePath . ' at ' . time());
+      $query = [
+          'hmac'      => $hmac,
+          'apikey'    => $apikey,
+          'timestamp' => $timestamp
+      ] + $options;
 
-    return $filePath;
+      $url      = $apiurl . '?' . http_build_query($query, '', '&');
+      $response = false;
+
+      $ch = curl_init();
+      try {
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+          $response = curl_exec($ch);
+          $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          if ($httpCode == 404) {
+              throw new \Exception('Received 404 from CasaGateway.');
+          }
+      } catch (\Exception $e) {
+          $this->addToLog('CASAWP: cURL Exception: ' . $e->getMessage());
+          throw $e;
+      } finally {
+          curl_close($ch);
+      }
+
+      if (!$response || is_numeric($response)) {
+          $this->addToLog('CASAWP: Invalid response from gateway');
+          throw new \Exception('Invalid response from CasaGateway.');
+      }
+
+      $importDir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import';
+      if (!is_dir($importDir)) {
+          if (!mkdir($importDir, 0755, true)) {
+              $this->addToLog('CASAWP: Failed to create import directory.');
+              throw new \Exception('Failed to create import directory.');
+          }
+      }
+
+      $filePath = $importDir . '/data.xml';
+      if (file_put_contents($filePath, $response) === false) {
+          $this->addToLog('CASAWP: Failed to save XML file');
+          throw new \Exception('Failed to save imported XML file.');
+      }
+
+      $this->addToLog('CASAWP: File fetched & saved to ' . $filePath . ' at ' . time());
+
+      return $filePath;
   }
 
   public function updateImportFileThroughCasaGateway()
   {
     $this->addToLog('gateway file retrieval start: ' . time());
+
+    set_transient('casawp_import_in_progress', true, 2 * HOUR_IN_SECONDS);
 
     try {
 
@@ -143,14 +172,18 @@ class Import
 
       if ($filePath && $this->getImportFile()) {
 
+        as_schedule_single_action(time(), 'casawp_delete_outdated_properties', [], 'casawp_delete_outdated_properties');
+
         delete_option('casawp_import_canceled');
         $this->deactivate_all_properties();
         $this->start_import();
         $this->addToLog('import start');
+
       }
+
     } catch (\Exception $e) {
-      $this->addToLog('Import failed: ' . $e->getMessage());
-      update_option('casawp_import_failed', true);
+        $this->addToLog('Import failed: ' . $e->getMessage());
+        update_option('casawp_import_failed', true);
     }
   }
 
@@ -243,234 +276,178 @@ class Import
 
     $this->addToLog('Import completed and lock cleared.');
 
+    if ( get_transient( 'casawp_import_pending' ) ) {
+        delete_transient( 'casawp_import_pending' );
+        $this->addToLog( 'Pending import triggered right after cleanup.' );
+
+        // Kick-off a fresh batch – no lock now
+        casawp_start_new_import( 'Pending after previous run', false );
+    }
+
     do_action('casawp_import_finished');
   }
 
-  /**
-   * Absolute path for a given chunk number.
-   */
-  private function chunk_path(int $batch_no): string
+  public function handle_properties_import_batch($batch_number)
   {
-    return CASASYNC_CUR_UPLOAD_BASEDIR . "/casawp/import/chunks/batch_$batch_no.json";
-  }
-
-  /**
-   * Stream the big XML file once and write N-item JSON chunks.
-   *
-   * @param int $chunkSize  Number of <property> nodes per chunk.
-   * @return int            How many chunks were generated.
-   */
-  public function splitXmlIntoChunks(int $chunkSize = 50): int
-  {
-
-    $override = (int) get_option('casawp_batch_size_override', 0);
-    if ($override > 0) {
-      $chunkSize = $override;
+    // Temporarily suspend cache additions for speed
+    wp_suspend_cache_addition(true);
+    if ( get_option('casawp_import_failed') ) {
+      $this->addToLog('Import already marked as failed. Skipping batch number: ' . $batch_number);
+      wp_suspend_cache_addition(false);
+      return;
     }
 
-    $dir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/chunks';
-    if (! is_dir($dir)) {
-      wp_mkdir_p($dir);
-    }
-
-    $reader  = new \XMLReader();
-    $reader->open($this->getImportFile());
-
-    $created = 0;
-    $current = [];
-
-    while ($reader->read()) {
-      if ($reader->nodeType === \XMLReader::ELEMENT && $reader->name === 'property') {
-
-        $node     = simplexml_load_string($reader->readOuterXML(), 'SimpleXMLElement', LIBXML_NOCDATA);
-        $current[] = $this->property2Array($node);
-
-        if (count($current) === $chunkSize) {
-          ++$created;
-          file_put_contents($this->chunk_path($created), json_encode($current));
-          $current = [];
-        }
-      }
-    }
-    $reader->close();
-
-    if ($current) {
-      ++$created;
-      file_put_contents($this->chunk_path($created), json_encode($current));
-    }
-    return $created;
-  }
-
-  /**
-   * Walk a chunk array and turn any JSON-encoded DateTime payload
-   * back into real \DateTime instances, no matter whether the value
-   * came back as a plain string or as the {"date": …} array used by
-   * PHP’s built-in JsonSerializable implementation.
-   */
-  private function restoreDateTimes(array &$data): void
-  {
-
-    // keys we know are DateTimes in your property / offer structure
-    static $datetimeKeys = ['creation', 'last_update', 'start'];
-
-    foreach ($data as $k => &$v) {
-
-      /* --- nested structure – recurse first ----------------------- */
-      if (is_array($v) && ! isset($v['date'])) {
-        $this->restoreDateTimes($v);
-        continue;
-      }
-
-      /* --- {"date": "...", "timezone": "..."} shape --------------- */
-      if (is_array($v) && isset($v['date'], $v['timezone'])) {
-        try {
-          $v = new \DateTime($v['date'], new \DateTimeZone($v['timezone']));
-        } catch (\Exception $e) {
-          // leave as-is on failure; log if you like
-        }
-        continue;
-      }
-
-      /* --- plain ISO string and key matches one we expect --------- */
-      if (is_string($v) && in_array($k, $datetimeKeys, true)) {
-        // quick check – looks like "YYYY-MM-DD"
-        if (preg_match('/^\d{4}\-\d{2}\-\d{2}/', $v)) {
-          try {
-            $v = new \DateTime($v);
-          } catch (\Exception $e) { /* ignore */
-          }
-        }
-      }
-    }
-  }
-
-
-
-  public function handle_chunk(int $batch_no): void
-  {
-
-    /* 4-A  global cancel flag */
     if (get_option('casawp_import_canceled', false)) {
-      $this->addToLog("Chunk $batch_no skipped – import canceled.");
+      $this->addToLog('Import has been canceled. Skipping batch number: ' . $batch_number);
+      wp_suspend_cache_addition(false);
       return;
     }
 
-    /* 4-B  load JSON */
-    $path = $this->chunk_path($batch_no);
-    if (! file_exists($path)) {
-      $this->addToLog("Chunk file missing for batch $batch_no.");
-      return;
-    }
-    $items = json_decode(file_get_contents($path), true);
-    if (! is_array($items)) {
-      $this->addToLog("Chunk $batch_no contains invalid JSON.");
-      @unlink($path);
-      return;
-    }
-
-    /* 4-C  run the heavy work */
-    try {
-      array_walk($items, function (&$prop) {
-        $this->restoreDateTimes($prop);
-      });
-      $this->updateOffers($items);
-      if (empty($items)) {                 // JSON file was empty
-        usleep(200000);                    // 0.2 s
-      }
-    } catch ( \Throwable $e ) {
-
-      $msg = $e->getMessage();
-
-      /* Known, recoverable WPML glitch – skip & continue */
-      if ( strpos( $msg, 'No translation entry found' ) !== false ) {
-        $this->addToLog( "WPML recoverable error ignored in chunk $batch_no: $msg" );
-        // fall through – do NOT re-throw
-      } else {
-        $this->addToLog( "Fatal in chunk $batch_no: $msg" );
-        throw $e;     // let Action-Scheduler retry on genuine errors
-      }
-    } finally {
-      @unlink($path);                       // always clean up
-    }
-
-    /* 4-D  progress accounting */
-    $done  = (int) get_option('casawp_completed_batches', 0) + 1;
-    $total = (int) get_option('casawp_total_batches',     0);
-    update_option('casawp_completed_batches', $done);
-
-    $this->addToLog("Finished chunk $batch_no / $total.");
-
-    /* 4-E  last chunk?  else queue the next one */
-    if ($done >= $total) {
-
-      $this->finalize_import_cleanup();
-      delete_option('casawp_total_batches');
-      delete_option('casawp_completed_batches');
-      delete_option('casawp_import_canceled');
-      delete_transient('casawp_import_in_progress');
-
-      $this->addToLog('All chunks processed – import completed.');
+    $batch_size_override = get_option('casawp_batch_size_override', '');
+    if (!empty($batch_size_override) && is_numeric($batch_size_override) && (int)$batch_size_override > 0) {
+      $batch_size = (int)$batch_size_override;
     } else {
-
-      $next = $batch_no + 1;
-
+      $batch_size = 1;
+      if (get_option('casawp_use_casagateway_cdn', false)) {
+        $language_count = 1;
+        if ( function_exists('icl_get_languages') ) {
+          $langs = icl_get_languages();
+          if ( ! is_array($langs) ) {
+              $langs = [];
+          }
+            $language_count = count($langs);
+        }
+        if ($language_count <= 2) {
+          $batch_size = 8;
+        } elseif ($language_count === 3) {
+          $batch_size = 6;
+        } else {
+          $batch_size = 4;
+        }
+      }
     }
+
+    $this->ranksort = get_option('casawp_ranksort', array());
+
+    try {
+
+      $xmlString = file_get_contents($this->getImportFile());
+      if ($xmlString === false) {
+        throw new \Exception('Failed to read import file.');
+      }
+
+      $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
+      if ($xml === false) {
+        throw new \Exception('Failed to parse XML.');
+      }
+
+      $properties = $xml->properties->property;
+      if ($properties === null) {
+        throw new \Exception('No properties found in XML.');
+      }
+
+      $properties_array = array();
+      foreach ($properties as $property) {
+        $properties_array[] = $this->property2Array($property);
+      }
+
+      $total_items   = count($properties_array);
+      $total_batches = ceil($total_items / $batch_size);
+
+      if ($batch_number == 1) {
+        update_option('casawp_total_batches', $total_batches);
+        update_option('casawp_completed_batches', 0);
+        update_option('casawp_current_rank', 0);
+        #$this->addToLog('Initialized import: Total Batches = ' . $total_batches);
+      }
+
+      $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
+
+      #$this->addToLog('Processing batch number: ' . $batch_number . ' with ' . count($items_for_current_batch) . ' properties.');
+
+      $this->updateOffers($items_for_current_batch);
+
+      update_option('casawp_ranksort', $this->ranksort);
+      update_option('casawp_completed_batches', $batch_number);
+      #$this->addToLog('Completed batch number: ' . $batch_number);
+
+      if ($batch_number >= $total_batches) {
+        $this->finalize_import_cleanup();
+        update_option('casawp_completed_batches', $total_batches);
+        delete_option('casawp_current_rank');
+        delete_option('casawp_ranksort');
+        $this->addToLog('Import process completed.');
+      } else {
+        $next_batch_number = $batch_number + 1;
+        $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+        if (!$pending_batch) {
+          as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+        }
+      }
+    } catch (\Exception $e) {
+      $this->addToLog('Error: ' . $e->getMessage());
+      if ($e->getMessage() === 'No properties found in XML.') {
+        set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
+        delete_transient('casawp_import_in_progress');
+      }
+    }
+    wp_suspend_cache_addition(false);
   }
-
-
 
   public function handle_single_request_import()
   {
-    // No top-level try/catch here. Let exceptions bubble up.
-    if (!get_transient('casawp_import_in_progress')) {
-      set_transient('casawp_import_in_progress', true, 6 * HOUR_IN_SECONDS);
-    }
+      wp_suspend_cache_addition(true);
+      if (!get_transient('casawp_import_in_progress')) {
+          set_transient('casawp_import_in_progress', true, 2 * HOUR_IN_SECONDS);
+      }
 
-    // Possibly throws exceptions if something goes wrong
-    $this->fetchFileFromCasaGateway();
+      // Possibly throws exceptions if something goes wrong
+      $this->fetchFileFromCasaGateway(); 
 
-    // Read the file or throw an exception
-    $xmlString = file_get_contents($this->getImportFile());
-    if ($xmlString === false) {
-      $this->addToLog('Failed to read import file.');
-      throw new Exception('Failed to read import file.');
-    }
+      // Read the file or throw an exception
+      $xmlString = file_get_contents($this->getImportFile());
+      if ($xmlString === false) {
+          $this->addToLog('Failed to read import file.');
+          wp_suspend_cache_addition(false);
+          throw new Exception('Failed to read import file.');
+      }
 
-    $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
-    if ($xml === false) {
-      $this->addToLog('Failed to parse XML.');
-      throw new Exception('Failed to parse XML.');
-    }
+      $xml = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
+      if ($xml === false) {
+          $this->addToLog('Failed to parse XML.');
+          wp_suspend_cache_addition(false);
+          throw new Exception('Failed to parse XML.');
+      }
 
-    // Another example check
-    if (!$xml->properties || !$xml->properties->property) {
-      $this->addToLog('No properties found in XML.');
-      throw new Exception('No properties found in XML.');
-    }
+      // Another example check
+      if (!$xml->properties || !$xml->properties->property) {
+          $this->addToLog('No properties found in XML.');
+          wp_suspend_cache_addition(false);
+          throw new Exception('No properties found in XML.');
+      }
 
-    // If we get here, parse the properties and import
-    $properties_array = [];
-    foreach ($xml->properties->property as $property) {
-      $properties_array[] = $this->property2Array($property);
-    }
+      // If we get here, parse the properties and import
+      $properties_array = [];
+      foreach ($xml->properties->property as $property) {
+          $properties_array[] = $this->property2Array($property);
+      }
 
-    // Mark single batch for consistency
-    update_option('casawp_total_batches', 1);
-    update_option('casawp_completed_batches', 0);
+      // Mark single batch for consistency
+      update_option('casawp_total_batches', 1);
+      update_option('casawp_completed_batches', 0);
 
-    // Do the update
-    $this->updateOffers($properties_array);
+      // Do the update
+      $this->updateOffers($properties_array);
 
-    // Mark done
-    update_option('casawp_completed_batches', 1);
+      // Mark done
+      update_option('casawp_completed_batches', 1);
 
-    // Clean up leftover properties
-    $this->finalize_import_cleanup();
+      // Clean up leftover properties
+      $this->finalize_import_cleanup();
 
-    // Clear lock
-    delete_transient('casawp_import_in_progress');
-
-    // No exception thrown means success
+      // Clear lock
+      delete_transient('casawp_import_in_progress');
+      wp_suspend_cache_addition(false);
   }
 
   public function delete_outdated_properties()
@@ -515,12 +492,12 @@ class Import
     $query = new \WP_Query($args);
     $existing_posts = $query->posts;
 
-    $exportproperty_to_posts = array();
+    $exportproperty_to_posts = [];
     foreach ($existing_posts as $post_id) {
       $exportproperty_id = (string) get_post_meta($post_id, 'exportproperty_id', true);
       if ($exportproperty_id) {
         if (!isset($exportproperty_to_posts[$exportproperty_id])) {
-          $exportproperty_to_posts[$exportproperty_id] = array();
+          $exportproperty_to_posts[$exportproperty_id] = [];
         }
         $exportproperty_to_posts[$exportproperty_id][] = $post_id;
       }
@@ -528,16 +505,16 @@ class Import
 
     $existing_exportproperty_ids = array_keys($exportproperty_to_posts);
     $outdated_exportproperty_ids = array_diff($existing_exportproperty_ids, $xml_property_ids);
+/* 
     $total_to_delete = count($outdated_exportproperty_ids);
 
     if ($total_to_delete === 0) {
       $this->addToLog("No outdated properties to delete.");
       return;
-    }
+    } */
 
     $batch_size = 50;
     $batches = array_chunk($outdated_exportproperty_ids, $batch_size);
-    $batch_number = 1;
 
     foreach ($batches as $batch) {
       foreach ($batch as $exportproperty_id) {
@@ -545,12 +522,7 @@ class Import
           foreach ($exportproperty_to_posts[$exportproperty_id] as $post_id) {
             if ($this->hasWPML()) {
 
-              global $wpdb;
-              $trid = (int) $wpdb->get_var($wpdb->prepare(
-                "SELECT trid FROM {$wpdb->prefix}icl_translations
-                   WHERE element_id = %d LIMIT 1",
-                $post_id
-              ));
+              $trid = apply_filters('wpml_element_trid', null, $post_id, 'post_' . get_post_type($post_id));
 
               if (!$trid) {
                 if (isset($this->trid_store[$exportproperty_id])) {
@@ -574,8 +546,6 @@ class Import
                   if (isset($translation->element_id)) {
                     $trans_post_id = $translation->element_id;
 
-                    #error_log("Deleting post ID: {$trans_post_id} for language: {$lang}");
-
                     $attachments = get_posts(array(
                       'post_type'      => 'attachment',
                       'posts_per_page' => -1,
@@ -585,26 +555,12 @@ class Import
                     ));
 
                     foreach ($attachments as $attachment_id) {
-                      if (wp_delete_attachment($attachment_id, true)) {
-                        #error_log("Deleted attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
-                      } else {
-                        #error_log("Failed to delete attachment ID: {$attachment_id} for post ID: {$trans_post_id}");
-                      }
+                      wp_delete_attachment($attachment_id, true);
                     }
 
-                    // Delete the post
-                    $deleted = wp_delete_post($trans_post_id, true);
-                    if ($deleted) {
-                      #error_log("Successfully deleted post ID: {$trans_post_id}");
-                    } else {
-                      #error_log("Failed to delete post ID: {$trans_post_id}");
-                    }
-                  } else {
-                    #error_log("Translation data missing for language: {$lang} in exportproperty_id: {$exportproperty_id}");
+                    wp_delete_post($trans_post_id, true);
                   }
                 }
-              } else {
-                #error_log("No translations found for TRID: {$trid} in exportproperty_id: {$exportproperty_id}");
               }
             } else {
 
@@ -617,64 +573,25 @@ class Import
               ));
 
               foreach ($attachments as $attachment_id) {
-                if (wp_delete_attachment($attachment_id, true)) {
-                  #$this->addToLog("Deleted attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id}");
-                } else {
-                  $this->addToLog("Failed to delete attachment ID: {$attachment_id} for exportproperty_id: {$exportproperty_id}");
-                }
+                wp_delete_attachment($attachment_id, true);
               }
-
-              $deleted = wp_delete_post($post_id, true);
-              if ($deleted) {
-                #$this->addToLog("Deleted property post ID: {$post_id} for exportproperty_id: {$exportproperty_id}");
-              } else {
-                $this->addToLog("Failed to delete property post ID: {$post_id} for exportproperty_id: {$exportproperty_id}");
-              }
+              wp_delete_post($post_id, true);
             }
           }
-        } else {
-          #$this->addToLog("No posts found for exportproperty_id: {$exportproperty_id}");
         }
       }
-
-      $batch_number++;
     }
 
     if (class_exists('\WpeCommon')) {
       \WpeCommon::purge_varnish_cache();
       \WpeCommon::purge_memcached();
       $this->addToLog('Triggered WP Engine cache purge after deletion.');
-    } else {
-      $this->addToLog('WpeCommon class not found. Skipping cache purge.');
-      #error_log('WpeCommon class not found. Skipping cache purge.');
     }
-
     $this->addToLog("Deletion of outdated properties completed.");
-    #error_log("Deletion of outdated properties completed.");
-  }
-
-  public function accumulate_valid_property_ids($current_batch_ids)
-  {
-    update_option('all_valid_casawp_ids', $current_batch_ids);
-  }
-
-  public function gatewaypoke()
-  {
-    add_action('asynchronous_gatewayupdate', array($this, 'gatewaypokeanswer'));
-    #$this->addToLog('Scheduled an Update on: ' . time());
-    wp_schedule_single_event(time(), 'asynchronous_gatewayupdate');
-  }
-
-  public function gatewaypokeanswer()
-  {
-    #$this->addToLog('gateway call file: ' . time());
-    $this->updateImportFileThroughCasaGateway();
-    #$this->addToLog('gateway import answer: ' . time());
   }
 
   public function getMainLang()
   {
-    global $sitepress;
     if (!$this->main_lang) {
       $main_lang = 'de';
       if ($this->hasWPML()) {
@@ -685,8 +602,6 @@ class Import
       } else {
         if (get_locale()) {
           $main_lang = substr(get_locale(), 0, 2);
-          //if (get_bloginfo('language')) {
-          //  $main_lang = substr(get_bloginfo('language'), 0, 2);
         }
       }
       $this->main_lang = $main_lang;
@@ -714,118 +629,33 @@ class Import
     return false;
   }
 
-  /**
-   * Link a property post to its WPML TRID – self-heals when rows
-   * are missing **and never lets a WPML exception bubble up**.
-   *
-   * @param \WP_Post $wp_post
-   * @param string   $lang
-   * @param string   $trid_identifier (exportproperty_id, etc.)
-   */
-  public function updateInsertWPMLconnection( $wp_post, string $lang, string $trid_identifier ) {
-
-    /* ---------- 0. WPML available? -------------------------------- */
-    if ( ! $this->hasWPML() ) {
-      return;
-    }
-    global $sitepress, $wpdb;
-
-    $table    = $wpdb->prefix . 'icl_translations';
-    $default  = $sitepress->get_default_language();
-
-    /* ---------- 1. Get (or fabricate) a trid ---------------------- */
-    if ( isset( $this->trid_store[ $trid_identifier ] ) ) {
-      $trid = (int) $this->trid_store[ $trid_identifier ];
-    } else {
-      $trid = (int) apply_filters(
-        'wpml_element_trid',
-        null,
-        $wp_post->ID,
-        'post_' . $wp_post->post_type
-      );
-      if ( ! $trid ) {
-        $trid  = ( $wp_post->post_type === 'casawp_property' ? 1000 : 2000 ) + $wp_post->ID;
+  // Delayed WPML link creation to reduce overhead
+  public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier)
+  {
+    if ($this->hasWPML()) {
+      if ($this->getMainLang() == $lang) {
+        $trid = wpml_get_content_trid('post_' . $wp_post->post_type, $wp_post->ID);
+        if (!$trid) {
+          $trid = 1000 . $wp_post->ID; 
+        }
+        $this->trid_store[$trid_identifier] = $trid;
+      } else {
+        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
       }
-      $this->trid_store[ $trid_identifier ] = $trid;
-    }
-
-    /* ---------- 2. Make sure rows actually exist ------------------ */
-    $row_tr = $wpdb->get_var( $wpdb->prepare(
-      "SELECT translation_id FROM $table WHERE trid = %d LIMIT 1",
-      $trid
-    ) );
-    $row_def = $wpdb->get_var( $wpdb->prepare(
-      "SELECT translation_id FROM $table WHERE trid = %d AND language_code = %s LIMIT 1",
-      $trid,
-      $default
-    ) );
-
-    // If either the TRID itself or its default-language row is gone,
-    // force WPML to start a fresh translation set.
-    if ( ! $row_tr || ! $row_def ) {
-      $this->addToLog(
-        sprintf(
-          'WPML: missing rows – will rebuild set (trid=%d row_tr=%s row_def=%s)',
-          $trid,
-          $row_tr ? 'OK' : 'MISSING',
-          $row_def ? 'OK' : 'MISSING'
-        )
-      );
-      $trid = null;
-    }
-
-    /* ---------- 3. Call WPML – and catch *everything* ------------- */
-    try {
-      $sitepress->set_element_language_details(
-        $wp_post->ID,
-        'post_' . $wp_post->post_type,
-        $trid,              // may be null
-        $lang,
-        ( $lang === $default ? null : $default ),
-        true
-      );
-
-      /* cache the fresh trid WPML may have created */
-      $new_trid = (int) apply_filters(
-        'wpml_element_trid',
-        null,
-        $wp_post->ID,
-        'post_' . $wp_post->post_type
-      );
-      if ( $new_trid && ( $trid !== $new_trid ) ) {
-        $this->trid_store[ $trid_identifier ] = $new_trid;
-        $this->addToLog(
-          sprintf(
-            'WPML: set_element_language_details() OK – trid=%d lang=%s post=%d',
-            $new_trid,
-            $lang,
-            $wp_post->ID
-          )
-        );
+      if ($trid) {
+        global $sitepress;
+        if ($this->getMainLang() != $lang) {
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, $sitepress->get_default_language(), true);
+        } else {
+          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, null, true);
+        }
       }
-
-    } catch ( \Throwable $e ) {
-
-      /* ---------- 3-b  graceful fallback -------------------- */
-      $this->addToLog(
-        sprintf(
-          'WPML error swallowed (post=%d lang=%s): %s',
-          $wp_post->ID,
-          $lang,
-          $e->getMessage()
-        )
-      );
-
-      // Do **not** re-throw – we deliberately keep going.
     }
   }
-
-
 
   public function getImportFile()
   {
     if (!$this->importFile) {
-      $good_to_go = false;
       if (!is_dir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp')) {
         mkdir(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp');
         $this->addToLog('directory casawp was missing: ' . time());
@@ -836,44 +666,19 @@ class Import
       }
       $file = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/import/data.xml';
       if (file_exists($file)) {
-        $good_to_go = true;
-        #$this->addToLog('file found lets go: ' . time());
+        $this->importFile = $file;
       } else {
         $this->addToLog('file was missing ' . time());
       }
-      if ($good_to_go) {
-        $this->importFile = $file;
-      }
-    } else {
-      #$this->addToLog('importfile already set: ' . time());
     }
-
     return $this->importFile;
-  }
-
-  public function renameImportFileTo($to)
-  {
-    if ($this->importFile != $to) {
-      rename($this->importFile, $to);
-      $this->importFile = $to;
-    }
-  }
-
-  public function backupImportFile()
-  {
-    copy($this->getImportFile(), CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/done/' . get_date_from_gmt('', 'Y_m_d_H_i_s') . '_completed.xml');
-    return true;
   }
 
   public function findLangKey($lang, $array)
   {
     foreach ($array as $key => $value) {
-      if (isset($value['lang'])) {
-        if ($lang == $value['lang']) {
-          return $key;
-        }
-      } else {
-        return false;
+      if (isset($value['lang']) && $lang == $value['lang']) {
+        return $key;
       }
     }
     return false;
@@ -882,20 +687,19 @@ class Import
   public function fillMissingTranslations($theoffers)
   {
 
-    $languages = array();
-    if (function_exists('icl_get_languages')) {
-      $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
-      // WPML sometimes returns false if it's not fully configured or no languages exist
-      if (is_array($maybe_languages)) {
-        $languages = $maybe_languages;
-      }
+     if (!function_exists('icl_get_languages')) {
+      return $theoffers;
     }
 
-    $translations = array();
-    foreach ($languages as $lang) {
+    $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
+    if (!is_array($maybe_languages)) {
+      return $theoffers;
+    }
+
+    $translations = [];
+    foreach ($maybe_languages as $lang) {
       $translations[$lang['language_code']] = false;
     }
-
     foreach ($theoffers as $offerData) {
       $translations[$offerData['lang']] = $offerData;
     }
@@ -912,285 +716,149 @@ class Import
       }
     }
 
-    foreach ($languages as $language) {
-      if (!$translations[$language['language_code']]) {
+    foreach ($translations as $langcode => $val) {
+      if (!$val) {
         $copy = $carbon;
-        $copy['lang'] = $language['language_code'];
-
+        $copy['lang'] = $langcode;
         if (get_option('casawp_auto_translate_properties')) {
-
-          if ($copy['urls']) {
-            foreach ($copy['urls'] as $i => $url) {
-              $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
-              $urlString = strtok($urlString, '/');
-              $copy['urls'][$i]['title'] = $urlString;
-            }
-          }
-
-          if ($language['language_code'] == 'de') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Dokument #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Bild #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'fr') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'en') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Property for rent in ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Property for sale in ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
-                  $img++;
-                }
-              }
-            }
-          } elseif ($language['language_code'] == 'it') {
-            if ($copy['type'] == 'rent') {
-              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
-            } else {
-              $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
-            }
-            if ($copy['offer_medias']) {
-              $doc = 1;
-              $plan = 1;
-              $img = 1;
-              foreach ($copy['offer_medias'] as $i => $offer_media) {
-                if ($offer_media['type'] == 'document') {
-                  $copy['offer_medias'][$i]['title'] = 'Documento #' . $doc;
-                  $doc++;
-                } elseif ($offer_media['type'] == 'plan') {
-                  $copy['offer_medias'][$i]['title'] = 'Piano #' . $plan;
-                  $plan++;
-                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
-                  $copy['offer_medias'][$i]['caption'] = 'Immagine #' . $img;
-                  $img++;
-                }
-              }
-            }
-          }
-          $copy['descriptions'] = array();
+          // Minimal default naming if missing
+          $copy['name'] = 'Property in '.$copy['locality'];
+          $copy['descriptions'] = [];
           $copy['excerpt'] = '';
         }
-        $translations[$language['language_code']] = $copy;
+        $translations[$langcode] = $copy;
       }
     }
 
-    $key = 0;
-    $theoffers = array();
+    $merged = [];
+    $i=0;
     foreach ($translations as $value) {
-      $key++;
       if ($value['lang'] == $this->getMainLang()) {
-        $theoffers[0] = $value;
+        $merged[0] = $value;
       } else {
-        $theoffers[$key] = $value;
+        $i++;
+        $merged[$i] = $value;
       }
     }
-    ksort($theoffers);
-    return $theoffers;
+    ksort($merged);
+    return $merged;
   }
 
-  /**
-   * Build a map: casawp_id → post_id for all IDs
-   * we are about to process in *this* chunk.
-   *
-   * @param string[] $casawpIds
-   * @return array   [ casawp_id => post_id ]
-   */
-  private function mapExistingPosts(array $casawpIds): array
-  {
-
-    if (empty($casawpIds)) {
-      return [];
-    }
-
-    global $wpdb;
-
-    $placeholders = implode(',', array_fill(0, count($casawpIds), '%s'));
-    $sql          = "
-        SELECT post_id, meta_value AS casawp_id
-        FROM   {$wpdb->postmeta}
-        WHERE  meta_key = 'casawp_id'
-          AND  meta_value IN ( $placeholders )";
-
-    /** @var stdClass[] $rows */
-    $rows = $wpdb->get_results($wpdb->prepare($sql, ...$casawpIds));
-
-    $map  = [];
-    foreach ($rows as $r) {
-      $map[$r->casawp_id] = (int) $r->post_id;
-    }
-    return $map;
-  }
-
-
-  public function updateOffers(array $batched_file)
+  public function updateOffers($batched_file)
   {
 
     global $wpdb;
+    $found_posts = [];
+    $curRank = get_option('casawp_current_rank', 0);
+    $enable_hash = get_option('casawp_enable_import_hash', false);
 
-    $found_posts  = [];
-    $curRank      = get_option('casawp_current_rank', 0);
-    $enable_hash  = get_option('casawp_enable_import_hash', false);
-
-    /* ------------------------------------------------------------------
-   * 1. Build one lookup: casawp_id → post_id
-   * ------------------------------------------------------------------ */
-    $neededIds = [];
-    foreach ($batched_file as $prop) {
-      foreach ($prop['offers'] as $of) {
-        $neededIds[] = $prop['exportproperty_id'] . $of['lang'];
-      }
-    }
-    $existingMap = $this->mapExistingPosts($neededIds);
-
-    /* ------------------------------------------------------------------
-   * 2. Walk every property in this chunk
-   * ------------------------------------------------------------------ */
-    foreach ($batched_file as $property) {
-
-      ++$curRank;
-
-      /* -------- collect offers for all languages -------------------- */
-      $offers = [];
-      foreach ($property['offers'] as $of) {
-        $of['locality'] = $property['address']['locality'];
-        $idx            = ($of['lang'] === $this->getMainLang()) ? 0 : count($offers) + 1;
-        $offers[$idx] = $of;
-      }
-      if ($this->hasWPML()) {
-        $offers = $this->fillMissingTranslations($offers);
-      }
-
-      /* -------- iterate over the (language-specific) offers ---------- */
-      foreach ($offers as $pos => $offer) {
-
-        $casawp_id = $property['exportproperty_id'] . $offer['lang'];
-
-        /* ~~~~~~~~~ 2-A  fetch or create post object ~~~~~~~~~~~~~~~~ */
-        if (isset($existingMap[$casawp_id])) {
-
-          $wp_post = get_post($existingMap[$casawp_id], OBJECT, 'raw');
-          $this->transcript[$casawp_id]['action'] = 'update';
-        } else {
-
-          $this->transcript[$casawp_id]['action'] = 'new';
-
-          $insert_id = wp_insert_post([
-            'post_title'   => $offer['name'],
-            'post_content' => 'unsaved property',
-            'post_status'  => 'publish',
-            'post_type'    => 'casawp_property',
-            'menu_order'   => $curRank,
-            'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']),
-            'post_date'    => (
-              $property['creation']
-              ? $property['creation']->format('Y-m-d H:i:s')
-              : $property['last_update']->format('Y-m-d H:i:s')
-            ),
-          ]);
-          update_post_meta($insert_id, 'casawp_id',      $casawp_id);
-          update_post_meta($insert_id, 'is_active',      true);
-
-          $wp_post = get_post($insert_id, OBJECT, 'raw');
-        }
-
-        /* keep order */
-        if ($wp_post->menu_order !== $curRank) {
-          wp_update_post([
-            'ID'         => $wp_post->ID,
-            'menu_order' => $curRank,
-          ], false, false);  // no filter / no cache-priming
-        }
-        $this->ranksort[$wp_post->ID] = $curRank;
-        $found_posts[]                  = $wp_post->ID;
-
-        /* ~~~~~~~~~ 2-B  HASH-BASED SKIPPING  ~~~~~~~~~~~~~~~~~~~~~~ */
-        if ($enable_hash) {
-
-          $propHash  = md5(serialize($property));
-          $mediaHash = md5(serialize($offer['offer_medias'] ?? []));
-
-          $oldProp   = get_post_meta($wp_post->ID, 'last_import_hash', true);
-          $oldMedia  = get_post_meta($wp_post->ID, 'last_media_hash',  true);
-
-          if ($oldProp === $propHash && $oldMedia === $mediaHash) {
-            // unchanged → mark active & skip updateOffer()
-            update_post_meta($wp_post->ID, 'is_active', true);
-            $this->transcript[$casawp_id]['action'] = 'skipped (hash match)';
-            continue;
+    if (!empty($batched_file)) {
+      foreach ($batched_file as $property) {
+        $curRank++;
+        $theoffers = [];
+        $i = 0;
+        foreach ($property['offers'] as $offer) {
+          $i++;
+          if ($offer['lang'] == $this->getMainLang()) {
+            $theoffers[0] = $offer;
+            $theoffers[0]['locality'] = $property['address']['locality'];
+          } else {
+            if ($this->hasWPML()) {
+              $theoffers[$i] = $offer;
+              $theoffers[$i]['locality'] = $property['address']['locality'];
+            }
           }
         }
 
-        /* ~~~~~~~~~ 2-C  do the heavy update  ~~~~~~~~~~~~~~~~~~~~~~ */
-        $this->updateOffer($casawp_id, $pos, $property, $offer, $wp_post);
-
-        /* save hashes so next import can skip fast */
-        if ($enable_hash) {
-          update_post_meta($wp_post->ID, 'last_import_hash', md5(serialize($property)));
-          update_post_meta($wp_post->ID, 'last_media_hash',  md5(serialize($offer['offer_medias'] ?? [])));
+        if ($this->hasWPML()) {
+          $theoffers = $this->fillMissingTranslations($theoffers);
         }
 
-        /* WPML linkage */
-        $this->updateInsertWPMLconnection($wp_post, $offer['lang'], $property['exportproperty_id']);
+        $offer_pos = 0;
+        foreach ($theoffers as $offerData) {
+          $offer_pos++;
+
+          $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
+
+          $the_query = new \WP_Query([
+            'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
+            'post_type'   => 'casawp_property',
+            'meta_query'  => [
+              [
+                'key'   => 'casawp_id',
+                'value' => $casawp_id,
+              ],
+            ],
+            'posts_per_page' => 1,
+            'suppress_filters' => true,
+            'language' => '',
+          ]);
+
+          if ($the_query->have_posts()) {
+            $the_query->the_post();
+            global $post;
+            $wp_post = $post;
+            $this->transcript[$casawp_id]['action'] = 'update';
+          } else {
+            $this->transcript[$casawp_id]['action'] = 'new';
+            
+            $the_post = [
+              'post_title'   => $offerData['name'],
+              'post_content' => 'unsaved property',
+              'post_status'  => 'publish',
+              'post_type'    => 'casawp_property',
+              'menu_order'   => $curRank,
+              'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
+              'post_date'    => (
+                  $property['creation']
+                  ? $property['creation']->format('Y-m-d H:i:s')
+                  : $property['last_update']->format('Y-m-d H:i:s')
+              ),
+            ];
+
+            $insert_id = wp_insert_post($the_post);
+            update_post_meta($insert_id, 'casawp_id', $casawp_id);
+            update_post_meta($insert_id, 'is_active', true);
+            $wp_post = get_post($insert_id, OBJECT, 'raw');
+          }
+
+          wp_reset_postdata();
+
+          wp_update_post(array(
+            'ID' => $wp_post->ID,
+            'menu_order' => $curRank,
+          ));
+
+          $this->ranksort[$wp_post->ID] = $curRank;
+
+          $found_posts[] = $wp_post->ID;
+
+          if ($enable_hash) {
+
+              $cleanPropertyData = $property;
+
+              $newHash = md5(serialize($cleanPropertyData));
+              $oldHash = get_post_meta($wp_post->ID, 'last_import_hash', true);
+
+              if ($oldHash && $oldHash === $newHash) {
+                  update_post_meta($wp_post->ID, 'is_active', true);
+                  $this->transcript[$casawp_id]['action'] = 'skipped (hash match)';
+              } else {
+                  $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
+                  update_post_meta($wp_post->ID, 'last_import_hash', $newHash);
+              }
+          } else {
+              $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
+          }
+
+          $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+
+        }
       }
     }
 
-    /* ------------------------------------------------------------------
-   * 3. Post-chunk housekeeping (same as before)
-   * ------------------------------------------------------------------ */
     update_option('casawp_current_rank', $curRank);
+
     $this->reactivate_properties($found_posts);
 
     $meta_key_area = 'areaForOrder';
@@ -1279,7 +947,6 @@ class Import
 
     $new_meta_data = array();
     $old_meta_data = array();
-
 
     $meta_values = get_post_meta($wp_post->ID, null, true);
 
@@ -1403,9 +1070,6 @@ class Import
       $new_meta_data['zoneTypes']              = $property['zoneTypes'];
     }
 
-    if (!$new_meta_data['referenceId']) {
-      echo '<div id="message" class="error">Warning! no referenceId found. for:' . $casawp_id . ' This could cause problems when sending inquiries</div>';
-    }
     if (isset($property['organization'])) {
       $new_meta_data['seller_org_phone_central'] = $property['organization']['phone'];
       $new_meta_data['seller_org_legalname']                     = $property['organization']['displayName'];
@@ -1423,76 +1087,50 @@ class Import
       }
     }
 
-    $personType = 'view';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
+    $personTypes = array('view', 'inquiry', 'visit');
+    foreach ($personTypes as $ptype) {
+      $keyName = $ptype . 'Person';
+      if (isset($property[$keyName]) && $property[$keyName]) {
+        $prefix = 'seller_' . $ptype . '_person_';
+        $new_meta_data[$prefix . 'function']    = $property[$keyName]['function'];
+        $new_meta_data[$prefix . 'givenname']   = $property[$keyName]['firstName'];
+        $new_meta_data[$prefix . 'familyname']  = $property[$keyName]['lastName'];
+        $new_meta_data[$prefix . 'email']       = $property[$keyName]['email'];
+        $new_meta_data[$prefix . 'fax']         = $property[$keyName]['fax'];
+        $new_meta_data[$prefix . 'phone_direct'] = $property[$keyName]['phone'];
+        $new_meta_data[$prefix . 'phone_mobile'] = $property[$keyName]['mobile'];
+        $new_meta_data[$prefix . 'gender']      = $property[$keyName]['gender'];
+        $new_meta_data[$prefix . 'note']        = $property[$keyName]['note'];
+      }
     }
 
-    $personType = 'inquiry';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
-    }
-
-    $personType = 'visit';
-    if (isset($property[$personType . 'Person']) && $property[$personType . 'Person']) {
-      $prefix = 'seller_' . $personType . '_person_';
-      $new_meta_data[$prefix . 'function']      = $property[$personType . 'Person']['function'];
-      $new_meta_data[$prefix . 'givenname']     = $property[$personType . 'Person']['firstName'];
-      $new_meta_data[$prefix . 'familyname']    = $property[$personType . 'Person']['lastName'];
-      $new_meta_data[$prefix . 'email']         = $property[$personType . 'Person']['email'];
-      $new_meta_data[$prefix . 'fax']           = $property[$personType . 'Person']['fax'];
-      $new_meta_data[$prefix . 'phone_direct']  = $property[$personType . 'Person']['phone'];
-      $new_meta_data[$prefix . 'phone_mobile']  = $property[$personType . 'Person']['mobile'];
-      $new_meta_data[$prefix . 'gender']        = $property[$personType . 'Person']['gender'];
-      $new_meta_data[$prefix . 'note']          = $property[$personType . 'Person']['note'];
-    }
-
-    $url = null;
-    $the_urls = array();
+    $urlDatas = array();
     if (isset($offer['urls'])) {
       foreach ($offer['urls'] as $url) {
-        $href = $url['url'];
+        $href  = $url['url'];
         if (! (substr($href, 0, 7) === "http://" || substr($href, 0, 8) === "https://")) {
           $href = 'http://' . $href;
         }
-
         $label = (isset($url['label']) ? $url['label'] : false);
         $title = (isset($url['title']) ? $url['title'] : false);
-        $type =  (isset($url['type'])  ? (string) $url['type'] : false);
+        $type  = (isset($url['type'])  ? (string) $url['type'] : false);
+
         if ($type) {
-          $the_urls[$type][] = array(
-            'href' => $href,
+          $urlDatas[$type][] = array(
+            'href'  => $href,
             'label' => $label,
             'title' => $title
           );
         } else {
-          $the_urls[] = array(
-            'href' => $href,
+          $urlDatas[] = array(
+            'href'  => $href,
             'label' => $label,
-            'title' =>  $title
+            'title' => $title
           );
         }
       }
-      ksort($the_urls);
-      $new_meta_data['the_urls'] = $the_urls;
+      ksort($urlDatas);
+      $new_meta_data['the_urls'] = $urlDatas;
     }
 
     $new_meta_data['price_currency'] = $property['price_currency'];
@@ -1537,15 +1175,15 @@ class Import
 
     $integratedoffers = array();
     if (isset($property['integratedoffers'])) {
-      foreach ($property['integratedoffers'] as $integratedoffer) {
+      foreach ($property['integratedoffers'] as $io) {
         $integratedoffers[] = array(
-          'type' => $integratedoffer['type'],
-          'price' => $integratedoffer['cost'],
-          'timesegment' => $integratedoffer['time_segment'],
-          'propertysegment' => $integratedoffer['property_segment'],
-          'currency' => $new_meta_data['price_currency'],
-          'frequency' => $integratedoffer['frequency'],
-          'inclusive' => $integratedoffer['inclusive']
+          'type'            => $io['type'],
+          'price'           => $io['cost'],
+          'timesegment'     => $io['time_segment'],
+          'propertysegment' => $io['property_segment'],
+          'currency'        => $new_meta_data['price_currency'],
+          'frequency'       => $io['frequency'],
+          'inclusive'       => $io['inclusive']
         );
       }
     }
@@ -1620,73 +1258,43 @@ class Import
     }
 
     if ($custom_metas) {
-      #$this->addToLog('_options_================HERE====================');
-      #$this->addToLog('_options_' . print_r($custom_metas, true));
-    }
-
-    foreach ($custom_metas as $key => $value) {
-      $new_meta_data['custom_option_' . $key] = $value;
-      #$this->addToLog('custom_option_' . $key);
+      foreach ($custom_metas as $ckey => $cvalue) {
+        $new_meta_data['custom_option_' . $ckey] = $cvalue;
+      }
     }
 
     ksort($new_meta_data);
 
 
-    if ($new_meta_data != $old_meta_data) {
-      #$this->addToLog('updating metadata');
-      foreach ($new_meta_data as $key => $value) {
-        $newval = $value;
-
-        if ($newval === true) {
-          $newval = "1";
-        }
-        if (is_numeric($newval)) {
-          $newval = (string) $newval;
-        }
-        if ($key == "floor" && $newval == 0) {
-          $newval = "EG";
-        }
-
-        if (function_exists("casawp_unicode_dirty_replace") && !is_array($newval)) {
-          $newval = casawp_unicode_dirty_replace($newval);
-        }
-
-        $new_meta_data[$key] = $newval;
+    foreach ($new_meta_data as $meta_key => $meta_value) {
+      if ($meta_value === true) {
+        $meta_value = "1";
       }
+      if (is_numeric($meta_value)) {
+        $meta_value = (string) $meta_value;
+      }
+      if ($meta_key == "floor" && $meta_value == 0) {
+        $meta_value = "EG";
+      }
+      if (function_exists("casawp_unicode_dirty_replace") && !is_array($meta_value)) {
+        $meta_value = casawp_unicode_dirty_replace($meta_value);
+      }
+      $new_meta_data[$meta_key] = $meta_value;
     }
 
-
-    $new_main_data['meta_input'] = $new_meta_data;
-
-    $main_data_changed = ($new_main_data != $old_main_data);
-    $meta_data_changed = ($new_meta_data != $old_meta_data);
-
-    if ($main_data_changed || $meta_data_changed) {
-      if ($main_data_changed) {
-        foreach ($old_main_data as $key => $value) {
-          if ($new_main_data[$key] != $value) {
-            $this->transcript[$casawp_id]['main_data'][$key]['from'] = $value;
-            $this->transcript[$casawp_id]['main_data'][$key]['to'] = $new_main_data[$key];
-            #$this->addToLog('updating main data (' . $key . '): ' . $value . ' -> ' . $new_main_data[$key]);
-          }
-        }
-      }
-
-      if (!$wp_post->post_name) {
-        $new_main_data['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $offer['name']);
+    /* ---------- main-post update ---------- */
+    if ( $new_main_data !== $old_main_data ) {
+      if ( ! $wp_post->post_name ) {
+        $new_main_data['post_name'] = $this->casawp_sanitize_title( $casawp_id . '-' . $offer['name'] );
       } else {
         $new_main_data['post_name'] = $wp_post->post_name;
       }
+      wp_update_post( $new_main_data );
+    }
 
-      wp_update_post($new_main_data);
-
-      $keys_to_delete = array_diff(array_keys($old_meta_data), array_keys($new_meta_data));
-      foreach ($keys_to_delete as $key) {
-        if (!in_array($key, array('casawp_id', 'projectunit_id', 'projectunit_sort')) && strpos($key, '_') !== 0) {
-          delete_post_meta($wp_post->ID, $key);
-          $this->transcript[$casawp_id]['meta_data']['removed'][$key] = $old_meta_data[$key];
-        }
-      }
+    /* ---------- meta update (single statement) ---------- */
+    if ( $new_meta_data !== $old_meta_data ) {
+      CASAWP_Bulk_Meta::sync( $wp_post->ID, $new_meta_data );
     }
 
     if (isset($property['property_categories'])) {
@@ -3131,6 +2739,17 @@ class Import
     return $propertydata;
   }
 
+  public function simpleXMLget($node, $fallback = false)
+  {
+    if ($node) {
+      $result = $node->__toString();
+      if ($result) {
+        return $result;
+      }
+    }
+    return $fallback;
+  }
+
   public function project2Array($project_xml)
   {
     $data['ref'] = (isset($project_xml['id']) ? $project_xml['id']->__toString() : '');
@@ -3235,17 +2854,6 @@ class Import
 
     ksort($translations);
     return $translations;
-  }
-
-  public function simpleXMLget($node, $fallback = false)
-  {
-    if ($node) {
-      $result = $node->__toString();
-      if ($result) {
-        return $result;
-      }
-    }
-    return $fallback;
   }
 
   public function updateProject($sort, $casawp_id, $projectData, $wp_post, $parent_post = false, $found_posts = array())
