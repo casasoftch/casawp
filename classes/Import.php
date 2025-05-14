@@ -59,6 +59,8 @@ class Import
 
   private $ranksort = array();
 
+  private int $current_run_id = 0;
+
   public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
     if ($casagatewaypoke) {
@@ -214,6 +216,13 @@ class Import
   {
     $this->addToLog('Finalizing import cleanup.');
 
+    if ( get_option( 'casawp_import_canceled' ) ) {
+        $this->addToLog( 'Import was canceled – cleanup skips deletions.' );
+        delete_transient( 'casawp_import_in_progress' );
+        delete_option   ( 'casawp_current_run_id' );
+        return;
+    }
+
     if (get_option('casawp_import_failed')) {
       $this->addToLog('Import marked as failed. Skipping deletion of inactive properties.');
       delete_option('casawp_import_failed');
@@ -221,21 +230,28 @@ class Import
       return;
     }
 
-    $args = array(
-      'posts_per_page' => -1,
-      'post_type'      => 'casawp_property',
-      'post_status'    => 'publish',
-      'fields'         => 'ids',
-      'meta_query'     => array(
-        array(
-          'key'     => 'is_active',
-          'value'   => false,
-          'compare' => '=',
-        ),
-      ),
-    );
+    $run_id = (int) get_option( 'casawp_current_run_id', 0 );
 
-    $posts_to_remove = get_posts($args);
+    $posts_to_remove = get_posts( [
+        'posts_per_page' => -1,
+        'post_type'      => 'casawp_property',
+        'post_status'    => 'publish',
+        'fields'         => 'ids',
+        'meta_query'     => [
+            'relation' => 'OR',
+            [
+                'key'     => 'last_processed_run',      // never processed (meta missing)
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key'     => 'last_processed_run',      // processed, but in an earlier run
+                'value'   => $run_id,
+                'compare' => '!=',
+                'type'    => 'NUMERIC',
+            ],
+        ],
+    ] );
+
 
     foreach ($posts_to_remove as $post_id) {
       $attachments = get_posts(array(
@@ -272,6 +288,7 @@ class Import
     }
 
     delete_transient('casawp_import_in_progress');
+    delete_option   ( 'casawp_current_run_id' );
     $this->addToLog('Import lock cleared.');
 
     $this->addToLog('Import completed and lock cleared.');
@@ -289,6 +306,14 @@ class Import
 
   public function handle_properties_import_batch($batch_number)
   {
+
+    if ( $batch_number == 1 ) {                         // very first batch of a run
+        $this->current_run_id = time();                 // seconds since 1970 => unique
+        update_option( 'casawp_current_run_id', $this->current_run_id, 'no' );
+    } else {
+        $this->current_run_id = (int) get_option( 'casawp_current_run_id', time() );
+    }
+
     // Temporarily suspend cache additions for speed
     wp_suspend_cache_addition(true);
     if ( get_option('casawp_import_failed') ) {
@@ -842,6 +867,7 @@ class Import
 
               if ($oldHash && $oldHash === $newHash) {
                   update_post_meta($wp_post->ID, 'is_active', true);
+                  update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
                   $this->transcript[$casawp_id]['action'] = 'skipped (hash match)';
               } else {
                   $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
@@ -1355,6 +1381,8 @@ class Import
 
     #$this->addToLog('updating attachments');
     $this->setOfferAttachments($offer['offer_medias'], $wp_post, $property['exportproperty_id'], $casawp_id, $property);
+    // mark this post as “seen in the current run”
+    update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
 
     #$this->addToLog('finish property update: [' . $casawp_id . ']' . time());
   }
