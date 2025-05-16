@@ -655,28 +655,76 @@ class Import
   }
 
   // Delayed WPML link creation to reduce overhead
-  public function updateInsertWPMLconnection($wp_post, $lang, $trid_identifier)
-  {
-    if ($this->hasWPML()) {
-      if ($this->getMainLang() == $lang) {
-        $trid = wpml_get_content_trid('post_' . $wp_post->post_type, $wp_post->ID);
-        if (!$trid) {
-          $trid = 1000 . $wp_post->ID; 
-        }
-        $this->trid_store[$trid_identifier] = $trid;
+  public function updateInsertWPMLconnection( $wp_post, string $lang, string $trid_identifier ): void {
+
+      if ( ! $this->hasWPML() ) {
+          return;
+      }
+
+      global $wpdb, $sitepress;
+      if ( ! $sitepress ) {                     // ① guard
+          return;
+      }
+
+      static $default_lang = null;              // ② micro-cache
+      $default_lang = $default_lang ?? $sitepress->get_default_language();
+
+      $main_lang    = $this->getMainLang();
+      $element_type = 'post_casawp_property';
+
+      /* 1 — obtain / mint TRID */
+      if ( $lang === $main_lang ) {
+
+          $trid = (int) $wpdb->get_var( $wpdb->prepare(
+              "SELECT trid FROM {$wpdb->prefix}icl_translations
+               WHERE element_id = %d AND element_type = %s LIMIT 1",
+              $wp_post->ID,
+              $element_type
+          ) );
+
+          if ( ! $trid ) {
+              $trid = 50_000_000 + $wp_post->ID;         // ③ wider gap
+          }
+
+          $this->trid_store[ $trid_identifier ] = $trid;
+
       } else {
-        $trid = (isset($this->trid_store[$trid_identifier]) ? $this->trid_store[$trid_identifier] : false);
+          $trid = $this->trid_store[ $trid_identifier ] ?? null;
+
+          if ( ! $trid ) {                               // ④ fallback
+              $trid = (int) $wpdb->get_var( $wpdb->prepare(
+                  "SELECT trid FROM {$wpdb->prefix}icl_translations
+                   WHERE element_id = %d AND element_type = %s LIMIT 1",
+                  $wp_post->ID,
+                  $element_type
+              ) );
+          }
       }
-      if ($trid) {
-        global $sitepress;
-        if ($this->getMainLang() != $lang) {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, $sitepress->get_default_language(), true);
-        } else {
-          $sitepress->set_element_language_details($wp_post->ID, 'post_casawp_property', $trid, $lang, null, true);
-        }
+
+      if ( ! $trid ) {
+          return;                                        // bail gracefully
       }
-    }
+
+      /* Skip if mapping already present (saves UPDATE) */
+      if ( $wpdb->get_var( $wpdb->prepare(
+              "SELECT translation_id FROM {$wpdb->prefix}icl_translations
+               WHERE element_id = %d AND trid = %d LIMIT 1",
+              $wp_post->ID, $trid
+          ) ) ) {
+          return;
+      }
+
+      /* 2 — register mapping */
+      $sitepress->set_element_language_details(
+          $wp_post->ID,
+          $element_type,
+          $trid,
+          $lang,
+          ( $lang === $main_lang ? null : $default_lang ),
+          true
+      );
   }
+
 
   public function getImportFile()
   {
