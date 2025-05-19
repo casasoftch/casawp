@@ -331,6 +331,10 @@ msgstr "Box coperto per cavalli"
 msgid "Boat mooring"
 msgstr "Boa di ormeggio per barca"
 
+#: ../src/CasasoftStandards/Service/FeatureService.php:286
+msgid "Store room"
+msgstr "Ripostiglio"
+
 #, fuzzy
 msgid "Cellar compartment"
 msgstr ""

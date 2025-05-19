@@ -611,6 +611,10 @@ msgstr "Propriété à démolir"
 msgid "Gutted"
 msgstr "Vidé"
 
+#: ../src/CasasoftStandards/Service/FeatureService.php:286
+msgid "Store room"
+msgstr "Réduit"
+
 #: ../src/CasasoftStandards/Service/FeatureService.php:288
 msgid "Shell construction"
 msgstr "Structure vide"

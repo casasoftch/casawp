@@ -616,6 +616,10 @@ msgstr "Abbruchobjekt"
 msgid "Gutted"
 msgstr "Entkernt"
 
+#: ../src/CasasoftStandards/Service/FeatureService.php:286
+msgid "Store room"
+msgstr "Abstellraum (Reduit)"
+
 #: ../src/CasasoftStandards/Service/FeatureService.php:288
 msgid "Shell construction"
 msgstr "Rohbau"

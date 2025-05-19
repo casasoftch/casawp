@@ -278,6 +278,14 @@ class FeatureService {
                 'label' => $this->translator->translate('Old', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'is-old-building' => array(
+                'label' => $this->translator->translate('Old', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-store-room' => array(
+                'label' => $this->translator->translate('Store room', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'has-building-law-restrictions' => array(
                 'label' => $this->translator->translate('has building law restrictions', 'casasoft-standards'),
                 'icon' => '',
