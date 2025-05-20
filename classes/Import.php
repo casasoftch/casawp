@@ -6,46 +6,55 @@ use Exception;
 
 if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
   final class CASAWP_Bulk_Meta {
-    public static function sync( int $post_id, array $new ): void {
-      global $wpdb;
-      $tbl = $wpdb->postmeta;
+      public static function sync( int $post_id, array $new ): void {
+          global $wpdb;
+          $tbl = $wpdb->postmeta;
 
-      $current = $wpdb->get_results(
-        $wpdb->prepare( "SELECT meta_key, meta_value FROM $tbl WHERE post_id=%d", $post_id ),
-        OBJECT_K
-      );
+          /* keep special keys intact when they are **not** in $new */
+          $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
 
-      $ins = [];
-      foreach ( $new as $k => $v ) {
-        $v = maybe_serialize( $v );
-        if ( isset( $current[ $k ] ) ) {
-          if ( $current[ $k ]->meta_value !== $v ) {
-            $ins[] = $wpdb->prepare( "(%d,%s,%s)", $post_id, $k, $v );
+          foreach ( $new as $k => $v ) {
+              $v = maybe_serialize( $v );
+
+              // 1) remove *all* rows for this key (except protected ones)
+              if ( ! in_array( $k, $protected, true ) ) {
+                  $wpdb->delete(
+                      $tbl,
+                      [ 'post_id' => $post_id, 'meta_key' => $k ],
+                      [ '%d', '%s' ]
+                  );
+              }
+
+              // 2) insert the fresh value
+              $wpdb->insert(
+                  $tbl,
+                  [
+                      'post_id'    => $post_id,
+                      'meta_key'   => $k,
+                      'meta_value' => $v,
+                  ],
+                  [ '%d', '%s', '%s' ]
+              );
           }
-          unset( $current[ $k ] );
-        } else {
-          $ins[] = $wpdb->prepare( "(%d,%s,%s)", $post_id, $k, $v );
-        }
-      }
 
-      if ( $current ) {
-        $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
-        foreach ( $protected as $keep ) {
-            unset( $current[ $keep ] ); 
-        }
-        $in = "'" . implode( "','", array_map( 'esc_sql', array_keys( $current ) ) ) . "'";
-        $wpdb->query( "DELETE FROM $tbl WHERE post_id=$post_id AND meta_key IN ($in)" );
-      }
+          /* 3) drop stale keys that disappeared from the payload -------- */
+          $placeholders = implode( ',', array_fill( 0, count( $new ), '%s' ) );
+          $wpdb->query(
+              $wpdb->prepare(
+                  "
+                  DELETE FROM $tbl
+                  WHERE post_id = %d
+                    AND meta_key NOT IN ( $placeholders )
+                    AND meta_key NOT IN ( '" . implode( "','", $protected ) . "' )
+                  ",
+                  array_merge( [ $post_id ], array_keys( $new ) )
+              )
+          );
 
-      if ( $ins ) {
-        $wpdb->query(
-          "INSERT INTO $tbl (post_id,meta_key,meta_value) VALUES " .
-          implode( ',', $ins ) .
-          " ON DUPLICATE KEY UPDATE meta_value = VALUES(meta_value)"
-        );
+          wp_cache_delete( $post_id, 'post_meta' );   // purge object-cache
       }
-    }
   }
+
 }
 
 class Import
@@ -77,9 +86,87 @@ class Import
     add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'));
   }
 
-  public function start_import()
+  public function start_import() {
+
+      // mint / reuse run-id
+      $run_id = (int) get_option( 'casawp_current_run_id', 0 );
+      if ( ! $run_id ) {
+          $run_id = time();                              // unique
+          update_option( 'casawp_current_run_id', $run_id, 'no' );
+      }
+
+      // schedule batch #1 in its *own* group
+      as_schedule_single_action(
+          time() + 10,
+          'casawp_batch_import',
+          [ 'batch_number' => 1 ],
+          'casawp_run_' . $run_id       // ← group
+      );
+  }
+
+  /**
+   * Recursively k-sort every associative sub-array while keeping pure
+   * numeric lists (0-based, consecutive keys) in their original order.
+   */
+  private function deepKsort( array &$a ): void
   {
-    as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => 1), 'casawp_batch_import');
+      // ── sort children first ─────────────────────────────────────────
+      foreach ( $a as &$v ) {
+          if ( is_array( $v ) ) {
+              $this->deepKsort( $v );        // recurse
+          }
+      }
+
+      // ── skip plain lists, sort true maps ───────────────────────────
+      $isList = function_exists( 'array_is_list' )
+          ? array_is_list( $a )              // PHP 8.1+
+          : (                             // fallback for older PHP
+              static function ( array $arr ): bool {
+                  $i = 0;
+                  foreach ( $arr as $k => $_ ) {
+                      if ( $k !== $i++ ) {            // non-sequential key
+                          return false;               // → not a list
+                      }
+                  }
+                  return true;                        // 0,1,2,3…
+              }
+          )( $a );
+
+      if ( ! $isList ) {
+          ksort( $a, SORT_STRING );        // stable, deterministic order
+      }
+  }
+
+
+  private function fingerprint( array $meta ): string {
+
+      static $skip = [
+          // housekeeping / volatile
+          'last_import_hash',
+          'last_processed_run',
+          'is_active',
+
+          // keys created outside the generator
+          '_thumbnail_id',
+          '_wpml_word_count',
+
+          // identifiers you store once during insert
+          'casawp_id',
+          'projectunit_id',
+          'projectunit_sort',
+      ];
+
+      foreach ( $skip as $k ) {
+          unset( $meta[ $k ] );
+      }
+
+      $this->deepKsort( $meta );
+      return md5( serialize( $meta ) );
+  }
+
+
+  private function group(): string {
+      return 'casawp_run_' . (int) get_option( 'casawp_current_run_id', 0 );
   }
 
   private function fetchFileFromCasaGateway(): string
@@ -237,6 +324,11 @@ class Import
 
     $this->addToLog( 'Finalizing import cleanup.' );
 
+    if ( as_next_scheduled_action( 'casawp_batch_import', [], $this->group() ) ) {
+        $this->addToLog( 'Cleanup postponed – batches still pending.' );
+        return;
+    }
+
     /* ----------------------------------------------------------------
      *  1.  Early exits for cancelled / failed runs
      * ---------------------------------------------------------------- */
@@ -317,7 +409,7 @@ class Import
     update_option( 'casawp_cleanup_done_for_run', $run_id );
 
     if ( function_exists( 'as_unschedule_all_actions' ) ) {
-      as_unschedule_all_actions( 'casawp_batch_import' );  // purge leftover jobs
+      as_unschedule_all_actions( 'casawp_batch_import', [], $this->group() );
     }
 
     delete_transient( 'casawp_import_in_progress' );
@@ -436,9 +528,9 @@ class Import
         $this->addToLog('Import process completed.');
       } else {
         $next_batch_number = $batch_number + 1;
-        $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+        $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), $this->group()  );
         if (!$pending_batch) {
-          as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), 'casawp_batch_import');
+          as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), $this->group()  );
         }
       }
     } catch (\Exception $e) {
@@ -954,7 +1046,6 @@ class Import
     global $wpdb;
     $found_posts = [];
     $curRank = get_option('casawp_current_rank', 0);
-    $enable_hash = get_option('casawp_enable_import_hash', false);
 
     if (!empty($batched_file)) {
       foreach ($batched_file as $property) {
@@ -1037,24 +1128,7 @@ class Import
 
           $found_posts[] = $wp_post->ID;
 
-          if ($enable_hash) {
-
-              $cleanPropertyData = $property;
-
-              $newHash = md5(serialize($cleanPropertyData));
-              $oldHash = get_post_meta($wp_post->ID, 'last_import_hash', true);
-
-              if ($oldHash && $oldHash === $newHash) {
-                  update_post_meta($wp_post->ID, 'is_active', true);
-                  update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
-                  $this->transcript[$casawp_id]['action'] = 'skipped (hash match)';
-              } else {
-                  $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
-                  update_post_meta($wp_post->ID, 'last_import_hash', $newHash);
-              }
-          } else {
-              $this->updateOffer($casawp_id, $offer_pos, $property, $offerData, $wp_post);
-          }
+          $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
 
           $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
 
@@ -1150,18 +1224,12 @@ class Import
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post)
   {
 
-    $new_meta_data = array();
-    $old_meta_data = array();
-
-    $meta_values = get_post_meta($wp_post->ID, null, true);
-
-    foreach ($meta_values as $key => $values) {
-      $old_meta_data[$key] = maybe_unserialize($values[0]);
+    $old_meta_data = [];
+    foreach ( get_post_meta( $wp_post->ID, null, true ) as $k => $vals ) {
+        $old_meta_data[ $k ] = maybe_unserialize( $vals[0] );
     }
-    ksort($old_meta_data);
-
-    $cleanPropertyData = $property;
-    $curImportHash = md5(serialize($cleanPropertyData));
+    unset( $old_meta_data['last_import_hash'] );    // <<< strip hash
+    ksort( $old_meta_data );
 
     if (!isset($old_meta_data['last_import_hash'])) {
       $old_meta_data['last_import_hash'] = 'no_hash';
@@ -1178,7 +1246,7 @@ class Import
     #$this->addToLog('beginn property update: [' . $casawp_id . ']' . time());
     #$this->addToLog(array($old_meta_data['last_import_hash'], $curImportHash));
 
-    $new_meta_data['last_import_hash'] = $curImportHash;
+    $new_meta_data = [];
 
     $publisher_options = array();
     if (isset($offer['publish'])) {
@@ -1467,9 +1535,15 @@ class Import
         $new_meta_data['custom_option_' . $ckey] = $cvalue;
       }
     }
-
+    if ( $casawp_id === '353188de' ) {          // 1 language is enough
+        $yb_old = $old_meta_data['year_built']  ?? '-';
+        $yb_new = $numericValues['year_built'] ?? '-';
+        $this->addToLog(
+            "DEBUG year_built  old={$yb_old}  new={$yb_new}"
+        );
+    }
+    
     ksort($new_meta_data);
-
 
     foreach ($new_meta_data as $meta_key => $meta_value) {
       if ($meta_value === true) {
@@ -1487,6 +1561,64 @@ class Import
       $new_meta_data[$meta_key] = $meta_value;
     }
 
+    $hashFromDb = $this->fingerprint( $old_meta_data );
+    $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
+    if ( $delta && $casawp_id === '353188de' ) {
+        $this->addToLog( 'DELTA '. print_r( $delta, true ) );
+    }
+    $newHash    = $this->fingerprint( $new_meta_data );
+
+    if ( $casawp_id === '353188de' ) {      // pick any ID
+        $this->addToLog( 'HASH_OLD '.$hashFromDb );
+        $this->addToLog( 'HASH_NEW '.$newHash );
+    }
+
+    /* DEBUGGING HASHING */
+
+   /*  if ( $casawp_id === '353188de' ) {           // pick any one offer
+
+        $mismatch = [];
+
+        $all_keys = array_unique(
+            array_merge( array_keys( $new_meta_data ), array_keys( $old_meta_data ) )
+        );
+
+        foreach ( $all_keys as $k ) {
+
+            $has_new = array_key_exists( $k, $new_meta_data );
+            $has_old = array_key_exists( $k, $old_meta_data );
+
+            if ( ! $has_new || ! $has_old ) {
+                $mismatch[ $k ] = $has_new ? 'only-new' : 'only-old';
+                continue;
+            }
+
+            if ( serialize( $new_meta_data[ $k ] ) !== serialize( $old_meta_data[ $k ] ) ) {
+                // tiny summary – avoids flooding the log with whole arrays
+                $mismatch[ $k ] = [
+                    'old' => is_scalar( $old_meta_data[ $k ] ) ? $old_meta_data[ $k ] : 'array('.count($old_meta_data[ $k ]).')',
+                    'new' => is_scalar( $new_meta_data[ $k ] ) ? $new_meta_data[ $k ] : 'array('.count($new_meta_data[ $k ]).')',
+                ];
+            }
+        }
+
+        if ( $mismatch ) {
+            $this->addToLog( 'MISMATCH '. print_r( $mismatch, true ) );
+        }
+    } */
+
+
+    if ( $hashFromDb === $newHash ) {         
+        $this->addToLog( "Skip {$casawp_id} – unchanged (hash)" );
+        update_post_meta( $wp_post->ID, 'is_active', true );
+        update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
+        return;
+    }
+
+    $new_meta_data['last_import_hash'] = $newHash;
+
+
+
     /* ---------- main-post update ---------- */
     if ( $new_main_data !== $old_main_data ) {
       if ( ! $wp_post->post_name ) {
@@ -1500,6 +1632,8 @@ class Import
     /* ---------- meta update (single statement) ---------- */
     if ( $new_meta_data !== $old_meta_data ) {
       CASAWP_Bulk_Meta::sync( $wp_post->ID, $new_meta_data );
+      update_post_meta( $wp_post->ID, 'last_import_hash', $newHash );
+      $this->addToLog( "Meta updated for {$casawp_id}" );
     }
 
     if (isset($property['property_categories'])) {

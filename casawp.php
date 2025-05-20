@@ -27,6 +27,10 @@ add_filter('action_scheduler_retention_period', function() {
 	return 7 * DAY_IN_SECONDS; // Keep logs for 7 days
 });
 
+add_filter( 'action_scheduler_queue_runner_concurrent_batches', function () {
+	return 1;          // default = 5
+} );
+
 // Update system
 require_once('wp_autoupdate.php');
 $plugin_current_version = '3.1.4';
@@ -305,10 +309,14 @@ function casawp_add_cron_schedule($schedules) {
 function casawp_cancel_import() {
 	if (class_exists('ActionScheduler')) {
 		$store = ActionScheduler::store();
-		$pending_actions = $store->query_actions(array(
+		$run_id = (int) get_option( 'casawp_current_run_id', 0 );
+		$group  = 'casawp_run_' . $run_id;
+
+		$pending_actions = $store->query_actions( [
 			'hook'   => 'casawp_batch_import',
-			'status' => ['pending','in-progress'],
-		));
+			'status' => [ 'pending', 'in-progress' ],
+			'group'  => $group,                    // ←  only this run
+		] );
 		foreach ($pending_actions as $action_id) {
 			$store->cancel_action($action_id);
 		}
