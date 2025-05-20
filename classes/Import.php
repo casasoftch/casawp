@@ -212,97 +212,129 @@ class Import
     }
   }
 
-  public function finalize_import_cleanup()
-  {
-    $this->addToLog('Finalizing import cleanup.');
+  /**
+   * Called once per run – deletes posts that have NOT been processed in
+   * the current run and clears the “import in progress” lock.
+   *
+   * Extra guards guarantee the function cannot execute a 2-nd time for
+   * the same run (or when no run is in progress).
+   */
+  public function finalize_import_cleanup() {
 
-    if ( get_option( 'casawp_import_canceled' ) ) {
-        $this->addToLog( 'Import was canceled – cleanup skips deletions.' );
-        delete_transient( 'casawp_import_in_progress' );
-        delete_option   ( 'casawp_current_run_id' );
-        return;
+    /* ───────────────────────────────────────────────────────────────
+     *  0.  Safety guards
+     *      –––––––––––––
+     *      • do nothing if no run is active
+     *      • do nothing if this run was already cleaned up
+     * ─────────────────────────────────────────────────────────────── */
+    $run_id = (int) get_option( 'casawp_current_run_id', 0 );
+    if ( ! $run_id ) {
+      return;                                    // no active run → bail
+    }
+    if ( (int) get_option( 'casawp_cleanup_done_for_run', 0 ) === $run_id ) {
+      return;                                    // already cleaned up → bail
     }
 
-    if (get_option('casawp_import_failed')) {
-      $this->addToLog('Import marked as failed. Skipping deletion of inactive properties.');
-      delete_option('casawp_import_failed');
-      delete_transient('casawp_import_in_progress');
+    $this->addToLog( 'Finalizing import cleanup.' );
+
+    /* ----------------------------------------------------------------
+     *  1.  Early exits for cancelled / failed runs
+     * ---------------------------------------------------------------- */
+    if ( get_option( 'casawp_import_canceled' ) ) {
+      $this->addToLog( 'Import was canceled – cleanup skips deletions.' );
+      delete_transient( 'casawp_import_in_progress' );
       return;
     }
 
-    $run_id = (int) get_option( 'casawp_current_run_id', 0 );
+    if ( get_option( 'casawp_import_failed' ) ) {
+      $this->addToLog( 'Import marked as failed. Skipping deletion of inactive properties.' );
+      delete_option( 'casawp_import_failed' );
+      delete_transient( 'casawp_import_in_progress' );
+      return;
+    }
 
+    /* ----------------------------------------------------------------
+     *  2.  Remove posts that were NOT touched in this run
+     * ---------------------------------------------------------------- */
     $posts_to_remove = get_posts( [
-        'posts_per_page' => -1,
-        'post_type'      => 'casawp_property',
-        'post_status'    => 'publish',
-        'fields'         => 'ids',
-        'meta_query'     => [
-            'relation' => 'OR',
-            [
-                'key'     => 'last_processed_run',      // never processed (meta missing)
-                'compare' => 'NOT EXISTS',
-            ],
-            [
-                'key'     => 'last_processed_run',      // processed, but in an earlier run
-                'value'   => $run_id,
-                'compare' => '!=',
-                'type'    => 'NUMERIC',
-            ],
+      'posts_per_page' => -1,
+      'post_type'      => 'casawp_property',
+      'post_status'    => 'publish',
+      'fields'         => 'ids',
+      'meta_query'     => [
+        'relation' => 'OR',
+        [
+          'key'     => 'last_processed_run',
+          'compare' => 'NOT EXISTS',          // never processed
         ],
+        [
+          'key'     => 'last_processed_run',  // processed in an earlier run
+          'value'   => $run_id,
+          'compare' => '!=',
+          'type'    => 'NUMERIC',
+        ],
+      ],
     ] );
 
+    foreach ( $posts_to_remove as $post_id ) {
 
-    foreach ($posts_to_remove as $post_id) {
-      $attachments = get_posts(array(
+      $attachments = get_posts( [
         'post_type'      => 'attachment',
         'posts_per_page' => -1,
         'post_status'    => 'any',
         'post_parent'    => $post_id,
         'fields'         => 'ids',
-      ));
+      ] );
 
-      $this->addToLog('Deleting ' . count($attachments) . ' attachments for property ID: ' . $post_id);
+      $this->addToLog( "Deleting " . count( $attachments ) . " attachments for property ID: $post_id" );
 
-      foreach ($attachments as $attachment_id) {
-        if (wp_delete_attachment($attachment_id, true)) {
-          $this->addToLog('Deleted attachment ID: ' . $attachment_id);
+      foreach ( $attachments as $attachment_id ) {
+        if ( wp_delete_attachment( $attachment_id, true ) ) {
+          $this->addToLog( "Deleted attachment ID: $attachment_id" );
         } else {
-          $this->addToLog('Failed to delete attachment ID: ' . $attachment_id);
+          $this->addToLog( "Failed to delete attachment ID: $attachment_id" );
         }
       }
 
-      if (wp_delete_post($post_id, true)) {
-        $this->addToLog('Deleted property ID: ' . $post_id);
+      if ( wp_delete_post( $post_id, true ) ) {
+        $this->addToLog( "Deleted property ID: $post_id" );
       } else {
-        $this->addToLog('Failed to delete property ID: ' . $post_id);
+        $this->addToLog( "Failed to delete property ID: $post_id" );
       }
     }
 
     flush_rewrite_rules();
 
-    if (class_exists('\WpeCommon')) {
+    if ( class_exists( '\WpeCommon' ) ) {
       \WpeCommon::purge_varnish_cache();
       \WpeCommon::purge_memcached();
-      $this->addToLog('Triggered WP Engine cache purge.');
+      $this->addToLog( 'Triggered WP Engine cache purge.' );
     }
 
-    delete_transient('casawp_import_in_progress');
-    delete_option   ( 'casawp_current_run_id' );
-    $this->addToLog('Import lock cleared.');
+    /* ----------------------------------------------------------------
+     *  3.  Mark this run as *fully* cleaned-up and tidy the scheduler
+     * ---------------------------------------------------------------- */
+    update_option( 'casawp_cleanup_done_for_run', $run_id );
 
-    $this->addToLog('Import completed and lock cleared.');
+    if ( function_exists( 'as_unschedule_all_actions' ) ) {
+      as_unschedule_all_actions( 'casawp_batch_import' );  // purge leftover jobs
+    }
 
+    delete_transient( 'casawp_import_in_progress' );
+    delete_option   ( 'casawp_current_run_id' );            // now safe to remove
+    $this->addToLog( 'Import lock cleared.' );
+    $this->addToLog( 'Import completed and lock cleared.' );
+
+    /* 4.  Fire follow-up actions / pending imports */
     if ( get_transient( 'casawp_import_pending' ) ) {
-        delete_transient( 'casawp_import_pending' );
-        $this->addToLog( 'Pending import triggered right after cleanup.' );
-
-        // Kick-off a fresh batch – no lock now
-        casawp_start_new_import( 'Pending after previous run', false );
+      delete_transient( 'casawp_import_pending' );
+      $this->addToLog( 'Pending import triggered right after cleanup.' );
+      casawp_start_new_import( 'Pending after previous run', false );
     }
 
-    do_action('casawp_import_finished');
+    do_action( 'casawp_import_finished' );
   }
+
 
   public function handle_properties_import_batch($batch_number)
   {
@@ -795,7 +827,106 @@ class Import
         $copy['lang'] = $langcode;
         if (get_option('casawp_auto_translate_properties')) {
           // Minimal default naming if missing
-          $copy['name'] = 'Property in '.$copy['locality'];
+          if ($copy['urls']) {
+            foreach ($copy['urls'] as $i => $url) {
+              $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
+              $urlString = strtok($urlString, '/');
+              $copy['urls'][$i]['title'] = $urlString;
+            }
+          }
+          if ($langcode == 'de') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Mietobjekt in ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Kaufobjekt in ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Dokument #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Bild #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($langcode == 'fr') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Objet à louer à ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Objet à acheter à ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($langcode == 'en') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Property for rent in ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Property for sale in ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Document #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Plan #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Image #' . $img;
+                  $img++;
+                }
+              }
+            }
+          } elseif ($langcode == 'it') {
+            if ($copy['type'] == 'rent') {
+              $copy['name'] = 'Oggetto in affitto a ' . $copy['locality'];
+            } else {
+              $copy['name'] = 'Oggetto in vendita a ' . $copy['locality'];
+            }
+            if ($copy['offer_medias']) {
+              $doc = 1;
+              $plan = 1;
+              $img = 1;
+              foreach ($copy['offer_medias'] as $i => $offer_media) {
+                if ($offer_media['type'] == 'document') {
+                  $copy['offer_medias'][$i]['title'] = 'Documento #' . $doc;
+                  $doc++;
+                } elseif ($offer_media['type'] == 'plan') {
+                  $copy['offer_medias'][$i]['title'] = 'Piano #' . $plan;
+                  $plan++;
+                } elseif ($offer_media['type'] == 'image' && $offer_media['caption'] != '') {
+                  $copy['offer_medias'][$i]['caption'] = 'Immagine #' . $img;
+                  $img++;
+                }
+              }
+            }
+          }
           $copy['descriptions'] = [];
           $copy['excerpt'] = '';
         }

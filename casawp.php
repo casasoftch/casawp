@@ -205,7 +205,7 @@ function casawp_remove_old_crons() {
 add_action('init', 'casawp_remove_old_crons');
 
 function eg_increase_time_limit( $time_limit ) {
-	return 300;
+	return 60;
 }
 add_filter( 'action_scheduler_queue_runner_time_limit', 'eg_increase_time_limit' );
 
