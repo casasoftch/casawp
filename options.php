@@ -1713,6 +1713,28 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 						</div>
 
+						<?php
+						/* -----------------------------------------------------------------
+						 *  “Delete everything” button  (UI)
+						 * -----------------------------------------------------------------*/
+						$del_nonce = wp_create_nonce( 'casawp_delete_all' );
+						$del_url   = add_query_arg(
+							[
+								'action'   => 'casawp_delete_all_properties',
+								'_wpnonce' => $del_nonce,
+							],
+							admin_url( 'admin-post.php' )
+						);
+						?>
+						<p style="margin-top:2em;">
+							<a href="<?php echo esc_url( $del_url ); ?>"
+							   class="button button-danger"
+							   style="background:#c9302c;border-color:#ac2925;color:#fff;"
+							   onclick="return confirm('Möchten Sie wirklich alle Objektdaten komplett löschen?');">
+								Alle Objektdaten löschen
+							</a>
+						</p>
+
 						<div id="casawp-progress-wrapper" style="display: none;">
 							<strong style="display: block; margin-bottom: 10px;">Import Progress</strong>
 							<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">

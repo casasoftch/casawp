@@ -433,6 +433,8 @@ class Import
   public function handle_properties_import_batch($batch_number)
   {
 
+    $started_at = microtime( true );
+
     if ( $batch_number == 1 ) {                         // very first batch of a run
         $this->current_run_id = time();                 // seconds since 1970 => unique
         update_option( 'casawp_current_run_id', $this->current_run_id, 'no' );
@@ -492,9 +494,22 @@ class Import
         throw new \Exception('Failed to parse XML.');
       }
 
-      $properties = $xml->properties->property;
+      // OLD WAY, throwing Exception
+      /* $properties = $xml->properties->property;
       if ($properties === null) {
         throw new \Exception('No properties found in XML.');
+      } */
+
+      //NEW WAY, to delete all properties if empty file
+      $propertiesNode = $xml->properties ?? null;
+      $properties     = $propertiesNode ? $propertiesNode->property : [];
+
+      if ( empty( $properties ) ) {
+        $this->addToLog('Feed contained zero properties – treating as full unpublish.');
+        $this->finalize_import_cleanup();
+        delete_transient('casawp_import_in_progress');
+        wp_suspend_cache_addition(false);
+        return;
       }
 
       $properties_array = array();
@@ -530,9 +545,34 @@ class Import
         $this->addToLog('Import process completed.');
       } else {
         $next_batch_number = $batch_number + 1;
-        $pending_batch = as_next_scheduled_action('casawp_batch_import', array('batch_number' => $next_batch_number), $this->group()  );
-        if (!$pending_batch) {
-          as_schedule_single_action(time() + 10, 'casawp_batch_import', array('batch_number' => $next_batch_number), $this->group()  );
+
+        /* ── calculate self-tuning delay ───────────── */
+        $runtime = microtime( true ) - $started_at;   // seconds
+        $delay   = min( max( ceil( $runtime ) + 8, 12 ), 90 );
+
+        $this->addToLog(
+            sprintf(
+                'Batch %d took %.2fs – next in %ds',
+                $batch_number,
+                $runtime,
+                $delay
+            )
+        );
+
+        /* If another batch with that number isn’t
+           already queued in this run, schedule it.   */
+        if ( ! as_next_scheduled_action(
+                 'casawp_batch_import',
+                 [ 'batch_number' => $next_batch_number ],
+                 $this->group()
+             ) ) {
+
+            as_schedule_single_action(
+                time() + $delay,
+                'casawp_batch_import',
+                [ 'batch_number' => $next_batch_number ],
+                $this->group()
+            );
         }
       }
     } catch (\Exception $e) {
@@ -570,16 +610,27 @@ class Import
           throw new Exception('Failed to parse XML.');
       }
 
-      // Another example check
-      if (!$xml->properties || !$xml->properties->property) {
-          $this->addToLog('No properties found in XML.');
-          wp_suspend_cache_addition(false);
-          throw new Exception('No properties found in XML.');
+      // OLD WAY, throwing Exception
+      /* $properties = $xml->properties->property;
+      if ($properties === null) {
+        throw new \Exception('No properties found in XML.');
+      } */
+
+      //NEW WAY, to delete all properties if empty file
+      $propertiesNode = $xml->properties ?? null;
+      $properties     = $propertiesNode ? $propertiesNode->property : [];
+
+      if ( empty( $properties ) ) {
+        $this->addToLog('Feed contained zero properties – treating as full unpublish.');
+        $this->finalize_import_cleanup();
+        delete_transient('casawp_import_in_progress');
+        wp_suspend_cache_addition(false);
+        return;
       }
 
       // If we get here, parse the properties and import
       $properties_array = [];
-      foreach ($xml->properties->property as $property) {
+      foreach ($properties as $property) {
           $properties_array[] = $this->property2Array($property);
       }
 
@@ -621,6 +672,7 @@ class Import
     }
 
     $xml_property_ids = array();
+
     foreach ($xml->properties->property as $property) {
       $id = (string) $property['id'];
       if ($id) {
@@ -629,7 +681,7 @@ class Import
     }
 
     if (empty($xml_property_ids)) {
-      #$this->addToLog("No properties found for deletion XML.");
+      $this->addToLog('Feed contained zero properties – skipping “outdated” pass, full clean-up will handle.');
       return;
     }
 
@@ -656,13 +708,7 @@ class Import
 
     $existing_exportproperty_ids = array_keys($exportproperty_to_posts);
     $outdated_exportproperty_ids = array_diff($existing_exportproperty_ids, $xml_property_ids);
-/* 
-    $total_to_delete = count($outdated_exportproperty_ids);
 
-    if ($total_to_delete === 0) {
-      $this->addToLog("No outdated properties to delete.");
-      return;
-    } */
 
     $batch_size = 50;
     $batches = array_chunk($outdated_exportproperty_ids, $batch_size);
