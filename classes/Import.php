@@ -150,6 +150,7 @@ class Import
           '_thumbnail_id',
           '_wpml_word_count',
           '_yoast_indexnow_last_ping',
+          '_last_translation_edit_mode',
 
           // identifiers you store once during insert
           'casawp_id',
@@ -1573,12 +1574,12 @@ class Import
 
     /* DEBUGGING HASHING */
 
-  if ( $casawp_id === '1595131de' ) {      // pick any ID
-      $this->addToLog( 'HASH_OLD '.$hashFromDb );
-      $this->addToLog( 'HASH_NEW '.$newHash );
-  }
+   /*  if ( $casawp_id === '1595131it' ) {      // pick any ID
+        $this->addToLog( 'HASH_OLD '.$hashFromDb );
+        $this->addToLog( 'HASH_NEW '.$newHash );
+    }
 
-    if ( $casawp_id === '1595131de' ) {           // pick any one offer
+    if ( $casawp_id === '1595131it' ) {           // pick any one offer
 
         $mismatch = [];
 
@@ -1608,7 +1609,7 @@ class Import
         if ( $mismatch ) {
             $this->addToLog( 'MISMATCH '. print_r( $mismatch, true ) );
         }
-    }
+    } */
 
 
     if ( $hashFromDb === $newHash ) {         
