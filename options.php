@@ -1439,7 +1439,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<label>
 								<input type="checkbox" name="<?php echo $name; ?>" value="1"
 									<?php checked(get_option($name), 1); ?>>
-								Import everything in a single request (disable batch scheduling).
+								Batch-Processing deaktivieren (Single HTTP-Request)
 							</label>
 						</fieldset>
 						<fieldset>
@@ -1506,10 +1506,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 						<legend class="screen-reader-text"><span>Batch Size Override</span></legend>
 						<?php $override_name = 'casawp_batch_size_override'; ?>
-						<?php $override_text = 'Override Batch Size'; ?>
+						<?php $override_text = 'Batch-Grösse überschreiben'; ?>
 						<label class="block-label block-label--intd" for="<?php echo $override_name; ?>"><?php echo $override_text; ?></label>
 						<input type="number" min="1" placeholder="Default: based on languages & CDN" name="<?php echo $override_name; ?>" value="<?= esc_attr(get_option($override_name, '')) ?>" id="<?php echo $override_name; ?>" class="regular-text" />
-						<p class="description">Enter a custom batch size to override the default calculation. Leave blank to use the default logic.</p>
+						<p class="description">Individuelle Batch-Grösse festlegen. Leerlassen für dynamische Logik anhand Anzahl installierter Sprachen.</p>
 
 
 
