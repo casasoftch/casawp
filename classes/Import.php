@@ -149,6 +149,7 @@ class Import
           // keys created outside the generator
           '_thumbnail_id',
           '_wpml_word_count',
+          '_yoast_indexnow_last_ping',
 
           // identifiers you store once during insert
           'casawp_id',
@@ -1568,14 +1569,16 @@ class Import
     }
     $newHash    = $this->fingerprint( $new_meta_data );
 
-    if ( $casawp_id === '353188de' ) {      // pick any ID
-        $this->addToLog( 'HASH_OLD '.$hashFromDb );
-        $this->addToLog( 'HASH_NEW '.$newHash );
-    }
+    
 
     /* DEBUGGING HASHING */
 
-   /*  if ( $casawp_id === '353188de' ) {           // pick any one offer
+  if ( $casawp_id === '1595131de' ) {      // pick any ID
+      $this->addToLog( 'HASH_OLD '.$hashFromDb );
+      $this->addToLog( 'HASH_NEW '.$newHash );
+  }
+
+    if ( $casawp_id === '1595131de' ) {           // pick any one offer
 
         $mismatch = [];
 
@@ -1605,7 +1608,7 @@ class Import
         if ( $mismatch ) {
             $this->addToLog( 'MISMATCH '. print_r( $mismatch, true ) );
         }
-    } */
+    }
 
 
     if ( $hashFromDb === $newHash ) {         

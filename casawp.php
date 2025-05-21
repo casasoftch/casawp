@@ -133,9 +133,6 @@ add_action('admin_init', function() {
 	if (get_option('casawp_single_request_import', '') === '') {
 		update_option('casawp_single_request_import', '1');
 	}
-	if (get_option('casawp_enable_import_hash', '') === '') {
-		update_option('casawp_enable_import_hash', '1');
-	}
 });
 
 add_action('admin_init', 'casawp_handle_import_requests');
