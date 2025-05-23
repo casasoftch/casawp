@@ -1736,7 +1736,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						</p>
 
 						<div id="casawp-progress-wrapper" style="display: none;">
-							<strong style="display: block; margin-bottom: 10px;">Import Progress</strong>
+							<strong style="display: block; margin-bottom: 10px; margin-top: 30px;">Import Progress</strong>
 							<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
 								<div id="casawp-progress-bar" style="width: 0%; height: 30px; background-color: #4caf50; line-height: 30px;">
 									<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">0%</span>

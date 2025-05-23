@@ -59,6 +59,7 @@ function casawpPostInstall($true, $hook_extra, $result) {
   return $result;
 }
 
+
 add_filter("upgrader_post_install", "casawpPostInstall", 10, 3);
 
 define('CASASYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -129,6 +130,46 @@ if (is_admin()) {
 $import = new casawp\Import(false, false);
 $import->register_hooks();
 
+
+/**
+ * Try to become the *one* importer that may run right now.
+ * Returns TRUE iff we won the race.
+ *
+ * If a lock is older than 4 h it is considered stale and recycled.
+ */
+function casawp_acquire_lock( int $max_age = 14400 ): bool {
+
+	$now = time();
+
+	/* 1) attempt to insert a brand-new row (atomic) */
+	if ( add_option( 'casawp_import_lock', $now, '', 'no' ) ) {
+		return true;                                // we own it
+	}
+
+	/* 2) row already there – is it stale? */
+	$existing = (int) get_option( 'casawp_import_lock', 0 );
+	if ( $existing && ( $now - $existing ) > $max_age ) {
+		// try to steal the stale lock (race-safe because delete+add flips order)
+		delete_option( 'casawp_import_lock' );
+		return add_option( 'casawp_import_lock', $now, '', 'no' );
+	}
+
+	return false;   
+}
+
+/** Remove the lock – *always* call once the run ends (success, cancel, fail). */
+function casawp_release_lock(): void {
+	delete_option( 'casawp_import_lock' );
+}
+
+/** Flag that a fresh import should run when the lock is free. */
+function casawp_set_pending(): void  { update_option( 'casawp_import_pending', 1, 'no' ); }
+function casawp_clear_pending(): void { delete_option( 'casawp_import_pending' ); }
+
+/** Is a pending poke queued? */
+function casawp_has_pending(): bool { return (bool) get_option( 'casawp_import_pending', 0 ); }
+
+
 add_action('admin_init', function() {
 	if (get_option('casawp_single_request_import', '') === '') {
 		update_option('casawp_single_request_import', '1');
@@ -145,8 +186,8 @@ function casawp_handle_import_requests() {
 		check_admin_referer('casawp_single_import');
 
 		try {
-			// If an import is in progress, cancel it:
-			if (get_transient('casawp_import_in_progress')) {
+
+			if (! casawp_acquire_lock()) {
 				casawp_cancel_import();
 				sleep(2);
 			}
@@ -230,25 +271,20 @@ function casawp_handle_failed_action($action_id) {
 		$import = new casawp\Import(false, false);
 		$import->addToLog('Import canceled due to batch failure on ' . $site_domain . '. Notification sent.');
 		update_option('casawp_import_failed', true);
-		delete_transient('casawp_import_in_progress');
+		casawp_release_lock();
 	}
 }
 
 
 function casawp_start_new_import($source = '', $force_cancel = false) {
 
-	// If something is already running…
-	if ( get_transient( 'casawp_import_in_progress' ) ) {
-
-		// …and we’ve been told to *force*-cancel (e.g. an admin action) → do it
+	if ( ! casawp_acquire_lock() ) {          // someone else is running
 		if ( $force_cancel ) {
-			delete_transient( 'casawp_import_pending' );
-			casawp_cancel_import();
-			sleep( 2 );     // keep as safety
-		}
-		// …otherwise, just mark that a fresh import should run afterwards and bail
-		else {
-			set_transient( 'casawp_import_pending', true, 2 * HOUR_IN_SECONDS );
+			casawp_cancel_import();           // clears jobs & releases lock
+			sleep( 2 );
+			casawp_acquire_lock();            // we *must* own it now
+		} else {
+			casawp_set_pending();             // queue & bail
 			return;
 		}
 	}
@@ -258,7 +294,8 @@ function casawp_start_new_import($source = '', $force_cancel = false) {
 	delete_option('casawp_import_failed');
 	delete_option('casawp_import_canceled');
 
-	$import = new casawp\Import(false, true);
+	$import = new casawp\Import(); 
+	$import->updateImportFileThroughCasaGateway( true );
 	$import->addToLog($source . ' import started');
 	return $import;
 
@@ -318,7 +355,7 @@ function casawp_cancel_import() {
 			$store->cancel_action($action_id);
 		}
 		update_option('casawp_import_canceled', true);
-		delete_transient('casawp_import_in_progress');
+		casawp_release_lock();
 		delete_option('casawp_import_failed');
 		$import = new casawp\Import(false, false);
 		$import->addToLog('All pending import actions canceled and import lock cleared.');
@@ -381,16 +418,16 @@ function casawp_start_import() {
 
 function casawp_start_single_request_import($source = '') {
 
-	if (get_transient('casawp_import_in_progress')) {
+	if (!casawp_acquire_lock()) {
 		casawp_cancel_import();
 		sleep(2);
+		casawp_acquire_lock();
 	}
 
 	update_option('casawp_total_batches', 1); 
 	update_option('casawp_completed_batches', 0);
 	delete_option('casawp_import_failed');
 	delete_option('casawp_import_canceled');
-	set_transient('casawp_import_in_progress', true, 2 * HOUR_IN_SECONDS);
 
 	$import = new \casawp\Import(false, true);
 	$import->addToLog($source . ' import (single-request) started');
@@ -402,7 +439,7 @@ function casawp_start_single_request_import($source = '') {
 	$import->finalize_import_cleanup([]);
 
 	$import->addToLog('Single-request import completed');
-	delete_transient('casawp_import_in_progress');
+	casawp_release_lock();
 }
 
 add_action('admin_init', function() {

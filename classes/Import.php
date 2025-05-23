@@ -82,7 +82,7 @@ class Import
 
   public function register_hooks()
   {
-    add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'));
+    add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'), 10, 2);
     add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'));
   }
 
@@ -99,7 +99,7 @@ class Import
       as_schedule_single_action(
           time() + 10,
           'casawp_batch_import',
-          [ 'batch_number' => 1 ],
+          [ 'batch_number' => 1, 'run_id' => $run_id ],
           'casawp_run_' . $run_id       // ← group
       );
   }
@@ -168,8 +168,14 @@ class Import
 
 
   private function group(): string {
+      // when the handler is already inside a batch, use the cached ID
+      if ( $this->current_run_id ) {
+          return 'casawp_run_' . $this->current_run_id;
+      }
+      // fallback for places that call group() before we set the property
       return 'casawp_run_' . (int) get_option( 'casawp_current_run_id', 0 );
   }
+
 
   private function fetchFileFromCasaGateway(): string
   {
@@ -251,11 +257,15 @@ class Import
       return $filePath;
   }
 
-  public function updateImportFileThroughCasaGateway()
+  public function updateImportFileThroughCasaGateway( bool $already_locked = false )
   {
     $this->addToLog('gateway file retrieval start: ' . time());
 
-    set_transient('casawp_import_in_progress', true, 2 * HOUR_IN_SECONDS);
+    if ( ! $already_locked && ! casawp_acquire_lock() ) {
+        casawp_set_pending();
+        $this->addToLog( 'Import already running - poke queued.' );
+        return;
+    }
 
     try {
 
@@ -275,6 +285,10 @@ class Import
     } catch (\Exception $e) {
         $this->addToLog('Import failed: ' . $e->getMessage());
         update_option('casawp_import_failed', true);
+    } finally {
+      if ( ! $already_locked ) {
+          casawp_release_lock();
+      }
     }
   }
 
@@ -335,15 +349,15 @@ class Import
      *  1.  Early exits for cancelled / failed runs
      * ---------------------------------------------------------------- */
     if ( get_option( 'casawp_import_canceled' ) ) {
-      $this->addToLog( 'Import was canceled – cleanup skips deletions.' );
-      delete_transient( 'casawp_import_in_progress' );
+      $this->addToLog( 'Import was canceled - cleanup skips deletions.' );
+      casawp_release_lock();
       return;
     }
 
     if ( get_option( 'casawp_import_failed' ) ) {
       $this->addToLog( 'Import marked as failed. Skipping deletion of inactive properties.' );
       delete_option( 'casawp_import_failed' );
-      delete_transient( 'casawp_import_in_progress' );
+      casawp_release_lock();
       return;
     }
 
@@ -414,14 +428,14 @@ class Import
       as_unschedule_all_actions( 'casawp_batch_import', [], $this->group() );
     }
 
-    delete_transient( 'casawp_import_in_progress' );
+    casawp_release_lock();
     delete_option   ( 'casawp_current_run_id' );            // now safe to remove
     $this->addToLog( 'Import lock cleared.' );
     $this->addToLog( 'Import completed and lock cleared.' );
 
     /* 4.  Fire follow-up actions / pending imports */
-    if ( get_transient( 'casawp_import_pending' ) ) {
-      delete_transient( 'casawp_import_pending' );
+    if ( casawp_has_pending() ) {
+      casawp_clear_pending();
       $this->addToLog( 'Pending import triggered right after cleanup.' );
       casawp_start_new_import( 'Pending after previous run', false );
     }
@@ -430,17 +444,21 @@ class Import
   }
 
 
-  public function handle_properties_import_batch($batch_number)
+  public function handle_properties_import_batch($batch_number, $run_id = 0)
   {
 
-    $started_at = microtime( true );
+    if ( ! $this->current_run_id ) {
+        $this->current_run_id = $run_id
+            ? (int) $run_id
+            : (int) get_option( 'casawp_current_run_id', 0 );
 
-    if ( $batch_number == 1 ) {                         // very first batch of a run
-        $this->current_run_id = time();                 // seconds since 1970 => unique
-        update_option( 'casawp_current_run_id', $this->current_run_id, 'no' );
-    } else {
-        $this->current_run_id = (int) get_option( 'casawp_current_run_id', time() );
+        if ( ! $this->current_run_id && $batch_number == 1 ) {
+            $this->current_run_id = time();
+            update_option( 'casawp_current_run_id', $this->current_run_id, 'no' );
+        }
     }
+
+    $started_at = microtime( true );
 
     // Temporarily suspend cache additions for speed
     wp_suspend_cache_addition(true);
@@ -505,9 +523,9 @@ class Import
       $properties     = $propertiesNode ? $propertiesNode->property : [];
 
       if ( empty( $properties ) ) {
-        $this->addToLog('Feed contained zero properties – treating as full unpublish.');
+        $this->addToLog('Feed contained zero properties - treating as full unpublish.');
         $this->finalize_import_cleanup();
-        delete_transient('casawp_import_in_progress');
+        casawp_release_lock();
         wp_suspend_cache_addition(false);
         return;
       }
@@ -570,7 +588,7 @@ class Import
             as_schedule_single_action(
                 time() + $delay,
                 'casawp_batch_import',
-                [ 'batch_number' => $next_batch_number ],
+                [ 'batch_number' => $next_batch_number, 'run_id' => $this->current_run_id ],
                 $this->group()
             );
         }
@@ -579,7 +597,7 @@ class Import
       $this->addToLog('Error: ' . $e->getMessage());
       if ($e->getMessage() === 'No properties found in XML.') {
         set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
-        delete_transient('casawp_import_in_progress');
+        casawp_release_lock();
       }
     }
     wp_suspend_cache_addition(false);
@@ -588,9 +606,6 @@ class Import
   public function handle_single_request_import()
   {
       wp_suspend_cache_addition(true);
-      if (!get_transient('casawp_import_in_progress')) {
-          set_transient('casawp_import_in_progress', true, 2 * HOUR_IN_SECONDS);
-      }
 
       // Possibly throws exceptions if something goes wrong
       $this->fetchFileFromCasaGateway(); 
@@ -623,7 +638,7 @@ class Import
       if ( empty( $properties ) ) {
         $this->addToLog('Feed contained zero properties – treating as full unpublish.');
         $this->finalize_import_cleanup();
-        delete_transient('casawp_import_in_progress');
+        casawp_release_lock();
         wp_suspend_cache_addition(false);
         return;
       }
@@ -648,7 +663,7 @@ class Import
       $this->finalize_import_cleanup();
 
       // Clear lock
-      delete_transient('casawp_import_in_progress');
+      casawp_release_lock();
       wp_suspend_cache_addition(false);
   }
 
@@ -681,7 +696,7 @@ class Import
     }
 
     if (empty($xml_property_ids)) {
-      $this->addToLog('Feed contained zero properties – skipping “outdated” pass, full clean-up will handle.');
+      $this->addToLog('Feed contained zero properties - skipping “outdated” pass, full clean-up will handle.');
       return;
     }
 
@@ -1659,7 +1674,7 @@ class Import
 
 
     if ( $hashFromDb === $newHash ) {         
-        $this->addToLog( "Skip {$casawp_id} – unchanged (hash)" );
+        $this->addToLog( "Skip {$casawp_id} - unchanged (hash)" );
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
         return;
