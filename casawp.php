@@ -285,6 +285,8 @@ function casawp_start_new_import($source = '', $force_cancel = false) {
 			casawp_acquire_lock();            // we *must* own it now
 		} else {
 			casawp_set_pending();             // queue & bail
+			$import = new casawp\Import(false, false);
+			$import->addToLog('Import already in progress. New import request queued.');
 			return;
 		}
 	}

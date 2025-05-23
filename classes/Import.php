@@ -570,7 +570,7 @@ class Import
 
         $this->addToLog(
             sprintf(
-                'Batch %d took %.2fs – next in %ds',
+                'Batch %d took %.2fs - next in %ds',
                 $batch_number,
                 $runtime,
                 $delay
