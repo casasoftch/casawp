@@ -45,6 +45,7 @@ wp casawp import --url=https://example.com
 
 * new: Added possibility to order by rand in queries
 * new: Option for single request imports
+* new: Option to delete all properties and media through direct SQL command button
 * update: Added new categories and translations
 * update: More robust import handling (hashing, cancellations, pending imports)
 * update: Enhanced logging and debugging possibilities
