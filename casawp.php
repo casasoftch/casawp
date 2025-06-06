@@ -418,31 +418,43 @@ function casawp_start_import() {
 	}
 }
 
-function casawp_start_single_request_import($source = '') {
+/**
+ * Run a one-shot (single-request) import:
+ * – fetch feed, process everything, remove stale posts – all in one HTTP request
+ */
+function casawp_start_single_request_import( string $source = '' ) {
 
-	if (!casawp_acquire_lock()) {
-		casawp_cancel_import();
-		sleep(2);
-		casawp_acquire_lock();
+	/* ── 1. exclusive lock ─────────────────────────────────────── */
+	if ( ! casawp_acquire_lock() ) {          // someone else is running
+		casawp_cancel_import();               // clear their jobs + lock
+		sleep( 2 );                           // tiny safety pause
+		casawp_acquire_lock();                // we must own it now
 	}
 
-	update_option('casawp_total_batches', 1); 
-	update_option('casawp_completed_batches', 0);
-	delete_option('casawp_import_failed');
-	delete_option('casawp_import_canceled');
+	/* ── 2. mint / store a fresh run-id ────────────────────────── */
+	$run_id = time();                         // seconds since 1970 ⇒ unique
+	update_option( 'casawp_current_run_id', $run_id, 'no' );
 
-	$import = new \casawp\Import(false, true);
-	$import->addToLog($source . ' import (single-request) started');
+	update_option( 'casawp_total_batches',     1 );
+	update_option( 'casawp_completed_batches', 0 );
+	delete_option( 'casawp_import_failed' );
+	delete_option( 'casawp_import_canceled' );
 
-	$import->deactivate_all_properties();
+	/* ── 3. create importer (no auto-update in ctor) ───────────── */
+	$import = new \casawp\Import( false, false );   // (poke = false, update = false)
+	$import->init_single_run( $run_id );            // hand over the run-id
 
-	$import->handle_single_request_import();
+	$import->addToLog( $source . ' import (single-request) started' );
 
-	$import->finalize_import_cleanup([]);
+	/* ── 4. do the actual work ─────────────────────────────────── */
+	$import->deactivate_all_properties();           // mark every post inactive
+	$import->handle_single_request_import();        // fetch + process feed
+	/*   ↑ calls finalize_import_cleanup() internally,
+		   which in turn releases the lock.                 */
 
-	$import->addToLog('Single-request import completed');
-	casawp_release_lock();
+	$import->addToLog( 'Single-request import completed' );
 }
+
 
 add_action('admin_init', function() {
 	if (!is_admin() || !current_user_can('manage_options')) {

@@ -104,6 +104,10 @@ class Import
       );
   }
 
+  public function init_single_run( int $run_id ): void {
+    $this->current_run_id = $run_id;
+  }
+
   /**
    * Recursively k-sort every associative sub-array while keeping pure
    * numeric lists (0-based, consecutive keys) in their original order.
