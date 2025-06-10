@@ -617,6 +617,34 @@ add_action( 'admin_post_casawp_delete_all_properties', function () {
 	}
 
 	/* ----------------------------------------------------------------
+	 *  2-b.  WPML glue (only if tables exist)
+	 * ----------------------------------------------------------------*/
+	$icl_trans = "{$p}icl_translations";
+	if ( $wpdb->get_var( $wpdb->prepare(
+			"SHOW TABLES LIKE %s", $icl_trans
+		) ) ) {
+
+		$icl_status = "{$p}icl_translation_status";
+		$icl_jobs   = "{$p}icl_translate_job";
+
+		// translations + status rows for casawp_property
+		$wpdb->query(
+			"DELETE t , ts
+			   FROM {$icl_trans}             AS t
+			   LEFT JOIN {$icl_status}       AS ts
+					 ON ts.translation_id = t.translation_id
+			  WHERE t.element_type = 'post_casawp_property'"
+		);
+
+		// orphaned jobs (defensive)
+		$wpdb->query(
+			"DELETE
+			   FROM {$icl_jobs}
+			  WHERE rid NOT IN ( SELECT rid FROM {$icl_status} )"
+		);
+	}
+
+	/* ----------------------------------------------------------------
 	 *  3.  Strip orphaned post-meta rows
 	 * ----------------------------------------------------------------*/
 	$wpdb->query(
