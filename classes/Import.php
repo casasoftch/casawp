@@ -1116,6 +1116,7 @@ class Import
 
     if (!empty($batched_file)) {
       foreach ($batched_file as $property) {
+        #error_log(print_r($property, true));
         $curRank++;
         $theoffers = [];
         $i = 0;
@@ -1602,14 +1603,76 @@ class Import
         $new_meta_data['custom_option_' . $ckey] = $cvalue;
       }
     }
-    if ( $casawp_id === '353188de' ) {          // 1 language is enough
+   /*  if ( $casawp_id === '353188de' ) {          // 1 language is enough
         $yb_old = $old_meta_data['year_built']  ?? '-';
         $yb_new = $numericValues['year_built'] ?? '-';
         $this->addToLog(
             "DEBUG year_built  old={$yb_old}  new={$yb_new}"
         );
+    } */
+
+    $new_meta_data['_hash_availability'] = sanitize_title( $property['availability'] );
+
+    # 2. salestype
+    $new_meta_data['_hash_salestype'] = sanitize_title( $property['type'] );
+
+    # 3. property-categories  (array → sorted pipe list)
+    if ( ! empty( $property['property_categories'] ) ) {
+        $cat_slugs = array_map( 'sanitize_title',
+                      (array) $property['property_categories'] );
+        sort( $cat_slugs, SORT_STRING );
+        $new_meta_data['_hash_categories'] = implode( '|', $cat_slugs );
     }
-    
+
+    # 4. features
+    if ( ! empty( $property['features'] ) ) {
+        $feat_slugs = array_map( 'sanitize_title',
+                       (array) $property['features'] );
+        sort( $feat_slugs, SORT_STRING );
+        $new_meta_data['_hash_features'] = implode( '|', $feat_slugs );
+    }
+
+    # 5. utilities
+    if ( ! empty( $property['property_utilities'] ) ) {
+        $util_slugs = array_map( 'sanitize_title',
+                        (array) $property['property_utilities'] );
+        sort( $util_slugs, SORT_STRING );
+        $new_meta_data['_hash_utilities'] = implode( '|', $util_slugs );
+    }
+
+    /* ------------------------------------------------------------------
+     * 6.  LOCATION  (country / region / locality)
+     * ----------------------------------------------------------------*/
+    $loc_slugs = [];
+    if ( ! empty( $property['address']['country'] ) ) {
+      $loc_slugs[] = sanitize_title( 'country_' .
+                                     strtoupper( $property['address']['country'] ) );
+    }
+    if ( ! empty( $property['address']['region'] ) ) {
+      $loc_slugs[] = sanitize_title( 'region_' . $property['address']['region'] );
+    }
+    if ( ! empty( $property['address']['locality'] ) ) {
+      $loc_slugs[] = sanitize_title( 'locality_' . $property['address']['locality'] );
+    }
+    sort( $loc_slugs, SORT_STRING );                        // deterministic
+    $new_meta_data['_hash_location'] = implode( '|', $loc_slugs );
+
+    /* ------------------------------------------------------------------
+     * 7.  CUSTOM REGIONS  (publisher options → “casawp_region” taxonomy)
+     * ----------------------------------------------------------------*/
+    $region_slugs = [];
+    foreach ( $publisher_options as $opt_key => $opt_val ) {
+      if ( str_starts_with( $opt_key, 'custom_region_' ) &&
+           str_ends_with(  $opt_key, '_slug' ) &&
+           ! empty( $opt_val[0] ) ) {
+
+        $region_slugs[] = sanitize_title( $opt_val[0] );
+      }
+    }
+    sort( $region_slugs, SORT_STRING );
+    $new_meta_data['_hash_regions'] = implode( '|', $region_slugs );
+
+
     ksort($new_meta_data);
 
     foreach ($new_meta_data as $meta_key => $meta_value) {
@@ -1639,12 +1702,12 @@ class Import
 
     /* DEBUGGING HASHING */
 
-   /*  if ( $casawp_id === '1595131it' ) {      // pick any ID
+   /*  if ( $casawp_id === '1294799de' ) {      // pick any ID
         $this->addToLog( 'HASH_OLD '.$hashFromDb );
         $this->addToLog( 'HASH_NEW '.$newHash );
     }
 
-    if ( $casawp_id === '1595131it' ) {           // pick any one offer
+    if ( $casawp_id === '1294799de' ) {           // pick any one offer
 
         $mismatch = [];
 
@@ -2373,14 +2436,14 @@ class Import
       $this->transcript[$casawp_id]['salestype']['from'] = $old_term_name;
       $this->transcript[$casawp_id]['salestype']['to'] = $new_term_name;
 
-      $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_salestype');
-      if (is_wp_error($result)) {
-        #$this->addToLog('Error assigning salestype term to post: ' . $result->get_error_message());
-      } else {
-        #$this->addToLog('Salestype updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+      wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_salestype');
+
+      if ( $new_term_id ) {
+          update_post_meta( $wp_post->ID,
+                            '_hash_salestype',
+                            get_term( $new_term_id )->slug );
       }
-    } else {
-      #$this->addToLog('No salestype changes detected.');
+      
     }
   }
 
@@ -2459,14 +2522,12 @@ class Import
       $this->transcript[$casawp_id]['availability']['from'] = $old_term_name;
       $this->transcript[$casawp_id]['availability']['to'] = $new_term_name;
 
-      $result = wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_availability');
-      if (is_wp_error($result)) {
-        #$this->addToLog('Error assigning availability term to post: ' . $result->get_error_message());
-      } else {
-        #$this->addToLog('Availability updated from "' . $old_term_name . '" to "' . $new_term_name . '".');
+      wp_set_object_terms($wp_post->ID, $new_term_id, 'casawp_availability');
+      if ( $new_term_id ) {
+          update_post_meta( $wp_post->ID,
+                            '_hash_availability',
+                            get_term( $new_term_id )->slug );
       }
-    } else {
-      #$this->addToLog('No availability changes detected.');
     }
   }
 
@@ -2548,8 +2609,14 @@ class Import
           $yoast_primary_term->set_primary_term($primary_term_id);
         }
       }
-    } else {
-      #$this->addToLog('No location changes detected.');
+
+      $slugs = [];
+      foreach ( wp_get_object_terms( $wp_post->ID, 'casawp_location' ) as $t ) {
+          $slugs[] = $t->slug;
+      }
+      sort( $slugs, SORT_STRING );
+      update_post_meta( $wp_post->ID, '_hash_location', implode( '|', $slugs ) );
+
     }
   }
 
@@ -2618,6 +2685,12 @@ class Import
         }
       }
       wp_set_object_terms($wp_post->ID, $new_categories, 'casawp_category', false);
+      $slugs = [];
+      foreach ( wp_get_object_terms( $wp_post->ID, 'casawp_category' ) as $t ) {
+          $slugs[] = $t->slug;
+      }
+      sort( $slugs, SORT_STRING );
+      update_post_meta( $wp_post->ID, '_hash_categories', implode( '|', $slugs ) );
     }
   }
 
@@ -2659,18 +2732,18 @@ class Import
       }
 
       if (!empty($term_ids)) {
-        $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_feature');
-        if (is_wp_error($result)) {
-          #$this->addToLog('Error assigning features to post: ' . $result->get_error_message());
-        } else {
-          #$this->addToLog('Assigned features to post successfully.');
-        }
+        wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_feature');
       } else {
         wp_set_object_terms($wp_post->ID, array(), 'casawp_feature');
-        #$this->addToLog('Removed all features from post.');
       }
-    } else {
-      #$this->addToLog('No feature changes detected.');
+
+      $slugs = [];
+      foreach ( wp_get_object_terms( $wp_post->ID, 'casawp_feature' ) as $t ) {
+          $slugs[] = $t->slug;
+      }
+      sort( $slugs, SORT_STRING );
+      update_post_meta( $wp_post->ID, '_hash_features', implode( '|', $slugs ) );
+
     }
   }
 
@@ -2713,19 +2786,18 @@ class Import
       }
 
       if (!empty($term_ids)) {
-        $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_utility');
-        if (is_wp_error($result)) {
-          #$this->addToLog('Error assigning utilities to post: ' . $result->get_error_message());
-        } else {
-          #$this->addToLog('Assigned utilities to post successfully.');
-        }
+        wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_utility');
       } else {
         wp_set_object_terms($wp_post->ID, array(), 'casawp_utility');
-        #$this->addToLog('Removed all utilities from post.');
       }
-    } else {
-      #$this->addToLog('No utility changes detected.');
-    }
+      $slugs = [];
+      foreach ( wp_get_object_terms( $wp_post->ID, 'casawp_utility' ) as $t ) {
+          $slugs[] = $t->slug;
+      }
+      sort( $slugs, SORT_STRING );
+      update_post_meta( $wp_post->ID, '_hash_utilities', implode( '|', $slugs ) );
+
+    } 
   }
 
   public function setOfferRegions($wp_post, $terms, $casawp_id)
@@ -2778,19 +2850,18 @@ class Import
       }
 
       if (!empty($term_ids)) {
-        $result = wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_region');
-        if (is_wp_error($result)) {
-          #$this->addToLog('Error assigning terms to post: ' . $result->get_error_message());
-        } else {
-          #$this->addToLog('Assigned regions to post successfully.');
-        }
+        wp_set_object_terms($wp_post->ID, $term_ids, 'casawp_region');
       } else {
         wp_set_object_terms($wp_post->ID, array(), 'casawp_region');
-        #$this->addToLog('Removed all regions from post.');
       }
-    } else {
-      #$this->addToLog('No region changes detected.');
-    }
+      $slugs = [];
+      foreach ( wp_get_object_terms( $wp_post->ID, 'casawp_region' ) as $t ) {
+          $slugs[] = $t->slug;
+      }
+      sort( $slugs, SORT_STRING );
+      update_post_meta( $wp_post->ID, '_hash_regions', implode( '|', $slugs ) );
+
+    } 
   }
 
   public function cleanup_log_files()
