@@ -1617,12 +1617,31 @@ class Import
     $new_meta_data['_hash_salestype'] = sanitize_title( $property['type'] );
 
     # 3. property-categories  (array → sorted pipe list)
+    $cat_slugs = [];
+
+    /* 1a. regular categories coming from <property_categories> */
     if ( ! empty( $property['property_categories'] ) ) {
-        $cat_slugs = array_map( 'sanitize_title',
-                      (array) $property['property_categories'] );
-        sort( $cat_slugs, SORT_STRING );
-        $new_meta_data['_hash_categories'] = implode( '|', $cat_slugs );
+      $cat_slugs = array_map(
+        'sanitize_title',
+        (array) $property['property_categories']
+      );
     }
+
+    /* 1b. custom categories coming from <publisher><options> */
+    foreach ( $publisher_options as $opt_key => $opt_val ) {
+      // keys look like  custom_category_1_slug, custom_category_2_slug, …
+      if ( preg_match( '/^custom_category_\d+_slug$/', $opt_key )
+           && ! empty( $opt_val[0] ) ) {
+
+        $cat_slugs[] = sanitize_title( 'custom_' . $opt_val[0] );
+      }
+    }
+
+    /* 1c. deterministic order + de-dupe → single hash string */
+    $cat_slugs = array_unique( $cat_slugs );
+    sort( $cat_slugs, SORT_STRING );
+
+    $new_meta_data['_hash_categories'] = implode( '|', $cat_slugs );
 
     # 4. features
     if ( ! empty( $property['features'] ) ) {
