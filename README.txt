@@ -7,7 +7,7 @@ Tested up to: 6.8.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.2.4
+Stable tag: 3.2.5
 
 Import your properties directly from your real-estate management software!
 
@@ -40,6 +40,10 @@ How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
 == Changelog ==
+
+= 3.2.5 =
+
+* fix: Post thumbnail was not always being set
 
 = 3.2.4 =
 
