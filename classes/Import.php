@@ -1611,6 +1611,9 @@ class Import
         );
     } */
 
+
+    $scalar = static function ($v) { return is_array($v) ? reset($v) : (string)$v; };
+
     $new_meta_data['_hash_availability'] = sanitize_title( $property['availability'] );
 
     # 2. salestype
@@ -1627,14 +1630,18 @@ class Import
       );
     }
 
+    $opt = static function ( $val ) {
+        return is_array( $val ) ? reset( $val ) : (string) $val;
+    };
+
     /* 1b. custom categories coming from <publisher><options> */
     foreach ( $publisher_options as $opt_key => $opt_val ) {
-      // keys look like  custom_category_1_slug, custom_category_2_slug, …
-      if ( preg_match( '/^custom_category_\d+_slug$/', $opt_key )
-           && ! empty( $opt_val[0] ) ) {
-
-        $cat_slugs[] = sanitize_title( 'custom_' . $opt_val[0] );
-      }
+        if ( preg_match( '/^custom_category_\d+_slug$/', $opt_key ) ) {
+            $slug = trim( $opt( $opt_val ) );          // <-- FIX
+            if ( $slug !== '' ) {
+                $cat_slugs[] = sanitize_title( 'custom_' . $slug );
+            }
+        }
     }
 
     /* 1c. deterministic order + de-dupe → single hash string */
@@ -1681,12 +1688,14 @@ class Import
      * ----------------------------------------------------------------*/
     $region_slugs = [];
     foreach ( $publisher_options as $opt_key => $opt_val ) {
-      if ( str_starts_with( $opt_key, 'custom_region_' ) &&
-           str_ends_with(  $opt_key, '_slug' ) &&
-           ! empty( $opt_val[0] ) ) {
+        if ( str_starts_with( $opt_key, 'custom_region_' ) &&
+             str_ends_with(  $opt_key, '_slug' ) ) {
 
-        $region_slugs[] = sanitize_title( $opt_val[0] );
-      }
+            $slug = trim( $scalar( $opt_val ) );
+            if ( $slug !== '' ) {
+                $region_slugs[] = sanitize_title( $slug );
+            }
+        }
     }
     sort( $region_slugs, SORT_STRING );
     $new_meta_data['_hash_regions'] = implode( '|', $region_slugs );
@@ -1751,12 +1760,12 @@ class Import
 
     /* DEBUGGING HASHING */
 
-   /*  if ( $casawp_id === '1294799de' ) {      // pick any ID
+    if ( $casawp_id === '1596609de' ) {      // pick any ID
         $this->addToLog( 'HASH_OLD '.$hashFromDb );
         $this->addToLog( 'HASH_NEW '.$newHash );
     }
 
-    if ( $casawp_id === '1294799de' ) {           // pick any one offer
+    if ( $casawp_id === '1596609de' ) {           // pick any one offer
 
         $mismatch = [];
 
@@ -1786,7 +1795,7 @@ class Import
         if ( $mismatch ) {
             $this->addToLog( 'MISMATCH '. print_r( $mismatch, true ) );
         }
-    } */
+    }
 
 
     if ( $hashFromDb === $newHash ) {         
@@ -1817,43 +1826,67 @@ class Import
       $this->addToLog( "Meta updated for {$casawp_id}" );
     }
 
-    if (isset($property['property_categories'])) {
-      #$this->addToLog('updating categories');
-      $custom_categories = array();
-      foreach ($publisher_options as $key => $values) {
-        if (strpos($key, 'custom_category') === 0) {
-          $parts = explode('_', $key);
-          $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-          $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-          $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-          if (!$values[0] || !$sort) {
-          } elseif ($slug) {
-            $custom_categories[$sort]['slug'] = $values[0];
-          } elseif ($label) {
-            $custom_categories[$sort]['label'] = $values[0];
-          }
+    if ( isset( $property['property_categories'] ) ) {
+
+      // helper → always give us the scalar value
+      $unwrap = static function ( $v ) {
+        return is_array( $v ) ? reset( $v ) : (string) $v;
+      };
+
+      $custom_categories = [];
+
+      foreach ( $publisher_options as $key => $val ) {
+
+        // only keys like  custom_category_1_slug  /  custom_category_2_label …
+        if ( strpos( $key, 'custom_category_' ) !== 0 ) {
+          continue;
+        }
+
+        $parts = explode( '_', $key );                // [custom,category,{n},slug|label]
+        $sort  = isset( $parts[2] ) && is_numeric( $parts[2] ) ? (int) $parts[2] : false;
+        if ( ! $sort ) {
+          continue;                                 // malformed → skip
+        }
+
+        $piece = end( $parts );                      // 'slug' or 'label'
+        $value = trim( $unwrap( $val ) );            // <- scalar  ('neu', 'Top 10', …)
+
+        if ( $value === '' ) {
+          continue;                                 // empty → skip
+        }
+
+        if ( $piece === 'slug' ) {
+          $custom_categories[ $sort ]['slug']  = $value;
+        } elseif ( $piece === 'label' ) {
+          $custom_categories[ $sort ]['label'] = $value;
         }
       }
 
-      $this->setOfferCategories($wp_post, $property['property_categories'], $custom_categories, $casawp_id);
+      $this->setOfferCategories(
+        $wp_post,
+        $property['property_categories'],
+        $custom_categories,
+        $casawp_id
+      );
     }
 
     #$this->addToLog('updating custom regions');
     $custom_regions = array();
-    foreach ($publisher_options as $key => $values) {
-      if (strpos($key, 'custom_region') === 0) {
-        $parts = explode('_', $key);
-        $sort = (isset($parts[2]) && is_numeric($parts[2]) ? $parts[2] : false);
-        $slug = (isset($parts[3]) && $parts[3] == 'slug' ? true : false);
-        $label = (isset($parts[3]) && $parts[3] == 'label' ? true : false);
-        if (!$values[0] || !$sort) {
-          // skip
-        } elseif ($slug) {
-          $custom_regions[$sort]['slug'] = $values[0];
-        } elseif ($label) {
-          $custom_regions[$sort]['label'] = $values[0];
+    foreach ( $publisher_options as $key => $val ) {
+        if ( strpos($key, 'custom_region_') === 0 ) {
+            $parts = explode('_', $key);
+            $sort  = isset($parts[2]) && is_numeric($parts[2]) ? (int)$parts[2] : false;
+            $piece = end($parts);                      // slug / label
+            $value = trim( $scalar($val) );            // <-- no [0] deref
+
+            if ( $value === '' || ! $sort ) { continue; }
+
+            if ( $piece === 'slug' ) {
+                $custom_regions[$sort]['slug']  = $value;
+            } elseif ( $piece === 'label' ) {
+                $custom_regions[$sort]['label'] = $value;
+            }
         }
-      }
     }
 
     $this->setOfferRegions($wp_post, $custom_regions, $casawp_id);
@@ -2716,7 +2749,7 @@ class Import
         $slug = 'custom_' . $custom_category['slug'];
         $label = isset($custom_category['label']) ? $custom_category['label'] : $custom_category['slug'];
         $new_categories[] = $slug;
-        $custom_categorylabels[$slug] = $label;
+        $custom_categorylabels[$slug] = $slug;
       }
     }
 
