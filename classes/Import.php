@@ -2404,6 +2404,36 @@ class Import
         wp_delete_attachment($attachment->ID);
       }
 
+      /* -----------------------------------------------------------------------
+       *  ➜  FEATURED IMAGE  (first image by menu_order)
+       * -------------------------------------------------------------------- */
+      $first_image = get_posts( [
+          'post_type'   => 'attachment',
+          'numberposts' => 1,            // just one
+          'post_status' => 'inherit',
+          'post_parent' => $wp_post->ID,
+          'orderby'     => 'menu_order',
+          'order'       => 'ASC',
+          'tax_query'   => [
+              [
+                  'taxonomy' => 'casawp_attachment_type',
+                  'field'    => 'slug',
+                  'terms'    => [ 'image' ],
+              ],
+          ],
+      ] );
+
+      if ( $first_image ) {
+          $img_id = $first_image[0]->ID;
+
+          // update only if it changed – keeps the DB tidy
+          if ( get_post_thumbnail_id( $wp_post->ID ) != $img_id ) {
+              set_post_thumbnail( $wp_post->ID, $img_id );
+              $this->transcript[ $casawp_id ]['attachments']['featured_image_set'] = $img_id;
+          }
+      }
+
+
       $args = array(
         'post_type'   => 'attachment',
         'numberposts' => -1,
