@@ -1692,6 +1692,36 @@ class Import
     $new_meta_data['_hash_regions'] = implode( '|', $region_slugs );
 
 
+    /* ------------------------------------------------------------------
+     * 8 · ATTACHMENTS
+     *      Build a stable list of every <media original_file> or <media url>,
+     *      sort it alphabetically, then hash the joined string.
+     * ----------------------------------------------------------------*/
+    $media_refs = [];
+
+    if ( ! empty( $offer['offer_medias'] ) && is_array( $offer['offer_medias'] ) ) {
+        foreach ( $offer['offer_medias'] as $m ) {
+
+            // prefer original_file (images/plans) but fall back to url (docs etc.)
+            if ( ! empty( $m['media']['original_file'] ) ) {
+                $ref = $m['media']['original_file'];
+            } elseif ( ! empty( $m['url'] ) ) {
+                $ref = $m['url'];
+            } else {
+                continue;                               // nothing to fingerprint
+            }
+
+            $media_refs[] = trim( $ref );
+        }
+
+        if ( $media_refs ) {
+            sort( $media_refs, SORT_STRING | SORT_FLAG_CASE );      // deterministic
+            $new_meta_data['_hash_media'] = md5( implode( '|', $media_refs ) );
+        }
+    }
+
+
+
     ksort($new_meta_data);
 
     foreach ($new_meta_data as $meta_key => $meta_value) {
