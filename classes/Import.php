@@ -1760,12 +1760,12 @@ class Import
 
     /* DEBUGGING HASHING */
 
-    if ( $casawp_id === '1596609de' ) {      // pick any ID
+    /* if ( $casawp_id === '1549583de' ) {      // pick any ID
         $this->addToLog( 'HASH_OLD '.$hashFromDb );
         $this->addToLog( 'HASH_NEW '.$newHash );
-    }
+    } */
 
-    if ( $casawp_id === '1596609de' ) {           // pick any one offer
+    /* if ( $casawp_id === '1549583de' ) {           // pick any one offer
 
         $mismatch = [];
 
@@ -1795,10 +1795,11 @@ class Import
         if ( $mismatch ) {
             $this->addToLog( 'MISMATCH '. print_r( $mismatch, true ) );
         }
-    }
+    } */
 
+    $main_unchanged = ( $new_main_data === $old_main_data );
 
-    if ( $hashFromDb === $newHash ) {         
+    if ( $hashFromDb === $newHash && $main_unchanged ) {         
         $this->addToLog( "Skip {$casawp_id} - unchanged (hash)" );
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
