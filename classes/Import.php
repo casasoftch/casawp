@@ -1750,10 +1750,10 @@ class Import
     }
 
     $hashFromDb = $this->fingerprint( $old_meta_data );
-    $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
+    /* $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
     if ( $delta && $casawp_id === '353188de' ) {
         $this->addToLog( 'DELTA '. print_r( $delta, true ) );
-    }
+    } */
     $newHash    = $this->fingerprint( $new_meta_data );
 
     
