@@ -1,6 +1,6 @@
 <?php
 if (! defined('ABSPATH')) exit; // Exit if accessed directly
-$single_request_import_enabled = get_option('casawp_single_request_import', false);
+$single_request_import_enabled = (bool) get_option('casawp_enable_single_request_import', 0);
 if (isset($_POST['casawp_submit'])) {
 	$saved_custom_categories = array();
 	foreach ($_POST as $key => $value) {
@@ -127,7 +127,7 @@ if (isset($_POST['casawp_submit'])) {
 		case 'general':
 		default:
 			$checkbox_traps = array(
-				'casawp_single_request_import',
+				'casawp_enable_single_request_import',
 				'casawp_use_casagateway_cdn',
 				'casawp_limit_reference_images',
 				'casawp_auto_translate_properties',
@@ -1435,12 +1435,15 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 					<th scope="row">Import</th>
 					<td class="front-static-pages">
 						<fieldset>
-							<?php $name = 'casawp_single_request_import'; ?>
+							<?php $name = 'casawp_enable_single_request_import'; ?>
 							<label>
-								<input type="checkbox" name="<?php echo $name; ?>" value="1"
-									<?php checked(get_option($name), 1); ?>>
-								Batch-Processing deaktivieren (Single HTTP-Request)
+							  <input type="checkbox" name="<?php echo $name; ?>" value="1"
+									 <?php checked( get_option($name, 0), 1 ); ?>>
+							  Single-Request Import aktivieren (alles in einem HTTP-Request)
 							</label>
+							<p class="description">
+							  Standard ist <strong>Batch-Import</strong> (empfohlen). Nur für Legacy-Setups oder manuelle Tests aktivieren.
+							</p>
 						</fieldset>
 						<fieldset>
 							<legend class="screen-reader-text"><span><a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a> als CDN für Bilder verwenden.</span></legend>
