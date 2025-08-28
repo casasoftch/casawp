@@ -1441,7 +1441,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 									 <?php checked( get_option($name, 0), 1 ); ?>>
 							  Single-Request Import aktivieren (alles in einem HTTP-Request)
 							</label>
-							<p class="description">
+							<p class="description" style="margin-bottom: 15px;">
 							  Standard ist <strong>Batch-Import</strong> (empfohlen). Nur für Legacy-Setups oder manuelle Tests aktivieren.
 							</p>
 						</fieldset>
