@@ -41,6 +41,14 @@ wp casawp import --url=https://example.com
 
 == Changelog ==
 
+= 3.3.1 =
+
+* update: leaner return to Gateway for optimized Gateway performance
+
+= 3.3.0 =
+
+* update: Batch import as new default method, with new single request import option
+
 = 3.2.6 =
 
 * fix: Title & Content updates only were skipped due to hashing
