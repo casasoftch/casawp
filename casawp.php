@@ -130,6 +130,52 @@ if (is_admin()) {
 $import = new casawp\Import(false, false);
 $import->register_hooks();
 
+// Make sure this runs very early so nothing else starts output.
+add_action('init', 'casawp_handle_gatewaypoke_fast', 0);
+
+function casawp_handle_gatewaypoke_fast() {
+	if (empty($_GET['gatewaypoke'])) {
+		return;
+	}
+
+	// Tell caches/CDNs to skip
+	if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
+	if (function_exists('nocache_headers')) nocache_headers();
+	header('X-Cache-Bypass: casawp-gatewaypoke');
+
+	$mode = casawp_is_single_request_enabled() ? 'single' : 'batch';
+
+	if ($mode === 'batch') {
+		// Just queue work and return immediately.
+		casawp_start_new_import('Poke from CasaGateway', false);
+
+		// Small, fast JSON + 202 Accepted
+		if (!headers_sent()) {
+			header('Content-Type: application/json; charset=utf-8', true, 202);
+		}
+		echo json_encode(['status' => 'accepted', 'mode' => 'batch', 'queued' => true]);
+		exit; // ← important: prevent theme render
+	}
+
+	// SINGLE-REQUEST MODE:
+	// If available, flush the response *first*, then continue processing server-side.
+	if (!headers_sent()) {
+		header('Content-Type: application/json; charset=utf-8', true, 202);
+	}
+	echo json_encode(['status' => 'accepted', 'mode' => 'single', 'processing' => 'inline']);
+	// Try to finish the HTTP response so the CRM isn't kept waiting
+	if (function_exists('fastcgi_finish_request')) {
+		fastcgi_finish_request();
+	}
+
+	// Now do the heavy work after the client got a quick response
+	casawp_start_single_request_import('Poke from CasaGateway');
+
+	// Nothing else should run
+	exit;
+}
+
+
 
 /**
  * Try to become the *one* importer that may run right now.
