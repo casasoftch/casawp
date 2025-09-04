@@ -5,7 +5,7 @@
  * Description: Import your properties directly from your real-estate management software!
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
- * Version: 3.3.0
+ * Version: 3.3.1
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2
@@ -33,7 +33,7 @@ add_filter( 'action_scheduler_queue_runner_concurrent_batches', function () {
 
 // Update system
 require_once('wp_autoupdate.php');
-$plugin_current_version = '3.3.0';
+$plugin_current_version = '3.3.1';
 $plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
@@ -129,6 +129,52 @@ if (is_admin()) {
 
 $import = new casawp\Import(false, false);
 $import->register_hooks();
+
+// Make sure this runs very early so nothing else starts output.
+add_action('init', 'casawp_handle_gatewaypoke_fast', 0);
+
+function casawp_handle_gatewaypoke_fast() {
+	if (empty($_GET['gatewaypoke'])) {
+		return;
+	}
+
+	// Tell caches/CDNs to skip
+	if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
+	if (function_exists('nocache_headers')) nocache_headers();
+	header('X-Cache-Bypass: casawp-gatewaypoke');
+
+	$mode = casawp_is_single_request_enabled() ? 'single' : 'batch';
+
+	if ($mode === 'batch') {
+		// Just queue work and return immediately.
+		casawp_start_new_import('Poke from CasaGateway', false);
+
+		// Small, fast JSON + 202 Accepted
+		if (!headers_sent()) {
+			header('Content-Type: application/json; charset=utf-8', true, 202);
+		}
+		echo json_encode(['status' => 'accepted', 'mode' => 'batch', 'queued' => true]);
+		exit; // ← important: prevent theme render
+	}
+
+	// SINGLE-REQUEST MODE:
+	// If available, flush the response *first*, then continue processing server-side.
+	if (!headers_sent()) {
+		header('Content-Type: application/json; charset=utf-8', true, 202);
+	}
+	echo json_encode(['status' => 'accepted', 'mode' => 'single', 'processing' => 'inline']);
+	// Try to finish the HTTP response so the CRM isn't kept waiting
+	if (function_exists('fastcgi_finish_request')) {
+		fastcgi_finish_request();
+	}
+
+	// Now do the heavy work after the client got a quick response
+	casawp_start_single_request_import('Poke from CasaGateway');
+
+	// Nothing else should run
+	exit;
+}
+
 
 
 /**
