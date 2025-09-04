@@ -7,7 +7,7 @@ Tested up to: 6.8.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.2.6
+Stable tag: 3.3.1
 
 Import your properties directly from your real-estate management software!
 
