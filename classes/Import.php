@@ -964,7 +964,12 @@ class Import
     foreach ($maybe_languages as $lang) {
       $translations[$lang['language_code']] = false;
     }
+
     foreach ($theoffers as $offerData) {
+      // If this offer was delivered by the feed, its own language is the source.
+      if (!isset($offerData['source_lang'])) {
+        $offerData['source_lang'] = $offerData['lang'];
+      }
       $translations[$offerData['lang']] = $offerData;
     }
 
@@ -984,8 +989,10 @@ class Import
       if (!$val) {
         $copy = $carbon;
         $copy['lang'] = $langcode;
-        if (get_option('casawp_auto_translate_properties')) {
-          // Minimal default naming if missing
+        $copy['source_lang'] = $carbon['source_lang'] ?? $carbon['lang'];
+        $autoTranslate  = (bool) get_option('casawp_auto_translate_properties');
+        $forceContent   = (bool) get_option('casawp_force_import_content');
+        if ($autoTranslate) {
           if ($copy['urls']) {
             foreach ($copy['urls'] as $i => $url) {
               $urlString = str_replace(array('http://', 'https://'), '', $url['url']);
@@ -1086,8 +1093,10 @@ class Import
               }
             }
           }
-          $copy['descriptions'] = [];
-          $copy['excerpt'] = '';
+          if (!$forceContent) {
+            $copy['descriptions'] = [];
+            $copy['excerpt'] = '';
+          }
         }
         $translations[$langcode] = $copy;
       }
@@ -1291,6 +1300,10 @@ class Import
 
   public function updateOffer($casawp_id, $offer_pos, $property, $offer, $wp_post)
   {
+
+   /*  echo 'offer ' . '<pre>' . print_r($offer, true) . '</pre>';
+    echo 'property ' . '<pre>' . print_r($property, true) . '</pre>';
+    die(); */
 
     $old_meta_data = [];
     foreach ( get_post_meta( $wp_post->ID, null, true ) as $k => $vals ) {
@@ -1603,6 +1616,12 @@ class Import
         $new_meta_data['custom_option_' . $ckey] = $cvalue;
       }
     }
+
+    if (isset($custom_metas['keywordsString'])) {
+      $new_meta_data['keywords_string'] = $custom_metas['keywordsString'];
+    }
+
+
    /*  if ( $casawp_id === '353188de' ) {          // 1 language is enough
         $yb_old = $old_meta_data['year_built']  ?? '-';
         $yb_new = $numericValues['year_built'] ?? '-';
@@ -1729,7 +1748,11 @@ class Import
         }
     }
 
-
+    // Persist the true textual source language for this post (2-letter code)
+    $source_lang = strtolower(
+        sanitize_text_field( $offer['source_lang'] ?? ($offer['lang'] ?? $this->getMainLang()) )
+    );
+    $new_meta_data['content_source_lang'] = $source_lang;
 
     ksort($new_meta_data);
 

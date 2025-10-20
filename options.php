@@ -131,6 +131,7 @@ if (isset($_POST['casawp_submit'])) {
 				'casawp_use_casagateway_cdn',
 				'casawp_limit_reference_images',
 				'casawp_auto_translate_properties',
+				'casawp_force_import_content',
 				'casawp_custom_slug',
 				'casawp_force_lang',
 				'casawp_live_import',
@@ -1472,27 +1473,47 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								</label></p>
 						</fieldset>
 
+						<fieldset id="force-import-content-wrap"
+								  style="<?php echo get_option('casawp_auto_translate_properties') ? '' : 'display:none;'; ?>">
+						  <?php $name = 'casawp_force_import_content'; ?>
+						  <p style="margin-top:8px;">
+							<label>
+							  <input id="ckForceImportContent"
+									 name="<?php echo $name; ?>"
+									 type="checkbox"
+									 value="1"
+									 class="tog"
+									 <?php checked( get_option($name, 0), 1 ); ?>>
+							  Inhalte trotzdem importieren (für externe KI-Übersetzung erforderlich)
+							</label>
+						  </p>
+						  <p class="description">
+							Aktiviert: Titel wird weiterhin dynamisch erzeugt, aber die Objektbeschreibung/Excerpt
+							werden aus dem Feed gespeichert.
+						  </p>
+						</fieldset>
+
 						<script>
-							function ckChange() {
-								var ckCDN = document.getElementById('ckCDN');
-								var ckRef = document.getElementById('ckRef');
+						  function ckChange() {
+							var ckCDN  = document.getElementById('ckCDN');
+							var ckRef  = document.getElementById('ckRef');
+							var ckTrans = document.getElementById('ckTrans'); // already exists
+							var forceWrap = document.getElementById('force-import-content-wrap');
+							var ckForce  = document.getElementById('ckForceImportContent');
 
-								if (ckRef.checked) {
-									ckCDN.disabled = true;
-								} else {
-									ckCDN.disabled = false;
-								}
+							if (ckRef.checked) { ckCDN.disabled = true; } else { ckCDN.disabled = false; }
+							if (ckCDN.checked){ ckRef.disabled = true; } else { ckRef.disabled = false; }
 
-								if (ckCDN.checked) {
-									ckRef.disabled = true;
-								} else {
-									ckRef.disabled = false;
-								}
+							if (forceWrap) {
+							  if (ckTrans && ckTrans.checked) {
+								forceWrap.style.display = '';
+							  } else {
+								forceWrap.style.display = 'none';
+								if (ckForce) ckForce.checked = false; 
+							  }
 							}
-
-							window.onload = function() {
-								ckChange();
-							};
+						  }
+						  window.onload = function(){ ckChange(); };
 						</script>
 
 						<legend class="screen-reader-text"><span>API-Key</span></legend>
