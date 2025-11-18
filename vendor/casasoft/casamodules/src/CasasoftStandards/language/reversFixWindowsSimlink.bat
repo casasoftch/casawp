@@ -23,3 +23,6 @@ mklink en_US.mo en.mo;
 
 del en_GB.mo;
 mklink en_GB.mo en.mo;
+
+del es_ES.mo;
+mklink es_ES.mo es.mo;
