@@ -265,6 +265,7 @@ class StructuredData
         if ($num_lav !== null) $addSimpleProp($additionalProps, 'Number of lavatories', $num_lav);
         if ($num_comm !== null) $addSimpleProp($additionalProps, 'Commercial units', $num_comm);
         if ($year_reno !== null) $addSimpleProp($additionalProps, 'Year renovated', (int)$year_reno);
+        if ($num_apts !== null) $addSimpleProp($additionalProps, 'Accommodation units', (int)$num_apts);
 
         if ($volume !== null) $addQVProp($additionalProps, 'Volume', $volume, 'MTQ');
 
@@ -291,8 +292,6 @@ class StructuredData
 
             'yearBuilt' => $year_built !== null ? (int)$year_built : null,
             'ceilingHeight' => $qv($ceil_h, 'MTR'),
-
-            'numberOfAccommodationUnits' => $num_apts !== null ? (int)$num_apts : null,
 
             'additionalProperty' => $additionalProps ?: null,
         ]);
