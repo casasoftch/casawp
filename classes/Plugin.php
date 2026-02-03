@@ -35,6 +35,9 @@ use casawp\Service\OfferService;
 
 use CasasoftMessenger\Service\MessengerService;
 use casawp\Service\ProjectService;
+use StructuredData;
+
+require_once CASASYNC_PLUGIN_DIR . 'classes/StructuredData.php';
 
 class Plugin
 {
@@ -114,6 +117,7 @@ class Plugin
         register_deactivation_hook(CASASYNC_PLUGIN_DIR, array($this, 'casawp_deactivation'));
 
         add_action('wp_head', array($this, 'add_meta_tags'));
+        add_action('wp_head', array($this, 'add_structured_data'), 20);
 
         add_action('right_now_content_table_end', array($this, 'casawp_right_now'));
 
@@ -3539,6 +3543,23 @@ class Plugin
             echo '<meta property="og:image"        content="' . wp_get_attachment_url(get_post_thumbnail_id()) . '">' . "\n";
             echo '<meta property="og:locale"       content="' . get_locale() . '" />' . "\n";
         }
+    }
+
+    public function add_structured_data()
+    {
+        global $post;
+        if (!$post || !is_singular('casawp_property')) {
+            return;
+        }
+
+        // Use your existing Offer bootstrap
+        $offer = $this->prepareOffer($post);
+
+        if (!StructuredData::should_output($post, $offer)) {
+            return;
+        }
+
+        echo StructuredData::render_script($offer, $post) . "\n";
     }
 
     public function prepareOffer($post)
