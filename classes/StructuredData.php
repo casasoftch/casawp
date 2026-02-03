@@ -3,6 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
 class StructuredData
 {
 
@@ -346,15 +347,9 @@ class StructuredData
         $casawp_id = $meta($post, 'casawp_id');
         $ref_id    = $meta($post, 'referenceId');
 
-        // --- Seller org (from your ACF)
-        $orgName = $meta($post, 'seller_org_legalname') ?: ($meta($post, 'seller_org_brand') ?: $site_name);
+        $orgId = trailingslashit(home_url('/')) . '#organization';
 
-        $org = [
-            '@type' => 'Organization',
-            '@id'   => $permalink . '#org',
-            'name'  => $orgName,
-            'url'   => home_url('/'),
-        ];
+        $brokerRef = ['@id' => $orgId];
 
         // --- Agent (display person)
         $given  = $meta($post, 'seller_view_person_givenname');
@@ -365,15 +360,31 @@ class StructuredData
         $agentPhone = $meta($post, 'seller_view_person_phone_direct') ?: $meta($post, 'seller_view_person_phone_mobile');
 
         $agent = null;
-        if ($agentName || $agentEmail || $agentPhone) {
-            $agent = array_filter([
-                '@type' => 'Person',
-                '@id'   => $permalink . '#agent',
-                'name'  => $agentName ?: null,
-                'email' => $agentEmail ? ('mailto:' . $agentEmail) : null,
-                'telephone' => $agentPhone ?: null,
-            ]);
+
+        if ($agentName) {
+            $companyLike = mb_strtolower(trim($agentName));
+
+            $looksLikeCompany =
+            preg_match('/\b(gmbh|ag|sa|sarl|ltd|inc|kg|llc|plc)\b/u', $companyLike) ||
+            preg_match('/\b(immobilien|real\s?estate|groupe|group|holding)\b/u', $companyLike);
+
+            $norm = static function (string $s) {
+              $s = mb_strtolower(trim($s));
+              $s = preg_replace('/[^\p{L}\p{N}]+/u', '', $s); // keep letters+digits only
+              return $s;
+            };
+
+            if ($norm($agentName) !== $norm($site_name) && !$looksLikeCompany) {
+                $agent = array_filter([
+                    '@type' => 'Person',
+                    '@id'   => $permalink . '#agent',
+                    'name'  => $agentName,
+                    'email' => $agentEmail ? ('mailto:' . $agentEmail) : null,
+                    'telephone' => $agentPhone ?: null,
+                ]);
+            }
         }
+
 
         // --- Offer node
         $offerNode = [
@@ -382,7 +393,7 @@ class StructuredData
             'url'   => $permalink,
             'availability'   => $schema_availability,
             'priceCurrency'  => $currency,
-            'seller' => ['@id' => $org['@id']],
+            'seller' => $brokerRef,
         ];
         // Add categories in-domain (Offer supports "category")
         if (!empty($cat_labels)) {
@@ -415,7 +426,7 @@ class StructuredData
                 $offerNode['price'] = $price;
             }
         }
-        if ($agent) $offerNode['offeredBy'] = ['@id' => $agent['@id']];
+        $offerNode['offeredBy'] = $brokerRef;
 
         // --- Listing node (use a conservative property type; you can upgrade via filters)
         $listing = array_filter([
@@ -448,11 +459,37 @@ class StructuredData
           $listing['datePosted'] = $datePosted;
         }
 
+        // Brokerage is the provider
+        $listing['provider'] = $brokerRef;
+
+        // Optional: if you have a Person, expose them as a contact
+        if ($agent) {
+            $listing['contactPoint'] = array_filter([
+              '@type' => 'ContactPoint',
+              'contactType' => 'sales',
+              'name' => $agentName ?: null,
+              'email' => $agentEmail ? ('mailto:' . $agentEmail) : null,
+              'telephone' => $agentPhone ?: null,
+            ]);
+        }
+
+        $isYoastActive = defined('WPSEO_VERSION') || class_exists('WPSEO_Options');
+
+        $orgNode = null;
+        if (!$isYoastActive) {
+          $orgNode = [
+            '@type' => 'Organization',
+            '@id'   => $orgId,
+            'name'  => $site_name,
+            'url'   => home_url('/'),
+          ];
+        }
+
+
         return [
             '@context' => 'https://schema.org',
             '@graph' => array_values(array_filter([
-                $org,
-                $agent,
+                $orgNode,
                 $place,
                 $propertyNode,
                 $offerNode,

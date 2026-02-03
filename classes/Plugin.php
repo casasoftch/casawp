@@ -3535,6 +3535,7 @@ class Plugin
     function add_meta_tags()
     {
         global $post;
+        if (class_exists('WPSEO_Frontend') || defined('WPSEO_VERSION')) return;
         if (is_singular('casawp_property')) {
             echo '<meta property="og:url"          content="' . get_the_permalink() . '" />' . "\n";
             echo '<meta property="og:type"         content="article" />' . "\n";
