@@ -6,55 +6,58 @@ use Exception;
 
 if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
   final class CASAWP_Bulk_Meta {
-      public static function sync( int $post_id, array $new ): void {
-          global $wpdb;
-          $tbl = $wpdb->postmeta;
+    public static function sync( int $post_id, array $new ): void {
+      global $wpdb;
+      $tbl = $wpdb->postmeta;
 
-          /* keep special keys intact when they are **not** in $new */
-          $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
+      $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
 
-          foreach ( $new as $k => $v ) {
-              $v = maybe_serialize( $v );
+      // Add SEO meta keys that must never be touched by CASAWP imports
+      $seo_like = [
+        '_yoast_wpseo_%',     // Yoast
+        '_rank_math_%',       // RankMath (optional)
+        '_aioseo_%',          // All in One SEO (optional)
+      ];
 
-              // 1) remove *all* rows for this key (except protected ones)
-              if ( ! in_array( $k, $protected, true ) ) {
-                  $wpdb->delete(
-                      $tbl,
-                      [ 'post_id' => $post_id, 'meta_key' => $k ],
-                      [ '%d', '%s' ]
-                  );
-              }
-
-              // 2) insert the fresh value
-              $wpdb->insert(
-                  $tbl,
-                  [
-                      'post_id'    => $post_id,
-                      'meta_key'   => $k,
-                      'meta_value' => $v,
-                  ],
-                  [ '%d', '%s', '%s' ]
-              );
-          }
-
-          /* 3) drop stale keys that disappeared from the payload -------- */
-          $placeholders = implode( ',', array_fill( 0, count( $new ), '%s' ) );
-          $wpdb->query(
-              $wpdb->prepare(
-                  "
-                  DELETE FROM $tbl
-                  WHERE post_id = %d
-                    AND meta_key NOT IN ( $placeholders )
-                    AND meta_key NOT IN ( '" . implode( "','", $protected ) . "' )
-                  ",
-                  array_merge( [ $post_id ], array_keys( $new ) )
-              )
-          );
-
-          wp_cache_delete( $post_id, 'post_meta' );   // purge object-cache
+      foreach ($seo_like as $like) {
+        $keys = $wpdb->get_col(
+          $wpdb->prepare("SELECT meta_key FROM $tbl WHERE post_id = %d AND meta_key LIKE %s", $post_id, $like)
+        );
+        if ($keys) {
+          $protected = array_merge($protected, $keys);
+        }
       }
-  }
 
+      // Optional: allow site code to extend protected keys
+      $protected = apply_filters('casawp_protected_postmeta_keys', array_values(array_unique($protected)), $post_id, $new);
+
+      foreach ( $new as $k => $v ) {
+        // If a key is protected, do not overwrite it even if it shows up in payload
+        if ( in_array( $k, $protected, true ) ) {
+          continue;
+        }
+
+        $v = maybe_serialize( $v );
+
+        $wpdb->delete($tbl, [ 'post_id' => $post_id, 'meta_key' => $k ], [ '%d', '%s' ]);
+        $wpdb->insert($tbl, [ 'post_id' => $post_id, 'meta_key' => $k, 'meta_value' => $v ], [ '%d', '%s', '%s' ]);
+      }
+
+      // Drop stale keys that disappeared from payload, but keep protected
+      $placeholders = implode(',', array_fill(0, count($new), '%s'));
+      $wpdb->query(
+        $wpdb->prepare(
+          "DELETE FROM $tbl
+           WHERE post_id = %d
+             AND meta_key NOT IN ( $placeholders )
+             AND meta_key NOT IN ('" . implode("','", array_map('esc_sql', $protected)) . "')",
+          array_merge([ $post_id ], array_keys($new))
+        )
+      );
+
+      wp_cache_delete( $post_id, 'post_meta' );
+    }
+  }
 }
 
 class Import
@@ -144,31 +147,42 @@ class Import
 
   private function fingerprint( array $meta ): string {
 
-      static $skip = [
-          // housekeeping / volatile
-          'last_import_hash',
-          'last_processed_run',
-          'is_active',
+    static $skip_exact = [
+      'last_import_hash',
+      'last_processed_run',
+      'is_active',
+      '_thumbnail_id',
+      '_wpml_word_count',
+      '_yoast_indexnow_last_ping',
+      '_last_translation_edit_mode',
+      'casawp_id',
+      'projectunit_id',
+      'projectunit_sort',
+    ];
 
-          // keys created outside the generator
-          '_thumbnail_id',
-          '_wpml_word_count',
-          '_yoast_indexnow_last_ping',
-          '_last_translation_edit_mode',
+    $skip_prefixes = [
+      '_yoast_wpseo_', // Yoast
+      '_rank_math_',   // optional
+      '_aioseo_',      // optional
+    ];
 
-          // identifiers you store once during insert
-          'casawp_id',
-          'projectunit_id',
-          'projectunit_sort',
-      ];
+    foreach ($skip_exact as $k) {
+      unset($meta[$k]);
+    }
 
-      foreach ( $skip as $k ) {
-          unset( $meta[ $k ] );
+    foreach (array_keys($meta) as $k) {
+      foreach ($skip_prefixes as $p) {
+        if (str_starts_with($k, $p)) {
+          unset($meta[$k]);
+          break;
+        }
       }
+    }
 
-      $this->deepKsort( $meta );
-      return md5( serialize( $meta ) );
+    $this->deepKsort($meta);
+    return md5(serialize($meta));
   }
+
 
 
   private function group(): string {
@@ -1622,13 +1636,13 @@ class Import
     }
 
 
-   /*  if ( $casawp_id === '353188de' ) {          // 1 language is enough
+    if ( $casawp_id === '353184de' ) {          // 1 language is enough
         $yb_old = $old_meta_data['year_built']  ?? '-';
         $yb_new = $numericValues['year_built'] ?? '-';
         $this->addToLog(
             "DEBUG year_built  old={$yb_old}  new={$yb_new}"
         );
-    } */
+    }
 
 
     $scalar = static function ($v) { return is_array($v) ? reset($v) : (string)$v; };
