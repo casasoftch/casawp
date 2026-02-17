@@ -1636,13 +1636,13 @@ class Import
     }
 
 
-    if ( $casawp_id === '353184de' ) {          // 1 language is enough
+    /* if ( $casawp_id === '353184de' ) { 
         $yb_old = $old_meta_data['year_built']  ?? '-';
         $yb_new = $numericValues['year_built'] ?? '-';
         $this->addToLog(
             "DEBUG year_built  old={$yb_old}  new={$yb_new}"
         );
-    }
+    } */
 
 
     $scalar = static function ($v) { return is_array($v) ? reset($v) : (string)$v; };
@@ -1736,31 +1736,40 @@ class Import
 
     /* ------------------------------------------------------------------
      * 8 · ATTACHMENTS
-     *      Build a stable list of every <media original_file> or <media url>,
-     *      sort it alphabetically, then hash the joined string.
+     *     - _hash_media:        membership (order-insensitive)
+     *     - _hash_media_order:  sequence (order-sensitive)
      * ----------------------------------------------------------------*/
-    $media_refs = [];
+    $media_refs       = [];
+    $media_refs_order = [];
 
     if ( ! empty( $offer['offer_medias'] ) && is_array( $offer['offer_medias'] ) ) {
+        $pos = 0;
         foreach ( $offer['offer_medias'] as $m ) {
+            $pos++;
 
-            // prefer original_file (images/plans) but fall back to url (docs etc.)
             if ( ! empty( $m['media']['original_file'] ) ) {
                 $ref = $m['media']['original_file'];
             } elseif ( ! empty( $m['url'] ) ) {
                 $ref = $m['url'];
             } else {
-                continue;                               // nothing to fingerprint
+                continue;
             }
 
-            $media_refs[] = trim( $ref );
+            $ref = trim( $ref );
+            $media_refs[]       = $ref;
+            $media_refs_order[] = $pos . ':' . $ref; // include position
         }
 
         if ( $media_refs ) {
-            sort( $media_refs, SORT_STRING | SORT_FLAG_CASE );      // deterministic
-            $new_meta_data['_hash_media'] = md5( implode( '|', $media_refs ) );
+            $sorted = $media_refs;
+            sort( $sorted, SORT_STRING | SORT_FLAG_CASE );
+            $new_meta_data['_hash_media'] = md5( implode( '|', $sorted ) );
+
+            // order-sensitive
+            $new_meta_data['_hash_media_order'] = md5( implode( '|', $media_refs_order ) );
         }
     }
+
 
     // Persist the true textual source language for this post (2-letter code)
     $source_lang = strtolower(
@@ -1787,8 +1796,8 @@ class Import
     }
 
     $hashFromDb = $this->fingerprint( $old_meta_data );
-    /* $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
-    if ( $delta && $casawp_id === '353188de' ) {
+    $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
+    /* if ( $delta && $casawp_id === '353188de' ) {
         $this->addToLog( 'DELTA '. print_r( $delta, true ) );
     } */
     $newHash    = $this->fingerprint( $new_meta_data );
@@ -1797,12 +1806,12 @@ class Import
 
     /* DEBUGGING HASHING */
 
-    /* if ( $casawp_id === '1549583de' ) {      // pick any ID
+   /*  if ( $casawp_id === '353188de' ) {  
         $this->addToLog( 'HASH_OLD '.$hashFromDb );
         $this->addToLog( 'HASH_NEW '.$newHash );
-    } */
+    }
 
-    /* if ( $casawp_id === '1549583de' ) {           // pick any one offer
+    if ( $casawp_id === '353188de' ) { 
 
         $mismatch = [];
 
@@ -1821,7 +1830,6 @@ class Import
             }
 
             if ( serialize( $new_meta_data[ $k ] ) !== serialize( $old_meta_data[ $k ] ) ) {
-                // tiny summary – avoids flooding the log with whole arrays
                 $mismatch[ $k ] = [
                     'old' => is_scalar( $old_meta_data[ $k ] ) ? $old_meta_data[ $k ] : 'array('.count($old_meta_data[ $k ]).')',
                     'new' => is_scalar( $new_meta_data[ $k ] ) ? $new_meta_data[ $k ] : 'array('.count($new_meta_data[ $k ]).')',
