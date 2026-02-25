@@ -14,6 +14,9 @@ use CasasoftStandards\Service\FeatureServiceFactory;
 use CasasoftStandards\Service\IntegratedOfferService;
 use CasasoftStandards\Service\IntegratedOfferServiceFactory;
 
+use CasasoftStandards\Service\HeatService;
+use CasasoftStandards\Service\HeatServiceFactory;
+
 use CasasoftMessenger\Service\MessengerService;
 use CasasoftMessenger\Service\MessengerServiceFactory;
 
@@ -43,6 +46,7 @@ return [
             FeatureService::class => FeatureServiceFactory::class,
             MessengerService::class => MessengerServiceFactory::class,
             IntegratedOfferService::class => IntegratedOfferServiceFactory::class,
+            HeatService::class => HeatServiceFactory::class,
         ],
     ],
     'view_manager' => [

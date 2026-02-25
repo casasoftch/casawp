@@ -1,0 +1,29 @@
+<?php global $casawp; ?>
+<?php if (!empty($this->heating)): ?>
+  <section class="casawp-heating">
+    <h2><?php echo __('Heating', 'casawp'); ?></h2>
+
+    <?php foreach ($this->heating as $heat): ?>
+      <?php
+        /** @var \CasasoftStandards\Service\Category|null $gen */
+        $gen  = $heat['generation'] ?? null;
+
+        /** @var \CasasoftStandards\Service\Category|null $dist */
+        $dist = $heat['distribution'] ?? null;
+
+        $genLabel  = $gen ? $gen->getLabel() : ('?' . ($heat['generation_key'] ?? ''));
+        $distLabel = $dist ? $dist->getLabel() : ('?' . ($heat['distribution_key'] ?? ''));
+      ?>
+
+      <article class="casawp-heat">
+        <strong><?php echo __('Generation', 'casawp'); ?>:</strong>
+        <?php echo esc_html($genLabel); ?>
+        <br>
+
+        <strong><?php echo __('Distribution', 'casawp'); ?>:</strong>
+        <?php echo esc_html($distLabel); ?>
+      </article>
+    <?php endforeach; ?>
+
+  </section>
+<?php endif; ?>

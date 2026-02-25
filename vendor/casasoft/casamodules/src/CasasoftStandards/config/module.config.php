@@ -19,6 +19,7 @@ return array(
             'CasasoftNumval'          => 'CasasoftStandards\Service\NumvalServiceFactory',
             'CasasoftUtility'         => 'CasasoftStandards\Service\UtilityServiceFactory',
             'CasasoftIntegratedOffer' => 'CasasoftStandards\Service\IntegratedOfferServiceFactory',
+            'CasasoftHeat'               => 'CasasoftStandards\Service\HeatServiceFactory',
             'CasasoftConversion'      => 'CasasoftStandards\Service\ConversionServiceFactory',
             'CasasoftHeat'      => 'CasasoftStandards\Service\HeatServiceFactory',
         )

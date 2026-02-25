@@ -1557,6 +1557,17 @@ class Import
     }
     $new_meta_data['integratedoffers'] = $integratedoffers;
 
+    $heating = array();
+    if (isset($property['heating'])) {
+      foreach ($property['heating'] as $heat) {
+        $heating[] = array(
+          'generation' => $heat['generation'],
+          'distribution' => $heat['distribution']
+        );
+      }
+    }
+    $new_meta_data['heating'] = $heating;
+
     if (array_key_exists('price', $new_meta_data) && $new_meta_data['price'] !== "") {
       $tmp_price = $new_meta_data['price'];
     } elseif (array_key_exists('grossPrice', $new_meta_data) && $new_meta_data['grossPrice'] !== "") {
@@ -2273,26 +2284,6 @@ class Import
     } else {
       return $filename . " could not be found!";
     }
-  }
-
-  public function integratedOffersToArray($integratedOffers)
-  {
-    $the_offers = array();
-
-    if (!empty($integratedOffers)) {
-      foreach ($integratedOffers->integratedOffer as $offer) {
-        $the_offer = array();
-        $the_offer['price']           = (int) $offer;
-        $the_offer['frequency']       = (int) $offer['frequency'];
-        $the_offer['timesegment']     = (string) $offer['timesegment'];
-        $the_offer['propertysegment'] = (string) $offer['propertysegment'];
-        $the_offer['inclusive']       = (int) $offer['inclusive'];
-
-        $the_offers[(string) $offer['type']][] = $the_offer;
-      }
-    }
-
-    return $the_offers;
   }
 
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property)
@@ -3138,6 +3129,16 @@ class Import
           'time_segment'     => ($xml_integratedoffer['timesegment'] ? $xml_integratedoffer['timesegment']->__toString() : ''),
           'property_segment' => ($xml_integratedoffer['propertysegment'] ? $xml_integratedoffer['propertysegment']->__toString() : ''),
           'inclusive'        => ($xml_integratedoffer['inclusive'] ? $xml_integratedoffer['inclusive']->__toString() : 0)
+        );
+      }
+    }
+
+    if ($property_xml->heating) {
+      $propertydata['heating'] = array();
+      foreach ($property_xml->heating as $xml_heating) {
+        $propertydata['heating'][] = array(
+          'generation' => $xml_heating->generation->__toString(),
+          'distribution' => $xml_heating->distribution->__toString()
         );
       }
     }

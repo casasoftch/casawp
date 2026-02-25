@@ -31,6 +31,8 @@ class Offer{
                 return $this->offerService->getNumvalService();
             case 'integratedOfferService':
                 return $this->offerService->getIntegratedOfferService();
+            case 'heatService':
+                return $this->offerService->getHeatService();
             case 'featureService':
                 return $this->offerService->getFeatureService();
             case 'messengerService':
@@ -636,22 +638,17 @@ class Offer{
     public function getIntegratedOffers(){
 
         $offers = $this->getFieldValue('integratedoffers', false);
-
-
-
+        
         if (empty($offers)) {return NULL;}
 
         if ($offers) {
             $offers = maybe_unserialize($offers);
         }
 
-
-
         //group em
         $f_offers = array();
         $check_keys = array('type', 'price', 'timesegment', 'propertysegment', 'currency', 'frequency', 'inclusive');
         
-
         foreach ($offers as $offer) {
             $found = false;
             foreach ($f_offers as $f_key => $f_offer) {
@@ -668,9 +665,6 @@ class Offer{
             $offer['count'] = 1;
             $f_offers[] = $offer;
         }
-        
-//        die('hier');
-
 
         $r_offers = array();
         foreach ($f_offers as $offer) {
@@ -691,6 +685,41 @@ class Offer{
         }
         return $r_offers;
     }
+
+    public function getHeating() {
+        $heating = $this->getFieldValue('heating', false);
+
+        if ($heating) {
+            $heating = maybe_unserialize($heating);
+        }
+
+        $result = [];
+
+        if (is_array($heating)) {
+            foreach ($heating as $heat) {
+                $genKey  = $heat['generation'] ?? null;
+                $distKey = $heat['distribution'] ?? null;
+
+                $generation = $genKey && $this->heatService->keyExists($genKey)
+                    ? $this->heatService->getItem($genKey)
+                    : null;
+
+                $distribution = $distKey && $this->heatService->keyExists($distKey)
+                    ? $this->heatService->getItem($distKey)
+                    : null;
+
+                $result[] = [
+                    'generation'   => $generation,
+                    'distribution' => $distribution,
+                    'generation_key' => $genKey,
+                    'distribution_key' => $distKey,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
 
     public function getUrls(){
         $value = $this->getFieldValue('the_urls', array());
@@ -1181,6 +1210,13 @@ class Offer{
         return $this->render('integrated-offers', array(
             'offer' => $this,
             'integratedOffers' => $this->getIntegratedOffers()
+        ));
+    }
+
+    public function renderHeating(){
+        return $this->render('heating', array(
+            'offer' => $this,
+            'heating' => $this->getHeating()
         ));
     }
 

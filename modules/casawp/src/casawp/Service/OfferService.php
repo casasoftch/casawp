@@ -7,6 +7,7 @@ use CasasoftMessenger\Service\MessengerService;
 use CasasoftStandards\Service\UtilityService;
 use CasasoftStandards\Service\FeatureService;
 use CasasoftStandards\Service\IntegratedOfferService;
+use CasasoftStandards\Service\HeatService;
 
 use casawp\Service\FormService;
 
@@ -32,6 +33,7 @@ class OfferService{
 	private $featureService;
 	private $messengerService;
 	private $integratedOfferService;
+	private $heatService;
 	private $formService;
 
 	public function __construct(
@@ -41,6 +43,7 @@ class OfferService{
 		UtilityService $utilityService,
 		FeatureService $featureService,
 		IntegratedOfferService $integratedOfferService,
+		HeatService $heatService,
 		FormService $formService
 	) {
 		$this->utilityService = $utilityService;
@@ -49,6 +52,7 @@ class OfferService{
 		$this->featureService = $featureService;
 		$this->messengerService = $messengerService;
 		$this->integratedOfferService = $integratedOfferService;
+		$this->heatService = $heatService;
 		$this->formService = $formService;
 	}
 
@@ -74,6 +78,10 @@ class OfferService{
 
 	public function getIntegratedOfferService() {
 		return $this->integratedOfferService;
+	}
+
+	public function getHeatService() {
+		return $this->heatService;
 	}
 
 	public function getFormService() {

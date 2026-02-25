@@ -10,6 +10,7 @@ use CasasoftMessenger\Service\MessengerService;
 use CasasoftStandards\Service\UtilityService;
 use CasasoftStandards\Service\FeatureService;
 use CasasoftStandards\Service\IntegratedOfferService;
+use CasasoftStandards\Service\HeatService;
 
 class OfferServiceFactory implements FactoryInterface
 {
@@ -27,6 +28,8 @@ class OfferServiceFactory implements FactoryInterface
         $featureService = $container->get(FeatureService::class);
         /** @var IntegratedOfferService $integratedOfferService */
         $integratedOfferService = $container->get(IntegratedOfferService::class);
+        /** @var HeatService $heatService */
+        $heatService = $container->get(HeatService::class);
         /** @var FormService $formService */
         $formService = $container->get(FormService::class);
 
@@ -37,6 +40,7 @@ class OfferServiceFactory implements FactoryInterface
             $utilityService,
             $featureService,
             $integratedOfferService,
+            $heatService,
             $formService
         );
     }

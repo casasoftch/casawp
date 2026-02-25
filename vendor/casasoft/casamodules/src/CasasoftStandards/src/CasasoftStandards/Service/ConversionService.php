@@ -1276,6 +1276,11 @@ class ConversionService {
                 foreach ($this->integratedOfferService->getDefaultOptions() as $key => $options) {
                     $template[] = [$key, 'integrated-offers'];
                 }
+            } elseif ($templateMixed === 'heat') {
+                $template = [];
+                foreach ($this->heatService->getDefaultGroupOptions() as $key => $options) {
+                    $template[] = [$key, 'heat'];
+                }
             } else {
                 return $list;
             }
