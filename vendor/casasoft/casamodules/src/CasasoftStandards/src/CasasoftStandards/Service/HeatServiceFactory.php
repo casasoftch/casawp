@@ -1,27 +1,23 @@
 <?php
 namespace CasasoftStandards\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class HeatServiceFactory implements FactoryInterface
 {
-
-    public function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null){
-        $translator = $container->get('MvcTranslator');
-        //$viewRenderer = $serviceLocator->get('viewRenderer');
-
-        $service = new HeatService($translator);
-
-        return $service;
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $translator = $serviceLocator->get('Translator');
+        /** @var TranslatorInterface $translator */
+        $translator = $container->get('translator');
 
-        $service = new HeatService($translator);
+        // Optional but recommended in WP context: sync locale to WordPress
+        $locale = function_exists('determine_locale') ? determine_locale() : get_locale();
+        if (method_exists($translator, 'setLocale')) {
+            $translator->setLocale($locale);
+        }
 
-        return $service;
+        return new HeatService($translator);
     }
 }

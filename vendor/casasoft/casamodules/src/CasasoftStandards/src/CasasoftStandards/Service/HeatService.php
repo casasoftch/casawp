@@ -23,6 +23,7 @@ class HeatService {
 
     public function getDefaultOptions(){
 
+
         return [
             'electric' => [
                 'label' => $this->translator->translate('Electric heating', 'casasoft-standards')

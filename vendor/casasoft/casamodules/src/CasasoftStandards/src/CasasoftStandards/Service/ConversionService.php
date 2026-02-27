@@ -1278,7 +1278,7 @@ class ConversionService {
                 }
             } elseif ($templateMixed === 'heat') {
                 $template = [];
-                foreach ($this->heatService->getDefaultGroupOptions() as $key => $options) {
+                foreach ($this->heatService->getDefaultOptions() as $key => $options) {
                     $template[] = [$key, 'heat'];
                 }
             } else {
