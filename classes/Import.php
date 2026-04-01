@@ -1766,17 +1766,19 @@ class Import
                 continue;
             }
 
-            $ref = trim( $ref );
+            $ref = $this->normalizeCasawpOrigin($ref);
+            if ($ref === '') {
+                continue;
+            }
+
             $media_refs[]       = $ref;
-            $media_refs_order[] = $pos . ':' . $ref; // include position
+            $media_refs_order[] = $pos . ':' . $ref;
         }
 
         if ( $media_refs ) {
             $sorted = $media_refs;
             sort( $sorted, SORT_STRING | SORT_FLAG_CASE );
             $new_meta_data['_hash_media'] = md5( implode( '|', $sorted ) );
-
-            // order-sensitive
             $new_meta_data['_hash_media_order'] = md5( implode( '|', $media_refs_order ) );
         }
     }
@@ -1964,7 +1966,14 @@ class Import
     $this->setOfferLocalities($wp_post, $property['address'], $casawp_id);
 
     #$this->addToLog('updating attachments');
-    $this->setOfferAttachments($offer['offer_medias'], $wp_post, $property['exportproperty_id'], $casawp_id, $property);
+    $this->setOfferAttachments(
+        isset($offer['offer_medias']) ? $offer['offer_medias'] : array(),
+        $wp_post,
+        $property['exportproperty_id'],
+        $casawp_id,
+        $property,
+        !empty($offer['has_media_node'])
+    );
     // mark this post as “seen in the current run”
     update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
 
@@ -2165,6 +2174,82 @@ class Import
     }
   }
 
+  private function isRemoteMediaUrl($value): bool
+  {
+      return is_string($value) && preg_match('#^https?://#i', $value) === 1;
+  }
+
+  private function normalizeCasawpOrigin($origin)
+  {
+      $origin = trim((string) $origin);
+      if ($origin === '') {
+          return '';
+      }
+
+      $origin = str_replace('%3F', '?', $origin);
+      $origin = str_replace('%3D', '=', $origin);
+      $origin = str_replace('http://', 'https://', $origin);
+      $origin = str_replace('casagateway.ch', 'cdn.casasoft.com', $origin);
+
+      return $origin;
+  }
+
+  private function shouldUseRemoteCasawpAttachment(array $the_mediaitem): bool
+  {
+      $source = !empty($the_mediaitem['url']) ? $the_mediaitem['url'] : $the_mediaitem['file'];
+
+      return !empty($the_mediaitem['type'])
+          && $the_mediaitem['type'] === 'image'
+          && get_option('casawp_use_casagateway_cdn', false)
+          && $this->isRemoteMediaUrl($source);
+  }
+
+  public function getCasawpImportedAttachments($post_id)
+  {
+      $attachments = get_posts(array(
+          'post_type'      => 'attachment',
+          'posts_per_page' => -1,
+          'post_status'    => 'any',
+          'post_parent'    => $post_id,
+          'meta_query'     => array(
+              'relation' => 'OR',
+              array(
+                  'key'   => '_casawp_import',
+                  'value' => '1',
+              ),
+              array(
+                  'key'     => '_origin',
+                  'compare' => 'EXISTS',
+              ),
+          ),
+          'fields'  => 'all',
+          'orderby' => 'ID',
+          'order'   => 'ASC',
+      ));
+
+      $indexed = array();
+
+      foreach ($attachments as $attachment) {
+          $origin = $this->normalizeCasawpOrigin(get_post_meta($attachment->ID, '_origin', true));
+          if (!$origin) {
+              continue;
+          }
+
+          if (!isset($indexed[$origin])) {
+              $indexed[$origin] = $attachment;
+          } else {
+              $this->addToLog(
+                  'duplicate casawp attachment found for post ' . $post_id .
+                  ' origin: ' . $origin .
+                  ' keeping ' . $indexed[$origin]->ID .
+                  ', duplicate ' . $attachment->ID
+              );
+          }
+      }
+
+      return $indexed;
+  }
+
   public function casawpUploadAttachmentFromGateway($property_id, $fileurl)
   {
     if (strpos($fileurl, '://')) {
@@ -2234,296 +2319,365 @@ class Import
 
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id)
   {
-    if ($the_mediaitem['file']) {
-      $filename = '/casawp/import/attachment/' . $the_mediaitem['file'];
-    } elseif ($the_mediaitem['url']) { //external
-      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
-        $filename = $the_mediaitem['url'];
-      } else {
-        $filename = $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
+      $source = '';
+
+      if (!empty($the_mediaitem['url'])) {
+          $source = trim((string) $the_mediaitem['url']);
+      } elseif (!empty($the_mediaitem['file'])) {
+          $source = trim((string) $the_mediaitem['file']);
       }
-    } else {
-      $filename = false;
-    }
 
-    if ($filename && (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . $filename) || get_option('casawp_use_casagateway_cdn', false))) {
-
-      $wp_filetype = wp_check_filetype(basename($filename), null);
-      $guid = CASASYNC_CUR_UPLOAD_BASEURL . $filename;
-      if ($the_mediaitem['type'] === 'image' && get_option('casawp_use_casagateway_cdn', false)) {
-        $guid = $filename;
+      if ($source === '') {
+          return 'Missing media source';
       }
-      $attachment = array(
-        'guid'           => $guid,
-        'post_mime_type' => $wp_filetype['type'],
-        'post_title'     => ($the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename)),
-        'post_name'      => sanitize_title_with_dashes($guid, '', 'save'),
-        'post_content'   => '',
-        'post_excerpt'   => $the_mediaitem['caption'],
-        'post_status'    => 'inherit',
-        'menu_order'     => $the_mediaitem['order']
-      );
 
-      $attach_id = wp_insert_attachment($attachment, CASASYNC_CUR_UPLOAD_BASEDIR . $filename, $post_id);
-
-      require_once(ABSPATH . 'wp-admin/includes/image.php');
-      $attach_data = wp_generate_attachment_metadata($attach_id, CASASYNC_CUR_UPLOAD_BASEDIR . $filename);
-      wp_update_attachment_metadata($attach_id, $attach_data);
+      $origin = $this->normalizeCasawpOrigin($source);
 
       $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
-      if ($term) {
-        $term_id = $term->term_id;
-        wp_set_post_terms($attach_id,  array($term_id), 'casawp_attachment_type');
+      if (!$term || is_wp_error($term)) {
+          return 'Missing taxonomy term casawp_attachment_type:' . $the_mediaitem['type'];
       }
 
-      update_post_meta($attach_id, '_wp_attachment_image_alt', $the_mediaitem['alt']);
+      $title = !empty($the_mediaitem['title'])
+          ? sanitize_text_field($the_mediaitem['title'])
+          : wp_basename(parse_url($origin, PHP_URL_PATH) ?: $origin);
 
-      update_post_meta($attach_id, '_origin', ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url']));
+      $caption = isset($the_mediaitem['caption']) ? (string) $the_mediaitem['caption'] : '';
+      $alt     = isset($the_mediaitem['alt']) ? (string) $the_mediaitem['alt'] : '';
 
-      return $attach_id;
-    } else {
-      return $filename . " could not be found!";
-    }
-  }
+      // Remote-only attachment for CDN image mode
+      if ($this->shouldUseRemoteCasawpAttachment($the_mediaitem)) {
+          $mime = wp_check_filetype(parse_url($origin, PHP_URL_PATH), null);
+          $mime_type = !empty($mime['type']) ? $mime['type'] : 'image/jpeg';
 
-  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property)
-  {
-
-    $the_casawp_attachments = array();
-    if ($offer_medias) {
-      $o = 0;
-      foreach ($offer_medias as $offer_media) {
-        $o++;
-        $media = $offer_media['media'];
-        if (in_array($offer_media['type'], array('image', 'document', 'plan', 'offer-logo', 'sales-brochure'))) {
-          $the_casawp_attachments[] = array(
-            'type'    => $offer_media['type'],
-            'alt'     => $offer_media['alt'],
-            'title'   => ($offer_media['title'] ? $offer_media['title'] : basename($media['original_file'])),
-            'file'    => '',
-            'url'     => $media['original_file'],
-            'caption' => $offer_media['caption'],
-            'order'   => $o
+          $attachment = array(
+              'guid'           => $origin,
+              'post_mime_type' => $mime_type,
+              'post_title'     => $title,
+              'post_name'      => sanitize_title($title . '-' . md5($origin)),
+              'post_content'   => '',
+              'post_excerpt'   => $caption,
+              'post_status'    => 'inherit',
+              'post_parent'    => (int) $post_id,
+              'menu_order'     => isset($the_mediaitem['order']) ? (int) $the_mediaitem['order'] : 0,
           );
-        }
-      }
-    }
 
+          $attach_id = wp_insert_attachment($attachment, false, $post_id, true);
 
-    if (get_option('casawp_limit_reference_images') && $property['availability'] == 'reference') {
-      $title_image = false;
-      foreach ($the_casawp_attachments as $key => $attachment) {
-        if ($attachment['type'] == 'image') {
-          $title_image = $attachment;
-          break;
-        }
-      }
-      if ($title_image) {
-        $the_casawp_attachments = array(0 => $title_image);
-      }
-    }
-
-    $wp_casawp_attachments = array();
-    $args = array(
-      'post_type'   => 'attachment',
-      'numberposts' => -1,
-      'post_status' => null,
-      'post_parent' => $wp_post->ID,
-      'tax_query'   => array(
-        'relation'  => 'AND',
-        array(
-          'taxonomy' => 'casawp_attachment_type',
-          'field'    => 'slug',
-          'terms'    => array('image', 'plan', 'document', 'offer-logo', 'sales-brochure')
-        )
-      )
-    );
-    $attachments = get_posts($args);
-    if ($attachments) {
-      foreach ($attachments as $attachment) {
-        $wp_casawp_attachments[] = $attachment;
-      }
-    }
-
-    if (isset($the_casawp_attachments)) {
-      $wp_casawp_attachments_to_remove = $wp_casawp_attachments;
-      $dup_checker_arr = [];
-      foreach ($the_casawp_attachments as $the_mediaitem) {
-        $existing = false;
-        $existing_attachment = array();
-        foreach ($wp_casawp_attachments as $key => $wp_mediaitem) {
-          $attachment_customfields = get_post_custom($wp_mediaitem->ID);
-          $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-          if (in_array($original_filename, $dup_checker_arr)) {
-            #$this->addToLog('found duplicate for id: ' . $wp_mediaitem->ID . ' orig: ' . $original_filename);
+          if (is_wp_error($attach_id)) {
+              return $attach_id->get_error_message();
           }
-          $dup_checker_arr[] = $original_filename;
 
-          $alt = '';
-          if (
-            $original_filename == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
-            ||
-            str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($the_mediaitem['file'] ? $the_mediaitem['file'] : $the_mediaitem['url'])
-          ) {
-            $existing = true;
-            #$this->addToLog('updating attachment ' . $wp_mediaitem->ID);
+          update_post_meta($attach_id, '_origin', $origin);
+          update_post_meta($attach_id, '_is_remote', 1);
+          update_post_meta($attach_id, '_casawp_import', 1);
+          update_post_meta($attach_id, '_wp_attachment_image_alt', $alt);
 
-            unset($wp_casawp_attachments_to_remove[$key]);
-
-            $types = wp_get_post_terms($wp_mediaitem->ID, 'casawp_attachment_type');
-            if (array_key_exists(0, $types)) {
-              $typeslug = $types[0]->slug;
-              $alt = get_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', true);
-              $existing_attachment = array(
-                'type'    => $typeslug,
-                'alt'     => $alt,
-                'title'   => $wp_mediaitem->post_title,
-                'file'    => $the_mediaitem['file'],
-                'url'     => $the_mediaitem['url'],
-                'caption' => $wp_mediaitem->post_excerpt,
-                'order'   => $wp_mediaitem->menu_order
-              );
-            }
-
-            if ($existing_attachment != $the_mediaitem) {
-              $changed = true;
-              $this->transcript[$casawp_id]['attachments']["updated"] = 1;
-              if (
-                $existing_attachment['caption'] != $the_mediaitem['caption']
-                || $existing_attachment['title'] != $the_mediaitem['title']
-                || $existing_attachment['order'] != $the_mediaitem['order']
-              ) {
-                $att['post_excerpt'] = $the_mediaitem['caption'];
-                $att['post_title']   = ($the_mediaitem['title'] ? $the_mediaitem['title'] : basename($filename));
-                $att['ID']           = $wp_mediaitem->ID;
-                $att['menu_order']   = $the_mediaitem['order'];
-                $insert_id           = wp_update_post($att);
-              }
-
-              if ($existing_attachment['type'] != $the_mediaitem['type']) {
-                $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
-                if ($term) {
-                  $term_id = $term->term_id;
-                  wp_set_post_terms($wp_mediaitem->ID,  array($term_id), 'casawp_attachment_type');
-                }
-              }
-
-              if ($alt != $the_mediaitem['alt']) {
-                update_post_meta($wp_mediaitem->ID, '_wp_attachment_image_alt', $the_mediaitem['alt']);
-              }
-            }
+          if (!empty($the_mediaitem['width'])) {
+              update_post_meta($attach_id, '_remote_width', (int) $the_mediaitem['width']);
           }
-        }
-
-        if (!$existing) {
-          if (isset($wp_mediaitem->ID)) {
-            #$this->addToLog('creating new attachment ' . $wp_mediaitem->ID);
+          if (!empty($the_mediaitem['height'])) {
+              update_post_meta($attach_id, '_remote_height', (int) $the_mediaitem['height']);
           }
-          $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
-          if (is_int($new_id)) {
-            $this->transcript[$casawp_id]['attachments']["created"] = $the_mediaitem['file'];
-          } else {
-            $this->transcript[$casawp_id]['attachments']["failed_to_create"] = $new_id;
-          }
-        }
 
-        if (! get_option('casawp_use_casagateway_cdn', false) && isset($the_mediaitem['url'])) {
-          $this->casawpUploadAttachmentFromGateway($property_id, $the_mediaitem['url']);
-        }
+          wp_set_post_terms($attach_id, array((int) $term->term_id), 'casawp_attachment_type', false);
+
+          return (int) $attach_id;
       }
 
-      if ($wp_casawp_attachments_to_remove) {
-        #$this->addToLog('removing ' . count($wp_casawp_attachments_to_remove) . ' attachments');
-      }
-      foreach ($wp_casawp_attachments_to_remove as $attachment) {
-        #$this->addToLog('removing ' . $attachment->ID);
-        $this->transcript[$casawp_id]['attachments']["removed"] = $attachment;
-        wp_delete_attachment($attachment->ID);
+      // Local file mode
+      if (!empty($the_mediaitem['file'])) {
+          $filename = '/casawp/import/attachment/' . ltrim($the_mediaitem['file'], '/');
+      } else {
+          $filename = $this->casawpUploadAttachmentFromGateway($property_id, $source);
       }
 
-      /* -----------------------------------------------------------------------
-       *  ➜  FEATURED IMAGE  (first image by menu_order)
-       * -------------------------------------------------------------------- */
-      $first_image = get_posts( [
-          'post_type'   => 'attachment',
-          'numberposts' => 1,            // just one
-          'post_status' => 'inherit',
-          'post_parent' => $wp_post->ID,
-          'orderby'     => 'menu_order',
-          'order'       => 'ASC',
-          'tax_query'   => [
-              [
-                  'taxonomy' => 'casawp_attachment_type',
-                  'field'    => 'slug',
-                  'terms'    => [ 'image' ],
-              ],
-          ],
-      ] );
-
-      if ( $first_image ) {
-          $img_id = $first_image[0]->ID;
-
-          // update only if it changed – keeps the DB tidy
-          if ( get_post_thumbnail_id( $wp_post->ID ) != $img_id ) {
-              set_post_thumbnail( $wp_post->ID, $img_id );
-              $this->transcript[ $casawp_id ]['attachments']['featured_image_set'] = $img_id;
-          }
+      if (!$filename) {
+          return 'File could not be downloaded';
       }
 
+      $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
+      if (!is_file($full_path)) {
+          return $filename . ' could not be found!';
+      }
 
-      $args = array(
-        'post_type'   => 'attachment',
-        'numberposts' => -1,
-        'post_status' => null,
-        'post_parent' => $wp_post->ID,
-        'tax_query'   => array(
-          'relation'  => 'AND',
-          array(
-            'taxonomy' => 'casawp_attachment_type',
-            'field'    => 'slug',
-            'terms'    => array('image', 'plan', 'document', 'offer-logo', 'sales-brochure')
-          )
-        )
+      $wp_filetype = wp_check_filetype(basename($filename), null);
+      $mime_type = !empty($wp_filetype['type'])
+          ? $wp_filetype['type']
+          : (($the_mediaitem['type'] === 'image') ? 'image/jpeg' : 'application/octet-stream');
+
+      $guid = CASASYNC_CUR_UPLOAD_BASEURL . $filename;
+
+      $attachment = array(
+          'guid'           => $guid,
+          'post_mime_type' => $mime_type,
+          'post_title'     => $title,
+          'post_name'      => sanitize_title($title . '-' . md5($origin)),
+          'post_content'   => '',
+          'post_excerpt'   => $caption,
+          'post_status'    => 'inherit',
+          'post_parent'    => (int) $post_id,
+          'menu_order'     => isset($the_mediaitem['order']) ? (int) $the_mediaitem['order'] : 0,
       );
 
-      $attachments = get_posts($args);
-      if ($attachments) {
-        unset($wp_casawp_attachments);
-        foreach ($attachments as $attachment) {
-          $wp_casawp_attachments[] = $attachment;
-        }
+      $attach_id = wp_insert_attachment($attachment, $full_path, $post_id, true);
+
+      if (is_wp_error($attach_id)) {
+          return $attach_id->get_error_message();
       }
 
-      $attachment_image_order = array();
-      foreach ($the_casawp_attachments as $the_mediaitem) {
-        if ($the_mediaitem['type'] == 'image') {
-          $attachment_image_order[$the_mediaitem['order']] = $the_mediaitem;
-        }
-      }
-
-      if (isset($attachment_image_order) && !empty($attachment_image_order)) {
-        ksort($attachment_image_order);
-        $attachment_image_order = reset($attachment_image_order);
-        if (!empty($attachment_image_order)) {
-          foreach ($wp_casawp_attachments as $wp_mediaitem) {
-            $attachment_customfields = get_post_custom($wp_mediaitem->ID);
-            $original_filename = (array_key_exists('_origin', $attachment_customfields) ? $attachment_customfields['_origin'][0] : '');
-            if (
-              $original_filename == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
-              ||
-              str_replace('%3D', '=', str_replace('%3F', '?', $original_filename)) == ($attachment_image_order['file'] ? $attachment_image_order['file'] : $attachment_image_order['url'])
-            ) {
-              $cur_thumbnail_id = get_post_thumbnail_id($wp_post->ID);
-              if ($cur_thumbnail_id != $wp_mediaitem->ID) {
-                set_post_thumbnail($wp_post->ID, $wp_mediaitem->ID);
-                $this->transcript[$casawp_id]['attachments']["featured_image_set"] = 1;
-                break;
-              }
-            }
+      if (strpos($mime_type, 'image/') === 0) {
+          require_once(ABSPATH . 'wp-admin/includes/image.php');
+          $attach_data = wp_generate_attachment_metadata($attach_id, $full_path);
+          if (!empty($attach_data) && !is_wp_error($attach_data)) {
+              wp_update_attachment_metadata($attach_id, $attach_data);
           }
-        }
       }
-    }
+
+      update_post_meta($attach_id, '_origin', $origin);
+      delete_post_meta($attach_id, '_is_remote');
+      update_post_meta($attach_id, '_casawp_import', 1);
+      update_post_meta($attach_id, '_wp_attachment_image_alt', $alt);
+
+      wp_set_post_terms($attach_id, array((int) $term->term_id), 'casawp_attachment_type', false);
+
+      return (int) $attach_id;
+  }
+
+  public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property, $has_media_node = true)
+  {
+      $allowed_types = array('image', 'document', 'plan', 'offer-logo', 'sales-brochure');
+      $the_casawp_attachments = array();
+      $order = 0;
+
+      if (!empty($offer_medias)) {
+          foreach ($offer_medias as $offer_media) {
+              $type = isset($offer_media['type']) ? $offer_media['type'] : 'image';
+              if (!in_array($type, $allowed_types, true)) {
+                  continue;
+              }
+
+              $source = '';
+              if (!empty($offer_media['media']['original_file'])) {
+                  $source = $offer_media['media']['original_file'];
+              } elseif (!empty($offer_media['url'])) {
+                  $source = $offer_media['url'];
+              }
+
+              if ($source === '') {
+                  continue;
+              }
+
+              $order++;
+
+              $fallback_title = wp_basename(parse_url($source, PHP_URL_PATH) ?: $source);
+
+              $the_casawp_attachments[] = array(
+                  'type'    => $type,
+                  'alt'     => isset($offer_media['alt']) ? $offer_media['alt'] : '',
+                  'title'   => !empty($offer_media['title']) ? $offer_media['title'] : $fallback_title,
+                  'file'    => '',
+                  'url'     => $source,
+                  'caption' => isset($offer_media['caption']) ? $offer_media['caption'] : '',
+                  'order'   => $order,
+              );
+          }
+      }
+
+      if (get_option('casawp_limit_reference_images') && isset($property['availability']) && $property['availability'] === 'reference') {
+          $title_image = false;
+          foreach ($the_casawp_attachments as $attachment) {
+              if ($attachment['type'] === 'image') {
+                  $title_image = $attachment;
+                  break;
+              }
+          }
+          $the_casawp_attachments = $title_image ? array($title_image) : array();
+      }
+
+      if (empty($the_casawp_attachments)) {
+          if (!$has_media_node) {
+              $this->addToLog('skipping attachment cleanup because media node was missing for property ' . $casawp_id);
+              return;
+          }
+
+          $existing_imported = $this->getCasawpImportedAttachments($wp_post->ID);
+
+          foreach ($existing_imported as $origin => $attachment) {
+              $this->addToLog('removing casawp attachment because source list is empty: ' . $attachment->ID . ' origin: ' . $origin);
+              $this->transcript[$casawp_id]['attachments']['removed'][] = $attachment->ID;
+              wp_delete_attachment($attachment->ID, true);
+          }
+
+          delete_post_thumbnail($wp_post->ID);
+          return;
+      }
+
+      $existing_by_origin = $this->getCasawpImportedAttachments($wp_post->ID);
+      $to_remove = $existing_by_origin;
+
+      $featured_attachment_id = 0;
+      $seen_desired_origins = array();
+
+      foreach ($the_casawp_attachments as $the_mediaitem) {
+          $origin = !empty($the_mediaitem['url']) ? $the_mediaitem['url'] : $the_mediaitem['file'];
+          $origin = $this->normalizeCasawpOrigin($origin);
+
+          if ($origin === '' || isset($seen_desired_origins[$origin])) {
+              continue;
+          }
+          $seen_desired_origins[$origin] = true;
+
+          $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
+          if (!$term || is_wp_error($term)) {
+              $this->addToLog('ERROR missing casawp_attachment_type term "' . $the_mediaitem['type'] . '"');
+              $this->transcript[$casawp_id]['attachments']['failed_to_create'][] =
+                  'Missing taxonomy term casawp_attachment_type:' . $the_mediaitem['type'];
+              continue;
+          }
+          $term_id = (int) $term->term_id;
+
+          $should_be_remote = $this->shouldUseRemoteCasawpAttachment($the_mediaitem);
+
+          $existing_attachment = isset($existing_by_origin[$origin]) ? $existing_by_origin[$origin] : null;
+          if ($existing_attachment) {
+              unset($to_remove[$origin]);
+          }
+
+          if ($existing_attachment) {
+              $attachment_id = (int) $existing_attachment->ID;
+              $current_is_remote = (bool) get_post_meta($attachment_id, '_is_remote', true);
+
+              // If this was previously remote but now should be local, recreate it locally.
+              if ($current_is_remote && !$should_be_remote) {
+                  $replacement_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
+
+                  if (is_int($replacement_id)) {
+                      $this->addToLog('converted remote attachment ' . $attachment_id . ' to local attachment ' . $replacement_id . ' origin: ' . $origin);
+                      $this->transcript[$casawp_id]['attachments']['converted_to_local'][] = array(
+                          'from' => $attachment_id,
+                          'to'   => $replacement_id,
+                      );
+
+                      wp_delete_attachment($attachment_id, true);
+
+                      $attachment_id = $replacement_id;
+                      $existing_attachment = get_post($attachment_id);
+                      $existing_by_origin[$origin] = $existing_attachment;
+                  } else {
+                      $this->addToLog('failed to convert remote attachment to local for origin: ' . $origin . ' reason: ' . print_r($replacement_id, true));
+                      $this->transcript[$casawp_id]['attachments']['failed_to_create'][] = array(
+                          'origin' => $origin,
+                          'reason' => $replacement_id,
+                      );
+                      continue;
+                  }
+              }
+
+              $existing_attachment = get_post($attachment_id);
+              $changed = false;
+              $update_post = array('ID' => $attachment_id);
+
+              if ((int) $existing_attachment->post_parent !== (int) $wp_post->ID) {
+                  $update_post['post_parent'] = (int) $wp_post->ID;
+                  $changed = true;
+              }
+
+              if ((string) $existing_attachment->post_title !== (string) $the_mediaitem['title']) {
+                  $update_post['post_title'] = sanitize_text_field($the_mediaitem['title']);
+                  $changed = true;
+              }
+
+              $new_excerpt = isset($the_mediaitem['caption']) ? (string) $the_mediaitem['caption'] : '';
+              if ((string) $existing_attachment->post_excerpt !== $new_excerpt) {
+                  $update_post['post_excerpt'] = $new_excerpt;
+                  $changed = true;
+              }
+
+              if ((int) $existing_attachment->menu_order !== (int) $the_mediaitem['order']) {
+                  $update_post['menu_order'] = (int) $the_mediaitem['order'];
+                  $changed = true;
+              }
+
+              if (count($update_post) > 1) {
+                  wp_update_post($update_post);
+              }
+
+              update_post_meta($attachment_id, '_origin', $origin);
+              update_post_meta($attachment_id, '_casawp_import', 1);
+
+              if ($should_be_remote) {
+                  update_post_meta($attachment_id, '_is_remote', 1);
+              } else {
+                  delete_post_meta($attachment_id, '_is_remote');
+              }
+
+              $current_alt = (string) get_post_meta($attachment_id, '_wp_attachment_image_alt', true);
+              $new_alt = isset($the_mediaitem['alt']) ? (string) $the_mediaitem['alt'] : '';
+              if ($current_alt !== $new_alt) {
+                  update_post_meta($attachment_id, '_wp_attachment_image_alt', $new_alt);
+                  $changed = true;
+              }
+
+              $current_terms = wp_get_post_terms($attachment_id, 'casawp_attachment_type', array('fields' => 'ids'));
+              $current_terms = array_map('intval', is_array($current_terms) ? $current_terms : array());
+
+              if ($current_terms !== array($term_id)) {
+                  wp_set_post_terms($attachment_id, array($term_id), 'casawp_attachment_type', false);
+                  $changed = true;
+              }
+
+              if ($changed) {
+                  $this->addToLog('updated casawp attachment ' . $attachment_id . ' origin: ' . $origin);
+                  $this->transcript[$casawp_id]['attachments']['updated'][] = $attachment_id;
+              } else {
+                  $this->addToLog('kept casawp attachment ' . $attachment_id . ' origin: ' . $origin);
+              }
+          } else {
+              $new_id = $this->casawpUploadAttachment($the_mediaitem, $wp_post->ID, $property_id);
+
+              if (is_int($new_id)) {
+                  $attachment_id = $new_id;
+                  $this->addToLog('created casawp attachment ' . $attachment_id . ' origin: ' . $origin);
+                  $this->transcript[$casawp_id]['attachments']['created'][] = $attachment_id;
+
+                  $existing_by_origin[$origin] = get_post($attachment_id);
+                  unset($to_remove[$origin]);
+              } else {
+                  $this->addToLog('failed to create casawp attachment for origin: ' . $origin . ' reason: ' . print_r($new_id, true));
+                  $this->transcript[$casawp_id]['attachments']['failed_to_create'][] = array(
+                      'origin' => $origin,
+                      'reason' => $new_id,
+                  );
+                  continue;
+              }
+          }
+
+          if ($the_mediaitem['type'] === 'image' && (int) $the_mediaitem['order'] === 1 && empty($featured_attachment_id)) {
+              $featured_attachment_id = (int) $attachment_id;
+          }
+      }
+
+      if (!empty($to_remove)) {
+          $this->addToLog('removing ' . count($to_remove) . ' obsolete casawp attachments');
+      }
+
+      foreach ($to_remove as $origin => $attachment) {
+          $attachment_id = (int) $attachment->ID;
+          $this->addToLog('removing obsolete casawp attachment ' . $attachment_id . ' origin: ' . $origin);
+          $this->transcript[$casawp_id]['attachments']['removed'][] = $attachment_id;
+          wp_delete_attachment($attachment_id, true);
+      }
+
+      if (!empty($featured_attachment_id)) {
+          $current_thumbnail_id = (int) get_post_thumbnail_id($wp_post->ID);
+          if ($current_thumbnail_id !== $featured_attachment_id) {
+              set_post_thumbnail($wp_post->ID, $featured_attachment_id);
+              $this->transcript[$casawp_id]['attachments']['featured_image_set'] = $featured_attachment_id;
+          }
+      } else {
+          delete_post_thumbnail($wp_post->ID);
+      }
   }
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id)
@@ -3343,6 +3497,7 @@ class Import
         }
         $offerData['descriptions'] = $descriptionDatas;
 
+        $offerData['has_media_node'] = isset($offer_xml->attachments);
         $offerData['offer_medias'] = array();
         if ($offer_xml->attachments) {
           foreach ($offer_xml->attachments->media as $xml_media) {

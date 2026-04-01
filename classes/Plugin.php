@@ -168,12 +168,10 @@ class Plugin
         // logout page
         add_action('template_redirect', array($this, 'privateUserLogOutOnLogoutPage'));
 
-        // custom post thumbnail (for gateway cdn usage)
-        add_filter('post_thumbnail_html', array($this, 'modifyPostThumbnailHtml'), 99, 5);
-
-        add_filter('wp_get_attachment_image_src', array($this, 'modifyGetAttachmentImageSrc'), 99, 5);
-
-        add_filter('wp_get_attachment_url', array($this, 'modifyGetAttachmentUrl'), 99, 5);
+        add_filter('wp_get_attachment_image_src', array($this, 'modifyGetAttachmentImageSrc'), 99, 4);
+        add_filter('wp_get_attachment_url', array($this, 'modifyGetAttachmentUrl'), 99, 2);
+        add_filter('image_downsize', array($this, 'remoteImageDownsize'), 10, 3);
+        add_filter('wp_get_attachment_image_attributes', array($this, 'modifyRemoteImageAttributes'), 99, 3);
     }
 
     public function privateUserMakeSurePagesExist()
@@ -238,175 +236,210 @@ class Plugin
 
     public function origToGwSrc($orig, $targetSize)
     {
-        // gateway sizes
-        // -72x72_C.png
-        // -100x72_C.png
-        // -240x180_C.png
-        // -500x375_C.jpg
-        // -1024x768_F.jpg
-        // -1300x800_F.jpg
         $remoteSrc = $orig;
         $remoteSrc = str_replace('%3F', '?', $remoteSrc);
         $remoteSrc = str_replace('%3D', '=', $remoteSrc);
+
         $width = null;
         $height = null;
-        //echo $remoteSrc;
-        // echo "*" . $targetSize . "*";
-        /*if (strpos($orig, '-p-xl.jpg')){
-            $remoteSrc = str_replace('-p-xl.jpg', '.jpg?p=xl', $remoteSrc);
-        }*/
+
         if ($targetSize === 'thumbnail') {
             $width = 240;
             $height = 180;
-            //echo '.';
-            if (strpos($orig, '-1300x800_F.jpg')) {
+
+            if (strpos($orig, '-1300x800_F.jpg') !== false) {
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=sm', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=lg')) {
+            if (strpos($remoteSrc, '?p=lg') !== false) {
                 $remoteSrc = str_replace('?p=lg', '?p=sm', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=hd')) {
+            if (strpos($remoteSrc, '?p=hd') !== false) {
                 $remoteSrc = str_replace('?p=hd', '?p=sm', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=xl')) {
-                //echo 'xl_prop';
+            if (strpos($remoteSrc, '?p=xl') !== false) {
                 $remoteSrc = str_replace('?p=xl', '?p=sm', $remoteSrc);
             }
+
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
+
         if ($targetSize === 'casawp-thumb') {
             $width = 500;
             $height = 375;
-            if (strpos($orig, '-1300x800_F.jpg')) {
+
+            if (strpos($orig, '-1300x800_F.jpg') !== false) {
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=md', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=lg')) {
+            if (strpos($remoteSrc, '?p=lg') !== false) {
                 $remoteSrc = str_replace('?p=lg', '?p=md', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=hd')) {
+            if (strpos($remoteSrc, '?p=hd') !== false) {
                 $remoteSrc = str_replace('?p=hd', '?p=md', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=xl')) {
+            if (strpos($remoteSrc, '?p=xl') !== false) {
                 $remoteSrc = str_replace('?p=xl', '?p=md', $remoteSrc);
             }
+
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
+
         if ($targetSize === 'large') {
             $width = 1024;
             $height = 768;
-            if (strpos($orig, '-1300x800_F.jpg')) {
+
+            if (strpos($orig, '-1300x800_F.jpg') !== false) {
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=lg', $remoteSrc);
             }
-            // if (strpos($remoteSrc, '?p=lg')){
-            //     $remoteSrc = str_replace('?p=lg', '?p=lg', $remoteSrc);
-            // }
-            if (strpos($remoteSrc, '?p=hd')) {
+            if (strpos($remoteSrc, '?p=hd') !== false) {
                 $remoteSrc = str_replace('?p=hd', '?p=lg', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=xl')) {
+            if (strpos($remoteSrc, '?p=xl') !== false) {
                 $remoteSrc = str_replace('?p=xl', '?p=lg', $remoteSrc);
             }
+
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
+
         if ($targetSize === 'full') {
             $width = 1300;
             $height = 800;
-            if (strpos($orig, '-1300x800_F.jpg')) {
+
+            if (strpos($orig, '-1300x800_F.jpg') !== false) {
                 $remoteSrc = str_replace('-1300x800_F.jpg', '.jpg?p=xl', $remoteSrc);
             }
-            if (strpos($remoteSrc, '?p=lg')) {
+            if (strpos($remoteSrc, '?p=lg') !== false) {
+                $remoteSrc = str_replace('?p=lg', '?p=xl', $remoteSrc);
+            }
+            if (strpos($remoteSrc, '?p=hd') !== false) {
                 $remoteSrc = str_replace('?p=hd', '?p=xl', $remoteSrc);
             }
-            // if (strpos($remoteSrc, '?p=xl')){
-            //     $remoteSrc = str_replace('?p=xl', '?p=xl', $remoteSrc);
-            // }
+
             $remoteSrc = str_replace('/media-thumb/', '/media/', $remoteSrc);
         }
+
         $remoteSrc = str_replace('http://', 'https://', $remoteSrc);
         $remoteSrc = str_replace('casagateway.ch', 'cdn.casasoft.com', $remoteSrc);
-        return [
-            'src' => $remoteSrc,
-            'width' => $width,
+
+        return array(
+            'src'    => $remoteSrc,
+            'width'  => $width,
             'height' => $height,
-        ];
+        );
     }
 
     public function modifyGetAttachmentUrl($url, $attachment_id)
     {
-        if (get_option('casawp_use_casagateway_cdn', false)) {
-            $orig = get_post_meta($attachment_id, '_origin', true);
-            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/'))) {
-                $remoteSrcArr = $this->origToGwSrc($orig, 'full');
-                return $remoteSrcArr['src'];
-            }
+        $origin = get_post_meta($attachment_id, '_origin', true);
+        $is_remote = get_post_meta($attachment_id, '_is_remote', true);
+
+        if ($is_remote && $origin) {
+            return $origin;
         }
+
         return $url;
     }
 
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon)
     {
-        if (get_option('casawp_use_casagateway_cdn', false)) {
-            $orig = get_post_meta($attachment_id, '_origin', true);
-            if (
-                $orig &&
-                strpos($orig, 'casagateway.ch') !== false &&
-                (strpos($orig, '/media-thumb/') !== false || strpos($orig, '/media/') !== false)
-            ) {
-                $remoteSrcArr = $this->origToGwSrc($orig, $size);
+        $is_remote = get_post_meta($attachment_id, '_is_remote', true);
+        $origin    = get_post_meta($attachment_id, '_origin', true);
 
-                // Ensure $image is an array
-                if (!is_array($image)) {
-                    $image = array();
-                }
-
-                // Assign values
-                $image[0] = $remoteSrcArr['src'];
-                $image[1] = $remoteSrcArr['width'];
-                $image[2] = $remoteSrcArr['height'];
-                // Optionally, set is_intermediate (index 3)
-                $image[3] = false; // or true, depending on your context
-            }
+        if (!$is_remote || !$origin) {
+            return $image;
         }
-        return $image;
+
+        $resolved = $this->getRemoteMediaVariant($origin, $size, $attachment_id);
+
+        if (!$resolved || empty($resolved['src'])) {
+            return $image;
+        }
+
+        return array(
+            $resolved['src'],
+            (int) $resolved['width'],
+            (int) $resolved['height'],
+            false,
+        );
     }
 
-
-    public function modifyPostThumbnailHtml($html, $post_id, $post_thumbnail_id, $size, $attr)
+    public function remoteImageDownsize($out, $attachment_id, $size)
     {
-        if (get_option('casawp_use_casagateway_cdn', false)) {
-            $post_thumbnail_id = get_post_thumbnail_id($post_id);
-            $orig = get_post_meta($post_thumbnail_id, '_origin', true);
-            $attachment_id = $post_thumbnail_id;
-            $remoteSrcArr = false;
-            if ($orig && strpos($orig, 'casagateway.ch') && (strpos($orig, '/media-thumb/') || strpos($orig, '/media/'))) {
-                $remoteSrcArr = $this->origToGwSrc($orig, $size);
-            } else {
-                return $html;
-            }
-            $id = get_post_thumbnail_id(); // gets the id of the current post_thumbnail (in the loop)
-            $alt = trim(strip_tags(get_post_meta($post_thumbnail_id, '_wp_attachment_image_alt', true))); // get_the_title($id); // gets the post thumbnail title
-            $size_class = $size;
-            if (is_array($size_class)) {
-                $size_class = join('x', $size_class);
-            }
-            $default_attr = array(
-                'src'   => $remoteSrcArr['src'],
-                'class' => "attachment-$size_class size-$size_class",
-                'alt'   => trim(strip_tags(get_post_meta($attachment_id, '_wp_attachment_image_alt', true))),
-            );
-            $attr = wp_parse_args($attr, $default_attr);
-            $attachment = get_post($attachment_id);
-            $attr = apply_filters('wp_get_attachment_image_attributes', $attr, $attachment, $size);
-            $attr = array_map('esc_attr', $attr);
-            $hwstring = image_hwstring($remoteSrcArr['width'], $remoteSrcArr['height']);
-            $html = rtrim("<img $hwstring");
-            foreach ($attr as $name => $value) {
-                $html .= " $name=" . '"' . $value . '"';
-            }
-            $html .= ' />';
+        $is_remote = get_post_meta($attachment_id, '_is_remote', true);
+        $origin    = get_post_meta($attachment_id, '_origin', true);
+
+        if (!$is_remote || !$origin) {
+            return false;
         }
 
-        return $html;
+        $resolved = $this->getRemoteMediaVariant($origin, $size, $attachment_id);
+
+        if (!$resolved || empty($resolved['src'])) {
+            return false;
+        }
+
+        return array(
+            $resolved['src'],
+            (int) $resolved['width'],
+            (int) $resolved['height'],
+            false,
+        );
+    }
+
+    public function modifyRemoteImageAttributes($attr, $attachment, $size)
+    {
+        if ($attachment && !empty($attachment->ID) && get_post_meta($attachment->ID, '_is_remote', true)) {
+            unset($attr['srcset'], $attr['sizes']);
+        }
+
+        return $attr;
+    }
+
+    private function getRemoteMediaVariant($origin, $size, $attachment_id = 0)
+    {
+        $width  = (int) get_post_meta($attachment_id, '_remote_width', true);
+        $height = (int) get_post_meta($attachment_id, '_remote_height', true);
+
+        if (!$width) {
+            $width = 1300;
+        }
+        if (!$height) {
+            $height = 800;
+        }
+
+        if (
+            strpos($origin, 'casagateway.ch') !== false ||
+            strpos($origin, 'cdn.casasoft.com') !== false
+        ) {
+            $normalized_size = $size;
+
+            if (is_array($size) && !empty($size[0])) {
+                $req_w = (int) $size[0];
+                if ($req_w <= 240) {
+                    $normalized_size = 'thumbnail';
+                } elseif ($req_w <= 500) {
+                    $normalized_size = 'casawp-thumb';
+                } elseif ($req_w <= 1024) {
+                    $normalized_size = 'large';
+                } else {
+                    $normalized_size = 'full';
+                }
+            }
+
+            $remote = $this->origToGwSrc($origin, $normalized_size);
+
+            return array(
+                'src'    => $remote['src'],
+                'width'  => (int) $remote['width'],
+                'height' => (int) $remote['height'],
+            );
+        }
+
+        // Generic remote image fallback
+        return array(
+            'src'    => $origin,
+            'width'  => $width,
+            'height' => $height,
+        );
     }
 
     public function privateUserHideAdminBarForRegisteredUsers()
