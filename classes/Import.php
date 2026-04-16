@@ -317,6 +317,7 @@ class Import
       'post_type'      => 'casawp_property',
       'post_status'    => array('publish', 'pending', 'draft', 'future', 'trash'),
       'fields'         => 'ids',
+      'suppress_filters' => true,
     );
 
     $properties = get_posts($args);
@@ -387,6 +388,7 @@ class Import
       'post_type'      => 'casawp_property',
       'post_status'    => 'publish',
       'fields'         => 'ids',
+      'suppress_filters' => true,
       'meta_query'     => [
         'relation' => 'OR',
         [
@@ -410,6 +412,7 @@ class Import
         'post_status'    => 'any',
         'post_parent'    => $post_id,
         'fields'         => 'ids',
+        'suppress_filters' => true,
       ] );
 
       $this->addToLog( "Deleting " . count( $attachments ) . " attachments for property ID: $post_id" );
@@ -723,6 +726,7 @@ class Import
       'posts_per_page' => -1,
       'fields'         => 'ids',
       'meta_key'       => 'exportproperty_id',
+      'suppress_filters' => true,
     );
 
     $query = new \WP_Query($args);
@@ -782,6 +786,7 @@ class Import
                       'post_status'    => 'any',
                       'post_parent'    => $trans_post_id,
                       'fields'         => 'ids',
+                      'suppress_filters' => true,
                     ));
 
                     foreach ($attachments as $attachment_id) {
@@ -800,6 +805,7 @@ class Import
                 'post_status'    => 'any',
                 'post_parent'    => $post_id,
                 'fields'         => 'ids',
+                'suppress_filters' => true,
               ));
 
               foreach ($attachments as $attachment_id) {
@@ -859,6 +865,85 @@ class Import
     return false;
   }
 
+  private function getCurrentWPMLLanguage(): ?string
+  {
+    if (!$this->hasWPML()) {
+      return null;
+    }
+
+    $lang = apply_filters('wpml_current_language', null);
+    if (is_string($lang) && $lang !== '') {
+      return $lang;
+    }
+
+    global $sitepress;
+    if ($sitepress && method_exists($sitepress, 'get_current_language')) {
+      $lang = $sitepress->get_current_language();
+      if (is_string($lang) && $lang !== '') {
+        return $lang;
+      }
+    }
+
+    return null;
+  }
+
+  private function switchWPMLLanguageContext(?string $lang): void
+  {
+    if (!$this->hasWPML() || !$lang) {
+      return;
+    }
+
+    global $sitepress;
+    if ($sitepress && method_exists($sitepress, 'switch_lang')) {
+      $sitepress->switch_lang($lang, true);
+      return;
+    }
+
+    do_action('wpml_switch_language', $lang);
+  }
+
+  private function withWPMLLanguage(?string $lang, callable $callback)
+  {
+    if (!$this->hasWPML() || !$lang) {
+      return $callback();
+    }
+
+    $previous_lang = $this->getCurrentWPMLLanguage();
+
+    if ($previous_lang !== $lang) {
+      $this->switchWPMLLanguageContext($lang);
+    }
+
+    try {
+      return $callback();
+    } finally {
+      if ($previous_lang && $previous_lang !== $lang) {
+        $this->switchWPMLLanguageContext($previous_lang);
+      }
+    }
+  }
+
+  private function insertPostWithLanguage(array $post_data, string $lang): int
+  {
+    $previous_post_language = $_POST['icl_post_language'] ?? null;
+
+    if ($this->hasWPML() && $lang !== '') {
+      $_POST['icl_post_language'] = $lang;
+    }
+
+    try {
+      return (int) $this->withWPMLLanguage($lang, function () use ($post_data) {
+        return wp_insert_post($post_data);
+      });
+    } finally {
+      if ($previous_post_language === null) {
+        unset($_POST['icl_post_language']);
+      } else {
+        $_POST['icl_post_language'] = $previous_post_language;
+      }
+    }
+  }
+
   // Delayed WPML link creation to reduce overhead
   public function updateInsertWPMLconnection( $wp_post, string $lang, string $trid_identifier ): void {
 
@@ -875,7 +960,8 @@ class Import
       $default_lang = $default_lang ?? $sitepress->get_default_language();
 
       $main_lang    = $this->getMainLang();
-      $element_type = 'post_casawp_property';
+      $post_type    = get_post_type($wp_post);
+      $element_type = $post_type ? 'post_' . $post_type : 'post_casawp_property';
 
       /* 1 — obtain / mint TRID */
       if ( $lang === $main_lang ) {
@@ -910,12 +996,21 @@ class Import
           return;                                        // bail gracefully
       }
 
-      /* Skip if mapping already present (saves UPDATE) */
-      if ( $wpdb->get_var( $wpdb->prepare(
-              "SELECT translation_id FROM {$wpdb->prefix}icl_translations
+      $existing_translation = $wpdb->get_row( $wpdb->prepare(
+              "SELECT translation_id, language_code, source_language_code
+               FROM {$wpdb->prefix}icl_translations
                WHERE element_id = %d AND trid = %d LIMIT 1",
               $wp_post->ID, $trid
-          ) ) ) {
+          ) );
+
+      $expected_source_lang = ( $lang === $main_lang ? null : $default_lang );
+
+      /* Skip if mapping already matches the intended language. */
+      if (
+          $existing_translation
+          && $existing_translation->language_code === $lang
+          && $existing_translation->source_language_code === $expected_source_lang
+      ) {
           return;
       }
 
@@ -1163,66 +1258,66 @@ class Import
         $offer_pos = 0;
         foreach ($theoffers as $offerData) {
           $offer_pos++;
+          $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData) {
+            $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
 
-          $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
-
-          $the_query = new \WP_Query([
-            'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
-            'post_type'   => 'casawp_property',
-            'meta_query'  => [
-              [
-                'key'   => 'casawp_id',
-                'value' => $casawp_id,
+            $the_query = new \WP_Query([
+              'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
+              'post_type'   => 'casawp_property',
+              'meta_query'  => [
+                [
+                  'key'   => 'casawp_id',
+                  'value' => $casawp_id,
+                ],
               ],
-            ],
-            'posts_per_page' => 1,
-            'suppress_filters' => true,
-            'language' => '',
-          ]);
+              'posts_per_page' => 1,
+              'suppress_filters' => true,
+              'language' => '',
+            ]);
 
-          if ($the_query->have_posts()) {
-            $the_query->the_post();
-            global $post;
-            $wp_post = $post;
-            $this->transcript[$casawp_id]['action'] = 'update';
-          } else {
-            $this->transcript[$casawp_id]['action'] = 'new';
-            
-            $the_post = [
-              'post_title'   => $offerData['name'],
-              'post_content' => 'unsaved property',
-              'post_status'  => 'publish',
-              'post_type'    => 'casawp_property',
-              'menu_order'   => $curRank,
-              'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
-              'post_date'    => (
-                  $property['creation']
-                  ? $property['creation']->format('Y-m-d H:i:s')
-                  : $property['last_update']->format('Y-m-d H:i:s')
-              ),
-            ];
+            if ($the_query->have_posts()) {
+              $the_query->the_post();
+              global $post;
+              $wp_post = $post;
+              $this->transcript[$casawp_id]['action'] = 'update';
+            } else {
+              $this->transcript[$casawp_id]['action'] = 'new';
 
-            $insert_id = wp_insert_post($the_post);
-            update_post_meta($insert_id, 'casawp_id', $casawp_id);
-            update_post_meta($insert_id, 'is_active', true);
-            $wp_post = get_post($insert_id, OBJECT, 'raw');
-          }
+              $the_post = [
+                'post_title'   => $offerData['name'],
+                'post_content' => 'unsaved property',
+                'post_status'  => 'publish',
+                'post_type'    => 'casawp_property',
+                'menu_order'   => $curRank,
+                'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
+                'post_date'    => (
+                    $property['creation']
+                    ? $property['creation']->format('Y-m-d H:i:s')
+                    : $property['last_update']->format('Y-m-d H:i:s')
+                ),
+              ];
 
-          wp_reset_postdata();
+              $insert_id = $this->insertPostWithLanguage($the_post, $offerData['lang']);
+              update_post_meta($insert_id, 'casawp_id', $casawp_id);
+              update_post_meta($insert_id, 'is_active', true);
+              $wp_post = get_post($insert_id, OBJECT, 'raw');
+            }
 
-          wp_update_post(array(
-            'ID' => $wp_post->ID,
-            'menu_order' => $curRank,
-          ));
+            wp_reset_postdata();
 
-          $this->ranksort[$wp_post->ID] = $curRank;
+            wp_update_post(array(
+              'ID' => $wp_post->ID,
+              'menu_order' => $curRank,
+            ));
 
-          $found_posts[] = $wp_post->ID;
+            $this->ranksort[$wp_post->ID] = $curRank;
 
-          $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
+            $found_posts[] = $wp_post->ID;
 
-          $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+            $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
 
+            $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+          });
         }
       }
     }
@@ -1279,8 +1374,7 @@ class Import
             $the_post['post_status'] = 'publish';
             $the_post['post_type'] = 'casawp_project';
             $the_post['post_name'] = $this->casawp_sanitize_title($casawp_id . '-' . $projectData['detail']['name']);
-            $_POST['icl_post_language'] = $lang;
-            $insert_id = wp_insert_post($the_post);
+            $insert_id = $this->insertPostWithLanguage($the_post, $lang);
 
             update_post_meta($insert_id, 'casawp_id', $casawp_id);
             $wp_post = get_post($insert_id, OBJECT, 'raw');
@@ -2211,6 +2305,7 @@ class Import
           'posts_per_page' => -1,
           'post_status'    => 'any',
           'post_parent'    => $post_id,
+          'suppress_filters' => true,
           'meta_query'     => array(
               'relation' => 'OR',
               array(
@@ -3786,8 +3881,7 @@ class Import
           $the_post['post_status'] = 'publish';
           $the_post['post_type'] = 'casawp_project';
           $the_post['post_name'] = $this->casawp_sanitize_title($unit_casawp_id . '-' . $unitData['detail']['name']);
-          $_POST['icl_post_language'] = $lang;
-          $insert_id = wp_insert_post($the_post);
+          $insert_id = $this->insertPostWithLanguage($the_post, $lang);
           update_post_meta($insert_id, 'casawp_id', $unit_casawp_id);
           $wp_unit_post = get_post($insert_id, OBJECT, 'raw');
         }
