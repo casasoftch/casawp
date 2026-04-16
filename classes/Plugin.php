@@ -41,6 +41,8 @@ require_once CASASYNC_PLUGIN_DIR . 'classes/StructuredData.php';
 
 class Plugin
 {
+    private const ATTACHMENT_TYPE_SCHEMA_VERSION = 1;
+
     public $textids = false;
     public $fields = false;
     public $meta_box = false;
@@ -440,6 +442,176 @@ class Plugin
             'width'  => $width,
             'height' => $height,
         );
+    }
+
+    private function getAttachmentTypeDefinitions(): array
+    {
+        return [
+            'image' => 'Image',
+            'plan' => 'Plan',
+            'document' => 'Document',
+            'sales-brochure' => 'Sales Brochure',
+        ];
+    }
+
+    private function getAttachmentTypeTermRowBySlug(string $slug): ?object
+    {
+        global $wpdb;
+
+        $row = $wpdb->get_row($wpdb->prepare(
+            "SELECT t.term_id, tt.term_taxonomy_id, t.slug, t.name
+             FROM {$wpdb->terms} t
+             INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = t.term_id
+             WHERE tt.taxonomy = %s AND t.slug = %s
+             ORDER BY tt.term_taxonomy_id ASC
+             LIMIT 1",
+            'casawp_attachment_type',
+            $slug
+        ));
+
+        return $row ?: null;
+    }
+
+    private function ensureAttachmentTypeTerm(string $slug, string $label): ?object
+    {
+        $row = $this->getAttachmentTypeTermRowBySlug($slug);
+
+        if (!$row) {
+            $inserted = wp_insert_term($label, 'casawp_attachment_type', ['slug' => $slug]);
+
+            if (is_wp_error($inserted)) {
+                if ($inserted->get_error_code() === 'term_exists') {
+                    $term_id = (int) $inserted->get_error_data();
+                    if ($term_id) {
+                        $term = get_term($term_id, 'casawp_attachment_type');
+                        if ($term && !is_wp_error($term)) {
+                            $row = (object) [
+                                'term_id' => (int) $term->term_id,
+                                'term_taxonomy_id' => (int) $term->term_taxonomy_id,
+                                'slug' => (string) $term->slug,
+                                'name' => (string) $term->name,
+                            ];
+                        }
+                    }
+                }
+            } else {
+                $row = $this->getAttachmentTypeTermRowBySlug($slug);
+            }
+        }
+
+        if ($row && $row->name !== $label) {
+            wp_update_term((int) $row->term_id, 'casawp_attachment_type', ['name' => $label]);
+            $row->name = $label;
+        }
+
+        return $row;
+    }
+
+    private function normalizeAttachmentTypeRelationships(int $from_term_taxonomy_id, int $to_term_taxonomy_id): array
+    {
+        global $wpdb;
+
+        if ($from_term_taxonomy_id === $to_term_taxonomy_id) {
+            return [];
+        }
+
+        $object_ids = $wpdb->get_col($wpdb->prepare(
+            "SELECT object_id
+             FROM {$wpdb->term_relationships}
+             WHERE term_taxonomy_id = %d",
+            $from_term_taxonomy_id
+        ));
+
+        if (!empty($object_ids)) {
+            $wpdb->query($wpdb->prepare(
+                "INSERT IGNORE INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id, term_order)
+                 SELECT object_id, %d, term_order
+                 FROM {$wpdb->term_relationships}
+                 WHERE term_taxonomy_id = %d",
+                $to_term_taxonomy_id,
+                $from_term_taxonomy_id
+            ));
+
+            $wpdb->delete(
+                $wpdb->term_relationships,
+                ['term_taxonomy_id' => $from_term_taxonomy_id],
+                ['%d']
+            );
+
+            clean_object_term_cache(array_map('intval', $object_ids), 'attachment');
+        }
+
+        return array_map('intval', $object_ids);
+    }
+
+    private function cleanupDuplicateAttachmentTypeTerms(): void
+    {
+        global $wpdb;
+
+        $touched_taxonomy_ids = [];
+
+        foreach ($this->getAttachmentTypeDefinitions() as $slug => $label) {
+            $canonical = $this->ensureAttachmentTypeTerm($slug, $label);
+            if (!$canonical) {
+                continue;
+            }
+
+            $canonical_term_id = (int) $canonical->term_id;
+            $canonical_tt_id = (int) $canonical->term_taxonomy_id;
+            $touched_taxonomy_ids[] = $canonical_tt_id;
+
+            $duplicates = $wpdb->get_results($wpdb->prepare(
+                "SELECT t.term_id, tt.term_taxonomy_id, t.slug, t.name, tt.count
+                 FROM {$wpdb->terms} t
+                 INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = t.term_id
+                 WHERE tt.taxonomy = %s
+                   AND t.term_id <> %d
+                   AND (
+                     t.name = %s
+                     OR t.slug REGEXP %s
+                   )",
+                'casawp_attachment_type',
+                $canonical_term_id,
+                $label,
+                '^' . preg_quote($slug, '/') . '-[0-9]+$'
+            ));
+
+            foreach ($duplicates as $duplicate) {
+                $object_ids = $this->normalizeAttachmentTypeRelationships(
+                    (int) $duplicate->term_taxonomy_id,
+                    $canonical_tt_id
+                );
+
+                if (!empty($object_ids)) {
+                    $this->addToLog(
+                        'Normalized attachment type term "' . $duplicate->slug .
+                        '" into "' . $slug . '" for ' . count($object_ids) . ' attachment(s).'
+                    );
+                }
+
+                wp_delete_term((int) $duplicate->term_id, 'casawp_attachment_type');
+                $touched_taxonomy_ids[] = (int) $duplicate->term_taxonomy_id;
+            }
+        }
+
+        $touched_taxonomy_ids = array_values(array_unique(array_filter($touched_taxonomy_ids)));
+        if (!empty($touched_taxonomy_ids)) {
+            wp_update_term_count_now($touched_taxonomy_ids, 'casawp_attachment_type');
+        }
+    }
+
+    private function maybeRepairAttachmentTypeTerms(): void
+    {
+        foreach ($this->getAttachmentTypeDefinitions() as $slug => $label) {
+            $this->ensureAttachmentTypeTerm($slug, $label);
+        }
+
+        if ((int) get_option('casawp_attachment_type_schema_version', 0) >= self::ATTACHMENT_TYPE_SCHEMA_VERSION) {
+            return;
+        }
+
+        $this->cleanupDuplicateAttachmentTypeTerms();
+        update_option('casawp_attachment_type_schema_version', self::ATTACHMENT_TYPE_SCHEMA_VERSION, 'no');
     }
 
     public function privateUserHideAdminBarForRegisteredUsers()
@@ -3494,10 +3666,7 @@ class Plugin
         register_taxonomy('casawp_attachment_type', array(), $args);
         register_taxonomy_for_object_type('casawp_attachment_type', 'attachment');
         add_post_type_support('attachment', 'casawp_attachment_type');
-        $id1 = wp_insert_term('Image', 'casawp_attachment_type', array('slug' => 'image'));
-        $id2 = wp_insert_term('Plan', 'casawp_attachment_type', array('slug' => 'plan'));
-        $id3 = wp_insert_term('Document', 'casawp_attachment_type', array('slug' => 'document'));
-        $id3 = wp_insert_term('Sales Brochure', 'casawp_attachment_type', array('slug' => 'sales-brochure'));
+        $this->maybeRepairAttachmentTypeTerms();
     }
 
     function casawp_property_custom_metaboxes($post)

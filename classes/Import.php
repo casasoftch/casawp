@@ -62,6 +62,8 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
 
 class Import
 {
+  private const MEDIA_SYNC_SCHEMA_VERSION = 1;
+
   public $importFile = false;
   public $main_lang = false;
   public $WPML = null;
@@ -158,6 +160,7 @@ class Import
       'casawp_id',
       'projectunit_id',
       'projectunit_sort',
+      'casawp_media_sync_version',
     ];
 
     $skip_prefixes = [
@@ -192,6 +195,22 @@ class Import
       }
       // fallback for places that call group() before we set the property
       return 'casawp_run_' . (int) get_option( 'casawp_current_run_id', 0 );
+  }
+
+  private function needsMediaSyncMigration(int $post_id): bool
+  {
+      return (int) get_post_meta($post_id, 'casawp_media_sync_version', true) < self::MEDIA_SYNC_SCHEMA_VERSION;
+  }
+
+  private function maybeMarkMediaSyncMigrationComplete(int $post_id, string $casawp_id): void
+  {
+      $attachment_failures = $this->transcript[$casawp_id]['attachments']['failed_to_create'] ?? [];
+
+      if (!empty($attachment_failures)) {
+          return;
+      }
+
+      update_post_meta($post_id, 'casawp_media_sync_version', self::MEDIA_SYNC_SCHEMA_VERSION);
   }
 
 
@@ -1908,6 +1927,7 @@ class Import
         $this->addToLog( 'DELTA '. print_r( $delta, true ) );
     } */
     $newHash    = $this->fingerprint( $new_meta_data );
+    $needs_media_sync_migration = $this->needsMediaSyncMigration($wp_post->ID);
 
     
 
@@ -1951,8 +1971,24 @@ class Import
 
     $main_unchanged = ( $new_main_data === $old_main_data );
 
-    if ( $hashFromDb === $newHash && $main_unchanged ) {         
+    if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync_migration ) {
         $this->addToLog( "Skip {$casawp_id} - unchanged (hash)" );
+        update_post_meta( $wp_post->ID, 'is_active', true );
+        update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
+        return;
+    }
+
+    if ( $hashFromDb === $newHash && $main_unchanged && $needs_media_sync_migration ) {
+        $this->addToLog( "Force media self-heal for {$casawp_id} - media sync migration pending" );
+        $this->setOfferAttachments(
+            isset($offer['offer_medias']) ? $offer['offer_medias'] : array(),
+            $wp_post,
+            $property['exportproperty_id'],
+            $casawp_id,
+            $property,
+            !empty($offer['has_media_node'])
+        );
+        $this->maybeMarkMediaSyncMigrationComplete($wp_post->ID, $casawp_id);
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
         return;
@@ -2068,6 +2104,7 @@ class Import
         $property,
         !empty($offer['has_media_node'])
     );
+    $this->maybeMarkMediaSyncMigrationComplete($wp_post->ID, $casawp_id);
     // mark this post as “seen in the current run”
     update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
 
@@ -2412,6 +2449,33 @@ class Import
     return $filename;
   }
 
+  private function getAttachmentTypeTermBySlug(string $slug)
+  {
+      global $wpdb;
+
+      $term_id = (int) $wpdb->get_var($wpdb->prepare(
+          "SELECT t.term_id
+           FROM {$wpdb->terms} t
+           INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = t.term_id
+           WHERE tt.taxonomy = %s AND t.slug = %s
+           ORDER BY tt.term_taxonomy_id ASC
+           LIMIT 1",
+          'casawp_attachment_type',
+          $slug
+      ));
+
+      if (!$term_id) {
+          return false;
+      }
+
+      $term = get_term($term_id, 'casawp_attachment_type');
+      if (!$term || is_wp_error($term)) {
+          return false;
+      }
+
+      return $term;
+  }
+
   public function casawpUploadAttachment($the_mediaitem, $post_id, $property_id)
   {
       $source = '';
@@ -2428,7 +2492,7 @@ class Import
 
       $origin = $this->normalizeCasawpOrigin($source);
 
-      $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
+      $term = $this->getAttachmentTypeTermBySlug((string) $the_mediaitem['type']);
       if (!$term || is_wp_error($term)) {
           return 'Missing taxonomy term casawp_attachment_type:' . $the_mediaitem['type'];
       }
@@ -2623,7 +2687,7 @@ class Import
           }
           $seen_desired_origins[$origin] = true;
 
-          $term = get_term_by('slug', $the_mediaitem['type'], 'casawp_attachment_type');
+          $term = $this->getAttachmentTypeTermBySlug((string) $the_mediaitem['type']);
           if (!$term || is_wp_error($term)) {
               $this->addToLog('ERROR missing casawp_attachment_type term "' . $the_mediaitem['type'] . '"');
               $this->transcript[$casawp_id]['attachments']['failed_to_create'][] =
