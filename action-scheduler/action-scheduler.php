@@ -1,7 +1,8 @@
 <?php
 /**
- * Plugin Name: Action Scheduler
- * Plugin URI: https://actionscheduler.org
+ * Action Scheduler - Scheduling Library
+ * Library: Action Scheduler
+ * URI: https://actionscheduler.org
  * Description: A robust scheduling library for use in WordPress plugins.
  * Author: Automattic
  * Author URI: https://automattic.com/
