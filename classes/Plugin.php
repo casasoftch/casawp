@@ -522,6 +522,14 @@ class Plugin
             $from_term_taxonomy_id
         ));
 
+        if (!is_array($object_ids)) {
+            error_log(
+                'CASAWP: failed to read attachment term relationships for term_taxonomy_id ' .
+                $from_term_taxonomy_id . '.'
+            );
+            return [];
+        }
+
         if (!empty($object_ids)) {
             $wpdb->query($wpdb->prepare(
                 "INSERT IGNORE INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id, term_order)
@@ -576,6 +584,13 @@ class Plugin
                 '^' . preg_quote($slug, '/') . '-[0-9]+$'
             ));
 
+            if (!is_array($duplicates)) {
+                error_log(
+                    'CASAWP: duplicate attachment term lookup failed for slug "' . $slug . '".'
+                );
+                continue;
+            }
+
             foreach ($duplicates as $duplicate) {
                 $object_ids = $this->normalizeAttachmentTypeRelationships(
                     (int) $duplicate->term_taxonomy_id,
@@ -583,18 +598,33 @@ class Plugin
                 );
 
                 if (!empty($object_ids)) {
-                    $this->addToLog(
-                        'Normalized attachment type term "' . $duplicate->slug .
+                    error_log(
+                        'CASAWP: normalized attachment type term "' . $duplicate->slug .
                         '" into "' . $slug . '" for ' . count($object_ids) . ' attachment(s).'
                     );
                 }
 
-                wp_delete_term((int) $duplicate->term_id, 'casawp_attachment_type');
+                $deleted = wp_delete_term((int) $duplicate->term_id, 'casawp_attachment_type');
+                if (is_wp_error($deleted)) {
+                    error_log(
+                        'CASAWP: failed to delete duplicate attachment type term "' .
+                        $duplicate->slug . '": ' . $deleted->get_error_message()
+                    );
+                }
                 $touched_taxonomy_ids[] = (int) $duplicate->term_taxonomy_id;
             }
         }
 
-        $touched_taxonomy_ids = array_values(array_unique(array_filter($touched_taxonomy_ids)));
+        if (!is_array($touched_taxonomy_ids)) {
+            error_log('CASAWP: touched attachment taxonomy id list became invalid during repair.');
+            $touched_taxonomy_ids = [];
+        }
+
+        $touched_taxonomy_ids = array_values(
+            array_unique(
+                array_filter(is_array($touched_taxonomy_ids) ? $touched_taxonomy_ids : [])
+            )
+        );
         if (!empty($touched_taxonomy_ids)) {
             wp_update_term_count_now($touched_taxonomy_ids, 'casawp_attachment_type');
         }
@@ -602,16 +632,20 @@ class Plugin
 
     private function maybeRepairAttachmentTypeTerms(): void
     {
-        foreach ($this->getAttachmentTypeDefinitions() as $slug => $label) {
-            $this->ensureAttachmentTypeTerm($slug, $label);
-        }
+        try {
+            foreach ($this->getAttachmentTypeDefinitions() as $slug => $label) {
+                $this->ensureAttachmentTypeTerm($slug, $label);
+            }
 
-        if ((int) get_option('casawp_attachment_type_schema_version', 0) >= self::ATTACHMENT_TYPE_SCHEMA_VERSION) {
-            return;
-        }
+            if ((int) get_option('casawp_attachment_type_schema_version', 0) >= self::ATTACHMENT_TYPE_SCHEMA_VERSION) {
+                return;
+            }
 
-        $this->cleanupDuplicateAttachmentTypeTerms();
-        update_option('casawp_attachment_type_schema_version', self::ATTACHMENT_TYPE_SCHEMA_VERSION, 'no');
+            $this->cleanupDuplicateAttachmentTypeTerms();
+            update_option('casawp_attachment_type_schema_version', self::ATTACHMENT_TYPE_SCHEMA_VERSION, 'no');
+        } catch (\Throwable $e) {
+            error_log('CASAWP: attachment type repair skipped due to error: ' . $e->getMessage());
+        }
     }
 
     public function privateUserHideAdminBarForRegisteredUsers()

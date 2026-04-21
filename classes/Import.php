@@ -633,8 +633,27 @@ class Import
             );
         }
       }
-    } catch (\Exception $e) {
-      $this->addToLog('Error: ' . $e->getMessage());
+    } catch (\Throwable $e) {
+      $this->addToLog(
+        sprintf(
+          'Batch %d failed (%s): %s in %s:%d',
+          $batch_number,
+          get_class($e),
+          $e->getMessage(),
+          $e->getFile(),
+          $e->getLine()
+        )
+      );
+      error_log(
+        sprintf(
+          'CASAWP batch %d failed (%s): %s in %s:%d',
+          $batch_number,
+          get_class($e),
+          $e->getMessage(),
+          $e->getFile(),
+          $e->getLine()
+        )
+      );
       if ($e->getMessage() === 'No properties found in XML.') {
         set_transient('casawp_no_properties_alert', 'No properties were found during the import. Please verify the data.', 60);
         casawp_release_lock();
@@ -1277,66 +1296,93 @@ class Import
         $offer_pos = 0;
         foreach ($theoffers as $offerData) {
           $offer_pos++;
-          $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData) {
-            $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
+          $casawp_id = $property['exportproperty_id'] . $offerData['lang'];
 
-            $the_query = new \WP_Query([
-              'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
-              'post_type'   => 'casawp_property',
-              'meta_query'  => [
-                [
-                  'key'   => 'casawp_id',
-                  'value' => $casawp_id,
+          try {
+            $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id) {
+              $the_query = new \WP_Query([
+                'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
+                'post_type'   => 'casawp_property',
+                'meta_query'  => [
+                  [
+                    'key'   => 'casawp_id',
+                    'value' => $casawp_id,
+                  ],
                 ],
-              ],
-              'posts_per_page' => 1,
-              'suppress_filters' => true,
-              'language' => '',
-            ]);
+                'posts_per_page' => 1,
+                'suppress_filters' => true,
+                'language' => '',
+              ]);
 
-            if ($the_query->have_posts()) {
-              $the_query->the_post();
-              global $post;
-              $wp_post = $post;
-              $this->transcript[$casawp_id]['action'] = 'update';
-            } else {
-              $this->transcript[$casawp_id]['action'] = 'new';
+              if ($the_query->have_posts()) {
+                $the_query->the_post();
+                global $post;
+                $wp_post = $post;
+                $this->transcript[$casawp_id]['action'] = 'update';
+              } else {
+                $this->transcript[$casawp_id]['action'] = 'new';
 
-              $the_post = [
-                'post_title'   => $offerData['name'],
-                'post_content' => 'unsaved property',
-                'post_status'  => 'publish',
-                'post_type'    => 'casawp_property',
-                'menu_order'   => $curRank,
-                'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
-                'post_date'    => (
-                    $property['creation']
-                    ? $property['creation']->format('Y-m-d H:i:s')
-                    : $property['last_update']->format('Y-m-d H:i:s')
-                ),
-              ];
+                $the_post = [
+                  'post_title'   => $offerData['name'],
+                  'post_content' => 'unsaved property',
+                  'post_status'  => 'publish',
+                  'post_type'    => 'casawp_property',
+                  'menu_order'   => $curRank,
+                  'post_name'    => $this->casawp_sanitize_title($casawp_id . '-' . $offerData['name']),
+                  'post_date'    => (
+                      $property['creation']
+                      ? $property['creation']->format('Y-m-d H:i:s')
+                      : $property['last_update']->format('Y-m-d H:i:s')
+                  ),
+                ];
 
-              $insert_id = $this->insertPostWithLanguage($the_post, $offerData['lang']);
-              update_post_meta($insert_id, 'casawp_id', $casawp_id);
-              update_post_meta($insert_id, 'is_active', true);
-              $wp_post = get_post($insert_id, OBJECT, 'raw');
-            }
+                $insert_id = $this->insertPostWithLanguage($the_post, $offerData['lang']);
+                update_post_meta($insert_id, 'casawp_id', $casawp_id);
+                update_post_meta($insert_id, 'is_active', true);
+                $wp_post = get_post($insert_id, OBJECT, 'raw');
+              }
 
+              wp_reset_postdata();
+
+              wp_update_post(array(
+                'ID' => $wp_post->ID,
+                'menu_order' => $curRank,
+              ));
+
+              $this->ranksort[$wp_post->ID] = $curRank;
+
+              $found_posts[] = $wp_post->ID;
+
+              $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
+
+              $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+            });
+          } catch (\Throwable $e) {
+            $this->transcript[$casawp_id]['action'] = 'error';
+            $this->transcript[$casawp_id]['error'] = $e->getMessage();
+            $this->addToLog(
+              sprintf(
+                'Offer %s failed during import (%s): %s in %s:%d',
+                $casawp_id,
+                get_class($e),
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+              )
+            );
+            error_log(
+              sprintf(
+                'CASAWP import failed for %s (%s): %s in %s:%d',
+                $casawp_id,
+                get_class($e),
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+              )
+            );
             wp_reset_postdata();
-
-            wp_update_post(array(
-              'ID' => $wp_post->ID,
-              'menu_order' => $curRank,
-            ));
-
-            $this->ranksort[$wp_post->ID] = $curRank;
-
-            $found_posts[] = $wp_post->ID;
-
-            $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
-
-            $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
-          });
+            continue;
+          }
         }
       }
     }
@@ -1922,10 +1968,6 @@ class Import
     }
 
     $hashFromDb = $this->fingerprint( $old_meta_data );
-    $delta = array_diff_assoc( $new_meta_data, $old_meta_data );
-    /* if ( $delta && $casawp_id === '353188de' ) {
-        $this->addToLog( 'DELTA '. print_r( $delta, true ) );
-    } */
     $newHash    = $this->fingerprint( $new_meta_data );
     $needs_media_sync_migration = $this->needsMediaSyncMigration($wp_post->ID);
 
