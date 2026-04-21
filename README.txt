@@ -41,6 +41,10 @@ wp casawp import --url=https://example.com
 
 == Changelog ==
 
+= 3.4.1 =
+
+* Fix: New self-healing sometimes caused batch fails
+
 = 3.4.0 =
 
 * New: Option to import content with Auto Translate
