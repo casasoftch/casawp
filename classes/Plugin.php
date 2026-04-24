@@ -334,11 +334,45 @@ class Plugin
         $origin = get_post_meta($attachment_id, '_origin', true);
         $is_remote = get_post_meta($attachment_id, '_is_remote', true);
 
-        if ($is_remote && $origin) {
-            return $origin;
+        if (!$origin) {
+            return $url;
+        }
+
+        if ($is_remote) {
+            return $this->normalizeCasawpAttachmentOrigin($origin);
+        }
+
+        if (
+            get_option('casawp_use_casagateway_cdn', false)
+            && $this->isCasawpGatewayMediaOrigin($origin)
+        ) {
+            $remoteSrcArr = $this->origToGwSrc($origin, 'full');
+            return $remoteSrcArr['src'];
         }
 
         return $url;
+    }
+
+    private function normalizeCasawpAttachmentOrigin($origin)
+    {
+        $origin = trim((string) $origin);
+        $origin = str_replace('%3F', '?', $origin);
+        $origin = str_replace('%3D', '=', $origin);
+        $origin = str_replace('http://', 'https://', $origin);
+        $origin = str_replace('casagateway.ch', 'cdn.casasoft.com', $origin);
+
+        return $origin;
+    }
+
+    private function isCasawpGatewayMediaOrigin($origin): bool
+    {
+        $origin = $this->normalizeCasawpAttachmentOrigin($origin);
+
+        return strpos($origin, 'cdn.casasoft.com') !== false
+            && (
+                strpos($origin, '/media/') !== false
+                || strpos($origin, '/media-thumb/') !== false
+            );
     }
 
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon)
