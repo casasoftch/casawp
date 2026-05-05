@@ -339,6 +339,11 @@ class Plugin
         }
 
         if ($is_remote) {
+            if ($this->isCasawpGatewayMediaOrigin($origin)) {
+                $remoteSrcArr = $this->origToGwSrc($origin, 'full');
+                return $remoteSrcArr['src'];
+            }
+
             return $this->normalizeCasawpAttachmentOrigin($origin);
         }
 
@@ -375,12 +380,26 @@ class Plugin
             );
     }
 
+    private function shouldRenderAttachmentAsRemote($attachment_id, $origin = null): bool
+    {
+        if (get_post_meta($attachment_id, '_is_remote', true)) {
+            return true;
+        }
+
+        if ($origin === null) {
+            $origin = get_post_meta($attachment_id, '_origin', true);
+        }
+
+        return get_option('casawp_use_casagateway_cdn', false)
+            && $origin
+            && $this->isCasawpGatewayMediaOrigin($origin);
+    }
+
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon)
     {
-        $is_remote = get_post_meta($attachment_id, '_is_remote', true);
         $origin    = get_post_meta($attachment_id, '_origin', true);
 
-        if (!$is_remote || !$origin) {
+        if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
             return $image;
         }
 
@@ -400,10 +419,9 @@ class Plugin
 
     public function remoteImageDownsize($out, $attachment_id, $size)
     {
-        $is_remote = get_post_meta($attachment_id, '_is_remote', true);
         $origin    = get_post_meta($attachment_id, '_origin', true);
 
-        if (!$is_remote || !$origin) {
+        if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
             return false;
         }
 
@@ -423,7 +441,7 @@ class Plugin
 
     public function modifyRemoteImageAttributes($attr, $attachment, $size)
     {
-        if ($attachment && !empty($attachment->ID) && get_post_meta($attachment->ID, '_is_remote', true)) {
+        if ($attachment && !empty($attachment->ID) && $this->shouldRenderAttachmentAsRemote($attachment->ID)) {
             unset($attr['srcset'], $attr['sizes']);
         }
 
@@ -459,14 +477,24 @@ class Plugin
                 } else {
                     $normalized_size = 'full';
                 }
+            } elseif (is_string($size)) {
+                if (in_array($size, array('thumbnail'), true)) {
+                    $normalized_size = 'thumbnail';
+                } elseif (in_array($size, array('medium', 'medium_large', 'casawp-thumb'), true)) {
+                    $normalized_size = 'casawp-thumb';
+                } elseif (in_array($size, array('large', '1536x1536'), true)) {
+                    $normalized_size = 'large';
+                } elseif (in_array($size, array('full', '2048x2048'), true)) {
+                    $normalized_size = 'full';
+                }
             }
 
             $remote = $this->origToGwSrc($origin, $normalized_size);
 
             return array(
                 'src'    => $remote['src'],
-                'width'  => (int) $remote['width'],
-                'height' => (int) $remote['height'],
+                'width'  => (int) ($remote['width'] ?: $width),
+                'height' => (int) ($remote['height'] ?: $height),
             );
         }
 
