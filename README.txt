@@ -41,6 +41,10 @@ wp casawp import --url=https://example.com
 
 == Changelog ==
 
+= 3.4.5 =
+
+* Fix: Missing feature translations
+
 = 3.4.4 =
 
 * Fix: Legacy CDN images support before re-imports

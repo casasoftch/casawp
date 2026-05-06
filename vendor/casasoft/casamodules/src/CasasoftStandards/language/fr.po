@@ -1521,7 +1521,7 @@ msgid "per"
 msgstr "par"
 
 msgid "Temporary use"
-msgstr "Urbanisme temporaire"
+msgstr "Utilisation temporaire"
 
 msgid "Fiber optic connection"
 msgstr "Connexion fibre optique"
@@ -1656,3 +1656,18 @@ msgstr "Objet industriel"
 
 msgid "Movie theater"
 msgstr "Cinéma"
+
+msgid "Photovoltaic"
+msgstr "Photovoltaïque"
+
+msgid "Water connection"
+msgstr "Raccordement à l'eau"
+
+msgid "Sewage connection"
+msgstr "Raccordement aux égouts"
+
+msgid "Power connection"
+msgstr "Raccordement électrique"
+
+msgid "First time occupied"
+msgstr "Première occupation"

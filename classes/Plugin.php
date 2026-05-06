@@ -68,29 +68,29 @@ class Plugin
     {
         $this->configuration = $configuration;
         $this->conversion = new Conversion;
-        $this->locale = substr(get_bloginfo('language'), 0, 2);
+        $this->locale = $this->getCasasoftStandardsLocale(get_bloginfo('language'));
 
         // this is in case wpml is not loaded yet. We will take the first segment of the uri
         $uri_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $uri_segments = explode('/', $uri_path);
 
         if (isset($uri_segments[1]) && $uri_segments[1] == 'en') {
-            $this->locale = 'en';
+            $this->locale = 'en_US';
         }
         if (isset($uri_segments[1]) && $uri_segments[1] == 'de') {
-            $this->locale = 'de';
+            $this->locale = 'de_DE';
         }
         if (isset($uri_segments[1]) && $uri_segments[1] == 'fr') {
-            $this->locale = 'fr';
+            $this->locale = 'fr_FR';
         }
         if (isset($uri_segments[1]) && $uri_segments[1] == 'it') {
-            $this->locale = 'it';
+            $this->locale = 'it_IT';
         }
         if (isset($uri_segments[1]) && $uri_segments[1] == 'ru') {
-            $this->locale = 'ru';
+            $this->locale = 'ru_RU';
         }
         if (isset($uri_segments[1]) && $uri_segments[1] == 'rm') {
-            $this->locale = 'rm';
+            $this->locale = 'rm_CH';
         }
 
         add_filter('icl_set_current_language', array($this, 'wpmlLanguageSwitchedTo'));
@@ -887,11 +887,32 @@ class Plugin
 
     public function wpmlLanguageSwitchedTo($lang)
     {
-        if ($this->locale != substr($lang, 0, 2)) {
-            $this->locale = substr($lang, 0, 2);
+        $locale = $this->getCasasoftStandardsLocale($lang);
+        if ($this->locale != $locale) {
+            $this->locale = $locale;
             $this->bootstrap($this->configuration);
         }
         return $lang;
+    }
+
+    private function getCasasoftStandardsLocale($lang)
+    {
+        switch (substr(str_replace('-', '_', $lang), 0, 2)) {
+            case 'de':
+                return 'de_DE';
+            case 'en':
+                return 'en_US';
+            case 'fr':
+                return 'fr_FR';
+            case 'it':
+                return 'it_IT';
+            case 'ru':
+                return 'ru_RU';
+            case 'rm':
+                return 'rm_CH';
+            default:
+                return 'de_DE';
+        }
     }
 
     public function returnPrevNext()

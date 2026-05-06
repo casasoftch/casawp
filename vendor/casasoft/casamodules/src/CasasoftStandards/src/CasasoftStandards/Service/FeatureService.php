@@ -91,6 +91,10 @@ class FeatureService {
                 'label' => $this->translator->translate('Temporary use', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'isTemporaryUse' => array(
+                'label' => $this->translator->translate('Temporary use', 'casasoft-standards'),
+                'icon' => '',
+            ),
 
             'has-rental-deposit-guarantee' => array(
                 'label' => $this->translator->translate('Rental deposit guarantee', 'casasoft-standards'),
@@ -175,7 +179,11 @@ class FeatureService {
                 'icon' => '',
             ),
             'has-photovoltaic' => array(
-                'label' => $this->translator->translate('Photovoltaics', 'casasoft-standards'),
+                'label' => $this->translator->translate('Photovoltaic', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'hasPhotovoltaic' => array(
+                'label' => $this->translator->translate('Photovoltaic', 'casasoft-standards'),
                 'icon' => '',
             ),
 
@@ -235,12 +243,36 @@ class FeatureService {
                 'label' => $this->translator->translate('Water supply', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-supply-water' => array(
+                'label' => $this->translator->translate('Water connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'hasSupplyWater' => array(
+                'label' => $this->translator->translate('Water connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'has-sewage-supply' => array(
                 'label' => $this->translator->translate('Sewage supply', 'casasoft-standards'),
                 'icon' => '',
             ),
+            'has-supply-sewage' => array(
+                'label' => $this->translator->translate('Sewage connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'hasSupplySewage' => array(
+                'label' => $this->translator->translate('Sewage connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
             'has-power-supply' => array(
                 'label' => $this->translator->translate('Power supply', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'has-supply-power' => array(
+                'label' => $this->translator->translate('Power connection', 'casasoft-standards'),
+                'icon' => '',
+            ),
+            'hasSupplyPower' => array(
+                'label' => $this->translator->translate('Power connection', 'casasoft-standards'),
                 'icon' => '',
             ),
             'has-gas-supply' => array(
@@ -389,6 +421,14 @@ class FeatureService {
            ),
            'is-first-time-occupancy' => array(
                'label' => $this->translator->translate('First time occupancy', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'is-first-occupancy' => array(
+               'label' => $this->translator->translate('First time occupied', 'casasoft-standards'),
+               'icon' => '',
+           ),
+           'isFirstOccupancy' => array(
+               'label' => $this->translator->translate('First time occupied', 'casasoft-standards'),
                'icon' => '',
            ),
            'has-washing-machine' => array( // Waschmaschine
