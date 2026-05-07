@@ -413,7 +413,7 @@ class FormMultiCheckbox extends FormInput
             return $this->labelHelper;
         }
 
-        if (method_exists($this->view, 'plugin')) {
+        if ($this->view !== null && method_exists($this->view, 'plugin')) {
             $this->labelHelper = $this->view->plugin('form_label');
         }
 
