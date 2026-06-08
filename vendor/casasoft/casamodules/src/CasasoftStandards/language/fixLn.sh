@@ -21,6 +21,3 @@ ln -s fr.mo fr_FR.mo;
 
 rm it_CH.mo;
 ln -s it.mo it_CH.mo;
-
-rm es_ES.mo;
-ln -s es.mo es_ES.mo;

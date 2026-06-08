@@ -33,12 +33,3 @@ curl -X POST https://api.poeditor.com/v2/projects/export \
      -d type="mo" \
      | jq -j '.result.url' \
      | xargs curl > en.mo
-
-printf "Fetching translations for ES backend:${NC}\n";
-curl -X POST https://api.poeditor.com/v2/projects/export \
-     -d api_token="f360e748f3bd15aa7d0dd369242d3507" \
-     -d id="126727" \
-     -d language="es" \
-     -d type="mo" \
-     | jq -j '.result.url' \
-     | xargs curl > es.mo
