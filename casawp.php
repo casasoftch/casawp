@@ -259,19 +259,32 @@ add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action
 function casawp_handle_failed_action($action_id) {
 	error_log('Action Scheduler Failed Hook Triggered for Action ID: ' . $action_id);
 	$action = ActionScheduler::store()->fetch_action($action_id);
-	if ($action && $action->get_hook() == 'casawp_batch_import') {
+	if (!$action) {
+		return;
+	}
+
+	$hook = $action->get_hook();
+	if ($hook == 'casawp_delete_outdated_properties') {
+		$import = new casawp\Import(false, false);
+		$import->addToLog('Early outdated-property deletion action failed; final cleanup will retry stale removals.');
+		return;
+	}
+
+	if ($hook == 'casawp_batch_import' || $hook == 'casawp_finalize_import_cleanup_batch') {
 		$args = $action->get_args();
 		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
 		$site_domain = home_url();
 		$to = get_option('admin_email');
-		$subject = 'CASAWP Import Batch Failed on ' . $site_domain;
-		$message = "Batch number " . $batch_number . " has failed after maximum retries.\n\nSite: " . $site_domain;
+		$is_cleanup = ($hook == 'casawp_finalize_import_cleanup_batch');
+		$subject = ($is_cleanup ? 'CASAWP Import Cleanup Failed on ' : 'CASAWP Import Batch Failed on ') . $site_domain;
+		$message = ($is_cleanup ? 'Cleanup batch number ' : 'Batch number ') . $batch_number . " has failed after maximum retries.\n\nSite: " . $site_domain;
 		wp_mail($to, $subject, $message);
 
 		$import = new casawp\Import(false, false);
-		$import->addToLog('Import canceled due to batch failure on ' . $site_domain . '. Notification sent.');
+		$import->addToLog('Import canceled due to ' . ($is_cleanup ? 'cleanup' : 'batch') . ' failure on ' . $site_domain . '. Notification sent.');
 		update_option('casawp_import_failed', true);
 		casawp_release_lock();
+		delete_option('casawp_current_run_id');
 	}
 }
 
@@ -348,16 +361,25 @@ function casawp_cancel_import() {
 		$run_id = (int) get_option( 'casawp_current_run_id', 0 );
 		$group  = 'casawp_run_' . $run_id;
 
-		$pending_actions = $store->query_actions( [
-			'hook'   => 'casawp_batch_import',
-			'status' => [ 'pending', 'in-progress' ],
-			'group'  => $group,                    // ←  only this run
-		] );
-		foreach ($pending_actions as $action_id) {
-			$store->cancel_action($action_id);
+		$hooks = [
+			'casawp_batch_import',
+			'casawp_delete_outdated_properties',
+			'casawp_finalize_import_cleanup_batch',
+		];
+
+		foreach ( $hooks as $hook ) {
+			$pending_actions = $store->query_actions( [
+				'hook'   => $hook,
+				'status' => [ 'pending', 'in-progress' ],
+				'group'  => $group,                    // ←  only this run
+			] );
+			foreach ($pending_actions as $action_id) {
+				$store->cancel_action($action_id);
+			}
 		}
 		update_option('casawp_import_canceled', true);
 		casawp_release_lock();
+		delete_option('casawp_current_run_id');
 		delete_option('casawp_import_failed');
 		$import = new casawp\Import(false, false);
 		$import->addToLog('All pending import actions canceled and import lock cleared.');

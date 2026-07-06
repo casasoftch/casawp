@@ -63,6 +63,8 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
 class Import
 {
   private const MEDIA_SYNC_SCHEMA_VERSION = 1;
+  private const CLEANUP_BATCH_SIZE = 10;
+  private const CLEANUP_TIME_LIMIT = 45;
 
   public $importFile = false;
   public $main_lang = false;
@@ -88,7 +90,8 @@ class Import
   public function register_hooks()
   {
     add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'), 10, 2);
-    add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'));
+    add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'), 10, 2);
+    add_action('casawp_finalize_import_cleanup_batch', array($this, 'handle_finalize_import_cleanup_batch'), 10, 2);
   }
 
   public function start_import() {
@@ -310,7 +313,22 @@ class Import
 
       if ($filePath && $this->getImportFile()) {
 
-        as_schedule_single_action(time(), 'casawp_delete_outdated_properties', [], 'casawp_delete_outdated_properties');
+        $run_id = (int) get_option( 'casawp_current_run_id', 0 );
+        if ( ! $run_id ) {
+          $run_id = time();
+          update_option( 'casawp_current_run_id', $run_id, 'no' );
+        }
+        $this->current_run_id = $run_id;
+
+        if (function_exists('as_unschedule_all_actions')) {
+          as_unschedule_all_actions('casawp_delete_outdated_properties');
+        }
+        as_schedule_single_action(
+          time(),
+          'casawp_delete_outdated_properties',
+          [ 'batch_number' => 1, 'run_id' => $run_id ],
+          $this->group()
+        );
 
         delete_option('casawp_import_canceled');
         $this->deactivate_all_properties();
@@ -360,50 +378,71 @@ class Import
    * Extra guards guarantee the function cannot execute a 2-nd time for
    * the same run (or when no run is in progress).
    */
-  public function finalize_import_cleanup() {
+  public function finalize_import_cleanup(): bool {
 
-    /* ───────────────────────────────────────────────────────────────
-     *  0.  Safety guards
-     *      –––––––––––––
-     *      • do nothing if no run is active
-     *      • do nothing if this run was already cleaned up
-     * ─────────────────────────────────────────────────────────────── */
     $run_id = (int) get_option( 'casawp_current_run_id', 0 );
     if ( ! $run_id ) {
-      return;                                    // no active run → bail
+      return true;                                    // no active run → bail
     }
     if ( (int) get_option( 'casawp_cleanup_done_for_run', 0 ) === $run_id ) {
-      return;                                    // already cleaned up → bail
+      return true;                                    // already cleaned up → bail
     }
 
+    $this->current_run_id = $run_id;
     $this->addToLog( 'Finalizing import cleanup.' );
 
-    if ( as_next_scheduled_action( 'casawp_batch_import', [], $this->group() ) ) {
-        $this->addToLog( 'Cleanup postponed – batches still pending.' );
-        return;
+    if ( function_exists( 'as_next_scheduled_action' ) && as_next_scheduled_action( 'casawp_batch_import', null, $this->group() ) ) {
+        $this->addToLog( 'Cleanup postponed - batches still pending.' );
+        return false;
     }
 
-    /* ----------------------------------------------------------------
-     *  1.  Early exits for cancelled / failed runs
-     * ---------------------------------------------------------------- */
     if ( get_option( 'casawp_import_canceled' ) ) {
       $this->addToLog( 'Import was canceled - cleanup skips deletions.' );
       casawp_release_lock();
-      return;
+      delete_option( 'casawp_current_run_id' );
+      return true;
     }
 
     if ( get_option( 'casawp_import_failed' ) ) {
       $this->addToLog( 'Import marked as failed. Skipping deletion of inactive properties.' );
       delete_option( 'casawp_import_failed' );
       casawp_release_lock();
-      return;
+      delete_option( 'casawp_current_run_id' );
+      return true;
     }
 
-    /* ----------------------------------------------------------------
-     *  2.  Remove posts that were NOT touched in this run
-     * ---------------------------------------------------------------- */
-    $posts_to_remove = get_posts( [
-      'posts_per_page' => -1,
+    if ( function_exists( 'as_schedule_single_action' ) ) {
+      if ( ! as_next_scheduled_action( 'casawp_finalize_import_cleanup_batch', null, $this->group() ) ) {
+        $this->schedule_finalize_import_cleanup_batch( $run_id, 1, 0 );
+        $this->addToLog( 'Final cleanup scheduled in deletion batches.' );
+      }
+      return false;
+    }
+
+    $this->handle_finalize_import_cleanup_batch( 1, $run_id );
+    return (int) get_option( 'casawp_cleanup_done_for_run', 0 ) === $run_id;
+  }
+
+  private function cleanup_batch_size(): int {
+    return max( 1, (int) apply_filters( 'casawp_cleanup_batch_size', self::CLEANUP_BATCH_SIZE ) );
+  }
+
+  private function cleanup_time_limit(): int {
+    return max( 5, (int) apply_filters( 'casawp_cleanup_time_limit', self::CLEANUP_TIME_LIMIT ) );
+  }
+
+  private function schedule_finalize_import_cleanup_batch( int $run_id, int $batch_number, int $delay = 5 ): void {
+    as_schedule_single_action(
+      time() + $delay,
+      'casawp_finalize_import_cleanup_batch',
+      [ 'batch_number' => $batch_number, 'run_id' => $run_id ],
+      'casawp_run_' . $run_id
+    );
+  }
+
+  private function get_posts_to_remove_for_run( int $run_id, int $limit ): array {
+    return get_posts( [
+      'posts_per_page' => $limit,
       'post_type'      => 'casawp_property',
       'post_status'    => 'publish',
       'fields'         => 'ids',
@@ -412,45 +451,146 @@ class Import
         'relation' => 'OR',
         [
           'key'     => 'last_processed_run',
-          'compare' => 'NOT EXISTS',          // never processed
+          'compare' => 'NOT EXISTS',
         ],
         [
-          'key'     => 'last_processed_run',  // processed in an earlier run
+          'key'     => 'last_processed_run',
           'value'   => $run_id,
           'compare' => '!=',
           'type'    => 'NUMERIC',
         ],
       ],
     ] );
+  }
 
-    foreach ( $posts_to_remove as $post_id ) {
+  private function delete_property_with_attachments( int $post_id ): array {
+    $attachments = get_posts( [
+      'post_type'      => 'attachment',
+      'posts_per_page' => -1,
+      'post_status'    => 'any',
+      'post_parent'    => $post_id,
+      'fields'         => 'ids',
+      'suppress_filters' => true,
+    ] );
 
-      $attachments = get_posts( [
-        'post_type'      => 'attachment',
-        'posts_per_page' => -1,
-        'post_status'    => 'any',
-        'post_parent'    => $post_id,
-        'fields'         => 'ids',
-        'suppress_filters' => true,
-      ] );
+    $deleted_attachments = 0;
+    $failed_attachments  = 0;
 
-      $this->addToLog( "Deleting " . count( $attachments ) . " attachments for property ID: $post_id" );
-
-      foreach ( $attachments as $attachment_id ) {
-        if ( wp_delete_attachment( $attachment_id, true ) ) {
-          $this->addToLog( "Deleted attachment ID: $attachment_id" );
-        } else {
-          $this->addToLog( "Failed to delete attachment ID: $attachment_id" );
-        }
-      }
-
-      if ( wp_delete_post( $post_id, true ) ) {
-        $this->addToLog( "Deleted property ID: $post_id" );
+    foreach ( $attachments as $attachment_id ) {
+      if ( wp_delete_attachment( $attachment_id, true ) ) {
+        $deleted_attachments++;
       } else {
-        $this->addToLog( "Failed to delete property ID: $post_id" );
+        $failed_attachments++;
+        $this->addToLog( "Failed to delete attachment ID: $attachment_id" );
       }
     }
 
+    if ( wp_delete_post( $post_id, true ) ) {
+      return [
+        'properties'         => 1,
+        'attachments'        => $deleted_attachments,
+        'attachment_failures' => $failed_attachments,
+      ];
+    }
+
+    $fallback = wp_update_post( [
+      'ID'          => $post_id,
+      'post_status' => 'draft',
+    ], true );
+
+    if ( ! is_wp_error( $fallback ) && $fallback ) {
+      $this->addToLog( "Failed to delete property ID: $post_id; moved to draft instead." );
+      return [
+        'properties'         => 1,
+        'attachments'        => $deleted_attachments,
+        'attachment_failures' => $failed_attachments,
+      ];
+    }
+
+    if ( $this->current_run_id ) {
+      update_post_meta( $post_id, 'last_processed_run', $this->current_run_id );
+    }
+
+    $this->addToLog( "Failed to delete property ID: $post_id" );
+    return [
+      'properties'         => 0,
+      'attachments'        => $deleted_attachments,
+      'attachment_failures' => $failed_attachments,
+    ];
+  }
+
+  public function handle_finalize_import_cleanup_batch( $batch_number = 1, $run_id = 0 ): void {
+    $run_id = $run_id ? (int) $run_id : (int) get_option( 'casawp_current_run_id', 0 );
+    if ( ! $run_id ) {
+      return;
+    }
+
+    if ( (int) get_option( 'casawp_cleanup_done_for_run', 0 ) === $run_id ) {
+      return;
+    }
+
+    $this->current_run_id = $run_id;
+
+    if ( get_option( 'casawp_import_canceled' ) ) {
+      $this->addToLog( 'Import was canceled - final cleanup batch skips deletions.' );
+      casawp_release_lock();
+      delete_option( 'casawp_current_run_id' );
+      return;
+    }
+
+    if ( get_option( 'casawp_import_failed' ) ) {
+      $this->addToLog( 'Import marked as failed. Final cleanup batch skips deletions.' );
+      delete_option( 'casawp_import_failed' );
+      casawp_release_lock();
+      delete_option( 'casawp_current_run_id' );
+      return;
+    }
+
+    $started_at       = microtime( true );
+    $deleted_posts    = 0;
+    $deleted_media    = 0;
+    $failed_media     = 0;
+    $deleted_post_ids = [];
+    $limit            = $this->cleanup_batch_size();
+
+    foreach ( $this->get_posts_to_remove_for_run( $run_id, $limit ) as $post_id ) {
+      $result = $this->delete_property_with_attachments( (int) $post_id );
+
+      if ( $result['properties'] ) {
+        $deleted_posts++;
+        $deleted_post_ids[] = (int) $post_id;
+      }
+      $deleted_media += $result['attachments'];
+      $failed_media  += $result['attachment_failures'];
+
+      if ( ( microtime( true ) - $started_at ) >= $this->cleanup_time_limit() ) {
+        break;
+      }
+    }
+
+    if ( $deleted_posts || $deleted_media || $failed_media ) {
+      $this->addToLog(
+        sprintf(
+          'Final cleanup batch %d deleted %d properties (%s), %d attachments, %d attachment failures.',
+          (int) $batch_number,
+          $deleted_posts,
+          implode( ',', $deleted_post_ids ),
+          $deleted_media,
+          $failed_media
+        )
+      );
+    }
+
+    $remaining = $this->get_posts_to_remove_for_run( $run_id, 1 );
+    if ( ! empty( $remaining ) ) {
+      $this->schedule_finalize_import_cleanup_batch( $run_id, (int) $batch_number + 1 );
+      return;
+    }
+
+    $this->complete_import_cleanup( $run_id );
+  }
+
+  private function complete_import_cleanup( int $run_id ): void {
     flush_rewrite_rules();
 
     if ( class_exists( '\WpeCommon' ) ) {
@@ -459,21 +599,18 @@ class Import
       $this->addToLog( 'Triggered WP Engine cache purge.' );
     }
 
-    /* ----------------------------------------------------------------
-     *  3.  Mark this run as *fully* cleaned-up and tidy the scheduler
-     * ---------------------------------------------------------------- */
     update_option( 'casawp_cleanup_done_for_run', $run_id );
 
     if ( function_exists( 'as_unschedule_all_actions' ) ) {
-      as_unschedule_all_actions( 'casawp_batch_import', [], $this->group() );
+      as_unschedule_all_actions( 'casawp_batch_import', null, 'casawp_run_' . $run_id );
+      as_unschedule_all_actions( 'casawp_finalize_import_cleanup_batch', null, 'casawp_run_' . $run_id );
     }
 
     casawp_release_lock();
-    delete_option   ( 'casawp_current_run_id' );            // now safe to remove
+    delete_option( 'casawp_current_run_id' );
     $this->addToLog( 'Import lock cleared.' );
     $this->addToLog( 'Import completed and lock cleared.' );
 
-    /* 4.  Fire follow-up actions / pending imports */
     if ( casawp_has_pending() ) {
       casawp_clear_pending();
       $this->addToLog( 'Pending import triggered right after cleanup.' );
@@ -565,7 +702,6 @@ class Import
       if ( empty( $properties ) ) {
         $this->addToLog('Feed contained zero properties - treating as full unpublish.');
         $this->finalize_import_cleanup();
-        casawp_release_lock();
         wp_suspend_cache_addition(false);
         return;
       }
@@ -582,7 +718,14 @@ class Import
         update_option('casawp_total_batches', $total_batches);
         update_option('casawp_completed_batches', 0);
         update_option('casawp_current_rank', 0);
-        #$this->addToLog('Initialized import: Total Batches = ' . $total_batches);
+        $this->addToLog(
+          sprintf(
+            'Initialized import: %d properties, batch size %d, total batches %d.',
+            $total_items,
+            $batch_size,
+            $total_batches
+          )
+        );
       }
 
       $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
@@ -596,11 +739,15 @@ class Import
       #$this->addToLog('Completed batch number: ' . $batch_number);
 
       if ($batch_number >= $total_batches) {
-        $this->finalize_import_cleanup();
+        $cleanup_finished = $this->finalize_import_cleanup();
         update_option('casawp_completed_batches', $total_batches);
         delete_option('casawp_current_rank');
         delete_option('casawp_ranksort');
-        $this->addToLog('Import process completed.');
+        if ( $cleanup_finished ) {
+          $this->addToLog('Import process completed.');
+        } else {
+          $this->addToLog('Import batches completed; final cleanup is running.');
+        }
       } else {
         $next_batch_number = $batch_number + 1;
 
@@ -621,7 +768,7 @@ class Import
            already queued in this run, schedule it.   */
         if ( ! as_next_scheduled_action(
                  'casawp_batch_import',
-                 [ 'batch_number' => $next_batch_number ],
+                 [ 'batch_number' => $next_batch_number, 'run_id' => $this->current_run_id ],
                  $this->group()
              ) ) {
 
@@ -697,7 +844,6 @@ class Import
       if ( empty( $properties ) ) {
         $this->addToLog('Feed contained zero properties – treating as full unpublish.');
         $this->finalize_import_cleanup();
-        casawp_release_lock();
         wp_suspend_cache_addition(false);
         return;
       }
@@ -720,148 +866,138 @@ class Import
 
       // Clean up leftover properties
       $this->finalize_import_cleanup();
-
-      // Clear lock
-      casawp_release_lock();
       wp_suspend_cache_addition(false);
   }
 
-  public function delete_outdated_properties()
-  {
-    $this->addToLog('Starting deletion of outdated properties.');
-
+  private function get_feed_property_ids(): ?array {
     $xml_file_path = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/data.xml';
-    if (!file_exists($xml_file_path)) {
-      $this->addToLog("XML file not found at: $xml_file_path");
-      #error_log("XML file not found at: $xml_file_path");
-      return;
+    if ( ! file_exists( $xml_file_path ) ) {
+      $this->addToLog( "XML file not found at: $xml_file_path" );
+      return null;
     }
 
-    libxml_use_internal_errors(true);
-    $xml = simplexml_load_file($xml_file_path);
-    if ($xml === false) {
-      $this->addToLog("Failed to parse XML file.");
+    libxml_use_internal_errors( true );
+    $xml = simplexml_load_file( $xml_file_path );
+    if ( $xml === false ) {
+      $this->addToLog( 'Failed to parse XML file.' );
       libxml_clear_errors();
-      return;
+      return null;
     }
 
-    $xml_property_ids = array();
-
-    foreach ($xml->properties->property as $property) {
+    $xml_property_ids = [];
+    foreach ( $xml->properties->property as $property ) {
       $id = (string) $property['id'];
-      if ($id) {
+      if ( $id ) {
         $xml_property_ids[] = $id;
       }
     }
 
-    if (empty($xml_property_ids)) {
-      $this->addToLog('Feed contained zero properties - skipping “outdated” pass, full clean-up will handle.');
-      return;
-    }
+    return array_values( array_unique( $xml_property_ids ) );
+  }
 
-    $args = array(
+  private function get_outdated_property_posts( array $xml_property_ids, int $limit ): array {
+    $xml_property_lookup = array_fill_keys( $xml_property_ids, true );
+
+    $query = new \WP_Query( [
       'post_type'      => 'casawp_property',
+      'post_status'    => 'publish',
       'posts_per_page' => -1,
       'fields'         => 'ids',
       'meta_key'       => 'exportproperty_id',
       'suppress_filters' => true,
+    ] );
+
+    $posts = [];
+    foreach ( $query->posts as $post_id ) {
+      $exportproperty_id = (string) get_post_meta( $post_id, 'exportproperty_id', true );
+      if ( $exportproperty_id && ! isset( $xml_property_lookup[ $exportproperty_id ] ) ) {
+        $posts[] = (int) $post_id;
+        if ( count( $posts ) >= $limit ) {
+          break;
+        }
+      }
+    }
+
+    return $posts;
+  }
+
+  private function schedule_outdated_properties_delete_batch( int $run_id, int $batch_number, int $delay = 5 ): void {
+    as_schedule_single_action(
+      time() + $delay,
+      'casawp_delete_outdated_properties',
+      [ 'batch_number' => $batch_number, 'run_id' => $run_id ],
+      $run_id ? 'casawp_run_' . $run_id : 'casawp_delete_outdated_properties'
     );
+  }
 
-    $query = new \WP_Query($args);
-    $existing_posts = $query->posts;
+  public function delete_outdated_properties( $batch_number = 1, $run_id = 0 ): void {
+    $run_id = $run_id ? (int) $run_id : (int) get_option( 'casawp_current_run_id', 0 );
+    if ( $run_id ) {
+      $this->current_run_id = $run_id;
+    }
 
-    $exportproperty_to_posts = [];
-    foreach ($existing_posts as $post_id) {
-      $exportproperty_id = (string) get_post_meta($post_id, 'exportproperty_id', true);
-      if ($exportproperty_id) {
-        if (!isset($exportproperty_to_posts[$exportproperty_id])) {
-          $exportproperty_to_posts[$exportproperty_id] = [];
-        }
-        $exportproperty_to_posts[$exportproperty_id][] = $post_id;
+    if ( (int) $batch_number === 1 ) {
+      $this->addToLog( 'Starting deletion of outdated properties.' );
+    }
+
+    $xml_property_ids = $this->get_feed_property_ids();
+    if ( $xml_property_ids === null ) {
+      return;
+    }
+
+    if ( empty( $xml_property_ids ) ) {
+      $this->addToLog( 'Feed contained zero properties - skipping outdated pass, full clean-up will handle.' );
+      return;
+    }
+
+    $started_at       = microtime( true );
+    $deleted_posts    = 0;
+    $deleted_media    = 0;
+    $failed_media     = 0;
+    $deleted_post_ids = [];
+
+    foreach ( $this->get_outdated_property_posts( $xml_property_ids, $this->cleanup_batch_size() ) as $post_id ) {
+      $result = $this->delete_property_with_attachments( (int) $post_id );
+
+      if ( $result['properties'] ) {
+        $deleted_posts++;
+        $deleted_post_ids[] = (int) $post_id;
+      }
+      $deleted_media += $result['attachments'];
+      $failed_media  += $result['attachment_failures'];
+
+      if ( ( microtime( true ) - $started_at ) >= $this->cleanup_time_limit() ) {
+        break;
       }
     }
 
-    $existing_exportproperty_ids = array_keys($exportproperty_to_posts);
-    $outdated_exportproperty_ids = array_diff($existing_exportproperty_ids, $xml_property_ids);
+    if ( $deleted_posts || $deleted_media || $failed_media ) {
+      $this->addToLog(
+        sprintf(
+          'Outdated deletion batch %d deleted %d properties (%s), %d attachments, %d attachment failures.',
+          (int) $batch_number,
+          $deleted_posts,
+          implode( ',', $deleted_post_ids ),
+          $deleted_media,
+          $failed_media
+        )
+      );
 
-
-    $batch_size = 50;
-    $batches = array_chunk($outdated_exportproperty_ids, $batch_size);
-
-    foreach ($batches as $batch) {
-      foreach ($batch as $exportproperty_id) {
-        if (isset($exportproperty_to_posts[$exportproperty_id])) {
-          foreach ($exportproperty_to_posts[$exportproperty_id] as $post_id) {
-            if ($this->hasWPML()) {
-
-              $trid = apply_filters('wpml_element_trid', null, $post_id, 'post_' . get_post_type($post_id));
-
-              if (!$trid) {
-                if (isset($this->trid_store[$exportproperty_id])) {
-                  $trid = $this->trid_store[$exportproperty_id];
-                } else {
-                  #error_log("Unable to find TRID for exportproperty_id: {$exportproperty_id}");
-                  continue;
-                }
-              }
-
-              global $sitepress;
-              if (isset($sitepress)) {
-                $translations = $sitepress->get_element_translations($trid);
-              } else {
-                #error_log("SitePress global object not found.");
-                continue;
-              }
-
-              if ($translations && is_array($translations)) {
-                foreach ($translations as $lang => $translation) {
-                  if (isset($translation->element_id)) {
-                    $trans_post_id = $translation->element_id;
-
-                    $attachments = get_posts(array(
-                      'post_type'      => 'attachment',
-                      'posts_per_page' => -1,
-                      'post_status'    => 'any',
-                      'post_parent'    => $trans_post_id,
-                      'fields'         => 'ids',
-                      'suppress_filters' => true,
-                    ));
-
-                    foreach ($attachments as $attachment_id) {
-                      wp_delete_attachment($attachment_id, true);
-                    }
-
-                    wp_delete_post($trans_post_id, true);
-                  }
-                }
-              }
-            } else {
-
-              $attachments = get_posts(array(
-                'post_type'      => 'attachment',
-                'posts_per_page' => -1,
-                'post_status'    => 'any',
-                'post_parent'    => $post_id,
-                'fields'         => 'ids',
-                'suppress_filters' => true,
-              ));
-
-              foreach ($attachments as $attachment_id) {
-                wp_delete_attachment($attachment_id, true);
-              }
-              wp_delete_post($post_id, true);
-            }
-          }
-        }
+      if ( class_exists( '\WpeCommon' ) ) {
+        \WpeCommon::purge_varnish_cache();
+        \WpeCommon::purge_memcached();
+        $this->addToLog( 'Triggered WP Engine cache purge after outdated deletion batch.' );
       }
     }
 
-    if (class_exists('\WpeCommon')) {
-      \WpeCommon::purge_varnish_cache();
-      \WpeCommon::purge_memcached();
-      $this->addToLog('Triggered WP Engine cache purge after deletion.');
+    if ( ! empty( $this->get_outdated_property_posts( $xml_property_ids, 1 ) ) ) {
+      if ( function_exists( 'as_schedule_single_action' ) ) {
+        $this->schedule_outdated_properties_delete_batch( $run_id, (int) $batch_number + 1 );
+      }
+      return;
     }
-    $this->addToLog("Deletion of outdated properties completed.");
+
+    $this->addToLog( 'Deletion of outdated properties completed.' );
   }
 
   public function getMainLang()
