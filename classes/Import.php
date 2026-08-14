@@ -391,7 +391,7 @@ class Import
     $this->current_run_id = $run_id;
     $this->addToLog( 'Finalizing import cleanup.' );
 
-    if ( function_exists( 'as_next_scheduled_action' ) && as_next_scheduled_action( 'casawp_batch_import', null, $this->group() ) ) {
+    if ( $this->has_pending_import_batches() ) {
         $this->addToLog( 'Cleanup postponed - batches still pending.' );
         return false;
     }
@@ -429,6 +429,27 @@ class Import
 
   private function cleanup_time_limit(): int {
     return max( 5, (int) apply_filters( 'casawp_cleanup_time_limit', self::CLEANUP_TIME_LIMIT ) );
+  }
+
+  /**
+   * Check only future import batches in this run.
+   *
+   * as_next_scheduled_action() also returns a running action. When this is
+   * called by the final batch, that action is the current batch itself, which
+   * used to postpone cleanup forever and leave the import lock in place.
+   */
+  private function has_pending_import_batches(): bool {
+    if ( ! class_exists( '\\ActionScheduler' ) || ! class_exists( '\\ActionScheduler_Store' ) ) {
+      return false;
+    }
+
+    $action_id = \ActionScheduler::store()->query_action( [
+      'hook'   => 'casawp_batch_import',
+      'status' => \ActionScheduler_Store::STATUS_PENDING,
+      'group'  => $this->group(),
+    ] );
+
+    return null !== $action_id;
   }
 
   private function schedule_finalize_import_cleanup_batch( int $run_id, int $batch_number, int $delay = 5 ): void {
