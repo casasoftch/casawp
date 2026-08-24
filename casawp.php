@@ -5,7 +5,7 @@
  * Description: Import your properties directly from your real-estate management software!
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
- * Version: 3.4.6
+ * Version: 3.4.7
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2
@@ -33,7 +33,7 @@ add_filter( 'action_scheduler_queue_runner_concurrent_batches', function () {
 
 // Update system
 require_once('wp_autoupdate.php');
-$plugin_current_version = '3.4.6';
+$plugin_current_version = '3.4.7';
 $plugin_slug = plugin_basename(__FILE__);
 $plugin_remote_path = 'https://wp.casasoft.com/casawp/update.php';
 $license_user = 'user';
@@ -168,6 +168,56 @@ function casawp_clear_pending(): void { delete_option( 'casawp_import_pending' )
 
 /** Is a pending poke queued? */
 function casawp_has_pending(): bool { return (bool) get_option( 'casawp_import_pending', 0 ); }
+
+/** Is an import lock currently held (read-only, does not acquire)? */
+function casawp_is_import_running( int $max_age = 14400 ): bool {
+	$existing = (int) get_option( 'casawp_import_lock', 0 );
+	if ( ! $existing ) {
+		return false;
+	}
+
+	return ( time() - $existing ) <= $max_age;
+}
+
+/** Action Scheduler group for deferred gateway poke jobs. */
+function casawp_gateway_poke_group(): string {
+	return 'casawp_gateway_poke';
+}
+
+/**
+ * Respond to CasaGateway poke requests without rendering a theme page.
+ */
+function casawp_respond_gateway_poke(): void {
+	status_header( 204 );
+	exit;
+}
+
+/**
+ * Kick Action Scheduler after a frontend poke (normally only auto-dispatches in admin).
+ */
+function casawp_dispatch_import_queue_after_poke(): void {
+	if ( ! class_exists( 'ActionScheduler' ) || ! class_exists( 'ActionScheduler_AsyncRequest_QueueRunner' ) ) {
+		return;
+	}
+
+	$store = ActionScheduler::store();
+	$async = new ActionScheduler_AsyncRequest_QueueRunner( $store );
+	$async->maybe_dispatch();
+}
+
+/**
+ * Background handler for gateway pokes scheduled via Action Scheduler.
+ */
+function casawp_run_scheduled_gateway_poke( string $source = 'Poke from CasaGateway' ): void {
+	if ( casawp_is_single_request_enabled() ) {
+		casawp_start_single_request_import( $source );
+		return;
+	}
+
+	casawp_start_new_import( $source, false );
+}
+
+add_action( 'casawp_process_gateway_poke', 'casawp_run_scheduled_gateway_poke', 10, 1 );
 
 function casawp_is_single_request_enabled(): bool {
 	return (bool) get_option('casawp_enable_single_request_import', 0);
@@ -365,6 +415,7 @@ function casawp_cancel_import() {
 			'casawp_batch_import',
 			'casawp_delete_outdated_properties',
 			'casawp_finalize_import_cleanup_batch',
+			'casawp_process_gateway_poke',
 		];
 
 		foreach ( $hooks as $hook ) {
@@ -505,13 +556,41 @@ function casawp_reset_import_progress() {
 
 add_action('init', 'casawp_handle_gatewaypoke');
 function casawp_handle_gatewaypoke() {
-	if ( isset($_GET['gatewaypoke']) ) {
-		if (casawp_is_single_request_enabled()) {
-			casawp_start_single_request_import('Poke from CasaGateway');
-		} else {
-			casawp_start_new_import('Poke from CasaGateway', false);
-		}
+	if ( ! isset( $_GET['gatewaypoke'] ) ) {
+		return;
 	}
+
+	$source = 'Poke from CasaGateway';
+	$import = new casawp\Import( false, false );
+
+	if ( casawp_is_import_running() ) {
+		casawp_set_pending();
+		$import->addToLog( 'Import already in progress. Gateway poke queued.' );
+		casawp_respond_gateway_poke();
+	}
+
+	if ( function_exists( 'as_next_scheduled_action' )
+		&& as_next_scheduled_action( 'casawp_process_gateway_poke', null, casawp_gateway_poke_group() ) ) {
+		$import->addToLog( 'Gateway poke already scheduled; ignoring duplicate.' );
+		casawp_respond_gateway_poke();
+	}
+
+	if ( ! function_exists( 'as_schedule_single_action' ) ) {
+		$import->addToLog( 'Action Scheduler unavailable; running gateway poke synchronously.' );
+		casawp_run_scheduled_gateway_poke( $source );
+		casawp_respond_gateway_poke();
+	}
+
+	as_schedule_single_action(
+		time(),
+		'casawp_process_gateway_poke',
+		[ $source ],
+		casawp_gateway_poke_group()
+	);
+
+	$import->addToLog( 'Gateway poke received; import scheduled asynchronously.' );
+	add_action( 'shutdown', 'casawp_dispatch_import_queue_after_poke', 0 );
+	casawp_respond_gateway_poke();
 }
 
 function this_plugin_after_wpml() {
