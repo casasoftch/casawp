@@ -28,9 +28,9 @@ case 'version':
 	break;  
 case 'info':   
 	$obj->requires = '4.0';  
-	$obj->tested = '6.9.4';  
+	$obj->tested = '7.1';
 	$obj->downloaded = 12540;  
-	$obj->last_updated = '2026-05-06';  
+	$obj->last_updated = '2026-09-01';
 	$obj->sections = array(  
 		'description' => 'The newest version of the CASAWP plugin',  
 		'changelog' => 'See Readme'  
