@@ -34,7 +34,7 @@ class ContactForm extends Form
             $genderArray = array(
                 '2' => __('Ms.', 'casawp'),
                 '1' => __('Mr.', 'casawp'),
-                '0' => '*'
+                '0' => __('Other', 'casawp')
             );
         }
 
