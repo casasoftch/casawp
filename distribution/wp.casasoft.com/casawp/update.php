@@ -14,7 +14,7 @@ $obj = new stdClass();
 $obj->slug = 'casawp';  
 $obj->name = 'CASAWP';
 $obj->plugin_name = 'casawp';
-$obj->new_version = '3.4.5';
+$obj->new_version = '3.4.8';
 // the url for the plugin homepage
 $obj->url = 'https://immobilien-plugin.ch';
 //the download location for the plugin zip file (can be any internet host)
