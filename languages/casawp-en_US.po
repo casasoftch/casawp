@@ -5,7 +5,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: CASAWP\n"
-"Language: en\n"
+"Language: en_US\n"
 
 #: theme-defaults/casawp/bootstrap2/basic-boxes.phtml:19
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:19
@@ -35,7 +35,8 @@ msgid "Specifications"
 msgstr ""
 
 #: casawp.php:48
-msgid "Import your properties directly from your real-estate managment software!"
+msgid ""
+"Import your properties directly from your real-estate managment software!"
 msgstr ""
 
 #: classes/Archive.php:379 classes/Plugin.php:876 classes/Plugin.php:1676
@@ -2806,63 +2807,675 @@ msgstr ""
 msgid "rent"
 msgstr ""
 
-#: 
 msgid "School"
 msgstr ""
 
-#: 
 msgid "Choose country"
 msgstr ""
 
-#: 
 msgid "Countries"
 msgstr ""
 
-#: 
 msgid "Extra Costs"
 msgstr ""
 
-#: 
 msgid "Ground floor"
 msgstr ""
 
-#: 
 msgid "Choose order"
 msgstr ""
 
-#: 
 msgid "Order by"
 msgstr ""
 
-#: 
 msgid "Ascending"
 msgstr ""
 
-#: 
 msgid "Descending"
 msgstr ""
 
-#: 
 msgid "Order direction"
 msgstr ""
 
-#: 
 msgid "Choose order direction"
 msgstr ""
 
-#: 
 msgid "Date"
 msgstr ""
 
-#: 
 msgid "Load distance map"
 msgstr ""
 
-#: 
 msgid "Load map"
 msgstr ""
 
-#: 
 msgid "Guest toilets"
 msgstr ""
 
+#: options.php:169
+msgid "Settings saved."
+msgstr ""
+
+#: options.php:176
+msgid "Properties imported."
+msgstr ""
+
+#: options.php:188
+msgid "General"
+msgstr ""
+
+#: options.php:189
+msgid "Archive"
+msgstr ""
+
+#: options.php:190
+msgid "Detail view"
+msgstr ""
+
+#: options.php:191
+msgid "Protected properties"
+msgstr ""
+
+#: options.php:192
+msgid "Contact form"
+msgstr ""
+
+#: options.php:193
+msgid "Scripts"
+msgstr ""
+
+#: options.php:194
+msgid "Logs"
+msgstr ""
+
+#: options.php:198
+msgid "Rate this plugin"
+msgstr ""
+
+#: options.php:199
+msgid "Changelog"
+msgstr ""
+
+#: options.php:220
+msgid "Bootstrap"
+msgstr ""
+
+#: options.php:223
+msgid "Template"
+msgstr ""
+
+#: options.php:225
+msgid "Choose display template"
+msgstr ""
+
+#: options.php:227 options.php:231 options.php:235
+#, php-format
+msgid "Version %d"
+msgstr ""
+
+#: options.php:242
+msgid "CSS"
+msgstr ""
+
+#: options.php:246
+msgid "Load CASAWP CSS"
+msgstr ""
+
+#: options.php:254
+msgid "JavaScript"
+msgstr ""
+
+#: options.php:258
+msgid "Load CASAWP JavaScript"
+msgstr ""
+
+#: options.php:272
+msgid "Load Featherlight"
+msgstr ""
+
+#: options.php:278
+msgid "Load jQuery Harvest Chosen"
+msgstr ""
+
+#: options.php:293
+msgid "Social media"
+msgstr ""
+
+#: options.php:296
+msgid "Show the following social media platforms"
+msgstr ""
+
+#: options.php:298
+msgid "Show Facebook share button"
+msgstr ""
+
+#: options.php:324 options.php:327
+msgid ""
+"Choose the values to display. The second field sets their display order."
+msgstr ""
+
+#: options.php:339 options.php:1003
+msgid "Usable area"
+msgstr ""
+
+#: options.php:349 options.php:1013
+msgid "Living area"
+msgstr ""
+
+#: options.php:359 options.php:1023
+msgid "Land area"
+msgstr ""
+
+#: options.php:389 options.php:1038
+msgid "Year built"
+msgstr ""
+
+#: options.php:399 options.php:1043
+msgid "Last renovation"
+msgstr ""
+
+#: options.php:423
+msgid "Google Maps"
+msgstr ""
+
+#: options.php:426
+msgid "Enable map"
+msgstr ""
+
+#: options.php:432
+msgid "Show distances"
+msgstr ""
+
+#: options.php:438
+msgid "Enable distance CSS"
+msgstr ""
+
+#: options.php:444
+msgid "Load map immediately"
+msgstr ""
+
+#: options.php:450
+msgid "Maps JavaScript API"
+msgstr ""
+
+#: options.php:455
+msgid "Zoom"
+msgstr ""
+
+#: options.php:484 options.php:487
+msgid "Gallery navigation"
+msgstr ""
+
+#: options.php:489
+msgid "Navigation with circles"
+msgstr ""
+
+#: options.php:497 options.php:500 options.php:508
+msgid "Thumbnails"
+msgstr ""
+
+#: options.php:502
+msgid "Maximum number of thumbnails"
+msgstr ""
+
+#: options.php:510
+msgid "Ideal thumbnail width"
+msgstr ""
+
+#: options.php:683 options.php:688 options.php:700
+msgid "Sort order"
+msgstr ""
+
+#: options.php:690
+msgid "Date created"
+msgstr ""
+
+#: options.php:691
+msgid "Date modified"
+msgstr ""
+
+#: options.php:692
+msgid "Custom order"
+msgstr ""
+
+#: options.php:695
+msgid "Reference ID"
+msgstr ""
+
+#: options.php:696
+msgid "Title"
+msgstr ""
+
+#: options.php:710
+msgid "Featured properties"
+msgstr ""
+
+#: options.php:715
+msgid "Mark as featured"
+msgstr ""
+
+#: options.php:728
+msgid "Hide in the main list"
+msgstr ""
+
+#: options.php:743
+msgid "Thumbnail"
+msgstr ""
+
+#: options.php:746
+msgid "Width"
+msgstr ""
+
+#: options.php:748
+msgid "Width × height"
+msgstr ""
+
+#: options.php:753
+msgid "Height"
+msgstr ""
+
+#: options.php:757
+msgid "Crop"
+msgstr ""
+
+#: options.php:768
+msgid "Filter"
+msgstr ""
+
+#: options.php:772
+msgid "Hide filter"
+msgstr ""
+
+#: options.php:779
+msgid "Enable live filter"
+msgstr ""
+
+#: options.php:788
+msgid "Rent / buy"
+msgstr ""
+
+#: options.php:789 options.php:803 options.php:817 options.php:831
+#: options.php:845 options.php:859 options.php:873
+msgid "Multiple selection"
+msgstr ""
+
+#: options.php:789 options.php:803 options.php:817 options.php:831
+#: options.php:845 options.php:859 options.php:873 options.php:887
+#: options.php:898 options.php:909 options.php:919 options.php:931
+#: options.php:942
+msgid "Single selection"
+msgstr ""
+
+#: options.php:789 options.php:803 options.php:817 options.php:831
+#: options.php:859 options.php:873
+msgid "Checkboxes"
+msgstr ""
+
+#: options.php:789 options.php:803 options.php:817 options.php:831
+#: options.php:845 options.php:859 options.php:873 options.php:887
+#: options.php:898 options.php:909 options.php:919 options.php:931
+#: options.php:942
+msgid "Radio buttons"
+msgstr ""
+
+#: options.php:789 options.php:803 options.php:817 options.php:831
+#: options.php:845 options.php:859 options.php:873 options.php:887
+#: options.php:898 options.php:909 options.php:919 options.php:931
+#: options.php:942
+msgid "Hide"
+msgstr ""
+
+#: options.php:802
+msgid "Usage"
+msgstr ""
+
+#: options.php:886
+msgid "Price (from — to)"
+msgstr ""
+
+#: options.php:897
+msgid "Price filter to"
+msgstr ""
+
+#: options.php:908
+msgid "Rooms (from — to)"
+msgstr ""
+
+#: options.php:930
+msgid "Area (from — to)"
+msgstr ""
+
+#: options.php:941
+msgid "Area filter to"
+msgstr ""
+
+#: options.php:954
+msgid "Minimum rooms"
+msgstr ""
+
+#: options.php:955
+msgid "Set room range manually"
+msgstr ""
+
+#: options.php:956 options.php:968
+msgid "Min."
+msgstr ""
+
+#: options.php:958
+msgid "Maximum rooms"
+msgstr ""
+
+#: options.php:959 options.php:971
+msgid "Max."
+msgstr ""
+
+#: options.php:966
+msgid "Minimum area"
+msgstr ""
+
+#: options.php:967
+msgid "Set area range manually"
+msgstr ""
+
+#: options.php:970
+msgid "Maximum area"
+msgstr ""
+
+#: options.php:980
+msgid "Dynamic fields"
+msgstr ""
+
+#: options.php:988
+msgid "Street + number"
+msgstr ""
+
+#: options.php:1018
+msgid "Net living area"
+msgstr ""
+
+#: options.php:1058
+msgid "Excerpt"
+msgstr ""
+
+#: options.php:1130
+msgid "Show net rent"
+msgstr ""
+
+#: options.php:1149
+msgid "Provider slug"
+msgstr ""
+
+#: options.php:1152
+msgid "Publisher slug"
+msgstr ""
+
+#: options.php:1155
+msgid "Google reCAPTCHA key"
+msgstr ""
+
+#: options.php:1158
+msgid "Google reCAPTCHA secret"
+msgstr ""
+
+#: options.php:1163
+msgid "Enable Google reCAPTCHA v3"
+msgstr ""
+
+#: options.php:1167
+msgid "Google reCAPTCHA v3 score"
+msgstr ""
+
+#: options.php:1172
+msgid "Send property enquiries by email"
+msgstr ""
+
+#: options.php:1177
+msgid "Enable gender-neutral salutation"
+msgstr ""
+
+#: options.php:1182
+msgid "Enable the “Accept privacy policy” checkbox"
+msgstr ""
+
+#: options.php:1192
+msgid "Contact details"
+msgstr ""
+
+#: options.php:1195 options.php:1197
+msgid "Show provider email address"
+msgstr ""
+
+#: options.php:1203 options.php:1205
+msgid "Show contact-person email address"
+msgstr ""
+
+#: options.php:1215
+msgid "Required fields"
+msgstr ""
+
+#: options.php:1239 options.php:1241
+msgid "Postal code"
+msgstr ""
+
+#: options.php:1279 options.php:1281
+msgid "Event tracking"
+msgstr ""
+
+#: options.php:1284
+msgid "Enter JavaScript tracking event"
+msgstr ""
+
+#: options.php:1287
+msgid "Example: _gaq.push(['_trackEvent', '%casawp_id%', 'CASAWP enquiry'])"
+msgstr ""
+
+#: options.php:1299
+msgid "Available logs"
+msgstr ""
+
+#: options.php:1364
+msgid "Login page"
+msgstr ""
+
+#: options.php:1372 options.php:1389
+msgid "Select"
+msgstr ""
+
+#: options.php:1381
+msgid "Logout page"
+msgstr ""
+
+#: options.php:1407
+msgid "HTML"
+msgstr ""
+
+#: options.php:1410
+msgid "Before the plugin"
+msgstr ""
+
+#: options.php:1412
+msgid "Before the content"
+msgstr ""
+
+#: options.php:1419
+msgid "After the plugin"
+msgstr ""
+
+#: options.php:1421
+msgid "After the content"
+msgstr ""
+
+#: options.php:1426
+msgid "Only the div tag with id and class attributes is allowed."
+msgstr ""
+
+#: options.php:1428 options.php:1430
+msgid "Custom slug"
+msgstr ""
+
+#: options.php:1432
+msgid "Set custom slug"
+msgstr ""
+
+#: options.php:1433 options.php:1435
+msgid "Force property language in XML"
+msgstr ""
+
+#: options.php:1437
+msgid "de, en, fr, or it"
+msgstr ""
+
+#: options.php:1438
+msgid ""
+"Set this only when the website is monolingual and XML properties are "
+"multilingual."
+msgstr ""
+
+#: options.php:1444
+msgid "Import"
+msgstr ""
+
+#: options.php:1451
+msgid "Enable single-request import (everything in one HTTP request)"
+msgstr ""
+
+#: options.php:1454
+msgid ""
+"The default is batch import (recommended). Enable only for legacy setups or "
+"manual tests."
+msgstr ""
+
+#: options.php:1458 options.php:1462
+#, php-format
+msgid "Use %s as an image CDN."
+msgstr ""
+
+#: options.php:1460
+msgid "Display images directly from the Gateway CDN."
+msgstr ""
+
+#: options.php:1467 options.php:1471
+#, php-format
+msgid ""
+"Import no more than one image for reference properties (not compatible with "
+"%s CDN)."
+msgstr ""
+
+#: options.php:1469
+msgid ""
+"Import no more than one image for reference properties (not compatible with "
+"Gateway CDN)."
+msgstr ""
+
+#: options.php:1476 options.php:1478
+msgid ""
+"Translate properties with dynamic content when no translation is available."
+msgstr ""
+
+#: options.php:1495
+msgid "Import content anyway (required for external AI translation)"
+msgstr ""
+
+#: options.php:1499
+msgid ""
+"When enabled, the title remains dynamic while the property description and "
+"excerpt are stored from the feed."
+msgstr ""
+
+#: options.php:1526 options.php:1528
+msgid "API key"
+msgstr ""
+
+#: options.php:1530
+msgid "Enter CASAGATEWAY API key"
+msgstr ""
+
+#: options.php:1532 options.php:1534
+msgid "Private key"
+msgstr ""
+
+#: options.php:1536
+msgid "Enter CASAGATEWAY private key"
+msgstr ""
+
+#: options.php:1538 options.php:1540
+msgid "Batch size override"
+msgstr ""
+
+#: options.php:1542
+msgid "Default: based on languages and CDN"
+msgstr ""
+
+#: options.php:1543
+msgid ""
+"Set a custom batch size. Leave empty to use dynamic logic based on the "
+"number of installed languages."
+msgstr ""
+
+#: options.php:1560 options.php:1563
+msgid "Fetch data from CASAGATEWAY"
+msgstr ""
+
+#: options.php:1564
+msgid "Cancel import"
+msgstr ""
+
+#: options.php:1569
+msgid "Error: "
+msgstr ""
+
+#: options.php:1570
+msgid "An error occurred while starting the import."
+msgstr ""
+
+#: options.php:1571
+msgid "Do you really want to cancel the current import?"
+msgstr ""
+
+#: options.php:1572
+msgid "Error while cancelling the import: "
+msgstr ""
+
+#: options.php:1573
+msgid "An error occurred while cancelling the import."
+msgstr ""
+
+#: options.php:1574
+msgid "Error while resetting import progress: "
+msgstr ""
+
+#: options.php:1575
+msgid "An error occurred while resetting import progress."
+msgstr ""
+
+#: options.php:1773
+msgid "Do you really want to permanently delete all property data?"
+msgstr ""
+
+#: options.php:1774
+msgid "Delete all property data"
+msgstr ""
+
+#: options.php:1779
+msgid "Import progress"
+msgstr ""
+
+#: options.php:1808
+msgid "Label"
+msgstr ""
+
+#: options.php:1814 options.php:1817
+msgid "Custom categories"
+msgstr ""
+
+#: options.php:1821
+msgid "ID"
+msgstr ""
+
+#: options.php:1827
+msgid "Show on website"
+msgstr ""
+
+#: options.php:1875
+msgid "Save changes"
+msgstr ""

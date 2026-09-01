@@ -1,21 +1,562 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CASAWP\n"
-"POT-Creation-Date: 2026-07-06 15:41+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: it_IT\n"
+"PO-Revision-Date: 2026-09-01 10:21+0200\n"
+"Last-Translator: Casasoft AG\n"
+"Language-Team: CASAWP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it_IT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.9\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: vendor\n"
+
+msgid "Settings saved."
+msgstr "Impostazioni salvate."
+
+msgid "Properties imported."
+msgstr "Immobili importati."
+
+msgid "General"
+msgstr "Generale"
+
+msgid "Archive"
+msgstr "Archivio"
+
+msgid "Detail view"
+msgstr "Vista dettagliata"
+
+msgid "Protected properties"
+msgstr "Immobili protetti"
+
+msgid "Contact form"
+msgstr "Modulo di contatto"
+
+msgid "Scripts"
+msgstr "Script"
+
+msgid "Logs"
+msgstr "Registri"
+
+msgid "Rate this plugin"
+msgstr "Valuta questo plugin"
+
+msgid "Changelog"
+msgstr "Registro delle modifiche"
+
+msgid "Bootstrap"
+msgstr "Bootstrap"
+
+msgid "Template"
+msgstr "Modello"
+
+msgid "Choose display template"
+msgstr "Scegliere il modello di visualizzazione"
+
+msgid "Version %d"
+msgstr "Versione %d"
+
+msgid "CSS"
+msgstr "CSS"
+
+msgid "Load CASAWP CSS"
+msgstr "Caricare CSS CASAWP"
+
+msgid "JavaScript"
+msgstr "JavaScript"
+
+msgid "Load CASAWP JavaScript"
+msgstr "Caricare JavaScript CASAWP"
+
+msgid "Load Featherlight"
+msgstr "Caricare Featherlight"
+
+msgid "Load jQuery Harvest Chosen"
+msgstr "Caricare jQuery Harvest Chosen"
+
+msgid "Social media"
+msgstr "Social media"
+
+msgid "Show the following social media platforms"
+msgstr "Mostrare le seguenti piattaforme social"
+
+msgid "Show Facebook share button"
+msgstr "Mostrare il pulsante di condivisione Facebook"
+
+msgid ""
+"Choose the values to display. The second field sets their display order."
+msgstr ""
+"Scegliere i valori da visualizzare. Il secondo campo ne imposta l’ordine di "
+"visualizzazione."
+
+msgid "Number of rooms"
+msgstr "Numero di locali"
+
+msgid "Usable area"
+msgstr "Superficie utile"
+
+msgid "Living area"
+msgstr "Superficie abitabile"
+
+msgid "Land area"
+msgstr "Superficie del terreno"
+
+msgid "Floor"
+msgstr "Piano"
+
+msgid "Number of floors"
+msgstr "Numero di piani"
+
+msgid "Year built"
+msgstr "Anno di costruzione"
+
+msgid "Last renovation"
+msgstr "Ultima ristrutturazione"
+
+msgid "Availability"
+msgstr "Disponibilità"
+
+msgid "Google Maps"
+msgstr "Google Maps"
+
+msgid "Enable map"
+msgstr "Attivare la mappa"
+
+msgid "Show distances"
+msgstr "Mostrare le distanze"
+
+msgid "Enable distance CSS"
+msgstr "Attivare CSS delle distanze"
+
+msgid "Load map immediately"
+msgstr "Caricare subito la mappa"
+
+msgid "Maps JavaScript API"
+msgstr "API JavaScript Maps"
+
+msgid "Zoom"
+msgstr "Zoom"
+
+msgid "Gallery navigation"
+msgstr "Navigazione galleria"
+
+msgid "Navigation with circles"
+msgstr "Navigazione con cerchi"
+
+msgid "Thumbnails"
+msgstr "Miniature"
+
+msgid "Maximum number of thumbnails"
+msgstr "Numero massimo di miniature"
+
+msgid "Ideal thumbnail width"
+msgstr "Larghezza ideale delle miniature"
+
+msgid "Sort order"
+msgstr "Ordinamento"
+
+msgid "Date created"
+msgstr "Data di creazione"
+
+msgid "Date modified"
+msgstr "Data di modifica"
+
+msgid "Custom order"
+msgstr "Ordine personalizzato"
+
+msgid "Location"
+msgstr "Località"
+
+msgid "Price"
+msgstr "Prezzo"
+
+msgid "Reference ID"
+msgstr "ID di riferimento"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "Available from"
+msgstr "Disponibile dal"
+
+msgid "Descending"
+msgstr "Decrescente"
+
+msgid "Ascending"
+msgstr "Crescente"
+
+msgid "Featured properties"
+msgstr "Immobili in evidenza"
+
+msgid "Mark as featured"
+msgstr "Contrassegnare come in evidenza"
+
+msgid "Hide in the main list"
+msgstr "Nascondere nell’elenco principale"
+
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+msgid "Width"
+msgstr "Larghezza"
+
+msgid "Width × height"
+msgstr "Larghezza × altezza"
+
+msgid "Height"
+msgstr "Altezza"
+
+msgid "Crop"
+msgstr "Ritagliare"
+
+msgid "Filter"
+msgstr "Filtro"
+
+msgid "Hide filter"
+msgstr "Nascondere filtro"
+
+msgid "Enable live filter"
+msgstr "Attivare filtro live"
+
+msgid "Rent / buy"
+msgstr "Affitto / acquisto"
+
+msgid "Multiple selection"
+msgstr "Selezione multipla"
+
+msgid "Single selection"
+msgstr "Selezione singola"
+
+msgid "Checkboxes"
+msgstr "Caselle di controllo"
+
+msgid "Radio buttons"
+msgstr "Pulsanti di opzione"
+
+msgid "Hide"
+msgstr "Nascondere"
+
+msgid "Usage"
+msgstr "Utilizzo"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Locality"
+msgstr "Località"
+
+msgid "Region"
+msgstr "Regione"
+
+msgid "Country"
+msgstr "Paese"
+
+msgid "Features"
+msgstr "Caratteristiche"
+
+msgid "Price (from — to)"
+msgstr "Prezzo (da — a)"
+
+msgid "Price filter to"
+msgstr "Filtro prezzo fino a"
+
+msgid "Rooms (from — to)"
+msgstr "Locali (da — a)"
+
+msgid "Area (from — to)"
+msgstr "Superficie (da — a)"
+
+msgid "Area filter to"
+msgstr "Filtro superficie fino a"
+
+msgid "Minimum rooms"
+msgstr "Numero minimo di locali"
+
+msgid "Set room range manually"
+msgstr "Impostare manualmente l’intervallo dei locali"
+
+msgid "Min."
+msgstr "Min."
+
+msgid "Maximum rooms"
+msgstr "Numero massimo di locali"
+
+msgid "Max."
+msgstr "Max."
+
+msgid "Minimum area"
+msgstr "Superficie minima"
+
+msgid "Set area range manually"
+msgstr "Impostare manualmente l’intervallo della superficie"
+
+msgid "Maximum area"
+msgstr "Superficie massima"
+
+msgid "Dynamic fields"
+msgstr "Campi dinamici"
+
+msgid "Street + number"
+msgstr "Via + numero"
+
+msgid "Gross floor area"
+msgstr "Superficie lorda di pavimento"
+
+msgid "Net living area"
+msgstr "Superficie abitabile netta"
+
+msgid "Excerpt"
+msgstr "Estratto"
+
+msgid "Show net rent"
+msgstr "Mostrare l’affitto netto"
+
+msgid "Provider slug"
+msgstr "Slug del fornitore"
+
+msgid "Publisher slug"
+msgstr "Slug dell’editore"
+
+msgid "Google reCAPTCHA key"
+msgstr "Chiave Google reCAPTCHA"
+
+msgid "Google reCAPTCHA secret"
+msgstr "Segreto Google reCAPTCHA"
+
+msgid "Enable Google reCAPTCHA v3"
+msgstr "Attivare Google reCAPTCHA v3"
+
+msgid "Google reCAPTCHA v3 score"
+msgstr "Punteggio Google reCAPTCHA v3"
+
+msgid "Send property enquiries by email"
+msgstr "Inviare richieste sugli immobili via e-mail"
+
+msgid "Enable gender-neutral salutation"
+msgstr "Attivare il saluto neutrale"
+
+msgid "Enable the “Accept privacy policy” checkbox"
+msgstr "Attivare la casella « Accetta l’informativa sulla privacy »"
+
+msgid "Contact details"
+msgstr "Dati di contatto"
+
+msgid "Show provider email address"
+msgstr "Mostrare l’indirizzo e-mail del fornitore"
+
+msgid "Show contact-person email address"
+msgstr "Mostrare l’indirizzo e-mail della persona di contatto"
+
+msgid "Required fields"
+msgstr "Campi obbligatori"
+
+msgid "First name"
+msgstr "Nome"
+
+msgid "Last name"
+msgstr "Cognome"
+
+msgid "Street"
+msgstr "Via"
+
+msgid "Postal code"
+msgstr "Codice postale"
+
+msgid "Phone"
+msgstr "Telefono"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Message"
+msgstr "Messaggio"
+
+msgid "Event tracking"
+msgstr "Tracciamento eventi"
+
+msgid "Enter JavaScript tracking event"
+msgstr "Inserire evento di tracciamento JavaScript"
+
+msgid "Example: _gaq.push(['_trackEvent', '%casawp_id%', 'CASAWP enquiry'])"
+msgstr "Esempio: _gaq.push(['_trackEvent', '%casawp_id%', 'Richiesta CASAWP'])"
+
+msgid "Available logs"
+msgstr "Registri disponibili"
+
+msgid "Login page"
+msgstr "Pagina di accesso"
+
+msgid "Select"
+msgstr "Selezionare"
+
+msgid "Logout page"
+msgstr "Pagina di disconnessione"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Before the plugin"
+msgstr "Prima del plugin"
+
+msgid "Before the content"
+msgstr "Prima del contenuto"
+
+msgid "After the plugin"
+msgstr "Dopo il plugin"
+
+msgid "After the content"
+msgstr "Dopo il contenuto"
+
+msgid "Only the div tag with id and class attributes is allowed."
+msgstr "È consentito solo il tag div con gli attributi id e class."
+
+msgid "Custom slug"
+msgstr "Slug personalizzato"
+
+msgid "Set custom slug"
+msgstr "Impostare slug personalizzato"
+
+msgid "Force property language in XML"
+msgstr "Forzare la lingua dell’immobile nell’XML"
+
+msgid "de, en, fr, or it"
+msgstr "de, en, fr o it"
+
+msgid ""
+"Set this only when the website is monolingual and XML properties are "
+"multilingual."
+msgstr ""
+"Impostare solo se il sito è monolingue e gli immobili XML sono multilingue."
+
+msgid "Import"
+msgstr "Importazione"
+
+msgid "Enable single-request import (everything in one HTTP request)"
+msgstr ""
+"Attivare l’importazione in una singola richiesta (tutto in una richiesta "
+"HTTP)"
+
+msgid ""
+"The default is batch import (recommended). Enable only for legacy setups or "
+"manual tests."
+msgstr ""
+"L’importazione a lotti è predefinita (consigliata). Attivare solo per "
+"configurazioni legacy o test manuali."
+
+msgid "Use %s as an image CDN."
+msgstr "Usare %s come CDN per immagini."
+
+msgid "Display images directly from the Gateway CDN."
+msgstr "Mostrare le immagini direttamente dal CDN Gateway."
+
+msgid ""
+"Import no more than one image for reference properties (not compatible with "
+"%s CDN)."
+msgstr ""
+"Importare al massimo un’immagine per gli immobili di riferimento (non "
+"compatibile con il CDN %s)."
+
+msgid ""
+"Import no more than one image for reference properties (not compatible with "
+"Gateway CDN)."
+msgstr ""
+"Importare al massimo un’immagine per gli immobili di riferimento (non "
+"compatibile con il CDN Gateway)."
+
+msgid ""
+"Translate properties with dynamic content when no translation is available."
+msgstr ""
+"Tradurre gli immobili con contenuto dinamico quando non è disponibile una "
+"traduzione."
+
+msgid "Import content anyway (required for external AI translation)"
+msgstr ""
+"Importare comunque i contenuti (necessario per la traduzione IA esterna)"
+
+msgid ""
+"When enabled, the title remains dynamic while the property description and "
+"excerpt are stored from the feed."
+msgstr ""
+"Quando attivata, il titolo rimane dinamico mentre la descrizione e "
+"l’estratto dell’immobile vengono salvati dal feed."
+
+msgid "API key"
+msgstr "Chiave API"
+
+msgid "Enter CASAGATEWAY API key"
+msgstr "Inserire la chiave API CASAGATEWAY"
+
+msgid "Private key"
+msgstr "Chiave privata"
+
+msgid "Enter CASAGATEWAY private key"
+msgstr "Inserire la chiave privata CASAGATEWAY"
+
+msgid "Batch size override"
+msgstr "Sovrascrivere dimensione lotto"
+
+msgid "Default: based on languages and CDN"
+msgstr "Predefinito: in base alle lingue e al CDN"
+
+msgid ""
+"Set a custom batch size. Leave empty to use dynamic logic based on the "
+"number of installed languages."
+msgstr ""
+"Impostare una dimensione di lotto personalizzata. Lasciare vuoto per usare "
+"la logica dinamica in base al numero di lingue installate."
+
+msgid "Fetch data from CASAGATEWAY"
+msgstr "Recuperare dati da CASAGATEWAY"
+
+msgid "Cancel import"
+msgstr "Annullare importazione"
+
+msgid "Error: "
+msgstr "Errore: "
+
+msgid "An error occurred while starting the import."
+msgstr "Si è verificato un errore durante l’avvio dell’importazione."
+
+msgid "Do you really want to cancel the current import?"
+msgstr "Si desidera davvero annullare l’importazione in corso?"
+
+msgid "Error while cancelling the import: "
+msgstr "Errore durante l’annullamento dell’importazione: "
+
+msgid "An error occurred while cancelling the import."
+msgstr "Si è verificato un errore durante l’annullamento dell’importazione."
+
+msgid "Error while resetting import progress: "
+msgstr "Errore durante il ripristino dell’avanzamento dell’importazione: "
+
+msgid "An error occurred while resetting import progress."
+msgstr ""
+"Si è verificato un errore durante il ripristino dell’avanzamento "
+"dell’importazione."
+
+msgid "Do you really want to permanently delete all property data?"
+msgstr ""
+"Si desidera davvero eliminare definitivamente tutti i dati degli immobili?"
+
+msgid "Delete all property data"
+msgstr "Eliminare tutti i dati degli immobili"
+
+msgid "Import progress"
+msgstr "Avanzamento importazione"
+
+msgid "Label"
+msgstr "Etichetta"
+
+msgid "Custom categories"
+msgstr "Categorie personalizzate"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Show on website"
+msgstr "Mostrare sul sito web"
+
+msgid "Save changes"
+msgstr "Salvare modifiche"
 
 #: action-scheduler/classes/ActionScheduler_ActionFactory.php:233
 msgid "Invalid action - must be a recurring action."
@@ -1905,10 +2446,6 @@ msgstr "Superficie abitabile"
 msgid "Net living space"
 msgstr "Spazio vitale"
 
-#: classes/Conversion.php:310
-msgid "Gross floor area"
-msgstr "superficie complessiva"
-
 #: classes/Conversion.php:311
 msgid "Surface usable"
 msgstr "Superficie utilizzabile"
@@ -1921,10 +2458,6 @@ msgstr "Ultimo rinnovamento"
 msgid "Year of construction"
 msgstr "Anno di costruzione"
 
-#: classes/Conversion.php:315
-msgid "Number of rooms"
-msgstr "Numero di locali"
-
 #: classes/Conversion.php:316
 msgid "Number of lavatory"
 msgstr "Numero di lavabo"
@@ -1932,14 +2465,6 @@ msgstr "Numero di lavabo"
 #: classes/Conversion.php:317
 msgid "Number of guest toilets"
 msgstr "Numero di bagni per gli ospiti"
-
-#: classes/Conversion.php:318
-msgid "Number of floors"
-msgstr "Numero di piani"
-
-#: classes/Conversion.php:319 classes/Single.php:431
-msgid "Floor"
-msgstr "Piano"
 
 #: classes/Conversion.php:320
 msgid "Volume"
@@ -2797,12 +3322,6 @@ msgstr "Riferimento Nr."
 msgid "Identifiers"
 msgstr "Identificatori"
 
-#: classes/Plugin.php:2868 classes/Plugin.php:3182
-#: modules/casawp/src/casawp/Form/ContactForm.php:90
-#: modules/casawp/src/casawp/Service/Offer.php:930
-msgid "Street"
-msgstr "Indirizzo"
-
 #: classes/Plugin.php:2875
 msgid "Nr."
 msgstr "N."
@@ -2818,16 +3337,6 @@ msgstr "C.A.P."
 #: classes/Plugin.php:2896
 msgid "City"
 msgstr "Città"
-
-#: classes/Plugin.php:2903 classes/Plugin.php:3210
-#: modules/casawp/src/casawp/Form/FilterForm.php:122
-msgid "Region"
-msgstr "Regione"
-
-#: classes/Plugin.php:2910 classes/Plugin.php:3217
-#: modules/casawp/src/casawp/Form/ContactForm.php:148
-msgid "Country"
-msgstr "Paese"
 
 #: classes/Plugin.php:2917
 msgid "Latitude"
@@ -2856,10 +3365,6 @@ msgstr ""
 #: classes/Plugin.php:2987
 msgid "General settings"
 msgstr "Configurazione generale"
-
-#: classes/Plugin.php:3010 modules/casawp/src/casawp/Form/FilterForm.php:261
-msgid "Price"
-msgstr "Prezzo"
 
 #: classes/Plugin.php:3019
 msgid "Price property segment"
@@ -2901,18 +3406,9 @@ msgstr "Nome Azienda"
 msgid "Brand"
 msgstr "Marchio"
 
-#: classes/Plugin.php:3175 modules/casawp/src/casawp/Form/ContactForm.php:160
-msgid "Phone"
-msgstr "Telefono"
-
 #: classes/Plugin.php:3189
 msgid "Street addition"
 msgstr "Aggiunta di strada"
-
-#: classes/Plugin.php:3203 modules/casawp/src/casawp/Form/ContactForm.php:113
-#: modules/casawp/src/casawp/Service/Offer.php:937
-msgid "Locality"
-msgstr "Località"
 
 #: classes/Plugin.php:3224
 msgid "P.O. Box"
@@ -2921,10 +3417,6 @@ msgstr "Casella postale"
 #: classes/Plugin.php:3231
 msgid "Organization"
 msgstr "Organizzazione"
-
-#: classes/Plugin.php:3256 modules/casawp/src/casawp/Form/ContactForm.php:182
-msgid "Email"
-msgstr "E-mail"
 
 #: classes/Plugin.php:3263
 msgid "Function"
@@ -3058,11 +3550,6 @@ msgstr ""
 msgid "Property categories"
 msgstr "Categorie di proprietà"
 
-#: classes/Plugin.php:3566 classes/Plugin.php:3575
-#: modules/casawp/src/casawp/Form/FilterForm.php:104
-msgid "Category"
-msgstr "Categoria"
-
 #: classes/Plugin.php:3567 classes/Plugin.php:3593
 msgid "Search Categories"
 msgstr "Cerca Categorie"
@@ -3173,12 +3660,6 @@ msgstr ""
 msgid "Property locations"
 msgstr "Posizioni degli immobili per"
 
-#: classes/Plugin.php:3646 classes/Plugin.php:3655
-#: modules/casawp/src/casawp/Form/FilterForm.php:140
-#: modules/casawp/src/casawp/Form/FilterForm.php:259
-msgid "Location"
-msgstr "Località"
-
 #: classes/Plugin.php:3647
 msgid "Search Locations"
 msgstr "Percorsi di ricerca"
@@ -3266,10 +3747,6 @@ msgstr "Nessun Salestypes trovato."
 #: classes/Plugin.php:3702
 msgid "Property availability"
 msgstr ""
-
-#: classes/Plugin.php:3703 classes/Plugin.php:3715
-msgid "Availability"
-msgstr "Disponibilità"
 
 #: classes/Plugin.php:3704
 msgid "Search availabilities"
@@ -3454,14 +3931,6 @@ msgstr "Altri"
 msgid "Anrede"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/ContactForm.php:57
-msgid "First name"
-msgstr "Nome"
-
-#: modules/casawp/src/casawp/Form/ContactForm.php:68
-msgid "Last name"
-msgstr "Cognome"
-
 #: modules/casawp/src/casawp/Form/ContactForm.php:101
 msgid "ZIP"
 msgstr "CAP"
@@ -3469,10 +3938,6 @@ msgstr "CAP"
 #: modules/casawp/src/casawp/Form/ContactForm.php:171
 msgid "Mobile"
 msgstr "Telefono mobile"
-
-#: modules/casawp/src/casawp/Form/ContactForm.php:193
-msgid "Message"
-msgstr "Messaggio"
 
 #: modules/casawp/src/casawp/Form/FilterForm.php:84
 #: modules/casawp/src/casawp/Form/FilterForm.php:93
@@ -3594,14 +4059,6 @@ msgstr ""
 msgid "Choose order direction"
 msgstr ""
 
-#: modules/casawp/src/casawp/Form/FilterForm.php:272
-msgid "Ascending"
-msgstr ""
-
-#: modules/casawp/src/casawp/Form/FilterForm.php:273
-msgid "Descending"
-msgstr ""
-
 #: modules/casawp/src/casawp/Service/FormService.php:313
 msgid "I am interested concerning this property. Please contact me."
 msgstr ""
@@ -3647,10 +4104,6 @@ msgstr "Acconto spese:"
 msgid "Rent price"
 msgstr "Canone d'affitto"
 
-#: modules/casawp/src/casawp/Service/Offer.php:1030
-msgid "Available from"
-msgstr "Disponibile da"
-
 #: options.php:161
 msgid "Einstellungen gespeichert.."
 msgstr ""
@@ -3691,12 +4144,6 @@ msgstr "Disponibile da:"
 #: theme-defaults/casawp/bootstrap4/datatable.phtml:1
 msgid "Offer"
 msgstr "Offerta"
-
-#: theme-defaults/casawp/bootstrap2/datatable.phtml:10
-#: theme-defaults/casawp/bootstrap3/datatable.phtml:10
-#: theme-defaults/casawp/bootstrap4/datatable.phtml:10
-msgid "Features"
-msgstr "Caratteristiche"
 
 #: theme-defaults/casawp/bootstrap2/datatable.phtml:18
 #: theme-defaults/casawp/bootstrap3/casadistance.phtml:2
