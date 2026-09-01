@@ -3,7 +3,7 @@ Contributors: casasoft
 Donate link: https://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML, SwissRETS
 Requires at least: 4.0.0
-Tested up to: 6.9.4
+Tested up to: 7.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2

@@ -17,13 +17,13 @@ Use this skill for changes to the CASAWP plugin.
 
 ## Release Version Consistency
 
-Keep the update service aligned with the installed plugin on every CASAWP change. Use the `Version` header in `casawp.php` as the canonical plugin version, then ensure these values are identical before committing or publishing:
+When changing the CASAWP plugin version, use the `Version` header in `casawp.php` as the canonical value. Update the following release metadata in the same change before committing or publishing:
 
 - `casawp.php`: the `Version` header and `$plugin_current_version`
-- `README.txt`: `Stable tag`
-- `distribution/wp.casasoft.com/casawp/update.php`: `$obj->new_version`
+- `README.txt`: `Stable tag`, `Tested up to`, and the matching changelog entry
+- `distribution/wp.casasoft.com/casawp/update.php`: `$obj->new_version`, `$obj->tested`, and `$obj->last_updated`
 
-When intentionally releasing a new version, update all of the above in the same change and add the matching `README.txt` changelog entry. Do not publish if any of the version declarations differ.
+Set `$obj->last_updated` to the change date as a `YYYY-MM-DD` string. Verify the latest stable WordPress release from the official WordPress download page, then use that exact version for both `Tested up to` and `$obj->tested`; CASAWP changes are tested against the current WordPress release. Do not publish if any synchronized version or compatibility declarations differ.
 
 ## Compatibility First
 
