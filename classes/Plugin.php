@@ -2306,9 +2306,7 @@ class Plugin
             if ($this->featureService->keyExists($tax_term->slug)) {
                 $feature = $this->featureService->getItem($tax_term->slug);
             } else {
-                $feature = new \CasasoftStandards\Service\Feature();
-                $feature->setKey($tax_term->slug);
-                $feature->setLabel('?' . $tax_term->slug);
+                continue;
             }
 
             $featureObjects[$tax_term->slug] = $feature;

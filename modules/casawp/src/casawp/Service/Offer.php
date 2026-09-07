@@ -334,15 +334,10 @@ class Offer{
     public function getFeatures(){
         if ($this->features === null) {
             $this->features = array();
-            $terms = wp_get_post_terms( $this->post->ID, 'casawp_feature', array("fields" => "names"));
-            foreach ($terms as $termName) {
-                if ($this->featureService->keyExists($termName)) {
-                    $this->features[] = $this->featureService->getItem($termName);
-                } else {
-                    $unknown_feature = new \CasasoftStandards\Service\Feature();
-                    $unknown_feature->setKey($termName);
-                    $unknown_feature->setLabel('?'.$termName);
-                    $this->features[] = $unknown_feature;
+            $terms = wp_get_post_terms($this->post->ID, 'casawp_feature');
+            foreach ($terms as $term) {
+                if ($this->featureService->keyExists($term->slug)) {
+                    $this->features[] = $this->featureService->getItem($term->slug);
                 }
             }
         }

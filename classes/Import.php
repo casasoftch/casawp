@@ -65,6 +65,7 @@ class Import
   private const MEDIA_SYNC_SCHEMA_VERSION = 1;
   private const CLEANUP_BATCH_SIZE = 10;
   private const CLEANUP_TIME_LIMIT = 45;
+  private const SKIPPED_FEATURE_SLUGS = array('has-evelator');
 
   public $importFile = false;
   public $main_lang = false;
@@ -3362,7 +3363,7 @@ class Import
       $old_features = array();
     }
 
-    $new_features = !empty($features) ? $features : array();
+    $new_features = $this->filterSkippedFeatures($features);
 
     if (array_diff($new_features, $old_features) || array_diff($old_features, $new_features)) {
       $slugs_to_add = array_diff($new_features, $old_features);
@@ -3406,6 +3407,22 @@ class Import
       update_post_meta( $wp_post->ID, '_hash_features', implode( '|', $slugs ) );
 
     }
+  }
+
+  /**
+   * Exclude known invalid feature identifiers sent by upstream systems.
+   *
+   * Keeping this here also removes an already-imported invalid term during
+   * the next successful import of the affected property.
+   */
+  private function filterSkippedFeatures($features)
+  {
+    return array_values(array_filter(
+      !empty($features) ? (array) $features : array(),
+      static function ($feature) {
+        return !in_array(trim((string) $feature), self::SKIPPED_FEATURE_SLUGS, true);
+      }
+    ));
   }
 
   public function setOfferUtilities($wp_post, $utilities, $casawp_id)
@@ -3710,6 +3727,7 @@ class Import
         $propertydata['features'][] = $xml_feature->__toString();
       }
     }
+    $propertydata['features'] = $this->filterSkippedFeatures($propertydata['features']);
 
     if ($property_xml->seller) {
 
