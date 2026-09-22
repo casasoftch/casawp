@@ -7,7 +7,7 @@ Tested up to: 7.1
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.4.9
+Stable tag: 3.5.0
 
 Import your properties directly from your real-estate management software!
 
@@ -40,6 +40,10 @@ How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
 == Changelog ==
+
+= 3.5.0 =
+
+* New: Route Flatfox property inquiries directly in REMCAT format
 
 = 3.4.9 =
 

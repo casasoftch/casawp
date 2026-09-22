@@ -1,6 +1,6 @@
 ---
 name: casawp-development
-description: Maintain the CASAWP WordPress plugin, especially its settings-page labels and translations, while preserving compatibility for existing sites.
+description: Maintain the CASAWP WordPress plugin, including its frontend and settings-page translations, while preserving compatibility for existing sites.
 ---
 
 # CASAWP Development
@@ -10,10 +10,11 @@ Use this skill for changes to the CASAWP plugin.
 ## Localization
 
 - Use English as the source language for every new or edited UI label.
-- Make every settings-page label and standardized frontend label translatable with the plugin's `casawp` text domain.
+- Make every new or edited plugin-owned user-facing string translatable with the `casawp` text domain. This includes frontend templates, form messages, validation and delivery errors, success notices, shortcodes, and settings-page labels; it does not include imported property content.
 - Maintain translations only for the supported locales: `de_DE`, `en_US`, `fr_FR`, and `it_IT`.
 - The WordPress admin UI in scope is CASAWP's dedicated settings page. Post-type and taxonomy labels are import-managed and are not ordinary WordPress admin UI; do not change them unless the user explicitly asks.
-- When changing settings-page text, update the matching `languages/casawp-{locale}.po` catalogs and compile their `.mo` files. `options.php` also uses the `casawp_settings_text()` helper; include it as an extraction keyword when rebuilding its catalog entries.
+- Whenever an in-scope user-facing string is added or edited, update the matching `languages/casawp-{locale}.po` catalogs, provide a translation for every supported locale, compile their `.mo` files, and verify the compiled catalogs contain the expected translations. Do not rely on source-language fallback for `en_US`.
+- `options.php` also uses the `casawp_settings_text()` helper; include it as an extraction keyword when rebuilding settings-page catalog entries.
 
 ## Release Version Consistency
 

@@ -805,7 +805,8 @@ class Plugin
             'offer' => $offer,
             'project' => $project,
             'sent' => $formResult['sent'],
-            'invalidCaptcha' => $formResult['invalidCaptcha']
+            'invalidCaptcha' => $formResult['invalidCaptcha'],
+            'sendError' => $formResult['sendError']
         ));
         return $result;
     }

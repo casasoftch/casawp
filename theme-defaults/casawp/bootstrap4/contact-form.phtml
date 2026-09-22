@@ -1,6 +1,9 @@
 <?php if ($sent): ?>
 	<p class="alert alert-success">Danke Ihre Nachricht wurde versendet.</p>
 <?php else: ?>
+	<?php if (!empty($sendError)): ?>
+		<p class="alert alert-danger" role="alert"><?= esc_html__("Your message could not be sent. Please try again later.", "casawp") ?></p>
+	<?php endif; ?>
 
 	<?php $renderobject = ($this->offer ? $this->offer : $this->casawp); ?>
 

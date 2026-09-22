@@ -1187,7 +1187,8 @@ class Offer{
             'form' => $formResult['form'],
             'offer' => $this,
             'sent' => $formResult['sent'],
-            'invalidCaptcha' => $formResult['invalidCaptcha']
+            'invalidCaptcha' => $formResult['invalidCaptcha'],
+            'sendError' => $formResult['sendError']
         ));
     }
 
