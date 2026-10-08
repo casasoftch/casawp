@@ -22,6 +22,12 @@ msgstr ""
 msgid "Please fill out all the fields."
 msgstr ""
 
+#: theme-defaults/casawp/bootstrap2/contact-form.phtml:5
+#: theme-defaults/casawp/bootstrap3/contact-form.phtml:5
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:5
+msgid "Your message could not be sent. Please try again later."
+msgstr "Your message could not be sent. Please try again later."
+
 #: theme-defaults/casawp/bootstrap2/tabable.phtml:3
 #: theme-defaults/casawp/bootstrap3/tabable.phtml:3
 #: theme-defaults/casawp/bootstrap4/tabable.phtml:6

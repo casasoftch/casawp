@@ -1,6 +1,6 @@
 ---
 name: casawp-development
-description: Maintain the CASAWP WordPress plugin, especially its settings-page labels and translations, while preserving compatibility for existing sites.
+description: Maintain the CASAWP WordPress plugin, including its frontend and settings-page translations, while preserving compatibility for existing sites.
 ---
 
 # CASAWP Development
@@ -10,10 +10,14 @@ Use this skill for changes to the CASAWP plugin.
 ## Localization
 
 - Use English as the source language for every new or edited UI label.
-- Make every settings-page label and standardized frontend label translatable with the plugin's `casawp` text domain.
+- Make every new or edited plugin-owned user-facing string translatable with the `casawp` text domain. This includes frontend templates, form messages, validation and delivery errors, success notices, shortcodes, and settings-page labels; it does not include imported property content.
 - Maintain translations only for the supported locales: `de_DE`, `en_US`, `fr_FR`, and `it_IT`.
+- German Swiss locales `de_CH` and `de_CH_informal` use derived binary aliases of `casawp-de_DE.mo`. Refresh these with `distribution/wp.casasoft.com/casawp/build-release.py` after compiling the German catalog; do not maintain duplicate PO sources or change imported language codes.
+- Ship CasasoftStandards locale aliases as real MO files, never symlinks. Use the release builder to refresh and validate them while preserving the existing canonical catalogs.
+- Preserve the independent CasasoftStandards `en_US.mo` catalog; it contains additional translations and must not be overwritten with `en.mo`.
 - The WordPress admin UI in scope is CASAWP's dedicated settings page. Post-type and taxonomy labels are import-managed and are not ordinary WordPress admin UI; do not change them unless the user explicitly asks.
-- When changing settings-page text, update the matching `languages/casawp-{locale}.po` catalogs and compile their `.mo` files. `options.php` also uses the `casawp_settings_text()` helper; include it as an extraction keyword when rebuilding its catalog entries.
+- Whenever an in-scope user-facing string is added or edited, update the matching `languages/casawp-{locale}.po` catalogs, provide a translation for every supported locale, compile their `.mo` files, and verify the compiled catalogs contain the expected translations. Do not rely on source-language fallback for `en_US`.
+- `options.php` also uses the `casawp_settings_text()` helper; include it as an extraction keyword when rebuilding settings-page catalog entries.
 
 ## Release Version Consistency
 

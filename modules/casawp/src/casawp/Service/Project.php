@@ -459,7 +459,9 @@ class Project{
         return $this->render('contact-form', array(
         	'form' => $formResult['form'],
         	'offer' => $this,
-        	'sent' => $formResult['sent']
+	        'sent' => $formResult['sent'],
+	        'invalidCaptcha' => $formResult['invalidCaptcha'],
+	        'sendError' => $formResult['sendError']
         ));
     }
 

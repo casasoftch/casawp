@@ -132,6 +132,11 @@ if (isset($_POST['casawp_submit'])) {
 				'casawp_form_dataprotection_checkbox'
 			);
 			break;
+		case 'private':
+		case 'logs':
+			// These tabs have no checkboxes to reset.
+			$checkbox_traps = array();
+			break;
 		case 'general':
 		default:
 			$checkbox_traps = array(
@@ -150,15 +155,15 @@ if (isset($_POST['casawp_submit'])) {
 				'casawp_after_content',
 				'casawp_legacy'
 			);
+
+			// Clear dependent general settings only when saving this tab.
+			if (get_option('casawp_request_per_remcat') == false) {
+				update_option('casawp_remCat_email', '');
+			}
+			if (get_option('casawp_request_per_mail_fallback') == false) {
+				update_option('casawp_request_per_mail_fallback_value', '');
+			}
 			break;
-	}
-	
-	//reset
-	if (get_option('casawp_request_per_remcat') == false) {
-		update_option('casawp_remCat_email', '');
-	}
-	if (get_option('casawp_request_per_mail_fallback') == false) {
-		update_option('casawp_request_per_mail_fallback_value', '');
 	}
 
 	foreach ($checkbox_traps as $trap) {

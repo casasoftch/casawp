@@ -4127,6 +4127,12 @@ msgstr "Liste des projets"
 msgid "Please fill out all the fields."
 msgstr "* Champs obligatoires"
 
+#: theme-defaults/casawp/bootstrap2/contact-form.phtml:5
+#: theme-defaults/casawp/bootstrap3/contact-form.phtml:5
+#: theme-defaults/casawp/bootstrap4/contact-form.phtml:5
+msgid "Your message could not be sent. Please try again later."
+msgstr "Votre message n'a pas pu être envoyé. Veuillez réessayer plus tard."
+
 #: theme-defaults/casawp/bootstrap2/contact-form.phtml:36
 #: theme-defaults/casawp/bootstrap3/contact-form.phtml:99
 #: theme-defaults/casawp/bootstrap4/contact-form.phtml:127
