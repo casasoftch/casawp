@@ -20,7 +20,6 @@ ALIASES = {
     STANDARDS + 'de_CH.mo': STANDARDS + 'de.mo',
     STANDARDS + 'de_CH_informal.mo': STANDARDS + 'de.mo',
     STANDARDS + 'en_GB.mo': STANDARDS + 'en.mo',
-    STANDARDS + 'en_US.mo': STANDARDS + 'en.mo',
     STANDARDS + 'es_ES.mo': STANDARDS + 'es.mo',
     STANDARDS + 'fr.mo': STANDARDS + 'fr_FR.mo',
     STANDARDS + 'fr_CH.mo': STANDARDS + 'fr_FR.mo',

@@ -9,6 +9,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class HeatService {
 
+    private $translator;
+
     public $items = [];
     private $groups = null;
 

@@ -14,6 +14,7 @@ Use this skill for changes to the CASAWP plugin.
 - Maintain translations only for the supported locales: `de_DE`, `en_US`, `fr_FR`, and `it_IT`.
 - German Swiss locales `de_CH` and `de_CH_informal` use derived binary aliases of `casawp-de_DE.mo`. Refresh these with `distribution/wp.casasoft.com/casawp/build-release.py` after compiling the German catalog; do not maintain duplicate PO sources or change imported language codes.
 - Ship CasasoftStandards locale aliases as real MO files, never symlinks. Use the release builder to refresh and validate them while preserving the existing canonical catalogs.
+- Preserve the independent CasasoftStandards `en_US.mo` catalog; it contains additional translations and must not be overwritten with `en.mo`.
 - The WordPress admin UI in scope is CASAWP's dedicated settings page. Post-type and taxonomy labels are import-managed and are not ordinary WordPress admin UI; do not change them unless the user explicitly asks.
 - Whenever an in-scope user-facing string is added or edited, update the matching `languages/casawp-{locale}.po` catalogs, provide a translation for every supported locale, compile their `.mo` files, and verify the compiled catalogs contain the expected translations. Do not rely on source-language fallback for `en_US`.
 - `options.php` also uses the `casawp_settings_text()` helper; include it as an extraction keyword when rebuilding settings-page catalog entries.

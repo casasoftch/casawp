@@ -34,6 +34,10 @@ The maintained WordPress translation sources remain `de_DE`, `en_US`,
 not separately maintained translations. Existing locale catalogs are not
 rewritten. Object content and imported language codes are unchanged.
 
+CasasoftStandards `en_US.mo` is an independently maintained catalog with
+additional translations. Preserve it as a real file; do not regenerate it
+from the smaller `en.mo` catalog.
+
 The bundled CasasoftStandards regional aliases are also real binary copies,
 not symlinks. Its missing `fr.mo` is derived from the existing `fr_FR.mo`.
 Keep these copies in Git so source ZIPs also contain usable files. Do not run

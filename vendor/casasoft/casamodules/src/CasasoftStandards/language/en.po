@@ -1783,6 +1783,21 @@ msgstr "Squash badminton"
 msgid "Storage room"
 msgstr "Storage room"
 
+msgid "Photovoltaic"
+msgstr "Photovoltaic"
+
+msgid "Water connection"
+msgstr "Water connection"
+
+msgid "Sewage connection"
+msgstr "Sewage connection"
+
+msgid "Power connection"
+msgstr "Power connection"
+
+msgid "First time occupied"
+msgstr "First time occupied"
+
 #:
 msgid "Minergie A"
 msgstr "Minergie-A"
@@ -2046,6 +2061,5 @@ msgstr "Squash badminton"
 #: 
 msgid "Storage room"
 msgstr "Storage room"
-
 
 
