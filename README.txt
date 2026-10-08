@@ -3,11 +3,11 @@ Contributors: casasoft
 Donate link: https://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML, SwissRETS
 Requires at least: 4.0.0
-Tested up to: 7.1
+Tested up to: 7.1.3
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 
 Import your properties directly from your real-estate management software!
 
@@ -40,6 +40,13 @@ How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
 == Changelog ==
+
+= 3.5.1 =
+
+* Fix: Preserve general settings, including custom slug and language, when saving Protected properties or Logs
+* Fix: Preserve general email settings when saving other tabs
+* Fix: Support German (Switzerland) with the existing German plugin translations
+* Fix: Ship regional translation catalogs as real files to prevent gettext errors after installation
 
 = 3.5.0 =
 
