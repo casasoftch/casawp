@@ -7,7 +7,7 @@ Tested up to: 7.1.3
 Author: Casasoft AG
 Author URI: https://casasoft.ch
 License: GPL2
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 
 Import your properties directly from your real-estate management software!
 
@@ -40,6 +40,12 @@ How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
 == Changelog ==
+
+= 3.5.2 =
+
+* Fix: Cache failed remote media downloads across properties and languages to avoid repeated requests to unavailable sources
+* Fix: Apply explicit remote media download timeouts and log failure status, duration, and retry cooldown
+* Fix: Discard failed or empty downloads before they can become local media files
 
 = 3.5.1 =
 

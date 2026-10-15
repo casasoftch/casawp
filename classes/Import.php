@@ -77,6 +77,8 @@ class Import
   private $ranksort = array();
 
   private int $current_run_id = 0;
+  private string $media_download_error = '';
+  private array $logged_media_failure_skips = [];
 
   public function __construct($casagatewaypoke = false, $casagatewayupdate = false)
   {
@@ -2584,6 +2586,10 @@ class Import
 
   public function casawpUploadAttachmentFromGateway($property_id, $fileurl)
   {
+    $this->media_download_error = '';
+    $download_source = strpos($fileurl, '://') ? urldecode($fileurl) : $fileurl;
+    $is_remote = $this->isRemoteMediaUrl($download_source);
+
     if (strpos($fileurl, '://')) {
       $parsed_url = parse_url(urldecode($fileurl));
     } else {
@@ -2621,9 +2627,32 @@ class Import
 
     $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
 
+    // A working local copy remains usable even while this URL has a cooldown.
+    if (is_file($full_path)) {
+      return $filename;
+    }
+
+    if ($is_remote) {
+      $cache_key = $this->mediaFailureCacheKey($download_source);
+      $failure = get_transient($cache_key);
+      if (is_array($failure) && (int) ($failure['retry_at'] ?? 0) > time()) {
+        $this->media_download_error = sprintf(
+          'Download skipped: cached %s; retry after %s',
+          $failure['error_code'],
+          gmdate('c', (int) $failure['retry_at'])
+        );
+        if (!isset($this->logged_media_failure_skips[$cache_key])) {
+          $this->addToLog('Remote media cooldown for requested URL: ' . $download_source . ' - ' . $this->media_download_error);
+          $this->logged_media_failure_skips[$cache_key] = true;
+        }
+        return false;
+      }
+    }
+
     $directory = dirname($full_path);
     if (!is_dir($directory)) {
       if (!mkdir($directory, 0755, true)) {
+        $this->media_download_error = 'Could not create media download directory';
         return false;
       }
     }
@@ -2634,10 +2663,10 @@ class Import
       }
       $this->transcript['attachments'][$property_id]["uploaded_from_gateway"][] = $filename;
 
-      if (strpos($fileurl, '://')) {
-        $could_copy = copy(urldecode($fileurl), $full_path);
+      if ($is_remote) {
+        $could_copy = $this->downloadRemoteMedia($download_source, $full_path);
       } else {
-        $could_copy = copy($fileurl, $full_path);
+        $could_copy = copy($download_source, $full_path);
       }
 
       if (!$could_copy) {
@@ -2647,6 +2676,95 @@ class Import
     }
 
     return $filename;
+  }
+
+  private function mediaFailureCacheKey(string $url): string
+  {
+    // Stay below the 45-character transient key limit in older WordPress versions.
+    return 'casawp_mfail_' . md5($url);
+  }
+
+  private function cacheMediaDownloadFailure(string $url, int $status, string $error_code, string $message, float $started_at): void
+  {
+    $default_ttl = in_array($status, [404, 410], true) ? 86400 : 900;
+    $ttl = max(1, (int) apply_filters('casawp_media_failure_cache_ttl', $default_ttl, $status, $error_code, $url));
+    $retry_at = time() + $ttl;
+    set_transient($this->mediaFailureCacheKey($url), [
+      'http_status' => $status,
+      'error_code'  => $error_code,
+      'retry_at'    => $retry_at,
+    ], $ttl);
+
+    $this->media_download_error = sprintf('%s: %s; retry after %s', $error_code, $message, gmdate('c', $retry_at));
+    $this->addToLog(sprintf(
+      'Remote media download failed for requested URL: %s status: %d duration: %.2fs reason: %s',
+      $url,
+      $status,
+      microtime(true) - $started_at,
+      $this->media_download_error
+    ));
+  }
+
+  private function downloadRemoteMedia(string $url, string $full_path): bool
+  {
+    // Use the destination filesystem so the completed download can be renamed atomically.
+    $temporary_path = tempnam(dirname($full_path), '.casawp-');
+    if ($temporary_path === false) {
+      $this->media_download_error = 'Could not create temporary media download file';
+      return false;
+    }
+    if (realpath(dirname($temporary_path)) !== realpath(dirname($full_path))) {
+      unlink($temporary_path);
+      $this->media_download_error = 'Could not create temporary media download file in the destination directory';
+      return false;
+    }
+
+    $started_at = microtime(true);
+    try {
+      $timeout = max(1, (int) apply_filters('casawp_media_download_timeout', 15, $url));
+      $response = wp_safe_remote_get($url, [
+        'timeout'     => $timeout,
+        'redirection' => 3,
+        'stream'      => true,
+        'filename'    => $temporary_path,
+      ]);
+
+      if (is_wp_error($response)) {
+        $this->cacheMediaDownloadFailure($url, 0, $response->get_error_code(), $response->get_error_message(), $started_at);
+        return false;
+      }
+
+      $status = (int) wp_remote_retrieve_response_code($response);
+      if ($status !== 200) {
+        $this->cacheMediaDownloadFailure($url, $status, 'http_' . $status, wp_remote_retrieve_response_message($response), $started_at);
+        return false;
+      }
+
+      clearstatcache(true, $temporary_path);
+      if (!is_file($temporary_path) || filesize($temporary_path) === 0) {
+        $this->cacheMediaDownloadFailure($url, $status, 'empty_file', 'Downloaded media file is empty', $started_at);
+        return false;
+      }
+
+      // tempnam() creates private files; match WordPress upload permissions before publishing.
+      $directory_permissions = fileperms(dirname($full_path));
+      if ($directory_permissions === false || !chmod($temporary_path, $directory_permissions & 0666)) {
+        $this->media_download_error = 'Could not set media download file permissions';
+        return false;
+      }
+
+      if (!rename($temporary_path, $full_path)) {
+        $this->media_download_error = 'Could not move completed media download into place';
+        return false;
+      }
+
+      delete_transient($this->mediaFailureCacheKey($url));
+      return true;
+    } finally {
+      if (is_file($temporary_path)) {
+        unlink($temporary_path);
+      }
+    }
   }
 
   private function getAttachmentTypeTermBySlug(string $slug)
@@ -2752,7 +2870,7 @@ class Import
       }
 
       if (!$filename) {
-          return 'File could not be downloaded';
+          return $this->media_download_error ?: 'File could not be downloaded';
       }
 
       $full_path = CASASYNC_CUR_UPLOAD_BASEDIR . $filename;
