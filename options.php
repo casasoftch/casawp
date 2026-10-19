@@ -1306,22 +1306,29 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<label class="block-label"></label>
 						<?php
 						$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
+						$logs_url = CASASYNC_CUR_UPLOAD_BASEURL . '/casawp/logs';
 
-						$log = '/wp-content/uploads/casawp/logs' . "/" . date('Ym') . '.log';
+						$log = $logs_url . '/' . date('Ym') . '.log';
 
-						echo '<a href="' . $log . '" target="_blank">' . $log . '</a><br>';
+						echo '<a href="' . esc_url($log) . '" target="_blank">' . esc_html($log) . '</a><br>';
 
 						for ($i = 1; $i <= 6; $i++) {
-							$months[] = date("Ym%", strtotime(date('Y-m-01') . " -$i months"));
+							$filename = date('Ym', strtotime(date('Y-m-01') . " -$i months")) . '.log';
+							$log = $logs_url . '/' . $filename;
 
-							$log = '/wp-content/uploads/casawp/logs' . "/" . date("Ym", strtotime(date('Y-m-01') . " -$i months")) . '.log';
-
-							if (file_exists(ABSPATH . $log)) {
-								echo '<a href="' . $log . '" target="_blank">' . $log . '</a><br>';
+							if (file_exists($dir . '/' . $filename)) {
+								echo '<a href="' . esc_url($log) . '" target="_blank">' . esc_html($log) . '</a><br>';
 							}
 						}
 						?>
 
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php echo casawp_settings_text('Import XML'); ?></th>
+					<td>
+						<?php $xml_url = CASASYNC_CUR_UPLOAD_BASEURL . '/casawp/import/data.xml'; ?>
+						<a href="<?php echo esc_url($xml_url); ?>" target="_blank"><?php echo esc_html($xml_url); ?></a>
 					</td>
 				</tr>
 				<?php echo $table_end; ?>
