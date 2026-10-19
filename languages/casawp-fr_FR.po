@@ -628,7 +628,7 @@ msgstr ""
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 #: action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 msgid "Action statuses are Pending, Complete, Canceled, Failed"
@@ -4359,3 +4359,60 @@ msgstr "J’accepte les conditions générales et la politique de confidentialit
 
 #~ msgid "Extra Costs"
 #~ msgstr "Charges"
+
+
+#: classes/Plugin.php
+msgid "Attached images and files"
+msgstr "Images et fichiers joints"
+
+
+#: classes/Plugin.php
+msgid "No media is attached to this property."
+msgstr "Aucun média n’est joint à ce bien."
+
+
+#: classes/Plugin.php
+msgid "This overview includes all media attached to this property, regardless of attachment type."
+msgstr "Cet aperçu affiche tous les médias joints à ce bien, quel que soit leur type."
+
+
+#: classes/Plugin.php
+#. translators: 1: number of attached media items, 2: number classified as images.
+#, php-format
+msgid "Attached media: %1$d. Classified as images: %2$d."
+msgstr "Médias joints : %1$d. Classés comme images : %2$d."
+
+
+#: classes/Plugin.php
+msgid "Preview"
+msgstr "Aperçu"
+
+
+#: classes/Plugin.php
+msgid "Attachment"
+msgstr "Pièce jointe"
+
+
+#: classes/Plugin.php
+msgid "Attachment type"
+msgstr "Type de pièce jointe"
+
+
+#: classes/Plugin.php
+msgid "Order"
+msgstr "Ordre"
+
+
+#: classes/Plugin.php
+msgid "Source"
+msgstr "Source"
+
+
+#: classes/Plugin.php
+msgid "Unassigned"
+msgstr "Non attribué"
+
+
+#: classes/Plugin.php
+msgid "Not classified as an image"
+msgstr "Non classé comme image"

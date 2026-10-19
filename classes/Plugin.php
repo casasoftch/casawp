@@ -101,9 +101,9 @@ class Plugin
         add_shortcode('casawp_properties', array($this, 'properties_shortcode'));
 
         add_action('init', array($this, 'setPostTypes'));
-        if (function_exists('acf_add_local_field_group')):
-            add_action('init', array($this, 'setACF'));
-        endif;
+        // ACF may be loaded by a later plugin or the theme; check availability at init.
+        add_action('init', array($this, 'setACF'));
+        add_action('add_meta_boxes_casawp_property', array($this, 'casawp_property_custom_metaboxes'));
 
 
         add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
@@ -2716,10 +2716,11 @@ class Plugin
 
     public function setACF()
     {
+        if (!function_exists('acf_add_local_field_group')) {
+            return;
+        }
+
         $used = array();
-
-        add_action('add_meta_boxes_casawp_property', array($this, 'casawp_property_custom_metaboxes'), 10, 2);
-
         foreach ($this->numvalService->getTemplate() as $group => $groupsettings) {
             $fields = array();
 
@@ -3788,6 +3789,89 @@ class Plugin
     function casawp_property_custom_metaboxes($post)
     {
         add_meta_box('unsorted-metas', __('Additional Meta Fields'),  array($this, 'casawp_add_unsorted_metabox'), 'casawp_property', 'normal', 'high');
+        add_meta_box('casawp-attached-media', __('Attached images and files', 'casawp'), array($this, 'casawp_add_attached_media_metabox'), 'casawp_property', 'normal', 'low');
+    }
+
+    public function casawp_add_attached_media_metabox($post)
+    {
+        // Do not filter by attachment type: incorrect or missing terms must remain visible here.
+        $attachments = get_posts(array(
+            'post_type'        => 'attachment',
+            'post_parent'      => (int) $post->ID,
+            'post_status'      => 'any',
+            'posts_per_page'   => -1,
+            'orderby'          => array('menu_order' => 'ASC', 'ID' => 'ASC'),
+            'suppress_filters' => true,
+        ));
+
+        if (!$attachments) {
+            echo '<p>' . esc_html__('No media is attached to this property.', 'casawp') . '</p>';
+            return;
+        }
+
+        $rows = array();
+        $image_count = 0;
+        foreach ($attachments as $attachment) {
+            $terms = get_the_terms($attachment->ID, 'casawp_attachment_type');
+            $types = ($terms && !is_wp_error($terms)) ? wp_list_pluck($terms, 'slug') : array();
+            $is_gallery_image = in_array('image', $types, true);
+            if ($is_gallery_image) {
+                $image_count++;
+            }
+            $rows[] = array($attachment, $types, $is_gallery_image);
+        }
+
+        echo '<p>' . esc_html__('This overview includes all media attached to this property, regardless of attachment type.', 'casawp') . '</p>';
+        echo '<p><strong>' . esc_html(sprintf(
+            /* translators: 1: number of attached media items, 2: number classified as images. */
+            __('Attached media: %1$d. Classified as images: %2$d.', 'casawp'),
+            count($attachments),
+            $image_count
+        )) . '</strong></p>';
+
+        echo '<div style="overflow-x:auto"><table class="widefat striped"><thead><tr>';
+        foreach (array(
+            __('Preview', 'casawp'),
+            __('Attachment', 'casawp'),
+            __('Attachment type', 'casawp'),
+            __('Status', 'casawp'),
+            __('Order', 'casawp'),
+            __('Source', 'casawp'),
+        ) as $heading) {
+            echo '<th scope="col">' . esc_html($heading) . '</th>';
+        }
+        echo '</tr></thead><tbody>';
+
+        foreach ($rows as list($attachment, $types, $is_gallery_image)) {
+            $attachment_id = (int) $attachment->ID;
+            $url = wp_get_attachment_url($attachment_id);
+            $origin = (string) get_post_meta($attachment_id, '_origin', true);
+            $edit_url = get_edit_post_link($attachment_id);
+            $title = $attachment->post_title !== '' ? $attachment->post_title : '#' . $attachment_id;
+
+            echo '<tr><td style="width:120px">';
+            echo wp_get_attachment_image($attachment_id, array(120, 90), true, array('style' => 'max-width:120px;height:auto;'));
+            echo '</td><td>';
+            if ($edit_url) {
+                echo '<a href="' . esc_url($edit_url) . '">' . esc_html($title) . '</a>';
+            } else {
+                echo esc_html($title);
+            }
+            echo '<br><code>' . esc_html__('ID', 'casawp') . ': ' . $attachment_id . '</code><br>' . esc_html($attachment->post_mime_type);
+            echo '</td><td>';
+            echo $types ? esc_html(implode(', ', $types)) : esc_html__('Unassigned', 'casawp');
+            if (!$is_gallery_image && strpos($attachment->post_mime_type, 'image/') === 0) {
+                echo '<br><strong>' . esc_html__('Not classified as an image', 'casawp') . '</strong>';
+            }
+            echo '</td><td>' . esc_html($attachment->post_status) . '</td>';
+            echo '<td>' . (int) $attachment->menu_order . '</td><td style="overflow-wrap:anywhere">';
+            $source = $origin !== '' ? $origin : $url;
+            if ($source) {
+                echo '<a href="' . esc_url($source) . '" target="_blank" rel="noopener noreferrer">' . esc_html($source) . '</a>';
+            }
+            echo '</td></tr>';
+        }
+        echo '</tbody></table></div>';
     }
 
     function casawp_add_unsorted_metabox($post)

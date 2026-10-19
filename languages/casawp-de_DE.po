@@ -623,7 +623,7 @@ msgstr ""
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 #: action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 msgid "Action statuses are Pending, Complete, Canceled, Failed"
@@ -4393,3 +4393,60 @@ msgstr ""
 
 #~ msgid "Guest toilets"
 #~ msgstr "Gäste WC"
+
+
+#: classes/Plugin.php
+msgid "Attached images and files"
+msgstr "Angehängte Bilder und Dateien"
+
+
+#: classes/Plugin.php
+msgid "No media is attached to this property."
+msgstr "Diesem Objekt sind keine Medien angehängt."
+
+
+#: classes/Plugin.php
+msgid "This overview includes all media attached to this property, regardless of attachment type."
+msgstr "Diese Übersicht zeigt alle diesem Objekt angehängten Medien, unabhängig vom Anhangstyp."
+
+
+#: classes/Plugin.php
+#. translators: 1: number of attached media items, 2: number classified as images.
+#, php-format
+msgid "Attached media: %1$d. Classified as images: %2$d."
+msgstr "Angehängte Medien: %1$d. Als Bilder zugeordnet: %2$d."
+
+
+#: classes/Plugin.php
+msgid "Preview"
+msgstr "Vorschau"
+
+
+#: classes/Plugin.php
+msgid "Attachment"
+msgstr "Anhang"
+
+
+#: classes/Plugin.php
+msgid "Attachment type"
+msgstr "Anhangstyp"
+
+
+#: classes/Plugin.php
+msgid "Order"
+msgstr "Reihenfolge"
+
+
+#: classes/Plugin.php
+msgid "Source"
+msgstr "Quelle"
+
+
+#: classes/Plugin.php
+msgid "Unassigned"
+msgstr "Nicht zugeordnet"
+
+
+#: classes/Plugin.php
+msgid "Not classified as an image"
+msgstr "Nicht als Bild zugeordnet"

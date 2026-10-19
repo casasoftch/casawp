@@ -3476,7 +3476,7 @@ msgstr ""
 
 #: options.php:1821
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: options.php:1827
 msgid "Show on website"
@@ -3485,3 +3485,65 @@ msgstr ""
 #: options.php:1875
 msgid "Save changes"
 msgstr ""
+
+
+#: classes/Plugin.php
+msgid "Attached images and files"
+msgstr "Attached images and files"
+
+
+#: classes/Plugin.php
+msgid "No media is attached to this property."
+msgstr "No media is attached to this property."
+
+
+#: classes/Plugin.php
+msgid "This overview includes all media attached to this property, regardless of attachment type."
+msgstr "This overview includes all media attached to this property, regardless of attachment type."
+
+
+#: classes/Plugin.php
+#. translators: 1: number of attached media items, 2: number classified as images.
+#, php-format
+msgid "Attached media: %1$d. Classified as images: %2$d."
+msgstr "Attached media: %1$d. Classified as images: %2$d."
+
+
+#: classes/Plugin.php
+msgid "Preview"
+msgstr "Preview"
+
+
+#: classes/Plugin.php
+msgid "Attachment"
+msgstr "Attachment"
+
+
+#: classes/Plugin.php
+msgid "Attachment type"
+msgstr "Attachment type"
+
+
+#: classes/Plugin.php
+msgid "Status"
+msgstr "Status"
+
+
+#: classes/Plugin.php
+msgid "Order"
+msgstr "Order"
+
+
+#: classes/Plugin.php
+msgid "Source"
+msgstr "Source"
+
+
+#: classes/Plugin.php
+msgid "Unassigned"
+msgstr "Unassigned"
+
+
+#: classes/Plugin.php
+msgid "Not classified as an image"
+msgstr "Not classified as an image"

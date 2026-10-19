@@ -41,6 +41,12 @@ wp casawp import --url=https://example.com
 
 == Changelog ==
 
+= Unreleased =
+
+* Fix: Keep the Scheduled Actions menu visible when WPForms is active
+* Fix: Load property metaboxes reliably regardless of plugin load order, without requiring WPML reactivation
+* New: Show an attached media overview with previews and image-type assignments below the metaboxes in the property edit screen
+
 = 3.5.2 =
 
 * Fix: Cache failed remote media downloads across properties and languages to avoid repeated requests to unavailable sources

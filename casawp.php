@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 // Include Action Scheduler
 require_once __DIR__ . '/action-scheduler/action-scheduler.php';
 
+// Keep the native Scheduled Actions menu visible when WPForms is active.
+add_filter( 'wpforms_tasks_admin_hide_as_menu', '__return_false' );
+
 // Ensure Action Scheduler is initialized
 add_action('plugins_loaded', function() {
 	if (!class_exists('ActionScheduler')) {
