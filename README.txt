@@ -44,6 +44,7 @@ wp casawp import --url=https://example.com
 = Unreleased =
 
 * Fix: Use the site's uploads directory for log links and older log file checks, including multisite subsites
+* Fix: Use HTTPS for log and XML links when the admin page uses HTTPS to prevent insecure download blocking
 * New: Add a data.xml download link beneath the logs using the site's uploads URL
 * Fix: Keep the Scheduled Actions menu visible when WPForms is active
 * Fix: Load property metaboxes reliably regardless of plugin load order, without requiring WPML reactivation

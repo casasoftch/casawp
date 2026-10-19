@@ -1306,7 +1306,11 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<label class="block-label"></label>
 						<?php
 						$dir = CASASYNC_CUR_UPLOAD_BASEDIR  . '/casawp/logs';
-						$logs_url = CASASYNC_CUR_UPLOAD_BASEURL . '/casawp/logs';
+						$uploads_url = CASASYNC_CUR_UPLOAD_BASEURL;
+						if (is_ssl()) {
+							$uploads_url = set_url_scheme($uploads_url, 'https');
+						}
+						$logs_url = $uploads_url . '/casawp/logs';
 
 						$log = $logs_url . '/' . date('Ym') . '.log';
 
@@ -1327,7 +1331,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Import XML'); ?></th>
 					<td>
-						<?php $xml_url = CASASYNC_CUR_UPLOAD_BASEURL . '/casawp/import/data.xml'; ?>
+						<?php $xml_url = $uploads_url . '/casawp/import/data.xml'; ?>
 						<a href="<?php echo esc_url($xml_url); ?>" target="_blank"><?php echo esc_html($xml_url); ?></a>
 					</td>
 				</tr>
