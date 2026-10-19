@@ -205,3 +205,39 @@ Use the default WordPress login form `wp_login_form()` or copy the sample code b
   ?>
 </div>
 ```
+
+Import diagnostics
+==================
+
+Import logs remain in `wp-content/uploads/casawp/logs/YYYYMM.log` (or the site's uploads directory on multisite). Entries use JSON with a local timestamp including seconds and a message. Successful milestones put batch progress, timings, counts and scheduling details in the message, with compact `_meta` fields for run/batch identity and the event. Repeated feed paths, fingerprints, memory figures and internal stages are omitted from successful milestones. Warnings and errors retain full diagnostics, including precise UTC time, severity, run/request IDs, stage, file/line, feed details and stack frames without argument values. JSON is the only output format; no format setting is needed.
+
+For example, batch milestones read:
+
+```json
+{"2026-10-19 14:21:59":"Import batch 32 scheduled in 13s (action 867).","_meta":{"run_id":1792411575,"batch_number":31,"event":"scheduler.scheduled"}}
+{"2026-10-19 14:21:59":"Import batch 31 finished in 4.202s: 16 offers processed, 12 unchanged offers, 4 metadata updates, 39 attachments updated, 0 errors.","_meta":{"run_id":1792411575,"batch_number":31,"event":"properties_batch.finished"}}
+{"2026-10-19 14:22:55":"Import batch 32 started.","_meta":{"run_id":1792411575,"batch_number":32,"event":"properties_batch.started"}}
+{"2026-10-19 14:22:55":"Import batch 32/164: processing 4 properties (1781010, 1781011, 1781012, 1739179).","_meta":{"run_id":1792411575,"batch_number":32,"event":"batch.processing"}}
+```
+
+Normal logging summarizes routine offer and attachment outcomes per batch. Individual unchanged-property, metadata and attachment messages are available in debug mode, so large imports do not generate a line for every successful operation. Warnings and errors always include their context. Signed URL query values, URL credentials and sensitive structured keys are redacted.
+
+Routine debug entries use the compact original timestamp/message style, without repeating `_meta` on every attachment. A short property heading identifies the property, language, run and batch; successful offer finish entries are omitted. For example:
+
+```json
+{"2026-10-19 12:09:03":"Property 353184 (de) | run 12345, batch 2"}
+{"2026-10-19 12:09:03":"updated casawp attachment 42 origin: https://example.test/image.jpg"}
+{"2026-10-19 12:09:03":"kept casawp attachment 43 origin: https://example.test/plan.pdf"}
+```
+
+Temporarily enable detailed logging in a site plugin when investigating a specific import:
+
+```php
+add_filter('casawp_import_log_level', static function () { return 'debug'; });
+```
+
+Remove the filter after investigating to return to batch summaries.
+
+Active imports record fatal PHP errors, including memory exhaustion and PHP execution timeouts, with the last known stage. A process killed by the server or operating system cannot write a shutdown entry; a batch start without a finish is still useful evidence. If the monthly log cannot be written, the entry falls back to the PHP error log.
+
+Run the standalone logging regression checks with `php tests/import-logging.php`.

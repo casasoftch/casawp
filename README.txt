@@ -39,10 +39,17 @@ Please refer to https://help.casasoft.ch/hc/de/articles/22037480338845-CASAGATEW
 How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
+For detailed import logs, including individual attachments, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
+
+add_filter('casawp_import_log_level', static function () { return 'debug'; });
+
+Remove or deactivate the filter to return to compact batch summaries.
+
 == Changelog ==
 
 = Unreleased =
 
+* Enhancement: Improve JSON import logging with readable batch summaries, run and property context, detailed failure diagnostics, and optional attachment debug logging
 * New: Add a link to trigger a gateway poke for the current site from the General settings tab
 * Fix: Use the site's uploads directory for log links and older log file checks, including multisite subsites
 * Fix: Use HTTPS for log and XML links when the admin page uses HTTPS to prevent insecure download blocking
