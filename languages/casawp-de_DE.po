@@ -10,6 +10,14 @@ msgstr ""
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: options.php
+msgid "Trigger gateway poke"
+msgstr "Gateway-Poke auslösen"
+
+#: options.php
+msgid "Use this button to test the automatic import flow by simulating a CASAGATEWAY poke."
+msgstr "Mit dieser Schaltfläche können Sie den automatischen Importablauf testen, indem Sie einen CASAGATEWAY-Poke simulieren."
+
 msgid "Settings saved."
 msgstr "Einstellungen gespeichert."
 

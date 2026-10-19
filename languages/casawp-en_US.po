@@ -2859,6 +2859,14 @@ msgid "Guest toilets"
 msgstr ""
 
 #: options.php:169
+#: options.php
+msgid "Trigger gateway poke"
+msgstr "Trigger gateway poke"
+
+#: options.php
+msgid "Use this button to test the automatic import flow by simulating a CASAGATEWAY poke."
+msgstr "Use this button to test the automatic import flow by simulating a CASAGATEWAY poke."
+
 msgid "Settings saved."
 msgstr ""
 

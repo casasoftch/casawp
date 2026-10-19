@@ -1767,6 +1767,16 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								</script>
 							<?php endif; ?>
 
+							<?php $gateway_poke_url = add_query_arg('gatewaypoke', '1', home_url('/', is_ssl() ? 'https' : null)); ?>
+							<p style="margin-top: 20px;">
+								<a href="<?php echo esc_url($gateway_poke_url); ?>" class="button button-secondary" aria-describedby="casawp-gateway-poke-description">
+									<?php echo casawp_settings_text('Trigger gateway poke'); ?>
+								</a>
+							</p>
+							<p class="description" id="casawp-gateway-poke-description">
+								<?php echo casawp_settings_text('Use this button to test the automatic import flow by simulating a CASAGATEWAY poke.'); ?>
+							</p>
+
 						</div>
 
 						<?php
