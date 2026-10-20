@@ -6,6 +6,9 @@ namespace casawp;
 class ManualCleanup
 {
     private const STALL_SECONDS = 600;
+    private const RECOVERY_SECONDS = 120;
+    private const MAX_RECOVERY_ATTEMPTS = 5;
+    private const WATCHDOG_HOOK = 'casawp_manual_cleanup_watchdog';
 
     public static function registerHooks(): void
     {
@@ -14,8 +17,94 @@ class ManualCleanup
         add_action('wp_ajax_casawp_stop_cleanup', [self::class, 'ajaxStop']);
         add_action('wp_ajax_casawp_cleanup_status', [self::class, 'ajaxStatus']);
         add_action('casawp_manual_cleanup_batch', [self::class, 'handleBatch'], 10, 2);
+        add_action(self::WATCHDOG_HOOK, [self::class, 'watchdog']);
+        add_action('init', [self::class, 'maintain'], 20);
+        add_filter('cron_schedules', [self::class, 'cronSchedules']);
+        add_filter('action_scheduler_queue_runner_time_limit', [self::class, 'queueTimeLimit'], 20);
+        add_filter('action_scheduler_timeout_period', [self::class, 'queueClaimTimeout']);
+        add_filter('action_scheduler_failure_period', [self::class, 'queueClaimTimeout']);
         foreach (['action_scheduler_failed_execution', 'action_scheduler_failed_action', 'action_scheduler_unexpected_shutdown'] as $hook) {
             add_action($hook, [self::class, 'handleFailure']);
+        }
+    }
+
+    public static function cronSchedules(array $schedules): array
+    {
+        $schedules['casawp_cleanup_minute'] = ['interval' => 60, 'display' => 'CASAWP cleanup recovery'];
+        return $schedules;
+    }
+
+    public static function queueTimeLimit($seconds)
+    {
+        // Leave headroom below the host's web-request timeout, including the async runner's sleep.
+        return !(defined('WP_CLI') && WP_CLI) && self::isRunning() ? min(20, (int) $seconds) : $seconds;
+    }
+
+    public static function queueClaimTimeout($seconds)
+    {
+        // Shorter requests must not prematurely expire claims belonging to other plugins.
+        return self::isRunning() ? max(self::STALL_SECONDS, (int) $seconds) : $seconds;
+    }
+
+    private static function freshOptions(): void
+    {
+        if (!function_exists('wp_cache_delete')) { return; }
+        // A long-lived queue runner can otherwise retain another request's old option values.
+        foreach (['casawp_manual_cleanup', 'casawp_manual_cleanup_worker', 'casawp_manual_cleanup_stop',
+            'casawp_manual_file_cleanup', 'casawp_manual_file_cleanup_totals', 'casawp_import_lock',
+            'casawp_current_run_id', 'casawp_use_casagateway_cdn'] as $key) {
+            wp_cache_delete($key, 'options');
+        }
+        wp_cache_delete('notoptions', 'options');
+    }
+
+    private static function ensureWatchdog(): void
+    {
+        if (!wp_next_scheduled(self::WATCHDOG_HOOK)) {
+            wp_schedule_event(time() + 60, 'casawp_cleanup_minute', self::WATCHDOG_HOOK);
+        }
+    }
+
+    /** Repair lost continuations on normal requests as well as on the independent cron tick. */
+    public static function maintain(): void
+    {
+        $state = get_option('casawp_manual_cleanup', []);
+        if (!in_array($state['status'] ?? '', ['queued', 'running'], true)) {
+            if (wp_next_scheduled(self::WATCHDOG_HOOK)) { wp_clear_scheduled_hook(self::WATCHDOG_HOOK); }
+            return;
+        }
+        self::freshOptions();
+        $state = get_option('casawp_manual_cleanup', []);
+        if (!in_array($state['status'] ?? '', ['queued', 'running'], true)) { return; }
+        self::ensureWatchdog();
+        if (self::stopRequested((int) $state['run_id'])) { (new self())->stop(); return; }
+        if ((defined('DOING_CRON') && DOING_CRON) || (defined('WP_CLI') && WP_CLI)) { return; }
+        if (self::canResume($state, [], self::RECOVERY_SECONDS)
+            && !as_has_scheduled_action('casawp_manual_cleanup_batch',
+                ['batch_number' => $state['next_batch'], 'run_id' => $state['run_id']], 'casawp_manual_cleanup_' . $state['run_id'])) {
+            $result = (new self())->resume(true);
+            if (!is_wp_error($result) && function_exists('casawp_dispatch_import_queue_after_poke')) {
+                add_action('shutdown', 'casawp_dispatch_import_queue_after_poke', 20);
+            }
+        }
+    }
+
+    public static function watchdog(): void
+    {
+        self::freshOptions();
+        $state = get_option('casawp_manual_cleanup', []);
+        if (!in_array($state['status'] ?? '', ['queued', 'running'], true)) {
+            wp_clear_scheduled_hook(self::WATCHDOG_HOOK);
+            return;
+        }
+        if (self::stopRequested((int) $state['run_id'])) { (new self())->stop(); return; }
+        if (!self::canRecoverLock($state)) {
+            (new self())->fail((int) $state['run_id'], 'Cleanup recovery stopped because another operation owns the import lock.');
+            return;
+        }
+        if (self::canResume($state, [], self::RECOVERY_SECONDS)) {
+            // Execute just one bounded batch in WP-Cron if Action Scheduler/loopbacks stopped advancing.
+            (new self())->resume(true, true);
         }
     }
 
@@ -52,6 +141,7 @@ class ManualCleanup
     public static function ajaxStatus(): void
     {
         self::authorize();
+        self::maintain();
         $state = get_option('casawp_manual_cleanup', []);
         if (in_array($state['status'] ?? '', ['queued', 'running'], true) && self::stopRequested((int) $state['run_id'])) {
             wp_send_json_success((new self())->stop());
@@ -89,11 +179,19 @@ class ManualCleanup
 
     public static function stopRequested(int $run_id): bool
     {
+        static $checked = [];
+        $blog = function_exists('get_current_blog_id') ? get_current_blog_id() : 0;
+        if (function_exists('wp_cache_delete') && microtime(true) - ($checked[$blog] ?? 0) >= 1) {
+            wp_cache_delete('casawp_manual_cleanup_stop', 'options');
+            wp_cache_delete('notoptions', 'options');
+            $checked[$blog] = microtime(true);
+        }
         return $run_id > 0 && (int) get_option('casawp_manual_cleanup_stop', 0) === $run_id;
     }
 
     public function stop(): array
     {
+        self::freshOptions();
         $state = get_option('casawp_manual_cleanup', []);
         if (!in_array($state['status'] ?? '', ['queued', 'running'], true)) { return self::statusData(); }
         $run_id = (int) $state['run_id'];
@@ -102,7 +200,7 @@ class ManualCleanup
             $this->logger($run_id)->write('Manual cleanup stop requested.', ['event' => 'manual_cleanup.stop_requested']);
         }
         as_unschedule_all_actions('', [], 'casawp_manual_cleanup_' . $run_id);
-        $worker = ['run_id' => $run_id, 'batch' => (int) $state['next_batch'], 'started_at' => time()];
+        $worker = self::worker($run_id, (int) $state['next_batch']);
         // An active worker observes the stop flag before continuing deletion or scheduling.
         if ($this->acquireWorker($worker)) {
             try { $this->finishStopped($run_id); }
@@ -122,6 +220,7 @@ class ManualCleanup
         $state['status'] = 'stopped';
         $state['finished_at'] = time();
         update_option('casawp_manual_cleanup', $state, false);
+        wp_clear_scheduled_hook(self::WATCHDOG_HOOK);
         if ($this->ownsLock($state)) { casawp_release_lock(); }
         $logger = $this->logger($run_id);
         $logger->setStage('manual_cleanup', ['cleanup_phase' => $state['phase']]);
@@ -139,7 +238,7 @@ class ManualCleanup
         return $lock ? $lock === (int) ($state['lock'] ?? 0) : !casawp_has_pending();
     }
 
-    private static function canResume(array $state, array $own_worker = []): bool
+    private static function canResume(array $state, array $own_worker = [], int $idle_seconds = self::STALL_SECONDS): bool
     {
         if (!in_array($state['status'] ?? '', ['queued', 'running'], true)
             || empty($state['run_id']) || empty($state['next_batch'])
@@ -148,33 +247,63 @@ class ManualCleanup
         // Older runs have no updated_at; their lock timestamp records the last batch start.
         $updated = (int) ($state['updated_at'] ?? $state['lock'] ?? $state['started_at'] ?? 0);
         $worker = get_option('casawp_manual_cleanup_worker', []);
-        return time() - $updated >= self::STALL_SECONDS
+        return time() - $updated >= $idle_seconds
             && (!$worker || $worker === $own_worker || time() - ($worker['started_at'] ?? 0) > self::STALL_SECONDS);
     }
 
     private function acquireWorker(array $worker): bool
     {
         $old = get_option('casawp_manual_cleanup_worker', []);
-        if ($old && time() - ($old['started_at'] ?? 0) > self::STALL_SECONDS) { delete_option('casawp_manual_cleanup_worker'); }
+        if ($old && time() - ($old['started_at'] ?? 0) > self::STALL_SECONDS) { $this->deleteWorker($old); }
         return add_option('casawp_manual_cleanup_worker', $worker, '', 'no');
+    }
+
+    private static function worker(int $run_id, int $batch): array
+    {
+        return ['run_id' => $run_id, 'batch' => $batch, 'started_at' => time(), 'token' => uniqid('cleanup_', true)];
     }
 
     private function releaseWorker(array $worker): void
     {
-        if (get_option('casawp_manual_cleanup_worker') === $worker) { delete_option('casawp_manual_cleanup_worker'); }
+        $this->deleteWorker($worker);
     }
 
-    public function resume()
+    private function deleteWorker(array $worker): void
     {
+        global $wpdb;
+        // Compare and delete in one query: an expired/late worker must not erase its replacement.
+        $deleted = $wpdb->query($wpdb->prepare(
+            "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s",
+            'casawp_manual_cleanup_worker', maybe_serialize($worker)
+        ));
+        if ($deleted) {
+            wp_cache_delete('casawp_manual_cleanup_worker', 'options');
+            wp_cache_delete('notoptions', 'options');
+        }
+    }
+
+    public function resume(bool $automatic = false, bool $direct = false)
+    {
+        self::freshOptions();
         $state = get_option('casawp_manual_cleanup', []);
         $busy = new \WP_Error('cleanup_busy', __('Cleanup cannot be resumed while another operation is active or progress was made recently.', 'casawp'));
-        if (!self::canResume($state)) { return $busy; }
+        $idle_seconds = $automatic ? self::RECOVERY_SECONDS : self::STALL_SECONDS;
+        if (!self::canResume($state, [], $idle_seconds)) { return $busy; }
         $run_id = (int) $state['run_id'];
-        $worker = ['run_id' => $run_id, 'batch' => (int) $state['next_batch'], 'started_at' => time()];
+        $worker = self::worker($run_id, (int) $state['next_batch']);
         if (!$this->acquireWorker($worker)) { return $busy; }
         try {
+            self::freshOptions();
             $state = get_option('casawp_manual_cleanup', []);
-            if (($state['run_id'] ?? 0) !== $run_id || !self::canResume($state, $worker)) { return $busy; }
+            if (($state['run_id'] ?? 0) !== $run_id || !self::canResume($state, $worker, $idle_seconds)) { return $busy; }
+            if ($automatic) {
+                $attempts = ($state['recovery_batch'] ?? 0) === $state['next_batch'] ? (int) ($state['recovery_attempts'] ?? 0) : 0;
+                if ($attempts >= self::MAX_RECOVERY_ATTEMPTS) {
+                    throw new \RuntimeException('Cleanup repeatedly stopped on the same batch; automatic recovery stopped after five attempts.');
+                }
+                $state['recovery_batch'] = $state['next_batch'];
+                $state['recovery_attempts'] = $attempts + 1;
+            } else { unset($state['recovery_batch'], $state['recovery_attempts']); }
             if ((bool) get_option('casawp_use_casagateway_cdn', false) !== $state['cdn']
                 || hash('sha256', serialize($this->propertyIds())) !== ($state['properties_hash'] ?? '')) {
                 throw new \RuntimeException('Stored properties or the CDN setting changed; start a new cleanup instead.');
@@ -198,11 +327,17 @@ class ManualCleanup
             $this->releaseWorker($worker);
         }
         try {
-            $this->schedule($run_id, $state['next_batch'], $state['phase']);
-            $this->logger($run_id)->write('Manual cleanup resumed from its saved batch.',
-                ['event' => 'manual_cleanup.resumed', 'batch_number' => $state['next_batch'], 'cleanup_phase' => $state['phase']]);
+            self::ensureWatchdog();
+            $this->logger($run_id)->write($automatic ? 'Manual cleanup automatically recovered from an interrupted background queue.' : 'Manual cleanup resumed from its saved batch.',
+                ['event' => $automatic ? 'manual_cleanup.recovered' : 'manual_cleanup.resumed', 'batch_number' => $state['next_batch'],
+                    'cleanup_phase' => $state['phase'], 'recovery_attempt' => $state['recovery_attempts'] ?? 0, 'runner' => $direct ? 'WP Cron' : 'Action Scheduler']);
+            if ($direct) { $this->runBatch($state['next_batch'], $run_id); }
+            else { $this->schedule($run_id, $state['next_batch'], $state['phase']); }
         } catch (\Throwable $e) {
-            $this->fail($run_id, $e->getMessage());
+            if ($automatic) {
+                $this->logger($run_id)->exception('Cleanup recovery could not schedule its batch; the next recovery check will retry.', $e,
+                    ['event' => 'manual_cleanup.schedule_interrupted', 'next_batch' => $state['next_batch']], 'warning');
+            } else { $this->fail($run_id, $e->getMessage()); }
             return new \WP_Error('cleanup_failed', __('Cleanup could not be resumed. See the logs for details.', 'casawp'));
         }
         return self::statusData();
@@ -233,10 +368,11 @@ class ManualCleanup
             delete_option('casawp_manual_file_cleanup');
             delete_option('casawp_manual_file_cleanup_totals');
             delete_option('casawp_manual_cleanup_worker');
-            delete_option('casawp_manual_cleanup_stop');
+            update_option('casawp_manual_cleanup_stop', 0, false);
             $logger = $this->logger($run_id);
             $logger->separator('Start of cleanup', 'cleanup.separator.start');
             $logger->write('Manual cleanup queued: database attachments, files, taxonomy terms, then old logs. Existing properties are retained; no feed is downloaded.', ['event' => 'manual_cleanup.queued']);
+            self::ensureWatchdog();
             $this->schedule($run_id, 1, 'attachments', 0);
         } catch (\Throwable $e) {
             $this->fail($run_id, $e->getMessage());
@@ -287,10 +423,11 @@ class ManualCleanup
 
     public function runBatch(int $batch, int $run_id): void
     {
+        self::freshOptions();
         $state = get_option('casawp_manual_cleanup', []);
         if (($state['run_id'] ?? 0) !== $run_id || !in_array($state['status'] ?? '', ['queued', 'running'], true)
             || ($state['next_batch'] ?? 0) !== $batch) { return; }
-        $worker = ['run_id' => $run_id, 'batch' => $batch, 'started_at' => time()];
+        $worker = self::worker($run_id, $batch);
         $logger = $this->logger($run_id);
         if (!$this->acquireWorker($worker)) {
             if (self::stopRequested($run_id)) { return; }
@@ -306,6 +443,7 @@ class ManualCleanup
         $next_batch = null;
         try {
             // State may have advanced while this request was waiting to acquire the worker.
+            self::freshOptions();
             $state = get_option('casawp_manual_cleanup', []);
             if (($state['run_id'] ?? 0) !== $run_id || ($state['next_batch'] ?? 0) !== $batch
                 || !in_array($state['status'] ?? '', ['queued', 'running'], true)) { return; }
@@ -330,6 +468,7 @@ class ManualCleanup
                     $files = get_option('casawp_manual_file_cleanup', []);
                     $state['phase'] = empty($files['legacy_done']) ? 'attachments' : (!empty($files['stack']) ? 'files' : 'terms');
                     $state['next_batch'] = $batch + 1;
+                    unset($state['recovery_batch'], $state['recovery_attempts']);
                     $state['updated_at'] = time();
                     update_option('casawp_manual_cleanup', $state, false);
                     $next_batch = $batch + 1;
@@ -357,6 +496,7 @@ class ManualCleanup
                 delete_option('casawp_manual_file_cleanup_totals');
                 if ($this->ownsLock($state)) { casawp_release_lock(); }
                 update_option('casawp_manual_cleanup', $state, false);
+                wp_clear_scheduled_hook(self::WATCHDOG_HOOK);
                 $logger->cleanupCompleted($state['stats'], $bytes, true);
                 do_action('casawp_cleanup_finished', $state);
                 $this->resumePendingImport();
@@ -371,7 +511,10 @@ class ManualCleanup
         // Publish the continuation only after releasing this batch's worker lock.
         if ($next_batch !== null && !self::stopRequested($run_id)) {
             try { $this->schedule($run_id, $next_batch, $state['phase']); }
-            catch (\Throwable $e) { $this->fail($run_id, $e->getMessage()); }
+            catch (\Throwable $e) {
+                $logger->exception('Cleanup continuation could not be scheduled; the recovery check will retry it.', $e,
+                    ['event' => 'manual_cleanup.schedule_interrupted', 'next_batch' => $next_batch], 'warning');
+            }
         }
     }
 
@@ -390,6 +533,7 @@ class ManualCleanup
         $state['finished_at'] = time();
         if ($this->ownsLock($state)) { casawp_release_lock(); }
         update_option('casawp_manual_cleanup', $state, false);
+        wp_clear_scheduled_hook(self::WATCHDOG_HOOK);
         $this->resumePendingImport();
     }
 
@@ -407,7 +551,15 @@ class ManualCleanup
         $action = \ActionScheduler::store()->fetch_action($action_id);
         if ($action && $action->get_hook() === 'casawp_manual_cleanup_batch') {
             $args = $action->get_args();
-            (new self())->fail((int) ($args['run_id'] ?? 0), 'The background cleanup action failed or terminated unexpectedly.');
+            self::freshOptions();
+            $state = get_option('casawp_manual_cleanup', []);
+            if (($state['run_id'] ?? 0) !== (int) ($args['run_id'] ?? 0)
+                || ($state['next_batch'] ?? 0) !== (int) ($args['batch_number'] ?? 0)
+                || !in_array($state['status'] ?? '', ['queued', 'running'], true)) { return; }
+            // An action timeout is recoverable; safety failures inside runBatch still fail the run.
+            self::ensureWatchdog();
+            (new self())->logger((int) $state['run_id'])->write('Background cleanup action was interrupted; automatic recovery will retry its saved batch.',
+                ['event' => 'manual_cleanup.action_interrupted', 'action_id' => $action_id, 'batch_number' => $state['next_batch']], 'warning');
         }
     }
 

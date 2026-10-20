@@ -392,6 +392,7 @@ function casawp_initialize_cleanup_cron() {
 register_deactivation_hook(__FILE__, 'casawp_unschedule_cleanup_cron');
 
 function casawp_unschedule_cleanup_cron() {
+	wp_clear_scheduled_hook('casawp_manual_cleanup_watchdog');
 	// Unschedule Cleanup Cron Event
 	$timestamp = wp_next_scheduled('casawp_cleanup_logs');
 	if ($timestamp) {

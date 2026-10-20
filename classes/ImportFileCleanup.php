@@ -274,7 +274,7 @@ class ImportFileCleanup
         if ($this->manual) {
             $state = get_option('casawp_manual_cleanup', []);
             return $run_id > 0 && ($state['run_id'] ?? 0) === $run_id && ($state['status'] ?? '') === 'running'
-                && (int) get_option('casawp_manual_cleanup_stop', 0) !== $run_id
+                && !ManualCleanup::stopRequested($run_id)
                 && !empty($state['lock'])
                 && !get_option('casawp_current_run_id')
                 && (int) get_option('casawp_import_lock', 0) === ($state['lock'] ?? -1)
