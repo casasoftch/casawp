@@ -4536,3 +4536,35 @@ msgstr "Impostazioni"
 #: options.php
 msgid "CASASOFT website"
 msgstr "Sito web CASASOFT"
+
+#: classes/ManualCleanup.php options.php
+msgid "Resume cleanup"
+msgstr "Riprendi la pulizia"
+
+#: classes/ManualCleanup.php options.php
+msgid "Stop cleanup"
+msgstr "Interrompi la pulizia"
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup changed. Refresh its status and try again."
+msgstr "La pulizia è cambiata. Aggiorna lo stato e riprova."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup cannot be resumed while another operation is active or progress was made recently."
+msgstr "La pulizia non può riprendere mentre un’altra operazione è attiva o sono stati registrati progressi di recente."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup could not be resumed. See the logs for details."
+msgstr "Impossibile riprendere la pulizia. Consulta i log per i dettagli."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup has not progressed for at least 10 minutes. Resume it to continue from the last saved batch."
+msgstr "La pulizia non avanza da almeno 10 minuti. Riprendila per continuare dall’ultimo lotto salvato."
+
+#: classes/ManualCleanup.php options.php
+msgid "Stopping cleanup. Waiting for the active batch to exit."
+msgstr "Interruzione della pulizia. In attesa della fine del lotto attivo."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup stopped. Changes already made were retained."
+msgstr "Pulizia interrotta. Le modifiche già effettuate sono state mantenute."

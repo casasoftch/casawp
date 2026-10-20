@@ -2,6 +2,8 @@
     'use strict';
     $(function () {
         var button = $('#casawp-cleanup-button');
+        var resume = $('#casawp-resume-cleanup-button');
+        var stop = $('#casawp-stop-cleanup-button');
         var status = $('#casawp-cleanup-status');
         var progress = $('#casawp-cleanup-progress');
         var deleting = $('#casawp-delete-all-button');
@@ -9,6 +11,7 @@
         var completionTimer = null;
         var completionDismissed = false;
         var generation = 0;
+        var lastData = casawpCleanup.initial;
 
         function dismissCompletion() {
             generation++;
@@ -22,11 +25,14 @@
         $('#casawp-single-import-button').on('click', dismissCompletion);
 
         function render(data) {
-            var active = data.status === 'queued' || data.status === 'running';
+            lastData = data;
+            var active = data.status === 'queued' || data.status === 'running' || data.status === 'stopping';
             if (active) { completionDismissed = false; }
             button.prop('disabled', pending || active || !data.can_start);
+            resume.toggle(!!data.can_resume).prop('disabled', pending || !data.can_resume);
+            stop.toggle(!!data.can_stop || data.status === 'stopping').prop('disabled', pending || !data.can_stop);
             deleting.attr('aria-disabled', active ? 'true' : 'false').toggleClass('disabled', active);
-            progress.toggle(active);
+            progress.toggle(active && !data.can_resume);
             window.clearTimeout(completionTimer);
             completionTimer = null;
             if (data.status === 'completed') {
@@ -43,7 +49,7 @@
         }
 
         function request(action) {
-            return $.ajax({url: ajaxurl, method: 'POST', data: {action: action, nonce: casawpCleanup.nonce}});
+            return $.ajax({url: ajaxurl, method: 'POST', data: {action: action, nonce: casawpCleanup.nonce, run_id: lastData.run_id}});
         }
 
         function errorMessage(xhr) {
@@ -51,20 +57,27 @@
                 ? xhr.responseJSON.data.message : casawpCleanup.requestFailed;
         }
 
-        button.on('click', function () {
+        function submit(action) {
+            if (pending) { return; }
             pending = true;
             dismissCompletion();
             button.prop('disabled', true);
-            request('casawp_start_cleanup').done(function (response) {
+            resume.prop('disabled', true);
+            stop.prop('disabled', true);
+            request(action).done(function (response) {
                 pending = false;
                 if (response.success) { render(response.data); }
-                else { button.prop('disabled', false); status.text(response.data.message || casawpCleanup.requestFailed).show(); }
+                else { render(lastData); status.text(response.data.message || casawpCleanup.requestFailed).show(); }
             }).fail(function (xhr) {
                 pending = false;
-                button.prop('disabled', false);
+                render(lastData);
                 status.text(errorMessage(xhr)).show();
             });
-        });
+        }
+
+        button.on('click', function () { submit('casawp_start_cleanup'); });
+        resume.on('click', function () { submit('casawp_resume_cleanup'); });
+        stop.on('click', function () { submit('casawp_stop_cleanup'); });
 
         render(casawpCleanup.initial);
         var polling = false;

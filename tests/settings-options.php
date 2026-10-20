@@ -112,6 +112,10 @@ try {
     $tabs = ['general', 'archiveview', 'singleview', 'private', 'contactform', 'appearance', 'logs'];
     $schemas = [];
     foreach ($tabs as $tab) { $schemas[$tab] = renderSettings($tab); }
+    foreach (['casawp-resume-cleanup-button', 'casawp-stop-cleanup-button'] as $id) {
+        check($schemas['general']->query('//button[@id="' . $id . '" and @type="button"]')->length === 1,
+            'General settings must render recovery controls without submitting the settings form');
+    }
     $total = $choicesTested = 0;
     foreach ($tabs as $tab) {
         $stored_options = ['unrelated_plugin_setting' => 'untouched', 'casawp_request_per_remcat' => '1', 'casawp_request_per_mail_fallback' => '1'];

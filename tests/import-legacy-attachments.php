@@ -37,7 +37,13 @@ function wp_send_json_success($data) { throw new CleanupJsonResponse(true, $data
 function as_schedule_single_action($time, $hook, $args, $group) {
     if (get_option('simulate_schedule_failure')) { return 0; }
     $GLOBALS['scheduled'][] = compact('time', 'hook', 'args', 'group');
+    if (isset($GLOBALS['on_schedule'])) { ($GLOBALS['on_schedule'])(); }
     return count($GLOBALS['scheduled']);
+}
+function as_unschedule_all_actions($hook, $args = [], $group = '') {
+    $GLOBALS['scheduled'] = array_values(array_filter($GLOBALS['scheduled'], static function ($job) use ($hook, $args, $group) {
+        return ($hook && $job['hook'] !== $hook) || $job['group'] !== $group || ($hook && $job['args'] !== $args);
+    }));
 }
 function casawp_acquire_lock() { return add_option('casawp_import_lock', time()); }
 function casawp_release_lock() { delete_option('casawp_import_lock'); }
@@ -591,5 +597,147 @@ try {
     check($wpdb->candidate_ids === range(50001, 50050), 'Bounded source queries must produce the first unique ordered page across both sources despite duplicate metadata');
     $usage_worker->runBatch(51180, 50, [], true, 5);
     check($wpdb->candidate_ids === range(51181, 51200), 'The final candidate page must preserve the cursor and include both source types');
+
+    // Recover the production failure: a completed action whose saved next batch is still 47.
+    delete_option('casawp_current_run_id');
+    delete_option('casawp_import_lock');
+    $scheduled = [];
+    $manual->start();
+    check(!\casawp\ManualCleanup::statusData()['can_resume'] && is_wp_error($manual->resume()), 'Recently started cleanup must not be resumed');
+    $stalled = get_option('casawp_manual_cleanup');
+    unset($stalled['updated_at']); // The deployed version did not store this field.
+    $stalled['status'] = 'running';
+    $stalled['next_batch'] = 47;
+    $stalled['lock'] = time() - 15000;
+    $stalled['stats'] = ['legacy_deleted' => 2157, 'bytes' => 123];
+    update_option('casawp_import_lock', $stalled['lock']);
+    update_option('casawp_manual_cleanup', $stalled);
+    update_option('casawp_manual_file_cleanup_totals', ['run_id' => $stalled['run_id'], 'stats' => $stalled['stats']]);
+    update_option('casawp_manual_file_cleanup', ['run_id' => $stalled['run_id'], 'legacy_after' => 50000,
+        'logged_phase' => 'attachments', 'feed_hash' => $stalled['properties_hash'], 'cdn' => $stalled['cdn'],
+        'stack' => [['dir' => '', 'after' => '']], 'stats' => array_merge(['files' => 0, 'directories' => 0, 'failures' => 0], $stalled['stats'])]);
+    try { \casawp\ManualCleanup::ajaxStatus(); }
+    catch (CleanupJsonResponse $response) { check($response->payload['data']['can_resume'], 'Status polling must preserve resumability after the four-hour lock expiry'); }
+    $worker = ['run_id' => $stalled['run_id'], 'batch' => 46, 'started_at' => time()];
+    update_option('casawp_manual_cleanup_worker', $worker);
+    check(!\casawp\ManualCleanup::statusData()['can_resume'] && is_wp_error($manual->resume()), 'Recovery must never clear a live worker');
+    $manual->runBatch(47, $stalled['run_id']);
+    $retry = end($scheduled);
+    check($retry['args']['batch_number'] === 47 && $retry['time'] >= time() + 29
+        && get_option('casawp_manual_cleanup_worker') === $worker, 'A busy worker must reschedule the consumed batch without clearing the active worker');
+    $worker['started_at'] = time() - 601;
+    update_option('casawp_manual_cleanup_worker', $worker);
+    update_option('casawp_import_lock', $stalled['lock'] + 1);
+    check(is_wp_error($manual->resume()), 'Resume must reject another operation\'s lock even if it is old');
+    update_option('casawp_import_lock', $stalled['lock']);
+    $options['casawp_current_run_id'] = 999;
+    check(is_wp_error($manual->resume()), 'Resume must reject an active import');
+    delete_option('casawp_current_run_id');
+    $checkpoint = get_option('casawp_manual_file_cleanup');
+    $on_schedule = static function () { check(!get_option('casawp_manual_cleanup_worker'), 'Resume and continuations must release the worker before scheduling'); };
+    $resumed = $manual->resume();
+    check(!is_wp_error($resumed) && $resumed['status'] === 'queued' && !$resumed['can_resume'], 'An expired cleanup must resume and immediately disable duplicate resume requests');
+    $resumed_state = get_option('casawp_manual_cleanup');
+    check($resumed_state['run_id'] === $stalled['run_id'] && $resumed_state['next_batch'] === 47
+        && $resumed_state['stats'] === $stalled['stats'] && get_option('casawp_manual_file_cleanup') === $checkpoint,
+        'Resume must preserve the run, next batch, totals and deletion cursor');
+    check(count(array_filter($scheduled, static function ($job) use ($stalled) {
+        return $job['args'] === ['batch_number' => 47, 'run_id' => $stalled['run_id']];
+    })) === 1, 'Resume must replace pending copies of the same batch with exactly one action');
+    $manual->runBatch(47, $stalled['run_id']);
+    check(get_option('casawp_manual_cleanup')['next_batch'] === 48, 'A resumed batch must continue from its saved number');
+    unset($on_schedule);
+
+    // Stopping an idle cleanup keeps partial totals and never touches unrelated jobs.
+    $scheduled[] = ['time' => time(), 'hook' => 'other_plugin', 'args' => [], 'group' => 'other'];
+    update_option('casawp_import_pending', 1);
+    $stopped = $manual->stop();
+    check($stopped['status'] === 'stopped' && !$stopped['can_resume'] && !$stopped['can_stop']
+        && !get_option('casawp_import_lock') && !get_option('casawp_manual_cleanup_worker'), 'Stop must finish an idle cleanup and release its locks');
+    check(get_option('casawp_manual_cleanup')['stats']['legacy_deleted'] >= 2157, 'Stop must retain the actual partial deletion totals');
+    check(count(array_filter($scheduled, static function ($job) { return $job['hook'] === 'other_plugin'; })) === 1
+        && count(array_filter($scheduled, static function ($job) { return $job['hook'] === 'casawp_process_gateway_poke'; })) === 1
+        && !array_filter($scheduled, static function ($job) { return $job['hook'] === 'casawp_manual_cleanup_batch'; })
+        && !casawp_has_pending(), 'Stop must preserve unrelated jobs and resume a deferred import');
+    $job_count = count($scheduled);
+    $manual->runBatch(48, $stalled['run_id']);
+    check(count($scheduled) === $job_count, 'Old scheduled actions must not restart a stopped cleanup');
+
+    // Stop arriving inside a deletion batch is observed before the next deletion.
+    $scheduled = [];
+    $manual->start();
+    $state = get_option('casawp_manual_cleanup');
+    check(!\casawp\ManualCleanup::stopRequested($state['run_id']), 'Starting a new cleanup must clear the previous stop request');
+    $requested_stop = false;
+    $stop_during_batch = static function ($reason) use ($manual, &$requested_stop) {
+        if (!$requested_stop) {
+            $requested_stop = true;
+            $result = $manual->stop();
+            check($result['status'] === 'stopping' && get_option('casawp_import_lock'), 'Stopping a live worker must retain the import lock until that worker exits');
+        }
+        return $reason;
+    };
+    add_filter('casawp_legacy_attachment_usage', $stop_during_batch);
+    $manual->runBatch(1, $state['run_id']);
+    remove_filter('casawp_legacy_attachment_usage', $stop_during_batch);
+    check($requested_stop && get_option('casawp_manual_cleanup')['status'] === 'stopped'
+        && !get_option('casawp_import_lock') && !get_option('casawp_manual_cleanup_worker') && !$scheduled,
+        'A stop during a batch must finish without scheduling a continuation');
+
+    $manual->start();
+    $state = get_option('casawp_manual_cleanup');
+    update_option('casawp_manual_cleanup_worker', ['run_id' => $state['run_id'], 'batch' => 1, 'started_at' => time()]);
+    $manual->stop();
+    update_option('casawp_manual_cleanup_worker', ['run_id' => $state['run_id'], 'batch' => 1, 'started_at' => time() - 601]);
+    try { \casawp\ManualCleanup::ajaxStatus(); }
+    catch (CleanupJsonResponse $response) { check($response->payload['data']['status'] === 'stopped', 'Polling must finish a stop request when a dead worker expires'); }
+
+    $can_manage = false;
+    foreach (['ajaxResume', 'ajaxStop'] as $endpoint) {
+        try { \casawp\ManualCleanup::$endpoint(); check(false, 'Recovery controls must require administrator privileges'); }
+        catch (CleanupJsonResponse $response) { check($response->getCode() === 403, 'Recovery controls must reject unauthorized users'); }
+    }
+    $can_manage = true;
+    $valid_nonce = false;
+    foreach (['ajaxResume', 'ajaxStop'] as $endpoint) {
+        try { \casawp\ManualCleanup::$endpoint(); check(false, 'Recovery controls must require a valid nonce'); }
+        catch (CleanupJsonResponse $response) { check($response->getCode() === 403, 'Recovery controls must verify their nonce'); }
+    }
+    $valid_nonce = true;
+    $_POST = ['run_id' => get_option('casawp_manual_cleanup')['run_id'] - 1];
+    foreach (['ajaxResume', 'ajaxStop'] as $endpoint) {
+        try { \casawp\ManualCleanup::$endpoint(); check(false, 'An old settings tab must not control a different cleanup'); }
+        catch (CleanupJsonResponse $response) { check($response->getCode() === 409, 'Recovery controls must reject a stale run ID'); }
+    }
+
+    $manual->start();
+    $state = get_option('casawp_manual_cleanup');
+    $state['updated_at'] = time() - 601;
+    update_option('casawp_manual_cleanup', $state);
+    delete_option('casawp_import_lock');
+    check(!is_wp_error($manual->resume()) && get_option('casawp_import_lock'), 'Resume must safely reacquire a missing lock');
+    $manual->stop();
+    foreach (['cdn', 'properties', 'scheduler'] as $failure) {
+        $manual->start();
+        $state = get_option('casawp_manual_cleanup');
+        $state['updated_at'] = time() - 601;
+        update_option('casawp_manual_cleanup', $state);
+        if ($failure === 'cdn') { $options['casawp_use_casagateway_cdn'] = !$state['cdn']; }
+        if ($failure === 'properties') { update_post_meta(8001, 'exportproperty_id', 'changed-before-resume'); }
+        if ($failure === 'scheduler') { $options['simulate_schedule_failure'] = true; }
+        check(is_wp_error($manual->resume()) && get_option('casawp_manual_cleanup')['status'] === 'failed'
+            && !get_option('casawp_import_lock') && !get_option('casawp_manual_cleanup_worker'),
+            'Unsafe or failed recovery must stop cleanly: ' . $failure);
+        $options['casawp_use_casagateway_cdn'] = $state['cdn'];
+        update_post_meta(8001, 'exportproperty_id', 'active');
+        delete_option('simulate_schedule_failure');
+    }
+    $manual->start();
+    $options['casawp_current_run_id'] = 999;
+    $options['casawp_import_lock']++;
+    $other_lock = $options['casawp_import_lock'];
+    $manual->stop();
+    check(get_option('casawp_import_lock') === $other_lock && get_option('casawp_current_run_id') === 999,
+        'Stopping an old cleanup must never release another import\'s lock');
     echo "Legacy attachment cleanup checks passed.\n";
 } finally { removeTree($temporary); }

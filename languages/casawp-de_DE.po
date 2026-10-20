@@ -4591,3 +4591,35 @@ msgstr "Einstellungen"
 #: options.php
 msgid "CASASOFT website"
 msgstr "CASASOFT Website"
+
+#: classes/ManualCleanup.php options.php
+msgid "Resume cleanup"
+msgstr "Bereinigung fortsetzen"
+
+#: classes/ManualCleanup.php options.php
+msgid "Stop cleanup"
+msgstr "Bereinigung stoppen"
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup changed. Refresh its status and try again."
+msgstr "Die Bereinigung hat sich geändert. Aktualisieren Sie den Status und versuchen Sie es erneut."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup cannot be resumed while another operation is active or progress was made recently."
+msgstr "Die Bereinigung kann nicht fortgesetzt werden, solange ein anderer Vorgang aktiv ist oder kürzlich Fortschritte erzielt wurden."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup could not be resumed. See the logs for details."
+msgstr "Die Bereinigung konnte nicht fortgesetzt werden. Details finden Sie in den Protokollen."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup has not progressed for at least 10 minutes. Resume it to continue from the last saved batch."
+msgstr "Die Bereinigung hat seit mindestens 10 Minuten keine Fortschritte gemacht. Setzen Sie sie fort, um beim zuletzt gespeicherten Batch weiterzumachen."
+
+#: classes/ManualCleanup.php options.php
+msgid "Stopping cleanup. Waiting for the active batch to exit."
+msgstr "Bereinigung wird gestoppt. Der aktive Batch wird noch beendet."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup stopped. Changes already made were retained."
+msgstr "Bereinigung gestoppt. Bereits vorgenommene Änderungen bleiben erhalten."

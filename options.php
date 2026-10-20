@@ -1651,6 +1651,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 											completionDismissed = true;
 											resetProgressBar();
 										});
+										$('#casawp-resume-cleanup-button').on('click', function() {
+											completionDismissed = true;
+											resetProgressBar();
+										});
 
 										$('#casawp-import-button').on('click', function(e) {
 											e.preventDefault();
@@ -1860,6 +1864,12 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<p>
 								<button type="button" id="casawp-cleanup-button" class="button button-secondary" aria-describedby="casawp-cleanup-description">
 									<?php echo casawp_settings_text('Run legacy data cleanup'); ?>
+								</button>
+								<button type="button" id="casawp-resume-cleanup-button" class="button button-secondary" aria-describedby="casawp-cleanup-status" style="display:none;">
+									<?php echo casawp_settings_text('Resume cleanup'); ?>
+								</button>
+								<button type="button" id="casawp-stop-cleanup-button" class="button button-secondary" aria-describedby="casawp-cleanup-status" style="display:none;">
+									<?php echo casawp_settings_text('Stop cleanup'); ?>
 								</button>
 							</p>
 							<p class="description" id="casawp-cleanup-description"><?php echo casawp_settings_text('Clean up unused attachments, local import files, empty taxonomy terms and old logs without importing properties. Existing properties are retained. Data is deleted step by step in background batches.'); ?></p>
