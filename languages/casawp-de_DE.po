@@ -24,6 +24,22 @@ msgstr "Einstellungen gespeichert."
 msgid "Properties imported."
 msgstr "Objekte importiert."
 
+#: options.php
+msgid "CASAWP imports property listings from CASAGATEWAY into your WordPress website."
+msgstr "CASAWP importiert Immobilienobjekte aus CASAGATEWAY in Ihre WordPress-Website."
+
+#: options.php
+msgid "Our help page covers setup, property imports, shortcodes, and custom views and forms."
+msgstr "Unsere Hilfeseite erklärt die Einrichtung, den Immobilienimport, Shortcodes sowie individuelle Ansichten und Formulare."
+
+#: options.php
+msgid "Help & documentation (German)"
+msgstr "Hilfe & Dokumentation (Deutsch)"
+
+#: options.php
+msgid "CASAWP on GitHub"
+msgstr "CASAWP auf GitHub"
+
 msgid "General"
 msgstr "Allgemein"
 

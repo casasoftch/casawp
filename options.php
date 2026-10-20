@@ -187,6 +187,14 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 <div class="wrap">
 	<h1><strong>CASA</strong><span style="font-weight:100">WP</span></h1>
+	<p>
+		<?php esc_html_e('CASAWP imports property listings from CASAGATEWAY into your WordPress website.', 'casawp'); ?>
+		<?php esc_html_e('Our help page covers setup, property imports, shortcodes, and custom views and forms.', 'casawp'); ?>
+	</p>
+	<p>
+		<a href="https://help.casasoft.ch/hc/de/articles/22201341913885-CASAWP-WordPress-Plugin" target="_blank" rel="noopener noreferrer" class="button button-secondary"><?php esc_html_e('Help & documentation (German)', 'casawp'); ?></a>
+		<a href="https://github.com/casasoftch/casawp" target="_blank" rel="noopener noreferrer" class="button button-secondary"><?php esc_html_e('CASAWP on GitHub', 'casawp'); ?></a>
+	</p>
 	<?php
 	// Tabs
 	$tabs = array(
@@ -199,10 +207,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 		'logs'        => __('Logs', 'casawp')
 	);
 	echo '<h2 class="nav-tab-wrapper">';
-	echo '<div style="float:right;">
-			<a href="http://wordpress.org/support/view/plugin-reviews/casawp" target="_blank" class="add-new-h2">' . esc_html__('Rate this plugin', 'casawp') . '</a>
-			<a href="http://wordpress.org/plugins/casawp/changelog/" target="_blank" class="add-new-h2">' . esc_html__('Changelog', 'casawp') . '</a>
-		</div>';
 	$current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 	foreach ($tabs as $tab => $name) {
 		$class = ($tab == $current) ? ' nav-tab-active' : '';

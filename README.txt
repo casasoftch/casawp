@@ -59,10 +59,11 @@ Import cleanup also removes monthly log files except those from the current and 
 
 = Unreleased =
 
+* Enhancement: Add a short plugin introduction and links to the CASAWP help documentation and GitHub repository above the settings tabs, including German translations
+* Change: Remove the obsolete WordPress.org rating and changelog buttons from the plugin settings page
+
 * Fix: Continue cleanup after individual term-deletion hook exceptions, including Yoast indexing failures; log the affected term and actual deletion result, retain warning counts and report the correct failure phase
-
 * Fix: Include legacy monthly log names such as "2020 Aug.log" in cleanup, preserving current/previous months across supported filename formats
-
 * Performance: Speed up database cleanup with bounded candidate queries and bulk cache loading; schedule follow-up cleanup batches without an artificial delay
 * Enhancement: Show deleted attachment, local import file and empty taxonomy term counts alongside freed MB when import or standalone cleanup finishes
 * Enhancement: Reserve 100% import progress until cleanup finishes; show cleanup activity bars and current phases for imports and standalone cleanup
