@@ -145,6 +145,7 @@ function removeTree($path) {
 function cleanupTotals($run_id) {
     $totals = [];
     foreach (glob(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/logs/*.log') as $file) {
+        if (!is_file($file) || is_link($file)) { continue; }
         foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
             $entry = json_decode($line, true);
             if (($entry['_meta']['event'] ?? '') === 'cleanup.total' && ($entry['_meta']['run_id'] ?? 0) === $run_id) {
@@ -380,6 +381,19 @@ try {
         check(!file_exists($log_dir . '/' . $old . '.log'), 'All other standard monthly logs must be removed regardless of file modification time');
         check(is_file($custom) && is_file($invalid) && is_link($log_dir . '/200001.log') && is_file($outside), 'Non-monthly names, invalid months and symbolic links must be retained');
     }
+    $fixed_date = '2026-10-20 12:00:00+02:00';
+    $legacy_old_names = ['2020 Aug.log', '2020 August.log', '2020-08.log', '2020_8.log', '2021 AUG.LOG', '2020 Aug..log', '2020 Sept.log'];
+    $legacy_keep_names = ['2026 Oct.log', '2026 October.log', '2026-10.log', '2026 Sep.log', '2026 September.log', '2026_9.LOG'];
+    $unrecognized_names = ['2020 Aug backup.log', '2020 Unknown.log', '2020-00.log', '2020-13.log', '2020 August.txt'];
+    foreach (array_merge($legacy_old_names, $legacy_keep_names, $unrecognized_names) as $name) { put($log_dir . '/' . $name); }
+    mkdir($log_dir . '/2019 Aug.log');
+    symlink($outside, $log_dir . '/2018 Aug.log');
+    $legacy_cleanup = new \casawp\Import();
+    $legacy_cleanup->cleanup_log_files();
+    foreach ($legacy_old_names as $name) { check(!file_exists($log_dir . '/' . $name), 'Old monthly log variant must be removed: ' . $name); }
+    foreach (array_merge($legacy_keep_names, $unrecognized_names) as $name) { check(is_file($log_dir . '/' . $name), 'Protected months and unrecognized names must survive: ' . $name); }
+    check(is_dir($log_dir . '/2019 Aug.log') && is_link($log_dir . '/2018 Aug.log') && is_file($outside), 'Legacy-name directories and symbolic links must not be deleted');
+    check($legacy_cleanup->getLogCleanupFreedBytes() === count($legacy_old_names) * strlen('test file'), 'Legacy monthly files must contribute their exact bytes to the cleanup total');
     $fixed_date = null;
 
     // A structurally invalid feed must not be interpreted as permission to sweep folders.

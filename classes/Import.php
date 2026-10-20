@@ -3951,7 +3951,7 @@ class Import
       return;
     }
     $keep = [$current_month, $month_start->modify('-1 month')->format('Ym')];
-    $files = glob($log_dir . '/*.log');
+    $files = glob($log_dir . '/*');
     if (!$files) {
       return;
     }
@@ -3959,9 +3959,8 @@ class Import
     $deleted = 0;
     $bytes = 0;
     foreach ($files as $file) {
-      $filename = basename($file, '.log');
-      if (!preg_match('/^\d{4}(?:0[1-9]|1[0-2])$/D', $filename)
-          || in_array($filename, $keep, true) || !is_file($file) || is_link($file)) {
+      $month = $this->logFileMonth(basename($file));
+      if ($month === null || in_array($month, $keep, true) || !is_file($file) || is_link($file)) {
         continue;
       }
       $size = filesize($file);
@@ -3978,6 +3977,30 @@ class Import
       $this->logImport(sprintf('Import log cleanup: deleted %d files; freed %.2f MB. Keeping %s and %s.',
         $deleted, $bytes / 1048576, $keep[0], $keep[1]), ['event' => 'logs.cleaned']);
     }
+  }
+
+  /** Recognize monthly log names without relying on locale or file modification time. */
+  private function logFileMonth(string $filename): ?string
+  {
+    if (preg_match('/^(\d{4})(0[1-9]|1[0-2])\.log$/iD', $filename, $parts)) {
+      return $parts[1] . $parts[2];
+    }
+    // Older releases used names such as "2020 Aug.log". Also accept full month
+    // names and common numeric/separator variants, but never arbitrary log names.
+    if (!preg_match('/^(\d{4})[ _-]+([a-z]+\.?|0?[1-9]|1[0-2])\.log$/iD', $filename, $parts)) {
+      return null;
+    }
+    $months = [
+      'jan' => 1, 'january' => 1, 'feb' => 2, 'february' => 2,
+      'mar' => 3, 'march' => 3, 'apr' => 4, 'april' => 4,
+      'may' => 5, 'jun' => 6, 'june' => 6, 'jul' => 7, 'july' => 7,
+      'aug' => 8, 'august' => 8, 'sep' => 9, 'sept' => 9, 'september' => 9,
+      'oct' => 10, 'october' => 10, 'nov' => 11, 'november' => 11,
+      'dec' => 12, 'december' => 12,
+    ];
+    $name = strtolower(rtrim($parts[2], '.'));
+    $month = ctype_digit($name) ? (int) $name : ($months[$name] ?? null);
+    return $month === null ? null : sprintf('%s%02d', $parts[1], $month);
   }
 
   public function getLogCleanupFreedBytes(): int

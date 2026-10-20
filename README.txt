@@ -53,11 +53,13 @@ After attachment and file cleanup, unused terms in registered casawp_* taxonomie
 
 Use "Run legacy data cleanup" below "Delete all property data" in General settings to run attachment, file, empty-term and old-log cleanup without importing properties. Existing properties are retained. This runs in background batches, shows an activity bar, its current phase and freed MB, and writes detailed progress to the monthly logs. It works without data.xml and protects folders belonging to properties currently stored in WordPress across all languages when CDN is disabled. With CDN enabled, externalsync is cleared completely. Imports and manual cleanup cannot run concurrently.
 
-Import cleanup also removes monthly log files except those from the current and previous calendar month, using the site's local date. The monthly cron cleanup uses the same retention rule, so old logs are removed even if cron has not run.
+Import cleanup also removes monthly log files except those from the current and previous calendar month, using the site's local date. It recognizes current names such as 202610.log and legacy names such as 2020 Aug.log, full English month names, and separated numeric month names. The monthly cron cleanup uses the same retention rule, so old logs are removed even if cron has not run.
 
 == Changelog ==
 
 = Unreleased =
+
+* Fix: Include legacy monthly log names such as "2020 Aug.log" in cleanup, preserving current/previous months across supported filename formats
 
 * Performance: Speed up database cleanup with bounded candidate queries and bulk cache loading; schedule follow-up cleanup batches without an artificial delay
 * Enhancement: Show deleted attachment, local import file and empty taxonomy term counts alongside freed MB when import or standalone cleanup finishes
