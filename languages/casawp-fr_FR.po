@@ -4533,3 +4533,11 @@ msgstr "Nettoyage terminé."
 #: classes/ImportProgress.php classes/ManualCleanup.php
 msgid "Cleanup completed with warnings. See the logs for details."
 msgstr "Nettoyage terminé avec des avertissements. Consultez les journaux pour plus de détails."
+
+#: options.php
+msgid "Settings"
+msgstr "Réglages"
+
+#: options.php
+msgid "CASASOFT website"
+msgstr "Site web de CASASOFT"

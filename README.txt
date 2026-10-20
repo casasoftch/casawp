@@ -26,6 +26,12 @@ Synchronize your properties directly to CASAWP, and let them be automatically ca
 4. Check out yourdomain.com/immobilien to verify that it works
 5. Adjust the theme files to your liking
 
+== Settings Page ==
+
+Open CASAWP in the WordPress admin menu. A responsive sidebar groups General, Archive, Detail view, Protected properties, Contact form, Scripts, and Logs. Settings appear in cards, and the "Save changes" bar stays within reach while scrolling. The page supports widths up to 1920 px and adapts to smaller screens.
+
+Archive filters are grouped in one card, including display types and manual room/area ranges. "Show net rent" appears in the Price section. Help documentation and GitHub links are available in the page header. Settings labels support German, English, French, and Italian. Existing option keys and tab URLs are retained.
+
 == Import Setup ==
 The plugin will look for a file in "wp-content/uploads/casawp/import/data.xml" and syncronize this data with your WordPress installation.
 
@@ -59,8 +65,13 @@ Import cleanup also removes monthly log files except those from the current and 
 
 = Unreleased =
 
+* Fix: Save the disabled state when Google reCAPTCHA v3 is unchecked in Contact form settings
+* Enhancement: Suppress third-party notice callbacks on the CASAWP settings page while preserving CASAWP messages and leaving other admin screens unchanged
+* Enhancement: Add the CASASOFT logo above the settings, linking to casasoft.ch in a new tab
+* Enhancement: Group archive filters in one card and label the net-rent option under Price
 * Enhancement: Add a short plugin introduction and links to the CASAWP help documentation and GitHub repository above the settings tabs, including German translations
 * Change: Remove the obsolete WordPress.org rating and changelog buttons from the plugin settings page
+* New: Modernize the settings page with responsive sidebar navigation, grouped cards, clearer controls, a sticky save bar, and a flexible header in a layout up to 1920 px wide
 
 * Fix: Continue cleanup after individual term-deletion hook exceptions, including Yoast indexing failures; log the affected term and actual deletion result, retain warning counts and report the correct failure phase
 * Fix: Include legacy monthly log names such as "2020 Aug.log" in cleanup, preserving current/previous months across supported filename formats
@@ -73,19 +84,18 @@ Import cleanup also removes monthly log files except those from the current and 
 * Enhancement: Log the total MB freed by attachment/XML file cleanup and old-log retention at the end of import cleanup
 * New: Add a standalone "Run legacy data cleanup" button below "Delete all property data", with background progress, shared import locking, translated status messages, and cleanup without requiring data.xml
 * New: Clean obsolete import XML files, leftover property folders, and local CDN attachment copies in batches after successful imports
-* New: Add legacy data cleanup and improve import logging
 
 * Fix: Repair missing offer-logo attachment terms and ignore empty XML features so these import errors no longer block file cleanup
 * Fix: Only show log and import XML download links when the corresponding files exist
+* Fix: Use the site's uploads directory for log links and older log file checks, including multisite subsites
+* Fix: Use HTTPS for log and XML links when the admin page uses HTTPS to prevent insecure download blocking
+* Fix: Keep the Scheduled Actions menu visible when WPForms is active
+* Fix: Load property metaboxes reliably regardless of plugin load order, without requiring WPML reactivation
 * Enhancement: Clean monthly logs after successful imports and through cron, retaining only the current and previous calendar month
 * Enhancement: Apply CDN mode to imported images, documents, plans, logos, and brochures; clarify the CDN setting label
 * Enhancement: Improve JSON import logging with readable batch summaries, run and property context, detailed failure diagnostics, and optional attachment debug logging
 * New: Add a link to trigger a gateway poke for the current site from the General settings tab
-* Fix: Use the site's uploads directory for log links and older log file checks, including multisite subsites
-* Fix: Use HTTPS for log and XML links when the admin page uses HTTPS to prevent insecure download blocking
 * New: Add a data.xml download link beneath the logs using the site's uploads URL
-* Fix: Keep the Scheduled Actions menu visible when WPForms is active
-* Fix: Load property metaboxes reliably regardless of plugin load order, without requiring WPML reactivation
 * New: Show an attached media overview with previews and image-type assignments below the metaboxes in the property edit screen
 
 = 3.5.2 =

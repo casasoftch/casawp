@@ -193,7 +193,7 @@ class Plugin
                     'post_type' => 'page'
                 ));
                 if (is_admin()) {
-                    echo '<div class="updated"><p><strong>' . __('Gennerated login page', 'casawp') . ' ' . $pageId . '</strong></p></div>';
+                    echo '<div class="updated casawp-notice"><p><strong>' . __('Gennerated login page', 'casawp') . ' ' . $pageId . '</strong></p></div>';
                 }
             } else {
                 $pageId = $page->ID;
@@ -216,7 +216,7 @@ class Plugin
                     'post_type' => 'page'
                 ));
                 if (is_admin()) {
-                    echo '<div class="updated"><p><strong>' . __('Gennerated logout page', 'casawp') . ' ' . $pageId . '</strong></p></div>';
+                    echo '<div class="updated casawp-notice"><p><strong>' . __('Gennerated logout page', 'casawp') . ' ' . $pageId . '</strong></p></div>';
                 }
             } else {
                 $pageId = $page->ID;

@@ -6,6 +6,64 @@ class Admin {
 	public function __construct(){ 
 		add_action( 'admin_menu', array($this,'casawp_menu') );
 		add_action( 'admin_enqueue_scripts', array($this,'registerAdminScriptsAndStyles' ));
+		foreach (array('admin_notices', 'all_admin_notices', 'network_admin_notices', 'user_admin_notices') as $hook) {
+			add_action($hook, array($this, 'suppressThirdPartyNotices'), PHP_INT_MIN);
+		}
+	}
+
+	/** Prevent unrelated notices from rendering, including inline !important banners. */
+	public function suppressThirdPartyNotices() {
+		$screen = get_current_screen();
+		if (!$screen || $screen->id !== 'toplevel_page_casawp') {
+			return;
+		}
+
+		global $wp_filter;
+		$hook = current_filter();
+		if (!isset($wp_filter[$hook])) {
+			return;
+		}
+
+		$allowed_directories = array_filter(array(
+			realpath(CASASYNC_PLUGIN_DIR),
+			realpath(ABSPATH . 'wp-admin'),
+			realpath(ABSPATH . WPINC),
+		));
+		foreach ($wp_filter[$hook]->callbacks as $priority => $callbacks) {
+			foreach ($callbacks as $callback) {
+				$function = $callback['function'];
+				try {
+					if (is_array($function)) {
+						$reflection = new \ReflectionMethod($function[0], $function[1]);
+					} elseif (is_string($function) && strpos($function, '::') !== false) {
+						list($class, $method) = explode('::', $function, 2);
+						$reflection = new \ReflectionMethod($class, $method);
+					} elseif (is_object($function) && !($function instanceof \Closure)) {
+						$reflection = new \ReflectionMethod($function, '__invoke');
+					} else {
+						$reflection = new \ReflectionFunction($function);
+					}
+				} catch (\ReflectionException $exception) {
+					// Leave callbacks with unknown ownership alone.
+					continue;
+				}
+				$file = $reflection->getFileName();
+				$file = $file ? realpath($file) : false;
+				if (!$file) {
+					continue;
+				}
+				$allowed = false;
+				foreach ($allowed_directories as $directory) {
+					if (strpos($file, $directory . DIRECTORY_SEPARATOR) === 0) {
+						$allowed = true;
+						break;
+					}
+				}
+				if (!$allowed) {
+					remove_action($hook, $function, $priority);
+				}
+			}
+		}
 	}
 	
 	public function casawp_install() {
@@ -82,11 +140,15 @@ class Admin {
 	}
 
 	public function registerAdminScriptsAndStyles() {
-		wp_register_style( 'casawp-admin-css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp-admin.css' );
+		wp_register_style( 'casawp-admin-css', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp-admin.css', array(), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/global/css/casawp-admin.css') );
         wp_enqueue_style( 'casawp-admin-css' );
         wp_enqueue_script('jquery-ui-droppable');
         wp_enqueue_script('jquery-ui-draggable');
         wp_enqueue_script('jquery-ui-sortable');
+		$screen = get_current_screen();
+		if ($screen && $screen->id === 'toplevel_page_casawp') {
+			wp_enqueue_script('casawp-settings-notices', CASASYNC_PLUGIN_URL . 'plugin-assets/js/settings-notices.js', array(), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/js/settings-notices.js'), true);
+		}
 	}
 
 }

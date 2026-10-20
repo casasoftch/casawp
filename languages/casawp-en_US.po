@@ -1889,7 +1889,7 @@ msgstr ""
 #: theme-defaults/casawp/bootstrap3/basic-boxes.phtml:27
 #: theme-defaults/casawp/bootstrap4/basic-boxes.phtml:16
 msgid "Price"
-msgstr ""
+msgstr "Price"
 
 #: classes/Plugin.php:1664
 msgid "Price property segment"
@@ -3094,7 +3094,7 @@ msgstr ""
 
 #: options.php:768
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #: options.php:772
 msgid "Hide filter"
@@ -3213,7 +3213,7 @@ msgstr ""
 
 #: options.php:1130
 msgid "Show net rent"
-msgstr ""
+msgstr "Show net rent"
 
 #: options.php:1149
 msgid "Provider slug"
@@ -3664,3 +3664,11 @@ msgstr "Cleanup completed."
 #: classes/ImportProgress.php classes/ManualCleanup.php
 msgid "Cleanup completed with warnings. See the logs for details."
 msgstr "Cleanup completed with warnings. See the logs for details."
+
+#: options.php
+msgid "Settings"
+msgstr "Settings"
+
+#: options.php
+msgid "CASASOFT website"
+msgstr "CASASOFT website"

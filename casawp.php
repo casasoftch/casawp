@@ -286,7 +286,7 @@ function casawp_display_single_import_notice() {
 
 		$status_class = ($result['status'] === 'success') ? 'notice-success' : 'notice-error';
 
-		echo '<div class="notice ' . esc_attr($status_class) . ' is-dismissible">'
+		echo '<div class="notice casawp-notice ' . esc_attr($status_class) . ' is-dismissible">'
 		   . '<p>' . esc_html($result['message']) . '</p>'
 		   . '</div>';
 	}
@@ -761,7 +761,7 @@ add_action( 'admin_post_casawp_delete_all_properties', function () {
 
 add_action( 'admin_notices', function () {
 	if ( isset( $_GET['casawp_deleted_all'] ) ) {
-		echo '<div class="notice notice-success is-dismissible"><p>'
+		echo '<div class="notice casawp-notice notice-success is-dismissible"><p>'
 		   . esc_html__( 'Alle Objektdaten wurden vollständig gelöscht.', 'casawp' )
 		   . '</p></div>';
 	}

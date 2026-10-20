@@ -4,6 +4,19 @@ readme.txt
 
 Please refer to the ``readme.txt`` for general infos concerning the plugin. This readme.md only contains further technical details.
 
+Settings page
+===============================
+
+Open **CASAWP** in the WordPress admin menu to configure General, Archive, Detail view, Protected properties, Contact form, Scripts, and Logs. The settings page uses a responsive sidebar, grouped cards, and a sticky **Save changes** bar. The layout supports widths up to 1920 px; on smaller screens, navigation wraps above the form and fields stack vertically. The introduction has flexible space, with help and GitHub links alongside it or underneath when space is limited.
+
+The CASASOFT logo above the settings links to [casasoft.ch](https://casasoft.ch/) in a new tab. All archive filters, including their display types and manual room/area ranges, share one card. **Show net rent** appears in the **Price** section. On this page, third-party callbacks on the WordPress admin notice hooks are suppressed before rendering; CASAWP and WordPress core callbacks are retained. A scoped stylesheet and script hide standard notices unless marked with `casawp-notice`, including banners that force inline `display: block !important`. CASAWP's settings confirmations, import results, deletion confirmations, and generated-page messages remain visible; other admin screens are unaffected. This also covers standard notices inserted later by another plugin. Existing option keys and tab URLs are retained, and settings labels are available in German, English, French, and Italian.
+
+![CASAWP settings page with sample values](assets/settings-page.png)
+
+Run `php tests/settings-options.php` to check saving and reloading across all seven tabs, every checkbox and dropdown/radio choice, isolation between tabs, custom category translations, import modes, and dynamic field ordering. It uses an isolated in-memory option store and does not change website settings. Run `node tests/settings-controls.js` for option dependencies and drag-order updates, and `node tests/import-progress.js` for import and cleanup UI state checks. External CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery require separate integration testing with configured services.
+
+Run `node tests/settings-notices.js` for inline-important and dynamically added notice checks. Run `php tests/admin-notices.php /path/to/wordpress` to verify callback suppression with WordPress's real hook dispatcher; this loads only its hook API and does not connect to a database or load site configuration.
+
 How do I change the html markup and add my own view files?
 -------------------------------
 
