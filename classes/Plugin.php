@@ -512,6 +512,7 @@ class Plugin
             'image' => 'Image',
             'plan' => 'Plan',
             'document' => 'Document',
+            'offer-logo' => 'Offer Logo',
             'sales-brochure' => 'Sales Brochure',
         ];
     }

@@ -66,6 +66,7 @@ class Import
   private const CLEANUP_BATCH_SIZE = 10;
   private const CLEANUP_TIME_LIMIT = 45;
   private const SKIPPED_FEATURE_SLUGS = array('has-evelator');
+  private int $log_cleanup_bytes = 0;
 
   public $importFile = false;
   public $main_lang = false;
@@ -80,6 +81,8 @@ class Import
   private string $media_download_error = '';
   private array $logged_media_failure_skips = [];
   private ?ImportLogger $import_logger = null;
+  private string $feed_fingerprint = '';
+  private bool $import_start_logged = false;
 
   private function logger(): ImportLogger
   {
@@ -115,7 +118,11 @@ class Import
       if ( ! $run_id ) {
           $run_id = time();                              // unique
           update_option( 'casawp_current_run_id', $run_id, 'no' );
+          ManualCleanup::dismissCompletionNotice();
+          update_option('casawp_import_progress_run_id', $run_id, false);
       }
+
+      $this->logImportStart();
 
       // schedule batch #1 in its *own* group
       $action_id = as_schedule_single_action(
@@ -129,18 +136,39 @@ class Import
 
   private function logScheduledAction($action_id, string $hook, int $batch, int $run_id, int $delay): void
   {
-    $this->logImport($action_id ? 'Import action scheduled.' : 'Import action could not be scheduled.', [
+    $details = [
       'event' => $action_id ? 'scheduler.scheduled' : 'scheduler.failed',
       'action_id' => (int) $action_id,
       'hook' => $hook,
       'scheduled_batch_number' => $batch,
       'run_id' => $run_id,
       'delay_seconds' => $delay,
-    ], $action_id ? 'info' : 'error');
+    ];
+    if ($hook === 'casawp_finalize_import_cleanup_batch') {
+      $details['cleanup_phase'] = $this->cleanupPhaseForRun($run_id);
+    }
+    $this->logImport($action_id ? 'Import action scheduled.' : 'Import action could not be scheduled.', $details, $action_id ? 'info' : 'error');
   }
 
   public function init_single_run( int $run_id ): void {
     $this->current_run_id = $run_id;
+  }
+
+  public function logImportStart(): void
+  {
+    if (!$this->import_start_logged) {
+      $this->logger()->separator('Start of import', 'import.separator.start');
+      $this->import_start_logged = true;
+    }
+  }
+
+  private function logCleanupStart(int $run_id): void
+  {
+    $progress = get_option('casawp_import_cleanup_progress', []);
+    if (($progress['run_id'] ?? 0) !== $run_id || empty($progress['separator_logged'])) {
+      $this->logger()->separator('Start of cleanup', 'cleanup.separator.start', ['cleanup_phase' => 'properties']);
+      update_option('casawp_import_cleanup_progress', ['run_id' => $run_id, 'phase' => 'properties', 'separator_logged' => true], false);
+    }
   }
 
   /**
@@ -237,6 +265,7 @@ class Import
       $attachment_failures = $this->transcript[$casawp_id]['attachments']['failed_to_create'] ?? [];
 
       if (!empty($attachment_failures)) {
+          $this->markFileCleanupFailed();
           return;
       }
 
@@ -339,6 +368,8 @@ class Import
 
   public function updateImportFileThroughCasaGateway( bool $already_locked = false )
   {
+    // Manual and scheduled gateway entry points already hold the import lock.
+    if ($already_locked) { $this->logImportStart(); }
     return $this->logger()->run('gateway_import', [], function () use ($already_locked) {
       return $this->retrieveGatewayImport($already_locked);
     });
@@ -346,13 +377,14 @@ class Import
 
   private function retrieveGatewayImport(bool $already_locked)
   {
-    $this->addToLog('gateway file retrieval start: ' . time());
-
     if ( ! $already_locked && ! casawp_acquire_lock() ) {
         casawp_set_pending();
         $this->addToLog( 'Import already running - poke queued.' );
         return;
     }
+
+    $this->logImportStart();
+    $this->addToLog('gateway file retrieval start: ' . time());
 
     try {
 
@@ -364,6 +396,8 @@ class Import
         if ( ! $run_id ) {
           $run_id = time();
           update_option( 'casawp_current_run_id', $run_id, 'no' );
+          ManualCleanup::dismissCompletionNotice();
+          update_option('casawp_import_progress_run_id', $run_id, false);
         }
         $this->current_run_id = $run_id;
 
@@ -460,10 +494,11 @@ class Import
       return true;
     }
 
+    $this->logCleanupStart($run_id);
     if ( function_exists( 'as_schedule_single_action' ) ) {
       if ( ! as_next_scheduled_action( 'casawp_finalize_import_cleanup_batch', null, $this->group() ) ) {
         $this->schedule_finalize_import_cleanup_batch( $run_id, 1, 0 );
-        $this->addToLog( 'Final cleanup scheduled in deletion batches.' );
+        $this->addToLog( 'Import cleanup queued: database properties, database attachments, files, taxonomy terms, then old logs.' );
       }
       return false;
     }
@@ -501,7 +536,7 @@ class Import
     return null !== $action_id;
   }
 
-  private function schedule_finalize_import_cleanup_batch( int $run_id, int $batch_number, int $delay = 5 ): void {
+  private function schedule_finalize_import_cleanup_batch( int $run_id, int $batch_number, int $delay = 0 ): void {
     $action_id = as_schedule_single_action(
       time() + $delay,
       'casawp_finalize_import_cleanup_batch',
@@ -596,38 +631,51 @@ class Import
   }
 
   public function handle_finalize_import_cleanup_batch( $batch_number = 1, $run_id = 0 ): void {
-    $this->logger()->run('final_cleanup', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id) {
-      $this->finalizeImportCleanupBatch($batch_number, $run_id);
+    $phase = $this->cleanupPhaseForRun($run_id ? (int) $run_id : (int) get_option('casawp_current_run_id', 0));
+    $this->logger()->run('final_cleanup', array_merge(['batch_number' => (int) $batch_number, 'cleanup_phase' => $phase], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id) {
+      return $this->finalizeImportCleanupBatch($batch_number, $run_id);
+    }, 'info', function (int $finished_run) {
+      if ($finished_run) { $this->complete_import_cleanup($finished_run); }
     });
   }
 
-  private function finalizeImportCleanupBatch($batch_number, $run_id): void {
+  private function cleanupPhaseForRun(int $run_id): string
+  {
+    $state = get_option('casawp_import_file_cleanup', []);
+    if (is_array($state) && ($state['run_id'] ?? 0) === $run_id) {
+      return empty($state['legacy_done']) ? 'attachments' : (!empty($state['stack']) ? 'files' : 'terms');
+    }
+    return $run_id && $this->get_posts_to_remove_for_run($run_id, 1) ? 'properties' : 'attachments';
+  }
+
+  private function finalizeImportCleanupBatch($batch_number, $run_id): int {
     $run_id = $run_id ? (int) $run_id : (int) get_option( 'casawp_current_run_id', 0 );
-    if ( ! $run_id ) {
-      return;
+    if ( ! $run_id || $run_id !== (int) get_option('casawp_current_run_id', 0) ) {
+      return 0;
     }
 
     if ( (int) get_option( 'casawp_cleanup_done_for_run', 0 ) === $run_id ) {
-      return;
+      return 0;
     }
 
     $this->current_run_id = $run_id;
 
     if ( get_option( 'casawp_import_canceled' ) ) {
-      $this->addToLog( 'Import was canceled - final cleanup batch skips deletions.' );
+      $this->addToLog( 'Import was canceled - cleanup batch skips deletions.' );
       casawp_release_lock();
       delete_option( 'casawp_current_run_id' );
-      return;
+      return 0;
     }
 
     if ( get_option( 'casawp_import_failed' ) ) {
-      $this->addToLog( 'Import marked as failed. Final cleanup batch skips deletions.' );
+      $this->addToLog( 'Import marked as failed. Cleanup batch skips deletions.' );
       delete_option( 'casawp_import_failed' );
       casawp_release_lock();
       delete_option( 'casawp_current_run_id' );
-      return;
+      return 0;
     }
 
+    $this->logCleanupStart($run_id);
     $started_at       = microtime( true );
     $deleted_posts    = 0;
     $deleted_media    = 0;
@@ -654,7 +702,7 @@ class Import
     if ( $deleted_posts || $deleted_media || $failed_media ) {
       $this->addToLog(
         sprintf(
-          'Final cleanup batch %d deleted %d properties (%s), %d attachments, %d attachment failures.',
+          'Database property cleanup batch %d deleted %d properties (%s), %d attachments, %d attachment failures.',
           (int) $batch_number,
           $deleted_posts,
           implode( ',', $deleted_post_ids ),
@@ -667,14 +715,78 @@ class Import
     $remaining = $this->get_posts_to_remove_for_run( $run_id, 1 );
     if ( ! empty( $remaining ) ) {
       $this->schedule_finalize_import_cleanup_batch( $run_id, (int) $batch_number + 1 );
-      return;
+      return 0;
     }
 
-    $this->complete_import_cleanup( $run_id );
+    if (!$this->cleanupImportFiles($run_id)) {
+      $this->schedule_finalize_import_cleanup_batch($run_id, (int) $batch_number + 1);
+      return 0;
+    }
+    return $run_id;
+  }
+
+  private function cleanupImportFiles(int $run_id): bool
+  {
+    $this->logger()->setStage('import_file_cleanup');
+    try {
+      $xml = $this->readImportXml($this->getImportFile());
+      if (!isset($xml->properties)) {
+        throw new \RuntimeException('Feed has no properties node; file cleanup was skipped.');
+      }
+      $ids = [];
+      foreach ($xml->properties->property as $property) {
+        $id = (string) $property['id'];
+        if ($id === '') {
+          throw new \RuntimeException('Feed contains a property without an ID; file cleanup was skipped.');
+        }
+        $ids[] = $id;
+      }
+      $this->logger()->setStage('import_file_cleanup');
+      $cleanup = new ImportFileCleanup(CASASYNC_CUR_UPLOAD_BASEDIR, $this->logger());
+      return $cleanup->runBatch($run_id, $ids);
+    } catch (\Throwable $e) {
+      $this->logger()->exception('Import file cleanup stopped; remaining files were retained.', $e);
+      return true;
+    }
+  }
+
+  private function markFileCleanupFailed(): void
+  {
+    if ($this->current_run_id) {
+      update_option('casawp_file_cleanup_failed_run', $this->current_run_id, false);
+    }
+  }
+
+  private function rememberImportedFeed(): void
+  {
+    update_option('casawp_import_feed_fingerprint', [
+      'run_id' => $this->current_run_id, 'sha256' => $this->feed_fingerprint,
+    ], false);
   }
 
   private function complete_import_cleanup( int $run_id ): void {
-    $this->logger()->setStage('cleanup_finalize');
+    update_option('casawp_import_cleanup_progress', ['run_id' => $run_id, 'phase' => 'logs'], false);
+    $this->logger()->run('log_cleanup', ['cleanup_phase' => 'logs'], function () { $this->cleanup_log_files(); });
+    $this->logger()->setStage('cleanup_finalize', ['cleanup_phase' => 'complete']);
+    $file_totals = get_option('casawp_import_file_cleanup_totals', []);
+    $file_bytes = is_array($file_totals) && ($file_totals['run_id'] ?? 0) === $run_id
+      ? (int) ($file_totals['stats']['bytes'] ?? 0) : 0;
+    $this->logImport(sprintf('Import cleanup total: %.2f MB freed (attachment/XML files: %.2f MB; old logs: %.2f MB).',
+      ($file_bytes + $this->log_cleanup_bytes) / 1048576, $file_bytes / 1048576, $this->log_cleanup_bytes / 1048576), [
+        'event' => 'cleanup.total',
+        'freed_bytes' => $file_bytes + $this->log_cleanup_bytes,
+        'attachment_xml_bytes' => $file_bytes,
+        'old_log_bytes' => $this->log_cleanup_bytes,
+      ]);
+    $cleanup_summary = [
+      'run_id' => $run_id, 'phase' => 'logs',
+      'stats' => is_array($file_totals) && ($file_totals['run_id'] ?? 0) === $run_id ? ($file_totals['stats'] ?? []) : [],
+      'freed_bytes' => $file_bytes + $this->log_cleanup_bytes,
+    ];
+    update_option('casawp_import_cleanup_progress', $cleanup_summary, false);
+    if (is_array($file_totals) && ($file_totals['run_id'] ?? 0) === $run_id) {
+      delete_option('casawp_import_file_cleanup_totals');
+    }
     flush_rewrite_rules();
 
     if ( class_exists( '\WpeCommon' ) ) {
@@ -683,6 +795,8 @@ class Import
       $this->addToLog( 'Triggered WP Engine cache purge.' );
     }
 
+    $cleanup_summary['finished_at'] = time();
+    update_option('casawp_import_cleanup_progress', $cleanup_summary, false);
     update_option( 'casawp_cleanup_done_for_run', $run_id );
 
     if ( function_exists( 'as_unschedule_all_actions' ) ) {
@@ -693,7 +807,7 @@ class Import
     casawp_release_lock();
     delete_option( 'casawp_current_run_id' );
     $this->addToLog( 'Import lock cleared.' );
-    $this->addToLog( 'Import completed and lock cleared.' );
+    $this->logger()->cleanupCompleted($cleanup_summary['stats'], $cleanup_summary['freed_bytes']);
 
     if ( casawp_has_pending() ) {
       casawp_clear_pending();
@@ -723,6 +837,8 @@ class Import
         if ( ! $this->current_run_id && $batch_number == 1 ) {
             $this->current_run_id = time();
             update_option( 'casawp_current_run_id', $this->current_run_id, 'no' );
+            ManualCleanup::dismissCompletionNotice();
+            update_option('casawp_import_progress_run_id', $this->current_run_id, false);
         }
     }
 
@@ -771,6 +887,9 @@ class Import
     try {
 
       $xml = $this->readImportXml($this->getImportFile());
+      if ((int) $batch_number === 1) {
+        $this->rememberImportedFeed();
+      }
 
       // OLD WAY, throwing Exception
       /* $properties = $xml->properties->property;
@@ -840,7 +959,7 @@ class Import
         if ( $cleanup_finished ) {
           $this->addToLog('Import process completed.');
         } else {
-          $this->addToLog('Import batches completed; final cleanup is running.');
+          $this->addToLog('Import batches completed; database cleanup is queued, followed by filesystem, taxonomy, and old-log cleanup.');
         }
       } else {
         $next_batch_number = $batch_number + 1;
@@ -876,6 +995,7 @@ class Import
         }
       }
     } catch (\Throwable $e) {
+      $this->markFileCleanupFailed();
       $this->logger()->exception('Import batch failed.', $e, [
         'event' => 'batch.failed',
         'duration_seconds' => round(microtime(true) - $started_at, 3),
@@ -890,6 +1010,7 @@ class Import
 
   public function handle_single_request_import()
   {
+    $this->logImportStart();
     return $this->logger()->run('single_request_import', ['batch_number' => 1], function () {
       try {
         return $this->importSingleRequest();
@@ -907,6 +1028,7 @@ class Import
       $this->fetchFileFromCasaGateway(); 
 
       $xml = $this->readImportXml($this->getImportFile());
+      $this->rememberImportedFeed();
 
       // OLD WAY, throwing Exception
       /* $properties = $xml->properties->property;
@@ -960,9 +1082,10 @@ class Import
       throw new \RuntimeException('Failed to read import file.');
     }
 
+    $this->feed_fingerprint = hash('sha256', $xml_string);
     $this->logger()->setStage('feed_parse', [
       'feed_bytes' => strlen($xml_string),
-      'feed_sha256' => hash('sha256', $xml_string),
+      'feed_sha256' => $this->feed_fingerprint,
     ]);
     $previous = libxml_use_internal_errors(true);
     libxml_clear_errors();
@@ -1655,6 +1778,7 @@ class Import
               });
             }, 'debug');
           } catch (\Throwable $e) {
+            $this->markFileCleanupFailed();
             $this->transcript[$casawp_id]['action'] = 'error';
             $this->transcript[$casawp_id]['error'] = $e->getMessage();
             wp_reset_postdata();
@@ -2673,10 +2797,8 @@ class Import
   {
       $source = !empty($the_mediaitem['url']) ? $the_mediaitem['url'] : $the_mediaitem['file'];
 
-      return !empty($the_mediaitem['type'])
-          && $the_mediaitem['type'] === 'image'
-          && get_option('casawp_use_casagateway_cdn', false)
-          && $this->isRemoteMediaUrl($source);
+      return ImportMedia::usesRemote((string) ($the_mediaitem['type'] ?? ''), (string) $source,
+          (bool) get_option('casawp_use_casagateway_cdn', false));
   }
 
   public function getCasawpImportedAttachments($post_id)
@@ -2970,10 +3092,11 @@ class Import
       $caption = isset($the_mediaitem['caption']) ? (string) $the_mediaitem['caption'] : '';
       $alt     = isset($the_mediaitem['alt']) ? (string) $the_mediaitem['alt'] : '';
 
-      // Remote-only attachment for CDN image mode
+      // CDN attachments retain WordPress records without downloading local copies.
       if ($this->shouldUseRemoteCasawpAttachment($the_mediaitem)) {
           $mime = wp_check_filetype(parse_url($origin, PHP_URL_PATH), null);
-          $mime_type = !empty($mime['type']) ? $mime['type'] : 'image/jpeg';
+          $mime_type = !empty($mime['type']) ? $mime['type']
+              : ($the_mediaitem['type'] === 'image' ? 'image/jpeg' : 'application/octet-stream');
 
           $attachment = array(
               'guid'           => $origin,
@@ -3071,7 +3194,7 @@ class Import
 
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property, $has_media_node = true)
   {
-      $allowed_types = array('image', 'document', 'plan', 'offer-logo', 'sales-brochure');
+      $allowed_types = ImportMedia::TYPES;
       $the_casawp_attachments = array();
       $order = 0;
 
@@ -3686,7 +3809,8 @@ class Import
     return array_values(array_filter(
       !empty($features) ? (array) $features : array(),
       static function ($feature) {
-        return !in_array(trim((string) $feature), self::SKIPPED_FEATURE_SLUGS, true);
+        $slug = trim((string) $feature);
+        return $slug !== '' && !in_array($slug, self::SKIPPED_FEATURE_SLUGS, true);
       }
     ));
   }
@@ -3810,46 +3934,55 @@ class Import
 
   public function cleanup_log_files()
   {
+    $this->log_cleanup_bytes = 0;
     $log_dir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/logs';
-
-    if (!is_dir($log_dir)) {
-      $this->addToLog('Log directory does not exist. Skipping cleanup.');
+    $uploads = realpath(CASASYNC_CUR_UPLOAD_BASEDIR);
+    $resolved = realpath($log_dir);
+    if (!$uploads || !$resolved || !is_dir($log_dir) || is_link($log_dir)
+        || strpos($resolved, $uploads . '/') !== 0) {
       return;
     }
 
+    // Use the same site-local month as the logger, anchored on day one to avoid
+    // month-end overflow when calculating the previous calendar month.
+    $current_month = get_date_from_gmt('', 'Ym');
+    $month_start = \DateTimeImmutable::createFromFormat('!Ym', $current_month, new \DateTimeZone('UTC'));
+    if ($month_start === false) {
+      return;
+    }
+    $keep = [$current_month, $month_start->modify('-1 month')->format('Ym')];
     $files = glob($log_dir . '/*.log');
-
     if (!$files) {
-      #$this->addToLog('No log files found for cleanup.');
       return;
     }
 
-    $current_time = time();
-    $six_months_in_seconds = 2 * MONTH_IN_SECONDS;
-
+    $deleted = 0;
+    $bytes = 0;
     foreach ($files as $file) {
       $filename = basename($file, '.log');
-
-      if (!preg_match('/^\d{6}$/', $filename)) {
+      if (!preg_match('/^\d{4}(?:0[1-9]|1[0-2])$/D', $filename)
+          || in_array($filename, $keep, true) || !is_file($file) || is_link($file)) {
         continue;
       }
-
-      $file_time = strtotime("{$filename}01");
-
-      if ($file_time === false) {
-        continue;
-      }
-
-      $age = $current_time - $file_time;
-
-      if ($age > $six_months_in_seconds) {
-        if (unlink($file)) {
-          #$this->addToLog("Deleted old log file: {$filename}.log");
-        } else {
-          #$this->addToLog("Failed to delete log file: {$filename}.log");
-        }
+      $size = filesize($file);
+      if (@unlink($file)) {
+        $deleted++;
+        $bytes += $size === false ? 0 : $size;
+        $this->log_cleanup_bytes = $bytes;
+        $this->logImport('Deleted old import log: ' . basename($file), [], 'debug');
+      } else {
+        $this->logImport('Could not delete old import log: ' . $file, ['event' => 'logs.delete_failed'], 'warning');
       }
     }
+    if ($deleted) {
+      $this->logImport(sprintf('Import log cleanup: deleted %d files; freed %.2f MB. Keeping %s and %s.',
+        $deleted, $bytes / 1048576, $keep[0], $keep[1]), ['event' => 'logs.cleaned']);
+    }
+  }
+
+  public function getLogCleanupFreedBytes(): int
+  {
+    return $this->log_cleanup_bytes;
   }
 
   public function addToLog($transcript)
@@ -3859,6 +3992,9 @@ class Import
 
   private function logImport($transcript, array $context = [], string $level = 'info')
   {
+    if ($level === 'error') {
+      $this->markFileCleanupFailed();
+    }
     $this->logger()->write($transcript, $context, $level);
   }
 

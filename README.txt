@@ -39,16 +39,41 @@ Please refer to https://help.casasoft.ch/hc/de/articles/22037480338845-CASAGATEW
 How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
 
-For detailed import logs, including individual attachments, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
+For detailed import logs, including individual attachments and batch start/scheduling entries, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
 
 add_filter('casawp_import_log_level', static function () { return 'debug'; });
 
 Remove or deactivate the filter to return to compact batch summaries.
 
+After a successful import, cleanup removes data-done.xml and data-error.xml, unused files in obsolete property folders, and empty attachment folders, including externalsync and its attachment parent when empty. Finder .DS_Store files inside attachment folders are also removed so they do not keep otherwise empty folders alive. With CDN enabled, CASAGATEWAY/CDN images, documents, plans, logos, and brochures are imported without local downloads; cleanup removes their old local copies and generated previews while preserving attachment records and image dimensions. With CDN enabled, every regular file under externalsync is deleted recursively, regardless of type, active property, missing metadata or local references. Other attachment folders retain their local-consumer protections. Symbolic links are skipped. After switching CDN off, restore local attachments through a manual media resync.
+
+Cleanup also removes detached legacy CASAWP attachment records with no existing parent, including old CASAGATEWAY remote-only records, and leftover metadata for missing CASAWP attachment posts. Source ownership and the absence of an existing parent determine deletion; matching IDs or filenames in content, saved metadata and options do not retain these records. Attachments with existing parents and their WPML translation groups are retained. Local files for active properties are retained when CDN is disabled. Debug logging explains why legacy records were retained.
+
+After attachment and file cleanup, unused terms in registered casawp_* taxonomies are removed, except casawp_availability and casawp_salestype. Required standard attachment types (image, document, plan, offer-logo, sales-brochure) and their WPML counterparts are retained even when unused, because plugin registration needs them and would recreate them. Unused custom attachment types can still be removed. Cleanup checks actual relationships across all languages and preserves terms with used WPML counterparts. Records and terms are removed through WordPress APIs so WPML deletion hooks run normally.
+
+Use "Run legacy data cleanup" below "Delete all property data" in General settings to run attachment, file, empty-term and old-log cleanup without importing properties. Existing properties are retained. This runs in background batches, shows an activity bar, its current phase and freed MB, and writes detailed progress to the monthly logs. It works without data.xml and protects folders belonging to properties currently stored in WordPress across all languages when CDN is disabled. With CDN enabled, externalsync is cleared completely. Imports and manual cleanup cannot run concurrently.
+
+Import cleanup also removes monthly log files except those from the current and previous calendar month, using the site's local date. The monthly cron cleanup uses the same retention rule, so old logs are removed even if cron has not run.
+
 == Changelog ==
 
 = Unreleased =
 
+* Performance: Speed up database cleanup with bounded candidate queries and bulk cache loading; schedule follow-up cleanup batches without an artificial delay
+* Enhancement: Show deleted attachment, local import file and empty taxonomy term counts alongside freed MB when import or standalone cleanup finishes
+* Enhancement: Reserve 100% import progress until cleanup finishes; show cleanup activity bars and current phases for imports and standalone cleanup
+* Enhancement: Clearly label database, filesystem, taxonomy, and old-log cleanup phases in batch progress and scheduling messages
+* Enhancement: Clean detached legacy import attachment records and orphaned CASAWP metadata in batches, preserving attachments with existing parents and their WPML translation groups
+* Enhancement: Remove empty CASAWP taxonomy terms after attachment/file cleanup, excluding availability and sale type and preserving used translations
+* Enhancement: Log the total MB freed by attachment/XML file cleanup and old-log retention at the end of import cleanup
+* New: Add a standalone "Run legacy data cleanup" button below "Delete all property data", with background progress, shared import locking, translated status messages, and cleanup without requiring data.xml
+* New: Clean obsolete import XML files, leftover property folders, and local CDN attachment copies in batches after successful imports
+* New: Add legacy data cleanup and improve import logging
+
+* Fix: Repair missing offer-logo attachment terms and ignore empty XML features so these import errors no longer block file cleanup
+* Fix: Only show log and import XML download links when the corresponding files exist
+* Enhancement: Clean monthly logs after successful imports and through cron, retaining only the current and previous calendar month
+* Enhancement: Apply CDN mode to imported images, documents, plans, logos, and brochures; clarify the CDN setting label
 * Enhancement: Improve JSON import logging with readable batch summaries, run and property context, detailed failure diagnostics, and optional attachment debug logging
 * New: Add a link to trigger a gateway poke for the current site from the General settings tab
 * Fix: Use the site's uploads directory for log links and older log file checks, including multisite subsites

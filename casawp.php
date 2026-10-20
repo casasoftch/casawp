@@ -132,6 +132,7 @@ if (is_admin()) {
 
 $import = new casawp\Import(false, false);
 $import->register_hooks();
+\casawp\ManualCleanup::registerHooks();
 
 
 /**
@@ -171,6 +172,14 @@ function casawp_clear_pending(): void { delete_option( 'casawp_import_pending' )
 
 /** Is a pending poke queued? */
 function casawp_has_pending(): bool { return (bool) get_option( 'casawp_import_pending', 0 ); }
+
+/** Keep gateway/manual import requests pending while standalone maintenance owns the lock. */
+function casawp_defer_import_during_cleanup(): bool {
+	if ( ! \casawp\ManualCleanup::isRunning() ) { return false; }
+	casawp_set_pending();
+	(new \casawp\Import(false, false))->addToLog('Import requested during manual cleanup; queued until cleanup finishes.');
+	return true;
+}
 
 /** Is an import lock currently held (read-only, does not acquire)? */
 function casawp_is_import_running( int $max_age = 14400 ): bool {
@@ -343,6 +352,7 @@ function casawp_handle_failed_action($action_id) {
 
 
 function casawp_start_new_import($source = '', $force_cancel = false) {
+	if ( casawp_defer_import_during_cleanup() ) { return; }
 
 	if ( ! casawp_acquire_lock() ) {          // someone else is running
 		if ( $force_cancel ) {
@@ -357,6 +367,7 @@ function casawp_start_new_import($source = '', $force_cancel = false) {
 		}
 	}
 
+	\casawp\ManualCleanup::dismissCompletionNotice();
 	update_option('casawp_total_batches', 0);
 	update_option('casawp_completed_batches', 0);
 	delete_option('casawp_import_failed');
@@ -447,16 +458,7 @@ function casawp_cancel_import() {
 add_action('wp_ajax_casawp_get_import_progress', 'casawp_get_import_progress');
 
 function casawp_get_import_progress() {
-	$total_batches = get_option('casawp_total_batches', 0);
-	$completed_batches = get_option('casawp_completed_batches', 0);
-
-	if ($total_batches > 0) {
-		$progress = ($completed_batches / $total_batches) * 100;
-	} else {
-		$progress = 0;
-	}
-
-	wp_send_json_success(['progress' => $progress]);
+	wp_send_json_success(\casawp\ImportProgress::data());
 }
 
 add_action('wp_ajax_casawp_check_no_properties_alert', 'casawp_check_no_properties_alert');
@@ -496,6 +498,7 @@ function casawp_start_import() {
  * – fetch feed, process everything, remove stale posts – all in one HTTP request
  */
 function casawp_start_single_request_import( string $source = '' ) {
+	if ( casawp_defer_import_during_cleanup() ) { return; }
 
 	/* ── 1. exclusive lock ─────────────────────────────────────── */
 	if ( ! casawp_acquire_lock() ) {          // someone else is running
@@ -507,6 +510,8 @@ function casawp_start_single_request_import( string $source = '' ) {
 	/* ── 2. mint / store a fresh run-id ────────────────────────── */
 	$run_id = time();                         // seconds since 1970 ⇒ unique
 	update_option( 'casawp_current_run_id', $run_id, 'no' );
+	\casawp\ManualCleanup::dismissCompletionNotice();
+	update_option('casawp_import_progress_run_id', $run_id, false);
 
 	update_option( 'casawp_total_batches',     1 );
 	update_option( 'casawp_completed_batches', 0 );
@@ -517,6 +522,7 @@ function casawp_start_single_request_import( string $source = '' ) {
 	$import = new \casawp\Import( false, false );   // (poke = false, update = false)
 	$import->init_single_run( $run_id );            // hand over the run-id
 
+	$import->logImportStart();
 	$import->addToLog( $source . ' import (single-request) started' );
 
 	/* ── 4. do the actual work ─────────────────────────────────── */

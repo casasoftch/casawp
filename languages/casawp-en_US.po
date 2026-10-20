@@ -3361,12 +3361,12 @@ msgstr ""
 
 #: options.php:1458 options.php:1462
 #, php-format
-msgid "Use %s as an image CDN."
-msgstr ""
+msgid "Use %s as a CDN for all attachments."
+msgstr "Use %s as a CDN for all attachments."
 
 #: options.php:1460
-msgid "Display images directly from the Gateway CDN."
-msgstr ""
+msgid "Display images, documents, plans, logos, and brochures directly from the Gateway CDN."
+msgstr "Display images, documents, plans, logos, and brochures directly from the Gateway CDN."
 
 #: options.php:1467 options.php:1471
 #, php-format
@@ -3555,3 +3555,112 @@ msgstr "Unassigned"
 #: classes/Plugin.php
 msgid "Not classified as an image"
 msgstr "Not classified as an image"
+
+#: classes/ManualCleanup.php options.php
+msgid "Insufficient privileges."
+msgstr "Insufficient privileges."
+
+#: classes/ManualCleanup.php options.php
+msgid "An import or cleanup is already running or queued. Please wait until it finishes."
+msgstr "An import or cleanup is already running or queued. Please wait until it finishes."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup scheduling is unavailable."
+msgstr "Cleanup scheduling is unavailable."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup could not be started. See the logs for details."
+msgstr "Cleanup could not be started. See the logs for details."
+
+#: classes/ManualCleanup.php options.php
+msgid "Database attachments"
+msgstr "Database attachments"
+
+#: classes/ManualCleanup.php options.php
+msgid "Files and folders"
+msgstr "Files and folders"
+
+#: classes/ManualCleanup.php options.php
+msgid "Empty taxonomy terms"
+msgstr "Empty taxonomy terms"
+
+#: classes/ManualCleanup.php options.php
+msgid "Old logs"
+msgstr "Old logs"
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup queued."
+msgstr "Cleanup queued."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup running: %1$s (batch %2$d). %3$s MB freed."
+msgstr "Cleanup running: %1$s (batch %2$d). %3$s MB freed."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup completed with warnings. %s MB freed. See the logs for details."
+msgstr "Cleanup completed with warnings. %s MB freed. See the logs for details."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup completed. %s MB freed."
+msgstr "Cleanup completed. %s MB freed."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup stopped. See the logs for details."
+msgstr "Cleanup stopped. See the logs for details."
+
+#: classes/ManualCleanup.php options.php
+msgid "Run legacy data cleanup"
+msgstr "Run legacy data cleanup"
+
+#: classes/ManualCleanup.php options.php
+msgid "Clean up unused attachments, local import files, empty taxonomy terms and old logs without importing properties. Existing properties are retained. Data is deleted step by step in background batches."
+msgstr "Clean up unused attachments, local import files, empty taxonomy terms and old logs without importing properties. Existing properties are retained. Data is deleted step by step in background batches."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup request failed. Please try again."
+msgstr "Cleanup request failed. Please try again."
+
+#: classes/ImportProgress.php options.php
+msgid "Outdated properties"
+msgstr "Outdated properties"
+
+#: classes/ImportProgress.php options.php
+msgid "Import stopped. See the logs for details."
+msgstr "Import stopped. See the logs for details."
+
+#: classes/ImportProgress.php options.php
+msgid "Importing properties…"
+msgstr "Importing properties…"
+
+#: classes/ImportProgress.php options.php
+#, php-format
+msgid "Cleaning up: %1$s. %2$s MB freed."
+msgstr "Cleaning up: %1$s. %2$s MB freed."
+
+#: classes/ImportProgress.php options.php
+msgid "Import and cleanup completed."
+msgstr "Import and cleanup completed."
+
+#: classes/ImportProgress.php options.php
+msgid "Import status could not be updated. Retrying…"
+msgstr "Import status could not be updated. Retrying…"
+
+#: classes/ImportProgress.php options.php
+msgid "Cleanup progress"
+msgstr "Cleanup progress"
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+#, php-format
+msgid "Removed: unused attachments (%1$s), local import files (%2$s), empty taxonomy terms (%3$s). %4$s MB freed."
+msgstr "Removed: unused attachments (%1$s), local import files (%2$s), empty taxonomy terms (%3$s). %4$s MB freed."
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+msgid "Cleanup completed."
+msgstr "Cleanup completed."
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+msgid "Cleanup completed with warnings. See the logs for details."
+msgstr "Cleanup completed with warnings. See the logs for details."

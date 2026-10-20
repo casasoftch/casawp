@@ -449,11 +449,11 @@ msgstr ""
 "L’importation par lots est utilisée par défaut (recommandé). N’activer que "
 "pour les configurations héritées ou les tests manuels."
 
-msgid "Use %s as an image CDN."
-msgstr "Utiliser %s comme CDN d’images."
+msgid "Use %s as a CDN for all attachments."
+msgstr "Utiliser %s comme CDN pour toutes les pièces jointes."
 
-msgid "Display images directly from the Gateway CDN."
-msgstr "Afficher les images directement depuis le CDN Gateway."
+msgid "Display images, documents, plans, logos, and brochures directly from the Gateway CDN."
+msgstr "Afficher les images, documents, plans, logos et brochures directement depuis le CDN Gateway."
 
 msgid ""
 "Import no more than one image for reference properties (not compatible with "
@@ -4424,3 +4424,112 @@ msgstr "Non attribué"
 #: classes/Plugin.php
 msgid "Not classified as an image"
 msgstr "Non classé comme image"
+
+#: classes/ManualCleanup.php options.php
+msgid "Insufficient privileges."
+msgstr "Droits insuffisants."
+
+#: classes/ManualCleanup.php options.php
+msgid "An import or cleanup is already running or queued. Please wait until it finishes."
+msgstr "Un import ou un nettoyage est déjà en cours ou en attente. Veuillez attendre la fin du processus."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup scheduling is unavailable."
+msgstr "La planification du nettoyage est indisponible."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup could not be started. See the logs for details."
+msgstr "Le nettoyage n’a pas pu démarrer. Consultez les journaux pour plus de détails."
+
+#: classes/ManualCleanup.php options.php
+msgid "Database attachments"
+msgstr "Pièces jointes de la base de données"
+
+#: classes/ManualCleanup.php options.php
+msgid "Files and folders"
+msgstr "Fichiers et dossiers"
+
+#: classes/ManualCleanup.php options.php
+msgid "Empty taxonomy terms"
+msgstr "Termes de taxonomie inutilisés"
+
+#: classes/ManualCleanup.php options.php
+msgid "Old logs"
+msgstr "Anciens journaux"
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup queued."
+msgstr "Nettoyage en attente."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup running: %1$s (batch %2$d). %3$s MB freed."
+msgstr "Nettoyage en cours : %1$s (lot %2$d). %3$s Mo libérés."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup completed with warnings. %s MB freed. See the logs for details."
+msgstr "Nettoyage terminé avec des avertissements. %s Mo libérés. Consultez les journaux pour plus de détails."
+
+#: classes/ManualCleanup.php options.php
+#, php-format
+msgid "Cleanup completed. %s MB freed."
+msgstr "Nettoyage terminé. %s Mo libérés."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup stopped. See the logs for details."
+msgstr "Nettoyage arrêté. Consultez les journaux pour plus de détails."
+
+#: classes/ManualCleanup.php options.php
+msgid "Run legacy data cleanup"
+msgstr "Nettoyer les anciennes données"
+
+#: classes/ManualCleanup.php options.php
+msgid "Clean up unused attachments, local import files, empty taxonomy terms and old logs without importing properties. Existing properties are retained. Data is deleted step by step in background batches."
+msgstr "Nettoyer les pièces jointes inutilisées, les fichiers d’import locaux, les termes de taxonomie inutilisés et les anciens journaux sans importer de biens. Les biens existants sont conservés. Les données sont supprimées progressivement par lots en arrière-plan."
+
+#: classes/ManualCleanup.php options.php
+msgid "Cleanup request failed. Please try again."
+msgstr "La demande de nettoyage a échoué. Veuillez réessayer."
+
+#: classes/ImportProgress.php options.php
+msgid "Outdated properties"
+msgstr "Biens obsolètes"
+
+#: classes/ImportProgress.php options.php
+msgid "Import stopped. See the logs for details."
+msgstr "Import arrêté. Consultez les journaux pour plus de détails."
+
+#: classes/ImportProgress.php options.php
+msgid "Importing properties…"
+msgstr "Importation des biens…"
+
+#: classes/ImportProgress.php options.php
+#, php-format
+msgid "Cleaning up: %1$s. %2$s MB freed."
+msgstr "Nettoyage en cours : %1$s. %2$s Mo libérés."
+
+#: classes/ImportProgress.php options.php
+msgid "Import and cleanup completed."
+msgstr "Import et nettoyage terminés."
+
+#: classes/ImportProgress.php options.php
+msgid "Import status could not be updated. Retrying…"
+msgstr "Impossible de mettre à jour l’état de l’import. Nouvelle tentative…"
+
+#: classes/ImportProgress.php options.php
+msgid "Cleanup progress"
+msgstr "Progression du nettoyage"
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+#, php-format
+msgid "Removed: unused attachments (%1$s), local import files (%2$s), empty taxonomy terms (%3$s). %4$s MB freed."
+msgstr "Supprimés : pièces jointes inutilisées (%1$s), fichiers d’import locaux (%2$s), termes de taxonomie inutilisés (%3$s). %4$s Mo libérés."
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+msgid "Cleanup completed."
+msgstr "Nettoyage terminé."
+
+#: classes/ImportProgress.php classes/ManualCleanup.php
+msgid "Cleanup completed with warnings. See the logs for details."
+msgstr "Nettoyage terminé avec des avertissements. Consultez les journaux pour plus de détails."

@@ -25,13 +25,44 @@ class ImportLogger
         $this->context = array_merge($this->context, $context, ['stage' => $stage]);
     }
 
-    public function run(string $stage, array $context, callable $callback, string $level = 'info')
+    public function separator(string $label, string $event, array $context = []): void
+    {
+        $this->write('-------------------- ' . $label . ' --------------------', array_merge($context, ['event' => $event]));
+    }
+
+    /** Diagnostics use English independently of the translated settings-page notices. */
+    public function cleanupCompleted(array $stats, int $bytes, bool $manual = false): void
+    {
+        $message = $manual ? 'Cleanup completed.' : 'Import and cleanup completed.';
+        if (!empty($stats['failures'])) {
+            $message = $manual ? 'Cleanup completed with warnings. See the logs for details.'
+                : 'Import and cleanup completed with warnings. See the logs for details.';
+        }
+        $counts = [
+            'deleted_attachments' => (int) ($stats['legacy_deleted'] ?? 0),
+            'deleted_files' => (int) ($stats['files'] ?? 0),
+            'deleted_terms' => (int) ($stats['terms_deleted'] ?? 0),
+            'freed_bytes' => $bytes,
+        ];
+        $message .= sprintf(' Removed: unused attachments (%s), local import files (%s), empty taxonomy terms (%s). %s MB freed.',
+            number_format($counts['deleted_attachments'], 0, '.', ','),
+            number_format($counts['deleted_files'], 0, '.', ','),
+            number_format($counts['deleted_terms'], 0, '.', ','),
+            number_format($bytes / 1048576, 2, '.', ','));
+        $this->write($message, array_merge(['event' => $manual ? 'manual_cleanup.completed' : 'cleanup.summary'], $counts));
+        $this->separator('End of cleanup', 'cleanup.separator');
+        if (!$manual) { $this->separator('End of import', 'import.separator.end'); }
+    }
+
+    /** Completion work runs after the finished entry, with error/fatal capture still active. */
+    public function run(string $stage, array $context, callable $callback, string $level = 'info', ?callable $afterFinished = null)
     {
         $previous = $this->context;
         $this->setStage($stage, $context);
         $started = microtime(true);
         $errors_before = $this->errors;
         $outcomes_before = $this->outcomes;
+        $finished = false;
         $this->active_operations++;
         if (!$this->shutdown_registered) {
             $this->shutdown_registered = true;
@@ -49,16 +80,20 @@ class ImportLogger
                     $counts[$event] = $difference;
                 }
             }
-            $this->write($this->stageLabel($stage) . ' finished.', [
+            $completion = [
                 'event' => $stage . '.finished',
                 'duration_seconds' => round(microtime(true) - $started, 3),
                 'error_count' => $error_count,
                 'counts' => $counts,
-            ], $error_count ? 'warning' : $level);
+            ];
+            if (isset($context['cleanup_phase'])) { $completion['cleanup_phase'] = $context['cleanup_phase']; }
+            $this->write($this->stageLabel($stage) . ' finished.', $completion, $error_count ? 'warning' : $level);
+            $finished = true;
+            if ($afterFinished) { $afterFinished($result); }
             return $result;
         } catch (\Throwable $e) {
-            $this->exception($this->stageLabel($stage) . ' failed.', $e, [
-                'event' => $stage . '.failed',
+            $this->exception($this->stageLabel($stage) . ($finished ? ' completion failed.' : ' failed.'), $e, [
+                'event' => $stage . ($finished ? '.completion_failed' : '.failed'),
                 'duration_seconds' => round(microtime(true) - $started, 3),
             ]);
             throw $e;
@@ -111,8 +146,15 @@ class ImportLogger
         if ($level === 'error') {
             $this->errors++;
         }
-        // Count routine outcomes without serializing or writing each record in normal mode.
-        if ($level === 'debug' && apply_filters('casawp_import_log_level', 'info') !== 'debug') {
+        $batch_detail = $level === 'info' && (
+            in_array($event, ['properties_batch.started', 'final_cleanup.started', 'manual_cleanup_batch.started', 'outdated_cleanup.started'], true)
+            || ($event === 'scheduler.scheduled' && in_array($context['hook'] ?? '', [
+                'casawp_batch_import', 'casawp_finalize_import_cleanup_batch', 'casawp_manual_cleanup_batch', 'casawp_delete_outdated_properties',
+            ], true))
+        );
+        // Keep lifecycle details in their existing JSON format, but only in debug mode.
+        // Counting, operation tracking and warning/error output remain active in normal mode.
+        if (($level === 'debug' || $batch_detail) && apply_filters('casawp_import_log_level', 'info') !== 'debug') {
             return '';
         }
         // The property heading and batch summary already delimit successful offers.
@@ -153,7 +195,7 @@ class ImportLogger
             } elseif (substr($event, -9) === '.finished') {
                 unset($details['duration_seconds'], $details['error_count'], $details['counts']);
             }
-            $metadata = array_merge(array_intersect_key($metadata, array_flip(['run_id', 'batch_number', 'event'])), $details);
+            $metadata = array_merge(array_intersect_key($metadata, array_flip(['run_id', 'batch_number', 'event', 'cleanup_phase'])), $details);
             if (empty($metadata['run_id'])) {
                 $metadata['request_id'] = $this->request_id;
             }
@@ -178,7 +220,8 @@ class ImportLogger
         if ($event === 'scheduler.scheduled') {
             $labels = [
                 'casawp_batch_import' => 'Import batch',
-                'casawp_finalize_import_cleanup_batch' => 'Final cleanup batch',
+                'casawp_finalize_import_cleanup_batch' => self::cleanupPhaseLabel($meta['cleanup_phase'] ?? '') . ' batch',
+                'casawp_manual_cleanup_batch' => self::cleanupPhaseLabel($meta['cleanup_phase'] ?? '') . ' batch',
                 'casawp_delete_outdated_properties' => 'Outdated property cleanup batch',
             ];
             return sprintf('%s %d scheduled in %ds (action %d).',
@@ -187,6 +230,12 @@ class ImportLogger
         }
         if ($event === 'properties_batch.started') {
             return sprintf('Import batch %d started.', $meta['batch_number']);
+        }
+        if ($event === 'final_cleanup.started' || $event === 'manual_cleanup_batch.started') {
+            return sprintf('%s batch %d started.', self::cleanupPhaseLabel($meta['cleanup_phase'] ?? ''), $meta['batch_number']);
+        }
+        if ($event === 'final_cleanup.failed' || $event === 'manual_cleanup_batch.failed') {
+            return sprintf('%s batch %d failed.', self::cleanupPhaseLabel($meta['cleanup_phase'] ?? ''), $meta['batch_number']);
         }
         if ($event === 'batch.processing') {
             $ids = $meta['property_ids'];
@@ -204,6 +253,9 @@ class ImportLogger
 
         $title = $event === 'properties_batch.finished'
             ? sprintf('Import batch %d finished', $meta['batch_number']) : rtrim($message, '.');
+        if ($event === 'final_cleanup.finished' || $event === 'manual_cleanup_batch.finished') {
+            $title = sprintf('%s batch %d finished', self::cleanupPhaseLabel($meta['cleanup_phase'] ?? ''), $meta['batch_number']);
+        }
         $labels = [
             'offer.finished' => ['offer processed', 'offers processed'],
             'offer.failed' => ['offer failed', 'offers failed'],
@@ -235,11 +287,23 @@ class ImportLogger
             'gateway_import' => 'Gateway import',
             'properties_batch' => 'Import batch',
             'single_request_import' => 'Single-request import',
-            'final_cleanup' => 'Final cleanup',
+            'final_cleanup' => 'Import cleanup',
+            'log_cleanup' => 'Old log cleanup',
             'outdated_cleanup' => 'Outdated property cleanup',
             'offer' => 'Offer',
         ];
         return $labels[$stage] ?? ucfirst(str_replace('_', ' ', $stage));
+    }
+
+    public static function cleanupPhaseLabel(string $phase): string
+    {
+        return [
+            'properties' => 'Database property cleanup',
+            'attachments' => 'Database attachment cleanup',
+            'files' => 'Filesystem cleanup',
+            'terms' => 'Taxonomy cleanup',
+            'logs' => 'Old log cleanup',
+        ][$phase] ?? 'Import cleanup';
     }
 
     private function redact($value, int $depth = 0)

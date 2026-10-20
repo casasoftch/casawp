@@ -1312,17 +1312,19 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						}
 						$logs_url = $uploads_url . '/casawp/logs';
 
-						$log = $logs_url . '/' . date('Ym') . '.log';
-
-						echo '<a href="' . esc_url($log) . '" target="_blank">' . esc_html($log) . '</a><br>';
-
-						for ($i = 1; $i <= 6; $i++) {
-							$filename = date('Ym', strtotime(date('Y-m-01') . " -$i months")) . '.log';
+						$has_logs = false;
+						$month_start = new DateTimeImmutable(get_date_from_gmt('', 'Y-m-01'));
+						for ($i = 0; $i <= 6; $i++) {
+							$filename = $month_start->modify("-$i months")->format('Ym') . '.log';
 							$log = $logs_url . '/' . $filename;
 
-							if (file_exists($dir . '/' . $filename)) {
+							if (is_file($dir . '/' . $filename)) {
 								echo '<a href="' . esc_url($log) . '" target="_blank">' . esc_html($log) . '</a><br>';
+								$has_logs = true;
 							}
+						}
+						if (!$has_logs) {
+							echo '&mdash;';
 						}
 						?>
 
@@ -1331,8 +1333,12 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Import XML'); ?></th>
 					<td>
-						<?php $xml_url = $uploads_url . '/casawp/import/data.xml'; ?>
-						<a href="<?php echo esc_url($xml_url); ?>" target="_blank"><?php echo esc_html($xml_url); ?></a>
+						<?php if (is_file(CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/import/data.xml')): ?>
+							<?php $xml_url = $uploads_url . '/casawp/import/data.xml'; ?>
+							<a href="<?php echo esc_url($xml_url); ?>" target="_blank"><?php echo esc_html($xml_url); ?></a>
+						<?php else: ?>
+							&mdash;
+						<?php endif; ?>
 					</td>
 				</tr>
 				<?php echo $table_end; ?>
@@ -1471,11 +1477,11 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</p>
 						</fieldset>
 						<fieldset>
-							<legend class="screen-reader-text"><span><?php printf(wp_kses_post(__('Use %s as an image CDN.', 'casawp')), '<a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a>'); ?></span></legend>
+							<legend class="screen-reader-text"><span><?php printf(wp_kses_post(__('Use %s as a CDN for all attachments.', 'casawp')), '<a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a>'); ?></span></legend>
 							<?php $name = 'casawp_use_casagateway_cdn'; ?>
-							<?php $text = casawp_settings_text('Display images directly from the Gateway CDN.'); ?>
+							<?php $text = casawp_settings_text('Display images, documents, plans, logos, and brochures directly from the Gateway CDN.'); ?>
 							<p><label>
-									<input id="ckCDN" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()"><?php printf(wp_kses_post(__('Use %s as an image CDN.', 'casawp')), '<a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a>'); ?>
+									<input id="ckCDN" name="<?php echo $name ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($name) ? 'checked="checked"' : ''); ?> onClick="ckChange()"><?php printf(wp_kses_post(__('Use %s as a CDN for all attachments.', 'casawp')), '<a href="https://casasoft.ch/produkte/schnittstellenmanager" target="_blank">CASAGATEWAY</a>'); ?>
 								</label></p>
 						</fieldset>
 
@@ -1572,12 +1578,14 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								  ], admin_url('admin.php?page=casawp'));
 								?>
 
-								<a href="<?php echo esc_url($import_url); ?>" class="button-primary">
+								<a id="casawp-single-import-button" href="<?php echo esc_url($import_url); ?>" class="button-primary">
 								  <?php echo casawp_settings_text('Fetch data from CASAGATEWAY'); ?>
 								</a>
 							<?php else : ?>
 								<button id="casawp-import-button" class="button-primary"><?php echo casawp_settings_text('Fetch data from CASAGATEWAY'); ?></button>
 								<button id="casawp-cancel-import-button" class="button-secondary" style="display: none; margin-left: 10px;"><?php echo casawp_settings_text('Cancel import'); ?></button>
+
+								<?php endif; ?>
 
 								<script type="text/javascript">
 									var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
@@ -1589,16 +1597,23 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										'cancelError' => __('An error occurred while cancelling the import.', 'casawp'),
 										'resetErrorPrefix' => __('Error while resetting import progress: ', 'casawp'),
 										'resetError' => __('An error occurred while resetting import progress.', 'casawp'),
+										'statusError' => __('Import status could not be updated. Retrying…', 'casawp'),
 									)); ?>;
 
 									jQuery(function($) {
 
-										var progressInterval;
+										var progressPolling = false;
+										var completionTimer = null;
+										var completionDismissed = false;
 
 										function resetProgressBar() {
+											window.clearTimeout(completionTimer);
+											completionTimer = null;
 											$('#casawp-progress-wrapper').hide();
 											$('#casawp-progress-bar').css('width', '0%');
 											$('#casawp-progress-percent').text('0%');
+											$('#casawp-import-cleanup-progress').hide();
+											$('#casawp-import-status').text('');
 											$('#casawp-cancel-import-button').hide();
 											$('#casawp-import-button').removeAttr('disabled');
 										}
@@ -1612,14 +1627,17 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										}
 
 										resetProgressBar();
+										$('#casawp-cleanup-button').on('click', function() {
+											completionDismissed = true;
+											resetProgressBar();
+										});
 
 										$('#casawp-import-button').on('click', function(e) {
 											e.preventDefault();
 
+											resetProgressBar();
 											$(this).attr('disabled', true);
 											showCancelButton();
-
-											resetProgressBar();
 											$('#casawp-progress-wrapper').show();
 
 											$.ajax({
@@ -1666,7 +1684,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 												},
 												success: function(response) {
 													if (response.success) {
-														clearInterval(progressInterval);
 														resetProgressBar();
 													} else {
 														alert(casawpImportI18n.cancelErrorPrefix + response.data.message);
@@ -1683,60 +1700,49 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										});
 
 										function updateProgressBar() {
-											jQuery.ajax({
+											if (progressPolling) { return; }
+											progressPolling = true;
+											$.ajax({
 												url: ajaxurl,
 												type: 'POST',
-												data: {
-													action: 'casawp_get_import_progress'
-												},
+												data: {action: 'casawp_get_import_progress'},
+												complete: function() { progressPolling = false; },
 												success: function(response) {
-													if (response.success) {
-														var progress = response.data.progress;
-														console.log(progress);
-														if (progress > 0 && progress < 100) {
-															$('#casawp-progress-wrapper').show();
-															$('#casawp-progress-bar').css('width', progress + '%');
-															$('#casawp-progress-percent').text(Math.round(progress) + '%');
-															showCancelButton();
-														} else if (progress === 100) {
-															$('#casawp-progress-wrapper').show();
-															$('#casawp-progress-bar').css('width', '100%');
-															$('#casawp-progress-percent').text('100%');
-															$('#casawp-import-button').removeAttr('disabled'); // Re-enable the button
-															hideCancelButton();
-															clearInterval(progressInterval); // Stop updating the progress bar after import is complete
-
-															// Trigger the reset of import progress options via AJAX
-															$.ajax({
-																url: ajaxurl,
-																type: 'POST',
-																data: {
-																	action: 'casawp_reset_import_progress'
-																},
-																success: function(response) {
-																	if (response.success) {
-																		console.log(response.data.message);
-																	} else {
-																console.log(casawpImportI18n.resetErrorPrefix + response.data.message);
-																	}
-																},
-																error: function() {
-														console.log(casawpImportI18n.resetError);
-																}
-															});
+													if (!response.success) { return; }
+													var data = response.data;
+													var active = data.status === 'running' || data.status === 'cleanup';
+													if (active) { completionDismissed = false; }
+													var progress = data.progress;
+													if (data.status === 'idle') {
+														resetProgressBar();
+														return;
+													}
+													window.clearTimeout(completionTimer);
+													completionTimer = null;
+													if (data.status === 'completed') {
+														if (data.notice_seconds > 0 && !completionDismissed) {
+															$('#casawp-import-status').text(data.message);
+															completionTimer = window.setTimeout(function() {
+																$('#casawp-import-status').text('');
+																$('#casawp-progress-wrapper').hide();
+																completionTimer = null;
+															}, data.notice_seconds * 1000);
 														}
 													} else {
-														resetProgressBar(); // Reset progress if no import is running
-														hideCancelButton();
-														$('#casawp-import-button').removeAttr('disabled');
-														clearInterval(progressInterval);
+														$('#casawp-import-status').text(data.message);
 													}
+													$('#casawp-progress-wrapper').toggle(active || data.status === 'stopped' || !!completionTimer);
+													$('#casawp-import-progress-heading').toggle(active);
+													$('#casawp-progress-bar-container').toggle(active);
+													$('#casawp-progress-bar').css('width', progress + '%');
+													$('#casawp-progress-bar-container').attr('aria-valuenow', Math.round(progress));
+													$('#casawp-progress-percent').text(Math.round(progress) + '%');
+													$('#casawp-import-cleanup-progress').toggle(data.status === 'cleanup');
+													$('#casawp-import-button').prop('disabled', active);
+													$('#casawp-cancel-import-button').toggle(active);
 												},
 												error: function() {
-													resetProgressBar();
-													$('#casawp-import-button').removeAttr('disabled');
-													hideCancelButton();
-													clearInterval(progressInterval);
+													$('#casawp-import-status').text(casawpImportI18n.statusError);
 												}
 											});
 										}
@@ -1757,7 +1763,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 											});
 										}
 
-										progressInterval = setInterval(function() {
+										setInterval(function() {
 											updateProgressBar();
 											checkForNoPropertiesAlert();
 										}, 5000);
@@ -1765,7 +1771,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										updateProgressBar();
 									});
 								</script>
-							<?php endif; ?>
 
 							<?php $gateway_poke_url = add_query_arg('gatewaypoke', '1', home_url('/', is_ssl() ? 'https' : null)); ?>
 							<p style="margin-top: 20px;">
@@ -1791,23 +1796,68 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							],
 							admin_url( 'admin-post.php' )
 						);
+						wp_enqueue_script('casawp-manual-cleanup', plugins_url('plugin-assets/js/manual-cleanup.js', __FILE__), ['jquery'], filemtime(__DIR__ . '/plugin-assets/js/manual-cleanup.js'), true);
+						wp_localize_script('casawp-manual-cleanup', 'casawpCleanup', [
+							'nonce' => wp_create_nonce('casawp_manual_cleanup'),
+							'initial' => \casawp\ManualCleanup::statusData(),
+							'requestFailed' => __('Cleanup request failed. Please try again.', 'casawp'),
+						]);
 						?>
+						<style>
+							.casawp-cleanup-activity {
+								width: 100%;
+								height: 24px;
+								overflow: hidden;
+								border-radius: 3px;
+								background: #ddd;
+							}
+							.casawp-cleanup-activity::before {
+								content: '';
+								display: block;
+								width: 35%;
+								height: 100%;
+								background: #4caf50;
+								animation: casawp-cleanup-activity 5s ease-in-out infinite alternate;
+							}
+							@keyframes casawp-cleanup-activity {
+								from { transform: translateX(0); }
+								to { transform: translateX(185.714%); }
+							}
+							@media (prefers-reduced-motion: reduce) {
+								.casawp-cleanup-activity::before { animation: none; transform: translateX(92.857%); }
+							}
+						</style>
 						<p style="margin-top:2em;">
 							<a href="<?php echo esc_url( $del_url ); ?>"
+							   id="casawp-delete-all-button"
 							   class="button button-danger"
 							   style="background:#c9302c;border-color:#ac2925;color:#fff;"
-							   onclick="return confirm('<?php echo esc_js(__('Do you really want to permanently delete all property data?', 'casawp')); ?>');">
+							   onclick="if (this.getAttribute('aria-disabled') === 'true') return false; return confirm('<?php echo esc_js(__('Do you really want to permanently delete all property data?', 'casawp')); ?>');">
 								<?php echo casawp_settings_text('Delete all property data'); ?>
 							</a>
 						</p>
+						<div id="casawp-cleanup-controls" style="margin-top:20px;">
+							<p>
+								<button type="button" id="casawp-cleanup-button" class="button button-secondary" aria-describedby="casawp-cleanup-description">
+									<?php echo casawp_settings_text('Run legacy data cleanup'); ?>
+								</button>
+							</p>
+							<p class="description" id="casawp-cleanup-description"><?php echo casawp_settings_text('Clean up unused attachments, local import files, empty taxonomy terms and old logs without importing properties. Existing properties are retained. Data is deleted step by step in background batches.'); ?></p>
+							<div id="casawp-cleanup-progress" class="casawp-cleanup-activity" role="progressbar" aria-labelledby="casawp-cleanup-button" aria-describedby="casawp-cleanup-status" style="display:none;margin-top:12px;"></div>
+							<p id="casawp-cleanup-status" role="status" aria-live="polite"></p>
+						</div>
 
 						<div id="casawp-progress-wrapper" style="display: none;">
-							<strong style="display: block; margin-bottom: 10px; margin-top: 30px;"><?php echo casawp_settings_text('Import progress'); ?></strong>
-							<div id="casawp-progress-bar-container" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
+							<strong id="casawp-import-progress-heading" style="display: block; margin-bottom: 10px; margin-top: 30px;"><?php echo casawp_settings_text('Import progress'); ?></strong>
+							<div id="casawp-progress-bar-container" role="progressbar" aria-label="<?php echo esc_attr(__('Import progress', 'casawp')); ?>" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width: 100%; background-color: #ddd; position: relative; text-align: center; color: white;">
 								<div id="casawp-progress-bar" style="width: 0%; height: 30px; background-color: #4caf50; line-height: 30px;">
 									<span id="casawp-progress-percent" style="position: absolute; width: 100%; left: 0;">0%</span>
 								</div>
 							</div>
+							<div id="casawp-import-cleanup-progress" style="display:none;margin-top:12px;">
+								<div class="casawp-cleanup-activity" role="progressbar" aria-label="<?php echo esc_attr(__('Cleanup progress', 'casawp')); ?>" aria-describedby="casawp-import-status"></div>
+							</div>
+							<p id="casawp-import-status" role="status" aria-live="polite"></p>
 						</div>
 
 

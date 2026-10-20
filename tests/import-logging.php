@@ -2,7 +2,9 @@
 /** Standalone regression checks: php tests/import-logging.php */
 
 require_once dirname(__DIR__) . '/classes/ImportLogger.php';
+require_once dirname(__DIR__) . '/classes/ImportMedia.php';
 require_once dirname(__DIR__) . '/classes/Import.php';
+require_once dirname(__DIR__) . '/classes/ManualCleanup.php';
 
 $mode = $argv[1] ?? '';
 $directory = $argv[2] ?? sys_get_temp_dir() . '/casawp-logging-' . uniqid();
@@ -133,6 +135,13 @@ if ($mode === 'unrelated-fatal') {
     trigger_error('Fatal after import ended', E_USER_ERROR);
     exit;
 }
+if ($mode === 'completion-fatal') {
+    $logger->run('final_cleanup', ['batch_number' => 1, 'cleanup_phase' => 'files'], static function () { return true; }, 'info', function () use ($logger) {
+        $logger->setStage('cleanup_finalize', ['cleanup_phase' => 'complete']);
+        trigger_error('Simulated fatal cleanup finalization error', E_USER_ERROR);
+    });
+    exit;
+}
 
 try {
     $legacy = ['old' => 'transcript'];
@@ -142,6 +151,51 @@ try {
     check(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', array_key_first($entry)), 'Readable local timestamps must retain second precision');
     check($entry['_meta']['run_id'] === 12345 && $entry['_meta']['token'] === '[redacted]', 'Run context and key redaction');
     check(!isset($entry['_meta']['memory_mb']) && !isset($entry['_meta']['request_id']), 'Successful entries must omit repeated diagnostic metadata');
+
+    $logger->cleanupCompleted(['legacy_deleted' => 1664, 'files' => 212, 'terms_deleted' => 0], 44350827, true);
+    $summary = eventEntries('manual_cleanup.completed')[0];
+    check(reset($summary) === 'Cleanup completed. Removed: unused attachments (1,664), local import files (212), empty taxonomy terms (0). 42.30 MB freed.',
+        'Cleanup diagnostics must use English text and numbers without translation functions');
+    check($summary['_meta']['deleted_attachments'] === 1664 && $summary['_meta']['freed_bytes'] === 44350827,
+        'English formatting must preserve machine-readable numeric counts');
+    $cleanup_records = entries();
+    $separator = end($cleanup_records);
+    check(($separator['_meta']['event'] ?? '') === 'cleanup.separator'
+        && reset($separator) === '-------------------- End of cleanup --------------------'
+        && $separator['_meta']['run_id'] === 12345, 'A valid JSON separator with run context must immediately follow the summary');
+    $logger->cleanupCompleted([], 0);
+    check(reset(eventEntries('cleanup.summary')[0]) === 'Import and cleanup completed. Removed: unused attachments (0), local import files (0), empty taxonomy terms (0). 0.00 MB freed.',
+        'Empty import cleanup must also log an English summary');
+    $cleanup_records = entries();
+    check(end($cleanup_records)['_meta']['event'] === 'import.separator.end'
+        && $cleanup_records[count($cleanup_records) - 2]['_meta']['event'] === 'cleanup.separator',
+        'An import must close its cleanup section before its import section');
+
+    $saved_options = $options;
+    $saved_scheduled = $scheduled;
+    // Both manual and scheduled gateway imports use this locked entry point.
+    $boundary_import = new \casawp\Import(false, false);
+    $before = count(entries());
+    $boundary_import->updateImportFileThroughCasaGateway(true); // Missing credentials prevent network access.
+    $boundary_import->start_import(); // Reusing the importer must not repeat the start separator.
+    $boundary_entries = array_slice(entries(), $before);
+    $boundary_events = array_column(array_column($boundary_entries, '_meta'), 'event');
+    check($boundary_events[0] === 'import.separator.start'
+        && count(array_keys($boundary_events, 'import.separator.start', true)) === 1
+        && array_search('import.separator.start', $boundary_events, true) < array_search('gateway.credentials_missing', $boundary_events, true),
+        'The shared manual/gateway entry point must open the import once, before retrieving the feed');
+    $single = new \casawp\Import(false, false);
+    $single->init_single_run(12345);
+    $before = count(entries());
+    $single->logImportStart(); // The single-request launcher logs its source after this.
+    try { $single->handle_single_request_import(); }
+    catch (Exception $e) { check($e->getMessage() === 'API Keys missing.', 'Expected a network-free single-request test'); }
+    $single_entries = array_slice(entries(), $before);
+    $single_events = array_column(array_column($single_entries, '_meta'), 'event');
+    check($single_events[0] === 'import.separator.start' && count(array_keys($single_events, 'import.separator.start', true)) === 1,
+        'Single-request imports must also start with exactly one separator');
+    $options = $saved_options;
+    $scheduled = $saved_scheduled;
 
     $logger->run('batch', ['batch_number' => 4], function () use ($logger) {
         try {
@@ -157,6 +211,19 @@ try {
     check(isset($failed['file'], $failed['line'], $failed['trace']) && !isset($failed['trace'][0]['args']), 'Exception location and trace without argument values');
     check(!isset(eventEntries('test.context_restored')[0]['_meta']['property_id']), 'Offer context must not leak into following entries');
     check(eventEntries('batch.finished')[0]['_meta']['level'] === 'warning', 'Batch containing an offer failure must finish with a warning');
+    $result = $logger->run('completion_order', [], static function () { return 37; }, 'info', function ($value) use ($logger) {
+        check($value === 37, 'Finalization must receive the batch outcome');
+        $logger->write('Completion summary.', ['event' => 'test.completion_summary']);
+    });
+    check($result === 37, 'Finalization must preserve the callback return value');
+    $order = array_column(array_column(entries(), '_meta'), 'event');
+    check(array_search('completion_order.finished', $order, true) < array_search('test.completion_summary', $order, true), 'The finished entry must precede the completion summary');
+    try {
+        $logger->run('completion_error', [], static function () { return true; }, 'info', static function () { throw new RuntimeException('Simulated completion failure'); });
+        check(false, 'Completion errors must propagate');
+    } catch (RuntimeException $e) { check($e->getMessage() === 'Simulated completion failure', 'Preserve the finalization error'); }
+    check(count(eventEntries('completion_error.finished')) === 1 && count(eventEntries('completion_error.completion_failed')) === 1
+        && !eventEntries('completion_error.failed'), 'Finalization errors must be logged distinctly without duplicating batch completion');
     $raw = file_get_contents($directory . '/casawp/logs/' . gmdate('Ym') . '.log');
     check(strpos($raw, 'secret-token') === false && strpos($raw, 'user:password') === false, 'Log output must redact credentials and URL query values');
     $logger->write("Invalid UTF-8: \xB1\x31");
@@ -173,6 +240,29 @@ try {
     $volume_summary = eventEntries('volume_batch.finished')[0];
     check(strpos(reset($volume_summary), '1000 attachments updated, 0 errors.') !== false, 'Suppressed detail must remain visible as readable summary counts');
 
+    $normal = new \casawp\ImportLogger(static function () { return 1792411575; });
+    foreach (['properties_batch', 'final_cleanup', 'manual_cleanup_batch', 'outdated_cleanup'] as $stage) {
+        $before = count(entries());
+        $normal->run($stage, ['batch_number' => 1, 'cleanup_phase' => 'files'], static function () {});
+        $batch_entries = entries();
+        check(count($batch_entries) === $before + 1 && end($batch_entries)['_meta']['event'] === $stage . '.finished', 'Normal mode must keep one batch finish without its routine started entry');
+    }
+    foreach (['casawp_batch_import', 'casawp_finalize_import_cleanup_batch', 'casawp_manual_cleanup_batch', 'casawp_delete_outdated_properties'] as $hook) {
+        check($normal->write('Scheduled.', ['event' => 'scheduler.scheduled', 'hook' => $hook]) === '', 'Successful batch scheduling belongs in debug mode');
+    }
+    check($normal->write('Scheduling failed.', ['event' => 'scheduler.failed', 'hook' => 'casawp_batch_import'], 'error') !== '', 'Scheduling errors must stay visible');
+    check($normal->write('Batch start warning.', ['event' => 'properties_batch.started', 'batch_number' => 1], 'warning') !== '', 'Warnings must not be suppressed by the lifecycle filter');
+    check($normal->write('Phase started.', ['event' => 'cleanup.phase_started', 'cleanup_phase' => 'files']) !== '', 'Phase transitions must stay visible');
+    $log_level = 'debug';
+    foreach (['properties_batch', 'final_cleanup', 'manual_cleanup_batch', 'outdated_cleanup'] as $stage) {
+        $before = count(eventEntries($stage . '.started'));
+        $normal->run($stage, ['batch_number' => 2, 'cleanup_phase' => 'attachments'], static function () {});
+        check(count(eventEntries($stage . '.started')) === $before + 1, 'Debug logging must restore batch start entries');
+    }
+    foreach (['casawp_batch_import', 'casawp_finalize_import_cleanup_batch', 'casawp_manual_cleanup_batch', 'casawp_delete_outdated_properties'] as $hook) {
+        check($normal->write('Scheduled.', ['event' => 'scheduler.scheduled', 'hook' => $hook, 'action_id' => 123,
+            'scheduled_batch_number' => 3, 'delay_seconds' => 0, 'cleanup_phase' => 'files']) !== '', 'Debug logging must restore successful scheduling entries');
+    }
     $milestones = new \casawp\ImportLogger(static function () { return 1792411575; });
     $milestones->run('properties_batch', ['batch_number' => 31], function () use ($milestones) {
         $milestones->setStage('archive_statistics', [
@@ -195,6 +285,21 @@ try {
     $milestone_summary = end($milestone_summaries);
     check(strpos(reset($milestone_summary), 'Import batch 31 finished in ') === 0 && strpos(reset($milestone_summary), '16 offers processed, 12 unchanged offers, 4 metadata updates, 39 attachments updated, 0 errors.') !== false, 'Batch summaries must expose counts in a consistent readable order');
     check(!isset($milestone_summary['_meta']['counts']) && !isset($milestone_summary['_meta']['feed_file']), 'Successful summaries must not duplicate counts or feed diagnostics in metadata');
+    $milestones->run('final_cleanup', ['batch_number' => 17, 'cleanup_phase' => 'attachments'], function () use ($milestones) {
+        $entry = json_decode($milestones->write('Import action scheduled.', [
+            'event' => 'scheduler.scheduled', 'action_id' => 900, 'hook' => 'casawp_finalize_import_cleanup_batch',
+            'scheduled_batch_number' => 18, 'delay_seconds' => 5, 'cleanup_phase' => 'files',
+        ]), true);
+        check(reset($entry) === 'Filesystem cleanup batch 18 scheduled in 5s (action 900).', 'Scheduling must name the next cleanup phase');
+        check($entry['_meta']['cleanup_phase'] === 'files', 'Compact cleanup scheduling metadata must retain its phase');
+        $milestones->setStage('cleanup_terms', ['cleanup_phase' => 'terms']);
+    });
+    $cleanup_starts = eventEntries('final_cleanup.started');
+    $cleanup_finishes = eventEntries('final_cleanup.finished');
+    $cleanup_start = end($cleanup_starts);
+    $cleanup_finish = end($cleanup_finishes);
+    check(reset($cleanup_start) === 'Database attachment cleanup batch 17 started.', 'Cleanup batch start must distinguish database records from files');
+    check(strpos(reset($cleanup_finish), 'Database attachment cleanup batch 17 finished in ') === 0, 'A batch finish must describe the same batch phase even when later phases run inside it');
     $milestones->run('properties_batch', ['batch_number' => 32], function () use ($milestones) {
         $entry = json_decode($milestones->write('Processing import batch.', [
             'event' => 'batch.processing', 'batch_size' => 4, 'total_batches' => 164,
@@ -204,6 +309,7 @@ try {
         check(!isset($entry['_meta']['property_ids']), 'Property list must not be repeated in metadata');
     });
 
+    $log_level = 'info';
     $import = new LoggingTestImport();
     writeFeed("<root>\n<properties><property></properties>\n</root>");
     $previous = libxml_use_internal_errors(false);
@@ -258,7 +364,8 @@ try {
 
     $schedule_result = 0;
     $import->start_import();
-    $scheduler_error = eventEntries('scheduler.failed')[0]['_meta'];
+    $scheduler_errors = eventEntries('scheduler.failed');
+    $scheduler_error = end($scheduler_errors)['_meta'];
     check($scheduler_error['hook'] === 'casawp_batch_import' && $scheduler_error['level'] === 'error', 'Failed scheduling must be visible');
 
     $workers = [];
@@ -274,6 +381,9 @@ try {
     check(proc_close(child('memory-fatal')) !== 0, 'Memory exhaustion process should fail');
     $fatals = eventEntries('import.fatal');
     check(count($fatals) === 2 && strpos($fatals[1]['_meta']['error'], 'Allowed memory size') !== false, 'Memory exhaustion must leave a diagnostic entry');
+    check(proc_close(child('completion-fatal')) !== 0, 'Fatal finalization test process should fail');
+    $fatals = eventEntries('import.fatal');
+    check(count($fatals) === 3 && $fatals[2]['_meta']['stage'] === 'cleanup_finalize', 'Fatal error capture must remain active after the batch finished entry until finalization ends');
 
     rename($directory . '/casawp/logs', $directory . '/saved-logs');
     file_put_contents($directory . '/casawp/logs', 'blocked directory');
