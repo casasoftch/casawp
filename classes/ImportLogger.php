@@ -103,7 +103,7 @@ class ImportLogger
         }
     }
 
-    public function exception(string $message, \Throwable $exception, array $context = []): void
+    public function exception(string $message, \Throwable $exception, array $context = [], string $level = 'error'): void
     {
         // Never include trace arguments: they can contain credentials or entire feeds.
         $trace = [];
@@ -116,7 +116,7 @@ class ImportLogger
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
             'trace' => $trace,
-        ]), 'error');
+        ]), $level);
         error_log('CASAWP import: ' . $entry);
     }
 

@@ -69,7 +69,34 @@ class ImportTermCleanup
             if ($objects) {
                 $result['retained']++;
             } else {
-                $deleted = wp_delete_term((int) $row->term_id, $row->taxonomy);
+                try {
+                    $deleted = wp_delete_term((int) $row->term_id, $row->taxonomy);
+                } catch (\Throwable $e) {
+                    // Plugins can throw from deletion hooks before or after WordPress
+                    // removes the term. Recheck the database before counting the result.
+                    if ($wpdb->last_error) {
+                        throw new \RuntimeException('Cannot safely continue CASAWP term cleanup after a database error: ' . $wpdb->last_error, 0, $e);
+                    }
+                    $remaining = $wpdb->get_var($wpdb->prepare(
+                        "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id = %d", (int) $row->term_taxonomy_id
+                    ));
+                    if ($wpdb->last_error) {
+                        throw new \RuntimeException('Cannot verify CASAWP term deletion after a hook failed: ' . $wpdb->last_error, 0, $e);
+                    }
+                    $removed = !$remaining;
+                    if ($removed) { $result['deleted']++; }
+                    $result['failures']++;
+                    $this->logger->exception(sprintf('Deletion hook failed for CASAWP term %d (%s); %s. Continuing with the next term.',
+                        $row->term_id, $row->taxonomy, $removed ? 'term was deleted' : 'term was retained'), $e, [
+                            'event' => 'terms.delete_hook_failed', 'cleanup_phase' => 'terms',
+                            'term_id' => (int) $row->term_id, 'term_taxonomy_id' => (int) $row->term_taxonomy_id,
+                            'taxonomy' => $row->taxonomy, 'term_deleted' => $removed,
+                        ], 'warning');
+                    // Advance even when the term remains, so a broken hook cannot stall
+                    // every subsequent batch. A later cleanup can retry retained terms.
+                    $result['after'] = (int) $row->term_taxonomy_id;
+                    continue;
+                }
                 if ($deleted && !is_wp_error($deleted)) {
                     $result['deleted']++;
                     $this->logger->write(sprintf('Deleted empty CASAWP term %d (%s).', $row->term_id, $row->taxonomy), [], 'debug');

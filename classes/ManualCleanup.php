@@ -199,7 +199,13 @@ class ManualCleanup
     {
         $state = get_option('casawp_manual_cleanup', []);
         if (($state['run_id'] ?? 0) !== $run_id || !in_array($state['status'] ?? '', ['queued', 'running'], true)) { return; }
-        $this->logger($run_id)->write('Manual cleanup stopped: ' . $error, ['event' => 'manual_cleanup.failed'], 'error');
+        $files = get_option('casawp_manual_file_cleanup', []);
+        if (($files['run_id'] ?? 0) === $run_id) { $state['phase'] = $files['logged_phase'] ?? $state['phase']; }
+        $totals = get_option('casawp_manual_file_cleanup_totals', []);
+        if (($totals['run_id'] ?? 0) === $run_id) { $state['stats'] = $totals['stats']; }
+        $logger = $this->logger($run_id);
+        $logger->setStage('manual_cleanup', ['cleanup_phase' => $state['phase'] ?? 'attachments']);
+        $logger->write('Manual cleanup stopped: ' . $error, ['event' => 'manual_cleanup.failed'], 'error');
         $state['status'] = 'failed';
         $state['finished_at'] = time();
         if ($this->ownsLock($state)) { casawp_release_lock(); }

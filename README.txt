@@ -59,6 +59,8 @@ Import cleanup also removes monthly log files except those from the current and 
 
 = Unreleased =
 
+* Fix: Continue cleanup after individual term-deletion hook exceptions, including Yoast indexing failures; log the affected term and actual deletion result, retain warning counts and report the correct failure phase
+
 * Fix: Include legacy monthly log names such as "2020 Aug.log" in cleanup, preserving current/previous months across supported filename formats
 
 * Performance: Speed up database cleanup with bounded candidate queries and bulk cache loading; schedule follow-up cleanup batches without an artificial delay

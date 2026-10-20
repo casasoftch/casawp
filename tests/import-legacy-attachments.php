@@ -88,10 +88,17 @@ function get_objects_in_term($id, $taxonomy) {
 function wp_delete_term($id, $taxonomy) {
     check(!get_post(101), 'Term deletion must follow legacy attachment cleanup');
     if ($id === 1005) { return false; }
+    if (get_option('term_throw_before') === $id) { throw new RuntimeException('Simulated failure before term deletion'); }
+    if (get_option('term_throw_database') === $id) {
+        $GLOBALS['wpdb']->last_error = 'Simulated term deletion database error';
+        throw new RuntimeException('Simulated deletion exception with a database error');
+    }
     if (defined('ICL_SITEPRESS_VERSION')) {
         $GLOBALS['wpdb']->query("DELETE FROM wp_icl_translations WHERE element_type='tax_" . $taxonomy . "' AND element_id=" . (int) $id);
     }
-    return $GLOBALS['wpdb']->query('DELETE FROM wp_term_taxonomy WHERE term_id=' . (int) $id) > 0;
+    $deleted = $GLOBALS['wpdb']->query('DELETE FROM wp_term_taxonomy WHERE term_id=' . (int) $id) > 0;
+    if (get_option('term_throw_after') === $id) { throw new RuntimeException('Primary key ID missing from row or is null'); }
+    return $deleted;
 }
 function wp_delete_attachment($id, $force) {
     if (get_option('fail_delete') === $id) { return false; }
@@ -299,6 +306,33 @@ try {
     foreach ([1002, 1003, 1004, 1005, 1006, 1007] as $id) {
         check($wpdb->get_var('SELECT term_id FROM wp_term_taxonomy WHERE term_id=' . $id), 'Assigned, excluded, failed and newly referenced terms must survive');
     }
+    // Plugin hook exceptions must not abort the term pass, even after partial deletion.
+    $wpdb->db->exec("INSERT INTO wp_term_taxonomy VALUES(1010,1010,'casawp_feature',0),(1011,1011,'casawp_feature',0),(1012,1012,'casawp_feature',0),(1013,1013,'casawp_feature',0)");
+    $options['term_throw_before'] = 1010;
+    $options['term_throw_after'] = 1011;
+    $hook_worker = new \casawp\ImportTermCleanup(new \casawp\ImportLogger(static function () { return 111; }), static function () { return true; });
+    $hook_batch = $hook_worker->runBatch(1007, 2, 5);
+    check($hook_batch['after'] === 1011 && !$hook_batch['done'] && $hook_batch['deleted'] === 1 && $hook_batch['failures'] === 2,
+        'Hook failures must advance the cursor, count actual deletions and retain warning counts');
+    check($wpdb->get_var('SELECT term_id FROM wp_term_taxonomy WHERE term_id=1010') && !$wpdb->get_var('SELECT term_id FROM wp_term_taxonomy WHERE term_id=1011'),
+        'A failed pre-delete hook must retain the term while a failed post-delete hook counts the removed term');
+    $next_hook_batch = $hook_worker->runBatch($hook_batch['after'], 1, 5, $hook_batch['max_id']);
+    check($next_hook_batch['deleted'] === 1 && $next_hook_batch['after'] === 1012, 'Later batches must continue past failed hooks');
+    $hook_warnings = [];
+    foreach (glob($temporary . '/casawp/logs/*.log') as $log_file) {
+        foreach (file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+            $entry = json_decode($line, true);
+            if (($entry['_meta']['event'] ?? '') === 'terms.delete_hook_failed') { $hook_warnings[] = $entry['_meta']; }
+        }
+    }
+    check(count($hook_warnings) === 2 && $hook_warnings[0]['term_deleted'] === false && $hook_warnings[1]['term_deleted'] === true
+        && $hook_warnings[1]['term_id'] === 1011 && $hook_warnings[1]['taxonomy'] === 'casawp_feature'
+        && $hook_warnings[1]['level'] === 'warning' && isset($hook_warnings[1]['file'], $hook_warnings[1]['trace']),
+        'Hook warnings must identify the exact term, taxonomy, exception location and physical deletion result');
+    $options['term_throw_database'] = 1013;
+    try { $hook_worker->runBatch(1012, 1, 5); check(false, 'Database errors must still stop cleanup'); }
+    catch (RuntimeException $e) { check(strpos($e->getMessage(), 'Cannot safely continue CASAWP term cleanup after a database error:') === 0, 'Expected a safe database failure'); }
+    foreach (['term_throw_before', 'term_throw_after', 'term_throw_database'] as $key) { delete_option($key); }
     // New terms created between requests must not cause an endless cleanup loop.
     $worker = new \casawp\ImportTermCleanup(new \casawp\ImportLogger(static function () { return 111; }), static function () { return true; });
     $wpdb->db->exec("INSERT INTO wp_term_taxonomy VALUES(1100,1100,'casawp_feature',0),(1101,1101,'casawp_feature',0)");
@@ -382,6 +416,9 @@ try {
     $local_manual = record(404, 'externalsync/active/local-document.pdf', 8001);
     $historical_xml = put($temporary . '/casawp/import/data-done.xml', 'old XML');
     $old_log = put($temporary . '/casawp/logs/200001.log', str_repeat('x', 1048576));
+    $wpdb->db->exec("INSERT INTO wp_term_taxonomy VALUES(2501,2501,'casawp_feature',0),(2502,2502,'casawp_feature',0),(2503,2503,'casawp_feature',0)");
+    $options['term_throw_before'] = 2501;
+    $options['term_throw_after'] = 2502;
     $before_files = [];
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary . '/casawp/import', FilesystemIterator::SKIP_DOTS)) as $file) {
         if ($file->isFile() && !$file->isLink()) { $before_files[$file->getPathname()] = $file->getSize(); }
@@ -402,6 +439,12 @@ try {
     }
     $state = get_option('casawp_manual_cleanup');
     check($state['status'] === 'completed' && !get_option('casawp_import_lock') && !get_option('casawp_manual_cleanup_worker'), 'Manual cleanup must finish across requests and release its locks');
+    check($state['stats']['terms_deleted'] >= 2 && $state['stats']['failures'] >= 2
+        && $wpdb->get_var('SELECT term_id FROM wp_term_taxonomy WHERE term_id=2501')
+        && !$wpdb->get_var('SELECT term_id FROM wp_term_taxonomy WHERE term_id IN (2502,2503)'),
+        'Manual cleanup must finish with warnings after hook exceptions, retain failed terms and remove later terms');
+    delete_option('term_throw_before');
+    delete_option('term_throw_after');
     check(!get_post(402) && !get_post_meta(403, '_wp_attached_file', true) && !is_file($unused_manual) && !is_file($orphan_manual), 'Standalone cleanup must remove unused legacy records and their files');
     check(get_post(401) && !is_file($current_cdn) && get_post_meta(401, '_is_remote', true), 'Standalone CDN cleanup must retain current attachment IDs while removing their local copies');
     check(get_post(404) && !is_file($local_manual) && !is_file($historical_xml) && !is_file($old_log) && !is_file($feed), 'Manual CDN cleanup must retain attached records, empty the externalsync cache, clear old XML/logs and never create data.xml');
@@ -471,8 +514,21 @@ try {
     $manual->start();
     update_post_meta(8001, 'exportproperty_id', 'changed-after-start');
     $state = get_option('casawp_manual_cleanup');
+    // A failed later batch must preserve its last known phase and partial totals.
+    update_option('casawp_manual_file_cleanup', ['run_id' => $state['run_id'], 'logged_phase' => 'terms']);
+    update_option('casawp_manual_file_cleanup_totals', ['run_id' => $state['run_id'], 'stats' => ['terms_deleted' => 4, 'bytes' => 123]]);
     $manual->runBatch(1, $state['run_id']);
     check(get_option('casawp_manual_cleanup')['status'] === 'failed' && !get_option('casawp_import_lock'), 'Manual cleanup must stop and release its lock if the stored property set changes');
+    check(get_option('casawp_manual_cleanup')['phase'] === 'terms' && get_option('casawp_manual_cleanup')['stats']['terms_deleted'] === 4,
+        'Stopped cleanup must retain the actual phase and partial totals');
+    $stop_entries = [];
+    foreach (glob($temporary . '/casawp/logs/*.log') as $log_file) {
+        foreach (file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+            $entry = json_decode($line, true);
+            if (($entry['_meta']['event'] ?? '') === 'manual_cleanup.failed' && ($entry['_meta']['run_id'] ?? 0) === $state['run_id']) { $stop_entries[] = $entry; }
+        }
+    }
+    check(count($stop_entries) === 1 && $stop_entries[0]['_meta']['cleanup_phase'] === 'terms', 'The stop log must identify the current phase rather than defaulting to attachments');
     update_post_meta(8001, 'exportproperty_id', 'active');
     $manual->start();
     $options['casawp_use_casagateway_cdn'] = false;
