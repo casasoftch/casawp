@@ -30,6 +30,8 @@ Synchronize your properties directly to CASAWP, and let them be automatically ca
 
 Open CASAWP in the WordPress admin menu. A responsive sidebar groups General, Archive, Detail view, Protected properties, Contact form, Scripts, and Logs. Settings appear in cards, and the "Save changes" bar stays within reach while scrolling. The page supports widths up to 1920 px and adapts to smaller screens.
 
+Poppins titles, Mulish body text, CASASOFT-inspired blue buttons, subtle field backgrounds, and clear focus indicators give the settings a consistent appearance. Fonts and licenses are bundled locally and loaded only on this page, without requests to Google Fonts. Code fields retain a monospace font. Section titles sit inside the first white card, aligned with the white navigation panel. Text inputs and textareas share a maximum width of 400 px. Custom checkboxes use the button blue with a white checkmark, and the sticky bottom bar contains only the save action. The delete-all action uses a solid red button with white text. All settings dropdowns use a locally bundled Select2 theme with matching blue focus and selection states, keyboard navigation, and search for lists of ten or more options. The original select fields and saved values are retained, with native dropdowns available if JavaScript fails. The library uses a private jQuery registration to avoid replacing another plugin’s Select2. Menus close on outside clicks. A head-loaded pending state prevents native dropdowns flashing during tab navigation; it clears after initialization or restores native controls automatically if enhancement fails.
+
 Archive filters are grouped in one card, including display types and manual room/area ranges. "Show net rent" appears in the Price section. Help documentation and GitHub links are available in the page header. Settings labels support German, English, French, and Italian. Existing option keys and tab URLs are retained.
 
 == Import Setup ==
@@ -66,6 +68,7 @@ Import cleanup also removes monthly log files except those from the current and 
 = Unreleased =
 
 * Fix: Save the disabled state when Google reCAPTCHA v3 is unchecked in Contact form settings
+* Enhancement: Use locally bundled Poppins and Mulish fonts, CASASOFT-inspired buttons, and cleaner fields with clear focus indicators on the settings page
 * Enhancement: Suppress third-party notice callbacks on the CASAWP settings page while preserving CASAWP messages and leaving other admin screens unchanged
 * Enhancement: Add the CASASOFT logo above the settings, linking to casasoft.ch in a new tab
 * Enhancement: Group archive filters in one card and label the net-rent option under Price

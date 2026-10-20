@@ -47,13 +47,34 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 
 /* Settings styles stay inside CASAWP's own page, away from other admin screens. */
 .casawp-settings {
-	--casawp-accent: var(--wp-admin-theme-color, #2271b1);
-	--casawp-ink: #1d2939;
-	--casawp-muted: #526173;
-	--casawp-border: #dfe4eb;
+	--casawp-accent: #407d9a;
+	--casawp-accent-dark: #2e5a6f;
+	--casawp-accent-light: #eaf3f7;
+	--casawp-ink: #0f1315;
+	--casawp-muted: #626e75;
+	--casawp-border: #e0e7eb;
+	--casawp-font-title: 'CASAWP Poppins', 'Helvetica Neue', sans-serif;
+	--casawp-font-body: 'CASAWP Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 	max-width: 1920px;
 	margin: 28px 24px 0 4px;
 	color: var(--casawp-ink);
+	font-family: var(--casawp-font-body);
+	font-size: 14px;
+	line-height: 1.65;
+}
+
+.casawp-settings h1,
+.casawp-settings h2,
+.casawp-settings h3 {
+	font-family: var(--casawp-font-title);
+}
+
+.casawp-settings a {
+	color: var(--casawp-accent);
+}
+
+.casawp-settings a:hover {
+	color: var(--casawp-accent-dark);
 }
 
 .casawp-settings-company {
@@ -107,17 +128,21 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 
 .casawp-settings-brand {
 	font-size: 28px;
-	letter-spacing: -1.2px;
+	letter-spacing: -1px;
+}
+
+.casawp-settings-brand strong {
+	font-weight: 600;
 }
 
 .casawp-settings-brand > span {
-	font-weight: 300;
+	font-weight: 400;
 }
 
 .casawp-settings-title {
 	padding-left: 20px;
 	border-left: 1px solid var(--casawp-border);
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: 500;
 	letter-spacing: -.3px;
 }
@@ -125,17 +150,17 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 .casawp-settings-header p {
 	margin: 0;
 	color: var(--casawp-muted);
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 1.7;
 }
 
 .casawp-settings-help {
-	flex: 0 1 390px;
+	flex: 0 1 440px;
 }
 
 .casawp-settings-help p {
 	margin-bottom: 12px;
-	font-size: 12px;
+	font-size: 13px;
 }
 
 .casawp-settings-links {
@@ -157,8 +182,10 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	padding: 0;
-	border: 0;
+	padding: 8px;
+	border: 1px solid var(--casawp-border);
+	border-radius: 10px;
+	background: #fff;
 }
 
 .casawp-settings-nav::after {
@@ -176,23 +203,23 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	border-radius: 8px;
 	background: transparent;
 	color: var(--casawp-muted);
-	font-size: 13px;
-	font-weight: 500;
+	font-size: 14px;
+	font-weight: 600;
 	line-height: 1.5;
 	white-space: normal;
 	text-decoration: none;
 }
 
 .casawp-settings .casawp-settings-nav .nav-tab:hover {
-	background: #e8ecf0;
+	background: var(--casawp-accent-light);
 	color: var(--casawp-ink);
 }
 
 .casawp-settings .casawp-settings-nav .nav-tab-active {
-	border-color: var(--casawp-border);
-	background: #fff;
+	border-color: #d4e4ed;
+	background: var(--casawp-accent-light);
 	color: var(--casawp-accent);
-	box-shadow: 0 2px 4px rgb(29 41 57 / 4%);
+	box-shadow: none;
 	font-weight: 600;
 }
 
@@ -206,9 +233,9 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 }
 
 .casawp-settings .casawp-settings-section-title {
-	margin: 10px 0 22px;
-	font-size: 20px;
-	font-weight: 600;
+	margin: 0;
+	font-size: 24px;
+	font-weight: 500;
 	line-height: 1.4;
 	letter-spacing: -.3px;
 }
@@ -228,17 +255,18 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	border: 1px solid var(--casawp-border);
 	border-radius: 10px;
 	background: #fff;
-	box-shadow: 0 2px 4px rgb(29 41 57 / 2%);
+	box-shadow: none;
 }
 
 .casawp-settings-fields > .form-table > tbody > tr > th {
 	box-sizing: border-box;
 	width: auto;
 	padding: 25px 20px;
-	border-right: 1px solid #edf0f4;
+	border-right: 1px solid #edf1f3;
 	color: var(--casawp-ink);
-	font-size: 13px;
-	font-weight: 600;
+	font-family: var(--casawp-font-title);
+	font-size: 14px;
+	font-weight: 500;
 	line-height: 1.65;
 }
 
@@ -246,9 +274,25 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	min-width: 0;
 	padding: 22px 26px;
 	margin: 0;
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 1.7;
 	overflow-wrap: anywhere;
+}
+
+.casawp-settings-fields > .form-table > tbody > .casawp-settings-heading-row {
+	margin-bottom: 0;
+	border-bottom: 0;
+	border-radius: 10px 10px 0 0;
+}
+
+.casawp-settings-fields > .form-table > tbody > .casawp-settings-heading-row > td {
+	grid-column: 1 / -1;
+	padding: 24px 20px 8px;
+}
+
+.casawp-settings-fields > .form-table > tbody > .casawp-settings-heading-row + tr {
+	border-top: 0;
+	border-radius: 0 0 10px 10px;
 }
 
 .casawp-settings .form-table fieldset + fieldset {
@@ -257,6 +301,15 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 
 .casawp-settings .form-table label {
 	line-height: 1.7;
+}
+
+.casawp-settings .form-table .casawp-settings-textarea-label {
+	display: block;
+	width: 100%;
+}
+
+.casawp-settings .block-label {
+	font-weight: 700;
 }
 
 .casawp-settings-filter-fields {
@@ -292,7 +345,7 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 .casawp-settings .form-table .description {
 	margin-top: 8px;
 	color: var(--casawp-muted);
-	font-size: 12px;
+	font-size: 13px;
 	font-style: normal;
 	line-height: 1.7;
 }
@@ -305,20 +358,164 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 .casawp-settings textarea {
 	box-sizing: border-box;
 	max-width: 100%;
-	min-height: 38px;
-	border-color: #a9b3c1;
-	border-radius: 6px;
-	font-size: 13px;
+	min-height: 44px;
+	padding: 9px 12px;
+	border: 1px solid #c7d3da;
+	border-radius: 4px;
+	background-color: #f8fafb;
+	box-shadow: none;
+	color: var(--casawp-ink);
+	font-family: var(--casawp-font-body);
+	font-size: 14px;
+	line-height: 1.5;
+	transition: border-color .2s, background-color .2s, box-shadow .2s;
 }
 
 .casawp-settings select {
 	width: auto;
 	min-width: 165px;
+	padding-right: 32px;
 }
 
 .casawp-settings textarea {
+	min-height: 90px;
 	padding: 10px 12px;
 	line-height: 1.6;
+}
+
+.casawp-settings input[type="text"]:not(.small-text),
+.casawp-settings input[type="email"],
+.casawp-settings input[type="password"],
+.casawp-settings input.regular-text,
+.casawp-settings textarea {
+	width: 100%;
+	max-width: min(100%, 400px);
+}
+
+.casawp-settings textarea.code {
+	font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+	font-size: 13px;
+}
+
+/* The private Select2 theme is shared by every settings dropdown. */
+html.casawp-dropdowns-pending .casawp-settings #options_form select:not(.select2-hidden-accessible) {
+	visibility: hidden;
+}
+
+.casawp-settings .select2-container--casawp {
+	max-width: min(100%, 400px);
+	min-width: 0;
+	font-family: var(--casawp-font-body);
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+.casawp-settings .casawp-settings-filter-controls .select2-container {
+	flex: 1;
+	width: 0 !important;
+}
+
+.casawp-settings .select2-container--casawp .select2-selection {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 9px 36px 9px 12px;
+	border: 1px solid #c7d3da;
+	border-radius: 4px;
+	background: #f8fafb;
+	color: var(--casawp-ink);
+	line-height: 1.5;
+}
+
+.casawp-settings .select2-container--casawp .select2-selection__rendered {
+	padding: 0;
+}
+
+.casawp-settings .select2-container--casawp .select2-selection__arrow {
+	position: absolute;
+	top: 50%;
+	right: 15px;
+	width: 7px;
+	height: 7px;
+	border: solid #626e75;
+	border-width: 0 1.5px 1.5px 0;
+	transform: translateY(-70%) rotate(45deg);
+}
+
+.casawp-settings .select2-container--casawp .select2-selection:hover {
+	border-color: #8eaab8;
+}
+
+.casawp-settings .select2-container--casawp.select2-container--focus .select2-selection,
+.casawp-settings .select2-container--casawp.select2-container--open .select2-selection {
+	border-color: var(--casawp-accent);
+	background: #fff;
+	box-shadow: 0 0 0 3px rgb(64 125 154 / 14%);
+	outline: 2px solid transparent;
+}
+
+.casawp-settings .select2-container--casawp.select2-container--disabled .select2-selection {
+	opacity: .5;
+	cursor: default;
+}
+
+.casawp-settings .select2-container--casawp .select2-dropdown {
+	overflow: hidden;
+	border: 1px solid #c7d3da;
+	border-radius: 4px;
+	box-shadow: 0 8px 24px rgb(15 19 21 / 12%);
+	background: #fff;
+}
+
+.casawp-settings .select2-container--casawp .select2-results__options {
+	max-height: 260px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.casawp-settings .select2-container--casawp .select2-results__option {
+	padding: 10px 12px;
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.casawp-settings .select2-container--casawp .select2-results__option--selected {
+	background: var(--casawp-accent-light);
+	color: var(--casawp-accent-dark);
+}
+
+.casawp-settings .select2-container--casawp .select2-results__option--highlighted {
+	background: var(--casawp-accent);
+	color: #fff;
+}
+
+.casawp-settings .select2-container--casawp .select2-results__option--disabled {
+	color: var(--casawp-muted);
+}
+
+.casawp-settings .select2-container--casawp .select2-search--dropdown {
+	padding: 8px;
+}
+
+.casawp-settings .select2-container--casawp .select2-search__field {
+	min-height: 40px;
+	border-radius: 4px;
+}
+
+.casawp-settings input::placeholder,
+.casawp-settings textarea::placeholder {
+	color: #76848c;
+	opacity: 1;
+}
+
+.casawp-settings input[type="text"]:hover:not(:disabled):not(:focus),
+.casawp-settings input[type="email"]:hover:not(:disabled):not(:focus),
+.casawp-settings input[type="number"]:hover:not(:disabled):not(:focus),
+.casawp-settings input[type="password"]:hover:not(:disabled):not(:focus),
+.casawp-settings select:hover:not(:disabled):not(:focus),
+.casawp-settings textarea:hover:not(:disabled):not(:focus) {
+	border-color: #8eaab8;
 }
 
 .casawp-settings input[type="text"]:focus,
@@ -328,26 +525,153 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 .casawp-settings select:focus,
 .casawp-settings textarea:focus {
 	border-color: var(--casawp-accent);
-	box-shadow: 0 0 0 1px var(--casawp-accent);
+	background-color: #fff;
+	box-shadow: 0 0 0 3px rgb(64 125 154 / 14%);
 	outline: 2px solid transparent;
 }
 
 .casawp-settings input[type="checkbox"],
 .casawp-settings input[type="radio"] {
 	margin-right: 7px;
+	border-color: #aebfc9;
+	box-shadow: none;
+}
+
+.casawp-settings input[type="checkbox"],
+.casawp-settings input[type="radio"] {
+	appearance: none;
+	position: relative;
+	box-sizing: border-box;
+	width: 18px;
+	height: 18px;
+	background: #fff;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.casawp-settings input[type="checkbox"] {
+	border-radius: 4px;
+}
+
+.casawp-settings input[type="radio"] {
+	border-radius: 50%;
+}
+
+.casawp-settings input[type="checkbox"]:checked,
+.casawp-settings input[type="checkbox"]:indeterminate,
+.casawp-settings input[type="radio"]:checked {
+	border-color: var(--casawp-accent);
+	background: var(--casawp-accent);
+}
+
+.casawp-settings .form-table input[type="checkbox"]:checked::before {
+	content: '';
+	position: absolute;
+	top: 12%;
+	left: 34%;
+	box-sizing: border-box;
+	width: 30%;
+	height: 58%;
+	margin: 0;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	background: none;
+	transform: rotate(45deg);
+}
+
+.casawp-settings .form-table input[type="checkbox"]:indeterminate::before {
+	content: '';
+	position: absolute;
+	top: calc(50% - 1px);
+	left: 20%;
+	width: 60%;
+	height: 2px;
+	margin: 0;
+	background: #fff;
+}
+
+.casawp-settings input[type="checkbox"]:disabled,
+.casawp-settings input[type="radio"]:disabled {
+	opacity: .5;
+	cursor: default;
+}
+
+.casawp-settings input[type="checkbox"]:focus,
+.casawp-settings input[type="radio"]:focus {
+	border-color: var(--casawp-accent);
+	box-shadow: 0 0 0 3px rgb(64 125 154 / 14%);
+}
+
+.casawp-settings .form-table input[type="radio"]:checked::before {
+	content: '';
+	position: absolute;
+	top: 30%;
+	left: 30%;
+	width: 40%;
+	height: 40%;
+	margin: 0;
+	border-radius: 50%;
+	background: #fff;
 }
 
 .casawp-settings .button,
 .casawp-settings .button-primary,
 .casawp-settings .button-secondary {
 	box-sizing: border-box;
-	min-height: 36px;
-	padding: 3px 14px;
-	border-radius: 6px;
-	font-size: 12px;
-	line-height: 28px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 44px;
+	padding: 10px 18px;
+	border: 1px solid var(--casawp-accent);
+	border-radius: 4px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--casawp-accent);
+	font-family: var(--casawp-font-body);
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.4;
 	text-align: center;
+	text-decoration: none;
 	white-space: normal;
+	transition: background-color .2s, color .2s, border-color .2s;
+}
+
+.casawp-settings .button-primary {
+	background: var(--casawp-accent);
+	color: #fff;
+}
+
+.casawp-settings .button:hover,
+.casawp-settings .button-primary:hover,
+.casawp-settings .button-secondary:hover,
+.casawp-settings .button:active,
+.casawp-settings .button-primary:active,
+.casawp-settings .button-secondary:active {
+	border-color: var(--casawp-accent-dark);
+	background: var(--casawp-accent-dark);
+	color: #fff;
+}
+
+.casawp-settings .casawp-settings-links .button {
+	min-height: 40px;
+	padding: 9px 14px;
+	font-size: 13px;
+}
+
+.casawp-settings .button-danger {
+	border-color: #b32d2e;
+	background: #b32d2e;
+	color: #fff;
+}
+
+.casawp-settings .button-danger:hover,
+.casawp-settings .button-danger:active {
+	border-color: #8a2424;
+	background: #8a2424;
+	color: #fff;
 }
 
 .casawp-settings .button:focus-visible,
@@ -356,16 +680,34 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	outline-offset: 3px;
 }
 
+.casawp-settings .button:focus-visible,
+.casawp-settings .button-primary:focus-visible,
+.casawp-settings .button-secondary:focus-visible {
+	border-color: var(--casawp-accent-dark);
+	background: var(--casawp-accent-dark);
+	box-shadow: none;
+	color: #fff;
+	outline: 2px solid var(--casawp-accent);
+	outline-offset: 3px;
+}
+
+.casawp-settings .button-danger:focus-visible {
+	border-color: #8a2424;
+	background: #8a2424;
+	color: #fff;
+	outline-color: #b32d2e;
+}
+
 .casawp-settings .draggable-list-item {
 	padding: 8px 12px 8px 44px;
 	margin-bottom: 8px;
 	border: 1px solid var(--casawp-border);
 	border-radius: 6px;
-	background: #f8fafc;
+	background: #f8fafb;
 }
 
 .casawp-settings .draggable-list-item:hover {
-	border-color: #a9b3c1;
+	border-color: #8eaab8;
 }
 
 .casawp-settings .draggable-list-item svg {
@@ -379,7 +721,7 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	z-index: 10;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	gap: 16px;
 	padding: 16px 22px;
 	margin-top: 6px;
@@ -389,21 +731,26 @@ body.toplevel_page_casawp div.update-nag:not(.casawp-notice) {
 	box-shadow: 0 -4px 16px rgb(29 41 57 / 5%);
 }
 
-.casawp-settings-footer-label {
-	color: var(--casawp-muted);
-	font-size: 13px;
-	font-weight: 500;
-}
-
 .casawp-settings .casawp-settings-footer .submit {
 	padding: 0;
 	margin: 0;
 }
 
 .casawp-settings .casawp-settings-footer .button-primary {
-	min-height: 40px;
-	padding: 5px 22px;
-	font-size: 13px;
+	min-height: 44px;
+	padding: 10px 24px;
+	font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.casawp-settings input,
+	.casawp-settings select,
+	.casawp-settings textarea,
+	.casawp-settings .button,
+	.casawp-settings .button-primary,
+	.casawp-settings .button-secondary {
+		transition: none;
+	}
 }
 
 @media screen and (max-width: 1200px) {

@@ -241,16 +241,16 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 
 	<form action="" method="post" id="options_form" name="options_form">
-		<h2 class="casawp-settings-section-title"><?php echo esc_html($tabs[$current]); ?></h2>
 		<div class="casawp-settings-fields">
 		<?php
 		$table_start = '<table class="form-table"><tbody>';
 		$table_end   = '</tbody></table>';
+		$first_table_start = $table_start . '<tr class="casawp-settings-heading-row"><td colspan="2"><h2 class="casawp-settings-section-title">' . esc_html($tabs[$current]) . '</h2></td></tr>';
 		switch ($current) {
 			case 'appearance':
 		?>
 				<?php /******* Appearance *******/ ?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Bootstrap'); ?></th>
 					<td class="front-static-pages">
@@ -323,7 +323,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 			case 'singleview':
 			?>
 				<?php /******* Single View *******/ ?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Social media'); ?></th>
 					<td class="front-static-pages">
@@ -712,7 +712,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 				break;
 			case 'archiveview':
 			?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Sort order'); ?></th>
 					<td>
@@ -1167,7 +1167,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 			case 'contactform':
 			?>
 				<?php /******* Kontaktformular *******/ ?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><label><input name="casawp_inquiry_method" type="hidden" value="casamail"> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 					<td class="front-static-pages contactform-tab">
@@ -1319,7 +1319,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 			case 'logs':
 			?>
 
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><label><?php echo casawp_settings_text('Available logs'); ?></label></th>
 					<td class="front-static-pages contactform-tab">
@@ -1401,7 +1401,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 				break;
 			case 'private':
 			?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scope="row"><?php echo casawp_settings_text('Login page'); ?></th>
 					<td>
@@ -1444,7 +1444,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 			default:
 			?>
 				<?php /******* General *******/ ?>
-				<?php echo $table_start; ?>
+				<?php echo $first_table_start; ?>
 				<tr valign="top">
 					<th scrope="row"><?php echo casawp_settings_text('HTML'); ?></th>
 					<td class="front-static-pages">
@@ -1453,7 +1453,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $name = 'casawp_before_content'; ?>
 							<?php $text = casawp_settings_text('Before the content'); ?>
 							<p><?php echo $text; ?></p>
-							<p><label>
+							<p><label class="casawp-settings-textarea-label">
 									<textarea placeholder='<div id="content">' name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 								</label></p>
 						</fieldset>
@@ -1462,7 +1462,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $name = 'casawp_after_content'; ?>
 							<?php $text = casawp_settings_text('After the content'); ?>
 							<p><?php echo $text; ?></p>
-							<p><label>
+							<p><label class="casawp-settings-textarea-label">
 									<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
 								</label></p>
 							<p class="description" id="tagline-description"><?php echo casawp_settings_text('Only the div tag with id and class attributes is allowed.'); ?></p>
@@ -1855,7 +1855,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<a href="<?php echo esc_url( $del_url ); ?>"
 							   id="casawp-delete-all-button"
 							   class="button button-danger"
-							   style="background:#c9302c;border-color:#ac2925;color:#fff;"
 							   onclick="if (this.getAttribute('aria-disabled') === 'true') return false; return confirm('<?php echo esc_js(__('Do you really want to permanently delete all property data?', 'casawp')); ?>');">
 								<?php echo casawp_settings_text('Delete all property data'); ?>
 							</a>
@@ -1980,7 +1979,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 		?>
 		</div>
 		<div class="casawp-settings-footer">
-			<span class="casawp-settings-footer-label"><?php echo esc_html($tabs[$current]); ?></span>
 			<p class="submit"><input type="submit" name="casawp_submit" id="submit" class="button button-primary" value="<?php echo esc_attr__('Save changes', 'casawp'); ?>"></p>
 		</div>
 	</form>

@@ -147,6 +147,18 @@ class Admin {
         wp_enqueue_script('jquery-ui-sortable');
 		$screen = get_current_screen();
 		if ($screen && $screen->id === 'toplevel_page_casawp') {
+			wp_enqueue_script('casawp-settings-dropdowns-preload', CASASYNC_PLUGIN_URL . 'plugin-assets/js/settings-dropdowns-preload.js', array(), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/js/settings-dropdowns-preload.js'), false);
+			wp_enqueue_style('casawp-select2', CASASYNC_PLUGIN_URL . 'plugin-assets/global/select2/select2.min.css', array(), '4.1.0');
+			wp_enqueue_script('casawp-select2', CASASYNC_PLUGIN_URL . 'plugin-assets/global/select2/select2.min.js', array('jquery'), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/global/select2/select2.min.js'), true);
+			$dropdown_dependencies = array('casawp-select2', 'casawp-settings-dropdowns-preload');
+			$dropdown_language = substr(get_user_locale(), 0, 2);
+			if (in_array($dropdown_language, array('de', 'fr', 'it'), true)) {
+				wp_enqueue_script('casawp-select2-locale', CASASYNC_PLUGIN_URL . 'plugin-assets/global/select2/i18n/' . $dropdown_language . '.js', array('casawp-select2'), '4.1.0', true);
+				$dropdown_dependencies[] = 'casawp-select2-locale';
+			}
+			wp_enqueue_script('casawp-settings-dropdowns', CASASYNC_PLUGIN_URL . 'plugin-assets/js/settings-dropdowns.js', $dropdown_dependencies, filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/js/settings-dropdowns.js'), true);
+			wp_localize_script('casawp-settings-dropdowns', 'casawpDropdowns', array('language' => $dropdown_language));
+			wp_enqueue_style('casawp-settings-fonts', CASASYNC_PLUGIN_URL . 'plugin-assets/global/css/casawp-settings-fonts.css', array(), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/global/css/casawp-settings-fonts.css'));
 			wp_enqueue_script('casawp-settings-notices', CASASYNC_PLUGIN_URL . 'plugin-assets/js/settings-notices.js', array(), filemtime(CASASYNC_PLUGIN_DIR . 'plugin-assets/js/settings-notices.js'), true);
 		}
 	}
