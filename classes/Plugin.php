@@ -174,6 +174,7 @@ class Plugin
         add_filter('wp_get_attachment_url', array($this, 'modifyGetAttachmentUrl'), 99, 2);
         add_filter('image_downsize', array($this, 'remoteImageDownsize'), 10, 3);
         add_filter('wp_get_attachment_image_attributes', array($this, 'modifyRemoteImageAttributes'), 99, 3);
+        add_filter('wp_prepare_attachment_for_js', array($this, 'prepareRemoteDocumentForJs'), 99, 3);
     }
 
     public function privateUserMakeSurePagesExist()
@@ -395,8 +396,29 @@ class Plugin
             && $this->isCasawpGatewayMediaOrigin($origin);
     }
 
+    private function remotePdfPlaceholder($attachment_id)
+    {
+        if (get_post_mime_type($attachment_id) === 'application/pdf' && $this->shouldRenderAttachmentAsRemote($attachment_id)) {
+            return CASASYNC_PLUGIN_URL . 'plugin-assets/global/img/pdf.svg';
+        }
+        return false;
+    }
+
+    public function prepareRemoteDocumentForJs($response, $attachment, $meta)
+    {
+        $placeholder = $this->remotePdfPlaceholder($attachment->ID);
+        if ($placeholder) { $response['icon'] = $placeholder; }
+        return $response;
+    }
+
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon)
     {
+        // Documents need a preview image or a MIME icon, never their document URL as an image source.
+        if (!wp_attachment_is_image($attachment_id)) {
+            if ($image && !empty($image[3])) { return $image; }
+            $placeholder = $icon ? $this->remotePdfPlaceholder($attachment_id) : false;
+            return $placeholder ? array($placeholder, 48, 64, false) : $image;
+        }
         $origin    = get_post_meta($attachment_id, '_origin', true);
 
         if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
@@ -419,10 +441,11 @@ class Plugin
 
     public function remoteImageDownsize($out, $attachment_id, $size)
     {
+        if (!wp_attachment_is_image($attachment_id)) { return $out; }
         $origin    = get_post_meta($attachment_id, '_origin', true);
 
         if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
-            return false;
+            return $out;
         }
 
         $resolved = $this->getRemoteMediaVariant($origin, $size, $attachment_id);
@@ -441,7 +464,8 @@ class Plugin
 
     public function modifyRemoteImageAttributes($attr, $attachment, $size)
     {
-        if ($attachment && !empty($attachment->ID) && $this->shouldRenderAttachmentAsRemote($attachment->ID)) {
+        if ($attachment && !empty($attachment->ID) && wp_attachment_is_image($attachment->ID)
+            && $this->shouldRenderAttachmentAsRemote($attachment->ID)) {
             unset($attr['srcset'], $attr['sizes']);
         }
 

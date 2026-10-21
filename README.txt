@@ -67,6 +67,7 @@ Import cleanup also removes monthly log files except those from the current and 
 
 = Unreleased =
 
+* Fix: Show a PDF placeholder for remote documents in the Media Library, preserve existing previews and document links, and prevent non-image attachments from rendering as broken images
 * Fix: Save the disabled state when Google reCAPTCHA v3 is unchecked in Contact form settings
 * Enhancement: Use locally bundled Poppins and Mulish fonts, CASASOFT-inspired buttons, and cleaner fields with clear focus indicators on the settings page
 * Enhancement: Suppress third-party notice callbacks on the CASAWP settings page while preserving CASAWP messages and leaving other admin screens unchanged
