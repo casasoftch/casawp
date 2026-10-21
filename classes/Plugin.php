@@ -396,6 +396,13 @@ class Plugin
             && $this->isCasawpGatewayMediaOrigin($origin);
     }
 
+    private function isImageAttachment($attachment_id): bool
+    {
+        // CDN-only records have no attached file, so WordPress's file-based check returns false.
+        return strpos((string) get_post_mime_type($attachment_id), 'image/') === 0
+            || wp_attachment_is_image($attachment_id);
+    }
+
     private function remotePdfPlaceholder($attachment_id)
     {
         if (get_post_mime_type($attachment_id) === 'application/pdf' && $this->shouldRenderAttachmentAsRemote($attachment_id)) {
@@ -414,7 +421,7 @@ class Plugin
     public function modifyGetAttachmentImageSrc($image, $attachment_id, $size, $icon)
     {
         // Documents need a preview image or a MIME icon, never their document URL as an image source.
-        if (!wp_attachment_is_image($attachment_id)) {
+        if (!$this->isImageAttachment($attachment_id)) {
             if ($image && !empty($image[3])) { return $image; }
             $placeholder = $icon ? $this->remotePdfPlaceholder($attachment_id) : false;
             return $placeholder ? array($placeholder, 48, 64, false) : $image;
@@ -441,7 +448,7 @@ class Plugin
 
     public function remoteImageDownsize($out, $attachment_id, $size)
     {
-        if (!wp_attachment_is_image($attachment_id)) { return $out; }
+        if (!$this->isImageAttachment($attachment_id)) { return $out; }
         $origin    = get_post_meta($attachment_id, '_origin', true);
 
         if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
@@ -464,7 +471,7 @@ class Plugin
 
     public function modifyRemoteImageAttributes($attr, $attachment, $size)
     {
-        if ($attachment && !empty($attachment->ID) && wp_attachment_is_image($attachment->ID)
+        if ($attachment && !empty($attachment->ID) && $this->isImageAttachment($attachment->ID)
             && $this->shouldRenderAttachmentAsRemote($attachment->ID)) {
             unset($attr['srcset'], $attr['sizes']);
         }

@@ -9,7 +9,11 @@ $options = ['casawp_use_casagateway_cdn' => true];
 function get_post_meta($id, $key, $single = false) { return $GLOBALS['metadata'][$id][$key] ?? ''; }
 function get_option($key, $default = false) { return $GLOBALS['options'][$key] ?? $default; }
 function get_post_mime_type($id) { return $GLOBALS['mime_types'][$id] ?? false; }
-function wp_attachment_is_image($id) { return strpos((string) get_post_mime_type($id), 'image/') === 0; }
+// WordPress requires an attached-file reference before checking the MIME type.
+function wp_attachment_is_image($id) {
+    return !empty($GLOBALS['metadata'][$id]['_wp_attached_file'])
+        && strpos((string) get_post_mime_type($id), 'image/') === 0;
+}
 function check($condition, $message) { if (!$condition) { throw new RuntimeException($message); } }
 $plugin = (new ReflectionClass(\casawp\Plugin::class))->newInstanceWithoutConstructor();
 $pdf = 'https://cdn.casasoft.com/media/provider-8474/property-1578973/c8289b681bdd7a3b0acbd32f245d8562.pdf';
@@ -46,6 +50,7 @@ check($plugin->prepareRemoteDocumentForJs($response, (object) ['ID' => 42727], f
 // Images continue using their CDN variants; other plugins and document types retain their fallbacks.
 $metadata[21] = ['_is_remote' => 1, '_origin' => str_replace('.pdf', '.jpg', $pdf)];
 $mime_types[21] = 'image/jpeg';
+check(!wp_attachment_is_image(21), 'The fixture must reproduce WordPress rejecting a CDN-only image with no attached-file metadata');
 $image = $plugin->remoteImageDownsize(false, 21, 'thumbnail');
 check($image && strpos($image[0], '.jpg') !== false && $image[1] === 240 && $image[2] === 180, 'Remote image thumbnail behavior must remain intact');
 check($plugin->modifyGetAttachmentImageSrc(false, 21, 'thumbnail', false) === $image, 'Both image filters must agree on the remote thumbnail');
