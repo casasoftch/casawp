@@ -341,12 +341,51 @@ try {
     sweep();
     check(get_post(124) && get_post_meta(125, 'unrelated_setting', true) === 'keep', 'Cleanup must remain scoped to CASAWP-owned records and metadata');
 
+    // Missing physical files and file metadata must not strand local Media Library records.
+    $local_guid = CASASYNC_CUR_UPLOAD_BASEURL . '/casawp/import/attachment/externalsync/';
+    $guid_record = static function ($id, $guid, $parent = 0) use ($wpdb) {
+        $query = $wpdb->db->prepare('INSERT INTO wp_posts(ID,post_type,post_parent,guid) VALUES(?,?,?,?)');
+        $query->execute([$id, 'attachment', $parent, $guid]);
+        update_post_meta($id, '_wp_attachment_metadata', ['width' => 100]);
+    };
+    $guid_record(130, $local_guid . 'gone/missing-file.jpg');
+    $guid_record(131, str_replace('https://', 'http://', $local_guid) . 'gone/old-http.jpg');
+    $guid_record(132, $local_guid . 'gone/missing-parent.jpg', 9999);
+    $guid_record(133, $local_guid . 'gone/attached.jpg', 900);
+    $guid_record(134, CASASYNC_CUR_UPLOAD_BASEURL . '/sites/157/casawp/import/attachment/externalsync/gone/other-site.jpg');
+    $guid_record(135, str_replace('site.example', 'other.example', $local_guid) . 'gone/foreign.jpg');
+    $guid_record(136, $local_guid . 'gone/../unsafe.jpg');
+    $guid_record(137, $local_guid . 'gone/conflicting.jpg');
+    update_post_meta(137, '_wp_attached_file', '../outside/file.jpg');
+    $guid_record(138, CASASYNC_CUR_UPLOAD_BASEURL . '/manual/externalsync/unrelated.jpg');
+    $guid_record(140, $local_guid . '866777/a5e127574d59670c465126a60ecc0a5f');
+    delete_post_meta(140, '_wp_attachment_metadata'); // URL only: no extension, no metadata, no file.
+    $guid_record(141, $local_guid . '866777/another-extensionless-file');
+    delete_post_meta(141, '_wp_attachment_metadata');
+    update_post_meta(141, '_wp_attached_file', '');
+    $before_guid_cleanup = get_option('casawp_import_file_cleanup_totals')['stats'];
+    delete_option('casawp_import_file_cleanup');
+    sweep();
+    foreach ([130, 131, 132, 140, 141] as $id) {
+        check(!get_post($id) && !get_post_meta($id, '_wp_attachment_metadata', true),
+            'Detached local import GUIDs must be removed with their metadata even when the physical file and file metadata are gone');
+    }
+    foreach ([133, 134, 135, 136, 137, 138] as $id) {
+        check((bool) get_post($id), 'GUID fallback must preserve attached, other-site, foreign, unsafe, conflicting and unrelated records');
+    }
+    $after_guid_cleanup = get_option('casawp_import_file_cleanup_totals')['stats'];
+    check($after_guid_cleanup['legacy_deleted'] === $before_guid_cleanup['legacy_deleted'] + 5
+        && $after_guid_cleanup['bytes'] === $before_guid_cleanup['bytes'],
+        'Media Library-only removal must count records without reporting freed file space');
+
     // CDN-off cleanup must preserve legacy files for active properties.
     $options['casawp_use_casagateway_cdn'] = false;
     delete_option('casawp_import_file_cleanup');
     $local = record(201, 'externalsync/active/local.jpg');
+    $guid_record(139, $local_guid . 'active/missing-file.jpg');
     sweep();
     check(get_post(201) && is_file($local), 'CDN-off active property media must remain');
+    check(get_post(139), 'GUID fallback must preserve active property records with CDN disabled even when their file is missing');
 
     // Failed database queries must leave records and files intact.
     delete_option('casawp_import_file_cleanup');

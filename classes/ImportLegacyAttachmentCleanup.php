@@ -24,6 +24,20 @@ class ImportLegacyAttachmentCleanup
     {
         global $wpdb;
         $prefix = 'casawp/import/attachment/';
+        $upload_urls = [];
+        if (defined('CASASYNC_CUR_UPLOAD_BASEURL') && preg_match('#^https?://#i', CASASYNC_CUR_UPLOAD_BASEURL)) {
+            $base = preg_replace('#^https?://#i', '', rtrim(CASASYNC_CUR_UPLOAD_BASEURL, '/'));
+            $upload_urls = ['https://' . $base . '/', 'http://' . $base . '/'];
+        }
+        $guid_patterns = [
+            'https://casagateway.ch/media/%', 'http://casagateway.ch/media/%',
+            'https://cdn.casasoft.com/media/%', 'http://cdn.casasoft.com/media/%',
+            'https://casagateway.ch/media-thumb/%', 'http://casagateway.ch/media-thumb/%',
+            'https://cdn.casasoft.com/media-thumb/%', 'http://cdn.casasoft.com/media-thumb/%',
+        ];
+        foreach ($upload_urls as $url) { $guid_patterns[] = $wpdb->esc_like($url . $prefix) . '%'; }
+        $guid_conditions = implode(' OR ', array_fill(0, count($guid_patterns), 'p.guid LIKE %s'));
+        // Include local GUIDs when historical attachment records have lost their file metadata.
         // Include metadata left behind by historical direct SQL deletion of attachment posts.
         $rows = $wpdb->get_results($wpdb->prepare(
             "SELECT ID FROM (SELECT DISTINCT pm.post_id AS ID FROM {$wpdb->postmeta} pm
@@ -37,16 +51,13 @@ class ImportLegacyAttachmentCleanup
              SELECT ID FROM (SELECT p.ID FROM {$wpdb->posts} p
              LEFT JOIN {$wpdb->posts} parent ON parent.ID = p.post_parent
              WHERE p.ID > %d AND p.post_type = 'attachment' AND parent.ID IS NULL
-               AND (p.guid LIKE %s OR p.guid LIKE %s OR p.guid LIKE %s OR p.guid LIKE %s
-                 OR p.guid LIKE %s OR p.guid LIKE %s OR p.guid LIKE %s OR p.guid LIKE %s)
-             ORDER BY p.ID ASC LIMIT %d) remote_candidates
+               AND ($guid_conditions)
+             ORDER BY p.ID ASC LIMIT %d) guid_candidates
              ORDER BY ID ASC LIMIT %d",
-            $after, $wpdb->esc_like($prefix) . '%', $wpdb->esc_like($this->uploads . '/' . $prefix) . '%',
-            $limit,
-            $after, 'https://casagateway.ch/media/%', 'http://casagateway.ch/media/%',
-            'https://cdn.casasoft.com/media/%', 'http://cdn.casasoft.com/media/%',
-            'https://casagateway.ch/media-thumb/%', 'http://casagateway.ch/media-thumb/%',
-            'https://cdn.casasoft.com/media-thumb/%', 'http://cdn.casasoft.com/media-thumb/%', $limit, $limit
+            ...array_merge([
+                $after, $wpdb->esc_like($prefix) . '%', $wpdb->esc_like($this->uploads . '/' . $prefix) . '%',
+                $limit, $after,
+            ], $guid_patterns, [$limit, $limit])
         ));
         $this->checkDatabase();
         if (!is_array($rows)) { throw new \RuntimeException('Cannot list legacy import attachments.'); }
@@ -57,6 +68,15 @@ class ImportLegacyAttachmentCleanup
             $id = (int) $row->ID;
             $post = get_post($id);
             $file = (string) get_post_meta($id, '_wp_attached_file', true);
+            // Only fall back within this subsite's upload URL; existing metadata remains authoritative.
+            if ($file === '' && $post) {
+                foreach ($upload_urls as $url) {
+                    if (strpos((string) $post->guid, $url . $prefix) === 0) {
+                        $file = substr((string) $post->guid, strlen($url));
+                        break;
+                    }
+                }
+            }
             $remote_file = ImportMedia::usesRemote('document', $file, true);
             $relative = strpos($file, $this->uploads . '/') === 0 ? substr($file, strlen($this->uploads) + 1) : $file;
             $files = [];
