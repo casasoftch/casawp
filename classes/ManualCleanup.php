@@ -345,7 +345,7 @@ class ManualCleanup
 
     public function start()
     {
-        if (get_option('casawp_current_run_id') || casawp_is_import_running() || casawp_has_pending()) {
+        if (get_option('casawp_current_run_id') || casawp_is_import_running() || self::hasPendingImport()) {
             return new \WP_Error('cleanup_busy', __('An import or cleanup is already running or queued. Please wait until it finishes.', 'casawp'));
         }
         if (!function_exists('as_schedule_single_action')) {
@@ -379,6 +379,21 @@ class ManualCleanup
             return new \WP_Error('cleanup_failed', __('Cleanup could not be started. See the logs for details.', 'casawp'));
         }
         return self::statusData();
+    }
+
+    /** Older cancellations left a pending flag without any job that could consume it. */
+    private static function hasPendingImport(): bool
+    {
+        if (!casawp_has_pending()) { return false; }
+        $state = get_option('casawp_manual_cleanup', []);
+        if (get_option('casawp_import_canceled') && !get_option('casawp_current_run_id') && !casawp_is_import_running()
+            && !in_array($state['status'] ?? '', ['queued', 'running'], true)
+            && function_exists('as_has_scheduled_action')
+            && !as_has_scheduled_action('casawp_process_gateway_poke', null, casawp_gateway_poke_group())) {
+            casawp_clear_pending();
+            return false;
+        }
+        return true;
     }
 
     private function propertyIds(): array
@@ -594,6 +609,6 @@ class ManualCleanup
             'can_resume' => $can_resume,
             'can_stop' => in_array($status, ['queued', 'running'], true),
             'notice_seconds' => $status === 'completed' && empty($state['notice_dismissed']) ? ImportProgress::completionNoticeSeconds((int) ($state['finished_at'] ?? 0)) : 0,
-            'can_start' => !get_option('casawp_current_run_id') && !casawp_is_import_running() && !casawp_has_pending()];
+            'can_start' => !get_option('casawp_current_run_id') && !casawp_is_import_running() && !self::hasPendingImport()];
     }
 }

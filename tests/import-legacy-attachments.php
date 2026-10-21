@@ -20,9 +20,18 @@ class CleanupJsonResponse extends RuntimeException {
 }
 class ActionScheduler {
     public static array $actions = [];
+    public static array $jobs = [];
     public static function store() {
         return new class {
             public function fetch_action($id) { return ActionScheduler::$actions[$id] ?? null; }
+            public function query_actions($query) {
+                $ids = array_keys(array_filter(ActionScheduler::$jobs, static function ($job) use ($query) {
+                    return $job['hook'] === $query['hook'] && $job['group'] === $query['group']
+                        && in_array($job['status'], (array) $query['status'], true);
+                }));
+                return ($query['per_page'] ?? 5) > 0 ? array_slice($ids, 0, $query['per_page'] ?? 5) : $ids;
+            }
+            public function cancel_action($id) { ActionScheduler::$jobs[$id]['status'] = 'canceled'; }
         };
     }
 }
@@ -59,6 +68,9 @@ function as_unschedule_all_actions($hook, $args = [], $group = '') {
     }));
 }
 function as_has_scheduled_action($hook, $args = null, $group = '') {
+    foreach (ActionScheduler::$jobs as $job) {
+        if ($job['hook'] === $hook && $job['group'] === $group && in_array($job['status'], ['pending', 'in-progress'], true)) { return true; }
+    }
     foreach ($GLOBALS['scheduled'] as $job) {
         if ($job['hook'] === $hook && ($args === null || $job['args'] === $args) && $job['group'] === $group) { return true; }
     }
@@ -938,5 +950,69 @@ try {
         check((bool) wp_next_scheduled('casawp_manual_cleanup_watchdog') === ($blog_id !== 4),
             'Stopping one subsite must preserve every other subsite\'s recovery schedule');
     }
+    // Exercise the production cancellation function without bootstrapping the whole plugin.
+    $plugin_source = file_get_contents(dirname(__DIR__) . '/casawp.php');
+    check(preg_match('/^function casawp_cancel_import\(\) \{.*?^\}/ms', $plugin_source, $cancel_function) === 1,
+        'The production cancellation handler must be available');
+    eval($cancel_function[0]);
+    $options = ['casawp_current_run_id' => 901, 'casawp_import_lock' => time(),
+        'casawp_import_pending' => 1, 'casawp_import_failed' => true];
+    $scheduled = [];
+    $job = static function ($hook, $status = 'pending', $group = 'casawp_run_901') {
+        return compact('hook', 'status', 'group');
+    };
+    foreach (range(1, 12) as $id) {
+        ActionScheduler::$jobs[$id] = $job('casawp_finalize_import_cleanup_batch');
+    }
+    ActionScheduler::$jobs[13] = $job('casawp_finalize_import_cleanup_batch', 'in-progress');
+    ActionScheduler::$jobs[14] = $job('casawp_batch_import');
+    ActionScheduler::$jobs[15] = $job('casawp_delete_outdated_properties');
+    ActionScheduler::$jobs[16] = $job('casawp_process_gateway_poke', 'pending', casawp_gateway_poke_group());
+    $preserved_jobs = [
+        17 => $job('casawp_finalize_import_cleanup_batch', 'complete'),
+        18 => $job('casawp_finalize_import_cleanup_batch', 'pending', 'casawp_run_902'),
+        19 => $job('casawp_manual_cleanup_batch', 'pending', 'casawp_manual_cleanup_903'),
+        20 => $job('unrelated_plugin_job'),
+    ];
+    ActionScheduler::$jobs += $preserved_jobs;
+    check(!\casawp\ManualCleanup::statusData()['can_start'], 'An active import must block manual cleanup');
+    check(casawp_cancel_import(), 'Stopping an import during cleanup must succeed');
+    foreach (range(1, 16) as $id) {
+        check(ActionScheduler::$jobs[$id]['status'] === 'canceled', 'Cancel must remove every run batch and deferred gateway request, including queues larger than five');
+    }
+    foreach ($preserved_jobs as $id => $expected) {
+        check(ActionScheduler::$jobs[$id] === $expected, 'Cancel must preserve completed jobs and jobs outside the import');
+    }
+    check(!get_option('casawp_current_run_id') && !get_option('casawp_import_lock') && !casawp_has_pending()
+        && !get_option('casawp_import_failed') && get_option('casawp_import_canceled'), 'Cancel must clear the state that blocks new maintenance');
+    check(\casawp\ImportProgress::data()['status'] === 'stopped' && \casawp\ManualCleanup::statusData()['can_start'],
+        'A stopped import must leave the manual cleanup button enabled');
+    check(!is_wp_error($manual->start()), 'Manual cleanup must actually start after canceling post-import cleanup');
+    $manual_state = get_option('casawp_manual_cleanup');
+    $options['casawp_import_pending'] = 1;
+    $manual_lock = get_option('casawp_import_lock');
+    check(!casawp_cancel_import() && get_option('casawp_import_lock') === $manual_lock && casawp_has_pending(),
+        'A stale import cancel request must preserve a running manual cleanup and its deferred import');
+    delete_option('casawp_import_pending');
+    $manual->stop();
+    ActionScheduler::$jobs = [];
+    $scheduled = [];
+
+    // Recover flags left behind by older versions while preserving genuine pending work.
+    $options = ['casawp_import_pending' => 1];
+    check(!\casawp\ManualCleanup::statusData()['can_start'] && casawp_has_pending(), 'An uncanceled pending import must remain protected');
+    $options['casawp_import_canceled'] = true;
+    ActionScheduler::$jobs[1] = $job('casawp_process_gateway_poke', 'pending', casawp_gateway_poke_group());
+    check(!\casawp\ManualCleanup::statusData()['can_start'] && casawp_has_pending(), 'A scheduled gateway request must remain protected after an older cancellation');
+    ActionScheduler::$jobs[1]['status'] = 'in-progress';
+    check(!\casawp\ManualCleanup::statusData()['can_start'] && casawp_has_pending(), 'An executing gateway request must remain protected');
+    ActionScheduler::$jobs = [];
+    $options['casawp_manual_cleanup'] = $manual_state;
+    check(!\casawp\ManualCleanup::statusData()['can_start'] && casawp_has_pending(), 'Pending imports deferred by manual cleanup must survive even without a live shared lock');
+    delete_option('casawp_manual_cleanup');
+    check(\casawp\ManualCleanup::statusData()['can_start'] && !casawp_has_pending(), 'Polling must recover an abandoned pending flag from an older cancellation');
+    $options['casawp_import_pending'] = 1;
+    check(!is_wp_error($manual->start()), 'Starting cleanup directly must also recover an abandoned canceled-import flag');
+    $manual->stop();
     echo "Legacy attachment cleanup checks passed.\n";
 } finally { removeTree($temporary); }

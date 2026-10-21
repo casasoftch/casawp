@@ -424,13 +424,13 @@ function casawp_cancel_import() {
 	if (class_exists('ActionScheduler')) {
 		$store = ActionScheduler::store();
 		$run_id = (int) get_option( 'casawp_current_run_id', 0 );
+		if (!$run_id && \casawp\ManualCleanup::isRunning()) { return false; }
 		$group  = 'casawp_run_' . $run_id;
 
 		$hooks = [
 			'casawp_batch_import',
 			'casawp_delete_outdated_properties',
 			'casawp_finalize_import_cleanup_batch',
-			'casawp_process_gateway_poke',
 		];
 
 		foreach ( $hooks as $hook ) {
@@ -438,11 +438,21 @@ function casawp_cancel_import() {
 				'hook'   => $hook,
 				'status' => [ 'pending', 'in-progress' ],
 				'group'  => $group,                    // ←  only this run
+				'per_page' => -1,
 			] );
 			foreach ($pending_actions as $action_id) {
 				$store->cancel_action($action_id);
 			}
 		}
+		// Deferred gateway requests use a site-local group, not the current run's group.
+		$gateway_actions = $store->query_actions([
+			'hook' => 'casawp_process_gateway_poke',
+			'status' => ['pending'],
+			'group' => casawp_gateway_poke_group(),
+			'per_page' => -1,
+		]);
+		foreach ($gateway_actions as $action_id) { $store->cancel_action($action_id); }
+		casawp_clear_pending();
 		update_option('casawp_import_canceled', true);
 		casawp_release_lock();
 		delete_option('casawp_current_run_id');
