@@ -676,6 +676,9 @@ class Import
     }
 
     $this->logCleanupStart($run_id);
+    $progress = get_option('casawp_import_cleanup_progress', []);
+    $progress['batch_number'] = max(1, (int) $batch_number);
+    update_option('casawp_import_cleanup_progress', $progress, false);
     $started_at       = microtime( true );
     $deleted_posts    = 0;
     $deleted_media    = 0;
@@ -765,7 +768,10 @@ class Import
   }
 
   private function complete_import_cleanup( int $run_id ): void {
-    update_option('casawp_import_cleanup_progress', ['run_id' => $run_id, 'phase' => 'logs'], false);
+    $progress = get_option('casawp_import_cleanup_progress', []);
+    if (($progress['run_id'] ?? 0) !== $run_id) { $progress = ['run_id' => $run_id]; }
+    $progress['phase'] = 'logs';
+    update_option('casawp_import_cleanup_progress', $progress, false);
     $this->logger()->run('log_cleanup', ['cleanup_phase' => 'logs'], function () { $this->cleanup_log_files(); });
     $this->logger()->setStage('cleanup_finalize', ['cleanup_phase' => 'complete']);
     $file_totals = get_option('casawp_import_file_cleanup_totals', []);
@@ -780,6 +786,7 @@ class Import
       ]);
     $cleanup_summary = [
       'run_id' => $run_id, 'phase' => 'logs',
+      'batch_number' => (int) ($progress['batch_number'] ?? 0),
       'stats' => is_array($file_totals) && ($file_totals['run_id'] ?? 0) === $run_id ? ($file_totals['stats'] ?? []) : [],
       'freed_bytes' => $file_bytes + $this->log_cleanup_bytes,
     ];

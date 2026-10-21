@@ -68,7 +68,10 @@ class ImportProgress
                 if ($cleanup_started && ($cleanup['phase'] ?? '') === 'logs') { $phase = 'logs'; }
                 $totals = get_option('casawp_import_file_cleanup_totals', []);
                 $bytes = ($totals['run_id'] ?? 0) === $run ? (int) ($totals['stats']['bytes'] ?? 0) : 0;
-                $message = sprintf(__('Cleaning up: %1$s. %2$s MB freed.', 'casawp'), self::cleanupLabel($phase), number_format_i18n($bytes / 1048576, 2));
+                $batch = $cleanup_started ? max(0, (int) ($cleanup['batch_number'] ?? 0)) : 0;
+                $message = $batch
+                    ? sprintf(__('Cleaning up: %1$s (batch %2$d). %3$s MB freed.', 'casawp'), self::cleanupLabel($phase), $batch, number_format_i18n($bytes / 1048576, 2))
+                    : sprintf(__('Cleaning up: %1$s. %2$s MB freed.', 'casawp'), self::cleanupLabel($phase), number_format_i18n($bytes / 1048576, 2));
             }
         } elseif ($finished || ($total > 0 && $completed >= $total)) {
             if (!$last_run || $finished) {

@@ -19,8 +19,13 @@ check(strpos(progress()['message'], 'Outdated properties') !== false, 'Ignore cl
 $options['casawp_import_file_cleanup'] = ['run_id' => 123, 'logged_phase' => 'attachments'];
 $options['casawp_import_file_cleanup_totals'] = ['run_id' => 123, 'stats' => ['bytes' => 2097152]];
 check(strpos(progress()['message'], 'Database attachments. 2.00 MB') !== false, 'Show the actual phase and cumulative bytes.');
-$options['casawp_import_cleanup_progress'] = ['run_id' => 123, 'phase' => 'logs'];
+$options['casawp_import_cleanup_progress'] = ['run_id' => 122, 'phase' => 'logs', 'batch_number' => 999];
+check(strpos(progress()['message'], '(batch') === false, 'An old run must not supply the cleanup batch number.');
+$options['casawp_import_cleanup_progress'] = ['run_id' => 123, 'phase' => 'attachments', 'batch_number' => 121];
+check(progress()['message'] === 'Cleaning up: Database attachments (batch 121). 2.00 MB freed.', 'Import cleanup must show the current batch alongside its phase and freed bytes.');
+$options['casawp_import_cleanup_progress']['phase'] = 'logs';
 check(strpos(progress()['message'], 'Old logs') !== false && progress()['progress'] === 99, 'Log cleanup is still active work.');
+check(strpos(progress()['message'], '(batch 121)') !== false, 'The batch number must remain visible during log cleanup.');
 $options['casawp_cleanup_done_for_run'] = 123;
 check(progress()['progress'] === 99, 'Keep monitoring until the current run is released.');
 unset($options['casawp_current_run_id']);

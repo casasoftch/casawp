@@ -4623,3 +4623,8 @@ msgstr "Bereinigung wird gestoppt. Der aktive Batch wird noch beendet."
 #: classes/ManualCleanup.php options.php
 msgid "Cleanup stopped. Changes already made were retained."
 msgstr "Bereinigung gestoppt. Bereits vorgenommene Änderungen bleiben erhalten."
+
+#: classes/ImportProgress.php
+#, php-format
+msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
+msgstr "Bereinigung läuft: %1$s (Batch %2$d). %3$s MB freigegeben."

@@ -4568,3 +4568,8 @@ msgstr "Interruzione della pulizia. In attesa della fine del lotto attivo."
 #: classes/ManualCleanup.php options.php
 msgid "Cleanup stopped. Changes already made were retained."
 msgstr "Pulizia interrotta. Le modifiche già effettuate sono state mantenute."
+
+#: classes/ImportProgress.php
+#, php-format
+msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
+msgstr "Pulizia in corso: %1$s (lotto %2$d). %3$s MB liberati."

@@ -3704,3 +3704,8 @@ msgstr "Stopping cleanup. Waiting for the active batch to exit."
 #: classes/ManualCleanup.php options.php
 msgid "Cleanup stopped. Changes already made were retained."
 msgstr "Cleanup stopped. Changes already made were retained."
+
+#: classes/ImportProgress.php
+#, php-format
+msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
+msgstr "Cleaning up: %1$s (batch %2$d). %3$s MB freed."

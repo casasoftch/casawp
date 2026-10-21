@@ -317,6 +317,12 @@ try {
     do {
         $import = new \casawp\Import();
         $import->handle_finalize_import_cleanup_batch($batch++, 111);
+        check(get_option('casawp_import_cleanup_progress')['batch_number'] === $batch - 1,
+            'Each executed import cleanup batch must publish its actual number, including the last batch');
+        if (get_option('casawp_current_run_id')) {
+            check(strpos(\casawp\ImportProgress::data()['message'], '(batch ' . ($batch - 1) . ')') !== false,
+                'Live import cleanup progress must display the batch actually executed by the worker');
+        }
         check($batch < 100, 'Integrated cleanup must complete');
     } while ((int) get_option('casawp_cleanup_done_for_run', 0) !== 111);
     check(!file_exists($photo) && !file_exists($base . '/casawp/import/data-done.xml') && !get_option('casawp_current_run_id'), 'Final import cleanup must finish file batches before releasing the run');
