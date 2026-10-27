@@ -16,25 +16,11 @@ Codex discovers the same skill through `.agents/skills/casawp-development`, a re
 - `modules/casawp/`: Laminas module configuration, services, and forms.
 - `theme-defaults/`: frontend templates; sites can override these in their themes.
 - `plugin-assets/`: scripts, styles, and frontend asset sources; `languages/`: translation catalogs.
-- `tests/`: standalone PHP and Node regression checks.
 - `distribution/wp.casasoft.com/casawp/`: update endpoint and release tooling.
 
 ## Validation
 
-Run the existing checks relevant to the change from the repository root. The root `package.json` and `composer.json` do not define test scripts; invoke the test files directly.
-
-| Area | Commands |
-| --- | --- |
-| Settings save/render | `php tests/settings-options.php` |
-| Settings interactions | `node tests/settings-controls.js`, `node tests/settings-dropdowns.js`, `node tests/settings-notices.js` |
-| Import and cleanup progress | `php tests/import-progress.php`, `node tests/import-progress.js` |
-| Import feed validation | `php tests/import-feed-validation.php` |
-| Import logging and taxonomy | `php tests/import-logging.php`, `php tests/import-taxonomy.php` |
-| File and legacy attachment cleanup | `php tests/import-file-cleanup.php`, `php tests/import-legacy-attachments.php` |
-| Remote media | `php tests/remote-media.php` |
-| Admin notice hooks | `php tests/admin-notices.php /path/to/wordpress` |
-
-The PHP checks use local stubs or fixtures. Settings checks need DOM, taxonomy and remote-media checks need SimpleXML, logging checks use `proc_open`, and legacy attachment checks need PDO SQLite and the bundled Composer dependencies. Admin notice checks require a local WordPress source tree and load its hook API without loading site configuration. Node checks use built-in modules. External services such as CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery need configured integration testing; standalone checks do not establish that coverage.
+There is no first-party automated test suite checked into this repository. Validate affected behaviour in a local or staging WordPress installation and record what was checked and what remains unverified. External services such as CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery require configured integration testing.
 
 For changed PHP or JavaScript files, check syntax with `php -l path/to/file.php` or `node --check path/to/file.js` as appropriate.
 

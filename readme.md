@@ -15,16 +15,12 @@ Titles use Poppins and body text uses Mulish, with CASASOFT-inspired blue button
 
 ![CASAWP settings page with sample values](assets/settings-page.png)
 
-Run `php tests/settings-options.php` to check saving and reloading across all seven tabs, every checkbox and dropdown/radio choice, isolation between tabs, custom category translations, import modes, and dynamic field ordering. It uses an isolated in-memory option store and does not change website settings. Run `node tests/settings-controls.js` for option dependencies and drag-order updates, and `node tests/import-progress.js` for import and cleanup UI state checks. External CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery require separate integration testing with configured services.
-
-Run `node tests/settings-dropdowns.js` for dropdown loading and failure recovery checks. Run `node tests/settings-notices.js` for inline-important and dynamically added notice checks. Run `php tests/admin-notices.php /path/to/wordpress` to verify callback suppression with WordPress's real hook dispatcher; this loads only its hook API and does not connect to a database or load site configuration.
+Verify settings changes in a local or staging WordPress installation. External CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery require separate integration testing with configured services.
 
 Import feed safety
 ===============================
 
 CASAWP validates the XML structure and every property ID before changing existing listings or scheduling deletion work. A feed must have exactly one direct `properties` node, containing only `property` elements with nonblank IDs. Wrapper names and imported IDs are preserved. An explicit empty `properties` list still requests full cleanup; an unexpected XML response, malformed XML, or invalid property list stops the run instead. Queued database cleanup checks the feed again before deleting properties, and a rejected feed leaves a stopped status and diagnostic logs while releasing its run's lock.
-
-Run `php tests/import-feed-validation.php` for standalone safety checks across gateway initialization, batch and single-request imports, and queued deletion work. These checks use in-memory WordPress fixtures and a simulated gateway response, without contacting CASAGATEWAY or changing a website.
 
 How do I change the html markup and add my own view files?
 -------------------------------
@@ -262,8 +258,6 @@ Remove the filter after investigating to return to batch summaries.
 
 Active imports record fatal PHP errors, including memory exhaustion and PHP execution timeouts, with the last known stage. A process killed by the server or operating system cannot write a shutdown entry; in debug mode, a batch start without a finish is still useful evidence. If the monthly log cannot be written, the entry falls back to the PHP error log.
 
-Run the standalone logging regression checks with `php tests/import-logging.php`.
-
 Import file cleanup
 ===================
 
@@ -291,8 +285,6 @@ After the file sweep, cleanup removes unused terms from registered `casawp_*` ta
 
 Exceptions thrown by individual term-deletion hooks (for example, Yoast indexable deletion) are logged as warnings with the term ID, taxonomy, exception trace and whether the term was actually removed. Cleanup checks the database after the exception, counts any completed deletion, advances past the affected term and continues with later terms and old-log cleanup. Retained terms can be retried on a subsequent cleanup. WordPress deletion hooks remain enabled. Database errors and unsafe or stale runs still stop cleanup. A stopped manual run preserves its last known phase and partial totals in its state and failure log.
 
-Cleanup logs identify each phase: database properties, database attachment records, filesystem files/folders, taxonomy terms, and old logs. Batch finish messages identify their phase, and phase transitions/completion are logged separately. Debug logging also includes batch starts and scheduling messages naming the next phase. Retained database record counts are explicitly labeled. File/folder counts and freed space are logged, with individual deleted file paths in debug mode. The last cleanup batch writes its finished entry before the overall totals and completion summary, for both imports and manual cleanup. Finalization remains covered by exception and fatal-error logging; a failure after batch completion is identified separately. A final summary combines the MB freed across all attachment/XML cleanup batches and old-log deletions, with a breakdown for each. The `casawp_file_cleanup_batch_size` and `casawp_file_cleanup_time_limit` filters default to 200 filesystem entries and 5 seconds per batch. Run its filesystem and finalization regression checks with `php tests/import-file-cleanup.php`.
-
-Run the SQLite-backed legacy attachment, reference, WPML and term cleanup checks with `php tests/import-legacy-attachments.php`.
+Cleanup logs identify each phase: database properties, database attachment records, filesystem files/folders, taxonomy terms, and old logs. Batch finish messages identify their phase, and phase transitions/completion are logged separately. Debug logging also includes batch starts and scheduling messages naming the next phase. Retained database record counts are explicitly labeled. File/folder counts and freed space are logged, with individual deleted file paths in debug mode. The last cleanup batch writes its finished entry before the overall totals and completion summary, for both imports and manual cleanup. Finalization remains covered by exception and fatal-error logging; a failure after batch completion is identified separately. A final summary combines the MB freed across all attachment/XML cleanup batches and old-log deletions, with a breakdown for each. The `casawp_file_cleanup_batch_size` and `casawp_file_cleanup_time_limit` filters default to 200 filesystem entries and 5 seconds per batch.
 
 Successful import finalization also removes monthly log files except those from the current and previous calendar month, based on the site's local date. It recognizes standard `YYYYMM.log` names, legacy English month names such as `2020 Aug.log` and `2020 August.log`, and separated numeric names such as `2020-08.log` or `2020_8.log`. Spaces, hyphens and underscores are accepted as separators; month names and the `.log` extension are case-insensitive. For example, during October 2026 it keeps both October and September logs in every recognized format, regardless of file modification time. Imports, standalone cleanup and the monthly cron share this routine. Custom log names, invalid month names, directories and symbolic links are skipped. Cleanup reports deleted file counts and freed space, and logs deletion failures.
