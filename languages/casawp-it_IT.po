@@ -4573,3 +4573,23 @@ msgstr "Pulizia interrotta. Le modifiche già effettuate sono state mantenute."
 #, php-format
 msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
 msgstr "Pulizia in corso: %1$s (lotto %2$d). %3$s MB liberati."
+
+#: classes/ImportProgress.php options.php
+msgid "Preparing import…"
+msgstr "Preparazione dell’importazione…"
+
+#: classes/ImportProgress.php
+msgid "Fetching data from CASAGATEWAY…"
+msgstr "Recupero dei dati da CASAGATEWAY…"
+
+#: classes/ImportProgress.php casawp.php
+msgid "Import queued."
+msgstr "Importazione in attesa."
+
+#: classes/ImportProgress.php
+msgid "Finalizing import…"
+msgstr "Completamento dell’importazione…"
+
+#: classes/ImportProgress.php
+msgid "Import and cleanup completed with warnings. See the logs for details."
+msgstr "Importazione e pulizia completate con avvisi. Consultare i registri per i dettagli."

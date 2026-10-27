@@ -63,10 +63,19 @@ Use "Run legacy data cleanup" below "Delete all property data" in General settin
 
 Import cleanup also removes monthly log files except those from the current and previous calendar month, using the site's local date. It recognizes current names such as 202610.log and legacy names such as 2020 Aug.log, full English month names, and separated numeric month names. The monthly cron cleanup uses the same retention rule, so old logs are removed even if cron has not run.
 
+== Import Status ==
+
+The progress bar, status messages and buttons update together. Starting an import shows preparation immediately, and reopening settings displays the current import without waiting for the first status request. Messages distinguish fetching gateway data, waiting in the queue, importing properties, cleanup and finalization. Activity bars disappear when work completes or stops; the final completion summary remains visible for up to ten minutes. Cleanup warnings are included in the result. Cancel works again when another import starts, and status requests retry after timeouts.
+
+CASAWP allows one active import per site. A background request or failure notification from a cancelled import can still arrive after the next import starts. Run-ID checks prevent this leftover work from changing the new import's status or stopping it. A failed batch marks its own import as stopped, cancels its queued work and releases its lock so another import can start. Gateway requests have connection and total timeouts, and fatal PHP errors stop the owning import when PHP can run its shutdown handler. Public gateway pokes retain their existing endpoint and do not require an admin nonce.
+
 == Changelog ==
 
 = Unreleased =
 
+* Fix: Synchronize import bars, status messages and controls across starts, cancellation, completion and delayed responses; recover status polling after request timeouts
+* Fix: Show import fetching, queued and finalizing phases, report cleanup warnings, and stop failed imports without allowing leftover jobs or failure notifications from a previous run to stop the current import
+* Fix: Bound gateway connection and retrieval times and release the owning import after fatal PHP errors when shutdown handling is available
 * Security: Require administrator permissions and verified POST requests for settings saves and AJAX import start, cancel and progress reset; save only fields belonging to the selected settings tab
 * Fix: Preserve quoted settings values, backslashes and the tracking property-ID placeholder across saves; escape stored values in form fields and HTML textareas
 * Fix: Preserve local document files and generated previews during CDN cleanup when retained attachments lack a usable remote source or share files with local consumers

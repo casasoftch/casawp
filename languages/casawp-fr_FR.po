@@ -4578,3 +4578,23 @@ msgstr "Nettoyage arrêté. Les modifications déjà effectuées sont conservée
 #, php-format
 msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
 msgstr "Nettoyage en cours : %1$s (lot %2$d). %3$s Mo libérés."
+
+#: classes/ImportProgress.php options.php
+msgid "Preparing import…"
+msgstr "Préparation de l’import…"
+
+#: classes/ImportProgress.php
+msgid "Fetching data from CASAGATEWAY…"
+msgstr "Récupération des données depuis CASAGATEWAY…"
+
+#: classes/ImportProgress.php casawp.php
+msgid "Import queued."
+msgstr "Import en attente."
+
+#: classes/ImportProgress.php
+msgid "Finalizing import…"
+msgstr "Finalisation de l’import…"
+
+#: classes/ImportProgress.php
+msgid "Import and cleanup completed with warnings. See the logs for details."
+msgstr "Import et nettoyage terminés avec des avertissements. Consultez les journaux pour plus de détails."

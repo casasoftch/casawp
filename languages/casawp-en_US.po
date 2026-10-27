@@ -3709,3 +3709,23 @@ msgstr "Cleanup stopped. Changes already made were retained."
 #, php-format
 msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
 msgstr "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
+
+#: classes/ImportProgress.php options.php
+msgid "Preparing import…"
+msgstr "Preparing import…"
+
+#: classes/ImportProgress.php
+msgid "Fetching data from CASAGATEWAY…"
+msgstr "Fetching data from CASAGATEWAY…"
+
+#: classes/ImportProgress.php casawp.php
+msgid "Import queued."
+msgstr "Import queued."
+
+#: classes/ImportProgress.php
+msgid "Finalizing import…"
+msgstr "Finalizing import…"
+
+#: classes/ImportProgress.php
+msgid "Import and cleanup completed with warnings. See the logs for details."
+msgstr "Import and cleanup completed with warnings. See the logs for details."

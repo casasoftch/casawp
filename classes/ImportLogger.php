@@ -8,15 +8,18 @@ class ImportLogger
     private array $context = [];
     private string $request_id;
     private $run_id;
+    private $failure_run_id;
     private int $errors = 0;
     private array $outcomes = [];
     private int $active_operations = 0;
+    private array $operation_stages = [];
     private bool $shutdown_registered = false;
     private string $memory_reserve = '';
 
-    public function __construct(callable $run_id)
+    public function __construct(callable $run_id, ?callable $failure_run_id = null)
     {
         $this->run_id = $run_id;
+        $this->failure_run_id = $failure_run_id;
         $this->request_id = uniqid('import_', true);
     }
 
@@ -64,6 +67,7 @@ class ImportLogger
         $outcomes_before = $this->outcomes;
         $finished = false;
         $this->active_operations++;
+        $this->operation_stages[] = $stage;
         if (!$this->shutdown_registered) {
             $this->shutdown_registered = true;
             $this->memory_reserve = str_repeat(' ', 262144);
@@ -99,6 +103,7 @@ class ImportLogger
             throw $e;
         } finally {
             $this->active_operations--;
+            array_pop($this->operation_stages);
             $this->context = $previous;
         }
     }
@@ -126,6 +131,15 @@ class ImportLogger
         $error = error_get_last();
         if (!$this->active_operations || !$error || !in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR], true)) {
             return;
+        }
+        // PHP can terminate a synchronous gateway request without an Action Scheduler failure event.
+        if ($this->failure_run_id && array_intersect($this->operation_stages, ['gateway_import', 'single_request_import', 'properties_batch', 'final_cleanup'])
+            && function_exists('casawp_fail_import_run')) {
+            try {
+                \casawp_fail_import_run((int) call_user_func($this->failure_run_id));
+            } catch (\Throwable $failure) {
+                error_log('CASAWP could not update import status after a fatal PHP error.');
+            }
         }
         $entry = $this->write('Import terminated by a fatal PHP error.', [
             'event' => 'import.fatal',

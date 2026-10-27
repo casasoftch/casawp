@@ -4628,3 +4628,23 @@ msgstr "Bereinigung gestoppt. Bereits vorgenommene Änderungen bleiben erhalten.
 #, php-format
 msgid "Cleaning up: %1$s (batch %2$d). %3$s MB freed."
 msgstr "Bereinigung läuft: %1$s (Batch %2$d). %3$s MB freigegeben."
+
+#: classes/ImportProgress.php options.php
+msgid "Preparing import…"
+msgstr "Import wird vorbereitet…"
+
+#: classes/ImportProgress.php
+msgid "Fetching data from CASAGATEWAY…"
+msgstr "Daten werden von CASAGATEWAY abgerufen…"
+
+#: classes/ImportProgress.php casawp.php
+msgid "Import queued."
+msgstr "Import wartet auf Ausführung."
+
+#: classes/ImportProgress.php
+msgid "Finalizing import…"
+msgstr "Import wird abgeschlossen…"
+
+#: classes/ImportProgress.php
+msgid "Import and cleanup completed with warnings. See the logs for details."
+msgstr "Import und Bereinigung mit Warnungen abgeschlossen. Weitere Informationen finden Sie in den Protokollen."

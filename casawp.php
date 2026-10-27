@@ -166,8 +166,69 @@ function casawp_release_lock(): void {
 	delete_option( 'casawp_import_lock' );
 }
 
+/** Read ownership afresh when several background actions share one PHP request. */
+function casawp_current_import_run_id(): int {
+	if (function_exists('wp_cache_delete')) {
+		wp_cache_delete('casawp_current_run_id', 'options');
+		wp_cache_delete('notoptions', 'options');
+	}
+	return (int) get_option('casawp_current_run_id', 0);
+}
+
+/** The caller holds the import lock; publish startup before any gateway request. */
+function casawp_begin_import_run(string $phase = 'fetching'): int {
+	$run_id = max(time(), (int) get_option('casawp_import_progress_run_id', 0) + 1,
+		(int) get_option('casawp_cleanup_done_for_run', 0) + 1, casawp_current_import_run_id() + 1);
+	\casawp\ImportProgress::dismissCompletionNotice();
+	\casawp\ManualCleanup::dismissCompletionNotice();
+	delete_option('casawp_import_failed');
+	delete_option('casawp_import_canceled');
+	casawp_clear_pending();
+	update_option('casawp_total_batches', 0);
+	update_option('casawp_completed_batches', 0);
+	update_option('casawp_import_progress_run_id', $run_id, false);
+	update_option('casawp_import_progress_state', ['run_id' => $run_id, 'phase' => $phase], false);
+	update_option('casawp_current_run_id', $run_id, false);
+	return $run_id;
+}
+
+/** Additive progress details must never overwrite another run's current phase. */
+function casawp_set_import_phase(int $run_id, string $phase): bool {
+	if (!$run_id || casawp_current_import_run_id() !== $run_id) { return false; }
+	update_option('casawp_import_progress_state', ['run_id' => $run_id, 'phase' => $phase], false);
+	return true;
+}
+
+/** Fail only the owning run, retaining the failure flag for the settings page. */
+function casawp_fail_import_run(int $run_id): bool {
+	if (!$run_id || casawp_current_import_run_id() !== $run_id) { return false; }
+	update_option('casawp_import_failed', true);
+	update_option('casawp_file_cleanup_failed_run', $run_id, false);
+	casawp_clear_pending();
+	if (function_exists('as_unschedule_all_actions')) {
+		try {
+			foreach (['casawp_batch_import', 'casawp_delete_outdated_properties', 'casawp_finalize_import_cleanup_batch'] as $hook) {
+				as_unschedule_all_actions($hook, null, 'casawp_run_' . $run_id);
+			}
+		} catch (\Throwable $e) {
+			// A queued stale action still fails its ownership check after the run is released.
+			error_log('CASAWP could not cancel all actions for the failed import run ' . $run_id . '.');
+		}
+	}
+	if (casawp_current_import_run_id() !== $run_id) { return false; }
+	delete_option('casawp_current_run_id');
+	casawp_release_lock();
+	return true;
+}
+
 /** Flag that a fresh import should run when the lock is free. */
-function casawp_set_pending(): void  { update_option( 'casawp_import_pending', 1, 'no' ); }
+function casawp_set_pending(): void {
+	update_option('casawp_import_pending', 1, 'no');
+	if (!casawp_current_import_run_id()) {
+		delete_option('casawp_import_failed');
+		delete_option('casawp_import_canceled');
+	}
+}
 function casawp_clear_pending(): void { delete_option( 'casawp_import_pending' ); }
 
 /** Is a pending poke queued? */
@@ -260,16 +321,15 @@ function casawp_handle_import_requests() {
 
 	try {
 	  casawp_start_single_request_import('Manual single request import');
+	  $progress = \casawp\ImportProgress::data();
 	  set_transient('casawp_single_import_result', [
-		'status'  => 'success',
-		'message' => 'Import erfolgreich ausgeführt!'
+		'status'  => $progress['status'] === 'stopped' ? 'error' : 'success',
+		'message' => $progress['message']
 	  ], 60);
-	} catch (Exception $e) {
+	} catch (\Throwable $e) {
 	  set_transient('casawp_single_import_result', [
 		'status'  => 'error',
-		'message' => $e instanceof UnexpectedValueException
-		  ? __('Import stopped. See the logs for details.', 'casawp')
-		  : 'Fehler beim Import: ' . esc_html($e->getMessage())
+		'message' => __('Import stopped. See the logs for details.', 'casawp')
 	  ], 60);
 	}
 
@@ -336,6 +396,18 @@ function casawp_handle_failed_action($action_id) {
 
 	if ($hook == 'casawp_batch_import' || $hook == 'casawp_finalize_import_cleanup_batch') {
 		$args = $action->get_args();
+		$run_id = (int) ($args['run_id'] ?? 0);
+		if (!$run_id && method_exists($action, 'get_group') && preg_match('/^casawp_run_(\d+)$/', $action->get_group(), $group)) {
+			$run_id = (int) $group[1];
+		}
+		if (!$run_id || $run_id !== casawp_current_import_run_id()) { return; }
+		$failed_batch = (int) ($args['batch_number'] ?? 0);
+		if ($hook === 'casawp_batch_import' && $failed_batch > 0
+			&& (int) get_option('casawp_completed_batches', 0) >= $failed_batch) { return; }
+		$cleanup = get_option('casawp_import_cleanup_progress', []);
+		if ($hook === 'casawp_finalize_import_cleanup_batch' && ($cleanup['run_id'] ?? 0) === $run_id
+			&& $failed_batch > 0 && (int) ($cleanup['batch_number'] ?? 0) > $failed_batch) { return; }
+		if (!casawp_fail_import_run($run_id)) { return; }
 		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
 		$site_domain = home_url();
 		$to = get_option('admin_email');
@@ -345,10 +417,8 @@ function casawp_handle_failed_action($action_id) {
 		wp_mail($to, $subject, $message);
 
 		$import = new casawp\Import(false, false);
+		$import->init_single_run($run_id);
 		$import->addToLog('Import canceled due to ' . ($is_cleanup ? 'cleanup' : 'batch') . ' failure on ' . $site_domain . '. Notification sent.');
-		update_option('casawp_import_failed', true);
-		casawp_release_lock();
-		delete_option('casawp_current_run_id');
 	}
 }
 
@@ -358,9 +428,9 @@ function casawp_start_new_import($source = '', $force_cancel = false) {
 
 	if ( ! casawp_acquire_lock() ) {          // someone else is running
 		if ( $force_cancel ) {
-			casawp_cancel_import();           // clears jobs & releases lock
+			if (!casawp_cancel_import()) { casawp_set_pending(); return; }
 			sleep( 2 );
-			casawp_acquire_lock();            // we *must* own it now
+			if (!casawp_acquire_lock()) { casawp_set_pending(); return; }
 		} else {
 			casawp_set_pending();             // queue & bail
 			$import = new casawp\Import(false, false);
@@ -369,15 +439,13 @@ function casawp_start_new_import($source = '', $force_cancel = false) {
 		}
 	}
 
-	\casawp\ManualCleanup::dismissCompletionNotice();
-	update_option('casawp_total_batches', 0);
-	update_option('casawp_completed_batches', 0);
-	delete_option('casawp_import_failed');
-	delete_option('casawp_import_canceled');
-
+	$run_id = casawp_begin_import_run();
 	$import = new casawp\Import(); 
+	$import->init_single_run($run_id);
 	$import->updateImportFileThroughCasaGateway( true );
-	$import->addToLog($source . ' import started');
+	if ($run_id === casawp_current_import_run_id() && !get_option('casawp_import_failed')) {
+		$import->addToLog($source . ' import started');
+	}
 	return $import;
 
 }
@@ -509,13 +577,24 @@ function casawp_start_import() {
 	}
 
 	if (isset($_POST['gatewayupdate']) && $_POST['gatewayupdate'] == 1) {
-		if (casawp_is_single_request_enabled()) {
-			casawp_start_single_request_import('Update from CASAGATEWAY');
-			wp_send_json_success(['message' => 'Single-request import started/finished']);
-		} else {
-			casawp_start_new_import('Update from CASAGATEWAY', true);
-			wp_send_json_success(['message' => 'Batch import started successfully']);
+		$previous_run = (int) get_option('casawp_import_progress_run_id', 0);
+		$single = casawp_is_single_request_enabled();
+		try {
+			if ($single) { casawp_start_single_request_import('Update from CASAGATEWAY'); }
+			else { casawp_start_new_import('Update from CASAGATEWAY', true); }
+		} catch (\Throwable $e) {
+			wp_send_json_error(['message' => __('Import stopped. See the logs for details.', 'casawp'),
+				'progress' => \casawp\ImportProgress::data()], 409);
+			return;
 		}
+		$queued = casawp_has_pending() && (int) get_option('casawp_import_progress_run_id', 0) === $previous_run;
+		$progress = \casawp\ImportProgress::data();
+		if (!$queued && get_option('casawp_import_failed')) {
+			wp_send_json_error(['message' => __('Import stopped. See the logs for details.', 'casawp'), 'progress' => $progress], 409);
+			return;
+		}
+		$message = $queued ? __('Import queued.', 'casawp') : ($single ? 'Single-request import started/finished' : 'Batch import started successfully');
+		wp_send_json_success(['message' => $message, 'queued' => $queued, 'progress' => $progress]);
 	} else {
 		wp_send_json_error(['message' => 'Invalid request']);
 	}
@@ -530,21 +609,13 @@ function casawp_start_single_request_import( string $source = '' ) {
 
 	/* ── 1. exclusive lock ─────────────────────────────────────── */
 	if ( ! casawp_acquire_lock() ) {          // someone else is running
-		casawp_cancel_import();               // clear their jobs + lock
+		if (!casawp_cancel_import()) { casawp_set_pending(); return; }
 		sleep( 2 );                           // tiny safety pause
-		casawp_acquire_lock();                // we must own it now
+		if (!casawp_acquire_lock()) { casawp_set_pending(); return; }
 	}
 
 	/* ── 2. mint / store a fresh run-id ────────────────────────── */
-	$run_id = time();                         // seconds since 1970 ⇒ unique
-	update_option( 'casawp_current_run_id', $run_id, 'no' );
-	\casawp\ManualCleanup::dismissCompletionNotice();
-	update_option('casawp_import_progress_run_id', $run_id, false);
-
-	update_option( 'casawp_total_batches',     1 );
-	update_option( 'casawp_completed_batches', 0 );
-	delete_option( 'casawp_import_failed' );
-	delete_option( 'casawp_import_canceled' );
+	$run_id = casawp_begin_import_run();
 
 	/* ── 3. create importer (no auto-update in ctor) ───────────── */
 	$import = new \casawp\Import( false, false );   // (poke = false, update = false)
@@ -568,7 +639,7 @@ function casawp_cancel_import_ajax() {
 		return;
 	}
 	if (casawp_cancel_import()) {
-		wp_send_json_success(['message' => 'Import canceled successfully.']);
+		wp_send_json_success(['message' => 'Import canceled successfully.', 'progress' => \casawp\ImportProgress::data()]);
 	} else {
 		wp_send_json_error(['message' => 'Failed to cancel the current import.']);
 	}

@@ -1802,6 +1802,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										'start' => wp_create_nonce('casawp_start_import'),
 										'cancel' => wp_create_nonce('casawp_cancel_import'),
 									)); ?>;
+									var casawpImportInitial = <?php echo wp_json_encode(\casawp\ImportProgress::data()); ?>;
 									var casawpImportI18n = <?php echo wp_json_encode(array(
 										'errorPrefix' => __('Error: ', 'casawp'),
 										'startError' => __('An error occurred while starting the import.', 'casawp'),
@@ -1811,183 +1812,265 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										'resetErrorPrefix' => __('Error while resetting import progress: ', 'casawp'),
 										'resetError' => __('An error occurred while resetting import progress.', 'casawp'),
 										'statusError' => __('Import status could not be updated. Retrying…', 'casawp'),
+										'preparing' => __('Preparing import…', 'casawp'),
+										'stopped' => __('Import stopped. See the logs for details.', 'casawp'),
 									)); ?>;
 
 									jQuery(function($) {
+									    var progressPolling = false;
+									    var progressRequest = null;
+									    var pollSerial = 0;
+									    var alertPolling = false;
+									    var alertSerial = 0;
+									    var generation = 0;
+									    var pendingAction = '';
+									    var completionTimer = null;
+									    var completionDeadline = 0;
+									    var completionRun = 0;
+									    var completionDismissed = false;
+									    var latestRun = 0;
+									    var publishedState = '';
+									    var lastData = {status: 'idle', progress: 0, run_id: 0, message: ''};
+									    var initialCleanup = window.casawpCleanup ? window.casawpCleanup.initial : {};
+									    var manualBusy = ['queued', 'running', 'stopping'].indexOf(initialCleanup.status) !== -1;
 
-										var progressPolling = false;
-										var completionTimer = null;
-										var completionDismissed = false;
+									    function invalidateRequests() {
+									        generation++;
+									        pollSerial++;
+									        alertSerial++;
+									        progressPolling = false;
+									        alertPolling = false;
+									        if (progressRequest && progressRequest.abort) { progressRequest.abort(); }
+									        progressRequest = null;
+									    }
 
-										function resetProgressBar() {
-											window.clearTimeout(completionTimer);
-											completionTimer = null;
-											$('#casawp-progress-wrapper').hide();
-											$('#casawp-progress-bar').css('width', '0%');
-											$('#casawp-progress-percent').text('0%');
-											$('#casawp-import-cleanup-progress').hide();
-											$('#casawp-import-status').text('');
-											$('#casawp-cancel-import-button').hide();
-											$('#casawp-import-button').removeAttr('disabled');
-										}
+									    function dismissCompletion() {
+									        completionDismissed = true;
+									        completionDeadline = 0;
+									        window.clearTimeout(completionTimer);
+									        completionTimer = null;
+									    }
 
-										function showCancelButton() {
-											$('#casawp-cancel-import-button').show();
-										}
+									    function publishState(active) {
+									        var state = {active: active, pending: !!pendingAction, status: lastData.status, run_id: lastData.run_id || 0};
+									        var signature = JSON.stringify(state);
+									        if (signature !== publishedState) {
+									            publishedState = signature;
+									            $(document).trigger('casawp:import-state', [state]);
+									        }
+									    }
 
-										function hideCancelButton() {
-											$('#casawp-cancel-import-button').hide();
-										}
+									    function renderProgress() {
+									        window.clearTimeout(completionTimer);
+									        completionTimer = null;
+									        var starting = pendingAction === 'start';
+									        var active = starting || lastData.status === 'running' || lastData.status === 'cleanup';
+									        var visibleActive = active && !manualBusy;
+									        var showResult = !manualBusy && !starting && lastData.status === 'completed'
+									            && !completionDismissed && completionDeadline > Date.now();
+									        var stopped = !manualBusy && lastData.status === 'stopped';
+									        var queuedBehindCleanup = manualBusy && lastData.status === 'running' && lastData.phase === 'queued';
+									        var progress = starting ? 0 : Math.max(0, Math.min(100, Number(lastData.progress) || 0));
+									        $('#casawp-import-progress-heading').toggle(visibleActive);
+									        $('#casawp-progress-bar-container').toggle(visibleActive);
+									        $('#casawp-import-cleanup-progress').toggle(visibleActive && !starting && lastData.status === 'cleanup');
+									        $('#casawp-progress-bar').css('width', progress + '%');
+									        $('#casawp-progress-percent').text(Math.round(progress) + '%');
+									        $('#casawp-progress-bar-container').attr('aria-valuenow', Math.round(progress));
+									        $('#casawp-import-status').text(starting ? casawpImportI18n.preparing : (visibleActive || showResult || stopped || queuedBehindCleanup ? lastData.message : ''));
+									        $('#casawp-progress-wrapper').toggle(visibleActive || showResult || stopped || queuedBehindCleanup);
+									        $('#casawp-import-button').prop('disabled', manualBusy || active || !!pendingAction);
+									        $('#casawp-single-import-button').attr('aria-disabled', manualBusy || active || !!pendingAction ? 'true' : 'false')
+									            .toggleClass('disabled', manualBusy || active || !!pendingAction);
+									        $('#casawp-cancel-import-button').toggle(visibleActive && !starting && lastData.can_cancel !== false)
+									            .prop('disabled', !!pendingAction || manualBusy);
+									        if (showResult) {
+									            completionTimer = window.setTimeout(function() {
+									                completionDeadline = 0;
+									                completionDismissed = true;
+									                renderProgress();
+									            }, Math.max(0, completionDeadline - Date.now()));
+									        }
+									        publishState(active);
+									    }
 
-										resetProgressBar();
-										$('#casawp-cleanup-button').on('click', function() {
-											completionDismissed = true;
-											resetProgressBar();
-										});
-										$('#casawp-resume-cleanup-button').on('click', function() {
-											completionDismissed = true;
-											resetProgressBar();
-										});
+									    function acceptProgress(data) {
+									        if (!data || typeof data.status !== 'string') { return; }
+									        var run = Number(data.run_id) || 0;
+									        if (latestRun && run < latestRun) { return; }
+									        if (run > latestRun) { completionDismissed = false; latestRun = run; }
+									        if (data.status === 'running' || data.status === 'cleanup') { completionDismissed = false; }
+									        lastData = data;
+									        if (data.status === 'completed' && Number(data.notice_seconds) > 0 && !completionDismissed) {
+									            var deadline = Date.now() + Math.min(600, Number(data.notice_seconds)) * 1000;
+									            completionDeadline = completionRun === run && completionDeadline ? Math.min(completionDeadline, deadline) : deadline;
+									            completionRun = run;
+									        } else { completionDeadline = 0; }
+									        renderProgress();
+									    }
 
-										$('#casawp-import-button').on('click', function(e) {
-											e.preventDefault();
+									    function pollProgress() {
+									        if (progressPolling || pendingAction || manualBusy) { return; }
+									        progressPolling = true;
+									        var requestGeneration = generation;
+									        var serial = ++pollSerial;
+									        progressRequest = $.ajax({
+									            url: ajaxurl,
+									            type: 'POST',
+									            timeout: 15000,
+									            data: {action: 'casawp_get_import_progress'},
+									            complete: function() {
+									                if (serial === pollSerial) { progressPolling = false; progressRequest = null; }
+									            },
+									            success: function(response) {
+									                if (requestGeneration !== generation || pendingAction || manualBusy) { return; }
+									                if (response && response.success) { acceptProgress(response.data); }
+									            },
+									            error: function() {
+									                if (requestGeneration !== generation || pendingAction || manualBusy) { return; }
+									                $('#casawp-import-status').text(casawpImportI18n.statusError);
+									                $('#casawp-progress-wrapper').show();
+									            }
+									        });
+									    }
 
-											resetProgressBar();
-											$(this).attr('disabled', true);
-											showCancelButton();
-											$('#casawp-progress-wrapper').show();
+									    function beginAction(action) {
+									        if (pendingAction || manualBusy) { return false; }
+									        invalidateRequests();
+									        dismissCompletion();
+									        pendingAction = action;
+									        $(document).trigger('casawp:import-action', [{action: action}]);
+									        renderProgress();
+									        return true;
+									    }
 
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_start_import',
-													nonce: casawpImportNonces.start,
-													gatewayupdate: 1
-												},
-												success: function(response) {
-													if (response.success) {
-														console.log(response.data.message);
-													} else {
-														alert(casawpImportI18n.errorPrefix + response.data.message);
-														// Re-enable the button if import couldn't start
-														$('#casawp-import-button').removeAttr('disabled');
-														hideCancelButton();
-													}
-												},
-												error: function() {
-											alert(casawpImportI18n.startError);
-													// Re-enable the button on error
-													$('#casawp-import-button').removeAttr('disabled');
-													hideCancelButton();
-												}
-											});
-										});
+									    $('#casawp-import-button').on('click', function(e) {
+									        e.preventDefault();
+									        if (lastData.status === 'running' || lastData.status === 'cleanup' || !beginAction('start')) { return; }
+									        var actionGeneration = generation;
+									        $.ajax({
+									            url: ajaxurl,
+									            type: 'POST',
+									            timeout: 150000,
+									            data: {action: 'casawp_start_import', nonce: casawpImportNonces.start, gatewayupdate: 1},
+									            success: function(response) {
+									                if (actionGeneration !== generation) { return; }
+									                pendingAction = '';
+									                if (response && response.success) {
+									                    acceptProgress(response.data && response.data.progress ? response.data.progress
+									                        : {status: 'running', phase: 'queued', progress: 0, run_id: latestRun, message: casawpImportI18n.preparing});
+									                } else {
+									                    renderProgress();
+									                    alert(response && response.data && response.data.message ? response.data.message : casawpImportI18n.startError);
+									                }
+									                pollProgress();
+									            },
+									            error: function(xhr) {
+									                if (actionGeneration !== generation) { return; }
+									                pendingAction = '';
+									                var failure = xhr && xhr.responseJSON && xhr.responseJSON.data;
+									                if (failure && failure.progress) { acceptProgress(failure.progress); }
+									                else {
+									                    // A lost response does not establish whether the server started the import.
+									                    lastData = {status: 'running', phase: 'fetching', progress: 0, run_id: latestRun,
+									                        message: casawpImportI18n.statusError, can_cancel: false};
+									                    renderProgress();
+									                }
+									                alert(failure && failure.message ? failure.message : casawpImportI18n.startError);
+									                pollProgress();
+									            }
+									        });
+									    });
 
-										$('#casawp-cancel-import-button').on('click', function(e) {
-											e.preventDefault();
+									    $('#casawp-single-import-button').on('click', function(e) {
+									        if (manualBusy || pendingAction || lastData.status === 'running' || lastData.status === 'cleanup') {
+									            e.preventDefault();
+									            return;
+									        }
+									        invalidateRequests();
+									        dismissCompletion();
+									        $(document).trigger('casawp:import-action', [{action: 'start'}]);
+									        renderProgress();
+									    });
 
-											if (!confirm(casawpImportI18n.cancelConfirm)) {
-												return;
-											}
+									    $('#casawp-cancel-import-button').on('click', function(e) {
+									        e.preventDefault();
+									        if (pendingAction || manualBusy || !confirm(casawpImportI18n.cancelConfirm) || !beginAction('cancel')) { return; }
+									        var actionGeneration = generation;
+									        $.ajax({
+									            url: ajaxurl,
+									            type: 'POST',
+									            timeout: 30000,
+									            data: {action: 'casawp_cancel_import', nonce: casawpImportNonces.cancel},
+									            success: function(response) {
+									                if (actionGeneration !== generation) { return; }
+									                pendingAction = '';
+									                if (response && response.success) {
+									                    acceptProgress(response.data && response.data.progress ? response.data.progress
+									                        : {status: 'stopped', progress: 0, run_id: latestRun, message: casawpImportI18n.stopped});
+									                } else {
+									                    renderProgress();
+									                    alert(response && response.data && response.data.message ? response.data.message : casawpImportI18n.cancelError);
+									                }
+									                pollProgress();
+									            },
+									            error: function(xhr) {
+									                if (actionGeneration !== generation) { return; }
+									                pendingAction = '';
+									                var failure = xhr && xhr.responseJSON && xhr.responseJSON.data;
+									                if (failure && failure.progress) { acceptProgress(failure.progress); }
+									                else { renderProgress(); }
+									                alert(failure && failure.message ? failure.message : casawpImportI18n.cancelError);
+									                pollProgress();
+									            }
+									        });
+									    });
 
-											$(this).attr('disabled', true);
-											$('#casawp-import-button').attr('disabled', true);
+									    $(document).on('casawp:cleanup-action', function() {
+									        invalidateRequests();
+									        dismissCompletion();
+									        pendingAction = '';
+									        manualBusy = true;
+									        renderProgress();
+									    });
+									    $(document).on('casawp:cleanup-state', function(event, state) {
+									        var busy = !!(state && (state.active || state.pending));
+									        if (busy !== manualBusy) {
+									            invalidateRequests();
+									            manualBusy = busy;
+									            renderProgress();
+									            if (!busy) { pollProgress(); }
+									        }
+									    });
 
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_cancel_import',
-													nonce: casawpImportNonces.cancel
-												},
-												success: function(response) {
-													if (response.success) {
-														resetProgressBar();
-													} else {
-														alert(casawpImportI18n.cancelErrorPrefix + response.data.message);
-														$('#casawp-cancel-import-button').removeAttr('disabled');
-														$('#casawp-import-button').removeAttr('disabled');
-													}
-												},
-												error: function() {
-											alert(casawpImportI18n.cancelError);
-													$('#casawp-cancel-import-button').removeAttr('disabled');
-													$('#casawp-import-button').removeAttr('disabled');
-												}
-											});
-										});
+									    function checkForNoPropertiesAlert() {
+									        if (alertPolling || pendingAction || manualBusy) { return; }
+									        alertPolling = true;
+									        var requestGeneration = generation;
+									        var serial = ++alertSerial;
+									        $.ajax({
+									            url: ajaxurl,
+									            type: 'POST',
+									            timeout: 15000,
+									            data: {action: 'casawp_check_no_properties_alert'},
+									            success: function(response) {
+									                if (requestGeneration !== generation || pendingAction || manualBusy) { return; }
+									                if (response && response.success && response.data && response.data.message) {
+									                    alert(response.data.message);
+									                    pollProgress();
+									                }
+									            },
+									            complete: function() { if (serial === alertSerial) { alertPolling = false; } }
+									        });
+									    }
 
-										function updateProgressBar() {
-											if (progressPolling) { return; }
-											progressPolling = true;
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {action: 'casawp_get_import_progress'},
-												complete: function() { progressPolling = false; },
-												success: function(response) {
-													if (!response.success) { return; }
-													var data = response.data;
-													var active = data.status === 'running' || data.status === 'cleanup';
-													if (active) { completionDismissed = false; }
-													var progress = data.progress;
-													if (data.status === 'idle') {
-														resetProgressBar();
-														return;
-													}
-													window.clearTimeout(completionTimer);
-													completionTimer = null;
-													if (data.status === 'completed') {
-														if (data.notice_seconds > 0 && !completionDismissed) {
-															$('#casawp-import-status').text(data.message);
-															completionTimer = window.setTimeout(function() {
-																$('#casawp-import-status').text('');
-																$('#casawp-progress-wrapper').hide();
-																completionTimer = null;
-															}, data.notice_seconds * 1000);
-														}
-													} else {
-														$('#casawp-import-status').text(data.message);
-													}
-													$('#casawp-progress-wrapper').toggle(active || data.status === 'stopped' || !!completionTimer);
-													$('#casawp-import-progress-heading').toggle(active);
-													$('#casawp-progress-bar-container').toggle(active);
-													$('#casawp-progress-bar').css('width', progress + '%');
-													$('#casawp-progress-bar-container').attr('aria-valuenow', Math.round(progress));
-													$('#casawp-progress-percent').text(Math.round(progress) + '%');
-													$('#casawp-import-cleanup-progress').toggle(data.status === 'cleanup');
-													$('#casawp-import-button').prop('disabled', active);
-													$('#casawp-cancel-import-button').toggle(active);
-												},
-												error: function() {
-													$('#casawp-import-status').text(casawpImportI18n.statusError);
-												}
-											});
-										}
-
-										function checkForNoPropertiesAlert() {
-											$.ajax({
-												url: ajaxurl,
-												type: 'POST',
-												data: {
-													action: 'casawp_check_no_properties_alert'
-												},
-												success: function(response) {
-													if (response.success && response.data.message) {
-														alert(response.data.message);
-														resetProgressBar();
-													}
-												}
-											});
-										}
-
-										setInterval(function() {
-											updateProgressBar();
-											checkForNoPropertiesAlert();
-										}, 5000);
-
-										updateProgressBar();
+									    function refreshProgress() { pollProgress(); checkForNoPropertiesAlert(); }
+									    window.setInterval(refreshProgress, 5000);
+									    $(window).on('focus', refreshProgress);
+									    $(document).on('visibilitychange', function() { if (!document.hidden) { refreshProgress(); } });
+									    if (window.casawpImportInitial) { acceptProgress(window.casawpImportInitial); }
+									    else { renderProgress(); }
+									    pollProgress();
 									});
 								</script>
 
@@ -2020,6 +2103,8 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							'nonce' => wp_create_nonce('casawp_manual_cleanup'),
 							'initial' => \casawp\ManualCleanup::statusData(),
 							'requestFailed' => __('Cleanup request failed. Please try again.', 'casawp'),
+							'queued' => __('Cleanup queued.', 'casawp'),
+							'stopping' => __('Stopping cleanup. Waiting for the active batch to exit.', 'casawp'),
 						]);
 						?>
 						<style>
