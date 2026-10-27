@@ -8,6 +8,9 @@ require_once dirname(__DIR__) . '/classes/ImportTermCleanup.php';
 require_once dirname(__DIR__) . '/classes/ImportFileCleanup.php';
 require_once dirname(__DIR__) . '/classes/Import.php';
 require_once dirname(__DIR__) . '/classes/ManualCleanup.php';
+define('CASASYNC_PLUGIN_DIR', dirname(__DIR__) . '/');
+define('ABSPATH', CASASYNC_PLUGIN_DIR);
+require_once dirname(__DIR__) . '/classes/Plugin.php';
 
 $temporary = sys_get_temp_dir() . '/casawp-file-cleanup-' . uniqid();
 mkdir($temporary, 0700, true);
@@ -241,28 +244,53 @@ try {
     $brochure = attachment(18, $base, 'externalsync/active/brochure.pdf', 'sales-brochure');
     $local_plan = attachment(22, $base, 'externalsync/active/local-plan.png', 'plan', true, 'local-plan.png');
     $external_document = attachment(23, $base, 'externalsync/active/external.pdf', 'document', true, 'https://example.org/document.pdf');
+    $preview = put(dirname($external_document) . '/external-preview.jpg');
+    $metadata[23]['_wp_attachment_metadata']['sizes'] = ['thumbnail' => ['file' => basename($preview)]];
+    $missing_origin = attachment(28, $base, 'externalsync/active/missing-origin.pdf', 'document');
+    unset($metadata[28]['_origin']);
+    $nested_local = attachment(29, $base, 'externalsync/gone/deep/nested/local.pdf', 'document', false, 'local.pdf');
+    $metadata[29]['_wp_attached_file'] = $nested_local; // Historical absolute upload paths also need protection.
     $shared_document = attachment(24, $base, 'externalsync/active/shared.pdf', 'document');
-    attachment(25, $base, 'externalsync/active/shared.pdf', 'document', false);
+    attachment(25, $base, 'externalsync/active/shared.pdf', 'document', false, 'shared.pdf');
     $shared = attachment(15, $base, 'externalsync/active/shared.jpg', 'image');
-    attachment(16, $base, 'externalsync/active/shared.jpg', 'image', false);
+    attachment(16, $base, 'externalsync/active/shared.jpg', 'image', false, 'shared.jpg');
     $local_source = attachment(17, $base, 'externalsync/active/local-source.jpg', 'image', true, 'https://site.example/uploads/casawp/import/attachment/externalsync/active/local-source.jpg');
     $unknown = attachment(26, $base, 'externalsync/active/unknown.bin', '', false);
     $root_file = put($base . '/casawp/import/attachment/externalsync/cache.dat');
     $nested = put($base . '/casawp/import/attachment/externalsync/active/deep/nested/anything.xyz');
     $outside_cache = attachment(27, $base, 'custom/local.pdf', 'document', false, 'local.pdf');
+    $plugin = (new ReflectionClass(\casawp\Plugin::class))->newInstanceWithoutConstructor();
+    $local_urls = [];
+    foreach ([16, 17, 22, 23, 25, 28, 29] as $id) {
+        $file = $metadata[$id]['_wp_attached_file'];
+        $local_urls[$id] = CASASYNC_CUR_UPLOAD_BASEURL . '/' . (strpos($file, $base . '/') === 0 ? substr($file, strlen($base) + 1) : $file);
+        check($plugin->modifyGetAttachmentUrl($local_urls[$id], $id) === $local_urls[$id], 'The fixture must reproduce an attachment URL that still requires a local file');
+    }
     runCleanup($base);
     check(!file_exists($photo) && !file_exists($thumb) && !file_exists($original) && !file_exists($backup) && !file_exists($orphan), 'CDN photos, old thumbnails, backups and orphan image files must be deleted');
     check(!file_exists($plan) && !file_exists($plan_thumb) && !file_exists($logo) && !file_exists($document) && !file_exists($brochure), 'CDN documents, plans, logos and brochures must lose their obsolete local copies');
-    foreach ([$local_plan, $external_document, $shared_document, $shared, $local_source, $unknown, $root_file, $nested] as $file) {
-        check(!is_file($file), 'Every regular externalsync file must be removed with CDN on, regardless of type, metadata, active property or shared consumers');
+    foreach ([$local_plan, $external_document, $preview, $missing_origin, $nested_local, $shared_document, $shared, $local_source] as $file) {
+        check(is_file($file), 'CDN cleanup must retain local consumers, their previews and files shared with remote attachments, including obsolete property folders');
     }
-    check(!is_dir($base . '/casawp/import/attachment/externalsync'), 'The complete externalsync cache must disappear after its last file');
+    check(!is_file($unknown) && !is_file($root_file) && !is_file($nested), 'Historical remote attachments and unreferenced cache files must still be removed recursively');
+    check(is_dir($base . '/casawp/import/attachment/externalsync'), 'Referenced local files must keep their externalsync parent directory');
     check(is_file($outside_cache), 'Local consumers outside externalsync must retain their files');
-    foreach ([10, 11, 12, 13, 14, 15, 16, 18, 24, 25, 26] as $id) {
+    foreach ([10, 11, 12, 13, 14, 15, 18, 24, 26] as $id) {
         check(isset($metadata[$id]) && $metadata[$id]['_is_remote'] === 1 && !isset($metadata[$id]['_wp_attached_file']), 'CDN attachment IDs must remain while obsolete local file pointers are cleared');
         check($metadata[$id]['_remote_width'] === 1200 && $metadata[$id]['_remote_height'] === 800 && $metadata[$id]['_wp_attachment_image_alt'] === 'Preserved description', 'CDN dimensions and descriptive metadata must survive cleanup');
     }
-    check(isset($metadata[17]['_wp_attached_file']) && isset($metadata[22]['_wp_attached_file']) && isset($metadata[23]['_wp_attached_file']), 'Records without a usable remote source must not be falsely marked as remote');
+    foreach ($local_urls as $id => $url) {
+        check(isset($metadata[$id]['_wp_attached_file']) && empty($metadata[$id]['_is_remote'])
+            && $plugin->modifyGetAttachmentUrl($url, $id) === $url, 'Local attachment records must retain their working URLs and file metadata after all cleanup batches');
+    }
+    check($plugin->modifyGetAttachmentUrl('', 14) === get_post_meta(14, '_origin', true), 'Migrated CDN documents must retain a working remote URL after their local copy is removed');
+
+    $base = scenario('cdn-unreferenced', true);
+    $external = $base . '/casawp/import/attachment/externalsync';
+    put($external . '/active/cache.pdf');
+    put($external . '/active/deep/cache.bin');
+    runCleanup($base);
+    check(!is_dir($external) && !is_dir(dirname($external)), 'CDN cleanup must still remove the entire cache when no local attachments need its files');
 
     foreach (['casawp_import_failed', 'casawp_import_canceled', 'casawp_file_cleanup_failed_run', 'casawp_current_run_id'] as $guard) {
         $base = scenario('guard-' . $guard, true);
@@ -410,7 +438,8 @@ try {
     $import->handle_finalize_import_cleanup_batch(1, 222);
     check(is_file($base . '/casawp/import/data-error.xml'), 'Missing properties node must preserve import files during finalization');
     $totals = cleanupTotals(222);
-    check(count($totals) === 1 && $totals[0]['_meta']['freed_bytes'] === 0, 'Skipped cleanup must report zero and exclude totals belonging to an earlier run');
+    check($totals === [] && get_option('casawp_import_failed') && !get_option('casawp_current_run_id'),
+        'An invalid feed must stop the run without reporting successful cleanup or reusing old totals');
 
     echo "Import file cleanup checks passed.\n";
 } finally {

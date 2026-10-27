@@ -25,7 +25,7 @@ ALIASES = {
     STANDARDS + 'fr_CH.mo': STANDARDS + 'fr_FR.mo',
     STANDARDS + 'it_CH.mo': STANDARDS + 'it.mo',
 }
-EXCLUDED = ('distribution/', 'tests/', 'skills/', '.github/')
+EXCLUDED = ('distribution/', 'tests/', 'skills/', '.github/', '.agents/')
 
 
 def prepare_catalogs():
@@ -69,7 +69,7 @@ def build(output):
     files = {}
     catalogs = 0
     for name in names:
-        if not name or name.startswith(EXCLUDED):
+        if not name or name == 'AGENTS.md' or name.startswith(EXCLUDED):
             continue
         path = ROOT / name
         if path.resolve() == output:

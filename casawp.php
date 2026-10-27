@@ -267,7 +267,9 @@ function casawp_handle_import_requests() {
 	} catch (Exception $e) {
 	  set_transient('casawp_single_import_result', [
 		'status'  => 'error',
-		'message' => 'Fehler beim Import: ' . esc_html($e->getMessage())
+		'message' => $e instanceof UnexpectedValueException
+		  ? __('Import stopped. See the logs for details.', 'casawp')
+		  : 'Fehler beim Import: ' . esc_html($e->getMessage())
 	  ], 60);
 	}
 
@@ -537,8 +539,7 @@ function casawp_start_single_request_import( string $source = '' ) {
 	$import->addToLog( $source . ' import (single-request) started' );
 
 	/* ── 4. do the actual work ─────────────────────────────────── */
-	$import->deactivate_all_properties();           // mark every post inactive
-	$import->handle_single_request_import();        // fetch + process feed
+	$import->handle_single_request_import();        // validate feed before changing posts
 	/*   ↑ calls finalize_import_cleanup() internally,
 		   which in turn releases the lock.                 */
 

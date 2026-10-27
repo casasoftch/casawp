@@ -1,3 +1,5 @@
 /distribution export-ignore
 /tests export-ignore
 /skills export-ignore
+/.agents export-ignore
+/AGENTS.md export-ignore

@@ -23,6 +23,7 @@ function get_date_from_gmt($date, $format) { return gmdate($format); }
 function get_option($key, $default = false) { return $GLOBALS['options'][$key] ?? $default; }
 function update_option($key, $value, $autoload = null) { $GLOBALS['options'][$key] = $value; }
 function delete_option($key) { unset($GLOBALS['options'][$key]); }
+function casawp_release_lock() { delete_option('casawp_import_lock'); }
 function wp_suspend_cache_addition($suspend) { $GLOBALS['cache_suspended'] = $suspend; }
 function as_next_scheduled_action(...$args) { return false; }
 function as_schedule_single_action($time, $hook, $args, $group) {
@@ -320,6 +321,12 @@ try {
     check($xml_error['xml_errors'][0]['line'] === 2 && $xml_error['xml_errors'][0]['column'] > 0, 'XML errors must contain line and column');
     check(isset($xml_error['feed_bytes'], $xml_error['feed_sha256']), 'Feed size and fingerprint must identify the input');
     check(!$cache_suspended && empty($scheduled), 'Malformed feed must restore cache state and schedule no subsequent batch');
+    check(get_option('casawp_import_failed') && !get_option('casawp_current_run_id'),
+        'Malformed feeds must leave a visible failure and release their run');
+
+    // The following fixtures represent separate imports after the failed run.
+    delete_option('casawp_import_failed');
+    $options['casawp_current_run_id'] = 12345;
 
     writeFeed('<root><properties><property id="conversion-error"/></properties></root>');
     $import->handle_properties_import_batch(1, 12345);

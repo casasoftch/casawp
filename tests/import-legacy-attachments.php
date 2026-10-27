@@ -323,14 +323,17 @@ try {
     check(sweep() > 5, 'Legacy cleanup must persist its cursor across bounded requests');
     foreach (array_merge([101, 102, 103, 104, 121, 122, 123], range(106, 115)) as $id) { check(!get_post($id), "Unused legacy record $id must be deleted"); }
     check(!get_post_meta(105, '_wp_attached_file', true), 'Metadata belonging to a missing CASAWP attachment post must be deleted');
-    foreach ([$unused, $shared, $parentless, $orphanmeta, $id_used, $gallery, $acf, $url_used, $preview, $thumbnail, $widget, $term, $user, $comment, $protected_shared, $failed, $custom, $outside_record] as $file) {
-        check(!is_file($file), 'CDN mode must remove every regular externalsync file, including shared and referenced files');
+    foreach ([$unused, $shared, $parentless, $orphanmeta, $id_used, $gallery, $acf, $url_used, $preview, $thumbnail, $widget, $term, $user, $comment, $outside_record] as $file) {
+        check(!is_file($file), 'CDN mode must remove externalsync files without a remaining local attachment consumer');
+    }
+    foreach ([$protected_shared, $failed, $custom] as $file) {
+        check(is_file($file), 'Retained attachments without a remote source must keep their referenced externalsync files');
     }
     check(is_file($outside), 'Files reached through symbolic links must survive');
     foreach ([116, 117, 118, 119, 120] as $id) { check((bool) get_post($id), 'Attached, failed, filter-retained and unsafe records must survive'); }
     check(apply_filters('wp_delete_file', 'file.jpg') === 'file.jpg', 'Temporary physical deletion filter must always be removed');
     $totals = get_option('casawp_import_file_cleanup_totals')['stats'];
-    check($totals['legacy_deleted'] === 17 && $totals['legacy_metadata'] === 1 && $totals['bytes'] === 18 * strlen('test file'), 'Totals must count duplicate records separately and each physical file only once');
+    check($totals['legacy_deleted'] === 17 && $totals['legacy_metadata'] === 1 && $totals['bytes'] === 15 * strlen('test file'), 'Totals must count duplicate records separately and only physically removed files as freed bytes');
     check(!$wpdb->usage_queries, 'Detached import cleanup must not depend on arbitrary content, metadata or option references');
 
     // An unrelated media-library record and unrelated orphan metadata are outside this cleanup.
@@ -517,6 +520,15 @@ try {
     $unused_manual = record(402, 'externalsync/obsolete/manual-unused.pdf');
     $orphan_manual = record(403, 'externalsync/obsolete/manual-orphan.pdf', 0, false);
     $local_manual = record(404, 'externalsync/active/local-document.pdf', 8001);
+    $wpdb->db->exec("UPDATE wp_posts SET post_mime_type='application/pdf' WHERE ID=404");
+    update_post_meta(404, '_casawp_import', 1);
+    $types[404] = 'document';
+    $local_manual_preview = put(dirname($local_manual) . '/local-document-150x150.jpg');
+    $local_manual_backup = put(dirname($local_manual) . '/local-document-backup.pdf');
+    $local_manual_metadata = ['sizes' => ['thumbnail' => ['file' => basename($local_manual_preview)]]];
+    $local_manual_backups = ['full-orig' => ['file' => basename($local_manual_backup)]];
+    update_post_meta(404, '_wp_attachment_metadata', $local_manual_metadata);
+    update_post_meta(404, '_wp_attachment_backup_sizes', $local_manual_backups);
     $historical_xml = put($temporary . '/casawp/import/data-done.xml', 'old XML');
     $old_log = put($temporary . '/casawp/logs/200001.log', str_repeat('x', 1048576));
     $wpdb->db->exec("INSERT INTO wp_term_taxonomy VALUES(2501,2501,'casawp_feature',0),(2502,2502,'casawp_feature',0),(2503,2503,'casawp_feature',0)");
@@ -550,7 +562,13 @@ try {
     delete_option('term_throw_after');
     check(!get_post(402) && !get_post_meta(403, '_wp_attached_file', true) && !is_file($unused_manual) && !is_file($orphan_manual), 'Standalone cleanup must remove unused legacy records and their files');
     check(get_post(401) && !is_file($current_cdn) && get_post_meta(401, '_is_remote', true), 'Standalone CDN cleanup must retain current attachment IDs while removing their local copies');
-    check(get_post(404) && !is_file($local_manual) && !is_file($historical_xml) && !is_file($old_log) && !is_file($feed), 'Manual CDN cleanup must retain attached records, empty the externalsync cache, clear old XML/logs and never create data.xml');
+    check(get_post(404) && is_file($local_manual) && is_file($local_manual_preview) && is_file($local_manual_backup)
+        && get_post_meta(404, '_wp_attached_file', true) === 'casawp/import/attachment/externalsync/active/local-document.pdf'
+        && get_post_meta(404, '_wp_attachment_metadata', true) === $local_manual_metadata
+        && get_post_meta(404, '_wp_attachment_backup_sizes', true) === $local_manual_backups
+        && !get_post_meta(404, '_is_remote', true),
+        'Manual CDN cleanup must preserve an attached PDF without a remote source, its preview, backup and local metadata');
+    check(!is_file($historical_xml) && !is_file($old_log) && !is_file($feed), 'Manual cleanup must clear old XML/logs and never create data.xml');
     check(get_post(8000)->post_content === 'Original DE property' && get_post(8001)->post_content === 'Original FR property', 'Standalone cleanup must retain properties in every language');
     check($options['casawp_total_batches'] === 123 && $options['casawp_completed_batches'] === 77 && $options['casawp_import_file_cleanup'] === $original_import_state, 'Manual cleanup must leave import progress and cleanup state intact');
     $cleared = 0;

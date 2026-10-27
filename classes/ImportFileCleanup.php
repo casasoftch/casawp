@@ -202,15 +202,14 @@ class ImportFileCleanup
             }
 
             $parts = explode('/', $relative);
-            // CDN mode owns the entire externalsync cache, regardless of extension,
-            // property presence, attachment metadata or other local consumers.
+            // Purge CDN cache files only after protecting attachments that still need local files.
             $purge_external = $cdn && $parts[0] === 'externalsync';
             $property = $parts[0] === 'externalsync' ? ($parts[1] ?? '') : $parts[0];
             $folder = count($parts) > ($parts[0] === 'externalsync' ? 2 : 1)
                 ? ($parts[0] === 'externalsync' ? 'externalsync/' . $property : $property) : '';
             $protected = $this->protectedFiles($folder, $cdn);
             $is_image = in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'bmp', 'tif', 'tiff', 'ico', 'svg'], true);
-            if ($purge_external || (!isset($protected[realpath($path)]) && ($name === '.DS_Store' || ($folder !== '' && !isset($active[$property])) || ($cdn && $is_image)))) {
+            if (!isset($protected[realpath($path)]) && ($purge_external || $name === '.DS_Store' || ($folder !== '' && !isset($active[$property])) || ($cdn && $is_image))) {
                 $this->removeFile($path, $run_id);
             }
         }
@@ -259,7 +258,7 @@ class ImportFileCleanup
         if (($state['logged_phase'] ?? '') !== $phase) {
             $descriptions = [
                 'attachments' => 'removing detached import attachment records and orphaned metadata; preserving records with existing parents and their WPML groups',
-                'files' => $this->cdn ? 'clearing all regular files in externalsync (CDN enabled), obsolete local import files and empty folders'
+                'files' => $this->cdn ? 'clearing unused externalsync files (CDN enabled), obsolete local import files and empty folders; preserving local consumers'
                     : 'removing obsolete local import files and empty folders; preserving active properties and local consumers',
                 'terms' => 'removing unused CASAWP taxonomy terms',
             ];
@@ -317,7 +316,7 @@ class ImportFileCleanup
         }
     }
 
-    /** Migrate remote attachments and protect local consumers outside the CDN externalsync cache. */
+    /** Migrate remote attachments and protect all remaining local consumers. */
     private function protectedFiles(string $folder, bool $cdn): array
     {
         if (isset($this->references[$folder])) {
@@ -371,7 +370,7 @@ class ImportFileCleanup
             }
             if ($cdn_attachment) {
                 $remote[] = ['id' => $id, 'metadata' => $metadata, 'files' => $files];
-            } elseif (!$purge_external) {
+            } else {
                 foreach ($files as $local) {
                     $resolved = realpath($local);
                     if ($resolved !== false) { $protected[$resolved] = true; }

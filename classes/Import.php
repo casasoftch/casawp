@@ -385,12 +385,16 @@ class Import
 
     $this->logImportStart();
     $this->addToLog('gateway file retrieval start: ' . time());
+    $this->current_run_id = (int) get_option('casawp_current_run_id', 0);
 
     try {
 
       $filePath = $this->fetchFileFromCasaGateway();
 
       if ($filePath && $this->getImportFile()) {
+        // A successful download is not necessarily a valid property feed.
+        // Validate before scheduling deletion work or changing existing posts.
+        $this->readImportXml($this->getImportFile());
 
         $run_id = (int) get_option( 'casawp_current_run_id', 0 );
         if ( ! $run_id ) {
@@ -422,7 +426,11 @@ class Import
 
     } catch (\Exception $e) {
         $this->logger()->exception('Import failed during gateway retrieval or initialization.', $e);
-        update_option('casawp_import_failed', true);
+        if ($e instanceof \UnexpectedValueException) {
+          $this->abortInvalidFeed(true);
+        } else {
+          update_option('casawp_import_failed', true);
+        }
     } finally {
       if ( ! $already_locked ) {
           casawp_release_lock();
@@ -675,6 +683,15 @@ class Import
       return 0;
     }
 
+    try {
+      // data.xml may have been replaced since the import batches ran.
+      $this->readImportXml($this->getImportFile());
+    } catch (\UnexpectedValueException $e) {
+      $this->logger()->exception('Import cleanup stopped; existing properties were retained.', $e);
+      $this->abortInvalidFeed();
+      return 0;
+    }
+
     $this->logCleanupStart($run_id);
     $progress = get_option('casawp_import_cleanup_progress', []);
     $progress['batch_number'] = max(1, (int) $batch_number);
@@ -898,17 +915,10 @@ class Import
         $this->rememberImportedFeed();
       }
 
-      // OLD WAY, throwing Exception
-      /* $properties = $xml->properties->property;
-      if ($properties === null) {
-        throw new \Exception('No properties found in XML.');
-      } */
+      // Only an explicitly valid empty properties list permits full cleanup.
+      $properties = $xml->properties->property;
 
-      //NEW WAY, to delete all properties if empty file
-      $propertiesNode = $xml->properties ?? null;
-      $properties     = $propertiesNode ? $propertiesNode->property : [];
-
-      if ( empty( $properties ) ) {
+      if ( count($properties) === 0 ) {
         $this->addToLog('Feed contained zero properties - treating as full unpublish.');
         $this->finalize_import_cleanup();
         wp_suspend_cache_addition(false);
@@ -1002,7 +1012,11 @@ class Import
         }
       }
     } catch (\Throwable $e) {
-      $this->markFileCleanupFailed();
+      if ($e instanceof \UnexpectedValueException) {
+        $this->abortInvalidFeed();
+      } else {
+        $this->markFileCleanupFailed();
+      }
       $this->logger()->exception('Import batch failed.', $e, [
         'event' => 'batch.failed',
         'duration_seconds' => round(microtime(true) - $started_at, 3),
@@ -1021,6 +1035,9 @@ class Import
     return $this->logger()->run('single_request_import', ['batch_number' => 1], function () {
       try {
         return $this->importSingleRequest();
+      } catch (\UnexpectedValueException $e) {
+        $this->abortInvalidFeed();
+        throw $e;
       } finally {
         wp_suspend_cache_addition(false);
       }
@@ -1036,18 +1053,11 @@ class Import
 
       $xml = $this->readImportXml($this->getImportFile());
       $this->rememberImportedFeed();
+      $this->deactivate_all_properties();
 
-      // OLD WAY, throwing Exception
-      /* $properties = $xml->properties->property;
-      if ($properties === null) {
-        throw new \Exception('No properties found in XML.');
-      } */
+      $properties = $xml->properties->property;
 
-      //NEW WAY, to delete all properties if empty file
-      $propertiesNode = $xml->properties ?? null;
-      $properties     = $propertiesNode ? $propertiesNode->property : [];
-
-      if ( empty( $properties ) ) {
+      if ( count($properties) === 0 ) {
         $this->addToLog('Feed contained zero properties – treating as full unpublish.');
         $this->finalize_import_cleanup();
         wp_suspend_cache_addition(false);
@@ -1077,16 +1087,34 @@ class Import
       wp_suspend_cache_addition(false);
   }
 
-  /** Parse feeds with useful diagnostics and restore libxml's previous error mode. */
+  /** Stop this run without letting queued workers delete data or clearing another run. */
+  private function abortInvalidFeed(bool $owns_uninitialized_run = false): void
+  {
+    $active_run = (int) get_option('casawp_current_run_id', 0);
+    if ($this->current_run_id !== $active_run || (!$active_run && !$owns_uninitialized_run)) {
+      return;
+    }
+    update_option('casawp_import_failed', true);
+    $this->markFileCleanupFailed();
+    if ($this->current_run_id && function_exists('as_unschedule_all_actions')) {
+      foreach (['casawp_batch_import', 'casawp_delete_outdated_properties', 'casawp_finalize_import_cleanup_batch'] as $hook) {
+        as_unschedule_all_actions($hook, null, $this->group());
+      }
+    }
+    delete_option('casawp_current_run_id');
+    casawp_release_lock();
+  }
+
+  /** Parse and validate feeds before any property changes, restoring libxml's error mode. */
   private function readImportXml($file_path): \SimpleXMLElement
   {
     $this->logger()->setStage('feed_read', ['feed_file' => $file_path ?: null]);
     if (!$file_path || !is_readable($file_path)) {
-      throw new \RuntimeException('Failed to read import file.');
+      throw new \UnexpectedValueException('Failed to read import file.');
     }
     $xml_string = @file_get_contents($file_path);
     if ($xml_string === false) {
-      throw new \RuntimeException('Failed to read import file.');
+      throw new \UnexpectedValueException('Failed to read import file.');
     }
 
     $this->feed_fingerprint = hash('sha256', $xml_string);
@@ -1109,7 +1137,24 @@ class Import
           ];
         }
         $this->logImport('XML parser diagnostics.', ['event' => 'feed.parse_errors', 'xml_errors' => $errors], 'warning');
-        throw new \RuntimeException('Failed to parse XML.');
+        throw new \UnexpectedValueException('Failed to parse XML.');
+      }
+      $this->logger()->setStage('feed_validation');
+      if (!isset($xml->properties) || count($xml->properties) !== 1) {
+        throw new \UnexpectedValueException('Invalid property feed: expected one properties node.');
+      }
+      $properties = $xml->properties;
+      if (trim((string) $properties) !== '') {
+        throw new \UnexpectedValueException('Invalid property feed: unexpected text in properties node.');
+      }
+      // Include namespaced children that ordinary ->property access would ignore.
+      if (count($properties->xpath('./*')) !== count($properties->property)) {
+        throw new \UnexpectedValueException('Invalid property feed: unexpected element in properties node.');
+      }
+      foreach ($properties->property as $property) {
+        if (trim((string) $property['id']) === '') {
+          throw new \UnexpectedValueException('Invalid property feed: property ID is missing or blank.');
+        }
       }
       return $xml;
     } finally {
@@ -1129,13 +1174,16 @@ class Import
       $xml = $this->readImportXml($xml_file_path);
     } catch (\Throwable $e) {
       $this->logger()->exception('Unable to read feed for outdated property deletion.', $e);
+      if ($e instanceof \UnexpectedValueException) {
+        $this->abortInvalidFeed();
+      }
       return null;
     }
 
     $xml_property_ids = [];
     foreach ( $xml->properties->property as $property ) {
       $id = (string) $property['id'];
-      if ( $id ) {
+      if ( $id !== '' ) {
         $xml_property_ids[] = $id;
       }
     }
@@ -1186,10 +1234,14 @@ class Import
   }
 
   private function deleteOutdatedPropertiesBatch($batch_number, $run_id): void {
-    $run_id = $run_id ? (int) $run_id : (int) get_option( 'casawp_current_run_id', 0 );
-    if ( $run_id ) {
-      $this->current_run_id = $run_id;
+    $run_id = $run_id ? (int) $run_id : (int) get_option('casawp_current_run_id', 0);
+    if (!$run_id || $run_id !== (int) get_option('casawp_current_run_id', 0)) {
+      return;
     }
+    if (get_option('casawp_import_failed') || get_option('casawp_import_canceled')) {
+      return;
+    }
+    $this->current_run_id = $run_id;
 
     if ( (int) $batch_number === 1 ) {
       $this->addToLog( 'Starting deletion of outdated properties.' );

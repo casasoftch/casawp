@@ -43,5 +43,6 @@ not symlinks. Its missing `fr.mo` is derived from the existing `fr_FR.mo`.
 Keep these copies in Git so source ZIPs also contain usable files. Do not run
 the old vendor symlink helper scripts when preparing a release.
 
-The build omits distribution tooling, tests, development skills, and GitHub
-workflow files from the installable ZIP. Test files are not needed at runtime.
+The build omits distribution tooling, tests, development skills, agent
+instructions, and GitHub workflow files from the installable ZIP. Test files
+are not needed at runtime.
