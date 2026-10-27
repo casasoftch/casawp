@@ -8,49 +8,238 @@ if (! function_exists('casawp_settings_text')) {
 	}
 }
 
+$settings_tabs = array('general', 'archiveview', 'singleview', 'private', 'contactform', 'appearance', 'logs');
+$current = isset($_GET['tab']) && is_string($_GET['tab']) && in_array($_GET['tab'], $settings_tabs, true) ? $_GET['tab'] : 'general';
+
+// Verify the request before saving options or resetting unchecked fields.
+if (isset($_POST['casawp_submit'])) {
+	if (!current_user_can('manage_options')) {
+		wp_die(esc_html__('Insufficient privileges.', 'casawp'), '', array('response' => 403));
+	}
+	if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'
+		|| !isset($_POST['casawp_settings_nonce'])
+		|| !is_string($_POST['casawp_settings_nonce'])
+		|| !wp_verify_nonce(wp_unslash($_POST['casawp_settings_nonce']), 'casawp_save_settings')) {
+		wp_die(-1, '', array('response' => 403));
+	}
+}
+
+// Use the same registered categories and displayed languages for saving and rendering.
+$custom_categories = array();
+$all_languages = array();
+if ($current === 'general') {
+	$all_categories = get_categories(array('taxonomy' => 'casawp_category'));
+	foreach ($all_categories as $category) {
+		if (strpos($category->slug, 'custom_') === 0) {
+			$custom_categories[] = array('name' => $category->slug, 'term_id' => $category->term_id);
+		}
+	}
+	if (function_exists('icl_get_home_url')) {
+		$all_languages = (array) icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
+	} else {
+		$all_languages = array(substr(get_locale(), 0, 2) => array('translated_name' => __('Label', 'casawp')));
+	}
+}
+
 $single_request_import_enabled = (bool) get_option('casawp_enable_single_request_import', 0);
 if (isset($_POST['casawp_submit'])) {
+	// Only settings displayed on this tab may be saved; import state is never form input.
+	$settings_fields = array(
+		'general' => array(
+			'casawp_before_content',
+			'casawp_after_content',
+			'casawp_custom_slug',
+			'casawp_force_lang',
+			'casawp_enable_single_request_import',
+			'casawp_use_casagateway_cdn',
+			'casawp_limit_reference_images',
+			'casawp_auto_translate_properties',
+			'casawp_force_import_content',
+			'casawp_api_key',
+			'casawp_private_key',
+			'casawp_batch_size_override',
+		),
+		'archiveview' => array(
+			'casawp_archive_orderby',
+			'casawp_archive_order',
+			'casawp_show_sticky_properties',
+			'casawp_hide_sticky_properties_in_main',
+			'casawp_archive_show_thumbnail_size_w',
+			'casawp_archive_show_thumbnail_size_h',
+			'casawp_archive_show_thumbnail_size_crop',
+			'casawp_filter_hide',
+			'casawp_ajaxify_archive',
+			'casawp_filter_salestypes_elementtype',
+			'casawp_filter_utilities_elementtype',
+			'casawp_filter_categories_elementtype',
+			'casawp_filter_locations_elementtype',
+			'casawp_filter_regions_elementtype',
+			'casawp_filter_countries_elementtype',
+			'casawp_filter_features_elementtype',
+			'casawp_filter_price_from_elementtype',
+			'casawp_filter_price_to_elementtype',
+			'casawp_filter_rooms_from_elementtype',
+			'casawp_filter_rooms_to_elementtype',
+			'casawp_filter_areas_from_elementtype',
+			'casawp_filter_areas_to_elementtype',
+			'casawp_archive_rooms_min',
+			'casawp_archive_rooms_max',
+			'casawp_archive_area_min',
+			'casawp_archive_area_max',
+			'casawp_archive_show_street_and_number',
+			'casawp_archive_show_street_and_number_order',
+			'casawp_archive_show_location',
+			'casawp_archive_show_location_order',
+			'casawp_archive_show_number_of_rooms',
+			'casawp_archive_show_number_of_rooms_order',
+			'casawp_archive_show_area_sia_nf',
+			'casawp_archive_show_area_sia_nf_order',
+			'casawp_archive_show_area_sia_gf',
+			'casawp_archive_show_area_sia_gf_order',
+			'casawp_archive_show_area_bwf',
+			'casawp_archive_show_area_bwf_order',
+			'casawp_archive_show_area_nwf',
+			'casawp_archive_show_area_nwf_order',
+			'casawp_archive_show_surface_property',
+			'casawp_archive_show_surface_property_order',
+			'casawp_archive_show_floor',
+			'casawp_archive_show_floor_order',
+			'casawp_archive_show_number_of_floors',
+			'casawp_archive_show_number_of_floors_order',
+			'casawp_archive_show_year_built',
+			'casawp_archive_show_year_built_order',
+			'casawp_archive_show_year_renovated',
+			'casawp_archive_show_year_renovated_order',
+			'casawp_archive_show_availability',
+			'casawp_archive_show_availability_order',
+			'casawp_archive_show_price',
+			'casawp_archive_show_price_order',
+			'casawp_archive_show_excerpt',
+			'casawp_archive_show_excerpt_order',
+			'casawp_prefer_extracost_segmentation',
+		),
+		'singleview' => array(
+			'casawp_share_facebook',
+			'casawp_single_show_number_of_rooms',
+			'casawp_single_show_number_of_rooms_order',
+			'casawp_single_show_area_sia_nf',
+			'casawp_single_show_area_sia_nf_order',
+			'casawp_single_show_area_bwf',
+			'casawp_single_show_area_bwf_order',
+			'casawp_single_show_surface_property',
+			'casawp_single_show_surface_property_order',
+			'casawp_single_show_floor',
+			'casawp_single_show_floor_order',
+			'casawp_single_show_number_of_floors',
+			'casawp_single_show_number_of_floors_order',
+			'casawp_single_show_year_built',
+			'casawp_single_show_year_built_order',
+			'casawp_single_show_year_renovated',
+			'casawp_single_show_year_renovated_order',
+			'casawp_single_show_availability',
+			'casawp_single_show_availability_order',
+			'casawp_load_googlemaps',
+			'casawp_casadistance_active',
+			'casawp_casadistance_basecss',
+			'casawp_load_maps_immediately',
+			'casawp_google_apikey',
+			'casawp_single_use_zoomlevel',
+			'casawp_single_show_carousel_indicators',
+			'casawp_single_max_thumbnails',
+			'casawp_single_thumbnail_ideal_width',
+		),
+		'private' => array(
+			'casawp_private_loginpage',
+			'casawp_private_logoutpage',
+		),
+		'contactform' => array(
+			'casawp_inquiry_method',
+			'casawp_customerid',
+			'casawp_publisherid',
+			'casawp_recaptcha',
+			'casawp_recaptcha_secret',
+			'casawp_recaptcha_v3',
+			'casawp_recaptcha_v3_score',
+			'casawp_casamail_direct_recipient',
+			'casawp_form_gender_neutral',
+			'casawp_form_dataprotection_checkbox',
+			'casawp_show_email_organisation',
+			'casawp_show_email_person_view',
+			'casawp_form_firstname_required',
+			'casawp_form_lastname_required',
+			'casawp_form_street_required',
+			'casawp_form_postalcode_required',
+			'casawp_form_locality_required',
+			'casawp_form_phone_required',
+			'casawp_form_email_required',
+			'casawp_form_message_required',
+			'casawp_form_event_tracking',
+		),
+		'appearance' => array(
+			'casawp_viewgroup',
+			'casawp_load_css',
+			'casawp_load_scripts',
+			'casawp_load_featherlight',
+			'casawp_load_chosen',
+		),
+		'logs' => array(
+		),
+	);
+	$allowed_fields = array_fill_keys($settings_fields[$current], true);
+	$custom_fields = array();
+	foreach ($custom_categories as $category) {
+		foreach (array_merge(array_keys($all_languages), array('show')) as $language) {
+			$custom_fields[$category['name'] . '/' . $language] = array($category['name'], $language);
+		}
+	}
+
 	$saved_custom_categories = array();
 	foreach ($_POST as $key => $value) {
-		if ($key == 'casawp_before_content' || $key == 'casawp_after_content') {
-			$allowed_html = array(
-				'div' => array(
-					'id' => array(),
-					'class' => array()
-				)
-			);
+		if ((!isset($allowed_fields[$key]) && !isset($custom_fields[$key])) || !is_string($value)) {
+			continue;
+		}
+		$value = wp_unslash($value);
+		if ($key === 'casawp_before_content' || $key === 'casawp_after_content') {
+			$allowed_html = array('div' => array('id' => array(), 'class' => array()));
 			$value = wp_kses($value, $allowed_html);
+		} elseif ($key === 'casawp_form_event_tracking') {
+			// sanitize_text_field() treats the placeholder's "%ca" as a URL escape.
+			$placeholder = '__CASAWP_PROPERTY_ID__';
+			while (strpos($value, $placeholder) !== false) {
+				$placeholder .= '_';
+			}
+			$value = str_replace('%casawp_id%', $placeholder, $value);
+			$value = str_replace($placeholder, '%casawp_id%', sanitize_text_field($value));
 		} else {
 			$value = sanitize_text_field($value);
 		}
-		if (substr($key, 0, 7) == 'custom_') {
-			$parts = explode('/', $key); //firstpart [0] is slug the second [1] is either the langcode or if it should be shown
-			$saved_custom_categories[$parts[0]][$parts[1]] = $value;
-			// array('custom_bauland' => array(
-			//  'show' => 1,
-			//  'de' => 'Deutscher text'
-			// ))
-			// if (!array_key_exists('show', $saved_custom_categories[$parts[0]])) {
-			// 	$saved_custom_categories[$parts[0]]['show'] = '0';
-			// }
-		}
-		if (substr($key, 0, 6) == 'casawp') {
+		if (isset($custom_fields[$key])) {
+			list($slug, $language) = $custom_fields[$key];
+			$saved_custom_categories[$slug][$language] = $value;
+		} else {
+			// These legacy fields are decoded with stripslashes() by existing frontend readers.
+			if (in_array($key, array('casawp_before_content', 'casawp_after_content', 'casawp_form_event_tracking'), true)) {
+				$value = wp_slash($value);
+			}
 			update_option($key, $value);
 		}
 	}
 
-	if (count($saved_custom_categories) > 0) {
-
-		//set empty shows to 0
-		foreach ($saved_custom_categories as $key => $cat) {
-			if (!array_key_exists('show', $cat)) {
-				$saved_custom_categories[$key]['show'] = '0';
-			}
+	if ($saved_custom_categories) {
+		$custom_translations = get_option('casawp_custom_category_translations', array());
+		if (!is_array($custom_translations)) {
+			$custom_translations = array();
 		}
-		update_option('casawp_custom_category_translations', $saved_custom_categories);
+		foreach ($saved_custom_categories as $slug => $translations) {
+			if (!array_key_exists('show', $translations)) {
+				$translations['show'] = '0';
+			}
+			$existing = isset($custom_translations[$slug]) && is_array($custom_translations[$slug]) ? $custom_translations[$slug] : array();
+			$custom_translations[$slug] = array_merge($existing, $translations);
+		}
+		update_option('casawp_custom_category_translations', $custom_translations);
 	}
 
-	$current = isset($_GET['tab']) ? $_GET['tab'] : 'general';
 	switch ($current) {
 		case 'appearance':
 			$checkbox_traps = array(
@@ -228,7 +417,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 		'appearance' => 'editor-code',
 		'logs' => 'media-text',
 	);
-	$current = isset($_GET['tab']) && is_string($_GET['tab']) && isset($tabs[$_GET['tab']]) ? $_GET['tab'] : 'general';
 	echo '<div class="casawp-settings-layout">';
 	echo '<nav class="nav-tab-wrapper casawp-settings-nav" aria-label="' . esc_attr__('Settings', 'casawp') . '">';
 	foreach ($tabs as $tab => $name) {
@@ -241,6 +429,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 
 	<form action="" method="post" id="options_form" name="options_form">
+		<?php wp_nonce_field('casawp_save_settings', 'casawp_settings_nonce'); ?>
 		<div class="casawp-settings-fields">
 		<?php
 		$table_start = '<table class="form-table"><tbody>';
@@ -367,7 +556,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_number_of_rooms_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_area_sia_nf'; ?>
@@ -377,7 +566,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_area_sia_nf_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_area_bwf'; ?>
@@ -387,7 +576,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_area_bwf_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_surface_property'; ?>
@@ -397,7 +586,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_surface_property_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_floor'; ?>
@@ -407,7 +596,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_floor_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_number_of_floors'; ?>
@@ -417,7 +606,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_number_of_floors_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_year_built'; ?>
@@ -427,7 +616,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_year_built_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_year_renovated'; ?>
@@ -437,7 +626,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_year_renovated_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 							<br>
 							<?php $name = 'casawp_single_show_availability'; ?>
@@ -447,7 +636,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							</label>
 							<?php $name = 'casawp_single_show_availability_order'; ?>
 							<label>
-								<input name="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="small-text">
+								<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 							</label>
 						</fieldset>
 					</td>
@@ -484,7 +673,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<?php $name = 'casawp_google_apikey'; ?>
 						<?php $text = casawp_settings_text('Maps JavaScript API'); ?>
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text ?></label>
-						<input name="<?php echo $name ?>" id="<?php echo $name ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
+						<input name="<?php echo $name ?>" id="<?php echo $name ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text">
 
 						<?php $name = 'casawp_single_use_zoomlevel'; ?>
 						<?php $text = casawp_settings_text('Zoom'); ?>
@@ -536,7 +725,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $name = 'casawp_single_max_thumbnails'; ?>
 							<?php $text = casawp_settings_text('Maximum number of thumbnails'); ?>
 							<label>
-								<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
+								<input name="<?php echo $name ?>" type="number" value="<?php echo esc_attr(get_option($name)); ?>" class="tog small-text"> <?php echo $text ?>
 							</label>
 						</fieldset>
 						<fieldset>
@@ -544,7 +733,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $name = 'casawp_single_thumbnail_ideal_width'; ?>
 							<?php $text = casawp_settings_text('Ideal thumbnail width'); ?>
 							<label>
-								<input name="<?php echo $name ?>" type="number" value="<?php echo get_option($name); ?>" class="tog small-text"> <?php echo $text ?>
+								<input name="<?php echo $name ?>" type="number" value="<?php echo esc_attr(get_option($name)); ?>" class="tog small-text"> <?php echo $text ?>
 							</label>
 						</fieldset>
 					</td>
@@ -559,7 +748,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<tr>
 								<th><label for="<?php echo $name; ?>"><b><?php echo $text ?></b></label></th>
 								<td>
-									<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text">
+									<input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text">
 									<br><span class="description">Diese E-Mail Adresse wird beim Kontaktformular verwendet.</span>
 								</td>
 							</tr>
@@ -582,31 +771,31 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $text = 'Organisation Name'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_address_street'; ?>
 							<?php $text = 'Strasse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_address_postalcode'; ?>
 							<?php $text = 'PLZ'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_address_locality'; ?>
 							<?php $text = 'Ort'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_address_region'; ?>
 							<?php $text = 'Kanton'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_address_country'; ?>
 							<?php $text = 'Land'; ?>
@@ -627,19 +816,19 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $text = 'E-Mail Adresse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_phone_central'; ?>
 							<?php $text = 'Telefon Geschäft'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_sellerfallback_fax'; ?>
 							<?php $text = 'Fax'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 						<?php echo $table_end; ?>
 						<?php echo $table_start; ?>
@@ -674,37 +863,37 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $text = 'Vorname'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_salesperson_fallback_familyname'; ?>
 							<?php $text = 'Nachname'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_salesperson_fallback_function'; ?>
 							<?php $text = 'Funktion'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_salesperson_fallback_email'; ?>
 							<?php $text = 'E-Mail Adresse'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_salesperson_fallback_phone_direct'; ?>
 							<?php $text = 'Direktwahl'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 							<?php $name = 'casawp_salesperson_fallback_phone_mobile'; ?>
 							<?php $text = 'Mobile'; ?>
 							<tr>
 								<th><label for="<?php echo $name; ?>"><?php echo $text ?></label></th>
-								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo get_option($name); ?>" class="regular-text"> <span class="description"></span></td>
+								<td><input name="<?php echo $name ?>" id="<?php echo $name; ?>" type="text" value="<?php echo esc_attr(get_option($name)); ?>" class="regular-text"> <span class="description"></span></td>
 							</tr>
 						<?php echo $table_end; ?>
 						<?php */ ?>
@@ -782,11 +971,11 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php echo casawp_settings_text('Width × height'); ?>
 						</div>
 						<!-- <label for="<?php echo $name; ?>"><?php echo $text; ?></label> -->
-						<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
+						<input name="<?php echo $name; ?>" name="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 						<?php $name = 'casawp_archive_show_thumbnail_size_h'; ?>
 						<?php $text = casawp_settings_text('Height'); ?>
 						<!-- <label for="<?php echo $name; ?>"><?php echo $text; ?></label> -->x
-						<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text"><br>
+						<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text"><br>
 						<?php $name = 'casawp_archive_show_thumbnail_size_crop'; ?>
 						<?php $text = casawp_settings_text('Crop'); ?>
 						<div style="margin-top: 15px;">
@@ -824,7 +1013,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -837,7 +1026,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -850,7 +1039,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -863,7 +1052,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -876,7 +1065,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -889,7 +1078,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -902,7 +1091,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -915,7 +1104,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 									<?php $name = 'casawp_filter_price_to_elementtype'; ?>
@@ -923,7 +1112,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 									<?php $options = ['hidden' => casawp_settings_text('Hide'), 'singleselect' => casawp_settings_text('Single selection'), 'radio' => casawp_settings_text('Radio buttons')]; ?>
 									— <select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -936,7 +1125,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 									<?php $name = 'casawp_filter_rooms_to_elementtype'; ?>
@@ -944,7 +1133,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 									—
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -957,7 +1146,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<div class="casawp-settings-filter-controls">
 									<select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 									<?php $name = 'casawp_filter_areas_to_elementtype'; ?>
@@ -965,7 +1154,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 									<?php $options = ['hidden' => casawp_settings_text('Hide'), 'singleselect' => casawp_settings_text('Single selection'), 'radio' => casawp_settings_text('Radio buttons')]; ?>
 									— <select name="<?php echo $name ?>" id="<?php echo $name ?>">
 										<?php foreach ($options as $key => $value) : ?>
-											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= $key ?>"><?= $value ?></option>
+											<option <?php echo (get_option($name)  == $key ? 'selected="selected"' : ''); ?> value="<?= esc_attr($key) ?>"><?= esc_html($value) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
@@ -975,10 +1164,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<?php $text = casawp_settings_text('Minimum rooms'); ?>
 								<label class="block-label" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Set room range manually'); ?></label>
 								<div class="casawp-settings-filter-controls">
-									<?php echo casawp_settings_text('Min.'); ?> <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo get_option($name); ?>" class="small-text">
+									<?php echo casawp_settings_text('Min.'); ?> <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 									<?php $name = 'casawp_archive_rooms_max'; ?>
 									<?php $text = casawp_settings_text('Maximum rooms'); ?> —
-									<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo get_option($name); ?>" class="small-text"> <?php echo casawp_settings_text('Max.'); ?>
+									<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="0.5" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text"> <?php echo casawp_settings_text('Max.'); ?>
 								</div>
 							</div>
 							<div class="casawp-settings-filter-field">
@@ -986,10 +1175,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 								<?php $text = casawp_settings_text('Minimum area'); ?>
 								<label class="block-label" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Set area range manually'); ?></label>
 								<div class="casawp-settings-filter-controls">
-									<?php echo casawp_settings_text('Min.'); ?> <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text">
+									<?php echo casawp_settings_text('Min.'); ?> <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text">
 									<?php $name = 'casawp_archive_area_max'; ?>
 									<?php $text = casawp_settings_text('Maximum area'); ?> —
-									<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo get_option($name); ?>" class="small-text"> <?php echo casawp_settings_text('Max.'); ?>
+									<input name="<?php echo $name; ?>" id="<?php echo $name; ?>" type="number" step="1" min="0" value="<?php echo esc_attr(get_option($name)); ?>" class="small-text"> <?php echo casawp_settings_text('Max.'); ?>
 									</div>
 								</div>
 								</div>
@@ -1140,7 +1329,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										<input name="<?php echo $field['field'] ?>" type="checkbox" value="1" class="tog" <?php echo (get_option($field['field']) ? 'checked="checked"' : ''); ?>> <?php echo $field['label'] ?>
 									</label>
 									<label>
-										<input name="<?php echo $field['field'] ?>_order" type="hidden" value="<?php echo get_option($field['order']); ?>" class="small-text">
+										<input name="<?php echo $field['field'] ?>_order" type="hidden" value="<?php echo esc_attr(get_option($field['order'])); ?>" class="small-text">
 									</label>
 								</div>
 							<?php endforeach ?>
@@ -1172,16 +1361,16 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 					<th scope="row"><label><input name="casawp_inquiry_method" type="hidden" value="casamail"> <strong>CASA</strong><span style="font-weight:100">MAIL</span></label></th>
 					<td class="front-static-pages contactform-tab">
 						<label class="block-label" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Provider slug'); ?></label>
-						<input name="casawp_customerid" type="text" value="<?= get_option('casawp_customerid') ?>" class="regular-text">
+						<input name="casawp_customerid" type="text" value="<?= esc_attr(get_option('casawp_customerid')) ?>" class="regular-text">
 
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Publisher slug'); ?></label>
-						<input name="casawp_publisherid" type="text" value="<?= get_option('casawp_publisherid') ?>" class="regular-text">
+						<input name="casawp_publisherid" type="text" value="<?= esc_attr(get_option('casawp_publisherid')) ?>" class="regular-text">
 
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Google reCAPTCHA key'); ?></label>
-						<input name="casawp_recaptcha" type="text" value="<?= get_option('casawp_recaptcha') ?>" class="regular-text">
+						<input name="casawp_recaptcha" type="text" value="<?= esc_attr(get_option('casawp_recaptcha')) ?>" class="regular-text">
 
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Google reCAPTCHA secret'); ?></label>
-						<input name="casawp_recaptcha_secret" type="text" value="<?= get_option('casawp_recaptcha_secret') ?>" class="regular-text">
+						<input name="casawp_recaptcha_secret" type="text" value="<?= esc_attr(get_option('casawp_recaptcha_secret')) ?>" class="regular-text">
 
 						<fieldset class="margin-top">
 							<label>
@@ -1190,7 +1379,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						</fieldset>
 
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Google reCAPTCHA v3 score'); ?></label>
-						<input name="casawp_recaptcha_v3_score" type="number" step="0.1" <?php echo (get_option('casawp_recaptcha_v3_score') ? 'value="' . get_option('casawp_recaptcha_v3_score') . '"' : 'value="0.4"'); ?> class="regular-text">
+						<input name="casawp_recaptcha_v3_score" type="number" step="0.1" <?php echo (get_option('casawp_recaptcha_v3_score') ? 'value="' . esc_attr(get_option('casawp_recaptcha_v3_score')) . '"' : 'value="0.4"'); ?> class="regular-text">
 
 						<fieldset class="margin-top">
 							<label>
@@ -1308,7 +1497,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<?php $text = 'Aktiv'; ?>
 						<label class="block-label" for="<?php echo $name; ?>"><?php echo casawp_settings_text('Enter JavaScript tracking event'); ?></label>
 						<label>
-							<input name="<?php echo $name ?>" type="text" value="<?php echo stripslashes(get_option($name)); ?>" class="regular-text">
+							<input name="<?php echo $name ?>" type="text" value="<?php echo esc_attr(stripslashes(get_option($name))); ?>" class="regular-text">
 							<br><span class="description"><?php echo casawp_settings_text("Example: _gaq.push(['_trackEvent', '%casawp_id%', 'CASAWP enquiry'])"); ?></span>
 						</label>
 					</td>
@@ -1454,7 +1643,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $text = casawp_settings_text('Before the content'); ?>
 							<p><?php echo $text; ?></p>
 							<p><label class="casawp-settings-textarea-label">
-									<textarea placeholder='<div id="content">' name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
+									<textarea placeholder='<div id="content">' name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo esc_textarea(stripslashes(get_option($name))); ?></textarea>
 								</label></p>
 						</fieldset>
 						<fieldset>
@@ -1463,7 +1652,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 							<?php $text = casawp_settings_text('After the content'); ?>
 							<p><?php echo $text; ?></p>
 							<p><label class="casawp-settings-textarea-label">
-									<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo stripslashes(get_option($name)); ?></textarea>
+									<textarea placeholder="</div>" name="<?php echo $name ?>" id="<?php echo $name; ?>" class="large-text code" rows="2" cols="50"><?php echo esc_textarea(stripslashes(get_option($name))); ?></textarea>
 								</label></p>
 							<p class="description" id="tagline-description"><?php echo casawp_settings_text('Only the div tag with id and class attributes is allowed.'); ?></p>
 						</fieldset>
@@ -1471,12 +1660,12 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<?php $name = 'casawp_custom_slug'; ?>
 						<?php $text = casawp_settings_text('Custom slug'); ?>
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
-						<input type="text" placeholder="<?php echo esc_attr__('Set custom slug', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+						<input type="text" placeholder="<?php echo esc_attr__('Set custom slug', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= esc_attr(get_option($name)) ?>" id="<?php echo $name; ?>" class="regular-text" />
 						<legend class="screen-reader-text"><span><?php echo casawp_settings_text('Force property language in XML'); ?></span></legend>
 						<?php $name = 'casawp_force_lang'; ?>
 						<?php $text = casawp_settings_text('Force property language in XML'); ?>
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
-						<input type="text" placeholder="<?php echo esc_attr__('de, en, fr, or it', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+						<input type="text" placeholder="<?php echo esc_attr__('de, en, fr, or it', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= esc_attr(get_option($name)) ?>" id="<?php echo $name; ?>" class="regular-text" />
 						<p class="description" id="tagline-description"><?php echo casawp_settings_text('Set this only when the website is monolingual and XML properties are multilingual.'); ?></p>
 
 					</td>
@@ -1569,13 +1758,13 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<?php $name = 'casawp_api_key'; ?>
 						<?php $text = casawp_settings_text('API key'); ?>
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
-						<input type="text" placeholder="<?php echo esc_attr__('Enter CASAGATEWAY API key', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+						<input type="text" placeholder="<?php echo esc_attr__('Enter CASAGATEWAY API key', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= esc_attr(get_option($name)) ?>" id="<?php echo $name; ?>" class="regular-text" />
 
 						<legend class="screen-reader-text"><span><?php echo casawp_settings_text('Private key'); ?></span></legend>
 						<?php $name = 'casawp_private_key'; ?>
 						<?php $text = casawp_settings_text('Private key'); ?>
 						<label class="block-label block-label--intd" for="<?php echo $name; ?>"><?php echo $text; ?></label>
-						<input type="text" placeholder="<?php echo esc_attr__('Enter CASAGATEWAY private key', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= get_option($name) ?>" id="<?php echo $name; ?>" class="regular-text" />
+						<input type="text" placeholder="<?php echo esc_attr__('Enter CASAGATEWAY private key', 'casawp'); ?>" name="<?php echo $name ?>" value="<?= esc_attr(get_option($name)) ?>" id="<?php echo $name; ?>" class="regular-text" />
 
 						<legend class="screen-reader-text"><span><?php echo casawp_settings_text('Batch size override'); ?></span></legend>
 						<?php $override_name = 'casawp_batch_size_override'; ?>
@@ -1609,6 +1798,10 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 								<script type="text/javascript">
 									var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+									var casawpImportNonces = <?php echo wp_json_encode(array(
+										'start' => wp_create_nonce('casawp_start_import'),
+										'cancel' => wp_create_nonce('casawp_cancel_import'),
+									)); ?>;
 									var casawpImportI18n = <?php echo wp_json_encode(array(
 										'errorPrefix' => __('Error: ', 'casawp'),
 										'startError' => __('An error occurred while starting the import.', 'casawp'),
@@ -1669,6 +1862,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 												type: 'POST',
 												data: {
 													action: 'casawp_start_import',
+													nonce: casawpImportNonces.start,
 													gatewayupdate: 1
 												},
 												success: function(response) {
@@ -1704,7 +1898,8 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 												url: ajaxurl,
 												type: 'POST',
 												data: {
-													action: 'casawp_cancel_import'
+													action: 'casawp_cancel_import',
+													nonce: casawpImportNonces.cancel
 												},
 												success: function(response) {
 													if (response.success) {
@@ -1893,27 +2088,6 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 
 					</td>
 				</tr>
-
-				<?php
-				$all_categories = get_categories(array('taxonomy' => 'casawp_category'));
-				$custom_categories = array();
-				$i = 0;
-				foreach ($all_categories as $key => $category) {
-					if (substr($category->slug, 0, 7) == 'custom_') {
-						$custom_categories[$i]['name'] = $category->slug;
-						$custom_categories[$i]['term_id'] = $category->term_id;
-						$i++;
-					}
-				}
-				if (function_exists('icl_get_home_url')) {
-					$all_languages = icl_get_languages('skip_missing=N&orderby=KEY&order=DIR&link_empty_to=str');
-				} else {
-					$cur_locale = get_locale();
-					$cur_lang = substr($cur_locale, 0, 2);
-					$all_languages = array($cur_lang => array('translated_name' => __('Label', 'casawp')));
-				}
-				?>
-
 				<?php if (!empty($custom_categories)) : ?>
 					<tr valign="top">
 						<th scrope="row"><?php echo casawp_settings_text('Custom categories'); ?></th>
@@ -1926,7 +2100,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 											<td><strong><?php echo casawp_settings_text('ID'); ?></strong></td>
 											<?php
 											foreach ($all_languages as $key => $value) {
-												echo '<td><strong>' . $value['translated_name'] . '</strong></td>';
+												echo '<td><strong>' . esc_html($value['translated_name']) . '</strong></td>';
 											}
 											?>
 											<td><strong><?php echo casawp_settings_text('Show on website'); ?></strong></td>
@@ -1934,7 +2108,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 										<?php
 										foreach ($custom_categories as $key => $value) {
 											echo '<tr>';
-											echo '<td>' . $value['name'] . '</td>';
+											echo '<td>' . esc_html($value['name']) . '</td>';
 
 											$get_saved_custom_categories = get_option('casawp_custom_category_translations');
 											foreach ($all_languages as $k => $v) {
@@ -1949,7 +2123,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 														$translated_name = $get_saved_custom_categories[$value['name']][$k];
 													}
 												}
-												echo '<td><input name="' . $name . '" type="text" value="' . $translated_name . '"></td>';
+												echo '<td><input name="' . esc_attr($name) . '" type="text" value="' . esc_attr($translated_name) . '"></td>';
 											}
 
 											$name = $value['name'] . '/show';
@@ -1962,7 +2136,7 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 													$checked = 'checked=checked';
 												}
 											}
-											echo '<td><input name="' . $name . '" value="1" class="tog" type="checkbox" ' . $checked . '></td>';
+											echo '<td><input name="' . esc_attr($name) . '" value="1" class="tog" type="checkbox" ' . $checked . '></td>';
 											echo '</tr>';
 										}
 										?>

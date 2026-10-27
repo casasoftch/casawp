@@ -487,9 +487,24 @@ function casawp_check_no_properties_alert() {
 }
 
 add_action('wp_ajax_casawp_start_import', 'casawp_start_import');
-function casawp_start_import() {
+/** Verify an administrator's POST request before changing import state. */
+function casawp_verify_import_request($action) {
 	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
+		wp_send_json_error(['message' => __('Insufficient privileges.', 'casawp')], 403);
+		return false;
+	}
+	if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'
+		|| !isset($_POST['nonce'])
+		|| !is_string($_POST['nonce'])
+		|| !wp_verify_nonce(wp_unslash($_POST['nonce']), $action)) {
+		wp_send_json_error(null, 403);
+		return false;
+	}
+	return true;
+}
+
+function casawp_start_import() {
+	if (!casawp_verify_import_request('casawp_start_import')) {
 		return;
 	}
 
@@ -549,8 +564,7 @@ function casawp_start_single_request_import( string $source = '' ) {
 
 add_action('wp_ajax_casawp_cancel_import', 'casawp_cancel_import_ajax');
 function casawp_cancel_import_ajax() {
-	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
+	if (!casawp_verify_import_request('casawp_cancel_import')) {
 		return;
 	}
 	if (casawp_cancel_import()) {
@@ -563,8 +577,7 @@ function casawp_cancel_import_ajax() {
 
 add_action('wp_ajax_casawp_reset_import_progress', 'casawp_reset_import_progress');
 function casawp_reset_import_progress() {
-	if (!current_user_can('manage_options')) {
-		wp_send_json_error(['message' => 'Unauthorized']);
+	if (!casawp_verify_import_request('casawp_reset_import_progress')) {
 		return;
 	}
 

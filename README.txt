@@ -67,6 +67,8 @@ Import cleanup also removes monthly log files except those from the current and 
 
 = Unreleased =
 
+* Security: Require administrator permissions and verified POST requests for settings saves and AJAX import start, cancel and progress reset; save only fields belonging to the selected settings tab
+* Fix: Preserve quoted settings values, backslashes and the tracking property-ID placeholder across saves; escape stored values in form fields and HTML textareas
 * Fix: Preserve local document files and generated previews during CDN cleanup when retained attachments lack a usable remote source or share files with local consumers
 * Fix: Validate import feed structure and property IDs before changing existing listings or running queued deletion work; reject invalid responses while preserving intentional empty-feed cleanup
 * Fix: Show a PDF placeholder for remote documents in the Media Library, preserve existing previews and document links, and prevent non-image attachments from rendering as broken images

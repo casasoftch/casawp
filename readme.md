@@ -17,6 +17,8 @@ Titles use Poppins and body text uses Mulish, with CASASOFT-inspired blue button
 
 Verify settings changes in a local or staging WordPress installation. External CASAGATEWAY, Google Maps, reCAPTCHA, and email delivery require separate integration testing with configured services.
 
+Settings saves require an administrator's verified POST request and accept only the fields on the selected tab, including registered custom categories and displayed content languages. AJAX import start, cancellation and progress reset require administrator permissions, POST and an action-specific nonce in the `nonce` field (`casawp_start_import`, `casawp_cancel_import` or `casawp_reset_import_progress`). The settings UI supplies these nonces for its controls. Public gateway pokes and scheduled imports keep their existing integration paths. Stored form values are escaped for their HTML context so quoted text and HTML wrappers remain editable. Submitted values are unslashed once; the HTML wrapper and tracking settings retain the legacy slash format expected by existing frontend readers, and tracking preserves the `%casawp_id%` placeholder.
+
 Import feed safety
 ===============================
 
