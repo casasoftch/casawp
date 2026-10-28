@@ -157,25 +157,8 @@ class FormService{
 
 										$data = $formSetting->preCasaMailFilter($data, $postdata, $validatedData);
 
-										$data_string = json_encode($data);
-
-										$ch = curl_init('https://message.casasoft.com/api/msg');
-										curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-										curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-										curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-											'Content-Type: application/json',
-											'Content-Length: ' . strlen($data_string))
-										);
-
-										curl_setopt($ch, CURLOPT_USERPWD,  "casawp:MQX-2C2-Hrh-zUu");
-
-										$result = curl_exec($ch);
-										$json = json_decode($result, true);
-										if (isset($json['validation_messages'])) {
-											wp_mail( 'dev@casasoft.ch', 'casawp casamail issue publisher ' . $data['publisher'], print_r($json['validation_messages'], true));
-											return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
-										}
+										$sent = $this->sendCasaMailInquiry($data);
+										$sendError = !$sent;
 									}
 
 									if ($sent) {
@@ -285,25 +268,8 @@ class FormService{
 
 									$data = $formSetting->preCasaMailFilter($data, $postdata, $validatedData);
 
-									$data_string = json_encode($data);
-
-									$ch = curl_init('https://message.casasoft.com/api/msg');
-									curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-									curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-									curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-									curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-										'Content-Type: application/json',
-										'Content-Length: ' . strlen($data_string))
-									);
-
-									curl_setopt($ch, CURLOPT_USERPWD,  "casawp:MQX-2C2-Hrh-zUu");
-
-									$result = curl_exec($ch);
-									$json = json_decode($result, true);
-									if (isset($json['validation_messages'])) {
-										wp_mail( 'dev@casasoft.ch', 'casawp casamail issue publisher ' . $data['publisher'], print_r($json['validation_messages'], true));
-										return '<p class="alert alert-danger">'.print_r($json['validation_messages'], true).'</p>';
-									}
+									$sent = $this->sendCasaMailInquiry($data);
+									$sendError = !$sent;
 								}
 
 								if ($sent) {
@@ -328,6 +294,53 @@ class FormService{
 			}
 		}
 		return array('form' => $form, 'sent' => $sent, 'invalidCaptcha' => $invalidCaptcha, 'sendError' => $sendError);
+	}
+	private function sendCasaMailInquiry($data){
+		$body = wp_json_encode($data);
+		if ($body === false) {
+			return false;
+		}
+
+		$response = wp_remote_post('https://message.casasoft.com/api/msg', array(
+			'timeout' => 20,
+			'redirection' => 0,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+				'Accept' => 'application/json',
+				'Authorization' => 'Basic ' . base64_encode('casawp:MQX-2C2-Hrh-zUu'),
+			),
+			'body' => $body,
+			'data_format' => 'body',
+		));
+		if (is_wp_error($response)) {
+			return false;
+		}
+
+		$status = (int) wp_remote_retrieve_response_code($response);
+		$json = json_decode(wp_remote_retrieve_body($response));
+		if (isset($json->validation_messages)) {
+			// Retain the existing diagnostic notification without exposing service output to visitors.
+			wp_mail('dev@casasoft.ch', 'casawp casamail issue publisher ' . $data['publisher'],
+				print_r(json_decode(wp_remote_retrieve_body($response), true)['validation_messages'], true));
+			return false;
+		}
+		$contentType = wp_remote_retrieve_header($response, 'content-type');
+		if ($status < 200 || $status >= 300 || !is_object($json)
+			|| (is_string($contentType) && stripos($contentType, 'application/problem+json') !== false)) {
+			return false;
+		}
+		if (!empty($json->error) || !empty($json->errors)
+			|| (isset($json->success) && in_array($json->success, array(false, 0, '0', 'false'), true))) {
+			return false;
+		}
+		if (isset($json->status)
+			&& ((is_numeric($json->status) && (int) $json->status >= 400)
+				|| (is_string($json->status) && in_array(strtolower($json->status), array('error', 'failed', 'failure', 'rejected'), true)))) {
+			return false;
+		}
+
+		// Acceptance by CASA Mail does not establish final delivery to the recipient's inbox.
+		return true;
 	}
 
 	private function getFlatfoxRemcatRecipient($subjectItem){

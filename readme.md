@@ -105,6 +105,8 @@ casawp_contactform
 
 Displays a form for inquiry submissions
 
+CASA Mail submissions show success only after the service returns a successful HTTP status and a valid JSON object without a reported error. Connection failures, timeouts, rejected requests and invalid responses use the existing delivery-error message and keep the populated form visible for retry. The request has a 20-second timeout and is not retried automatically. Service acceptance does not confirm final inbox delivery. Custom form payload filters and the existing email/Flatfox delivery routes remain supported. Theme overrides can show delivery errors using the existing `sendError` value.
+
 Accepted Query Params:
 
 * id – Form ID registered to formSettingService (optional)
