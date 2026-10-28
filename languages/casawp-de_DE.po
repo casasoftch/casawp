@@ -568,6 +568,7 @@ msgstr "Bezeichnung"
 msgid "Custom categories"
 msgstr "Eigene Kategorien"
 
+#: classes/PropertyMedia.php
 msgid "ID"
 msgstr "ID"
 
@@ -644,6 +645,7 @@ msgstr ""
 msgid "Name of the action hook that will be triggered."
 msgstr ""
 
+#: classes/PropertyMedia.php
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 #: action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
@@ -3930,6 +3932,7 @@ msgstr "Empfehlen"
 msgid "and"
 msgstr "und"
 
+#: classes/PropertyMedia.php
 #: classes/Single.php:1077
 msgid "Document"
 msgstr "Dokument"
@@ -4308,6 +4311,7 @@ msgstr ""
 msgid "Sales Brochure"
 msgstr "Verkaufsbroschüre"
 
+#: classes/PropertyMedia.php
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:47
 #: theme-defaults/casawp/bootstrap4/datatable.phtml:47
 msgid "Plan"
@@ -4424,54 +4428,54 @@ msgid "Attached images and files"
 msgstr "Angehängte Bilder und Dateien"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "No media is attached to this property."
 msgstr "Diesem Objekt sind keine Medien angehängt."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "This overview includes all media attached to this property, regardless of attachment type."
 msgstr "Diese Übersicht zeigt alle diesem Objekt angehängten Medien, unabhängig vom Anhangstyp."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 #. translators: 1: number of attached media items, 2: number classified as images.
 #, php-format
 msgid "Attached media: %1$d. Classified as images: %2$d."
 msgstr "Angehängte Medien: %1$d. Als Bilder zugeordnet: %2$d."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Preview"
 msgstr "Vorschau"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment"
 msgstr "Anhang"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment type"
 msgstr "Anhangstyp"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Order"
 msgstr "Reihenfolge"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Source"
 msgstr "Quelle"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Unassigned"
 msgstr "Nicht zugeordnet"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Not classified as an image"
 msgstr "Nicht als Bild zugeordnet"
 
@@ -4660,3 +4664,107 @@ msgstr "Das Löschen der Objektdaten ist fehlgeschlagen. Einige Daten wurden mö
 #: casawp.php
 msgid "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
 msgstr "Das Löschen der Objektdaten wurde unterbrochen. Einige Daten wurden möglicherweise bereits gelöscht. Weitere Informationen finden Sie in den Protokollen."
+
+#: classes/PropertyMedia.php
+msgid "Image"
+msgstr "Bild"
+
+#: classes/PropertyMedia.php
+msgid "Sales brochure"
+msgstr "Verkaufsbroschüre"
+
+#: classes/PropertyMedia.php
+msgid "Offer logo"
+msgstr "Angebotslogo"
+
+#: classes/PropertyMedia.php
+msgid "Choose attachments"
+msgstr "Anhänge auswählen"
+
+#: classes/PropertyMedia.php
+msgid "Add attachments"
+msgstr "Anhänge hinzufügen"
+
+#: classes/PropertyMedia.php
+msgid "Saving attachment changes…"
+msgstr "Änderungen an den Anhängen werden gespeichert…"
+
+#: classes/PropertyMedia.php
+msgid "Attachment changes saved."
+msgstr "Änderungen an den Anhängen gespeichert."
+
+#: classes/PropertyMedia.php
+msgid "Could not save attachment changes. Please try again."
+msgstr "Die Änderungen an den Anhängen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: classes/PropertyMedia.php
+msgid "Drag images to reorder them, or use the arrow buttons. Changes are saved immediately. The first image becomes the featured image."
+msgstr "Ziehen Sie die Bilder, um ihre Reihenfolge zu ändern, oder verwenden Sie die Pfeiltasten. Änderungen werden sofort gespeichert. Das erste Bild wird als Beitragsbild verwendet."
+
+#: classes/PropertyMedia.php
+msgid "Imports take over the media list and image order again when they resume. Files added here return to the Media Library. Use these controls for properties managed manually."
+msgstr "Sobald die Importe fortgesetzt werden, bestimmen sie wieder die Medienliste und die Bildreihenfolge. Hier hinzugefügte Dateien werden wieder von diesem Objekt gelöst und bleiben in der Mediathek erhalten. Verwenden Sie diese Funktionen für manuell verwaltete Objekte."
+
+#: classes/PropertyMedia.php
+msgid "Choose new uploads, unattached files, or files already attached to this property."
+msgstr "Wählen Sie neue Uploads, nicht zugeordnete Dateien oder Dateien, die bereits diesem Objekt angehängt sind."
+
+#: classes/PropertyMedia.php
+msgid "Image order"
+msgstr "Bildreihenfolge"
+
+#: classes/PropertyMedia.php
+msgid "Move image earlier"
+msgstr "Bild nach vorne verschieben"
+
+#: classes/PropertyMedia.php
+msgid "Move image later"
+msgstr "Bild nach hinten verschieben"
+
+#: classes/PropertyMedia.php
+msgid "You cannot change these property attachments. Reload the page and try again."
+msgstr "Sie können die Anhänge dieses Objekts nicht ändern. Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: classes/PropertyMedia.php
+msgid "Invalid attachment selection."
+msgstr "Ungültige Auswahl von Anhängen."
+
+#: classes/PropertyMedia.php
+msgid "Wait until the import or cleanup finishes before changing attachments."
+msgstr "Warten Sie, bis der Import oder die Bereinigung abgeschlossen ist, bevor Sie Anhänge ändern."
+
+#: classes/PropertyMedia.php
+msgid "The attached images have changed. Reload the page before reordering them."
+msgstr "Die angehängten Bilder haben sich geändert. Laden Sie die Seite neu, bevor Sie deren Reihenfolge ändern."
+
+#: classes/PropertyMedia.php
+msgid "You cannot add attachments to this property."
+msgstr "Sie können diesem Objekt keine Anhänge hinzufügen."
+
+#: classes/PropertyMedia.php
+msgid "Choose a valid attachment type."
+msgstr "Wählen Sie einen gültigen Anhangstyp."
+
+#: classes/PropertyMedia.php
+msgid "The attachment type is unavailable. Reload the page and try again."
+msgstr "Der Anhangstyp ist nicht verfügbar. Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: classes/PropertyMedia.php
+msgid "Select image files for this attachment type."
+msgstr "Wählen Sie für diesen Anhangstyp Bilddateien aus."
+
+#: classes/PropertyMedia.php
+msgid "You cannot change one or more selected attachments."
+msgstr "Sie können einen oder mehrere der ausgewählten Anhänge nicht ändern."
+
+#: classes/PropertyMedia.php
+msgid "A selected file belongs to another post. Upload a separate copy for this property."
+msgstr "Eine ausgewählte Datei gehört zu einem anderen Beitrag. Laden Sie für dieses Objekt eine separate Kopie hoch."
+
+#: classes/PropertyMedia.php
+msgid "Other attachments"
+msgstr "Weitere Anhänge"
+
+#: classes/PropertyMedia.php
+msgid "No other files are attached to this property."
+msgstr "Diesem Objekt sind keine weiteren Dateien angehängt."

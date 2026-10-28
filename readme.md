@@ -24,6 +24,13 @@ Import feed safety
 
 CASAWP validates the XML structure and every property ID before changing existing listings or scheduling deletion work. A feed must have exactly one direct `properties` node, containing only `property` elements with nonblank IDs. Wrapper names and imported IDs are preserved. An explicit empty `properties` list still requests full cleanup; an unexpected XML response, malformed XML, or invalid property list stops the run instead. Queued database cleanup checks the feed again before deleting properties, and a rejected feed leaves a stopped status and diagnostic logs while releasing its run's lock.
 
+Property attachment editing
+===============================
+
+The property's **Attached images and files** box provides a sortable image gallery above the other attachment details. The lower table contains documents, plans, brochures and other attachments, including unassigned files, without repeating gallery images. The summary still counts all attachments and images. Drag a preview or use its arrow buttons to change the image order. Changes save immediately, including for draft properties, and the first image becomes the featured image. **Add attachments** opens the WordPress Media Library; choose the attachment type first: image, document, plan, sales brochure or offer logo. Image and offer-logo types require image files. New uploads and unattached local files can be added; files already belonging to another post cannot be moved through this control. Existing files on the same property can be selected to assign a type.
+
+This supports manual property management when imports are disconnected. Resumed imports remain authoritative: an explicit source media list restores the imported image order and featured image even for an otherwise unchanged offer. Files added through the new control are detached back into the Media Library, retaining their records and files. A missing source media node preserves manual additions; source-upload failures keep the pending manual changes available for a retry. Older manual attachments that have not been selected through the new control keep their existing behaviour. Changes apply only to the edited property, including on multilingual sites. Editing requires permission for both the property and each affected attachment; adding also requires upload permission. Requests use POST and a property-specific nonce, and wait while import or cleanup work holds the shared lock.
+
 Delete-all operation logging
 ===============================
 

@@ -73,10 +73,17 @@ CASAWP allows one active import per site. A background request or failure notifi
 
 The General settings action "Delete all property data" records its start and result in the existing monthly CASAWP logs. Entries identify the administrator's user ID and current site, with timestamps, affected database-row counts and duration. Failures and interruptions record available partial results and diagnostic details. The settings page confirms success only after deletion finishes; failure or interruption notices warn that some data may already have been deleted and direct the administrator to the logs. Result notices appear once for the initiating administrator and site without adding deletion-result URL parameters. The action retains its existing database deletion scope.
 
+== Property Attachments ==
+
+The property's "Attached images and files" box supports dragging images into order, with arrow buttons as a keyboard alternative. The lower table shows documents, plans, brochures and other attachments without repeating gallery images; the summary still counts all attachments and images. Changes save immediately and the first image becomes the featured image. "Add attachments" opens the WordPress Media Library with a type selector for images, documents, plans, sales brochures and offer logos. Use new uploads, unattached local files or files already belonging to the edited property; files attached elsewhere are protected.
+
+These controls support properties managed manually after disconnecting imports. When imports resume with a media list, the source takes over the imported order, types and featured image again, even when the feed is otherwise unchanged. Local files added with the new control return to the Media Library without being deleted. A missing source media list preserves manual additions. Existing manually attached files that were not added through these controls retain their previous import behaviour.
+
 == Changelog ==
 
 = Unreleased =
 
+* Enhancement: Reorder property images by drag and drop and add typed attachments from the Media Library; save immediately while allowing resumed imports to restore source media
 * Fix: Show delete-all result notices once from stored administrator/site results without adding deletion-result URL parameters
 * Fix: Refresh monthly logfile links when their contents change so reopening them requests the latest version of the same file
 * Enhancement: Log delete-all property-data operations with administrator, site, timing, affected-row counts and final outcomes; show accurate success, failure or interruption notices

@@ -557,6 +557,7 @@ msgstr "Libellé"
 msgid "Custom categories"
 msgstr "Catégories personnalisées"
 
+#: classes/PropertyMedia.php
 msgid "ID"
 msgstr "ID"
 
@@ -633,6 +634,7 @@ msgstr ""
 msgid "Name of the action hook that will be triggered."
 msgstr ""
 
+#: classes/PropertyMedia.php
 #: action-scheduler/classes/ActionScheduler_AdminView.php:243
 #: action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
@@ -3916,6 +3918,7 @@ msgstr "Partager"
 msgid "and"
 msgstr "et"
 
+#: classes/PropertyMedia.php
 #: classes/Single.php:1077
 msgid "Document"
 msgstr "Document"
@@ -4294,6 +4297,7 @@ msgstr ""
 msgid "Sales Brochure"
 msgstr "Brochure de vente"
 
+#: classes/PropertyMedia.php
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:47
 #: theme-defaults/casawp/bootstrap4/datatable.phtml:47
 msgid "Plan"
@@ -4374,54 +4378,54 @@ msgid "Attached images and files"
 msgstr "Images et fichiers joints"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "No media is attached to this property."
 msgstr "Aucun média n’est joint à ce bien."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "This overview includes all media attached to this property, regardless of attachment type."
 msgstr "Cet aperçu affiche tous les médias joints à ce bien, quel que soit leur type."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 #. translators: 1: number of attached media items, 2: number classified as images.
 #, php-format
 msgid "Attached media: %1$d. Classified as images: %2$d."
 msgstr "Médias joints : %1$d. Classés comme images : %2$d."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Preview"
 msgstr "Aperçu"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment"
 msgstr "Pièce jointe"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment type"
 msgstr "Type de pièce jointe"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Order"
 msgstr "Ordre"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Source"
 msgstr "Source"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Unassigned"
 msgstr "Non attribué"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Not classified as an image"
 msgstr "Non classé comme image"
 
@@ -4610,3 +4614,107 @@ msgstr "La suppression des données des biens a échoué. Certaines données ont
 #: casawp.php
 msgid "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
 msgstr "La suppression des données des biens a été interrompue. Certaines données ont peut-être déjà été supprimées. Consultez les journaux pour plus de détails."
+
+#: classes/PropertyMedia.php
+msgid "Image"
+msgstr "Image"
+
+#: classes/PropertyMedia.php
+msgid "Sales brochure"
+msgstr "Brochure de vente"
+
+#: classes/PropertyMedia.php
+msgid "Offer logo"
+msgstr "Logo de l’offre"
+
+#: classes/PropertyMedia.php
+msgid "Choose attachments"
+msgstr "Choisir des pièces jointes"
+
+#: classes/PropertyMedia.php
+msgid "Add attachments"
+msgstr "Ajouter des pièces jointes"
+
+#: classes/PropertyMedia.php
+msgid "Saving attachment changes…"
+msgstr "Enregistrement des modifications des pièces jointes…"
+
+#: classes/PropertyMedia.php
+msgid "Attachment changes saved."
+msgstr "Modifications des pièces jointes enregistrées."
+
+#: classes/PropertyMedia.php
+msgid "Could not save attachment changes. Please try again."
+msgstr "Les modifications des pièces jointes n’ont pas pu être enregistrées. Veuillez réessayer."
+
+#: classes/PropertyMedia.php
+msgid "Drag images to reorder them, or use the arrow buttons. Changes are saved immediately. The first image becomes the featured image."
+msgstr "Faites glisser les images pour modifier leur ordre ou utilisez les boutons fléchés. Les modifications sont enregistrées immédiatement. La première image devient l’image mise en avant."
+
+#: classes/PropertyMedia.php
+msgid "Imports take over the media list and image order again when they resume. Files added here return to the Media Library. Use these controls for properties managed manually."
+msgstr "À la reprise des imports, ceux-ci déterminent à nouveau la liste des médias et l’ordre des images. Les fichiers ajoutés ici sont détachés du bien et restent dans la médiathèque. Utilisez ces commandes pour les biens gérés manuellement."
+
+#: classes/PropertyMedia.php
+msgid "Choose new uploads, unattached files, or files already attached to this property."
+msgstr "Choisissez de nouveaux fichiers à téléverser, des fichiers non rattachés ou des fichiers déjà joints à ce bien."
+
+#: classes/PropertyMedia.php
+msgid "Image order"
+msgstr "Ordre des images"
+
+#: classes/PropertyMedia.php
+msgid "Move image earlier"
+msgstr "Avancer l’image"
+
+#: classes/PropertyMedia.php
+msgid "Move image later"
+msgstr "Reculer l’image"
+
+#: classes/PropertyMedia.php
+msgid "You cannot change these property attachments. Reload the page and try again."
+msgstr "Vous ne pouvez pas modifier les pièces jointes de ce bien. Rechargez la page et réessayez."
+
+#: classes/PropertyMedia.php
+msgid "Invalid attachment selection."
+msgstr "Sélection de pièces jointes non valide."
+
+#: classes/PropertyMedia.php
+msgid "Wait until the import or cleanup finishes before changing attachments."
+msgstr "Attendez la fin de l’import ou du nettoyage avant de modifier les pièces jointes."
+
+#: classes/PropertyMedia.php
+msgid "The attached images have changed. Reload the page before reordering them."
+msgstr "Les images jointes ont changé. Rechargez la page avant de modifier leur ordre."
+
+#: classes/PropertyMedia.php
+msgid "You cannot add attachments to this property."
+msgstr "Vous ne pouvez pas ajouter de pièces jointes à ce bien."
+
+#: classes/PropertyMedia.php
+msgid "Choose a valid attachment type."
+msgstr "Choisissez un type de pièce jointe valide."
+
+#: classes/PropertyMedia.php
+msgid "The attachment type is unavailable. Reload the page and try again."
+msgstr "Ce type de pièce jointe n’est pas disponible. Rechargez la page et réessayez."
+
+#: classes/PropertyMedia.php
+msgid "Select image files for this attachment type."
+msgstr "Sélectionnez des fichiers image pour ce type de pièce jointe."
+
+#: classes/PropertyMedia.php
+msgid "You cannot change one or more selected attachments."
+msgstr "Vous ne pouvez pas modifier une ou plusieurs des pièces jointes sélectionnées."
+
+#: classes/PropertyMedia.php
+msgid "A selected file belongs to another post. Upload a separate copy for this property."
+msgstr "Un fichier sélectionné appartient à une autre publication. Téléversez une copie distincte pour ce bien."
+
+#: classes/PropertyMedia.php
+msgid "Other attachments"
+msgstr "Autres pièces jointes"
+
+#: classes/PropertyMedia.php
+msgid "No other files are attached to this property."
+msgstr "Aucun autre fichier n’est joint à ce bien."

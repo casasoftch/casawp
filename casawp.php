@@ -142,20 +142,30 @@ $import->register_hooks();
  * If a lock is older than 4 h it is considered stale and recycled.
  */
 function casawp_acquire_lock( int $max_age = 14400 ): bool {
-
+	global $wpdb;
 	$now = time();
+	$insert = static function () use ($wpdb, $now): bool {
+		// Lock acquisition must never update an existing owner after a stale option-cache read.
+		$result = $wpdb->query($wpdb->prepare("INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')",
+			'casawp_import_lock', (string) $now));
+		wp_cache_delete('casawp_import_lock', 'options');
+		wp_cache_delete('notoptions', 'options');
+		return $result === 1;
+	};
 
 	/* 1) attempt to insert a brand-new row (atomic) */
-	if ( add_option( 'casawp_import_lock', $now, '', 'no' ) ) {
+	if ( $insert() ) {
 		return true;                                // we own it
 	}
 
 	/* 2) row already there – is it stale? */
 	$existing = (int) get_option( 'casawp_import_lock', 0 );
 	if ( $existing && ( $now - $existing ) > $max_age ) {
-		// try to steal the stale lock (race-safe because delete+add flips order)
-		delete_option( 'casawp_import_lock' );
-		return add_option( 'casawp_import_lock', $now, '', 'no' );
+		// Remove only the expired value observed, then compete for the empty slot again.
+		$wpdb->delete($wpdb->options, ['option_name' => 'casawp_import_lock', 'option_value' => (string) $existing], ['%s', '%s']);
+		wp_cache_delete('casawp_import_lock', 'options');
+		wp_cache_delete('notoptions', 'options');
+		return $insert();
 	}
 
 	return false;   
@@ -494,7 +504,7 @@ function casawp_cancel_import() {
 	if (class_exists('ActionScheduler')) {
 		$store = ActionScheduler::store();
 		$run_id = (int) get_option( 'casawp_current_run_id', 0 );
-		if (!$run_id && \casawp\ManualCleanup::isRunning()) { return false; }
+		if (!$run_id && (\casawp\ManualCleanup::isRunning() || \casawp\PropertyMedia::isRunning())) { return false; }
 		$group  = 'casawp_run_' . $run_id;
 
 		$hooks = [

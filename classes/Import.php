@@ -10,7 +10,8 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
       global $wpdb;
       $tbl = $wpdb->postmeta;
 
-      $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort' ];
+      // Media changes must remain retryable if the later attachment sync fails.
+      $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort', '_casawp_manual_media_modified' ];
 
       // Add SEO meta keys that must never be touched by CASAWP imports
       $seo_like = [
@@ -224,6 +225,7 @@ class Import
       'projectunit_id',
       'projectunit_sort',
       'casawp_media_sync_version',
+      '_casawp_manual_media_modified',
     ];
 
     $skip_prefixes = [
@@ -2463,6 +2465,8 @@ class Import
     $hashFromDb = $this->fingerprint( $old_meta_data );
     $newHash    = $this->fingerprint( $new_meta_data );
     $needs_media_sync_migration = $this->needsMediaSyncMigration($wp_post->ID);
+    $has_manual_media_changes = (bool) get_post_meta($wp_post->ID, '_casawp_manual_media_modified', true);
+    $needs_media_sync = $needs_media_sync_migration || $has_manual_media_changes;
 
     
 
@@ -2506,16 +2510,23 @@ class Import
 
     $main_unchanged = ( $new_main_data === $old_main_data );
 
-    if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync_migration ) {
+    if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync ) {
         $this->logImport( "Skip {$casawp_id} - unchanged (hash)", ['event' => 'offer.unchanged'], 'debug' );
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
         return;
     }
 
-    if ( $hashFromDb === $newHash && $main_unchanged && $needs_media_sync_migration ) {
+    if ( $hashFromDb === $newHash && $main_unchanged && $needs_media_sync ) {
         $this->logger()->setStage('offer_media');
-        $this->addToLog( "Force media self-heal for {$casawp_id} - media sync migration pending" );
+        $reasons = array();
+        if ($needs_media_sync_migration) {
+            $reasons[] = 'media sync migration pending';
+        }
+        if ($has_manual_media_changes) {
+            $reasons[] = 'manual media changes pending';
+        }
+        $this->addToLog( "Force media sync for {$casawp_id} - " . implode('; ', $reasons) );
         $this->setOfferAttachments(
             isset($offer['offer_medias']) ? $offer['offer_medias'] : array(),
             $wp_post,
@@ -3343,6 +3354,10 @@ class Import
           }
 
           delete_post_thumbnail($wp_post->ID);
+          if (get_post_meta($wp_post->ID, '_casawp_manual_media_modified', true) && get_post_thumbnail_id($wp_post->ID)) {
+              throw new \RuntimeException('Could not clear the imported property featured image.');
+          }
+          $this->resetManualPropertyMedia($wp_post->ID, $casawp_id, $has_media_node);
           return;
       }
 
@@ -3433,7 +3448,11 @@ class Import
               }
 
               if (count($update_post) > 1) {
-                  wp_update_post($update_post);
+                  $updated = wp_update_post($update_post, true);
+                  if (is_wp_error($updated) || !$updated) {
+                      throw new \RuntimeException('Could not update imported attachment ' . $attachment_id .
+                          (is_wp_error($updated) ? ': ' . $updated->get_error_message() : '.'));
+                  }
               }
 
               update_post_meta($attachment_id, '_origin', $origin);
@@ -3486,6 +3505,16 @@ class Import
               }
           }
 
+          if (get_post_meta($wp_post->ID, '_casawp_manual_media_modified', true)) {
+              $restored = get_post($attachment_id);
+              $restored_terms = wp_get_post_terms($attachment_id, 'casawp_attachment_type', ['fields' => 'ids']);
+              $restored_terms = is_wp_error($restored_terms) ? [] : array_map('intval', $restored_terms);
+              if (!$restored || (int) $restored->post_parent !== (int) $wp_post->ID
+                  || (int) $restored->menu_order !== (int) $the_mediaitem['order'] || $restored_terms !== [$term_id]) {
+                  throw new \RuntimeException('Could not restore imported attachment ' . $attachment_id . '.');
+              }
+          }
+
           if ($the_mediaitem['type'] === 'image' && (int) $the_mediaitem['order'] === 1 && empty($featured_attachment_id)) {
               $featured_attachment_id = (int) $attachment_id;
           }
@@ -3511,6 +3540,62 @@ class Import
       } else {
           delete_post_thumbnail($wp_post->ID);
       }
+
+      if (get_post_meta($wp_post->ID, '_casawp_manual_media_modified', true)
+          && (int) get_post_thumbnail_id($wp_post->ID) !== $featured_attachment_id) {
+          throw new \RuntimeException('Could not restore the imported property featured image.');
+      }
+
+      $this->resetManualPropertyMedia($wp_post->ID, $casawp_id, $has_media_node);
+  }
+
+  /** Restore feed ownership without deleting files an editor added to the media library. */
+  private function resetManualPropertyMedia($post_id, $casawp_id, $has_media_node): void
+  {
+      // A missing source list is not an instruction to discard manual media changes.
+      if (!$has_media_node || !get_post_meta($post_id, '_casawp_manual_media_modified', true)) {
+          return;
+      }
+      // A failed source upload must remain retryable before retiring local additions.
+      if (!empty($this->transcript[$casawp_id]['attachments']['failed_to_create'])) {
+          return;
+      }
+
+      $attachments = get_posts(array(
+          'post_type' => 'attachment',
+          'post_parent' => (int) $post_id,
+          'post_status' => 'any',
+          'posts_per_page' => -1,
+          'suppress_filters' => true,
+          'meta_key' => '_casawp_manual_attachment',
+          'meta_value' => '1',
+      ));
+
+      foreach ($attachments as $attachment) {
+          $attachment = get_post($attachment->ID);
+          if (!$attachment || $attachment->post_type !== 'attachment' || (int) $attachment->post_parent !== (int) $post_id) {
+              continue;
+          }
+          // Only the new editor's ordinary local additions belong to this reset.
+          // Never infer ownership of existing/imported media from a property alone.
+          if (get_post_meta($attachment->ID, '_origin', true) !== '' ||
+              get_post_meta($attachment->ID, '_casawp_import', true) ||
+              get_post_meta($attachment->ID, '_is_remote', true)) {
+              continue;
+          }
+
+          $updated = wp_update_post(array('ID' => (int) $attachment->ID, 'post_parent' => 0), true);
+          if (is_wp_error($updated) || !$updated || (int) wp_get_post_parent_id($attachment->ID) !== 0) {
+              throw new \RuntimeException('Could not detach manually added attachment ' . $attachment->ID .
+                  (is_wp_error($updated) ? ': ' . $updated->get_error_message() : '.'));
+          }
+          delete_post_meta($attachment->ID, '_casawp_manual_attachment');
+          $this->logImport('Detached manually added attachment ' . $attachment->ID .
+              ' after importing property ' . $casawp_id . '; retained in the media library.',
+              ['event' => 'media.manual_detached', 'attachment_id' => (int) $attachment->ID], 'debug');
+      }
+
+      delete_post_meta($post_id, '_casawp_manual_media_modified');
   }
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id)

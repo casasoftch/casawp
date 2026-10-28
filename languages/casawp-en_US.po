@@ -2520,9 +2520,10 @@ msgstr ""
 msgid "and"
 msgstr ""
 
+#: classes/PropertyMedia.php
 #: classes/Single.php:1071 theme-defaults/casawp/bootstrap3/datatable.phtml:39
 msgid "Document"
-msgstr ""
+msgstr "Document"
 
 #: modules/casawp/src/casawp/Form/ContactForm.php:32
 msgid "Anrede"
@@ -2797,9 +2798,10 @@ msgstr ""
 msgid "Sales Brochure"
 msgstr ""
 
+#: classes/PropertyMedia.php
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:47
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:56
 msgid "Links"
@@ -3482,6 +3484,7 @@ msgstr ""
 msgid "Custom categories"
 msgstr ""
 
+#: classes/PropertyMedia.php
 #: options.php:1821
 msgid "ID"
 msgstr "ID"
@@ -3500,59 +3503,59 @@ msgid "Attached images and files"
 msgstr "Attached images and files"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "No media is attached to this property."
 msgstr "No media is attached to this property."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "This overview includes all media attached to this property, regardless of attachment type."
 msgstr "This overview includes all media attached to this property, regardless of attachment type."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 #. translators: 1: number of attached media items, 2: number classified as images.
 #, php-format
 msgid "Attached media: %1$d. Classified as images: %2$d."
 msgstr "Attached media: %1$d. Classified as images: %2$d."
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Preview"
 msgstr "Preview"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment"
 msgstr "Attachment"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Attachment type"
 msgstr "Attachment type"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Status"
 msgstr "Status"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Order"
 msgstr "Order"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Source"
 msgstr "Source"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Unassigned"
 msgstr "Unassigned"
 
 
-#: classes/Plugin.php
+#: classes/PropertyMedia.php
 msgid "Not classified as an image"
 msgstr "Not classified as an image"
 
@@ -3741,3 +3744,107 @@ msgstr "Property data deletion failed. Some data may already have been deleted. 
 #: casawp.php
 msgid "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
 msgstr "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
+
+#: classes/PropertyMedia.php
+msgid "Image"
+msgstr "Image"
+
+#: classes/PropertyMedia.php
+msgid "Sales brochure"
+msgstr "Sales brochure"
+
+#: classes/PropertyMedia.php
+msgid "Offer logo"
+msgstr "Offer logo"
+
+#: classes/PropertyMedia.php
+msgid "Choose attachments"
+msgstr "Choose attachments"
+
+#: classes/PropertyMedia.php
+msgid "Add attachments"
+msgstr "Add attachments"
+
+#: classes/PropertyMedia.php
+msgid "Saving attachment changes…"
+msgstr "Saving attachment changes…"
+
+#: classes/PropertyMedia.php
+msgid "Attachment changes saved."
+msgstr "Attachment changes saved."
+
+#: classes/PropertyMedia.php
+msgid "Could not save attachment changes. Please try again."
+msgstr "Could not save attachment changes. Please try again."
+
+#: classes/PropertyMedia.php
+msgid "Drag images to reorder them, or use the arrow buttons. Changes are saved immediately. The first image becomes the featured image."
+msgstr "Drag images to reorder them, or use the arrow buttons. Changes are saved immediately. The first image becomes the featured image."
+
+#: classes/PropertyMedia.php
+msgid "Imports take over the media list and image order again when they resume. Files added here return to the Media Library. Use these controls for properties managed manually."
+msgstr "Imports take over the media list and image order again when they resume. Files added here return to the Media Library. Use these controls for properties managed manually."
+
+#: classes/PropertyMedia.php
+msgid "Choose new uploads, unattached files, or files already attached to this property."
+msgstr "Choose new uploads, unattached files, or files already attached to this property."
+
+#: classes/PropertyMedia.php
+msgid "Image order"
+msgstr "Image order"
+
+#: classes/PropertyMedia.php
+msgid "Move image earlier"
+msgstr "Move image earlier"
+
+#: classes/PropertyMedia.php
+msgid "Move image later"
+msgstr "Move image later"
+
+#: classes/PropertyMedia.php
+msgid "You cannot change these property attachments. Reload the page and try again."
+msgstr "You cannot change these property attachments. Reload the page and try again."
+
+#: classes/PropertyMedia.php
+msgid "Invalid attachment selection."
+msgstr "Invalid attachment selection."
+
+#: classes/PropertyMedia.php
+msgid "Wait until the import or cleanup finishes before changing attachments."
+msgstr "Wait until the import or cleanup finishes before changing attachments."
+
+#: classes/PropertyMedia.php
+msgid "The attached images have changed. Reload the page before reordering them."
+msgstr "The attached images have changed. Reload the page before reordering them."
+
+#: classes/PropertyMedia.php
+msgid "You cannot add attachments to this property."
+msgstr "You cannot add attachments to this property."
+
+#: classes/PropertyMedia.php
+msgid "Choose a valid attachment type."
+msgstr "Choose a valid attachment type."
+
+#: classes/PropertyMedia.php
+msgid "The attachment type is unavailable. Reload the page and try again."
+msgstr "The attachment type is unavailable. Reload the page and try again."
+
+#: classes/PropertyMedia.php
+msgid "Select image files for this attachment type."
+msgstr "Select image files for this attachment type."
+
+#: classes/PropertyMedia.php
+msgid "You cannot change one or more selected attachments."
+msgstr "You cannot change one or more selected attachments."
+
+#: classes/PropertyMedia.php
+msgid "A selected file belongs to another post. Upload a separate copy for this property."
+msgstr "A selected file belongs to another post. Upload a separate copy for this property."
+
+#: classes/PropertyMedia.php
+msgid "Other attachments"
+msgstr "Other attachments"
+
+#: classes/PropertyMedia.php
+msgid "No other files are attached to this property."
+msgstr "No other files are attached to this property."
