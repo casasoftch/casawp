@@ -4593,3 +4593,15 @@ msgstr "Completamento dell’importazione…"
 #: classes/ImportProgress.php
 msgid "Import and cleanup completed with warnings. See the logs for details."
 msgstr "Importazione e pulizia completate con avvisi. Consultare i registri per i dettagli."
+
+#: casawp.php
+msgid "Property data deletion completed."
+msgstr "Eliminazione dei dati degli immobili completata."
+
+#: casawp.php
+msgid "Property data deletion failed. Some data may already have been deleted. See the logs for details."
+msgstr "L'eliminazione dei dati degli immobili non è riuscita. Alcuni dati potrebbero essere già stati eliminati. Consulta i registri per maggiori dettagli."
+
+#: casawp.php
+msgid "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
+msgstr "L'eliminazione dei dati degli immobili è stata interrotta. Alcuni dati potrebbero essere già stati eliminati. Consulta i registri per maggiori dettagli."

@@ -69,10 +69,17 @@ The progress bar, status messages and buttons update together. Starting an impor
 
 CASAWP allows one active import per site. A background request or failure notification from a cancelled import can still arrive after the next import starts. Run-ID checks prevent this leftover work from changing the new import's status or stopping it. A failed batch marks its own import as stopped, cancels its queued work and releases its lock so another import can start. Gateway requests have connection and total timeouts, and fatal PHP errors stop the owning import when PHP can run its shutdown handler. Public gateway pokes retain their existing endpoint and do not require an admin nonce.
 
+== Delete All Property Data ==
+
+The General settings action "Delete all property data" records its start and result in the existing monthly CASAWP logs. Entries identify the administrator's user ID and current site, with timestamps, affected database-row counts and duration. Failures and interruptions record available partial results and diagnostic details. The settings page confirms success only after deletion finishes; failure or interruption notices warn that some data may already have been deleted and direct the administrator to the logs. Result notices appear once for the initiating administrator and site without adding deletion-result URL parameters. The action retains its existing database deletion scope.
+
 == Changelog ==
 
 = Unreleased =
 
+* Fix: Show delete-all result notices once from stored administrator/site results without adding deletion-result URL parameters
+* Fix: Refresh monthly logfile links when their contents change so reopening them requests the latest version of the same file
+* Enhancement: Log delete-all property-data operations with administrator, site, timing, affected-row counts and final outcomes; show accurate success, failure or interruption notices
 * Fix: Synchronize import bars, status messages and controls across starts, cancellation, completion and delayed responses; recover status polling after request timeouts
 * Fix: Show import fetching, queued and finalizing phases, report cleanup warnings, and stop failed imports without allowing leftover jobs or failure notifications from a previous run to stop the current import
 * Fix: Bound gateway connection and retrieval times and release the owning import after fatal PHP errors when shutdown handling is available

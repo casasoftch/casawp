@@ -3729,3 +3729,15 @@ msgstr "Finalizing import…"
 #: classes/ImportProgress.php
 msgid "Import and cleanup completed with warnings. See the logs for details."
 msgstr "Import and cleanup completed with warnings. See the logs for details."
+
+#: casawp.php
+msgid "Property data deletion completed."
+msgstr "Property data deletion completed."
+
+#: casawp.php
+msgid "Property data deletion failed. Some data may already have been deleted. See the logs for details."
+msgstr "Property data deletion failed. Some data may already have been deleted. See the logs for details."
+
+#: casawp.php
+msgid "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."
+msgstr "Property data deletion was interrupted. Some data may already have been deleted. See the logs for details."

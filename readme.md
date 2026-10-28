@@ -24,6 +24,13 @@ Import feed safety
 
 CASAWP validates the XML structure and every property ID before changing existing listings or scheduling deletion work. A feed must have exactly one direct `properties` node, containing only `property` elements with nonblank IDs. Wrapper names and imported IDs are preserved. An explicit empty `properties` list still requests full cleanup; an unexpected XML response, malformed XML, or invalid property list stops the run instead. Queued database cleanup checks the feed again before deleting properties, and a rejected feed leaves a stopped status and diagnostic logs while releasing its run's lock.
 
+Delete-all operation logging
+===============================
+
+**Delete all property data** in General settings writes a start entry and a final success, failure or interruption summary to the existing monthly CASAWP logs in the current site's uploads directory. Entries include the administrator's user ID, site context, timestamps, affected database-row counts and elapsed time. Failure diagnostics identify the stage and error; interrupted operations record available partial results when PHP can run its shutdown handler. These counts describe database changes within the action's existing deletion scope.
+
+The settings page shows success only after the operation finishes. The result notice is stored for the initiating administrator and site, appears once on the CASAWP settings page and needs no deletion-result URL parameters. Refreshing the page does not show it again. Failure and interruption notices explain that some data may already have been deleted and direct the administrator to the logs for investigation. The existing administrator permission and nonce checks still apply. This action remains separate from **Run legacy data cleanup**. The Logs tab links to these same monthly files, with a version based on each file's modification time and size so reopening a refreshed link requests its latest contents. An already-open or downloaded copy must be reopened to display later entries.
+
 How do I change the html markup and add my own view files?
 -------------------------------
 

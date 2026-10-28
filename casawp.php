@@ -725,143 +725,25 @@ function this_plugin_after_wpml() {
 add_action("activated_plugin", "this_plugin_after_wpml");
 
 /**
- * Delete every CASAWP object (properties + media + stray meta).
+ * Delete CASAWP database records (properties + selected media + stray meta).
  *
  * Runs on the current blog only – in Multisite the user needs to click
  * the button inside each sub-site where they want to wipe the data.
  */
-add_action( 'admin_post_casawp_delete_all_properties', function () {
-
-	// ── security ──────────────────────────────────────────────────
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( 'Insufficient privileges.' );
+add_action('admin_post_casawp_delete_all_properties', function () {
+	if (!current_user_can('manage_options')) {
+		wp_die(esc_html__('Insufficient privileges.', 'casawp'), '', ['response' => 403]);
 	}
-	check_admin_referer( 'casawp_delete_all' );
+	check_admin_referer('casawp_delete_all');
 
-	global $wpdb;
-
-	$p      = $wpdb->prefix;                // honour sub-site prefixes
-	$posts  = "{$p}posts";
-	$meta   = "{$p}postmeta";
-	$terms  = "{$p}terms";
-	$tax    = "{$p}term_taxonomy";
-	$rel    = "{$p}term_relationships";
-
-	/* ----------------------------------------------------------------
-	 *  1.  Delete all casawp_property posts (+meta)
-	 * ----------------------------------------------------------------*/
-	$wpdb->query(
-		"DELETE p, pm
-		   FROM {$posts} p
-		   LEFT JOIN {$meta} pm ON pm.post_id = p.ID
-		  WHERE p.post_type = 'casawp_property'"
-	);
-
-	/* ----------------------------------------------------------------
-	 *  2.  Attachment term-taxonomy IDs we need to purge
-	 * ----------------------------------------------------------------*/
-	$slugs = [ 'image', 'document', 'plan', 'offer-logo', 'sales-brochue' ];
-	$place = implode( ',', array_fill( 0, count( $slugs ), '%s' ) );
-
-	$tt_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT tt.term_taxonomy_id
-			   FROM {$tax} tt
-			   JOIN {$terms} t ON t.term_id = tt.term_id
-			  WHERE tt.taxonomy = 'casawp_attachment_type'
-				AND t.slug IN ( {$place} )",
-			$slugs
-		)
-	);
-
-	if ( $tt_ids ) {
-		$tt_in = implode( ',', array_map( 'intval', $tt_ids ) );
-
-		/* 2a. Delete attachments & their meta that are linked to those terms */
-		$wpdb->query(
-			"DELETE p, pm
-			   FROM {$posts} p
-			   LEFT JOIN {$meta} pm ON pm.post_id = p.ID
-			   JOIN {$rel}  tr ON tr.object_id = p.ID
-			  WHERE tr.term_taxonomy_id IN ( {$tt_in} )
-				AND p.post_type = 'attachment'"
-		);
-
-		/* 2b. Finally remove the now-unused term relationships themselves */
-		$wpdb->query(
-			"DELETE FROM {$rel}
-			  WHERE term_taxonomy_id IN ( {$tt_in} )"
-		);
-	}
-
-	/* ----------------------------------------------------------------
-	 *  2-b.  WPML glue (only if tables exist)
-	 * ----------------------------------------------------------------*/
-	$icl_trans = "{$p}icl_translations";
-	if ( $wpdb->get_var( $wpdb->prepare(
-			"SHOW TABLES LIKE %s", $icl_trans
-		) ) ) {
-
-		$icl_status = "{$p}icl_translation_status";
-		$icl_jobs   = "{$p}icl_translate_job";
-
-		// translations + status rows for casawp_property
-		$wpdb->query(
-			"DELETE t , ts
-			   FROM {$icl_trans}             AS t
-			   LEFT JOIN {$icl_status}       AS ts
-					 ON ts.translation_id = t.translation_id
-			  WHERE t.element_type = 'post_casawp_property'"
-		);
-
-		// orphaned jobs (defensive)
-		$wpdb->query(
-			"DELETE
-			   FROM {$icl_jobs}
-			  WHERE rid NOT IN ( SELECT rid FROM {$icl_status} )"
-		);
-	}
-
-	/* ----------------------------------------------------------------
-	 *  3.  Strip orphaned post-meta rows
-	 * ----------------------------------------------------------------*/
-	$wpdb->query(
-		"DELETE pm
-		   FROM {$meta} pm
-	  LEFT JOIN {$posts} p ON p.ID = pm.post_id
-		  WHERE p.ID IS NULL"
-	);
-
-	/* ----------------------------------------------------------------
-	 *  4.  House-keeping: term counts, caches, feedback
-	 * ----------------------------------------------------------------*/
-	// update term counts for the attachment taxonomy
-	$wpdb->query(
-		"UPDATE {$tax} SET count = 0 WHERE taxonomy = 'casawp_attachment_type'"
-	);
-
-	clean_term_cache( array(), 'casawp_attachment_type' );
-	wp_cache_flush();
-
-	/* ----------------------------------------------------------------
-	 *  5.  Redirect back with a success notice
-	 * ----------------------------------------------------------------*/
-	$redirect = add_query_arg(
-		[ 'casawp_deleted_all' => 1 ],
-		wp_get_referer() ?: admin_url( 'admin.php?page=casawp' )
-	);
-	wp_safe_redirect( $redirect );
+	(new \casawp\DeleteAllProperties())->run();
+	$redirect = remove_query_arg(['casawp_deleted_all', 'casawp_delete_result'],
+		wp_get_referer() ?: admin_url('admin.php?page=casawp'));
+	wp_safe_redirect($redirect);
 	exit;
-} );
+});
 
-
-add_action( 'admin_notices', function () {
-	if ( isset( $_GET['casawp_deleted_all'] ) ) {
-		echo '<div class="notice casawp-notice notice-success is-dismissible"><p>'
-		   . esc_html__( 'Alle Objektdaten wurden vollständig gelöscht.', 'casawp' )
-		   . '</p></div>';
-	}
-} );
+add_action('admin_notices', [\casawp\DeleteAllProperties::class, 'displayNotice']);
 
 
 

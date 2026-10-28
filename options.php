@@ -1526,9 +1526,15 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						for ($i = 0; $i <= 6; $i++) {
 							$filename = $month_start->modify("-$i months")->format('Ym') . '.log';
 							$log = $logs_url . '/' . $filename;
+							$log_path = $dir . '/' . $filename;
 
-							if (is_file($dir . '/' . $filename)) {
-								echo '<a href="' . esc_url($log) . '" target="_blank">' . esc_html($log) . '</a><br>';
+							clearstatcache(true, $log_path);
+							if (is_file($log_path)) {
+								$log_stat = @stat($log_path);
+								if ($log_stat === false) { continue; }
+								// Appended entries need a fresh URL, including writes within the same second.
+								$log_url = add_query_arg('ver', $log_stat['mtime'] . '-' . $log_stat['size'], $log);
+								echo '<a href="' . esc_url($log_url) . '" target="_blank">' . esc_html($log) . '</a><br>';
 								$has_logs = true;
 							}
 						}
