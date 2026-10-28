@@ -44,26 +44,9 @@ $license_key = 'abcd';
 new WP_AutoUpdate($plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key);
 
 function casawpPostInstall($true, $hook_extra, $result) {
-  // Remember if our plugin was previously activated
-  $wasActivated = is_plugin_active('casawp');
-
-  // Since we are hosted in GitHub, our plugin folder would have a dirname of
-  // reponame-tagname change it to our original one:
-  global $wp_filesystem;
-  $pluginFolder = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . dirname('casawp');
-  $wp_filesystem->move($result['destination'], $pluginFolder);
-  $result['destination'] = $pluginFolder;
-
-  // Re-activate plugin if needed
-  if ($wasActivated) {
-	  $activate = activate_plugin('casawp');
-  }
-
-  return $result;
+  // Compatibility shim: release ZIPs contain casawp/, and WordPress owns installation and activation.
+  return $true;
 }
-
-
-add_filter("upgrader_post_install", "casawpPostInstall", 10, 3);
 
 define('CASASYNC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CASASYNC_PLUGIN_DIR', plugin_dir_path(__FILE__) . '');

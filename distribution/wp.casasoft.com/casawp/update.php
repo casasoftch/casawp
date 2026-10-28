@@ -37,6 +37,7 @@ case 'info':
 	);
 	$obj->download_link = $obj->package;  
 	echo serialize($obj);  
+	break;
 case 'license':  
 	echo serialize( $obj );  
 	break;  

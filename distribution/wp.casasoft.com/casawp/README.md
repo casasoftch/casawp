@@ -7,6 +7,17 @@ https://wp.casasoft.com/casawp/update.php
 The updater follows CASAWP's established version and info POST contract and
 always distributes latest.zip. Versioned ZIPs are retained only as archives.
 
+WordPress manages installation destinations and activation. Release archives
+must retain the top-level `casawp/` directory; the client no longer moves
+installed packages through a global post-install hook. The old
+`casawpPostInstall()` function remains a pass-through compatibility shim.
+
+The update client accepts HTTP 200 responses with valid serialized metadata,
+uses a 10-second request timeout, and rejects malformed fields and remote
+application classes. Failed checks preserve incoming update/filter results.
+The `info` action emits one serialized object; the client also accepts the
+first object from older endpoints that emitted it twice.
+
 ## Publishing a release
 
 1. Update CASAWP's plugin version and the version/changelog values in
