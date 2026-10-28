@@ -91,6 +91,7 @@ These controls support properties managed manually after disconnecting imports. 
 
 = Unreleased =
 
+* Fix: Allow multiple Bootstrap 4 contact forms on one page when the privacy checkbox is enabled without crashing the page
 * Fix: Leave installation folders and activation to WordPress so CASAWP cannot interfere with other updates; reject failed or invalid update-server responses and preserve other plugins' details
 * Fix: Show contact-form delivery errors when CASA Mail times out, rejects an inquiry or returns an invalid response; retain entered values and run success hooks only after service acceptance
 * Security: Enforce private-property access across JSON, AJAX, maps and REST, exclude protected records from public collections, and prevent caching of authenticated protected responses
