@@ -1865,11 +1865,20 @@ class Import
               });
             }, 'debug');
           } catch (\Throwable $e) {
-            $this->markFileCleanupFailed();
             $this->transcript[$casawp_id]['action'] = 'error';
             $this->transcript[$casawp_id]['error'] = $e->getMessage();
             wp_reset_postdata();
-            continue;
+            // An unsuccessful offer may still have an older last_processed_run.
+            // Stop this run before cleanup can mistake it for a removed property.
+            if (casawp_fail_import_run($this->current_run_id)) {
+              $this->logImport('Import stopped after a property update failed; remaining work and cleanup were canceled.', [
+                'event' => 'offer.import_stopped',
+                'property_id' => $property['exportproperty_id'],
+                'casawp_id' => $casawp_id,
+                'language' => $offerData['lang'],
+              ], 'warning');
+            }
+            return;
           }
         }
       }

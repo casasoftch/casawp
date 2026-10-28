@@ -69,6 +69,8 @@ The progress bar, status messages and buttons update together. Starting an impor
 
 CASAWP allows one active import per site. A background request or failure notification from a cancelled import can still arrive after the next import starts. Run-ID checks prevent this leftover work from changing the new import's status or stopping it. A failed batch marks its own import as stopped, cancels its queued work and releases its lock so another import can start. Gateway requests have connection and total timeouts, and fatal PHP errors stop the owning import when PHP can run its shutdown handler. Public gateway pokes retain their existing endpoint and do not require an admin nonce.
 
+If an individual property update throws an error, its import stops before final cleanup can mistake that property for a removed listing. Remaining queued work is cancelled, the import lock is released and the settings page shows the stopped status. The logs identify the failed property. Changes already applied are retained; this does not roll back earlier updates or deletions.
+
 == Delete All Property Data ==
 
 The General settings action "Delete all property data" records its start and result in the existing monthly CASAWP logs. Entries identify the administrator's user ID and current site, with timestamps, affected database-row counts and duration. Failures and interruptions record available partial results and diagnostic details. The settings page confirms success only after deletion finishes; failure or interruption notices warn that some data may already have been deleted and direct the administrator to the logs. Result notices appear once for the initiating administrator and site without adding deletion-result URL parameters. The action retains its existing database deletion scope.
@@ -83,6 +85,7 @@ These controls support properties managed manually after disconnecting imports. 
 
 = Unreleased =
 
+* Fix: Stop imports after individual property update errors so final cleanup cannot delete source-present properties and their attachments
 * Enhancement: Reorder property images by drag and drop and add typed attachments from the Media Library; save immediately while allowing resumed imports to restore source media
 * Fix: Show delete-all result notices once from stored administrator/site results without adding deletion-result URL parameters
 * Fix: Refresh monthly logfile links when their contents change so reopening them requests the latest version of the same file
