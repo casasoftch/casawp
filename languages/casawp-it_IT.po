@@ -4713,3 +4713,7 @@ msgstr "Altri allegati"
 #: classes/PropertyMedia.php
 msgid "No other files are attached to this property."
 msgstr "Nessun altro file è allegato a questo immobile."
+
+#: classes/PropertyAccess.php
+msgid "Please log in to view this property."
+msgstr "Acceda per visualizzare questo immobile."

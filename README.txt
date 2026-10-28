@@ -34,6 +34,12 @@ Poppins titles, Mulish body text, CASASOFT-inspired blue buttons, subtle field b
 
 Archive filters are grouped in one card, including display types and manual room/area ranges. "Show net rent" appears in the Price section. Help documentation and GitHub links are available in the page header. Settings labels support German, English, French, and Italian. Existing option keys and tab URLs are retained.
 
+== Protected Properties ==
+
+Properties with availability "private" require login. This uses the existing private-area rule: any logged-in WordPress user can view them. Guests are redirected to the configured login page for normal property pages, while direct JSON, AJAX, map and REST reads return an authentication error. Anonymous public queries and REST collections exclude protected properties and related attachment metadata before pagination is calculated. Protected comments and oEmbed previews are also excluded. Authenticated protected responses use private, no-store cache headers.
+
+These controls protect WordPress-rendered content and API responses. Direct upload and CDN file URLs need their own download authorization; this does not make existing media files private. Clear existing page/API caches when deploying the access-control fix. Internal import, cron and CLI queries and authenticated editing retain their existing behaviour.
+
 == Import Setup ==
 The plugin will look for a file in "wp-content/uploads/casawp/import/data.xml" and syncronize this data with your WordPress installation.
 
@@ -85,6 +91,7 @@ These controls support properties managed manually after disconnecting imports. 
 
 = Unreleased =
 
+* Security: Enforce private-property access across JSON, AJAX, maps and REST, exclude protected records from public collections, and prevent caching of authenticated protected responses
 * Fix: Stop imports after individual property update errors so final cleanup cannot delete source-present properties and their attachments
 * Enhancement: Reorder property images by drag and drop and add typed attachments from the Media Library; save immediately while allowing resumed imports to restore source media
 * Fix: Show delete-all result notices once from stored administrator/site results without adding deletion-result URL parameters

@@ -4718,3 +4718,7 @@ msgstr "Autres pièces jointes"
 #: classes/PropertyMedia.php
 msgid "No other files are attached to this property."
 msgstr "Aucun autre fichier n’est joint à ce bien."
+
+#: classes/PropertyAccess.php
+msgid "Please log in to view this property."
+msgstr "Veuillez vous connecter pour consulter ce bien."

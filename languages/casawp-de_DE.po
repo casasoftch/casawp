@@ -4768,3 +4768,7 @@ msgstr "Weitere Anhänge"
 #: classes/PropertyMedia.php
 msgid "No other files are attached to this property."
 msgstr "Diesem Objekt sind keine weiteren Dateien angehängt."
+
+#: classes/PropertyAccess.php
+msgid "Please log in to view this property."
+msgstr "Bitte melden Sie sich an, um dieses Objekt anzusehen."

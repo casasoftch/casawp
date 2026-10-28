@@ -82,6 +82,9 @@ class Offer{
     ========================================*/
 
     public function to_array() {
+        if (!\casawp\PropertyAccess::canRead($this->post)) {
+            return array();
+        }
         $offer_array = array(
             'post' => $this->post->to_array()
         );

@@ -67,6 +67,7 @@ class Plugin
     public function __construct($configuration)
     {
         $this->configuration = $configuration;
+        PropertyAccess::register([$this, 'privateAuth'], [$this, 'privateRedirectToLogin']);
         $this->conversion = new Conversion;
         $this->locale = $this->getCasasoftStandardsLocale(get_bloginfo('language'));
 
@@ -1191,6 +1192,7 @@ class Plugin
 
     public function renderSingle($post)
     {
+        PropertyAccess::guardOutput($post);
         $offer = $this->prepareOffer($post);
 
         if ($offer->getAvailability() == 'private') {
@@ -1210,6 +1212,9 @@ class Plugin
     }
 
     public function renderArchiveSingle( $post, $layout = 'cards', $args = array() ) {
+        if (!PropertyAccess::canRead($post)) {
+            return '';
+        }
 
         $offer = $this->prepareOffer( $post );
 
@@ -2441,6 +2446,9 @@ class Plugin
     public function getPrevNext($query, $base_post_id)
     {
         $lapost = get_post($base_post_id);
+        if (!$lapost || !PropertyAccess::canRead($lapost)) {
+            return ['nextlink' => 'no', 'prevlink' => 'no'];
+        }
         $query['posts_per_page'] = 100;
         $this->queryService->setQuery($query);
         $args = $this->queryService->getArgs();
@@ -2472,6 +2480,7 @@ class Plugin
 
     public function include_template_function($template_path)
     {
+        PropertyAccess::guardSingular();
 
         //property main view files
         if (get_post_type() == 'casawp_property' && is_single()) {

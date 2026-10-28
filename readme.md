@@ -217,7 +217,13 @@ add_action( 'casawp_after_inquirysend', 'casawp_after_inquirysend' );
 Exclusive Properties with login
 ===============================
 
-The Plugin uses the default WordPress user interface for registration and authentication for users that have access to special unpublished properties. These properties `if availability = private` and the corresponding filter `if availability contains private`, will only be viewable if the user is registered to at least a `subscription` level and will be redirected to the defined login page.
+The plugin uses WordPress registration and authentication for properties with availability `private`. The existing admission rule remains unchanged: any logged-in WordPress user, including a subscriber, can view the private area. Anonymous normal property pages redirect to the configured login page before headers or theme content can expose property details. Direct JSON, AJAX, map and WordPress REST item reads require authentication too; REST collections, search and public property queries exclude protected properties and related attachment metadata before pagination and totals are calculated. Protected comments and oEmbed previews are excluded from anonymous output. Availability checks use stored taxonomy relationships across languages and inspect every assigned term, matching the `private` slug or name.
+
+Custom categories such as `custom_exklusiv` are separate from availability. Assigning such a category does not enable CASAWP's login protection.
+
+Authenticated protected responses receive private, no-store cache headers. Clear any previously generated page and API caches when deploying this fix. Public-property response formats, theme overrides, logged-in editor access and internal import/cron/CLI queries retain their existing behaviour. Custom PHP queries that explicitly suppress filters retain that contract; the supported CASAWP card and JSON serializers still check access before rendering.
+
+This protects WordPress-generated property data and API metadata. It does not add download authentication to static upload files, external CDN URLs or import XML/log files; protecting those URLs requires separate storage/server or delivery controls.
 
 CASAWP will generate 2 Pages directly and will define the pages within the casawp->settings->PrivateArea login and logout pages.
 
