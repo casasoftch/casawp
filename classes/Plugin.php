@@ -106,6 +106,13 @@ class Plugin
         add_action('init', array($this, 'setACF'));
         add_action('add_meta_boxes_casawp_property', array($this, 'casawp_property_custom_metaboxes'));
         PropertyMedia::register();
+        PropertyMeta::register(function (): array {
+            $types = [];
+            foreach ($this->serviceManager->get(OfferService::class)->getIntegratedOfferService()->getItems() as $key => $type) {
+                $types[$key] = $type->getLabel();
+            }
+            return $types;
+        });
 
 
         add_action('wp_enqueue_scripts', array($this, 'registerScriptsAndStyles'));
@@ -3830,7 +3837,7 @@ class Plugin
 
     function casawp_property_custom_metaboxes($post)
     {
-        add_meta_box('unsorted-metas', __('Additional Meta Fields'),  array($this, 'casawp_add_unsorted_metabox'), 'casawp_property', 'normal', 'high');
+        add_meta_box('unsorted-metas', __('Additional Meta Fields', 'casawp'), array($this, 'casawp_add_unsorted_metabox'), 'casawp_property', 'normal', 'high');
         add_meta_box('casawp-attached-media', __('Attached images and files', 'casawp'), array($this, 'casawp_add_attached_media_metabox'), 'casawp_property', 'normal', 'low');
     }
 
@@ -3841,62 +3848,22 @@ class Plugin
 
     function casawp_add_unsorted_metabox($post)
     {
-        $meta_keys = get_post_custom_keys($post->ID);
-        echo '<table class="acf-table">';
-        $skip = array(
-            'property_address_streetaddress',
-            'property_address_streetnumber',
-            'property_address_streetaddition',
-            'property_address_postalcode',
-            'property_address_locality',
-            'property_address_region',
-            'property_address_country',
-            'property_geo_latitude',
-            'property_geo_longitude',
-            'netPrice',
-            'netPrice_propertysegment',
-            'netPrice_timesegment',
-            'price_currency',
-            'price_propertysegment',
-            'grossPrice',
-            'grossPrice_propertysegment',
-            'grossPrice_timesegment',
-            'start',
-            'casawp_id',
-            'referenceId'
-        );
-
-        $old = array(
-            'availability'
-        );
-
-        $json_hide = array(
-            'extraPrice',
-            'integratedoffers',
-            'the_urls'
-        );
-
-        $skip = array_merge($skip, $old, array_keys($this->numvalService->items));
-
-
-        foreach ($meta_keys as $meta_key) {
-            if (
-                !in_array($meta_key, $skip)
-                && strpos($meta_key, 'seller_inquiry_person') !== 0
-                && strpos($meta_key, 'seller_view_person') !== 0
-                && strpos($meta_key, 'seller_visit_person') !== 0
-                && strpos($meta_key, 'seller_org') !== 0
-                && strpos($meta_key, '_') !== 0
-            ) {
-                $value = implode(', ', get_post_custom_values($meta_key, $post->ID));
-                if (strpos($value, '}')) {
-                    $value =  print_r(maybe_unserialize($value), true);
+        $service = $this->serviceManager->get(OfferService::class);
+        $readable = ['heating' => get_post_meta($post->ID, 'heating', true)];
+        foreach (['heating' => ['generation', 'distribution']] as $key => $fields) {
+            if (!is_array($readable[$key])) { continue; }
+            $catalog = $key === 'heating' ? $service->getHeatService() : $service->getIntegratedOfferService();
+            foreach ($readable[$key] as &$row) {
+                if (!is_array($row)) { continue; }
+                foreach ($fields as $field) {
+                    if (isset($row[$field]) && is_scalar($row[$field]) && $catalog->keyExists((string) $row[$field])) {
+                        $row[$field] = $catalog->getItem((string) $row[$field])->getLabel();
+                    }
                 }
-                echo '<tr><td class="acf-label">' . $meta_key . '</td><td class="acf-input">' . $value . '</td></tr>';
             }
+            unset($row);
         }
-
-        echo "</table>";
+        PropertyMeta::render($post, array_keys($this->numvalService->items), $readable);
     }
 
     function add_meta_tags()

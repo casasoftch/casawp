@@ -3364,6 +3364,7 @@ msgstr "Indirizzo"
 msgid "Start"
 msgstr "Inizio"
 
+#: classes/PropertyMeta.php:193 classes/PropertyMeta.php:232
 #: classes/Plugin.php:2966
 msgid "Currency"
 msgstr "Valuta"
@@ -3890,9 +3891,9 @@ msgstr "Aggiungi nuovo tipo allegato"
 msgid "New Attachment Type Name"
 msgstr "Nuovo allegato Tipo Nome"
 
-#: classes/Plugin.php:3791
+#: classes/Plugin.php:3840
 msgid "Additional Meta Fields"
-msgstr ""
+msgstr "Campi aggiuntivi"
 
 #: classes/Single.php:429
 msgid "Ground"
@@ -4175,11 +4176,12 @@ msgstr "Distanze"
 msgid "Documents"
 msgstr "Documenti"
 
+#: classes/PropertyMeta.php:226
 #: theme-defaults/casawp/bootstrap2/heating.phtml:4
 #: theme-defaults/casawp/bootstrap3/heating.phtml:4
 #: theme-defaults/casawp/bootstrap4/heating.phtml:4
 msgid "Heating"
-msgstr ""
+msgstr "Riscaldamento"
 
 #: theme-defaults/casawp/bootstrap2/heating.phtml:19
 #: theme-defaults/casawp/bootstrap3/heating.phtml:19
@@ -4301,10 +4303,11 @@ msgstr "Brochure di vendita"
 msgid "Plan"
 msgstr "Pianifica"
 
+#: classes/PropertyMeta.php:147
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:56
 #: theme-defaults/casawp/bootstrap4/datatable.phtml:56
 msgid "Links"
-msgstr ""
+msgstr "Link"
 
 #: theme-defaults/casawp/bootstrap3/map.phtml:5
 #: theme-defaults/casawp/bootstrap4/map.phtml:5
@@ -4717,3 +4720,299 @@ msgstr "Nessun altro file è allegato a questo immobile."
 #: classes/PropertyAccess.php
 msgid "Please log in to view this property."
 msgstr "Acceda per visualizzare questo immobile."
+
+#: classes/PropertyMeta.php:33 classes/PropertyMeta.php:357
+msgid "Could not save additional details. Please try again."
+msgstr "Impossibile salvare i dettagli aggiuntivi. Riprova."
+
+#: classes/PropertyMeta.php:34
+msgid "You have unsaved additional details."
+msgstr "Sono presenti dettagli aggiuntivi non salvati."
+
+#: classes/PropertyMeta.php:36 classes/PropertyMeta.php:386
+msgid "Use no more than 50 entries per section."
+msgstr "Usa al massimo 50 voci per sezione."
+
+#: classes/PropertyMeta.php:103
+msgid "Further property details"
+msgstr "Altri dettagli dell’immobile"
+
+#: classes/PropertyMeta.php:104
+msgid "Heating is shown for reference."
+msgstr "Il riscaldamento è mostrato a titolo informativo."
+
+#: classes/PropertyMeta.php:106
+msgid "Import information"
+msgstr "Informazioni sull’importazione"
+
+#: classes/PropertyMeta.php:107
+msgid "These values are calculated or managed by imports. They cannot be edited here."
+msgstr "Questi valori vengono calcolati o gestiti dalle importazioni. Non possono essere modificati qui."
+
+#: classes/PropertyMeta.php:130
+msgid "Other stored details"
+msgstr "Altri dettagli memorizzati"
+
+#: classes/PropertyMeta.php:140
+msgid "Use these fields for manually managed properties. The next source import replaces these changes."
+msgstr "Usa questi campi per gli immobili gestiti manualmente. La prossima importazione dal sistema di origine sostituirà queste modifiche."
+
+#: classes/PropertyMeta.php:141
+msgid "These details are saved when you update or publish the property."
+msgstr "Questi dettagli vengono salvati quando aggiorni o pubblichi l’immobile."
+
+#: classes/PropertyMeta.php:145
+msgid "Display reference"
+msgstr "Riferimento visualizzato"
+
+#: classes/PropertyMeta.php:146
+msgid "Shown to visitors and included in property inquiries."
+msgstr "Mostrato ai visitatori e incluso nelle richieste relative all’immobile."
+
+#: classes/PropertyMeta.php:148
+msgid "Additional costs"
+msgstr "Costi aggiuntivi"
+
+#: classes/PropertyMeta.php:149 classes/PropertyMeta.php:226
+msgid "Additional offers"
+msgstr "Offerte aggiuntive"
+
+#: classes/PropertyMeta.php:158
+msgid "This imported format is shown read-only to preserve its data."
+msgstr "Questo formato importato viene mostrato in sola lettura per preservarne i dati."
+
+#: classes/PropertyMeta.php:168
+msgid "Add link"
+msgstr "Aggiungi link"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional offer"
+msgstr "Aggiungi un’offerta aggiuntiva"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional cost"
+msgstr "Aggiungi un costo aggiuntivo"
+
+#: classes/PropertyMeta.php:180
+msgid "Link type"
+msgstr "Tipo di link"
+
+#: classes/PropertyMeta.php:181
+msgid "Website"
+msgstr "Sito web"
+
+#: classes/PropertyMeta.php:181
+msgid "YouTube video"
+msgstr "Video YouTube"
+
+#: classes/PropertyMeta.php:182
+msgid "Virtual tour"
+msgstr "Visita virtuale"
+
+#: classes/PropertyMeta.php:182 classes/PropertyMeta.php:195 classes/PropertyMeta.php:198
+msgid "Unspecified"
+msgstr "Non specificato"
+
+#: classes/PropertyMeta.php:183
+msgid "URL"
+msgstr "URL"
+
+#: classes/PropertyMeta.php:184
+msgid "Link label"
+msgstr "Etichetta del link"
+
+#: classes/PropertyMeta.php:185
+msgid "Link title"
+msgstr "Titolo del link"
+
+#: classes/PropertyMeta.php:188
+msgid "Offer type"
+msgstr "Tipo di offerta"
+
+#: classes/PropertyMeta.php:189
+msgid "Included in the price"
+msgstr "Incluso nel prezzo"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "No"
+msgstr "No"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "Yes"
+msgstr "Sì"
+
+#: classes/PropertyMeta.php:192
+msgid "Amount (optional)"
+msgstr "Importo (facoltativo)"
+
+#: classes/PropertyMeta.php:192 classes/PropertyMeta.php:232
+msgid "Amount"
+msgstr "Importo"
+
+#: classes/PropertyMeta.php:194 classes/PropertyMeta.php:233
+msgid "Billing period"
+msgstr "Periodo di fatturazione"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "One-time"
+msgstr "Una tantum"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "Hourly"
+msgstr "All’ora"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:257
+msgid "Daily"
+msgstr "Al giorno"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Weekly"
+msgstr "Alla settimana"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Monthly"
+msgstr "Al mese"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Yearly"
+msgstr "All’anno"
+
+#: classes/PropertyMeta.php:197 classes/PropertyMeta.php:233
+msgid "Applies to"
+msgstr "Si applica a"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Whole property"
+msgstr "Intero immobile"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Per m²"
+msgstr "Al m²"
+
+#: classes/PropertyMeta.php:203
+msgid "Remove link"
+msgstr "Rimuovi link"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional offer"
+msgstr "Rimuovi l’offerta aggiuntiva"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional cost"
+msgstr "Rimuovi il costo aggiuntivo"
+
+#: classes/PropertyMeta.php:227
+msgid "Area used for filtering"
+msgstr "Superficie usata per i filtri"
+
+#: classes/PropertyMeta.php:227
+msgid "Price used for filtering"
+msgstr "Prezzo usato per i filtri"
+
+#: classes/PropertyMeta.php:228
+msgid "Source language"
+msgstr "Lingua di origine"
+
+#: classes/PropertyMeta.php:228
+msgid "Import property ID"
+msgstr "ID dell’immobile importato"
+
+#: classes/PropertyMeta.php:229
+msgid "Import fingerprint"
+msgstr "Impronta dell’importazione"
+
+#: classes/PropertyMeta.php:229
+msgid "Media synchronization version"
+msgstr "Versione della sincronizzazione dei media"
+
+#: classes/PropertyMeta.php:230
+msgid "Last import run"
+msgstr "Ultima esecuzione dell’importazione"
+
+#: classes/PropertyMeta.php:230
+msgid "Processed by import"
+msgstr "Elaborato dall’importazione"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat source"
+msgstr "Fonte di calore"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat distribution"
+msgstr "Distribuzione del calore"
+
+#: classes/PropertyMeta.php:232
+msgid "Type"
+msgstr "Tipo"
+
+#: classes/PropertyMeta.php:234
+msgid "Frequency"
+msgstr "Frequenza"
+
+#: classes/PropertyMeta.php:234
+msgid "Included"
+msgstr "Incluso"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range from"
+msgstr "Fascia di prezzo da"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range to"
+msgstr "Fascia di prezzo fino a"
+
+#: classes/PropertyMeta.php:236
+msgid "Zones"
+msgstr "Zone"
+
+#: classes/PropertyMeta.php:236
+msgid "Keywords"
+msgstr "Parole chiave"
+
+#: classes/PropertyMeta.php:241 classes/PropertyMeta.php:253
+msgid "Not specified"
+msgstr "Non specificato"
+
+#: classes/PropertyMeta.php:264
+msgid "Unavailable"
+msgstr "Non disponibile"
+
+#: classes/PropertyMeta.php:296
+msgid "You cannot change these property details. Reload the page and try again."
+msgstr "Non puoi modificare questi dettagli dell’immobile. Ricarica la pagina e riprova."
+
+#: classes/PropertyMeta.php:302 classes/PropertyMeta.php:335 classes/PropertyMeta.php:373 classes/PropertyMeta.php:398
+msgid "These details changed after you opened the page. Reload before saving."
+msgstr "Questi dettagli sono cambiati dopo l’apertura della pagina. Ricarica la pagina prima di salvare."
+
+#: classes/PropertyMeta.php:306
+msgid "The submitted details are incomplete. Reload the page and try again."
+msgstr "I dettagli inviati sono incompleti. Ricarica la pagina e riprova."
+
+#: classes/PropertyMeta.php:374
+msgid "Wait until the import or cleanup finishes before changing these details."
+msgstr "Attendi il completamento dell’importazione o della pulizia prima di modificare questi dettagli."
+
+#: classes/PropertyMeta.php:380
+msgid "Property details could not be saved."
+msgstr "Impossibile salvare i dettagli dell’immobile."
+
+#: classes/PropertyMeta.php:394 classes/PropertyMeta.php:409 classes/PropertyMeta.php:426
+msgid "Choose valid values for every entry."
+msgstr "Scegli valori validi per ogni voce."
+
+#: classes/PropertyMeta.php:421
+msgid "Enter a complete http:// or https:// URL for each link."
+msgstr "Inserisci un URL completo con http:// o https:// per ogni link."
+
+#: classes/PropertyMeta.php:438
+msgid "Enter a nonnegative amount for each additional cost."
+msgstr "Inserisci un importo maggiore o uguale a zero per ogni costo aggiuntivo."
+
+#: classes/PropertyMeta.php:444
+msgid "Choose a valid currency, billing period and property unit."
+msgstr "Scegli una valuta, un periodo di fatturazione e un’unità dell’immobile validi."
+
+#: classes/PropertyMeta.php:449
+msgid "Choose a valid offer type and included status."
+msgstr "Scegli un tipo di offerta valido e indica se l’offerta è inclusa nel prezzo."

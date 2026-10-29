@@ -90,10 +90,17 @@ The property's "Attached images and files" box supports dragging images into ord
 
 These controls support properties managed manually after disconnecting imports. When imports resume with a media list, the source takes over the imported order, types and featured image again, even when the feed is otherwise unchanged. Local files added with the new control return to the Media Library without being deleted, including when an import removes their property. They keep their manual-upload marker so later import and standalone cleanup retain their records and files. A missing source media list preserves manual additions. Existing manually attached files that were not added through these controls retain their previous import behaviour.
 
+== Additional Property Details ==
+
+The property's "Additional Meta Fields" box provides labelled controls for its display reference, links, additional costs and additional offers such as parking. Add or remove links with a type, URL, label and title, or costs with an amount, currency, billing period and property unit. Additional offers also have a type and an "Included in the price" choice; their amount is optional. Save these details with the property's normal Update or Publish button. These changes support manually managed properties; the next source import restores imported values even if the feed has not changed.
+
+Heating has a readable, read-only overview. Calculated values and import bookkeeping are grouped under collapsed "Import information"; other stored details remain available separately. Labels, help and messages support German, English, French and Italian, including Swiss German aliases. Imports and cleanup block simultaneous manual changes, and saving rejects changes based on an outdated view of these details.
+
 == Changelog ==
 
 = Unreleased =
 
+* Enhancement: Add translated, structured manual controls for property references, links, additional costs and additional offers, saving with Update or Publish, readable heating details and collapsed import information while preserving source-import authority
 * Fix: Keep manually added property media in the Media Library after import detachment and subsequent cleanup; preserve ordinary uploads during delete-all while continuing to remove media identified by import metadata and source fields
 * Performance: Check complete property conversion once per import run and feed change, then convert only each batch's properties while preserving full XML validation and property order
 * Fix: Declare the bundled PHP 8.1 minimum in WordPress and update metadata and align Composer support with PHP 8.1–8.3

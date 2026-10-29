@@ -1876,9 +1876,10 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
+#: classes/PropertyMeta.php:193 classes/PropertyMeta.php:232
 #: classes/Plugin.php:1618
 msgid "Currency"
-msgstr ""
+msgstr "Currency"
 
 #: classes/Plugin.php:1632
 msgid "General settings"
@@ -2487,9 +2488,9 @@ msgstr ""
 msgid "New Attachment Type Name"
 msgstr ""
 
-#: classes/Plugin.php:2415
+#: classes/Plugin.php:3840
 msgid "Additional Meta Fields"
-msgstr ""
+msgstr "Additional Meta Fields"
 
 #: classes/Single.php:429
 msgid "Ground"
@@ -2803,9 +2804,10 @@ msgstr ""
 msgid "Plan"
 msgstr "Plan"
 
+#: classes/PropertyMeta.php:147
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:56
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: theme-defaults/casawp/bootstrap3/shortcode-properties.phtml:38
 msgid "Sorry, no posts matched your criteria."
@@ -3852,3 +3854,303 @@ msgstr "No other files are attached to this property."
 #: classes/PropertyAccess.php
 msgid "Please log in to view this property."
 msgstr "Please log in to view this property."
+
+#: classes/PropertyMeta.php:33 classes/PropertyMeta.php:357
+msgid "Could not save additional details. Please try again."
+msgstr "Could not save additional details. Please try again."
+
+#: classes/PropertyMeta.php:34
+msgid "You have unsaved additional details."
+msgstr "You have unsaved additional details."
+
+#: classes/PropertyMeta.php:36 classes/PropertyMeta.php:386
+msgid "Use no more than 50 entries per section."
+msgstr "Use no more than 50 entries per section."
+
+#: classes/PropertyMeta.php:103
+msgid "Further property details"
+msgstr "Further property details"
+
+#: classes/PropertyMeta.php:104
+msgid "Heating is shown for reference."
+msgstr "Heating is shown for reference."
+
+#: classes/PropertyMeta.php:106
+msgid "Import information"
+msgstr "Import information"
+
+#: classes/PropertyMeta.php:107
+msgid "These values are calculated or managed by imports. They cannot be edited here."
+msgstr "These values are calculated or managed by imports. They cannot be edited here."
+
+#: classes/PropertyMeta.php:130
+msgid "Other stored details"
+msgstr "Other stored details"
+
+#: classes/PropertyMeta.php:140
+msgid "Use these fields for manually managed properties. The next source import replaces these changes."
+msgstr "Use these fields for manually managed properties. The next source import replaces these changes."
+
+#: classes/PropertyMeta.php:141
+msgid "These details are saved when you update or publish the property."
+msgstr "These details are saved when you update or publish the property."
+
+#: classes/PropertyMeta.php:145
+msgid "Display reference"
+msgstr "Display reference"
+
+#: classes/PropertyMeta.php:146
+msgid "Shown to visitors and included in property inquiries."
+msgstr "Shown to visitors and included in property inquiries."
+
+#: classes/PropertyMeta.php:148
+msgid "Additional costs"
+msgstr "Additional costs"
+
+#: classes/PropertyMeta.php:149 classes/PropertyMeta.php:226
+msgid "Additional offers"
+msgstr "Additional offers"
+
+#: classes/PropertyMeta.php:158
+msgid "This imported format is shown read-only to preserve its data."
+msgstr "This imported format is shown read-only to preserve its data."
+
+#: classes/PropertyMeta.php:168
+msgid "Add link"
+msgstr "Add link"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional offer"
+msgstr "Add additional offer"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional cost"
+msgstr "Add additional cost"
+
+#: classes/PropertyMeta.php:180
+msgid "Link type"
+msgstr "Link type"
+
+#: classes/PropertyMeta.php:181
+msgid "Website"
+msgstr "Website"
+
+#: classes/PropertyMeta.php:181
+msgid "YouTube video"
+msgstr "YouTube video"
+
+#: classes/PropertyMeta.php:182
+msgid "Virtual tour"
+msgstr "Virtual tour"
+
+#: classes/PropertyMeta.php:182 classes/PropertyMeta.php:195 classes/PropertyMeta.php:198
+msgid "Unspecified"
+msgstr "Unspecified"
+
+#: classes/PropertyMeta.php:183
+msgid "URL"
+msgstr "URL"
+
+#: classes/PropertyMeta.php:184
+msgid "Link label"
+msgstr "Link label"
+
+#: classes/PropertyMeta.php:185
+msgid "Link title"
+msgstr "Link title"
+
+#: classes/PropertyMeta.php:188
+msgid "Offer type"
+msgstr "Offer type"
+
+#: classes/PropertyMeta.php:189
+msgid "Included in the price"
+msgstr "Included in the price"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "No"
+msgstr "No"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "Yes"
+msgstr "Yes"
+
+#: classes/PropertyMeta.php:192
+msgid "Amount (optional)"
+msgstr "Amount (optional)"
+
+#: classes/PropertyMeta.php:192 classes/PropertyMeta.php:232
+msgid "Amount"
+msgstr "Amount"
+
+#: classes/PropertyMeta.php:194 classes/PropertyMeta.php:233
+msgid "Billing period"
+msgstr "Billing period"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "One-time"
+msgstr "One-time"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "Hourly"
+msgstr "Hourly"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:257
+msgid "Daily"
+msgstr "Daily"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Weekly"
+msgstr "Weekly"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Monthly"
+msgstr "Monthly"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Yearly"
+msgstr "Yearly"
+
+#: classes/PropertyMeta.php:197 classes/PropertyMeta.php:233
+msgid "Applies to"
+msgstr "Applies to"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Whole property"
+msgstr "Whole property"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Per m²"
+msgstr "Per m²"
+
+#: classes/PropertyMeta.php:203
+msgid "Remove link"
+msgstr "Remove link"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional offer"
+msgstr "Remove additional offer"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional cost"
+msgstr "Remove additional cost"
+
+#: classes/PropertyMeta.php:226
+msgid "Heating"
+msgstr "Heating"
+
+#: classes/PropertyMeta.php:227
+msgid "Area used for filtering"
+msgstr "Area used for filtering"
+
+#: classes/PropertyMeta.php:227
+msgid "Price used for filtering"
+msgstr "Price used for filtering"
+
+#: classes/PropertyMeta.php:228
+msgid "Source language"
+msgstr "Source language"
+
+#: classes/PropertyMeta.php:228
+msgid "Import property ID"
+msgstr "Import property ID"
+
+#: classes/PropertyMeta.php:229
+msgid "Import fingerprint"
+msgstr "Import fingerprint"
+
+#: classes/PropertyMeta.php:229
+msgid "Media synchronization version"
+msgstr "Media synchronization version"
+
+#: classes/PropertyMeta.php:230
+msgid "Last import run"
+msgstr "Last import run"
+
+#: classes/PropertyMeta.php:230
+msgid "Processed by import"
+msgstr "Processed by import"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat source"
+msgstr "Heat source"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat distribution"
+msgstr "Heat distribution"
+
+#: classes/PropertyMeta.php:232
+msgid "Type"
+msgstr "Type"
+
+#: classes/PropertyMeta.php:234
+msgid "Frequency"
+msgstr "Frequency"
+
+#: classes/PropertyMeta.php:234
+msgid "Included"
+msgstr "Included"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range from"
+msgstr "Price range from"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range to"
+msgstr "Price range to"
+
+#: classes/PropertyMeta.php:236
+msgid "Zones"
+msgstr "Zones"
+
+#: classes/PropertyMeta.php:236
+msgid "Keywords"
+msgstr "Keywords"
+
+#: classes/PropertyMeta.php:241 classes/PropertyMeta.php:253
+msgid "Not specified"
+msgstr "Not specified"
+
+#: classes/PropertyMeta.php:264
+msgid "Unavailable"
+msgstr "Unavailable"
+
+#: classes/PropertyMeta.php:296
+msgid "You cannot change these property details. Reload the page and try again."
+msgstr "You cannot change these property details. Reload the page and try again."
+
+#: classes/PropertyMeta.php:302 classes/PropertyMeta.php:335 classes/PropertyMeta.php:373 classes/PropertyMeta.php:398
+msgid "These details changed after you opened the page. Reload before saving."
+msgstr "These details changed after you opened the page. Reload before saving."
+
+#: classes/PropertyMeta.php:306
+msgid "The submitted details are incomplete. Reload the page and try again."
+msgstr "The submitted details are incomplete. Reload the page and try again."
+
+#: classes/PropertyMeta.php:374
+msgid "Wait until the import or cleanup finishes before changing these details."
+msgstr "Wait until the import or cleanup finishes before changing these details."
+
+#: classes/PropertyMeta.php:380
+msgid "Property details could not be saved."
+msgstr "Property details could not be saved."
+
+#: classes/PropertyMeta.php:394 classes/PropertyMeta.php:409 classes/PropertyMeta.php:426
+msgid "Choose valid values for every entry."
+msgstr "Choose valid values for every entry."
+
+#: classes/PropertyMeta.php:421
+msgid "Enter a complete http:// or https:// URL for each link."
+msgstr "Enter a complete http:// or https:// URL for each link."
+
+#: classes/PropertyMeta.php:438
+msgid "Enter a nonnegative amount for each additional cost."
+msgstr "Enter a nonnegative amount for each additional cost."
+
+#: classes/PropertyMeta.php:444
+msgid "Choose a valid currency, billing period and property unit."
+msgstr "Choose a valid currency, billing period and property unit."
+
+#: classes/PropertyMeta.php:449
+msgid "Choose a valid offer type and included status."
+msgstr "Choose a valid offer type and included status."

@@ -3378,6 +3378,7 @@ msgstr "Adresse"
 msgid "Start"
 msgstr "Start"
 
+#: classes/PropertyMeta.php:193 classes/PropertyMeta.php:232
 #: classes/Plugin.php:2966
 msgid "Currency"
 msgstr "Währung"
@@ -3904,7 +3905,7 @@ msgstr "Neue Anhangsarten erstellen"
 msgid "New Attachment Type Name"
 msgstr "Neuer Anhangsart-Namen"
 
-#: classes/Plugin.php:3791
+#: classes/Plugin.php:3840
 msgid "Additional Meta Fields"
 msgstr "Weitere Felder"
 
@@ -4189,11 +4190,12 @@ msgstr "Distanzen"
 msgid "Documents"
 msgstr "Dokumente"
 
+#: classes/PropertyMeta.php:226
 #: theme-defaults/casawp/bootstrap2/heating.phtml:4
 #: theme-defaults/casawp/bootstrap3/heating.phtml:4
 #: theme-defaults/casawp/bootstrap4/heating.phtml:4
 msgid "Heating"
-msgstr ""
+msgstr "Heizung"
 
 #: theme-defaults/casawp/bootstrap2/heating.phtml:19
 #: theme-defaults/casawp/bootstrap3/heating.phtml:19
@@ -4317,6 +4319,7 @@ msgstr "Verkaufsbroschüre"
 msgid "Plan"
 msgstr "Plan"
 
+#: classes/PropertyMeta.php:147
 #: theme-defaults/casawp/bootstrap3/datatable.phtml:56
 #: theme-defaults/casawp/bootstrap4/datatable.phtml:56
 msgid "Links"
@@ -4772,3 +4775,299 @@ msgstr "Diesem Objekt sind keine weiteren Dateien angehängt."
 #: classes/PropertyAccess.php
 msgid "Please log in to view this property."
 msgstr "Bitte melden Sie sich an, um dieses Objekt anzusehen."
+
+#: classes/PropertyMeta.php:33 classes/PropertyMeta.php:357
+msgid "Could not save additional details. Please try again."
+msgstr "Die weiteren Angaben konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+
+#: classes/PropertyMeta.php:34
+msgid "You have unsaved additional details."
+msgstr "Weitere Angaben wurden noch nicht gespeichert."
+
+#: classes/PropertyMeta.php:36 classes/PropertyMeta.php:386
+msgid "Use no more than 50 entries per section."
+msgstr "Verwenden Sie höchstens 50 Einträge pro Bereich."
+
+#: classes/PropertyMeta.php:103
+msgid "Further property details"
+msgstr "Weitere Objektangaben"
+
+#: classes/PropertyMeta.php:104
+msgid "Heating is shown for reference."
+msgstr "Die Heizung wird zur Information angezeigt."
+
+#: classes/PropertyMeta.php:106
+msgid "Import information"
+msgstr "Importinformationen"
+
+#: classes/PropertyMeta.php:107
+msgid "These values are calculated or managed by imports. They cannot be edited here."
+msgstr "Diese Werte werden berechnet oder durch Importe verwaltet. Sie können hier nicht bearbeitet werden."
+
+#: classes/PropertyMeta.php:130
+msgid "Other stored details"
+msgstr "Weitere gespeicherte Angaben"
+
+#: classes/PropertyMeta.php:140
+msgid "Use these fields for manually managed properties. The next source import replaces these changes."
+msgstr "Verwenden Sie diese Felder für manuell verwaltete Objekte. Der nächste Import aus dem Quellsystem überschreibt diese Änderungen."
+
+#: classes/PropertyMeta.php:141
+msgid "These details are saved when you update or publish the property."
+msgstr "Diese Angaben werden beim Aktualisieren oder Veröffentlichen des Objekts gespeichert."
+
+#: classes/PropertyMeta.php:145
+msgid "Display reference"
+msgstr "Angezeigte Referenz"
+
+#: classes/PropertyMeta.php:146
+msgid "Shown to visitors and included in property inquiries."
+msgstr "Wird Besuchern angezeigt und in Objektanfragen angegeben."
+
+#: classes/PropertyMeta.php:148
+msgid "Additional costs"
+msgstr "Zusatzkosten"
+
+#: classes/PropertyMeta.php:149 classes/PropertyMeta.php:226
+msgid "Additional offers"
+msgstr "Zusatzangebote"
+
+#: classes/PropertyMeta.php:158
+msgid "This imported format is shown read-only to preserve its data."
+msgstr "Dieses importierte Format wird zum Schutz seiner Daten schreibgeschützt angezeigt."
+
+#: classes/PropertyMeta.php:168
+msgid "Add link"
+msgstr "Link hinzufügen"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional offer"
+msgstr "Zusatzangebot hinzufügen"
+
+#: classes/PropertyMeta.php:169
+msgid "Add additional cost"
+msgstr "Zusatzkosten hinzufügen"
+
+#: classes/PropertyMeta.php:180
+msgid "Link type"
+msgstr "Linktyp"
+
+#: classes/PropertyMeta.php:181
+msgid "Website"
+msgstr "Webseite"
+
+#: classes/PropertyMeta.php:181
+msgid "YouTube video"
+msgstr "YouTube-Video"
+
+#: classes/PropertyMeta.php:182
+msgid "Virtual tour"
+msgstr "Virtueller Rundgang"
+
+#: classes/PropertyMeta.php:182 classes/PropertyMeta.php:195 classes/PropertyMeta.php:198
+msgid "Unspecified"
+msgstr "Nicht angegeben"
+
+#: classes/PropertyMeta.php:183
+msgid "URL"
+msgstr "URL"
+
+#: classes/PropertyMeta.php:184
+msgid "Link label"
+msgstr "Linkbeschriftung"
+
+#: classes/PropertyMeta.php:185
+msgid "Link title"
+msgstr "Linktitel"
+
+#: classes/PropertyMeta.php:188
+msgid "Offer type"
+msgstr "Angebotstyp"
+
+#: classes/PropertyMeta.php:189
+msgid "Included in the price"
+msgstr "Im Preis inbegriffen"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "No"
+msgstr "Nein"
+
+#: classes/PropertyMeta.php:190 classes/PropertyMeta.php:255
+msgid "Yes"
+msgstr "Ja"
+
+#: classes/PropertyMeta.php:192
+msgid "Amount (optional)"
+msgstr "Betrag (optional)"
+
+#: classes/PropertyMeta.php:192 classes/PropertyMeta.php:232
+msgid "Amount"
+msgstr "Betrag"
+
+#: classes/PropertyMeta.php:194 classes/PropertyMeta.php:233
+msgid "Billing period"
+msgstr "Abrechnungszeitraum"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "One-time"
+msgstr "Einmalig"
+
+#: classes/PropertyMeta.php:195 classes/PropertyMeta.php:257
+msgid "Hourly"
+msgstr "Stündlich"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:257
+msgid "Daily"
+msgstr "Täglich"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: classes/PropertyMeta.php:196 classes/PropertyMeta.php:258
+msgid "Yearly"
+msgstr "Jährlich"
+
+#: classes/PropertyMeta.php:197 classes/PropertyMeta.php:233
+msgid "Applies to"
+msgstr "Bezieht sich auf"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Whole property"
+msgstr "Gesamtes Objekt"
+
+#: classes/PropertyMeta.php:198 classes/PropertyMeta.php:262
+msgid "Per m²"
+msgstr "Pro m²"
+
+#: classes/PropertyMeta.php:203
+msgid "Remove link"
+msgstr "Link entfernen"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional offer"
+msgstr "Zusatzangebot entfernen"
+
+#: classes/PropertyMeta.php:204
+msgid "Remove additional cost"
+msgstr "Zusatzkosten entfernen"
+
+#: classes/PropertyMeta.php:227
+msgid "Area used for filtering"
+msgstr "Fläche für die Filterung"
+
+#: classes/PropertyMeta.php:227
+msgid "Price used for filtering"
+msgstr "Preis für die Filterung"
+
+#: classes/PropertyMeta.php:228
+msgid "Source language"
+msgstr "Quellsprache"
+
+#: classes/PropertyMeta.php:228
+msgid "Import property ID"
+msgstr "Import-Objekt-ID"
+
+#: classes/PropertyMeta.php:229
+msgid "Import fingerprint"
+msgstr "Import-Prüfsumme"
+
+#: classes/PropertyMeta.php:229
+msgid "Media synchronization version"
+msgstr "Version der Mediensynchronisierung"
+
+#: classes/PropertyMeta.php:230
+msgid "Last import run"
+msgstr "Letzter Importlauf"
+
+#: classes/PropertyMeta.php:230
+msgid "Processed by import"
+msgstr "Vom Import verarbeitet"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat source"
+msgstr "Wärmeerzeugung"
+
+#: classes/PropertyMeta.php:231
+msgid "Heat distribution"
+msgstr "Wärmeverteilung"
+
+#: classes/PropertyMeta.php:232
+msgid "Type"
+msgstr "Typ"
+
+#: classes/PropertyMeta.php:234
+msgid "Frequency"
+msgstr "Häufigkeit"
+
+#: classes/PropertyMeta.php:234
+msgid "Included"
+msgstr "Inbegriffen"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range from"
+msgstr "Preisspanne von"
+
+#: classes/PropertyMeta.php:235
+msgid "Price range to"
+msgstr "Preisspanne bis"
+
+#: classes/PropertyMeta.php:236
+msgid "Zones"
+msgstr "Zonen"
+
+#: classes/PropertyMeta.php:236
+msgid "Keywords"
+msgstr "Stichwörter"
+
+#: classes/PropertyMeta.php:241 classes/PropertyMeta.php:253
+msgid "Not specified"
+msgstr "Nicht angegeben"
+
+#: classes/PropertyMeta.php:264
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
+
+#: classes/PropertyMeta.php:296
+msgid "You cannot change these property details. Reload the page and try again."
+msgstr "Sie können diese Objektangaben nicht ändern. Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: classes/PropertyMeta.php:302 classes/PropertyMeta.php:335 classes/PropertyMeta.php:373 classes/PropertyMeta.php:398
+msgid "These details changed after you opened the page. Reload before saving."
+msgstr "Diese Angaben wurden geändert, nachdem Sie die Seite geöffnet haben. Laden Sie die Seite vor dem Speichern neu."
+
+#: classes/PropertyMeta.php:306
+msgid "The submitted details are incomplete. Reload the page and try again."
+msgstr "Die übermittelten Angaben sind unvollständig. Laden Sie die Seite neu und versuchen Sie es erneut."
+
+#: classes/PropertyMeta.php:374
+msgid "Wait until the import or cleanup finishes before changing these details."
+msgstr "Warten Sie, bis der Import oder die Bereinigung abgeschlossen ist, bevor Sie diese Angaben ändern."
+
+#: classes/PropertyMeta.php:380
+msgid "Property details could not be saved."
+msgstr "Die Objektangaben konnten nicht gespeichert werden."
+
+#: classes/PropertyMeta.php:394 classes/PropertyMeta.php:409 classes/PropertyMeta.php:426
+msgid "Choose valid values for every entry."
+msgstr "Wählen Sie für jeden Eintrag gültige Werte."
+
+#: classes/PropertyMeta.php:421
+msgid "Enter a complete http:// or https:// URL for each link."
+msgstr "Geben Sie für jeden Link eine vollständige URL mit http:// oder https:// ein."
+
+#: classes/PropertyMeta.php:438
+msgid "Enter a nonnegative amount for each additional cost."
+msgstr "Geben Sie für jede Kostenposition einen Betrag von mindestens null ein."
+
+#: classes/PropertyMeta.php:444
+msgid "Choose a valid currency, billing period and property unit."
+msgstr "Wählen Sie eine gültige Währung, einen gültigen Abrechnungszeitraum und eine gültige Objekteinheit."
+
+#: classes/PropertyMeta.php:449
+msgid "Choose a valid offer type and included status."
+msgstr "Wählen Sie einen gültigen Angebotstyp und geben Sie an, ob das Angebot im Preis inbegriffen ist."

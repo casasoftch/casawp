@@ -197,10 +197,43 @@ class PropertyMedia
         if (in_array(0, $valid_ids, true) || count(array_unique($valid_ids)) !== count($valid_ids)) {
             wp_send_json_error(['message' => __('Invalid attachment selection.', 'casawp')], 400);
         }
+        $error = null;
+        $error_status = 400;
+        try {
+            self::withEditLock(static function () use ($operation, $post_id, $valid_ids): void {
+                if ($operation === 'order') { self::order($post_id, $valid_ids); }
+                else { self::attach($post_id, $valid_ids, $_POST['type'] ?? ''); }
+            });
+        } catch (\Throwable $caught) {
+            $error = $caught;
+            if ($caught->getCode() === 409) { $error_status = 409; }
+        }
+        ob_start();
+        self::renderContent($post_id);
+        $html = ob_get_clean();
+        if ($error) {
+            wp_send_json_error(['message' => $error->getMessage(), 'html' => $html,
+                'thumbnail_id' => (int) get_post_thumbnail_id($post_id)], $error_status);
+        }
+        wp_send_json_success(['html' => $html, 'message' => __('Attachment changes saved.', 'casawp'),
+            'thumbnail_id' => (int) get_post_thumbnail_id($post_id)]);
+    }
+
+    /** Share the manual editor's import/cancellation guard with property details. */
+    public static function withEditLock(callable $edit)
+    {
+        $release = self::acquireEditLock();
+        try { return $edit(); }
+        finally { $release(); }
+    }
+
+    /** Hold the manual edit guard until the native WordPress save has finished. */
+    public static function acquireEditLock(): callable
+    {
         // Publish intent before acquiring the shared lock so forced starts cannot cancel it in between.
         $owner = self::claimOwner();
         if (!$owner) {
-            wp_send_json_error(['message' => __('Wait until the import or cleanup finishes before changing attachments.', 'casawp')], 409);
+            throw new \RuntimeException(__('Wait until the import or cleanup finishes before changing attachments.', 'casawp'), 409);
         }
         $lock_time = 0;
         $released = false;
@@ -221,33 +254,19 @@ class PropertyMedia
             }
         };
         register_shutdown_function($release);
-        $error = null;
-        $error_status = 400;
         try {
             if (ManualCleanup::isRunning() || casawp_current_import_run_id() || !casawp_acquire_lock()) {
-                $error_status = 409;
-                throw new \RuntimeException(__('Wait until the import or cleanup finishes before changing attachments.', 'casawp'));
+                throw new \RuntimeException(__('Wait until the import or cleanup finishes before changing attachments.', 'casawp'), 409);
             }
             $lock_time = (int) get_option('casawp_import_lock');
             if (get_option('casawp_property_media_owner') !== $owner) {
                 throw new \RuntimeException(__('Could not save attachment changes. Please try again.', 'casawp'));
             }
-            if ($operation === 'order') { self::order($post_id, $valid_ids); }
-            else { self::attach($post_id, $valid_ids, $_POST['type'] ?? ''); }
-        } catch (\Throwable $caught) {
-            $error = $caught;
-        } finally {
+            return $release;
+        } catch (\Throwable $error) {
             $release();
+            throw $error;
         }
-        ob_start();
-        self::renderContent($post_id);
-        $html = ob_get_clean();
-        if ($error) {
-            wp_send_json_error(['message' => $error->getMessage(), 'html' => $html,
-                'thumbnail_id' => (int) get_post_thumbnail_id($post_id)], $error_status);
-        }
-        wp_send_json_success(['html' => $html, 'message' => __('Attachment changes saved.', 'casawp'),
-            'thumbnail_id' => (int) get_post_thumbnail_id($post_id)]);
     }
 
     private static function positiveId($value): int
