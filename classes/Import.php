@@ -953,15 +953,39 @@ class Import
         return;
       }
 
-      $properties_array = array();
+      $total_items   = count($properties);
+      $total_batches = ceil($total_items / $batch_size);
+      $offset = (int) (($batch_number - 1) * $batch_size);
+      // Match array_slice(..., true), including its negative-offset behavior.
+      $batch_start = $offset < 0 ? max(0, $total_items + $offset) : min($offset, $total_items);
+      $batch_end = min($total_items, $batch_start + $batch_size);
+
+      $validated_feed = get_option('casawp_import_conversion_fingerprint', []);
+      $convert_all = !is_array($validated_feed)
+        || ($validated_feed['run_id'] ?? null) !== $this->current_run_id
+        || ($validated_feed['sha256'] ?? null) !== $this->feed_fingerprint;
+      $items_for_current_batch = [];
+      $index = 0;
       foreach ($properties as $property) {
-        $this->logger()->setStage('property_conversion', ['property_id' => (string) $property['id']]);
-        $properties_array[] = $this->property2Array($property);
+        if (!$convert_all && $index >= $batch_end) { break; }
+        if ($convert_all || $index >= $batch_start) {
+          $this->logger()->setStage('property_conversion', ['property_id' => (string) $property['id']]);
+          $converted = $this->property2Array($property);
+          if ($index >= $batch_start && $index < $batch_end) {
+            $items_for_current_batch[$index] = $converted;
+          }
+        }
+        $index++;
       }
       $this->logger()->setStage('properties_batch', ['property_id' => null]);
 
-      $total_items   = count($properties_array);
-      $total_batches = ceil($total_items / $batch_size);
+      if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
+      if ($convert_all) {
+        // Preserve fail-before-update checks for the entire feed once per run/content change.
+        update_option('casawp_import_conversion_fingerprint', [
+          'run_id' => $this->current_run_id, 'sha256' => $this->feed_fingerprint,
+        ], false);
+      }
 
       if ($batch_number == 1) {
         update_option('casawp_total_batches', $total_batches);
@@ -976,8 +1000,6 @@ class Import
           )
         );
       }
-
-      $items_for_current_batch = array_slice($properties_array, ($batch_number - 1) * $batch_size, $batch_size, true);
 
       if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
 

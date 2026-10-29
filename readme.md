@@ -26,6 +26,11 @@ CASAWP validates the XML structure and every property ID before changing existin
 
 An exception during an individual property update stops its owning import instead of continuing to final cleanup with an unprocessed property. Its remaining import and cleanup actions are cancelled, the run's lock is released and the existing stopped-import notice directs the administrator to the logs. This also covers failures before a post ID is available and errors while restoring manually changed attachments. Already applied updates and deletions are retained. An older worker cannot stop a newer run, and a later successful import keeps the normal cleanup behaviour.
 
+Batched import preparation
+===============================
+
+Batched imports check that every property can be converted before applying the first batch. That result is remembered for the current import run and exact feed contents. Later batches convert only their selected properties; a new run or changed feed triggers the complete conversion check again. Each batch still reads and validates the entire XML structure and property IDs. The conversion pass retains only the current batch's converted properties in memory. Property order, translations, media handling, batch sizes, scheduling and cleanup follow the existing import flow.
+
 Property attachment editing
 ===============================
 

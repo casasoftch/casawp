@@ -92,6 +92,7 @@ These controls support properties managed manually after disconnecting imports. 
 
 = Unreleased =
 
+* Performance: Check complete property conversion once per import run and feed change, then convert only each batch's properties while preserving full XML validation and property order
 * Fix: Declare the bundled PHP 8.1 minimum in WordPress and update metadata and align Composer support with PHP 8.1–8.3
 * Fix: Allow multiple Bootstrap 4 contact forms on one page when the privacy checkbox is enabled without crashing the page
 * Fix: Leave installation folders and activation to WordPress so CASAWP cannot interfere with other updates; reject failed or invalid update-server responses and preserve other plugins' details
