@@ -84,6 +84,7 @@ class Import
   private ?ImportLogger $import_logger = null;
   private string $feed_fingerprint = '';
   private bool $import_start_logged = false;
+  private bool $rank_saved_before_offer = false;
 
   private function logger(): ImportLogger
   {
@@ -1039,9 +1040,9 @@ class Import
       } else {
         $next_batch_number = $batch_number + 1;
 
-        /* ── calculate self-tuning delay ───────────── */
+        // Let Action Scheduler continue in a new request, retaining its native pause and limits.
         $runtime = microtime( true ) - $started_at;   // seconds
-        $delay   = min( max( ceil( $runtime ) + 8, 12 ), 90 );
+        $delay   = 0;
 
         $this->logImport(
             sprintf(
@@ -1776,6 +1777,8 @@ class Import
     global $wpdb;
     $found_posts = [];
     $curRank = get_option('casawp_current_rank', 0);
+    // Custom updaters may rely on updateOffers applying the rank before their override runs.
+    $legacy_rank_save = (new \ReflectionMethod($this, 'updateOffer'))->getDeclaringClass()->getName() !== self::class;
 
     if (!empty($batched_file)) {
       foreach ($batched_file as $property) {
@@ -1814,9 +1817,9 @@ class Import
               'casawp_id' => $casawp_id,
               'language' => $offerData['lang'],
               'post_id' => null,
-            ], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id) {
+            ], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id, $legacy_rank_save) {
               $this->logger()->setStage('offer_lookup');
-              $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id) {
+              $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id, $legacy_rank_save) {
                 $the_query = new \WP_Query([
                   'post_status' => ['publish', 'pending', 'draft', 'future', 'trash'],
                   'post_type'   => 'casawp_property',
@@ -1869,22 +1872,26 @@ class Import
                   'post_id' => $wp_post->ID,
                   'action' => $this->transcript[$casawp_id]['action'],
                 ]);
-                $rank_result = wp_update_post(array(
-                  'ID' => $wp_post->ID,
-                  'menu_order' => $curRank,
-                ), true);
-                if (is_wp_error($rank_result)) {
-                  $this->logImport('WordPress could not update the offer rank.', [
-                    'error_code' => $rank_result->get_error_code(),
-                    'error' => $rank_result->get_error_message(),
-                  ], 'error');
+                if ($legacy_rank_save) {
+                  $rank_result = wp_update_post(['ID' => $wp_post->ID, 'menu_order' => $curRank], true);
+                  if (is_wp_error($rank_result)) {
+                    $this->logImport('WordPress could not update the offer rank.', [
+                      'error_code' => $rank_result->get_error_code(),
+                      'error' => $rank_result->get_error_message(),
+                    ], 'error');
+                  }
                 }
-
                 $this->ranksort[$wp_post->ID] = $curRank;
 
                 $found_posts[] = $wp_post->ID;
 
-                $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
+                $previous_rank_save = $this->rank_saved_before_offer;
+                $this->rank_saved_before_offer = $legacy_rank_save;
+                try {
+                  $this->updateOffer( $casawp_id, $offer_pos, $property, $offerData, $wp_post );
+                } finally {
+                  $this->rank_saved_before_offer = $previous_rank_save;
+                }
 
                 $this->logger()->setStage('offer_wpml_link');
                 $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
@@ -2545,6 +2552,29 @@ class Import
 
     $main_unchanged = ( $new_main_data === $old_main_data );
 
+    // Decide before saving: unchanged offers need only their current-run markers.
+    // Real metadata/media changes still receive the native save hooks and modified date.
+    if ( ! $main_unchanged || ( ! $this->rank_saved_before_offer
+        && ( $hashFromDb !== $newHash || $needs_media_sync || ! $wp_post->post_name ) ) ) {
+        $this->logger()->setStage('offer_post_update');
+        $post_data = [ 'ID' => $wp_post->ID, 'menu_order' => $curRank ];
+        if ( ! $main_unchanged ) {
+            $post_data = $new_main_data;
+            $post_data['post_name'] = $wp_post->post_name
+                ?: $this->casawp_sanitize_title( $casawp_id . '-' . $offer['name'] );
+        }
+        // A narrow update preserves stored escaping when only metadata/media changed.
+        // It also keeps WordPress's existing repair of an otherwise unchanged empty slug.
+        $post_result = wp_update_post( $post_data, true );
+        if (is_wp_error($post_result)) {
+            $this->logImport('WordPress could not update the offer.', [
+                'event' => 'offer.update_failed',
+                'error_code' => $post_result->get_error_code(),
+                'error' => $post_result->get_error_message(),
+            ], 'error');
+        }
+    }
+
     if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync ) {
         $this->logImport( "Skip {$casawp_id} - unchanged (hash)", ['event' => 'offer.unchanged'], 'debug' );
         update_post_meta( $wp_post->ID, 'is_active', true );
@@ -2579,24 +2609,6 @@ class Import
     $new_meta_data['last_import_hash'] = $newHash;
 
 
-
-    /* ---------- main-post update ---------- */
-    $this->logger()->setStage('offer_post_update');
-    if ( $new_main_data !== $old_main_data ) {
-      if ( ! $wp_post->post_name ) {
-        $new_main_data['post_name'] = $this->casawp_sanitize_title( $casawp_id . '-' . $offer['name'] );
-      } else {
-        $new_main_data['post_name'] = $wp_post->post_name;
-      }
-      $post_result = wp_update_post( $new_main_data, true );
-      if (is_wp_error($post_result)) {
-        $this->logImport('WordPress could not update the offer.', [
-          'event' => 'offer.update_failed',
-          'error_code' => $post_result->get_error_code(),
-          'error' => $post_result->get_error_message(),
-        ], 'error');
-      }
-    }
 
     /* ---------- meta update (single statement) ---------- */
     $this->logger()->setStage('offer_meta_update');

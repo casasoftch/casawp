@@ -100,6 +100,8 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
+* Performance: Skip WordPress post saves for genuinely unchanged imported listings while retaining saves for ordering, content, metadata and media work, processed-run tracking and translation linking
+* Performance: Continue property batches through Action Scheduler's background requests without an added scheduling delay, retaining its five-second pause, serial execution and batch sizes; yield after each web property action and use a shorter queue planning budget
 * Enhancement: Add translated, structured manual controls for property references, links, additional costs and additional offers, saving with Update or Publish, readable heating details and collapsed import information while preserving source-import authority
 * Fix: Keep manually added property media in the Media Library after import detachment and subsequent cleanup; preserve ordinary uploads during delete-all while continuing to remove media identified by import metadata and source fields
 * Performance: Check complete property conversion once per import run and feed change, then convert only each batch's properties while preserving full XML validation and property order

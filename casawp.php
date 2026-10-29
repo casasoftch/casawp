@@ -117,6 +117,7 @@ if (is_admin()) {
 $import = new casawp\Import(false, false);
 $import->register_hooks();
 \casawp\ManualCleanup::registerHooks();
+\casawp\ImportQueue::registerHooks();
 
 
 /**
