@@ -4,6 +4,7 @@
 import argparse
 import gettext
 import io
+import json
 from pathlib import Path
 import re
 import stat
@@ -57,6 +58,27 @@ def validate_metadata():
     tested = re.search(r'Tested up to: ([\d.]+)', readme).group(1)
     if tested != re.search(r"\$obj->tested = '([^']+)'", updater).group(1):
         raise ValueError('WordPress compatibility declarations must match')
+    php = re.search(r'Requires PHP: ([\d.]+)', plugin)
+    readme_php = re.search(r'Requires PHP: ([\d.]+)', readme)
+    update_php = re.search(r"\$obj->requires_php = '([\d.]+)'", updater)
+    if not php or not readme_php or not update_php or len({php.group(1), readme_php.group(1), update_php.group(1)}) != 1:
+        raise ValueError('Plugin, readme, and updater PHP requirements must match')
+    platform = (ROOT / 'vendor/composer/platform_check.php').read_text()
+    runtime_php = re.search(r'PHP_VERSION_ID >= (\d+)', platform)
+    php_parts = [int(part) for part in php.group(1).split('.')]
+    php_parts += [0] * (3 - len(php_parts))
+    php_id = php_parts[0] * 10000 + php_parts[1] * 100 + php_parts[2]
+    if not runtime_php or int(runtime_php.group(1)) != php_id:
+        raise ValueError('Declared PHP minimum must match the bundled Composer runtime check')
+    composer = json.loads((ROOT / 'composer.json').read_text())
+    lock = json.loads((ROOT / 'composer.lock').read_text())
+    constraint = composer['require']['php']
+    if constraint != lock['platform']['php']:
+        raise ValueError('Composer and lock-file PHP constraints must match')
+    # The root requirement enumerates supported versions as ~major.minor.patch.
+    supported_php = [re.fullmatch(r'~(\d+)\.(\d+)\.(\d+)', item.strip()) for item in constraint.split('||')]
+    if not all(supported_php) or min(int(item.group(1)) * 10000 + int(item.group(2)) * 100 + int(item.group(3)) for item in supported_php) != php_id:
+        raise ValueError('Composer PHP support must start at the declared minimum')
     return version
 
 

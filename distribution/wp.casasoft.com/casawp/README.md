@@ -24,7 +24,8 @@ first object from older endpoints that emitted it twice.
    update.php.
 2. Run `python3 distribution/wp.casasoft.com/casawp/build-release.py /tmp/casawp-X.Y.Z.zip`.
    This refreshes the derived locale catalogs, validates all MO files and
-   release metadata, and creates a ZIP with the top-level directory `casawp/`.
+   release metadata (including matching PHP requirements), and creates a ZIP
+   with the top-level directory `casawp/`.
    Stage any new runtime files before building; the ZIP uses tracked files
    from the working tree plus the explicitly generated locale aliases.
    Commit the release including any refreshed catalogs before publishing.
@@ -36,6 +37,12 @@ first object from older endpoints that emitted it twice.
 
 The update client never downloads the archived ZIPs. They are there solely for
 rollback and release history.
+
+The bundled dependencies require PHP 8.1. The plugin/readme headers and both
+update responses declare that minimum, while the update client passes it to
+WordPress. Composer and the lock file retain the supported PHP 8.1–8.3 range;
+PHP 8.4 support requires a separate dependency compatibility review. The
+builder checks those declarations against the bundled runtime requirement.
 
 ## Translation compatibility
 

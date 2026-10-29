@@ -92,6 +92,9 @@ class WP_AutoUpdate
 			$obj->url = $remote_version->url;
 			$obj->plugin = $this->plugin_slug;
 			$obj->package = $remote_version->package;
+			if (isset($remote_version->requires_php)) {
+				$obj->requires_php = $remote_version->requires_php;
+			}
 			$transient->response[$this->plugin_slug] = $obj;
 		}
 		return $transient;
@@ -249,6 +252,8 @@ class WP_AutoUpdate
 		return $version instanceof stdClass
 			&& isset($version->new_version, $version->url, $version->package)
 			&& (!isset($version->slug) || $version->slug === $this->slug)
+			&& (!isset($version->requires_php) || (is_string($version->requires_php)
+				&& ($version->requires_php === '' || preg_match('/^[0-9]+(?:\.[0-9]+){0,2}$/D', $version->requires_php))))
 			&& is_string($version->new_version)
 			&& preg_match('/^[0-9][0-9A-Za-z.+_-]*$/D', $version->new_version)
 			&& $this->isValidUrl($version->url) && $this->isValidUrl($version->package);

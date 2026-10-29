@@ -6,6 +6,7 @@
  * Author: Casasoft AG
  * Author URI: https://casasoft.ch
  * Version: 3.5.2
+ * Requires PHP: 8.1
  * Text Domain: casawp
  * Domain Path: languages/
  * License: GPL2

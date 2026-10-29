@@ -3,6 +3,7 @@ Contributors: casasoft
 Donate link: https://immobilien-plugin.ch
 Tags: immobilien, real estate, openimmo, idx, casaXML, SwissRETS
 Requires at least: 4.0.0
+Requires PHP: 8.1
 Tested up to: 7.1.3
 Author: Casasoft AG
 Author URI: https://casasoft.ch
@@ -91,6 +92,7 @@ These controls support properties managed manually after disconnecting imports. 
 
 = Unreleased =
 
+* Fix: Declare the bundled PHP 8.1 minimum in WordPress and update metadata and align Composer support with PHP 8.1–8.3
 * Fix: Allow multiple Bootstrap 4 contact forms on one page when the privacy checkbox is enabled without crashing the page
 * Fix: Leave installation folders and activation to WordPress so CASAWP cannot interfere with other updates; reject failed or invalid update-server responses and preserve other plugins' details
 * Fix: Show contact-form delivery errors when CASA Mail times out, rejects an inquiry or returns an invalid response; retain entered values and run success hooks only after service acceptance
