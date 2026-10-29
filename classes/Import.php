@@ -602,6 +602,10 @@ class Import
     $failed_attachments  = 0;
 
     foreach ( $attachments as $attachment_id ) {
+      if ( ImportMedia::isManualAttachment( (int) $attachment_id ) ) {
+        $this->detachManualAttachment( (int) $attachment_id, get_post_meta( $post_id, 'casawp_id', true ) ?: $post_id );
+        continue;
+      }
       $this->logger()->setStage('attachment_delete', ['attachment_id' => (int) $attachment_id]);
       if ( wp_delete_attachment( $attachment_id, true ) ) {
         $deleted_attachments++;
@@ -3609,24 +3613,27 @@ class Import
           }
           // Only the new editor's ordinary local additions belong to this reset.
           // Never infer ownership of existing/imported media from a property alone.
-          if (get_post_meta($attachment->ID, '_origin', true) !== '' ||
-              get_post_meta($attachment->ID, '_casawp_import', true) ||
-              get_post_meta($attachment->ID, '_is_remote', true)) {
+          if (!ImportMedia::isManualAttachment((int) $attachment->ID)) {
               continue;
           }
 
-          $updated = wp_update_post(array('ID' => (int) $attachment->ID, 'post_parent' => 0), true);
-          if (is_wp_error($updated) || !$updated || (int) wp_get_post_parent_id($attachment->ID) !== 0) {
-              throw new \RuntimeException('Could not detach manually added attachment ' . $attachment->ID .
-                  (is_wp_error($updated) ? ': ' . $updated->get_error_message() : '.'));
-          }
-          delete_post_meta($attachment->ID, '_casawp_manual_attachment');
-          $this->logImport('Detached manually added attachment ' . $attachment->ID .
-              ' after importing property ' . $casawp_id . '; retained in the media library.',
-              ['event' => 'media.manual_detached', 'attachment_id' => (int) $attachment->ID], 'debug');
+          $this->detachManualAttachment((int) $attachment->ID, $casawp_id);
       }
 
       delete_post_meta($post_id, '_casawp_manual_media_modified');
+  }
+
+  private function detachManualAttachment(int $attachment_id, $casawp_id): void
+  {
+      $updated = wp_update_post(array('ID' => $attachment_id, 'post_parent' => 0), true);
+      if (is_wp_error($updated) || !$updated || (int) wp_get_post_parent_id($attachment_id) !== 0) {
+          throw new \RuntimeException('Could not detach manually added attachment ' . $attachment_id .
+              (is_wp_error($updated) ? ': ' . $updated->get_error_message() : '.'));
+      }
+      // Keep its provenance: later import and standalone cleanups must retain it.
+      $this->logImport('Detached manually added attachment ' . $attachment_id .
+          ' from property ' . $casawp_id . '; retained in the media library.',
+          ['event' => 'media.manual_detached', 'attachment_id' => $attachment_id], 'debug');
   }
 
   public function setOfferSalestype($wp_post, $salestype, $casawp_id)

@@ -74,6 +74,26 @@ class DeleteAllProperties
         $tax = "{$p}term_taxonomy";
         $rel = "{$p}term_relationships";
 
+        // A media type alone does not make an editor's upload import-owned.
+        $sources = 'externalsync|casagateway|cdn[.]casasoft[.]com';
+        $import_join = "LEFT JOIN {$meta} import_source ON import_source.post_id = p.ID
+            AND ((import_source.meta_key IN ('_origin', '_casawp_import', '_is_remote')
+                  AND import_source.meta_value NOT IN ('', '0'))
+                 OR LOWER(import_source.meta_value) REGEXP '{$sources}')";
+        $imported = "(import_source.meta_id IS NOT NULL OR LOWER(CONCAT_WS(' ',
+            p.post_title, p.post_name, p.guid, p.post_content, p.post_excerpt,
+            p.post_content_filtered, p.to_ping, p.pinged, p.post_mime_type,
+            p.post_password, p.post_status, p.comment_status, p.ping_status)) REGEXP '{$sources}')";
+
+        $this->phase = 'manual_attachments';
+        // Preserve ordinary uploads even if an older import already cleared their marker.
+        $this->query("UPDATE {$posts} p
+            INNER JOIN {$posts} parent ON parent.ID = p.post_parent AND parent.post_type = 'casawp_property'
+            {$import_join}
+            SET p.post_parent = 0
+            WHERE p.post_type = 'attachment' AND NOT {$imported}");
+        $this->completed_steps[] = $this->phase;
+
         $this->phase = 'properties';
         $from = "FROM {$posts} p LEFT JOIN {$meta} pm ON pm.post_id = p.ID WHERE p.post_type = 'casawp_property'";
         $this->deletePosts('properties', $from, "DELETE p, pm
@@ -97,17 +117,20 @@ class DeleteAllProperties
             $this->phase = 'attachments';
             $from = "FROM {$posts} p LEFT JOIN {$meta} pm ON pm.post_id = p.ID
                 JOIN {$rel} tr ON tr.object_id = p.ID
-                WHERE tr.term_taxonomy_id IN ( {$tt_in} ) AND p.post_type = 'attachment'";
+                {$import_join}
+                WHERE tr.term_taxonomy_id IN ( {$tt_in} ) AND p.post_type = 'attachment' AND {$imported}";
             $this->deletePosts('attachments', $from, "DELETE p, pm
                FROM {$posts} p
                LEFT JOIN {$meta} pm ON pm.post_id = p.ID
                JOIN {$rel} tr ON tr.object_id = p.ID
+               {$import_join}
               WHERE tr.term_taxonomy_id IN ( {$tt_in} )
-                AND p.post_type = 'attachment'");
+                AND p.post_type = 'attachment' AND {$imported}");
 
             $this->phase = 'attachment_relationships';
-            $this->counts['relationships'] += $this->query("DELETE FROM {$rel}
-              WHERE term_taxonomy_id IN ( {$tt_in} )");
+            $this->counts['relationships'] += $this->query("DELETE tr FROM {$rel} tr
+              LEFT JOIN {$posts} p ON p.ID = tr.object_id
+              WHERE tr.term_taxonomy_id IN ( {$tt_in} ) AND p.ID IS NULL");
             $this->completed_steps[] = $this->phase;
         }
 
@@ -139,7 +162,13 @@ class DeleteAllProperties
           WHERE p.ID IS NULL");
         $this->completed_steps[] = $this->phase;
         $this->phase = 'term_counts';
-        $this->query("UPDATE {$tax} SET count = 0 WHERE taxonomy = 'casawp_attachment_type'");
+        $all_types = $this->db->get_col("SELECT term_taxonomy_id FROM {$tax} WHERE taxonomy = 'casawp_attachment_type'");
+        $this->checkDatabaseError();
+        if (!is_array($all_types)) { throw new \RuntimeException('Attachment type counts could not be read.'); }
+        if ($all_types) {
+            wp_update_term_count_now(array_map('intval', $all_types), 'casawp_attachment_type');
+            $this->checkDatabaseError();
+        }
         $this->completed_steps[] = $this->phase;
     }
 

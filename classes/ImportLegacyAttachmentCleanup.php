@@ -67,6 +67,9 @@ class ImportLegacyAttachmentCleanup
         foreach ($rows as $row) {
             $id = (int) $row->ID;
             $post = get_post($id);
+            if ($post && ImportMedia::isManualAttachment($id)) {
+                $retained[$id] = 'manually added media retained in the library'; continue;
+            }
             $file = (string) get_post_meta($id, '_wp_attached_file', true);
             // Only fall back within this subsite's upload URL; existing metadata remains authoritative.
             if ($file === '' && $post) {
@@ -136,9 +139,10 @@ class ImportLegacyAttachmentCleanup
                 $this->logger->write('Retained legacy attachment ' . $id . ': ' . $reason . '.', [], 'debug');
             } else {
                 $candidate = $candidates[$id];
-                // Recheck the parent immediately before removal, after running extension filters.
+                // Recheck ownership and the parent after running extension filters.
                 $post = get_post($id);
-                if ($post && ($post->post_type !== 'attachment' || ($post->post_parent && get_post($post->post_parent)))) {
+                if ($post && (ImportMedia::isManualAttachment($id) || $post->post_type !== 'attachment'
+                    || ($post->post_parent && get_post($post->post_parent)))) {
                     $result['retained']++;
                 } else {
                     $deleted = false;
@@ -183,7 +187,7 @@ class ImportLegacyAttachmentCleanup
         return $result;
     }
 
-    /** A detached translation must not delete a counterpart that still has a parent. */
+    /** Deletion hooks must not remove attached or manually preserved translations. */
     private function findAttachedTranslations(array $candidates): array
     {
         if (!$candidates || (!defined('ICL_SITEPRESS_VERSION') && !isset($GLOBALS['sitepress']))) { return []; }
@@ -191,18 +195,24 @@ class ImportLegacyAttachmentCleanup
         $table = $wpdb->prefix . 'icl_translations';
         $ids = implode(',', array_map('intval', array_keys($candidates)));
         $translations = $wpdb->get_results(
-            "SELECT source.element_id AS source_id, related.element_id AS ID
+            "SELECT DISTINCT source.element_id AS source_id, related.element_id AS ID, parent.ID AS parent_id
              FROM $table source INNER JOIN $table related
                ON related.trid = source.trid AND related.element_type = source.element_type
              INNER JOIN {$wpdb->posts} p ON p.ID = related.element_id
-             INNER JOIN {$wpdb->posts} parent ON parent.ID = p.post_parent
-             WHERE source.element_type = 'post_attachment' AND source.element_id IN ($ids)"
+             LEFT JOIN {$wpdb->posts} parent ON parent.ID = p.post_parent
+             LEFT JOIN {$wpdb->postmeta} manual ON manual.post_id = p.ID
+               AND manual.meta_key = '_casawp_manual_attachment' AND manual.meta_value = '1'
+             WHERE source.element_type = 'post_attachment' AND source.element_id IN ($ids)
+               AND (parent.ID IS NOT NULL OR manual.meta_id IS NOT NULL)"
         );
         $this->checkDatabase();
         if (!is_array($translations)) { throw new \RuntimeException('Cannot check WPML attachment translations.'); }
+        $this->primeCaches(array_map(static function ($row) { return (int) $row->ID; }, $translations));
         $used = [];
         foreach ($translations as $translation) {
-            $used[(int) $translation->source_id] = 'WPML attachment translation ' . $translation->ID . ' still has a parent';
+            if ($translation->parent_id || ImportMedia::isManualAttachment((int) $translation->ID)) {
+                $used[(int) $translation->source_id] = 'WPML attachment translation ' . $translation->ID . ' is attached or manually preserved';
+            }
         }
         return $used;
     }

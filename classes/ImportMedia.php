@@ -2,10 +2,19 @@
 
 namespace casawp;
 
-/** Shared rules for remote-only imports and removal of obsolete local copies. */
+/** Shared attachment ownership and remote-source rules. */
 class ImportMedia
 {
     public const TYPES = ['image', 'document', 'plan', 'offer-logo', 'sales-brochure'];
+
+    /** Manual additions remain library-owned after an import detaches them. */
+    public static function isManualAttachment(int $id): bool
+    {
+        return (bool) get_post_meta($id, '_casawp_manual_attachment', true)
+            && get_post_meta($id, '_origin', true) === ''
+            && !get_post_meta($id, '_casawp_import', true)
+            && !get_post_meta($id, '_is_remote', true);
+    }
 
     public static function usesRemote(string $type, string $source, bool $cdn): bool
     {
