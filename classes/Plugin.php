@@ -105,6 +105,7 @@ class Plugin
         // ACF may be loaded by a later plugin or the theme; check availability at init.
         add_action('init', array($this, 'setACF'));
         add_action('add_meta_boxes_casawp_property', array($this, 'casawp_property_custom_metaboxes'));
+        add_filter('get_user_option_meta-box-order_casawp_property', array($this, 'casawp_property_metabox_order'));
         PropertyMedia::register();
         PropertyMeta::register(function (): array {
             $types = [];
@@ -3838,7 +3839,29 @@ class Plugin
     function casawp_property_custom_metaboxes($post)
     {
         add_meta_box('unsorted-metas', __('Additional Meta Fields', 'casawp'), array($this, 'casawp_add_unsorted_metabox'), 'casawp_property', 'normal', 'high');
-        add_meta_box('casawp-attached-media', __('Attached images and files', 'casawp'), array($this, 'casawp_add_attached_media_metabox'), 'casawp_property', 'normal', 'low');
+        add_meta_box('casawp-attached-media', __('Attached images and files', 'casawp'), array($this, 'casawp_add_attached_media_metabox'), 'casawp_property', 'normal', 'high');
+    }
+
+    public function casawp_property_metabox_order($order)
+    {
+        if (!is_array($order)) {
+            return $order;
+        }
+
+        // Keep the boxes together even when WordPress restores a user's saved layout.
+        foreach ($order as $context => $ids) {
+            if (!is_string($ids)) {
+                continue;
+            }
+            $boxes = array_values(array_diff(explode(',', $ids), ['casawp-attached-media']));
+            $position = array_search('unsorted-metas', $boxes, true);
+            if ($position !== false) {
+                array_splice($boxes, $position + 1, 0, ['casawp-attached-media']);
+            }
+            $order[$context] = implode(',', $boxes);
+        }
+
+        return $order;
     }
 
     public function casawp_add_attached_media_metabox($post)
