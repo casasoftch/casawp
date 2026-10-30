@@ -321,7 +321,6 @@ class QueryService{
 
         if (isset($this->query['rooms_from']) && $this->query['rooms_from']) {
             $rooms_from = $this->get_first_element($this->query['rooms_from']);
-            error_log('rooms_from: ' . $rooms_from);
             if ($rooms_from !== null && $rooms_from !== '') {
                 $meta_query_items_new[] = array(
                     'key' => 'number_of_rooms',
