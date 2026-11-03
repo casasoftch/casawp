@@ -409,8 +409,28 @@ class Plugin
     private function isImageAttachment($attachment_id): bool
     {
         // CDN-only records have no attached file, so WordPress's file-based check returns false.
-        return strpos((string) get_post_mime_type($attachment_id), 'image/') === 0
-            || wp_attachment_is_image($attachment_id);
+        $mime_type = (string) get_post_mime_type($attachment_id);
+        if (strpos($mime_type, 'image/') === 0 || wp_attachment_is_image($attachment_id)) {
+            return true;
+        }
+
+        // Older CDN imports could leave MIME empty when the source URL contained a query string.
+        if (!in_array($mime_type, ['', 'application/octet-stream', 'import'], true)) {
+            return false;
+        }
+        $origin = get_post_meta($attachment_id, '_origin', true);
+        if (!$origin || !$this->shouldRenderAttachmentAsRemote($attachment_id, $origin)) {
+            return false;
+        }
+
+        $path = parse_url($this->normalizeCasawpAttachmentOrigin($origin), PHP_URL_PATH);
+        $filetype = wp_check_filetype((string) $path, wp_get_mime_types());
+        if (!empty($filetype['type'])) {
+            return strpos($filetype['type'], 'image/') === 0;
+        }
+
+        // Keep extensionless imported images usable without treating known documents as images.
+        return has_term(['image', 'offer-logo'], 'casawp_attachment_type', $attachment_id);
     }
 
     private function remotePdfPlaceholder($attachment_id)
