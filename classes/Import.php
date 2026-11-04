@@ -85,6 +85,8 @@ class Import
   private string $feed_fingerprint = '';
   private bool $import_start_logged = false;
   private bool $rank_saved_before_offer = false;
+  private ?array $import_run_plan = null;
+  private $import_main_language_override = false;
 
   private function logger(): ImportLogger
   {
@@ -516,6 +518,14 @@ class Import
       return true;
     }
 
+    try {
+      $this->assertImportCoverage();
+    } catch (\UnexpectedValueException $e) {
+      $this->logger()->exception('Import cleanup stopped; not all properties were processed.', $e);
+      $this->abortInvalidFeed();
+      return false;
+    }
+
     $this->logCleanupStart($run_id);
     if ( function_exists( 'as_schedule_single_action' ) ) {
       if ( ! as_next_scheduled_action( 'casawp_finalize_import_cleanup_batch', null, $this->group() ) ) {
@@ -710,7 +720,8 @@ class Import
 
     try {
       // data.xml may have been replaced since the import batches ran.
-      $this->readImportXml($this->getImportFile());
+      $xml = $this->readImportXml($this->getImportFile());
+      $this->assertImportCoverage($xml);
     } catch (\UnexpectedValueException $e) {
       $this->logger()->exception('Import cleanup stopped; existing properties were retained.', $e);
       $this->abortInvalidFeed();
@@ -876,6 +887,157 @@ class Import
   }
 
 
+  private function currentImportRunPlan(): ?array
+  {
+    if (!$this->current_run_id || $this->current_run_id !== casawp_current_import_run_id()) { return null; }
+    if (function_exists('wp_cache_delete')) {
+      wp_cache_delete('casawp_import_run_plan', 'options');
+      wp_cache_delete('notoptions', 'options');
+    }
+    $plan = get_option('casawp_import_run_plan', []);
+    return is_array($plan) && (int) ($plan['run_id'] ?? 0) === $this->current_run_id ? $plan : null;
+  }
+
+  /** Reuse settings cheaply during conversion, without affecting public calls after the run ends. */
+  private function activeImportLanguagePlan(): ?array
+  {
+    $plan = $this->import_run_plan;
+    return $plan !== null && $plan['run_id'] === $this->current_run_id
+      && (int) get_option('casawp_current_run_id', 0) === $this->current_run_id ? $plan : null;
+  }
+
+  private function importPropertyIdsHash(\SimpleXMLElement $xml): string
+  {
+    $ids = [];
+    foreach ($xml->properties->property as $property) { $ids[] = (string) $property['id']; }
+    return hash('sha256', serialize($ids));
+  }
+
+  /** Language-switcher APIs depend on a frontend query, which cron/AJAX may not have. */
+  private function configuredImportLanguages(): array
+  {
+    global $sitepress;
+    $languages = is_object($sitepress) && is_callable([$sitepress, 'get_active_languages'])
+      ? $sitepress->get_active_languages() : null;
+    if ((!is_array($languages) || !$languages) && function_exists('icl_get_languages')) {
+      $languages = icl_get_languages('skip_missing=0&orderby=code');
+    }
+    $codes = [];
+    foreach (is_array($languages) ? $languages : [] as $key => $language) {
+      $code = is_array($language) ? ($language['language_code'] ?? $language['code'] ?? null) : null;
+      if (!is_string($code) || $code === '') { $code = is_string($key) ? $key : ''; }
+      if ($code !== '') { $codes[] = $code; }
+    }
+    if (!$codes) {
+      throw new \UnexpectedValueException('WPML languages are unavailable; start a new import after WPML is initialized.');
+    }
+    return array_values(array_unique($codes));
+  }
+
+  /** Offsets, completion and translation targets must use the same settings for the whole run. */
+  private function prepareImportRunPlan(\SimpleXMLElement $xml, int $batch_number, bool $single = false): array
+  {
+    if (!$this->current_run_id || $this->current_run_id !== casawp_current_import_run_id()) {
+      throw new \UnexpectedValueException('The import run no longer owns its work.');
+    }
+    $plan = $this->currentImportRunPlan();
+    if ($plan === null) {
+      // Old counters cannot establish coverage when earlier batches used different sizes.
+      if ($batch_number !== 1 || (int) get_option('casawp_completed_batches', 0) > 0) {
+        throw new \UnexpectedValueException('Import batch settings are missing; start a new full import to avoid skipped properties.');
+      }
+      if ($this->import_run_plan !== null && $this->import_run_plan['run_id'] !== $this->current_run_id) {
+        // Restore an explicit public-field override; otherwise refresh the previous run's cache.
+        if ($this->main_lang === $this->import_run_plan['main_language']) {
+          $this->main_lang = $this->import_main_language_override;
+        } else {
+          $this->import_main_language_override = $this->main_lang;
+        }
+        $this->WPML = null;
+      } else {
+        $this->import_main_language_override = $this->main_lang;
+      }
+      global $sitepress;
+      $wpml = (bool) $this->hasWPML();
+      if (!$wpml && (defined('ICL_SITEPRESS_VERSION') || is_object($sitepress))) {
+        $wpml = $this->loadWPML();
+        $this->WPML = $wpml;
+        if (!$wpml) {
+          throw new \UnexpectedValueException('WPML is not initialized; start a new import after WPML is available.');
+        }
+      }
+      $languages = $wpml ? $this->configuredImportLanguages() : [];
+      $main_language = $this->getMainLang();
+      if ($wpml && !in_array($main_language, $languages, true)) {
+        throw new \UnexpectedValueException('The main import language is missing from the WPML language list.');
+      }
+      $default_language = $wpml && is_callable([$sitepress, 'get_default_language'])
+        ? $sitepress->get_default_language() : $main_language;
+      if ($wpml && !in_array($default_language, $languages, true)) {
+        throw new \UnexpectedValueException('The default WPML language is missing from the import language list.');
+      }
+      $total_items = count($xml->properties->property);
+      $override = get_option('casawp_batch_size_override', '');
+      $has_override = !empty($override) && is_numeric($override) && (int) $override > 0;
+      $batch_size = $has_override ? (int) $override : 1;
+      if (!$has_override && get_option('casawp_use_casagateway_cdn', false)) {
+        $language_count = max(1, count($languages));
+        $batch_size = $language_count <= 2 ? 8 : ($language_count === 3 ? 6 : 4);
+      }
+      if ($single) { $batch_size = max(1, $total_items); }
+      $plan = [
+        'run_id' => $this->current_run_id, 'batch_size' => $batch_size,
+        'total_items' => $total_items, 'total_batches' => (int) ceil($total_items / $batch_size),
+        'property_ids_hash' => $this->importPropertyIdsHash($xml),
+        'wpml' => $wpml, 'languages' => $languages, 'main_language' => $main_language,
+        'default_language' => $default_language,
+        'force_language' => get_option('casawp_force_lang'), 'single_request' => $single,
+        'completed_batches' => 0, 'processed_properties' => 0,
+      ];
+      if ($this->current_run_id !== casawp_current_import_run_id()) {
+        throw new \UnexpectedValueException('The import run changed while preparing its batch settings.');
+      }
+      update_option('casawp_import_run_plan', $plan, false);
+    }
+    if ($plan['property_ids_hash'] !== $this->importPropertyIdsHash($xml) || $plan['single_request'] !== $single) {
+      throw new \UnexpectedValueException('The import property list or mode changed; start a new full import.');
+    }
+    if ($batch_number !== (int) $plan['completed_batches'] + 1
+        || (int) $plan['processed_properties'] !== ($batch_number - 1) * $plan['batch_size']) {
+      throw new \UnexpectedValueException('Import batches are out of sequence; cleanup was prevented.');
+    }
+    if ($plan['wpml'] && !$this->loadWPML()) {
+      throw new \UnexpectedValueException('WPML became unavailable during the import; remaining work and cleanup were stopped.');
+    }
+    $this->WPML = $plan['wpml'];
+    $this->main_lang = $plan['main_language'];
+    $this->import_run_plan = $plan;
+    return $plan;
+  }
+
+  private function completeImportPlanBatch(array $plan, int $batch_number, int $processed): void
+  {
+    $current = $this->currentImportRunPlan();
+    if ($current === null || $current['completed_batches'] !== $plan['completed_batches']
+        || $batch_number !== $plan['completed_batches'] + 1
+        || $processed !== min($plan['batch_size'], $plan['total_items'] - $plan['processed_properties'])) {
+      throw new \UnexpectedValueException('Import batch coverage could not be confirmed; cleanup was prevented.');
+    }
+    $plan['completed_batches'] = $batch_number;
+    $plan['processed_properties'] += $processed;
+    update_option('casawp_import_run_plan', $plan, false);
+  }
+
+  private function assertImportCoverage(?\SimpleXMLElement $xml = null): void
+  {
+    $plan = $this->currentImportRunPlan();
+    if ($plan === null || $plan['processed_properties'] !== $plan['total_items']
+        || $plan['completed_batches'] !== $plan['total_batches']
+        || ($xml !== null && $plan['property_ids_hash'] !== $this->importPropertyIdsHash($xml))) {
+      throw new \UnexpectedValueException('Import coverage is incomplete or the property list changed; start a new full import.');
+    }
+  }
+
   public function handle_properties_import_batch($batch_number, $run_id = 0)
   {
     return $this->logger()->run('properties_batch', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id) {
@@ -918,35 +1080,13 @@ class Import
     }
     casawp_set_import_phase($this->current_run_id, 'properties');
 
-    $batch_size_override = get_option('casawp_batch_size_override', '');
-    if (!empty($batch_size_override) && is_numeric($batch_size_override) && (int)$batch_size_override > 0) {
-      $batch_size = (int)$batch_size_override;
-    } else {
-      $batch_size = 1;
-      if (get_option('casawp_use_casagateway_cdn', false)) {
-        $language_count = 1;
-        if ( function_exists('icl_get_languages') ) {
-          $langs = icl_get_languages();
-          if ( ! is_array($langs) ) {
-              $langs = [];
-          }
-            $language_count = count($langs);
-        }
-        if ($language_count <= 2) {
-          $batch_size = 8;
-        } elseif ($language_count === 3) {
-          $batch_size = 6;
-        } else {
-          $batch_size = 4;
-        }
-      }
-    }
-
     $this->ranksort = get_option('casawp_ranksort', array());
 
     try {
 
       $xml = $this->readImportXml($this->getImportFile());
+      $plan = $this->prepareImportRunPlan($xml, (int) $batch_number);
+      $batch_size = $plan['batch_size'];
       if ((int) $batch_number === 1) {
         $this->rememberImportedFeed();
       }
@@ -961,8 +1101,8 @@ class Import
         return;
       }
 
-      $total_items   = count($properties);
-      $total_batches = ceil($total_items / $batch_size);
+      $total_items   = $plan['total_items'];
+      $total_batches = $plan['total_batches'];
       $offset = (int) (($batch_number - 1) * $batch_size);
       // Match array_slice(..., true), including its negative-offset behavior.
       $batch_start = $offset < 0 ? max(0, $total_items + $offset) : min($offset, $total_items);
@@ -1022,6 +1162,7 @@ class Import
 
       if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
 
+      $this->completeImportPlanBatch($plan, (int) $batch_number, count($items_for_current_batch));
       update_option('casawp_ranksort', $this->ranksort);
       update_option('casawp_completed_batches', $batch_number);
       $this->logImport('Completed import batch.', [
@@ -1032,6 +1173,7 @@ class Import
 
       if ($batch_number >= $total_batches) {
         $cleanup_finished = $this->finalize_import_cleanup();
+        if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
         update_option('casawp_completed_batches', $total_batches);
         delete_option('casawp_current_rank');
         delete_option('casawp_ranksort');
@@ -1108,6 +1250,7 @@ class Import
 
       $xml = $this->readImportXml($this->getImportFile());
       if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
+      $plan = $this->prepareImportRunPlan($xml, 1, true);
       $this->rememberImportedFeed();
       casawp_set_import_phase($this->current_run_id, 'properties');
       $this->deactivate_all_properties();
@@ -1138,6 +1281,7 @@ class Import
       if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
 
       // Mark done
+      $this->completeImportPlanBatch($plan, 1, count($properties_array));
       update_option('casawp_completed_batches', 1);
 
       // Clean up leftover properties
@@ -1396,6 +1540,11 @@ class Import
         if (function_exists("wpml_get_default_language")) {
           $main_lang = wpml_get_default_language();
           $this->WPML = true;
+        } else {
+          global $sitepress;
+          $default = is_object($sitepress) && is_callable([$sitepress, 'get_default_language'])
+            ? $sitepress->get_default_language() : apply_filters('wpml_default_language', null);
+          if (is_string($default) && $default !== '') { $main_lang = $default; }
         }
       } else {
         if (get_locale()) {
@@ -1527,8 +1676,10 @@ class Import
           return;
       }
 
-      static $default_lang = null;              // ② micro-cache
-      $default_lang = $default_lang ?? $sitepress->get_default_language();
+      static $default_lang = null;              // ② micro-cache for callers outside managed imports
+      $plan = $this->activeImportLanguagePlan();
+      $source_language = $plan !== null
+          ? $plan['default_language'] : ($default_lang = $default_lang ?? $sitepress->get_default_language());
 
       $main_lang    = $this->getMainLang();
       $post_type    = get_post_type($wp_post);
@@ -1574,7 +1725,7 @@ class Import
               $wp_post->ID, $trid
           ) );
 
-      $expected_source_lang = ( $lang === $main_lang ? null : $default_lang );
+      $expected_source_lang = ( $lang === $main_lang ? null : $source_language );
 
       /* Skip if mapping already matches the intended language. */
       if (
@@ -1591,7 +1742,7 @@ class Import
           $element_type,
           $trid,
           $lang,
-          ( $lang === $main_lang ? null : $default_lang ),
+          $expected_source_lang,
           true
       );
   }
@@ -1630,14 +1781,16 @@ class Import
 
   public function fillMissingTranslations($theoffers)
   {
-
-     if (!function_exists('icl_get_languages')) {
-      return $theoffers;
-    }
-
-    $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
-    if (!is_array($maybe_languages)) {
-      return $theoffers;
+    if (!$theoffers) { return $theoffers; }
+    $plan = $this->activeImportLanguagePlan();
+    if ($plan !== null) {
+      if (!$plan['wpml']) { return $theoffers; }
+      $maybe_languages = array_map(static function ($code) { return ['language_code' => $code]; }, $plan['languages']);
+    } else {
+      // Preserve the existing API for callers outside the managed import flow.
+      if (!function_exists('icl_get_languages')) { return $theoffers; }
+      $maybe_languages = icl_get_languages('skip_missing=0&orderby=code');
+      if (!is_array($maybe_languages)) { return $theoffers; }
     }
 
     $translations = [];
@@ -1827,6 +1980,9 @@ class Import
         }
 
         if ($this->hasWPML()) {
+          if (!$theoffers && $this->import_run_plan !== null && $this->import_run_plan['run_id'] === $this->current_run_id) {
+            throw new \UnexpectedValueException('A property has no source offer for the planned translations.');
+          }
           $theoffers = $this->fillMissingTranslations($theoffers);
         }
 
@@ -4273,6 +4429,9 @@ class Import
 
   public function property2Array($property_xml)
   {
+    $plan = $this->activeImportLanguagePlan();
+    $force_language = $plan !== null
+      ? $plan['force_language'] : get_option('casawp_force_lang');
 
     $propertydata['address'] = array(
       'country'       => ($property_xml->address->country->__toString() ?: ''),
@@ -4479,8 +4638,8 @@ class Import
     $offerDatas = array();
     if ($property_xml->offers) {
       foreach ($property_xml->offers->offer as $offer_xml) {
-        if (get_option('casawp_force_lang')) {
-          $offerData['lang'] =  get_option('casawp_force_lang');
+        if ($force_language) {
+          $offerData['lang'] = $force_language;
         } else {
           $offerData['lang'] =  strtolower($offer_xml['lang']->__toString());
         }
