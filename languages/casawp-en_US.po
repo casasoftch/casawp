@@ -4154,3 +4154,7 @@ msgstr "Choose a valid currency, billing period and property unit."
 #: classes/PropertyMeta.php:449
 msgid "Choose a valid offer type and included status."
 msgstr "Choose a valid offer type and included status."
+
+#: classes/ImportProgress.php:67
+msgid "Import stopped: The import feed is empty and contains no properties."
+msgstr "Import stopped: The import feed is empty and contains no properties."

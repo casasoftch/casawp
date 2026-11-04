@@ -357,6 +357,9 @@ class Import
           curl_close($ch);
       }
 
+      if (is_string($response) && trim($response) === '') {
+          $this->rejectEmptyFeed();
+      }
       if (!$response || is_numeric($response)) {
           $this->addToLog('CASAWP: Invalid response from gateway');
           throw new \Exception('Invalid response from CasaGateway.');
@@ -1157,6 +1160,18 @@ class Import
     }
   }
 
+  /** Retain the reason for this run; callers keep their existing failure handling. */
+  private function rejectEmptyFeed(): void
+  {
+    $state = get_option('casawp_import_progress_state', []);
+    if ($this->current_run_id && $this->current_run_id === casawp_current_import_run_id()
+        && is_array($state) && (int) ($state['run_id'] ?? 0) === $this->current_run_id) {
+      $state['failure_reason'] = 'empty_feed';
+      update_option('casawp_import_progress_state', $state, false);
+    }
+    throw new \UnexpectedValueException('Import feed is empty and contains no properties.');
+  }
+
   /** Parse and validate feeds before any property changes, restoring libxml's error mode. */
   private function readImportXml($file_path): \SimpleXMLElement
   {
@@ -1174,6 +1189,9 @@ class Import
       'feed_bytes' => strlen($xml_string),
       'feed_sha256' => $this->feed_fingerprint,
     ]);
+    if (trim($xml_string) === '') {
+      $this->rejectEmptyFeed();
+    }
     $previous = libxml_use_internal_errors(true);
     libxml_clear_errors();
     try {
@@ -1192,6 +1210,13 @@ class Import
         throw new \UnexpectedValueException('Failed to parse XML.');
       }
       $this->logger()->setStage('feed_validation');
+      // CasaGateway can return only export metadata when there are no listings.
+      // Keep rejecting that feed; an explicit <properties/> still requests cleanup.
+      if (!isset($xml->properties) && $xml->getName() === 'export' && trim((string) $xml) === ''
+          && count($xml->exportInformation) <= 1
+          && count($xml->xpath('./*')) === count($xml->exportInformation)) {
+        $this->rejectEmptyFeed();
+      }
       if (!isset($xml->properties) || count($xml->properties) !== 1) {
         throw new \UnexpectedValueException('Invalid property feed: expected one properties node.');
       }

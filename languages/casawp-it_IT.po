@@ -5016,3 +5016,7 @@ msgstr "Scegli una valuta, un periodo di fatturazione e un’unità dell’immob
 #: classes/PropertyMeta.php:449
 msgid "Choose a valid offer type and included status."
 msgstr "Scegli un tipo di offerta valido e indica se l’offerta è inclusa nel prezzo."
+
+#: classes/ImportProgress.php:67
+msgid "Import stopped: The import feed is empty and contains no properties."
+msgstr "Importazione interrotta: il feed di importazione è vuoto e non contiene immobili."

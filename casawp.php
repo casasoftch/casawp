@@ -322,9 +322,10 @@ function casawp_handle_import_requests() {
 		'message' => $progress['message']
 	  ], 60);
 	} catch (\Throwable $e) {
+	  $progress = \casawp\ImportProgress::data();
 	  set_transient('casawp_single_import_result', [
 		'status'  => 'error',
-		'message' => __('Import stopped. See the logs for details.', 'casawp')
+		'message' => $progress['status'] === 'stopped' ? $progress['message'] : __('Import stopped. See the logs for details.', 'casawp')
 	  ], 60);
 	}
 
@@ -578,14 +579,15 @@ function casawp_start_import() {
 			if ($single) { casawp_start_single_request_import('Update from CASAGATEWAY'); }
 			else { casawp_start_new_import('Update from CASAGATEWAY', true); }
 		} catch (\Throwable $e) {
-			wp_send_json_error(['message' => __('Import stopped. See the logs for details.', 'casawp'),
-				'progress' => \casawp\ImportProgress::data()], 409);
+			$progress = \casawp\ImportProgress::data();
+			wp_send_json_error(['message' => $progress['status'] === 'stopped' ? $progress['message'] : __('Import stopped. See the logs for details.', 'casawp'),
+				'progress' => $progress], 409);
 			return;
 		}
 		$queued = casawp_has_pending() && (int) get_option('casawp_import_progress_run_id', 0) === $previous_run;
 		$progress = \casawp\ImportProgress::data();
 		if (!$queued && get_option('casawp_import_failed')) {
-			wp_send_json_error(['message' => __('Import stopped. See the logs for details.', 'casawp'), 'progress' => $progress], 409);
+			wp_send_json_error(['message' => $progress['message'], 'progress' => $progress], 409);
 			return;
 		}
 		$message = $queued ? __('Import queued.', 'casawp') : ($single ? 'Single-request import started/finished' : 'Batch import started successfully');

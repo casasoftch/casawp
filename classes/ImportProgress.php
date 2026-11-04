@@ -62,6 +62,10 @@ class ImportProgress
             $status = 'stopped';
             $phase = $failed ? 'failed' : 'canceled';
             $message = __('Import stopped. See the logs for details.', 'casawp');
+            if ($failed && is_array($state) && (int) ($state['run_id'] ?? 0) === ($run ?: $last_run)
+                && ($state['failure_reason'] ?? '') === 'empty_feed') {
+                $message = __('Import stopped: The import feed is empty and contains no properties.', 'casawp');
+            }
         } elseif ($pending && !$run) {
             // A requested import may be waiting for standalone cleanup to release its lock.
             $status = 'running';
