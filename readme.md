@@ -26,6 +26,8 @@ CASAWP validates the XML structure and every property ID before changing existin
 
 A blank feed or a CasaGateway `export` containing only export metadata stops with an explicit empty-feed message on the settings page and in manual import feedback. Existing listings are retained for these rejected feeds. The reason belongs to that import run and is reset when a new run starts; other failures keep the general log notice.
 
+CasaGateway's explicit JSON error stating that the API key could not be found produces a dedicated settings-page message asking the administrator to check the API keys. This is detected both in a download response and in an already-saved import file, before XML parsing. The monthly log records the same cause under `gateway.api_key_not_found`. The error response is not saved over an existing feed, and the key included in its detail is omitted from the notice, log entry and diagnostic exception. Other authorization and XML errors keep their existing failure messages.
+
 An exception during an individual property update stops its owning import instead of continuing to final cleanup with an unprocessed property. Its remaining import and cleanup actions are cancelled, the run's lock is released and the existing stopped-import notice directs the administrator to the logs. This also covers failures before a post ID is available and errors while restoring manually changed attachments. Already applied updates and deletions are retained. An older worker cannot stop a newer run, and a later successful import keeps the normal cleanup behaviour.
 
 Batched import preparation

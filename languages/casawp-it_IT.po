@@ -5020,3 +5020,7 @@ msgstr "Scegli un tipo di offerta valido e indica se l’offerta è inclusa nel 
 #: classes/ImportProgress.php:67
 msgid "Import stopped: The import feed is empty and contains no properties."
 msgstr "Importazione interrotta: il feed di importazione è vuoto e non contiene immobili."
+
+#: classes/ImportProgress.php:69
+msgid "Import stopped: The API key does not exist. Please check the CASAGATEWAY API keys in the settings."
+msgstr "Importazione interrotta: la chiave API non esiste. Verifica le chiavi API CASAGATEWAY nelle impostazioni."

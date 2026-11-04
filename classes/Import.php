@@ -347,6 +347,9 @@ class Import
               'response_bytes' => is_string($response) ? strlen($response) : 0,
               'content_type' => curl_getinfo($ch, CURLINFO_CONTENT_TYPE),
           ], ($curl_errno || $httpCode >= 400 || !$httpCode) ? 'error' : 'info');
+          if (!$curl_errno && is_string($response)) {
+              $this->rejectGatewayApiKeyError($response);
+          }
           if ($httpCode == 404) {
               throw new \Exception('Received 404 from CasaGateway.');
           }
@@ -1370,15 +1373,35 @@ class Import
   }
 
   /** Retain the reason for this run; callers keep their existing failure handling. */
-  private function rejectEmptyFeed(): void
+  private function rejectImportFeed(string $reason, string $message): void
   {
     $state = get_option('casawp_import_progress_state', []);
     if ($this->current_run_id && $this->current_run_id === casawp_current_import_run_id()
         && is_array($state) && (int) ($state['run_id'] ?? 0) === $this->current_run_id) {
-      $state['failure_reason'] = 'empty_feed';
+      $state['failure_reason'] = $reason;
       update_option('casawp_import_progress_state', $state, false);
     }
-    throw new \UnexpectedValueException('Import feed is empty and contains no properties.');
+    throw new \UnexpectedValueException($message);
+  }
+
+  private function rejectEmptyFeed(): void
+  {
+    $this->rejectImportFeed('empty_feed', 'Import feed is empty and contains no properties.');
+  }
+
+  /** Match the gateway's explicit error without exposing the key included in its detail. */
+  private function rejectGatewayApiKeyError(string $content): void
+  {
+    if (strpos(ltrim($content), '{') !== 0) { return; }
+    $problem = json_decode($content, true);
+    if (is_array($problem) && in_array($problem['status'] ?? null, [401, '401'], true)
+        && isset($problem['detail']) && is_string($problem['detail'])
+        && strpos($problem['detail'], 'The given API key could not be found:') === 0) {
+      $this->logger()->write('CasaGateway API key does not exist. Check the CASAGATEWAY API keys in the settings.', [
+        'event' => 'gateway.api_key_not_found',
+      ], 'error');
+      $this->rejectImportFeed('api_key_not_found', 'CasaGateway could not find the configured API key.');
+    }
   }
 
   /** Parse and validate feeds before any property changes, restoring libxml's error mode. */
@@ -1392,6 +1415,7 @@ class Import
     if ($xml_string === false) {
       throw new \UnexpectedValueException('Failed to read import file.');
     }
+    $this->rejectGatewayApiKeyError($xml_string);
 
     $this->feed_fingerprint = hash('sha256', $xml_string);
     $this->logger()->setStage('feed_parse', [
