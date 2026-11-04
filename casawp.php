@@ -372,11 +372,11 @@ function eg_increase_time_limit( $time_limit ) {
 add_filter( 'action_scheduler_queue_runner_time_limit', 'eg_increase_time_limit' );
 
 
-add_action('action_scheduler_failed_execution', 'casawp_handle_failed_action');
-add_action('action_scheduler_failed_action', 'casawp_handle_failed_action');
-add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action' );
+add_action('action_scheduler_failed_execution', 'casawp_handle_failed_action', 10, 3);
+add_action('action_scheduler_failed_action', 'casawp_handle_failed_action', 10, 3);
+add_action( 'action_scheduler_unexpected_shutdown', 'casawp_handle_failed_action', 10, 3 );
 
-function casawp_handle_failed_action($action_id) {
+function casawp_handle_failed_action($action_id, $failure = null, $runner_context = '') {
 	error_log('Action Scheduler Failed Hook Triggered for Action ID: ' . $action_id);
 	$action = ActionScheduler::store()->fetch_action($action_id);
 	if (!$action) {
@@ -398,12 +398,60 @@ function casawp_handle_failed_action($action_id) {
 		}
 		if (!$run_id || $run_id !== casawp_current_import_run_id()) { return; }
 		$failed_batch = (int) ($args['batch_number'] ?? 0);
+		$property_offset = isset($args['property_offset']) ? (int) $args['property_offset'] : null;
 		if ($hook === 'casawp_batch_import' && $failed_batch > 0
 			&& (int) get_option('casawp_completed_batches', 0) >= $failed_batch) { return; }
+		if ($hook === 'casawp_batch_import' && $failed_batch > 0) {
+			if (function_exists('wp_cache_delete')) {
+				wp_cache_delete('casawp_import_run_plan', 'options');
+				wp_cache_delete('notoptions', 'options');
+			}
+			$plan = get_option('casawp_import_run_plan', []);
+			if (is_array($plan) && (int) ($plan['run_id'] ?? 0) === $run_id && (int) ($plan['batch_size'] ?? 0) > 0) {
+				if ((int) ($plan['completed_batches'] ?? 0) >= $failed_batch) { return; }
+				$action_start_offset = $property_offset ?? (($failed_batch - 1) * (int) $plan['batch_size']);
+				// Ignore late failures only while the checkpointed continuation is pending or running.
+				if ($action_start_offset >= 0 && (int) ($plan['processed_properties'] ?? 0) > $action_start_offset
+					&& as_next_scheduled_action('casawp_batch_import', [
+						'batch_number' => $failed_batch, 'run_id' => $run_id, 'property_offset' => (int) $plan['processed_properties'],
+					], 'casawp_run_' . $run_id)) { return; }
+			}
+		}
 		$cleanup = get_option('casawp_import_cleanup_progress', []);
 		if ($hook === 'casawp_finalize_import_cleanup_batch' && ($cleanup['run_id'] ?? 0) === $run_id
 			&& $failed_batch > 0 && (int) ($cleanup['batch_number'] ?? 0) > $failed_batch) { return; }
 		if (!casawp_fail_import_run($run_id)) { return; }
+		$logger = new casawp\ImportLogger(static function () use ($run_id) { return $run_id; });
+		$failure_context = [
+			'event' => 'scheduler.failed',
+			'failure_hook' => current_filter(),
+			'action_id' => (int) $action_id,
+			'hook' => $hook,
+			'run_id' => $run_id,
+			'batch_number' => $failed_batch,
+			'property_offset' => $property_offset,
+			'group' => method_exists($action, 'get_group') ? $action->get_group() : '',
+			'runner_context' => is_scalar($runner_context) ? (string) $runner_context : '',
+		];
+		if ($failure instanceof \Throwable) {
+			$logger->exception('Import action failed during execution.', $failure, array_merge($failure_context, ['reason' => 'exception']));
+		} elseif (is_array($failure)) {
+			$logger->write('Import action terminated during an unexpected shutdown.', array_merge($failure_context, [
+				'reason' => 'unexpected_shutdown',
+				'error' => $failure['message'] ?? '',
+				'file' => $failure['file'] ?? '',
+				'line' => (int) ($failure['line'] ?? 0),
+				'php_error_type' => (int) ($failure['type'] ?? 0),
+			]), 'error');
+		} elseif (is_numeric($failure)) {
+			// This event comes from a later worker; it cannot establish why the original worker stopped.
+			$logger->write('Import action exceeded the scheduler failure timeout.', array_merge($failure_context, [
+				'reason' => 'timeout',
+				'timeout_seconds' => (int) $failure,
+			]), 'error');
+		} else {
+			$logger->write('Import action failed without additional scheduler error details.', array_merge($failure_context, ['reason' => 'unknown']), 'error');
+		}
 		$batch_number = isset($args['batch_number']) ? $args['batch_number'] : 'unknown';
 		$site_domain = home_url();
 		$to = get_option('admin_email');

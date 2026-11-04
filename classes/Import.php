@@ -87,6 +87,7 @@ class Import
   private bool $rank_saved_before_offer = false;
   private ?array $import_run_plan = null;
   private $import_main_language_override = false;
+  private ?array $batch_work = null;
 
   private function logger(): ImportLogger
   {
@@ -112,7 +113,7 @@ class Import
 
   public function register_hooks()
   {
-    add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'), 10, 2);
+    add_action('casawp_batch_import', array($this, 'handle_properties_import_batch'), 10, 3);
     add_action('casawp_delete_outdated_properties', array($this, 'delete_outdated_properties'), 10, 2);
     add_action('casawp_finalize_import_cleanup_batch', array($this, 'handle_finalize_import_cleanup_batch'), 10, 2);
   }
@@ -982,7 +983,8 @@ class Import
       $batch_size = $has_override ? (int) $override : 1;
       if (!$has_override && get_option('casawp_use_casagateway_cdn', false)) {
         $language_count = max(1, count($languages));
-        $batch_size = $language_count <= 2 ? 8 : ($language_count === 3 ? 6 : 4);
+        // Budget translated offers rather than allowing 18 offers in a three-language request.
+        $batch_size = max(1, (int) floor(8 / $language_count));
       }
       if ($single) { $batch_size = max(1, $total_items); }
       $plan = [
@@ -992,7 +994,7 @@ class Import
         'wpml' => $wpml, 'languages' => $languages, 'main_language' => $main_language,
         'default_language' => $default_language,
         'force_language' => get_option('casawp_force_lang'), 'single_request' => $single,
-        'completed_batches' => 0, 'processed_properties' => 0,
+        'completed_batches' => 0, 'processed_properties' => 0, 'batch_processed_properties' => 0,
       ];
       if ($this->current_run_id !== casawp_current_import_run_id()) {
         throw new \UnexpectedValueException('The import run changed while preparing its batch settings.');
@@ -1002,8 +1004,11 @@ class Import
     if ($plan['property_ids_hash'] !== $this->importPropertyIdsHash($xml) || $plan['single_request'] !== $single) {
       throw new \UnexpectedValueException('The import property list or mode changed; start a new full import.');
     }
+    $plan['batch_processed_properties'] = (int) ($plan['batch_processed_properties'] ?? 0);
+    $batch_start = ($batch_number - 1) * $plan['batch_size'];
     if ($batch_number !== (int) $plan['completed_batches'] + 1
-        || (int) $plan['processed_properties'] !== ($batch_number - 1) * $plan['batch_size']) {
+        || $plan['batch_processed_properties'] < 0 || $plan['batch_processed_properties'] >= $plan['batch_size']
+        || (int) $plan['processed_properties'] !== $batch_start + $plan['batch_processed_properties']) {
       throw new \UnexpectedValueException('Import batches are out of sequence; cleanup was prevented.');
     }
     if ($plan['wpml'] && !$this->loadWPML()) {
@@ -1015,17 +1020,35 @@ class Import
     return $plan;
   }
 
-  private function completeImportPlanBatch(array $plan, int $batch_number, int $processed): void
+  private function completeImportPlanBatch(array $plan, int $batch_number, int $processed): bool
   {
     $current = $this->currentImportRunPlan();
+    $remaining = min($plan['batch_size'] - $plan['batch_processed_properties'], $plan['total_items'] - $plan['processed_properties']);
     if ($current === null || $current['completed_batches'] !== $plan['completed_batches']
+        || $current['processed_properties'] !== $plan['processed_properties']
         || $batch_number !== $plan['completed_batches'] + 1
-        || $processed !== min($plan['batch_size'], $plan['total_items'] - $plan['processed_properties'])) {
+        || $processed <= 0 || $processed > $remaining) {
       throw new \UnexpectedValueException('Import batch coverage could not be confirmed; cleanup was prevented.');
     }
-    $plan['completed_batches'] = $batch_number;
     $plan['processed_properties'] += $processed;
+    $plan['batch_processed_properties'] += $processed;
+    $completed = $processed === $remaining;
+    if ($completed) {
+      $plan['completed_batches'] = $batch_number;
+      $plan['batch_processed_properties'] = 0;
+    }
     update_option('casawp_import_run_plan', $plan, false);
+    return $completed;
+  }
+
+  /** Stop between complete properties; a property's translations always stay together. */
+  private function importBatchBudgetExceeded(): bool
+  {
+    if ($this->batch_work === null || !$this->batch_work['processed']) { return false; }
+    $now = microtime(true);
+    $average = max(0, $now - $this->batch_work['started_at']) / $this->batch_work['processed'];
+    return $now + $average >= $this->batch_work['deadline']
+      || ($this->batch_work['memory_limit'] > 0 && memory_get_usage(true) >= $this->batch_work['memory_limit'] * 0.8);
   }
 
   private function assertImportCoverage(?\SimpleXMLElement $xml = null): void
@@ -1033,6 +1056,7 @@ class Import
     $plan = $this->currentImportRunPlan();
     if ($plan === null || $plan['processed_properties'] !== $plan['total_items']
         || $plan['completed_batches'] !== $plan['total_batches']
+        || !empty($plan['batch_processed_properties'])
         || ($xml !== null && $plan['property_ids_hash'] !== $this->importPropertyIdsHash($xml))) {
       throw new \UnexpectedValueException('Import coverage is incomplete or the property list changed; start a new full import.');
     }
@@ -1040,12 +1064,14 @@ class Import
 
   public function handle_properties_import_batch($batch_number, $run_id = 0)
   {
-    return $this->logger()->run('properties_batch', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id) {
-      return $this->importPropertiesBatch($batch_number, $run_id);
+    // The optional action argument distinguishes resumed work from an older worker's notification.
+    $property_offset = func_num_args() > 2 ? (int) func_get_arg(2) : null;
+    return $this->logger()->run('properties_batch', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id, $property_offset) {
+      return $this->importPropertiesBatch($batch_number, $run_id, $property_offset);
     });
   }
 
-  private function importPropertiesBatch($batch_number, $run_id)
+  private function importPropertiesBatch($batch_number, $run_id, ?int $property_offset = null)
   {
     $active_run = casawp_current_import_run_id();
     if ($run_id && (int) $run_id !== $active_run) { return; }
@@ -1078,6 +1104,11 @@ class Import
       wp_suspend_cache_addition(false);
       return;
     }
+    $existing_plan = $this->currentImportRunPlan();
+    if ($property_offset !== null && $existing_plan !== null && $property_offset < $existing_plan['processed_properties']) {
+      wp_suspend_cache_addition(false);
+      return;
+    }
     casawp_set_import_phase($this->current_run_id, 'properties');
 
     $this->ranksort = get_option('casawp_ranksort', array());
@@ -1086,8 +1117,11 @@ class Import
 
       $xml = $this->readImportXml($this->getImportFile());
       $plan = $this->prepareImportRunPlan($xml, (int) $batch_number);
+      if ($property_offset !== null && $property_offset !== $plan['processed_properties']) {
+        throw new \UnexpectedValueException('Import continuation is out of sequence; cleanup was prevented.');
+      }
       $batch_size = $plan['batch_size'];
-      if ((int) $batch_number === 1) {
+      if ((int) $batch_number === 1 && !$plan['processed_properties']) {
         $this->rememberImportedFeed();
       }
 
@@ -1104,9 +1138,10 @@ class Import
       $total_items   = $plan['total_items'];
       $total_batches = $plan['total_batches'];
       $offset = (int) (($batch_number - 1) * $batch_size);
-      // Match array_slice(..., true), including its negative-offset behavior.
-      $batch_start = $offset < 0 ? max(0, $total_items + $offset) : min($offset, $total_items);
+      // Keep the logical range fixed and skip properties saved by an earlier request.
+      $batch_start = min($offset, $total_items);
       $batch_end = min($total_items, $batch_start + $batch_size);
+      $batch_start += $plan['batch_processed_properties'];
 
       $validated_feed = get_option('casawp_import_conversion_fingerprint', []);
       $convert_all = !is_array($validated_feed)
@@ -1135,7 +1170,7 @@ class Import
         ], false);
       }
 
-      if ($batch_number == 1) {
+      if ($batch_number == 1 && !$plan['processed_properties']) {
         update_option('casawp_total_batches', $total_batches);
         update_option('casawp_completed_batches', 0);
         update_option('casawp_current_rank', 0);
@@ -1158,17 +1193,47 @@ class Import
         'property_ids' => array_column($items_for_current_batch, 'exportproperty_id'),
       ]);
 
-      $this->updateOffers($items_for_current_batch);
+      // Custom whole-batch updaters keep their existing call contract.
+      $bounded = (new \ReflectionMethod($this, 'updateOffers'))->getDeclaringClass()->getName() === self::class;
+      $seconds = max(1, (int) apply_filters('casawp_import_batch_time_limit', 15));
+      $php_limit = (int) ini_get('max_execution_time');
+      if ($php_limit > 0) { $seconds = min($seconds, max(1, $php_limit - 5)); }
+      $this->batch_work = $bounded ? [
+        'started_at' => $started_at,
+        'deadline' => $started_at + $seconds,
+        'memory_limit' => function_exists('wp_convert_hr_to_bytes') ? wp_convert_hr_to_bytes(ini_get('memory_limit')) : 0,
+        'processed' => 0,
+      ] : null;
+      try {
+        $this->updateOffers($items_for_current_batch);
+        $processed = $this->batch_work !== null ? $this->batch_work['processed'] : count($items_for_current_batch);
+      } finally {
+        $this->batch_work = null;
+      }
 
       if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
 
-      $this->completeImportPlanBatch($plan, (int) $batch_number, count($items_for_current_batch));
+      $batch_completed = $this->completeImportPlanBatch($plan, (int) $batch_number, $processed);
       update_option('casawp_ranksort', $this->ranksort);
+      if (!$batch_completed) {
+        $next_offset = $plan['processed_properties'] + $processed;
+        $this->logImport('Import batch checkpoint saved; remaining properties will continue in a new request.', [
+          'event' => 'batch.yielded', 'properties_processed' => $processed, 'next_property_offset' => $next_offset,
+          'duration_seconds' => round(microtime(true) - $started_at, 3),
+        ]);
+        // The same batch is still running, so as_next_scheduled_action() would find this action itself.
+        $action_id = as_schedule_single_action(time(), 'casawp_batch_import', [
+          'batch_number' => (int) $batch_number, 'run_id' => $this->current_run_id, 'property_offset' => $next_offset,
+        ], $this->group());
+        $this->logScheduledAction($action_id, 'casawp_batch_import', (int) $batch_number, $this->current_run_id, 0);
+        wp_suspend_cache_addition(false);
+        return;
+      }
       update_option('casawp_completed_batches', $batch_number);
       $this->logImport('Completed import batch.', [
         'event' => 'batch.processed',
         'duration_seconds' => round(microtime(true) - $started_at, 3),
-        'properties_processed' => count($items_for_current_batch),
+        'properties_processed' => $processed,
       ], 'debug');
 
       if ($batch_number >= $total_batches) {
@@ -1961,6 +2026,7 @@ class Import
     if (!empty($batched_file)) {
       foreach ($batched_file as $property) {
         if ($this->current_run_id && $this->current_run_id !== casawp_current_import_run_id()) { return; }
+        if ($this->importBatchBudgetExceeded()) { break; }
         $this->logger()->setStage('property_offers', ['property_id' => $property['exportproperty_id']]);
         #error_log(print_r($property, true));
         $curRank++;
@@ -2095,13 +2161,18 @@ class Import
             return;
           }
         }
+        if ($this->batch_work !== null) { $this->batch_work['processed']++; }
       }
     }
 
+    if ($this->current_run_id && $this->current_run_id !== casawp_current_import_run_id()) { return; }
     $this->logger()->setStage('archive_statistics', ['property_id' => null]);
     update_option('casawp_current_rank', $curRank);
 
     $this->reactivate_properties($found_posts);
+
+    // A checkpoint must not multiply the four full postmeta scans within one logical batch.
+    if ($this->batch_work !== null && $this->batch_work['processed'] < count($batched_file)) { return; }
 
     $meta_key_area = 'areaForOrder';
     $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);

@@ -74,6 +74,10 @@ class ImportProgress
         } elseif ($run) {
             $status = $phase === 'finalizing' || $cleanup_started || ($total > 0 && $completed >= $total) ? 'cleanup' : 'running';
             $progress = $total ? min(99, ($completed / $total) * 99) : 0;
+            $plan = get_option('casawp_import_run_plan', []);
+            if (is_array($plan) && (int) ($plan['run_id'] ?? 0) === $run && (int) ($plan['total_items'] ?? 0) > 0) {
+                $progress = max(0, min(99, ((int) ($plan['processed_properties'] ?? 0) / (int) $plan['total_items']) * 99));
+            }
             $message = __('Importing properties…', 'casawp');
             if ($status === 'cleanup') {
                 $progress = 99;
