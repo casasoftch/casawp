@@ -36,7 +36,7 @@ class ActionScheduler_QueueRunner extends ActionScheduler_Abstract_QueueRunner {
 	 * @param ActionScheduler_FatalErrorMonitor $monitor
 	 * @param ActionScheduler_QueueCleaner      $cleaner
 	 */
-	public function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null, ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {
+	public function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null, ?ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {
 		parent::__construct( $store, $monitor, $cleaner );
 
 		if ( is_null( $async_request ) ) {

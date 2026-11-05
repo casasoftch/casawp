@@ -31,7 +31,7 @@ abstract class ActionScheduler_Abstract_QueueRunner extends ActionScheduler_Abst
 	 * @param ActionScheduler_FatalErrorMonitor $monitor
 	 * @param ActionScheduler_QueueCleaner      $cleaner
 	 */
-	public function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null ) {
+	public function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null ) {
 
 		$this->created_time = microtime( true );
 

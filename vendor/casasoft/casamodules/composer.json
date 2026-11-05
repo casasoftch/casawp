@@ -14,8 +14,7 @@
         }
     ],
     "require": {
-        "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
-        "laminas/laminas-dependency-plugin": "2.6.0"
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
     },
     "require-dev": {},
     "suggest": {},
@@ -31,10 +30,6 @@
             "CasasoftGeo\\": "src/"
         }
     },
-    "config": {
-        "allow-plugins": {
-            "laminas/laminas-dependency-plugin": true
-        }},
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"

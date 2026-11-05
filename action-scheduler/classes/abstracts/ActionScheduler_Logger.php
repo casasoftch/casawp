@@ -25,7 +25,7 @@ abstract class ActionScheduler_Logger {
 	 *
 	 * @return string The log entry ID
 	 */
-	abstract public function log( $action_id, $message, DateTime $date = NULL );
+	abstract public function log( $action_id, $message, ?DateTime $date = NULL );
 
 	/**
 	 * @param string $entry_id
@@ -139,7 +139,7 @@ abstract class ActionScheduler_Logger {
 	 *
 	 * @return ActionScheduler_LogEntry[]
 	 */
-	public function log_failed_fetch_action( $action_id, Exception $exception = NULL ) {
+	public function log_failed_fetch_action( $action_id, ?Exception $exception = NULL ) {
 
 		if ( ! is_null( $exception ) ) {
 			/* translators: %s: exception message */

@@ -7,7 +7,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class ConversionServiceFactory implements FactoryInterface
 {
 
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null){
+    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, ?array $options = null){
         $translator = $container->get('MvcTranslator');
         $numvalService = $container->get('CasasoftNumval');
         $categoryService = $container->get('CasasoftCategory');

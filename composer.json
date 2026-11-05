@@ -9,12 +9,20 @@
     "homepage": "http://framework.zend.com/",
     "repositories": [
         {
-            "type": "git",
-            "url": "git@github.com:CasasoftCH/casamodules.git"
+            "type": "composer",
+            "url": "./distribution/wp.casasoft.com/casawp/compatibility",
+            "only": [
+                "casasoft/casamodules",
+                "laminas/laminas-eventmanager",
+                "laminas/laminas-log",
+                "laminas/laminas-mvc",
+                "laminas/laminas-serializer",
+                "laminas/laminas-view"
+            ]
         }
     ],
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
         "laminas/laminas-loader": "^2.0",
         "laminas/laminas-mvc": "^3.7",
         "laminas/laminas-i18n": "^2.0",
@@ -34,8 +42,12 @@
         }
     },
     "config": {
-        "allow-plugins": {
-            "laminas/laminas-dependency-plugin": true
+        "platform": {
+            "php": "8.1.0"
         }
+    },
+    "scripts": {
+        "post-install-cmd": "@php distribution/wp.casasoft.com/casawp/compatibility/apply-patches.php",
+        "post-update-cmd": "@php distribution/wp.casasoft.com/casawp/compatibility/apply-patches.php"
     }
 }

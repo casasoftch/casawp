@@ -40,9 +40,10 @@ rollback and release history.
 
 The bundled dependencies require PHP 8.1. The plugin/readme headers and both
 update responses declare that minimum, while the update client passes it to
-WordPress. Composer and the lock file retain the supported PHP 8.1–8.3 range;
-PHP 8.4 support requires a separate dependency compatibility review. The
-builder checks those declarations against the bundled runtime requirement.
+WordPress. Composer and the lock file support PHP 8.1–8.4. The bundled versions
+carry narrow compatibility backports, described in
+[compatibility/README.md](compatibility/README.md). The builder checks those
+patches and the declarations against the bundled runtime requirement.
 
 ## Translation compatibility
 

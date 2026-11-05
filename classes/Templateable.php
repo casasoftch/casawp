@@ -13,7 +13,7 @@
 
     }
 
-    public function setTemplate($type = 'archive', $object){
+    public function setTemplate($type, $object){
       $this->type = $type;
       switch ($type) {
         case 'archive':

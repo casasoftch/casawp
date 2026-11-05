@@ -6,7 +6,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class UtilityFactory implements FactoryInterface
 {
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array$options = NULL)
+    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, ?array$options = NULL)
     {
         $utilityService = $container->get('CasasoftUtility');
         $helper = new Category($utilityService);

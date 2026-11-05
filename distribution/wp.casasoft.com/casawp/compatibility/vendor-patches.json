@@ -1,0 +1,692 @@
+{
+    "action-scheduler/classes/ActionScheduler_ActionFactory.php": [
+        {
+            "from": "\tpublic function get_stored_action( $status, $hook, array $args = array(), ActionScheduler_Schedule $schedule = null, $group = '' ) {\n",
+            "to": "\tpublic function get_stored_action( $status, $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = null, $group = '' ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/ActionScheduler_QueueCleaner.php": [
+        {
+            "from": "\tpublic function __construct( ActionScheduler_Store $store = null, $batch_size = 20 ) {\n",
+            "to": "\tpublic function __construct( ?ActionScheduler_Store $store = null, $batch_size = 20 ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/ActionScheduler_QueueRunner.php": [
+        {
+            "from": "\tpublic function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null, ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {\n",
+            "to": "\tpublic function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null, ?ActionScheduler_AsyncRequest_QueueRunner $async_request = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php": [
+        {
+            "from": "\tpublic function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null ) {\n",
+            "to": "\tpublic function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/abstracts/ActionScheduler_Abstract_QueueRunner.php": [
+        {
+            "from": "\tpublic function __construct( ActionScheduler_Store $store = null, ActionScheduler_FatalErrorMonitor $monitor = null, ActionScheduler_QueueCleaner $cleaner = null ) {\n",
+            "to": "\tpublic function __construct( ?ActionScheduler_Store $store = null, ?ActionScheduler_FatalErrorMonitor $monitor = null, ?ActionScheduler_QueueCleaner $cleaner = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/abstracts/ActionScheduler_Abstract_RecurringSchedule.php": [
+        {
+            "from": "\tpublic function __construct( DateTime $date, $recurrence, DateTime $first = null ) {\n",
+            "to": "\tpublic function __construct( DateTime $date, $recurrence, ?DateTime $first = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/abstracts/ActionScheduler_Logger.php": [
+        {
+            "from": "\tabstract public function log( $action_id, $message, DateTime $date = NULL );\n",
+            "to": "\tabstract public function log( $action_id, $message, ?DateTime $date = NULL );\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function log_failed_fetch_action( $action_id, Exception $exception = NULL ) {\n",
+            "to": "\tpublic function log_failed_fetch_action( $action_id, ?Exception $exception = NULL ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/abstracts/ActionScheduler_Store.php": [
+        {
+            "from": "\tabstract public function save_action( ActionScheduler_Action $action, DateTime $scheduled_date = NULL );\n",
+            "to": "\tabstract public function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL );\n",
+            "count": 1
+        },
+        {
+            "from": "\tabstract public function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' );\n",
+            "to": "\tabstract public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' );\n",
+            "count": 1
+        },
+        {
+            "from": "\tprotected function get_scheduled_date_string( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {\n",
+            "to": "\tprotected function get_scheduled_date_string( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tprotected function get_scheduled_date_string_local( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {\n",
+            "to": "\tprotected function get_scheduled_date_string_local( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/actions/ActionScheduler_Action.php": [
+        {
+            "from": "\tpublic function __construct( $hook, array $args = array(), ActionScheduler_Schedule $schedule = NULL, $group = '' ) {\n",
+            "to": "\tpublic function __construct( $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = NULL, $group = '' ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/actions/ActionScheduler_CanceledAction.php": [
+        {
+            "from": "\tpublic function __construct( $hook, array $args = array(), ActionScheduler_Schedule $schedule = null, $group = '' ) {\n",
+            "to": "\tpublic function __construct( $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = null, $group = '' ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/actions/ActionScheduler_NullAction.php": [
+        {
+            "from": "\tpublic function __construct( $hook = '', array $args = array(), ActionScheduler_Schedule $schedule = NULL ) {\n",
+            "to": "\tpublic function __construct( $hook = '', array $args = array(), ?ActionScheduler_Schedule $schedule = NULL ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php": [
+        {
+            "from": "\tpublic function log( $action_id, $message, DateTime $date = null ) {\n",
+            "to": "\tpublic function log( $action_id, $message, ?DateTime $date = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/data-stores/ActionScheduler_DBStore.php": [
+        {
+            "from": "\tpublic function save_unique_action( ActionScheduler_Action $action, \\DateTime $scheduled_date = null ) {\n",
+            "to": "\tpublic function save_unique_action( ActionScheduler_Action $action, ?\\DateTime $scheduled_date = null ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function save_action( ActionScheduler_Action $action, \\DateTime $scheduled_date = null ) {\n",
+            "to": "\tpublic function save_action( ActionScheduler_Action $action, ?\\DateTime $scheduled_date = null ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tprivate function save_action_to_db( ActionScheduler_Action $action, DateTime $date = null, $unique = false ) {\n",
+            "to": "\tprivate function save_action_to_db( ActionScheduler_Action $action, ?DateTime $date = null, $unique = false ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function stake_claim( $max_actions = 10, \\DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "to": "\tpublic function stake_claim( $max_actions = 10, ?\\DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tprotected function claim_actions( $claim_id, $limit, \\DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "to": "\tprotected function claim_actions( $claim_id, $limit, ?\\DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/data-stores/ActionScheduler_HybridStore.php": [
+        {
+            "from": "\tpublic function __construct( Config $config = null ) {\n",
+            "to": "\tpublic function __construct( ?Config $config = null ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "to": "\tpublic function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function save_action( ActionScheduler_Action $action, DateTime $date = null ) {\n",
+            "to": "\tpublic function save_action( ActionScheduler_Action $action, ?DateTime $date = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/data-stores/ActionScheduler_wpCommentLogger.php": [
+        {
+            "from": "\tpublic function log( $action_id, $message, DateTime $date = NULL ) {\n",
+            "to": "\tpublic function log( $action_id, $message, ?DateTime $date = NULL ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php": [
+        {
+            "from": "\tpublic function save_action( ActionScheduler_Action $action, DateTime $scheduled_date = null ) {\n",
+            "to": "\tpublic function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tprotected function create_post_array( ActionScheduler_Action $action, DateTime $scheduled_date = null ) {\n",
+            "to": "\tprotected function create_post_array( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tpublic function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "to": "\tpublic function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "count": 1
+        },
+        {
+            "from": "\tprotected function claim_actions( $claim_id, $limit, DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "to": "\tprotected function claim_actions( $claim_id, $limit, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php": [
+        {
+            "from": "\tpublic function save_action( ActionScheduler_Action $action, \\DateTime $scheduled_date = null, \\DateTime $last_attempt_date = null ){\n",
+            "to": "\tpublic function save_action( ActionScheduler_Action $action, ?\\DateTime $scheduled_date = null, ?\\DateTime $last_attempt_date = null ){\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/schedules/ActionScheduler_CronSchedule.php": [
+        {
+            "from": "\tpublic function __construct( DateTime $start, $recurrence, DateTime $first = null ) {\n",
+            "to": "\tpublic function __construct( DateTime $start, $recurrence, ?DateTime $first = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/schedules/ActionScheduler_NullSchedule.php": [
+        {
+            "from": "\tpublic function __construct( DateTime $date = null ) {\n",
+            "to": "\tpublic function __construct( ?DateTime $date = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/schedules/ActionScheduler_Schedule.php": [
+        {
+            "from": "\tpublic function next( DateTime $after = NULL );\n",
+            "to": "\tpublic function next( ?DateTime $after = NULL );\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/deprecated/ActionScheduler_Schedule_Deprecated.php": [
+        {
+            "from": "\tpublic function next( DateTime $after = null ) {\n",
+            "to": "\tpublic function next( ?DateTime $after = null ) {\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/lib/cron-expression/CronExpression.php": [
+        {
+            "from": "    public static function factory($expression, CronExpression_FieldFactory $fieldFactory = null)\n",
+            "to": "    public static function factory($expression, ?CronExpression_FieldFactory $fieldFactory = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftEmail/src/CasasoftEmail/Service/EmailServiceFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array $options = NULL){\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array $options = NULL){\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftGeo/src/CasasoftGeo/Service/GeoServiceFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array $options = NULL){\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array $options = NULL){\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/CategoryServiceFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/ConversionServiceFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array $options = null){\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array $options = null){\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/FeatureServiceFactory.php": [
+        {
+            "from": "  public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "  public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/HeatServiceFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/IntegratedOfferServiceFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/NumvalServiceFactory.php": [
+        {
+            "from": "  public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "  public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/UtilityServiceFactory.php": [
+        {
+            "from": "  public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "  public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/CategoryFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/FeatureFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array $options = NULL)\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array $options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/GetListFactory.php": [
+        {
+            "from": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/LabelFactory.php": [
+        {
+            "from": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/NumvalFactory.php": [
+        {
+            "from": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/UtilityFactory.php": [
+        {
+            "from": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "    function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/View/Helper/ValueFactory.php": [
+        {
+            "from": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, array$options = NULL)\n",
+            "to": "  function __invoke(\\Interop\\Container\\ContainerInterface $container, $requestedName, ?array$options = NULL)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Application.php": [
+        {
+            "from": "        EventManagerInterface $events = null,\n",
+            "to": "        ?EventManagerInterface $events = null,\n",
+            "count": 1
+        },
+        {
+            "from": "        RequestInterface $request = null,\n",
+            "to": "        ?RequestInterface $request = null,\n",
+            "count": 1
+        },
+        {
+            "from": "        ResponseInterface $response = null\n",
+            "to": "        ?ResponseInterface $response = null\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/AbstractController.php": [
+        {
+            "from": "    public function dispatch(Request $request, Response $response = null)\n",
+            "to": "    public function dispatch(Request $request, ?Response $response = null)\n",
+            "count": 1
+        },
+        {
+            "from": "    public function plugin($name, array $options = null)\n",
+            "to": "    public function plugin($name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/AbstractRestfulController.php": [
+        {
+            "from": "    public function dispatch(Request $request, Response $response = null)\n",
+            "to": "    public function dispatch(Request $request, ?Response $response = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/LazyControllerAbstractFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/MiddlewareController.php": [
+        {
+            "from": "    private function populateRequestParametersFromRoute(ServerRequestInterface $request, RouteMatch $routeMatch = null)\n",
+            "to": "    private function populateRequestParametersFromRoute(ServerRequestInterface $request, ?RouteMatch $routeMatch = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/Plugin/AcceptableViewModelSelector.php": [
+        {
+            "from": "        array $matchAgainst = null,\n",
+            "to": "        ?array $matchAgainst = null,\n",
+            "count": 3
+        },
+        {
+            "from": "    public function match(array $matchAgainst = null)\n",
+            "to": "    public function match(?array $matchAgainst = null)\n",
+            "count": 1
+        },
+        {
+            "from": "    public function setDefaultMatchAgainst(array $matchAgainst = null)\n",
+            "to": "    public function setDefaultMatchAgainst(?array $matchAgainst = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/Plugin/Forward.php": [
+        {
+            "from": "    public function dispatch($name, array $params = null)\n",
+            "to": "    public function dispatch($name, ?array $params = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/Plugin/Service/ForwardFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Controller/PluginManager.php": [
+        {
+            "from": "    public function get($name, array $options = null)\n",
+            "to": "    public function get($name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/MiddlewareListener.php": [
+        {
+            "from": "        Exception $exception = null\n",
+            "to": "        ?Exception $exception = null\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/AbstractPluginManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ApplicationFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ConfigFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ControllerManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/DispatchListenerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/EventManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/HttpDefaultRenderingStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/HttpExceptionStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/HttpMethodListenerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/HttpRouteNotFoundStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/HttpViewManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/InjectTemplateListenerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ModuleManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/RequestFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ResponseFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ServiceListenerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewFeedStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewHelperManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewJsonStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewManagerFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewPhpRendererFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewPhpRendererStrategyFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewPrefixPathStackResolverFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewResolverFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewTemplateMapResolverFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/src/Service/ViewTemplatePathStackFactory.php": [
+        {
+            "from": "    public function __invoke(ContainerInterface $container, $name, array $options = null)\n",
+            "to": "    public function __invoke(ContainerInterface $container, $name, ?array $options = null)\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/src/CasasoftStandards/src/CasasoftStandards/Service/ConversionService.php": [
+        {
+            "from": "    private function getCalculatedPrices($type = 'rent', $currency) {\n",
+            "to": "    private function getCalculatedPrices($type, $currency) {\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-log/src/Logger.php": [
+        {
+            "from": "        E_STRICT            => self::DEBUG,\n",
+            "to": "        2048                => self::DEBUG, // E_STRICT; avoid the deprecated constant on PHP 8.4.\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php": [
+        {
+            "from": "\t\treturn array_filter( str_getcsv( $string ) );\n",
+            "to": "\t\treturn array_filter( str_getcsv( $string, ',', '\"', '\\\\' ) );\n",
+            "count": 1
+        }
+    ],
+    "action-scheduler/classes/abstracts/ActionScheduler.php": [
+        {
+            "from": "\t\ttrigger_error(\"Singleton. No cloning allowed!\", E_USER_ERROR);\n",
+            "to": "\t\tthrow new Error(\"Singleton. No cloning allowed!\");\n",
+            "count": 1
+        },
+        {
+            "from": "\t\ttrigger_error(\"Singleton. No serialization allowed!\", E_USER_ERROR);\n",
+            "to": "\t\tthrow new Error(\"Singleton. No serialization allowed!\");\n",
+            "count": 1
+        }
+    ],
+    "vendor/casasoft/casamodules/composer.json": [
+        {
+            "from": "{\n    \"name\": \"casasoft/casamodules\",\n    \"type\": \"library\",\n    \"description\": \"Casasoft Modules for Zend Framework 2 (PSR7) implementations.\",\n    \"keywords\": [\n        \"zf2\"\n    ],\n    \"homepage\": \"http://casasoft.ch/\",\n    \"license\": \"GPL\",\n    \"authors\": [\n        {\n            \"name\": \"Jens Stalder\",\n            \"email\": \"jens.stalder@casasoft.ch\"\n        }\n    ],\n    \"require\": {\n        \"php\": \"~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0\",\n        \"laminas/laminas-dependency-plugin\": \"2.6.0\"\n    },\n    \"require-dev\": {},\n    \"suggest\": {},\n    \"autoload\": {\n        \"psr-0\": {\n            \"CasasoftAuth\\\\\": \"src/\",\n            \"CasasoftEmail\\\\\": \"src/\",\n            \"CasasoftHelpers\\\\\": \"src/\",\n            \"CasasoftThumb\\\\\": \"src/\",\n            \"CasasoftStandards\\\\\": \"src/\",\n            \"DbGenerator\\\\\": \"src/\",\n            \"CasasoftMessenger\\\\\": \"src/\",\n            \"CasasoftGeo\\\\\": \"src/\"\n        }\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"laminas/laminas-dependency-plugin\": true\n        }},\n    \"extra\": {\n        \"branch-alias\": {\n            \"dev-master\": \"1.0.x-dev\"\n        }\n    },\n    \"prefer-stable\": true,\n    \"minimum-stability\": \"dev\"\n}\n",
+            "to": "{\n    \"name\": \"casasoft/casamodules\",\n    \"type\": \"library\",\n    \"description\": \"Casasoft Modules for Zend Framework 2 (PSR7) implementations.\",\n    \"keywords\": [\n        \"zf2\"\n    ],\n    \"homepage\": \"http://casasoft.ch/\",\n    \"license\": \"GPL\",\n    \"authors\": [\n        {\n            \"name\": \"Jens Stalder\",\n            \"email\": \"jens.stalder@casasoft.ch\"\n        }\n    ],\n    \"require\": {\n        \"php\": \"~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\"\n    },\n    \"require-dev\": {},\n    \"suggest\": {},\n    \"autoload\": {\n        \"psr-0\": {\n            \"CasasoftAuth\\\\\": \"src/\",\n            \"CasasoftEmail\\\\\": \"src/\",\n            \"CasasoftHelpers\\\\\": \"src/\",\n            \"CasasoftThumb\\\\\": \"src/\",\n            \"CasasoftStandards\\\\\": \"src/\",\n            \"DbGenerator\\\\\": \"src/\",\n            \"CasasoftMessenger\\\\\": \"src/\",\n            \"CasasoftGeo\\\\\": \"src/\"\n        }\n    },\n    \"extra\": {\n        \"branch-alias\": {\n            \"dev-master\": \"1.0.x-dev\"\n        }\n    },\n    \"prefer-stable\": true,\n    \"minimum-stability\": \"dev\"\n}\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-eventmanager/composer.json": [
+        {
+            "from": "{\n    \"name\": \"laminas/laminas-eventmanager\",\n    \"description\": \"Trigger and listen to events within a PHP application\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"event\",\n        \"events\",\n        \"eventmanager\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-eventmanager/\",\n        \"issues\": \"https://github.com/laminas/laminas-eventmanager/issues\",\n        \"source\": \"https://github.com/laminas/laminas-eventmanager\",\n        \"rss\": \"https://github.com/laminas/laminas-eventmanager/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true,\n            \"composer/package-versions-deprecated\": true\n        }\n    },\n    \"extra\": {\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"~2.5.0\",\n        \"laminas/laminas-stdlib\": \"^3.18\",\n        \"phpbench/phpbench\": \"^1.2.15\",\n        \"phpunit/phpunit\": \"^10.5.5\",\n        \"psalm/plugin-phpunit\": \"^0.18.4\",\n        \"psr/container\": \"^1.1.2 || ^2.0.2\",\n        \"vimeo/psalm\": \"^5.18\"\n    },\n    \"suggest\": {\n        \"psr/container\": \"^1.1.2 || ^2.0.2, to use the lazy listeners feature\",\n        \"laminas/laminas-stdlib\": \"^2.7.3 || ^3.0, to use the FilterChain feature\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\EventManager\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\EventManager\\\\\": \"test/\",\n            \"LaminasBench\\\\EventManager\\\\\": \"benchmarks/\",\n            \"LaminasPsalm\\\\EventManager\\\\\": \"psalm/\"\n        }\n    },\n    \"scripts\": {\n        \"benchmark\": \"phpbench run --revs=2 --iterations=2 --report=aggregate\",\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\",\n        \"static-analysis\": \"psalm --shepherd --stats\"\n    },\n    \"conflict\": {\n        \"container-interop/container-interop\": \"<1.2\",\n        \"zendframework/zend-eventmanager\": \"*\"\n    }\n}\n",
+            "to": "{\n    \"name\": \"laminas/laminas-eventmanager\",\n    \"description\": \"Trigger and listen to events within a PHP application\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"event\",\n        \"events\",\n        \"eventmanager\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-eventmanager/\",\n        \"issues\": \"https://github.com/laminas/laminas-eventmanager/issues\",\n        \"source\": \"https://github.com/laminas/laminas-eventmanager\",\n        \"rss\": \"https://github.com/laminas/laminas-eventmanager/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true,\n            \"composer/package-versions-deprecated\": true\n        }\n    },\n    \"extra\": {},\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"~2.5.0\",\n        \"laminas/laminas-stdlib\": \"^3.18\",\n        \"phpbench/phpbench\": \"^1.2.15\",\n        \"phpunit/phpunit\": \"^10.5.5\",\n        \"psalm/plugin-phpunit\": \"^0.18.4\",\n        \"psr/container\": \"^1.1.2 || ^2.0.2\",\n        \"vimeo/psalm\": \"^5.18\"\n    },\n    \"suggest\": {\n        \"psr/container\": \"^1.1.2 || ^2.0.2, to use the lazy listeners feature\",\n        \"laminas/laminas-stdlib\": \"^2.7.3 || ^3.0, to use the FilterChain feature\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\EventManager\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\EventManager\\\\\": \"test/\",\n            \"LaminasBench\\\\EventManager\\\\\": \"benchmarks/\",\n            \"LaminasPsalm\\\\EventManager\\\\\": \"psalm/\"\n        }\n    },\n    \"scripts\": {\n        \"benchmark\": \"phpbench run --revs=2 --iterations=2 --report=aggregate\",\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\",\n        \"static-analysis\": \"psalm --shepherd --stats\"\n    },\n    \"conflict\": {\n        \"container-interop/container-interop\": \"<1.2\",\n        \"zendframework/zend-eventmanager\": \"*\"\n    }\n}\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-log/composer.json": [
+        {
+            "from": "{\n    \"name\": \"laminas/laminas-log\",\n    \"description\": \"Robust, composite logger with filtering, formatting, and PSR-3 support\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"log\",\n        \"logging\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-log/\",\n        \"issues\": \"https://github.com/laminas/laminas-log/issues\",\n        \"source\": \"https://github.com/laminas/laminas-log\",\n        \"rss\": \"https://github.com/laminas/laminas-log/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        },\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        }\n    },\n    \"extra\": {\n        \"laminas\": {\n            \"component\": \"Laminas\\\\Log\",\n            \"config-provider\": \"Laminas\\\\Log\\\\ConfigProvider\"\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0\",\n        \"laminas/laminas-servicemanager\": \"^3.21.0\",\n        \"laminas/laminas-stdlib\": \"^3.0\",\n        \"psr/log\": \"^1.1.2\"\n    },\n    \"require-dev\": {\n        \"ext-dom\": \"*\",\n        \"ext-json\": \"*\",\n        \"ext-xml\": \"*\",\n        \"firephp/firephp-core\": \"^0.5.3\",\n        \"laminas/laminas-coding-standard\": \"~2.3.0\",\n        \"laminas/laminas-db\": \"^2.6\",\n        \"laminas/laminas-escaper\": \"^2.5\",\n        \"laminas/laminas-filter\": \"^2.5\",\n        \"laminas/laminas-mail\": \"^2.6.1\",\n        \"laminas/laminas-validator\": \"^2.10.1\",\n        \"mikey179/vfsstream\": \"^1.6.7\",\n        \"phpspec/prophecy-phpunit\": \"^2.0\",\n        \"phpunit/phpunit\": \"^9.5.10\"\n    },\n    \"provide\": {\n        \"psr/log-implementation\": \"1.0.0\"\n    },\n    \"suggest\": {\n        \"ext-mongo\": \"mongo extension to use Mongo writer\",\n        \"ext-mongodb\": \"mongodb extension to use MongoDB writer\",\n        \"laminas/laminas-db\": \"Laminas\\\\Db component to use the database log writer\",\n        \"laminas/laminas-escaper\": \"Laminas\\\\Escaper component, for use in the XML log formatter\",\n        \"laminas/laminas-mail\": \"Laminas\\\\Mail component to use the email log writer\",\n        \"laminas/laminas-validator\": \"Laminas\\\\Validator component to block invalid log messages\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Log\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Log\\\\\": \"test/\"\n        },\n        \"files\": [\n            \"test/Writer/TestAsset/chmod.php\"\n        ]\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-log\": \"*\"\n    }\n}\n",
+            "to": "{\n    \"name\": \"laminas/laminas-log\",\n    \"description\": \"Robust, composite logger with filtering, formatting, and PSR-3 support\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"log\",\n        \"logging\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-log/\",\n        \"issues\": \"https://github.com/laminas/laminas-log/issues\",\n        \"source\": \"https://github.com/laminas/laminas-log\",\n        \"rss\": \"https://github.com/laminas/laminas-log/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        },\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        }\n    },\n    \"extra\": {\n        \"laminas\": {\n            \"component\": \"Laminas\\\\Log\",\n            \"config-provider\": \"Laminas\\\\Log\\\\ConfigProvider\"\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\",\n        \"laminas/laminas-servicemanager\": \"^3.21.0\",\n        \"laminas/laminas-stdlib\": \"^3.0\",\n        \"psr/log\": \"^1.1.2\"\n    },\n    \"require-dev\": {\n        \"ext-dom\": \"*\",\n        \"ext-json\": \"*\",\n        \"ext-xml\": \"*\",\n        \"firephp/firephp-core\": \"^0.5.3\",\n        \"laminas/laminas-coding-standard\": \"~2.3.0\",\n        \"laminas/laminas-db\": \"^2.6\",\n        \"laminas/laminas-escaper\": \"^2.5\",\n        \"laminas/laminas-filter\": \"^2.5\",\n        \"laminas/laminas-mail\": \"^2.6.1\",\n        \"laminas/laminas-validator\": \"^2.10.1\",\n        \"mikey179/vfsstream\": \"^1.6.7\",\n        \"phpspec/prophecy-phpunit\": \"^2.0\",\n        \"phpunit/phpunit\": \"^9.5.10\"\n    },\n    \"provide\": {\n        \"psr/log-implementation\": \"1.0.0\"\n    },\n    \"suggest\": {\n        \"ext-mongo\": \"mongo extension to use Mongo writer\",\n        \"ext-mongodb\": \"mongodb extension to use MongoDB writer\",\n        \"laminas/laminas-db\": \"Laminas\\\\Db component to use the database log writer\",\n        \"laminas/laminas-escaper\": \"Laminas\\\\Escaper component, for use in the XML log formatter\",\n        \"laminas/laminas-mail\": \"Laminas\\\\Mail component to use the email log writer\",\n        \"laminas/laminas-validator\": \"Laminas\\\\Validator component to block invalid log messages\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Log\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Log\\\\\": \"test/\"\n        },\n        \"files\": [\n            \"test/Writer/TestAsset/chmod.php\"\n        ]\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-log\": \"*\"\n    }\n}\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-mvc/composer.json": [
+        {
+            "from": "{\n    \"name\": \"laminas/laminas-mvc\",\n    \"description\": \"Laminas's event-driven MVC layer, including MVC Applications, Controllers, and Plugins\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"mvc\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-mvc/\",\n        \"issues\": \"https://github.com/laminas/laminas-mvc/issues\",\n        \"source\": \"https://github.com/laminas/laminas-mvc\",\n        \"rss\": \"https://github.com/laminas/laminas-mvc/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true,\n            \"webimpress/composer-extra-dependency\": true\n        }\n    },\n    \"extra\": {\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0\",\n        \"container-interop/container-interop\": \"^1.2\",\n        \"laminas/laminas-eventmanager\": \"^3.4\",\n        \"laminas/laminas-http\": \"^2.15\",\n        \"laminas/laminas-modulemanager\": \"^2.8\",\n        \"laminas/laminas-router\": \"^3.11.1\",\n        \"laminas/laminas-servicemanager\": \"^3.20.0\",\n        \"laminas/laminas-stdlib\": \"^3.6\",\n        \"laminas/laminas-view\": \"^2.14\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"^2.5.0\",\n        \"laminas/laminas-json\": \"^3.6\",\n        \"phpspec/prophecy\": \"^1.17.0\",\n        \"phpspec/prophecy-phpunit\": \"^2.0.2\",\n        \"phpunit/phpunit\": \"^9.6.13\",\n        \"webmozart/assert\": \"^1.11\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-json\": \"(^2.6.1 || ^3.0) To auto-deserialize JSON body content in AbstractRestfulController extensions, when json_decode is unavailable\",\n        \"laminas/laminas-log\": \"^2.9.1  To provide log functionality via LogFilterManager, LogFormatterManager, and LogProcessorManager\",\n        \"laminas/laminas-mvc-console\": \"laminas-mvc-console provides the ability to expose laminas-mvc as a console application\",\n        \"laminas/laminas-mvc-i18n\": \"laminas-mvc-i18n provides integration with laminas-i18n, including a translation bridge and translatable route segments\",\n        \"laminas/laminas-mvc-middleware\": \"To dispatch middleware in your laminas-mvc application\",\n        \"laminas/laminas-mvc-plugin-fileprg\": \"To provide Post/Redirect/Get functionality around forms that container file uploads\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"To provide flash messaging capabilities between requests\",\n        \"laminas/laminas-mvc-plugin-identity\": \"To access the authenticated identity (per laminas-authentication) in controllers\",\n        \"laminas/laminas-mvc-plugin-prg\": \"To provide Post/Redirect/Get functionality within controllers\",\n        \"laminas/laminas-paginator\": \"^2.7 To provide pagination functionality via PaginatorPluginManager\",\n        \"laminas/laminas-servicemanager-di\": \"laminas-servicemanager-di provides utilities for integrating laminas-di and laminas-servicemanager in your laminas-mvc application\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Mvc\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Mvc\\\\\": \"test/\"\n        },\n        \"files\": [\n            \"test/_autoload.php\"\n        ]\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-mvc\": \"*\"\n    }\n}\n",
+            "to": "{\n    \"name\": \"laminas/laminas-mvc\",\n    \"description\": \"Laminas's event-driven MVC layer, including MVC Applications, Controllers, and Plugins\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"mvc\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-mvc/\",\n        \"issues\": \"https://github.com/laminas/laminas-mvc/issues\",\n        \"source\": \"https://github.com/laminas/laminas-mvc\",\n        \"rss\": \"https://github.com/laminas/laminas-mvc/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true,\n            \"webimpress/composer-extra-dependency\": true\n        }\n    },\n    \"extra\": {},\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\",\n        \"container-interop/container-interop\": \"^1.2\",\n        \"laminas/laminas-eventmanager\": \"^3.4\",\n        \"laminas/laminas-http\": \"^2.15\",\n        \"laminas/laminas-modulemanager\": \"^2.8\",\n        \"laminas/laminas-router\": \"^3.11.1\",\n        \"laminas/laminas-servicemanager\": \"^3.20.0\",\n        \"laminas/laminas-stdlib\": \"^3.6\",\n        \"laminas/laminas-view\": \"^2.14\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"^2.5.0\",\n        \"laminas/laminas-json\": \"^3.6\",\n        \"phpspec/prophecy\": \"^1.17.0\",\n        \"phpspec/prophecy-phpunit\": \"^2.0.2\",\n        \"phpunit/phpunit\": \"^9.6.13\",\n        \"webmozart/assert\": \"^1.11\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-json\": \"(^2.6.1 || ^3.0) To auto-deserialize JSON body content in AbstractRestfulController extensions, when json_decode is unavailable\",\n        \"laminas/laminas-log\": \"^2.9.1  To provide log functionality via LogFilterManager, LogFormatterManager, and LogProcessorManager\",\n        \"laminas/laminas-mvc-console\": \"laminas-mvc-console provides the ability to expose laminas-mvc as a console application\",\n        \"laminas/laminas-mvc-i18n\": \"laminas-mvc-i18n provides integration with laminas-i18n, including a translation bridge and translatable route segments\",\n        \"laminas/laminas-mvc-middleware\": \"To dispatch middleware in your laminas-mvc application\",\n        \"laminas/laminas-mvc-plugin-fileprg\": \"To provide Post/Redirect/Get functionality around forms that container file uploads\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"To provide flash messaging capabilities between requests\",\n        \"laminas/laminas-mvc-plugin-identity\": \"To access the authenticated identity (per laminas-authentication) in controllers\",\n        \"laminas/laminas-mvc-plugin-prg\": \"To provide Post/Redirect/Get functionality within controllers\",\n        \"laminas/laminas-paginator\": \"^2.7 To provide pagination functionality via PaginatorPluginManager\",\n        \"laminas/laminas-servicemanager-di\": \"laminas-servicemanager-di provides utilities for integrating laminas-di and laminas-servicemanager in your laminas-mvc application\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Mvc\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Mvc\\\\\": \"test/\"\n        },\n        \"files\": [\n            \"test/_autoload.php\"\n        ]\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-mvc\": \"*\"\n    }\n}\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-serializer/composer.json": [
+        {
+            "from": "{\n    \"name\": \"laminas/laminas-serializer\",\n    \"description\": \"Serialize and deserialize PHP structures to a variety of representations\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"serializer\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-serializer/\",\n        \"issues\": \"https://github.com/laminas/laminas-serializer/issues\",\n        \"source\": \"https://github.com/laminas/laminas-serializer\",\n        \"rss\": \"https://github.com/laminas/laminas-serializer/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        },\n        \"platform\": {\n            \"php\": \"8.0.99\"\n        }\n    },\n    \"extra\": {\n        \"laminas\": {\n            \"component\": \"Laminas\\\\Serializer\",\n            \"config-provider\": \"Laminas\\\\Serializer\\\\ConfigProvider\"\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0\",\n        \"laminas/laminas-json\": \"^3.1\",\n        \"laminas/laminas-stdlib\": \"^3.2\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"~2.4.0\",\n        \"laminas/laminas-math\": \"^3.6\",\n        \"laminas/laminas-servicemanager\": \"~3.19.0\",\n        \"phpunit/phpunit\": \"~9.6.0\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-math\": \"(^3.3) To support Python Pickle serialization\",\n        \"laminas/laminas-servicemanager\": \"(^3.6) To support plugin manager support\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Serializer\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Serializer\\\\\": \"test/\"\n        }\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-serializer\": \"*\"\n    }\n}\n",
+            "to": "{\n    \"name\": \"laminas/laminas-serializer\",\n    \"description\": \"Serialize and deserialize PHP structures to a variety of representations\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"serializer\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-serializer/\",\n        \"issues\": \"https://github.com/laminas/laminas-serializer/issues\",\n        \"source\": \"https://github.com/laminas/laminas-serializer\",\n        \"rss\": \"https://github.com/laminas/laminas-serializer/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        },\n        \"platform\": {\n            \"php\": \"8.0.99\"\n        }\n    },\n    \"extra\": {\n        \"laminas\": {\n            \"component\": \"Laminas\\\\Serializer\",\n            \"config-provider\": \"Laminas\\\\Serializer\\\\ConfigProvider\"\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\",\n        \"laminas/laminas-json\": \"^3.1\",\n        \"laminas/laminas-stdlib\": \"^3.2\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-coding-standard\": \"~2.4.0\",\n        \"laminas/laminas-math\": \"^3.6\",\n        \"laminas/laminas-servicemanager\": \"~3.19.0\",\n        \"phpunit/phpunit\": \"~9.6.0\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-math\": \"(^3.3) To support Python Pickle serialization\",\n        \"laminas/laminas-servicemanager\": \"(^3.6) To support plugin manager support\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\Serializer\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\Serializer\\\\\": \"test/\"\n        }\n    },\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    },\n    \"conflict\": {\n        \"zendframework/zend-serializer\": \"*\"\n    }\n}\n",
+            "count": 1
+        }
+    ],
+    "vendor/laminas/laminas-view/composer.json": [
+        {
+            "from": "{\n    \"name\": \"laminas/laminas-view\",\n    \"description\": \"Flexible view layer supporting and providing multiple view layers, helpers, and more\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"view\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-view/\",\n        \"issues\": \"https://github.com/laminas/laminas-view/issues\",\n        \"source\": \"https://github.com/laminas/laminas-view\",\n        \"rss\": \"https://github.com/laminas/laminas-view/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0\",\n        \"ext-dom\": \"*\",\n        \"ext-filter\": \"*\",\n        \"ext-json\": \"*\",\n        \"laminas/laminas-escaper\": \"^2.5\",\n        \"laminas/laminas-eventmanager\": \"^3.4\",\n        \"laminas/laminas-json\": \"^3.3\",\n        \"laminas/laminas-servicemanager\": \"^3.21.0\",\n        \"laminas/laminas-stdlib\": \"^3.10.1\",\n        \"psr/container\": \"^1 || ^2\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-authentication\": \"^2.16\",\n        \"laminas/laminas-coding-standard\": \"~2.5.0\",\n        \"laminas/laminas-feed\": \"^2.22\",\n        \"laminas/laminas-filter\": \"^2.34\",\n        \"laminas/laminas-http\": \"^2.19\",\n        \"laminas/laminas-i18n\": \"^2.26.0\",\n        \"laminas/laminas-modulemanager\": \"^2.15\",\n        \"laminas/laminas-mvc\": \"^3.7.0\",\n        \"laminas/laminas-mvc-i18n\": \"^1.8\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"^1.10.1\",\n        \"laminas/laminas-navigation\": \"^2.19.1\",\n        \"laminas/laminas-paginator\": \"^2.18.1\",\n        \"laminas/laminas-permissions-acl\": \"^2.16\",\n        \"laminas/laminas-router\": \"^3.13.0\",\n        \"laminas/laminas-uri\": \"^2.11\",\n        \"phpunit/phpunit\": \"^10.5.13\",\n        \"psalm/plugin-phpunit\": \"^0.19.0\",\n        \"vimeo/psalm\": \"^5.23.1\"\n    },\n    \"conflict\": {\n        \"container-interop/container-interop\": \"<1.2\",\n        \"laminas/laminas-session\": \"<2.12\",\n        \"laminas/laminas-router\": \"<3.0.1\",\n        \"zendframework/zend-view\": \"*\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-authentication\": \"Laminas\\\\Authentication component\",\n        \"laminas/laminas-feed\": \"Laminas\\\\Feed component\",\n        \"laminas/laminas-filter\": \"Laminas\\\\Filter component\",\n        \"laminas/laminas-http\": \"Laminas\\\\Http component\",\n        \"laminas/laminas-i18n\": \"Laminas\\\\I18n component\",\n        \"laminas/laminas-mvc\": \"Laminas\\\\Mvc component\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"laminas-mvc-plugin-flashmessenger component, if you want to use the FlashMessenger view helper with laminas-mvc versions 3 and up\",\n        \"laminas/laminas-navigation\": \"Laminas\\\\Navigation component\",\n        \"laminas/laminas-paginator\": \"Laminas\\\\Paginator component\",\n        \"laminas/laminas-permissions-acl\": \"Laminas\\\\Permissions\\\\Acl component\",\n        \"laminas/laminas-uri\": \"Laminas\\\\Uri component\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\View\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\View\\\\\": \"test/\"\n        }\n    },\n    \"bin\": [\n        \"bin/templatemap_generator.php\"\n    ],\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"static-analysis\": \"psalm --shepherd --stats\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    }\n}\n",
+            "to": "{\n    \"name\": \"laminas/laminas-view\",\n    \"description\": \"Flexible view layer supporting and providing multiple view layers, helpers, and more\",\n    \"license\": \"BSD-3-Clause\",\n    \"keywords\": [\n        \"laminas\",\n        \"view\"\n    ],\n    \"homepage\": \"https://laminas.dev\",\n    \"support\": {\n        \"docs\": \"https://docs.laminas.dev/laminas-view/\",\n        \"issues\": \"https://github.com/laminas/laminas-view/issues\",\n        \"source\": \"https://github.com/laminas/laminas-view\",\n        \"rss\": \"https://github.com/laminas/laminas-view/releases.atom\",\n        \"chat\": \"https://laminas.dev/chat\",\n        \"forum\": \"https://discourse.laminas.dev\"\n    },\n    \"config\": {\n        \"sort-packages\": true,\n        \"platform\": {\n            \"php\": \"8.1.99\"\n        },\n        \"allow-plugins\": {\n            \"dealerdirect/phpcodesniffer-composer-installer\": true\n        }\n    },\n    \"require\": {\n        \"php\": \"~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0\",\n        \"ext-dom\": \"*\",\n        \"ext-filter\": \"*\",\n        \"ext-json\": \"*\",\n        \"laminas/laminas-escaper\": \"^2.5\",\n        \"laminas/laminas-eventmanager\": \"^3.4\",\n        \"laminas/laminas-json\": \"^3.3\",\n        \"laminas/laminas-servicemanager\": \"^3.21.0\",\n        \"laminas/laminas-stdlib\": \"^3.10.1\",\n        \"psr/container\": \"^1 || ^2\"\n    },\n    \"require-dev\": {\n        \"laminas/laminas-authentication\": \"^2.16\",\n        \"laminas/laminas-coding-standard\": \"~2.5.0\",\n        \"laminas/laminas-feed\": \"^2.22\",\n        \"laminas/laminas-filter\": \"^2.34\",\n        \"laminas/laminas-http\": \"^2.19\",\n        \"laminas/laminas-i18n\": \"^2.26.0\",\n        \"laminas/laminas-modulemanager\": \"^2.15\",\n        \"laminas/laminas-mvc\": \"^3.7.0\",\n        \"laminas/laminas-mvc-i18n\": \"^1.8\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"^1.10.1\",\n        \"laminas/laminas-navigation\": \"^2.19.1\",\n        \"laminas/laminas-paginator\": \"^2.18.1\",\n        \"laminas/laminas-permissions-acl\": \"^2.16\",\n        \"laminas/laminas-router\": \"^3.13.0\",\n        \"laminas/laminas-uri\": \"^2.11\",\n        \"phpunit/phpunit\": \"^10.5.13\",\n        \"psalm/plugin-phpunit\": \"^0.19.0\",\n        \"vimeo/psalm\": \"^5.23.1\"\n    },\n    \"conflict\": {\n        \"container-interop/container-interop\": \"<1.2\",\n        \"laminas/laminas-session\": \"<2.12\",\n        \"laminas/laminas-router\": \"<3.0.1\",\n        \"zendframework/zend-view\": \"*\"\n    },\n    \"suggest\": {\n        \"laminas/laminas-authentication\": \"Laminas\\\\Authentication component\",\n        \"laminas/laminas-feed\": \"Laminas\\\\Feed component\",\n        \"laminas/laminas-filter\": \"Laminas\\\\Filter component\",\n        \"laminas/laminas-http\": \"Laminas\\\\Http component\",\n        \"laminas/laminas-i18n\": \"Laminas\\\\I18n component\",\n        \"laminas/laminas-mvc\": \"Laminas\\\\Mvc component\",\n        \"laminas/laminas-mvc-plugin-flashmessenger\": \"laminas-mvc-plugin-flashmessenger component, if you want to use the FlashMessenger view helper with laminas-mvc versions 3 and up\",\n        \"laminas/laminas-navigation\": \"Laminas\\\\Navigation component\",\n        \"laminas/laminas-paginator\": \"Laminas\\\\Paginator component\",\n        \"laminas/laminas-permissions-acl\": \"Laminas\\\\Permissions\\\\Acl component\",\n        \"laminas/laminas-uri\": \"Laminas\\\\Uri component\"\n    },\n    \"autoload\": {\n        \"psr-4\": {\n            \"Laminas\\\\View\\\\\": \"src/\"\n        }\n    },\n    \"autoload-dev\": {\n        \"psr-4\": {\n            \"LaminasTest\\\\View\\\\\": \"test/\"\n        }\n    },\n    \"bin\": [\n        \"bin/templatemap_generator.php\"\n    ],\n    \"scripts\": {\n        \"check\": [\n            \"@cs-check\",\n            \"@test\"\n        ],\n        \"cs-check\": \"phpcs\",\n        \"cs-fix\": \"phpcbf\",\n        \"static-analysis\": \"psalm --shepherd --stats\",\n        \"test\": \"phpunit --colors=always\",\n        \"test-coverage\": \"phpunit --colors=always --coverage-clover clover.xml\"\n    }\n}\n",
+            "count": 1
+        }
+    ]
+}

@@ -90,7 +90,7 @@ class Logger implements LoggerInterface
         E_PARSE             => self::ERR,
         E_COMPILE_ERROR     => self::ERR,
         E_COMPILE_WARNING   => self::ERR,
-        E_STRICT            => self::DEBUG,
+        2048                => self::DEBUG, // E_STRICT; avoid the deprecated constant on PHP 8.4.
         E_DEPRECATED        => self::DEBUG,
         E_USER_DEPRECATED   => self::DEBUG,
     ];

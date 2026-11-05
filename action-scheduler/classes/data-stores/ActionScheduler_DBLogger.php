@@ -18,7 +18,7 @@ class ActionScheduler_DBLogger extends ActionScheduler_Logger {
 	 *
 	 * @return int     The log entry ID.
 	 */
-	public function log( $action_id, $message, DateTime $date = null ) {
+	public function log( $action_id, $message, ?DateTime $date = null ) {
 		if ( empty( $date ) ) {
 			$date = as_get_datetime_object();
 		} else {

@@ -7,7 +7,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class NumvalFactory implements FactoryInterface
 {
 
-  function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array$options = NULL)
+  function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, ?array$options = NULL)
   {
       $numvalService = $container->get('CasasoftNumval');
       $helper = new Numval($numvalService);

@@ -26,7 +26,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 *
 	 * @return int The action ID
 	 */
-	abstract public function save_action( ActionScheduler_Action $action, DateTime $scheduled_date = NULL );
+	abstract public function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL );
 
 	/**
 	 * @param string $action_id
@@ -185,7 +185,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 *
 	 * @return ActionScheduler_ActionClaim
 	 */
-	abstract public function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' );
+	abstract public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' );
 
 	/**
 	 * @return int
@@ -254,7 +254,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 * @param DateTime $scheduled_date (optional)
 	 * @return string
 	 */
-	protected function get_scheduled_date_string( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {
+	protected function get_scheduled_date_string( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL ) {
 		$next = null === $scheduled_date ? $action->get_schedule()->get_date() : $scheduled_date;
 		if ( ! $next ) {
 			$next = date_create();
@@ -271,7 +271,7 @@ abstract class ActionScheduler_Store extends ActionScheduler_Store_Deprecated {
 	 * @param DateTime $scheduled_date (optional)
 	 * @return string
 	 */
-	protected function get_scheduled_date_string_local( ActionScheduler_Action $action, DateTime $scheduled_date = NULL ) {
+	protected function get_scheduled_date_string_local( ActionScheduler_Action $action, ?DateTime $scheduled_date = NULL ) {
 		$next = null === $scheduled_date ? $action->get_schedule()->get_date() : $scheduled_date;
 		if ( ! $next ) {
 			$next = date_create();

@@ -18,7 +18,7 @@ class ActionScheduler_ActionFactory {
 	 *
 	 * @return ActionScheduler_Action An instance of the stored action.
 	 */
-	public function get_stored_action( $status, $hook, array $args = array(), ActionScheduler_Schedule $schedule = null, $group = '' ) {
+	public function get_stored_action( $status, $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = null, $group = '' ) {
 		// The 6th parameter ($priority) is not formally declared in the method signature to maintain compatibility with
 		// third-party subclasses created before this param was added.
 		$priority = func_num_args() >= 6 ? (int) func_get_arg( 5 ) : 10;

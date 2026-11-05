@@ -62,15 +62,15 @@
                 "reference": "3d381b165f15d8102285bec6def1e00f71b90cc7"
             },
             "require": {
-                "laminas/laminas-dependency-plugin": "2.6.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "time": "2024-11-19T12:32:33+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
-                }
+                },
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
             },
             "installation-source": "source",
             "autoload": {
@@ -173,62 +173,6 @@
             "install-path": "../laminas/laminas-config"
         },
         {
-            "name": "laminas/laminas-dependency-plugin",
-            "version": "2.6.0",
-            "version_normalized": "2.6.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-dependency-plugin.git",
-                "reference": "d98c34fc81f65564ef97e045a381ac3419958615"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-dependency-plugin/zipball/d98c34fc81f65564ef97e045a381ac3419958615",
-                "reference": "d98c34fc81f65564ef97e045a381ac3419958615",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": ">=1.1.0 <2.3.0",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
-            },
-            "require-dev": {
-                "composer/composer": ">=1.9.0 <2.3.0",
-                "laminas/laminas-coding-standard": "~2.5.0",
-                "mikey179/vfsstream": "^1.6.11",
-                "phpunit/phpunit": "^9.5.5",
-                "psalm/plugin-phpunit": "^0.18.0",
-                "roave/security-advisories": "dev-master",
-                "vimeo/psalm": "^4.5"
-            },
-            "time": "2023-12-14T20:02:33+00:00",
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Laminas\\DependencyPlugin\\DependencyRewriterPluginDelegator"
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\DependencyPlugin\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Replace zendframework and zfcampus packages with their Laminas Project equivalents.",
-            "support": {
-                "issues": "https://github.com/laminas/laminas-dependency-plugin/issues",
-                "source": "https://github.com/laminas/laminas-dependency-plugin/tree/2.6.0"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "install-path": "../laminas/laminas-dependency-plugin"
-        },
-        {
             "name": "laminas/laminas-escaper",
             "version": "2.14.0",
             "version_normalized": "2.14.0.0",
@@ -309,7 +253,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "conflict": {
                 "container-interop/container-interop": "<1.2",
@@ -362,7 +306,10 @@
                     "type": "community_bridge"
                 }
             ],
-            "install-path": "../laminas/laminas-eventmanager"
+            "install-path": "../laminas/laminas-eventmanager",
+            "extra": {
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
+            }
         },
         {
             "name": "laminas/laminas-filter",
@@ -999,9 +946,9 @@
                 "shasum": ""
             },
             "require": {
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "laminas/laminas-servicemanager": "^3.21.0",
                 "laminas/laminas-stdlib": "^3.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "psr/log": "^1.1.2"
             },
             "conflict": {
@@ -1039,7 +986,8 @@
                 "laminas": {
                     "component": "Laminas\\Log",
                     "config-provider": "Laminas\\Log\\ConfigProvider"
-                }
+                },
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
             },
             "installation-source": "dist",
             "autoload": {
@@ -1166,6 +1114,7 @@
                 "shasum": ""
             },
             "require": {
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "container-interop/container-interop": "^1.2",
                 "laminas/laminas-eventmanager": "^3.4",
                 "laminas/laminas-http": "^2.15",
@@ -1173,8 +1122,7 @@
                 "laminas/laminas-router": "^3.11.1",
                 "laminas/laminas-servicemanager": "^3.20.0",
                 "laminas/laminas-stdlib": "^3.6",
-                "laminas/laminas-view": "^2.14",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
+                "laminas/laminas-view": "^2.14"
             },
             "conflict": {
                 "zendframework/zend-mvc": "*"
@@ -1232,7 +1180,10 @@
                     "type": "community_bridge"
                 }
             ],
-            "install-path": "../laminas/laminas-mvc"
+            "install-path": "../laminas/laminas-mvc",
+            "extra": {
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
+            }
         },
         {
             "name": "laminas/laminas-mvc-i18n",
@@ -1405,9 +1356,9 @@
                 "shasum": ""
             },
             "require": {
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "laminas/laminas-json": "^3.1",
-                "laminas/laminas-stdlib": "^3.2",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
+                "laminas/laminas-stdlib": "^3.2"
             },
             "conflict": {
                 "zendframework/zend-serializer": "*"
@@ -1428,7 +1379,8 @@
                 "laminas": {
                     "component": "Laminas\\Serializer",
                     "config-provider": "Laminas\\Serializer\\ConfigProvider"
-                }
+                },
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
             },
             "installation-source": "dist",
             "autoload": {
@@ -1837,6 +1789,7 @@
                 "shasum": ""
             },
             "require": {
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
                 "ext-dom": "*",
                 "ext-filter": "*",
                 "ext-json": "*",
@@ -1845,7 +1798,6 @@
                 "laminas/laminas-json": "^3.3",
                 "laminas/laminas-servicemanager": "^3.21.0",
                 "laminas/laminas-stdlib": "^3.10.1",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "psr/container": "^1 || ^2"
             },
             "conflict": {
@@ -1922,7 +1874,10 @@
                     "type": "community_bridge"
                 }
             ],
-            "install-path": "../laminas/laminas-view"
+            "install-path": "../laminas/laminas-view",
+            "extra": {
+                "casawp-compatibility": "PHP 8.4 backports; see vendor-patches.json in the CASAWP compatibility repository."
+            }
         },
         {
             "name": "nikic/php-parser",

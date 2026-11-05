@@ -7,7 +7,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class ValueFactory implements FactoryInterface
 {
 
-  function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array$options = NULL)
+  function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, ?array$options = NULL)
   {
       $conversionService = $container->get('CasasoftConversion');
       $helper = new Value($conversionService);

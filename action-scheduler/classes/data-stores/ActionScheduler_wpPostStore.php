@@ -35,7 +35,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	 * @throws RuntimeException Throws an exception if the action could not be saved.
 	 * @return int
 	 */
-	public function save_action( ActionScheduler_Action $action, DateTime $scheduled_date = null ) {
+	public function save_action( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
 		try {
 			$this->validate_action( $action );
 			$post_array = $this->create_post_array( $action, $scheduled_date );
@@ -58,7 +58,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	 *
 	 * @return array Returns an array of post data.
 	 */
-	protected function create_post_array( ActionScheduler_Action $action, DateTime $scheduled_date = null ) {
+	protected function create_post_array( ActionScheduler_Action $action, ?DateTime $scheduled_date = null ) {
 		$post = array(
 			'post_type'     => self::POST_TYPE,
 			'post_title'    => $action->get_hook(),
@@ -582,7 +582,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	 * @throws RuntimeException When there is an error staking a claim.
 	 * @throws InvalidArgumentException When the given group is not valid.
 	 */
-	public function stake_claim( $max_actions = 10, DateTime $before_date = null, $hooks = array(), $group = '' ) {
+	public function stake_claim( $max_actions = 10, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {
 		$this->claim_before_date = $before_date;
 		$claim_id                = $this->generate_claim_id();
 		$this->claim_actions( $claim_id, $max_actions, $before_date, $hooks, $group );
@@ -631,7 +631,7 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	 * @return int The number of actions that were claimed.
 	 * @throws RuntimeException  When there is a database error.
 	 */
-	protected function claim_actions( $claim_id, $limit, DateTime $before_date = null, $hooks = array(), $group = '' ) {
+	protected function claim_actions( $claim_id, $limit, ?DateTime $before_date = null, $hooks = array(), $group = '' ) {
 		// Set up initial variables.
 		$date      = null === $before_date ? as_get_datetime_object() : clone $before_date;
 		$limit_ids = ! empty( $group );

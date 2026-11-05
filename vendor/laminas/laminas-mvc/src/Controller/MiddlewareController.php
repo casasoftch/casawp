@@ -90,7 +90,7 @@ final class MiddlewareController extends AbstractController
      * @param RouteMatch|null $routeMatch
      * @return ServerRequestInterface
      */
-    private function populateRequestParametersFromRoute(ServerRequestInterface $request, RouteMatch $routeMatch = null)
+    private function populateRequestParametersFromRoute(ServerRequestInterface $request, ?RouteMatch $routeMatch = null)
     {
         if (! $routeMatch) {
             return $request;

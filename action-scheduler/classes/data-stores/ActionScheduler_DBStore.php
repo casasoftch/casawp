@@ -52,7 +52,7 @@ class ActionScheduler_DBStore extends ActionScheduler_Store {
 	 * @return int                  Action ID.
 	 * @throws RuntimeException     Throws exception when saving the action fails.
 	 */
-	public function save_unique_action( ActionScheduler_Action $action, \DateTime $scheduled_date = null ) {
+	public function save_unique_action( ActionScheduler_Action $action, ?\DateTime $scheduled_date = null ) {
 		return $this->save_action_to_db( $action, $scheduled_date, true );
 	}
 
@@ -65,7 +65,7 @@ class ActionScheduler_DBStore extends ActionScheduler_Store {
 	 * @return int Action ID.
 	 * @throws RuntimeException     Throws exception when saving the action fails.
 	 */
-	public function save_action( ActionScheduler_Action $action, \DateTime $scheduled_date = null ) {
+	public function save_action( ActionScheduler_Action $action, ?\DateTime $scheduled_date = null ) {
 		return $this->save_action_to_db( $action, $scheduled_date, false );
 	}
 
@@ -79,7 +79,7 @@ class ActionScheduler_DBStore extends ActionScheduler_Store {
 	 * @return int Action ID.
 	 * @throws RuntimeException     Throws exception when saving the action fails.
 	 */
-	private function save_action_to_db( ActionScheduler_Action $action, DateTime $date = null, $unique = false ) {
+	private function save_action_to_db( ActionScheduler_Action $action, ?DateTime $date = null, $unique = false ) {
 		global $wpdb;
 
 		try {
@@ -794,7 +794,7 @@ AND `group_id` = %d
 	 *
 	 * @return ActionScheduler_ActionClaim
 	 */
-	public function stake_claim( $max_actions = 10, \DateTime $before_date = null, $hooks = array(), $group = '' ) {
+	public function stake_claim( $max_actions = 10, ?\DateTime $before_date = null, $hooks = array(), $group = '' ) {
 		$claim_id = $this->generate_claim_id();
 
 		$this->claim_before_date = $before_date;
@@ -859,7 +859,7 @@ AND `group_id` = %d
 	 * @throws \InvalidArgumentException Throws InvalidArgumentException if group doesn't exist.
 	 * @throws \RuntimeException Throws RuntimeException if unable to claim action.
 	 */
-	protected function claim_actions( $claim_id, $limit, \DateTime $before_date = null, $hooks = array(), $group = '' ) {
+	protected function claim_actions( $claim_id, $limit, ?\DateTime $before_date = null, $hooks = array(), $group = '' ) {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 

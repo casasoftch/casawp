@@ -113,7 +113,7 @@ class PluginManager extends AbstractPluginManager
      * @param  null|array $options Options to use when creating the instance.
      * @return DispatchableInterface
      */
-    public function get($name, array $options = null)
+    public function get($name, ?array $options = null)
     {
         $plugin = parent::get($name, $options);
         $this->injectController($plugin);

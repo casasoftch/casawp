@@ -102,12 +102,23 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
+* Fix: Add PHP 8.4 compatibility backports for CASAWP and bundled libraries, correcting nullable parameters, logging and CSV parsing while retaining PHP 8.1 support
+* Maintenance: Preserve bundled compatibility patches through Composer installs and updates, remove the obsolete Zend-to-Laminas migration bridge, and validate patches and dependency metadata during release packaging
+* Enhancement: Add an optional CASAGATEWAY poke cooldown that combines repeated pokes into one deferred import without extending the interval; manual imports bypass the cooldown
+* Fix: Show a dedicated error when CASAGATEWAY cannot find the API key, preserve the existing feed and omit the reported key from notices and diagnostic logs
+* Performance: Checkpoint property batches between complete properties and resume them in later requests to limit multilingual worker time and memory use while preserving property order, progress and translation groups
+* Fix: Record Action Scheduler exceptions, shutdown errors and timeouts with action, run and batch context; ignore late failure notices for work already checkpointed
+* Fix: Retain batch sizes and WPML language settings throughout each import, scale automatic CDN batches by language count, and prevent cleanup until all planned properties have completed
+* Fix: Show explicit errors for blank or metadata-only gateway feeds while retaining existing listings and preserving cleanup for an intentional empty properties list
+* Fix: Restore legacy CDN images with missing or generic MIME types without requiring a reimport, including source URLs with query strings
+* Fix: Remove unnecessary room-filter debug messages from the PHP error log
+* Enhancement: Keep the attached-media box directly below Additional Meta Fields when WordPress restores a saved property-editor layout
 * Performance: Skip WordPress post saves for genuinely unchanged imported listings while retaining saves for ordering, content, metadata and media work, processed-run tracking and translation linking
 * Performance: Continue property batches through Action Scheduler's background requests without an added scheduling delay, retaining its five-second pause, serial execution and batch sizes; yield after each web property action and use a shorter queue planning budget
 * Enhancement: Add translated, structured manual controls for property references, links, additional costs and additional offers, saving with Update or Publish, readable heating details and collapsed import information while preserving source-import authority
 * Fix: Keep manually added property media in the Media Library after import detachment and subsequent cleanup; preserve ordinary uploads during delete-all while continuing to remove media identified by import metadata and source fields
 * Performance: Check complete property conversion once per import run and feed change, then convert only each batch's properties while preserving full XML validation and property order
-* Fix: Declare the bundled PHP 8.1 minimum in WordPress and update metadata and align Composer support with PHP 8.1–8.3
+* Fix: Declare the bundled PHP 8.1 minimum consistently in WordPress and update metadata
 * Fix: Allow multiple Bootstrap 4 contact forms on one page when the privacy checkbox is enabled without crashing the page
 * Fix: Leave installation folders and activation to WordPress so CASAWP cannot interfere with other updates; reject failed or invalid update-server responses and preserve other plugins' details
 * Fix: Show contact-form delivery errors when CASA Mail times out, rejects an inquiry or returns an invalid response; retain entered values and run success hooks only after service acceptance

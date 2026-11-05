@@ -224,7 +224,7 @@ class ConversionService {
         return $this->property;
     }
 
-    private function getCalculatedPrices($type = 'rent', $currency) {
+    private function getCalculatedPrices($type, $currency) {
         $prices = [];
         $areas = $this->getList('areas');
         $area_seek = ['area_sia_gf', 'area_sia_nf', 'area_nwf', 'area_sia_gsf', 'volume_sia_gv'];

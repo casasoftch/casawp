@@ -6,7 +6,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class FeatureFactory implements FactoryInterface
 {
-    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = NULL)
+    function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, ?array $options = NULL)
     {
         $featureService = $container->get('CasasoftFeature');
         $helper = new Feature($featureService);

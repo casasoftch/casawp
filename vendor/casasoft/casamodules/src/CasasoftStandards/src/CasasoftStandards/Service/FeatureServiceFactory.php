@@ -8,7 +8,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 
 class FeatureServiceFactory implements FactoryInterface
 {
-  public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+  public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
   {
       /** @var TranslatorInterface $translator */
       $translator = $container->get('translator');

@@ -79,7 +79,29 @@ def validate_metadata():
     supported_php = [re.fullmatch(r'~(\d+)\.(\d+)\.(\d+)', item.strip()) for item in constraint.split('||')]
     if not all(supported_php) or min(int(item.group(1)) * 10000 + int(item.group(2)) * 100 + int(item.group(3)) for item in supported_php) != php_id:
         raise ValueError('Composer PHP support must start at the declared minimum')
+    validate_compatibility(lock)
     return version
+
+
+def validate_compatibility(lock):
+    compatibility = ROOT / 'distribution/wp.casasoft.com/casawp/compatibility'
+    patches = json.loads((compatibility / 'vendor-patches.json').read_text())
+    for name, edits in patches.items():
+        contents = (ROOT / name).read_text()
+        for edit in edits:
+            if edit['from'] in contents or contents.count(edit['to']) != edit['count']:
+                raise ValueError(f'Missing or changed compatibility backport: {name}')
+    repository = json.loads((compatibility / 'packages.json').read_text())['packages']
+    installed = json.loads((ROOT / 'vendor/composer/installed.json').read_text())
+    for label, packages in [('lock', lock['packages']), ('installed', installed['packages'])]:
+        by_name = {package['name']: package for package in packages}
+        if 'laminas/laminas-dependency-plugin' in by_name:
+            raise ValueError(f'Obsolete Composer migration bridge remains in {label} metadata')
+        for name, versions in repository.items():
+            package = by_name.get(name, {})
+            override = versions.get(package.get('version'))
+            if not override or any(package.get(key) != override.get(key) for key in ('source', 'require', 'extra')):
+                raise ValueError(f'Compatibility override mismatch in {label}: {name}')
 
 
 def build(output):

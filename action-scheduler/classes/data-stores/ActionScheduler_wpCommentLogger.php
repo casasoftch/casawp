@@ -14,7 +14,7 @@ class ActionScheduler_wpCommentLogger extends ActionScheduler_Logger {
 	 *
 	 * @return string The log entry ID
 	 */
-	public function log( $action_id, $message, DateTime $date = NULL ) {
+	public function log( $action_id, $message, ?DateTime $date = NULL ) {
 		if ( empty($date) ) {
 			$date = as_get_datetime_object();
 		} else {

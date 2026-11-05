@@ -23,7 +23,7 @@ class ActionScheduler_Action {
 	 */
 	protected $priority = 10;
 
-	public function __construct( $hook, array $args = array(), ActionScheduler_Schedule $schedule = NULL, $group = '' ) {
+	public function __construct( $hook, array $args = array(), ?ActionScheduler_Schedule $schedule = NULL, $group = '' ) {
 		$schedule = empty( $schedule ) ? new ActionScheduler_NullSchedule() : $schedule;
 		$this->set_hook($hook);
 		$this->set_schedule($schedule);

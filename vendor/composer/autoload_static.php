@@ -51,7 +51,6 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
             'Laminas\\Filter\\' => 15,
             'Laminas\\EventManager\\' => 21,
             'Laminas\\Escaper\\' => 16,
-            'Laminas\\DependencyPlugin\\' => 25,
             'Laminas\\Config\\' => 15,
         ),
         'B' => 
@@ -176,10 +175,6 @@ class ComposerStaticInit273860618654b7393bcd9a138e0fa273
         'Laminas\\Escaper\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
-        ),
-        'Laminas\\DependencyPlugin\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laminas/laminas-dependency-plugin/src',
         ),
         'Laminas\\Config\\' => 
         array (
