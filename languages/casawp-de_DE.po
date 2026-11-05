@@ -5079,3 +5079,11 @@ msgstr "Import gestoppt: Der Import-Feed ist leer und enthält keine Immobilien.
 #: classes/ImportProgress.php:69
 msgid "Import stopped: The API key does not exist. Please check the CASAGATEWAY API keys in the settings."
 msgstr "Import gestoppt: Der API-Schlüssel existiert nicht. Bitte prüfen Sie die CASAGATEWAY-API-Schlüssel in den Einstellungen."
+
+#: options.php:1790
+msgid "Poke cooldown (minutes)"
+msgstr "Poke-Sperrzeit (Minuten)"
+
+#: options.php:1792
+msgid "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."
+msgstr "Leer lassen, um keine Sperrzeit zu verwenden. Während dieses Zeitraums empfangene Pokes werden zu einem Import zusammengefasst, der frühestens nach der angegebenen Anzahl von Minuten seit Beginn des letzten CASAGATEWAY-Abrufs starten kann. Manuelle Importe umgehen die Sperrzeit."

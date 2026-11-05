@@ -286,6 +286,7 @@ class Import
 
   private function fetchFileFromCasaGateway(): string
   {
+      GatewayPokeCooldown::fetchStarted();
       $this->logger()->setStage('gateway_fetch');
       $started_at = microtime(true);
       $this->addToLog('CASAWP: Start fetching fresh XML from CasaGateway at ' . time());

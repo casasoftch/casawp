@@ -4162,3 +4162,11 @@ msgstr "Import stopped: The import feed is empty and contains no properties."
 #: classes/ImportProgress.php:69
 msgid "Import stopped: The API key does not exist. Please check the CASAGATEWAY API keys in the settings."
 msgstr "Import stopped: The API key does not exist. Please check the CASAGATEWAY API keys in the settings."
+
+#: options.php:1790
+msgid "Poke cooldown (minutes)"
+msgstr "Poke cooldown (minutes)"
+
+#: options.php:1792
+msgid "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."
+msgstr "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."

@@ -5024,3 +5024,11 @@ msgstr "Importazione interrotta: il feed di importazione è vuoto e non contiene
 #: classes/ImportProgress.php:69
 msgid "Import stopped: The API key does not exist. Please check the CASAGATEWAY API keys in the settings."
 msgstr "Importazione interrotta: la chiave API non esiste. Verifica le chiavi API CASAGATEWAY nelle impostazioni."
+
+#: options.php:1790
+msgid "Poke cooldown (minutes)"
+msgstr "Intervallo tra i poke (minuti)"
+
+#: options.php:1792
+msgid "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."
+msgstr "Lasciare vuoto per non impostare alcun intervallo. I poke ricevuti durante questo intervallo vengono raggruppati in un unico import, che può iniziare dopo il numero di minuti indicato dall’inizio dell’ultimo recupero da CASAGATEWAY. Gli import manuali ignorano questo intervallo."

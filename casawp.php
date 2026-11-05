@@ -118,6 +118,7 @@ $import = new casawp\Import(false, false);
 $import->register_hooks();
 \casawp\ManualCleanup::registerHooks();
 \casawp\ImportQueue::registerHooks();
+\casawp\GatewayPokeCooldown::registerHooks();
 
 
 /**
@@ -159,6 +160,7 @@ function casawp_acquire_lock( int $max_age = 14400 ): bool {
 /** Remove the lock – *always* call once the run ends (success, cancel, fail). */
 function casawp_release_lock(): void {
 	delete_option( 'casawp_import_lock' );
+	\casawp\GatewayPokeCooldown::resume();
 }
 
 /** Read ownership afresh when several background actions share one PHP request. */
@@ -276,7 +278,14 @@ function casawp_dispatch_import_queue_after_poke(): void {
 /**
  * Background handler for gateway pokes scheduled via Action Scheduler.
  */
-function casawp_run_scheduled_gateway_poke( string $source = 'Poke from CasaGateway' ): void {
+function casawp_run_scheduled_gateway_poke( string $source = 'Poke from CasaGateway', bool $cooldown_request = false ): void {
+	if ($source === 'Poke from CasaGateway') {
+		// Older queued actions carry no pending flag; new actions may already
+		// have been satisfied by a manual fetch and must then remain a no-op.
+		if (!$cooldown_request) { \casawp\GatewayPokeCooldown::request(); }
+		\casawp\GatewayPokeCooldown::run();
+		return;
+	}
 	if ( casawp_is_single_request_enabled() ) {
 		casawp_start_single_request_import( $source );
 		return;
@@ -285,7 +294,7 @@ function casawp_run_scheduled_gateway_poke( string $source = 'Poke from CasaGate
 	casawp_start_new_import( $source, false );
 }
 
-add_action( 'casawp_process_gateway_poke', 'casawp_run_scheduled_gateway_poke', 10, 1 );
+add_action( 'casawp_process_gateway_poke', 'casawp_run_scheduled_gateway_poke', 10, 2 );
 
 function casawp_is_single_request_enabled(): bool {
 	return (bool) get_option('casawp_enable_single_request_import', 0);
@@ -467,10 +476,10 @@ function casawp_handle_failed_action($action_id, $failure = null, $runner_contex
 }
 
 
-function casawp_start_new_import($source = '', $force_cancel = false) {
-	if ( casawp_defer_import_during_cleanup() ) { return; }
+function casawp_start_new_import($source = '', $force_cancel = false, bool $already_locked = false) {
+	if ( ! $already_locked && casawp_defer_import_during_cleanup() ) { return; }
 
-	if ( ! casawp_acquire_lock() ) {          // someone else is running
+	if ( ! $already_locked && ! casawp_acquire_lock() ) {          // someone else is running
 		if ( $force_cancel ) {
 			if (!casawp_cancel_import()) { casawp_set_pending(); return; }
 			sleep( 2 );
@@ -506,6 +515,7 @@ function casawp_initialize_cleanup_cron() {
 register_deactivation_hook(__FILE__, 'casawp_unschedule_cleanup_cron');
 
 function casawp_unschedule_cleanup_cron() {
+	\casawp\GatewayPokeCooldown::cancel();
 	wp_clear_scheduled_hook('casawp_manual_cleanup_watchdog');
 	// Unschedule Cleanup Cron Event
 	$timestamp = wp_next_scheduled('casawp_cleanup_logs');
@@ -566,6 +576,7 @@ function casawp_cancel_import() {
 			'per_page' => -1,
 		]);
 		foreach ($gateway_actions as $action_id) { $store->cancel_action($action_id); }
+		\casawp\GatewayPokeCooldown::cancel();
 		casawp_clear_pending();
 		update_option('casawp_import_canceled', true);
 		casawp_release_lock();
@@ -649,11 +660,11 @@ function casawp_start_import() {
  * Run a one-shot (single-request) import:
  * – fetch feed, process everything, remove stale posts – all in one HTTP request
  */
-function casawp_start_single_request_import( string $source = '' ) {
-	if ( casawp_defer_import_during_cleanup() ) { return; }
+function casawp_start_single_request_import( string $source = '', bool $already_locked = false ) {
+	if ( ! $already_locked && casawp_defer_import_during_cleanup() ) { return; }
 
 	/* ── 1. exclusive lock ─────────────────────────────────────── */
-	if ( ! casawp_acquire_lock() ) {          // someone else is running
+	if ( ! $already_locked && ! casawp_acquire_lock() ) {          // someone else is running
 		if (!casawp_cancel_import()) { casawp_set_pending(); return; }
 		sleep( 2 );                           // tiny safety pause
 		if (!casawp_acquire_lock()) { casawp_set_pending(); return; }
@@ -710,36 +721,10 @@ function casawp_handle_gatewaypoke() {
 		return;
 	}
 
-	$source = 'Poke from CasaGateway';
-	$import = new casawp\Import( false, false );
-
-	if ( casawp_is_import_running() ) {
-		casawp_set_pending();
-		$import->addToLog( 'Import already in progress. Gateway poke queued.' );
-		casawp_respond_gateway_poke();
+	\casawp\GatewayPokeCooldown::request();
+	if (!function_exists('as_schedule_single_action')) {
+		\casawp\GatewayPokeCooldown::run();
 	}
-
-	if ( function_exists( 'as_next_scheduled_action' )
-		&& as_next_scheduled_action( 'casawp_process_gateway_poke', null, casawp_gateway_poke_group() ) ) {
-		$import->addToLog( 'Gateway poke already scheduled; ignoring duplicate.' );
-		casawp_respond_gateway_poke();
-	}
-
-	if ( ! function_exists( 'as_schedule_single_action' ) ) {
-		$import->addToLog( 'Action Scheduler unavailable; running gateway poke synchronously.' );
-		casawp_run_scheduled_gateway_poke( $source );
-		casawp_respond_gateway_poke();
-	}
-
-	as_schedule_single_action(
-		time(),
-		'casawp_process_gateway_poke',
-		[ $source ],
-		casawp_gateway_poke_group()
-	);
-
-	$import->addToLog( 'Gateway poke received; import scheduled asynchronously.' );
-	add_action( 'shutdown', 'casawp_dispatch_import_queue_after_poke', 0 );
 	casawp_respond_gateway_poke();
 }
 

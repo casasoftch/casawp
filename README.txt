@@ -49,6 +49,8 @@ You can place the XML file through FTP/Rsync or something similar.
 If you are unable to export to the CASAXML standard with your management software, we can provide you with a CASAGATEWAY account so that you may convert (OpenImmo, HomegateXML, etc.) on the fly.
 You will then only need to add the API and SECRET keys to the plugin's options.
 
+The optional "Poke cooldown (minutes)" setting limits automatic imports triggered by CASAGATEWAY pokes. Leave it empty for no cooldown. Pokes received during the interval are combined into one deferred import, eligible the configured number of minutes after the last CASAGATEWAY fetch started. Additional pokes do not extend the interval. Manual imports bypass the cooldown and start a new interval for subsequent pokes. Deferred imports run when the WordPress background queue is next processed after they become eligible, and wait for any active import or maintenance job to finish.
+
 Please refer to https://help.casasoft.ch/hc/de/articles/22037480338845-CASAGATEWAY-API for further instructions.
 
 How to trigger the import through WP CLI (--url for Multisites)

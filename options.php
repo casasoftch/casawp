@@ -58,6 +58,7 @@ if (isset($_POST['casawp_submit'])) {
 			'casawp_api_key',
 			'casawp_private_key',
 			'casawp_batch_size_override',
+			'casawp_poke_cooldown',
 		),
 		'archiveview' => array(
 			'casawp_archive_orderby',
@@ -202,6 +203,8 @@ if (isset($_POST['casawp_submit'])) {
 		if ($key === 'casawp_before_content' || $key === 'casawp_after_content') {
 			$allowed_html = array('div' => array('id' => array(), 'class' => array()));
 			$value = wp_kses($value, $allowed_html);
+		} elseif ($key === 'casawp_poke_cooldown') {
+			$value = \casawp\GatewayPokeCooldown::sanitizeMinutes($value);
 		} elseif ($key === 'casawp_form_event_tracking') {
 			// sanitize_text_field() treats the placeholder's "%ca" as a URL escape.
 			$placeholder = '__CASAWP_PROPERTY_ID__';
@@ -221,7 +224,11 @@ if (isset($_POST['casawp_submit'])) {
 			if (in_array($key, array('casawp_before_content', 'casawp_after_content', 'casawp_form_event_tracking'), true)) {
 				$value = wp_slash($value);
 			}
-			update_option($key, $value);
+			if ($key === 'casawp_poke_cooldown') {
+				update_option($key, $value, false);
+			} else {
+				update_option($key, $value);
+			}
 		}
 	}
 
@@ -1778,6 +1785,11 @@ if (isset($_GET['do_import']) && !isset($_POST['casawp_submit'])) {
 						<label class="block-label block-label--intd" for="<?php echo $override_name; ?>"><?php echo $override_text; ?></label>
 						<input type="number" min="1" placeholder="<?php echo esc_attr__('Default: based on languages and CDN', 'casawp'); ?>" name="<?php echo $override_name; ?>" value="<?= esc_attr(get_option($override_name, '')) ?>" id="<?php echo $override_name; ?>" class="regular-text" />
 						<p class="description"><?php echo casawp_settings_text('Set a custom batch size. Leave empty to use dynamic logic based on the number of installed languages.'); ?></p>
+
+						<?php $cooldown_name = 'casawp_poke_cooldown'; ?>
+						<label class="block-label block-label--intd" for="<?php echo $cooldown_name; ?>"><?php echo casawp_settings_text('Poke cooldown (minutes)'); ?></label>
+						<input type="number" min="1" step="1" name="<?php echo $cooldown_name; ?>" value="<?php echo esc_attr(get_option($cooldown_name, '')); ?>" id="<?php echo $cooldown_name; ?>" class="regular-text" aria-describedby="casawp-poke-cooldown-description" />
+						<p class="description" id="casawp-poke-cooldown-description"><?php echo casawp_settings_text('Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown.'); ?></p>
 
 
 
