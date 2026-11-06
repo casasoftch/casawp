@@ -102,6 +102,9 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
+* Performance: Reuse WordPress object-cache entries during bounded property batches and restore the caller's cache-addition setting afterward; retain the existing single-request import cache behavior
+* Performance: Write only new or changed imported metadata while preserving serialized values, protected fields, duplicate-key repair, stale-field removal and cache invalidation
+* Performance: Calculate archive area/room ranges with one query per completed logical batch and skip unused pagination totals when looking up existing properties
 * Fix: Add PHP 8.4 compatibility backports for CASAWP and bundled libraries, correcting nullable parameters, logging and CSV parsing while retaining PHP 8.1 support
 * Maintenance: Preserve bundled compatibility patches through Composer installs and updates, remove the obsolete Zend-to-Laminas migration bridge, and validate patches and dependency metadata during release packaging
 * Enhancement: Add an optional CASAGATEWAY poke cooldown that combines repeated pokes into one deferred import without extending the interval; manual imports bypass the cooldown

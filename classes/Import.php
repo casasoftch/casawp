@@ -32,6 +32,31 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
       // Optional: allow site code to extend protected keys
       $protected = apply_filters('casawp_protected_postmeta_keys', array_values(array_unique($protected)), $post_id, $new);
 
+      // Ambiguous payload keys keep the legacy rewrite path: a previous write can
+      // otherwise invalidate this snapshot under a case-insensitive DB collation.
+      $compare_stored = true;
+      $payload_keys = [];
+      foreach (array_keys($new) as $key) {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/D', (string) $key) || isset($payload_keys[strtolower((string) $key)])) {
+          $compare_stored = false;
+          break;
+        }
+        $payload_keys[strtolower((string) $key)] = true;
+      }
+
+      $stored = [];
+      if ($compare_stored) {
+        // Group using the database's collation so duplicate/case-equivalent keys
+        // are still collapsed by the existing delete/insert path.
+        $rows = $wpdb->get_results($wpdb->prepare(
+          "SELECT meta_key, COUNT(*) AS value_count, MIN(meta_value) AS meta_value
+           FROM $tbl WHERE post_id = %d GROUP BY meta_key", $post_id
+        ), ARRAY_A);
+        foreach ((array) $rows as $row) {
+          $stored[$row['meta_key']] = $row;
+        }
+      }
+
       foreach ( $new as $k => $v ) {
         // If a key is protected, do not overwrite it even if it shows up in payload
         if ( in_array( $k, $protected, true ) ) {
@@ -39,6 +64,14 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
         }
 
         $v = maybe_serialize( $v );
+
+        // Compare the serialized value as stored by wpdb, including SQL NULL.
+        // Multiple rows must still be rewritten even when their values match.
+        if (isset($stored[$k]) && (int) $stored[$k]['value_count'] === 1
+            && ($v === null || is_scalar($v))
+            && $stored[$k]['meta_value'] === ($v === null ? null : (string) $v)) {
+          continue;
+        }
 
         $wpdb->delete($tbl, [ 'post_id' => $post_id, 'meta_key' => $k ], [ '%d', '%s' ]);
         $wpdb->insert($tbl, [ 'post_id' => $post_id, 'meta_key' => $k, 'meta_value' => $v ], [ '%d', '%s', '%s' ]);
@@ -1071,7 +1104,15 @@ class Import
     // The optional action argument distinguishes resumed work from an older worker's notification.
     $property_offset = func_num_args() > 2 ? (int) func_get_arg(2) : null;
     return $this->logger()->run('properties_batch', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id, $property_offset) {
-      return $this->importPropertiesBatch($batch_number, $run_id, $property_offset);
+      // Bounded batches reuse property/attachment metadata many times. Allow the
+      // normal WordPress cache additions, then restore the caller's request state.
+      $cache_suspended = wp_suspend_cache_addition();
+      wp_suspend_cache_addition(false);
+      try {
+        return $this->importPropertiesBatch($batch_number, $run_id, $property_offset);
+      } finally {
+        wp_suspend_cache_addition($cache_suspended);
+      }
     });
   }
 
@@ -1091,26 +1132,20 @@ class Import
 
     $started_at = microtime( true );
 
-    // Temporarily suspend cache additions for speed
-    wp_suspend_cache_addition(true);
     if ( get_option('casawp_import_failed') ) {
       $this->logImport('Import already marked as failed. Skipping batch number: ' . $batch_number, ['event' => 'batch.skipped', 'reason' => 'failed'], 'warning');
-      wp_suspend_cache_addition(false);
       return;
     }
 
     if (get_option('casawp_import_canceled', false)) {
       $this->logImport('Import has been canceled. Skipping batch number: ' . $batch_number, ['event' => 'batch.skipped', 'reason' => 'canceled'], 'warning');
-      wp_suspend_cache_addition(false);
       return;
     }
     if ((int) $batch_number > 0 && (int) get_option('casawp_completed_batches', 0) >= (int) $batch_number) {
-      wp_suspend_cache_addition(false);
       return;
     }
     $existing_plan = $this->currentImportRunPlan();
     if ($property_offset !== null && $existing_plan !== null && $property_offset < $existing_plan['processed_properties']) {
-      wp_suspend_cache_addition(false);
       return;
     }
     casawp_set_import_phase($this->current_run_id, 'properties');
@@ -1135,7 +1170,6 @@ class Import
       if ( count($properties) === 0 ) {
         $this->addToLog('Feed contained zero properties - treating as full unpublish.');
         $this->finalize_import_cleanup();
-        wp_suspend_cache_addition(false);
         return;
       }
 
@@ -1166,7 +1200,7 @@ class Import
       }
       $this->logger()->setStage('properties_batch', ['property_id' => null]);
 
-      if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
+      if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
       if ($convert_all) {
         // Preserve fail-before-update checks for the entire feed once per run/content change.
         update_option('casawp_import_conversion_fingerprint', [
@@ -1188,7 +1222,7 @@ class Import
         );
       }
 
-      if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
+      if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
 
       $this->logImport('Processing import batch.', [
         'event' => 'batch.processing',
@@ -1215,7 +1249,7 @@ class Import
         $this->batch_work = null;
       }
 
-      if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
+      if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
 
       $batch_completed = $this->completeImportPlanBatch($plan, (int) $batch_number, $processed);
       update_option('casawp_ranksort', $this->ranksort);
@@ -1230,7 +1264,6 @@ class Import
           'batch_number' => (int) $batch_number, 'run_id' => $this->current_run_id, 'property_offset' => $next_offset,
         ], $this->group());
         $this->logScheduledAction($action_id, 'casawp_batch_import', (int) $batch_number, $this->current_run_id, 0);
-        wp_suspend_cache_addition(false);
         return;
       }
       update_option('casawp_completed_batches', $batch_number);
@@ -1242,7 +1275,7 @@ class Import
 
       if ($batch_number >= $total_batches) {
         $cleanup_finished = $this->finalize_import_cleanup();
-        if ($this->current_run_id !== casawp_current_import_run_id()) { wp_suspend_cache_addition(false); return; }
+        if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
         update_option('casawp_completed_batches', $total_batches);
         delete_option('casawp_current_rank');
         delete_option('casawp_ranksort');
@@ -1291,7 +1324,6 @@ class Import
         'duration_seconds' => round(microtime(true) - $started_at, 3),
       ]);
     }
-    wp_suspend_cache_addition(false);
   }
 
   public function handle_single_request_import()
@@ -2102,6 +2134,8 @@ class Import
                     ],
                   ],
                   'posts_per_page' => 1,
+                  // This lookup only needs the first match, never pagination totals.
+                  'no_found_rows' => true,
                   'suppress_filters' => true,
                   'language' => '',
                 ]);
@@ -2196,20 +2230,26 @@ class Import
 
     $this->reactivate_properties($found_posts);
 
-    // A checkpoint must not multiply the four full postmeta scans within one logical batch.
+    // A checkpoint must not repeat archive statistics work within one logical batch.
     if ($this->batch_work !== null && $this->batch_work['processed'] < count($batched_file)) { return; }
 
     $meta_key_area = 'areaForOrder';
-    $query = $wpdb->prepare("SELECT max( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
-    $max_area = $wpdb->get_var($query);
-    $query = $wpdb->prepare("SELECT min( cast( meta_value as UNSIGNED ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_area);
-    $min_area = $wpdb->get_var($query);
-
     $meta_key_rooms = 'number_of_rooms';
-    $query = $wpdb->prepare("SELECT max( cast(meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
-    $max_rooms = $wpdb->get_var($query);
-    $query = $wpdb->prepare("SELECT min( cast( meta_value as DECIMAL(10, 1) ) ) FROM $wpdb->postmeta WHERE meta_key=%s", $meta_key_rooms);
-    $min_rooms = $wpdb->get_var($query);
+    // Read both ranges together, preserving the existing casts and NULL for absent values.
+    $statistics = $wpdb->get_row($wpdb->prepare(
+      "SELECT
+         MAX(CASE WHEN meta_key = %s THEN CAST(meta_value AS UNSIGNED) END) AS max_area,
+         MIN(CASE WHEN meta_key = %s THEN CAST(meta_value AS UNSIGNED) END) AS min_area,
+         MAX(CASE WHEN meta_key = %s THEN CAST(meta_value AS DECIMAL(10, 1)) END) AS max_rooms,
+         MIN(CASE WHEN meta_key = %s THEN CAST(meta_value AS DECIMAL(10, 1)) END) AS min_rooms
+       FROM $wpdb->postmeta
+       WHERE meta_key IN (%s, %s)",
+      $meta_key_area, $meta_key_area, $meta_key_rooms, $meta_key_rooms, $meta_key_area, $meta_key_rooms
+    ), ARRAY_A);
+    $max_area = $statistics['max_area'] ?? null;
+    $min_area = $statistics['min_area'] ?? null;
+    $max_rooms = $statistics['max_rooms'] ?? null;
+    $min_rooms = $statistics['min_rooms'] ?? null;
 
     update_option('casawp_archive_area_min', $min_area);
     update_option('casawp_archive_area_max', $max_area);
