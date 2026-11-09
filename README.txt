@@ -20,6 +20,14 @@ Synchronize your properties directly to CASAWP, and let them be automatically ca
 
 *** For further technical infos concerning this plugin refer to the readme.md file included within the plugin files.
 
+== Import Debug Hook ==
+
+For advanced import diagnostics, including compact stage checkpoints, individual save_post callback tracing, timings, query counts and HTTP results, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
+
+add_filter('casawp_import_log_level', static function () { return 'debug'; });
+
+Logs are saved in the site's uploads directory under casawp/logs/YYYYMM.log. Shared request details are recorded once, routine unchanged-offer entries are omitted, and successful stage finishes are recorded only from 100 ms. Callback starts/finishes and full warnings/errors are retained. Remove or deactivate the filter to return to compact batch summaries.
+
 == Installation ==
 1. Upload "casawp" to the "/wp-content/plugins/" directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
@@ -55,12 +63,6 @@ Please refer to https://help.casasoft.ch/hc/de/articles/22037480338845-CASAGATEW
 
 How to trigger the import through WP CLI (--url for Multisites)
 wp casawp import --url=https://example.com
-
-For detailed import logs, including individual attachments and batch start/scheduling entries, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
-
-add_filter('casawp_import_log_level', static function () { return 'debug'; });
-
-Remove or deactivate the filter to return to compact batch summaries.
 
 After a successful import, cleanup removes data-done.xml and data-error.xml, unused files in obsolete property folders, and empty attachment folders, including externalsync and its attachment parent when empty. Finder .DS_Store files inside attachment folders are also removed so they do not keep otherwise empty folders alive. With CDN enabled, CASAGATEWAY/CDN images, documents, plans, logos, and brochures are imported without local downloads. Cleanup removes unreferenced externalsync files and old local copies and generated previews of attachments that can safely use a remote source, preserving attachment records and image dimensions. Retained attachments without a usable remote source keep their local files and generated previews; files shared with other local consumers are also protected. Symbolic links are skipped. After switching CDN off, restore removed local attachments through a manual media resync.
 
@@ -102,6 +104,14 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
+* Diagnostics: Trace individual save_post callbacks during debug imports; reduce log volume with compact checkpoints, shared request context and batch-level unchanged counts
+
+* New: Extend the existing debug log hook with persisted stage, save-hook and HTTP checkpoints, action/request identities, timings, query counts and memory limits; retain compact normal logs and redact sensitive data
+* New: At import startup, warn the WordPress administrator by email when WPML Media (attachment) is translatable; suppress repeat mail until an import observes the corrected setting, and keep imports running
+* Fix: Release property batch and empty background queue requests promptly instead of occupying PHP workers in a five-second pause; retain native pauses after other queue jobs and under WP-CLI
+* Fix: Treat equivalent HTML entities in plain-text property and attachment titles as unchanged, preserving stored title spelling and detecting genuine text or markup changes
+* Fix: Compare sanitized attachment titles to avoid repeatedly updating unchanged images with encoded URL characters or markup in their titles
+* Fix: Derive bounded import ranks from the saved feed position so a stale rank counter cannot shift property order on repeated imports or checkpoint resumes
 * Performance: Reuse WordPress object-cache entries during bounded property batches and restore the caller's cache-addition setting afterward; retain the existing single-request import cache behavior
 * Performance: Write only new or changed imported metadata while preserving serialized values, protected fields, duplicate-key repair, stale-field removal and cache invalidation
 * Performance: Calculate archive area/room ranges with one query per completed logical batch and skip unused pagination totals when looking up existing properties

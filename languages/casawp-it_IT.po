@@ -5032,3 +5032,13 @@ msgstr "Intervallo tra i poke (minuti)"
 #: options.php:1792
 msgid "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."
 msgstr "Lasciare vuoto per non impostare alcun intervallo. I poke ricevuti durante questo intervallo vengono raggruppati in un unico import, che può iniziare dopo il numero di minuti indicato dall’inizio dell’ultimo recupero da CASAGATEWAY. Gli import manuali ignorano questo intervallo."
+
+#: classes/WpmlMediaWarning.php
+#, php-format
+msgid "CASAWP: WPML media translation is enabled on %s"
+msgstr "CASAWP: la traduzione dei media WPML è attiva su %s"
+
+#: classes/WpmlMediaWarning.php
+#, php-format
+msgid "WPML is active and Media (attachment) is configured as translatable on this website:\n%s\n\nOpen WPML > Settings > Post Types Translation and set Media (attachment) to \"Not translatable\".\n\nCASAWP already manages property media for each language. Translatable media can create duplicate attachments and increase import time.\n\nThe import will continue. This warning will not be repeated until an import detects that the setting has been corrected and it is later enabled again."
+msgstr "WPML è attivo e i media (attachment) sono impostati come traducibili su questo sito:\n%s\n\nApri WPML > Impostazioni > Traduzione dei tipi di contenuto e imposta Media (attachment) su \"Non traducibile\".\n\nCASAWP gestisce già i media degli immobili per ogni lingua. I media traducibili possono creare allegati duplicati e aumentare la durata dell’importazione.\n\nL’importazione prosegue. Questo avviso verrà inviato di nuovo solo dopo che un’importazione avrà rilevato la correzione dell’impostazione e la traduzione dei media sarà stata successivamente riattivata."

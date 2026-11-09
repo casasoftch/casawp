@@ -118,6 +118,7 @@ $import = new casawp\Import(false, false);
 $import->register_hooks();
 \casawp\ManualCleanup::registerHooks();
 \casawp\ImportQueue::registerHooks();
+\casawp\ImportLogger::registerHooks();
 \casawp\GatewayPokeCooldown::registerHooks();
 
 
@@ -186,6 +187,7 @@ function casawp_begin_import_run(string $phase = 'fetching'): int {
 	update_option('casawp_import_progress_run_id', $run_id, false);
 	update_option('casawp_import_progress_state', ['run_id' => $run_id, 'phase' => $phase], false);
 	update_option('casawp_current_run_id', $run_id, false);
+	\casawp\WpmlMediaWarning::check($run_id);
 	return $run_id;
 }
 

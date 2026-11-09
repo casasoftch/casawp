@@ -5087,3 +5087,13 @@ msgstr "Poke-Sperrzeit (Minuten)"
 #: options.php:1792
 msgid "Leave empty for no cooldown. Pokes received during this interval are combined into one import, eligible after the specified number of minutes since the last CASAGATEWAY fetch started. Manual imports bypass the cooldown."
 msgstr "Leer lassen, um keine Sperrzeit zu verwenden. Während dieses Zeitraums empfangene Pokes werden zu einem Import zusammengefasst, der frühestens nach der angegebenen Anzahl von Minuten seit Beginn des letzten CASAGATEWAY-Abrufs starten kann. Manuelle Importe umgehen die Sperrzeit."
+
+#: classes/WpmlMediaWarning.php
+#, php-format
+msgid "CASAWP: WPML media translation is enabled on %s"
+msgstr "CASAWP: Die WPML-Medienübersetzung ist auf %s aktiviert"
+
+#: classes/WpmlMediaWarning.php
+#, php-format
+msgid "WPML is active and Media (attachment) is configured as translatable on this website:\n%s\n\nOpen WPML > Settings > Post Types Translation and set Media (attachment) to \"Not translatable\".\n\nCASAWP already manages property media for each language. Translatable media can create duplicate attachments and increase import time.\n\nThe import will continue. This warning will not be repeated until an import detects that the setting has been corrected and it is later enabled again."
+msgstr "WPML ist aktiv und Medien (attachment) sind auf dieser Website als übersetzbar eingestellt:\n%s\n\nÖffnen Sie WPML > Einstellungen > Übersetzung von Beitragstypen und stellen Sie Medien (attachment) auf \"Nicht übersetzbar\".\n\nCASAWP verwaltet die Objektmedien bereits für jede Sprache. Übersetzbare Medien können doppelte Anhänge erzeugen und die Importdauer erhöhen.\n\nDer Import wird fortgesetzt. Diese Warnung wird erst erneut versendet, wenn ein Import die korrigierte Einstellung erkannt hat und die Medienübersetzung später wieder aktiviert wird."

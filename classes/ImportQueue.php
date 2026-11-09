@@ -8,6 +8,7 @@ class ImportQueue
     private static bool $limited_request = false;
     private static bool $yield_request = false;
     private static bool $checked_request = false;
+    private static bool $other_action_executed = false;
 
     public static function registerHooks(): void
     {
@@ -16,6 +17,7 @@ class ImportQueue
         add_filter('action_scheduler_failure_period', [self::class, 'claimTimeout']);
         add_action('action_scheduler_begin_execute', [self::class, 'beforeAction'], 10, 2);
         add_filter('action_scheduler_maximum_execution_time_likely_to_be_exceeded', [self::class, 'shouldYield']);
+        add_filter('action_scheduler_async_request_sleep_seconds', [self::class, 'asyncRequestSleep'], 20);
     }
 
     private static function isCli(): bool
@@ -50,7 +52,10 @@ class ImportQueue
     {
         if (self::isCli()) { return; }
         $action = \ActionScheduler::store()->fetch_action($action_id);
-        if ($action->get_hook() !== 'casawp_batch_import') { return; }
+        if ($action->get_hook() !== 'casawp_batch_import') {
+            self::$other_action_executed = true;
+            return;
+        }
         self::$limited_request = true;
         self::$yield_request = true;
         if ($context !== 'Async Request') {
@@ -58,7 +63,27 @@ class ImportQueue
             // priority zero also lets a successful dispatch unhook the ordinary admin dispatcher.
             add_action('shutdown', 'casawp_dispatch_import_queue_after_poke', 0);
         }
-        // The native async runner retains its five-second pause and dispatches its own continuation.
+        // The native async runner dispatches its own continuation after releasing the claim.
+    }
+
+    public static function asyncRequestSleep($seconds)
+    {
+        // Preserve the native throttle when this request also processed other queue work.
+        if (self::isCli() || self::$other_action_executed) {
+            return $seconds;
+        }
+        // Property actions already yield after one batch. Sleeping after releasing their
+        // claim lets another runner start and can leave every PHP worker asleep at once.
+        if (self::$yield_request) { return 0; }
+        if (!self::limitedRequest()) { return $seconds; }
+        $state = get_option('casawp_import_progress_state', []);
+        if (is_array($state) && ($state['phase'] ?? '') === 'properties'
+            && (int) ($state['run_id'] ?? 0) === casawp_current_import_run_id()) {
+            // A competing runner can find no work while another request owns the claim.
+            // Sleeping here would occupy a PHP worker without processing a batch.
+            return 0;
+        }
+        return $seconds;
     }
 
     public static function shouldYield($exceeded)

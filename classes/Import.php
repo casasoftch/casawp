@@ -248,6 +248,19 @@ class Import
   }
 
 
+  /** Compare plain-text titles while retaining the stored entity spelling. */
+  private function equivalentImportedTitle($stored, $incoming): bool {
+    if ($stored === $incoming) { return true; }
+    // Markup and escaped markup can render differently. Keep their exact comparison.
+    if (!is_string($stored) || !is_string($incoming)
+        || strpos($stored, '<') !== false || strpos($incoming, '<') !== false) {
+      return false;
+    }
+    // Decode once only: double-encoded entities represent different visible text.
+    return html_entity_decode($stored, ENT_QUOTES | ENT_HTML5, 'UTF-8')
+      === html_entity_decode($incoming, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  }
+
   private function fingerprint( array $meta ): string {
 
     static $skip_exact = [
@@ -1239,9 +1252,13 @@ class Import
       $this->batch_work = $bounded ? [
         'started_at' => $started_at,
         'deadline' => $started_at + $seconds,
+        'rank_offset' => $batch_start,
         'memory_limit' => function_exists('wp_convert_hr_to_bytes') ? wp_convert_hr_to_bytes(ini_get('memory_limit')) : 0,
         'processed' => 0,
       ] : null;
+      $this->logger()->setStage('batch_offers', [
+        'property_offset' => $batch_start, 'batch_end_offset' => $batch_end, 'batch_time_budget_seconds' => $seconds,
+      ]);
       try {
         $this->updateOffers($items_for_current_batch);
         $processed = $this->batch_work !== null ? $this->batch_work['processed'] : count($items_for_current_batch);
@@ -1251,6 +1268,7 @@ class Import
 
       if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
 
+      $this->logger()->setStage('batch_checkpoint');
       $batch_completed = $this->completeImportPlanBatch($plan, (int) $batch_number, $processed);
       update_option('casawp_ranksort', $this->ranksort);
       if (!$batch_completed) {
@@ -1260,6 +1278,7 @@ class Import
           'duration_seconds' => round(microtime(true) - $started_at, 3),
         ]);
         // The same batch is still running, so as_next_scheduled_action() would find this action itself.
+        $this->logger()->setStage('batch_schedule');
         $action_id = as_schedule_single_action(time(), 'casawp_batch_import', [
           'batch_number' => (int) $batch_number, 'run_id' => $this->current_run_id, 'property_offset' => $next_offset,
         ], $this->group());
@@ -1274,6 +1293,7 @@ class Import
       ], 'debug');
 
       if ($batch_number >= $total_batches) {
+        $this->logger()->setStage('batch_finalize');
         $cleanup_finished = $this->finalize_import_cleanup();
         if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
         update_option('casawp_completed_batches', $total_batches);
@@ -1285,6 +1305,7 @@ class Import
           $this->addToLog('Import batches completed; database cleanup is queued, followed by filesystem, taxonomy, and old-log cleanup.');
         }
       } else {
+        $this->logger()->setStage('batch_schedule');
         $next_batch_number = $batch_number + 1;
 
         // Let Action Scheduler continue in a new request, retaining its native pause and limits.
@@ -2076,7 +2097,10 @@ class Import
 
     global $wpdb;
     $found_posts = [];
-    $curRank = get_option('casawp_current_rank', 0);
+    // Managed batches have an exact feed cursor, including checkpointed properties.
+    // Do not let a stale rank counter shift every later property's order on reimport.
+    $curRank = isset($this->batch_work['rank_offset'])
+      ? (int) $this->batch_work['rank_offset'] : get_option('casawp_current_rank', 0);
     // Custom updaters may rely on updateOffers applying the rank before their override runs.
     $legacy_rank_save = (new \ReflectionMethod($this, 'updateOffer'))->getDeclaringClass()->getName() !== self::class;
 
@@ -2121,6 +2145,7 @@ class Import
               'casawp_id' => $casawp_id,
               'language' => $offerData['lang'],
               'post_id' => null,
+              'attachment_id' => null, 'media_origin' => null, 'media_index' => null, 'media_count' => null,
             ], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id, $legacy_rank_save) {
               $this->logger()->setStage('offer_lookup');
               $this->withWPMLLanguage($offerData['lang'], function () use (&$found_posts, $curRank, $offer_pos, $property, $offerData, $casawp_id, $legacy_rank_save) {
@@ -2199,7 +2224,9 @@ class Import
                   $this->rank_saved_before_offer = $previous_rank_save;
                 }
 
-                $this->logger()->setStage('offer_wpml_link');
+                $this->logger()->setStage('offer_wpml_link', [
+                  'attachment_id' => null, 'media_origin' => null, 'media_index' => null, 'media_count' => null, 'media_remote' => null,
+                ]);
                 $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
               });
             }, 'debug');
@@ -2225,7 +2252,10 @@ class Import
     }
 
     if ($this->current_run_id && $this->current_run_id !== casawp_current_import_run_id()) { return; }
-    $this->logger()->setStage('archive_statistics', ['property_id' => null]);
+    $this->logger()->setStage('archive_statistics', [
+      'property_id' => null, 'casawp_id' => null, 'language' => null, 'post_id' => null,
+      'attachment_id' => null, 'media_origin' => null, 'media_index' => null, 'media_count' => null,
+    ]);
     update_option('casawp_current_rank', $curRank);
 
     $this->reactivate_properties($found_posts);
@@ -2867,6 +2897,10 @@ class Import
         }
     } */
 
+    if ($this->equivalentImportedTitle($old_main_data['post_title'], $new_main_data['post_title'])) {
+        // Preserve the stored spelling even when another main field requires a save.
+        $new_main_data['post_title'] = $old_main_data['post_title'];
+    }
     $main_unchanged = ( $new_main_data === $old_main_data );
 
     // Decide before saving: unchanged offers need only their current-run markers.
@@ -3437,6 +3471,7 @@ class Import
 
   private function downloadRemoteMedia(string $url, string $full_path): bool
   {
+    $this->logger()->setStage('media_download', ['media_origin' => $url]);
     // Use the destination filesystem so the completed download can be renamed atomically.
     $temporary_path = tempnam(dirname($full_path), '.casawp-');
     if ($temporary_path === false) {
@@ -3540,6 +3575,8 @@ class Import
 
       $origin = $this->normalizeCasawpOrigin($source);
 
+      $this->logger()->setStage('media_prepare', ['media_origin' => $origin, 'attachment_id' => null]);
+
       $term = $this->getAttachmentTypeTermBySlug((string) $the_mediaitem['type']);
       if (!$term || is_wp_error($term)) {
           return 'Missing taxonomy term casawp_attachment_type:' . $the_mediaitem['type'];
@@ -3570,12 +3607,14 @@ class Import
               'menu_order'     => isset($the_mediaitem['order']) ? (int) $the_mediaitem['order'] : 0,
           );
 
+          $this->logger()->setStage('media_insert', ['media_remote' => true]);
           $attach_id = wp_insert_attachment($attachment, false, $post_id, true);
 
           if (is_wp_error($attach_id)) {
               return $attach_id->get_error_message();
           }
 
+          $this->logger()->setStage('media_metadata', ['attachment_id' => (int) $attach_id]);
           update_post_meta($attach_id, '_origin', $origin);
           update_post_meta($attach_id, '_is_remote', 1);
           update_post_meta($attach_id, '_casawp_import', 1);
@@ -3588,6 +3627,7 @@ class Import
               update_post_meta($attach_id, '_remote_height', (int) $the_mediaitem['height']);
           }
 
+          $this->logger()->setStage('media_terms');
           wp_set_post_terms($attach_id, array((int) $term->term_id), 'casawp_attachment_type', false);
 
           return (int) $attach_id;
@@ -3628,6 +3668,7 @@ class Import
           'menu_order'     => isset($the_mediaitem['order']) ? (int) $the_mediaitem['order'] : 0,
       );
 
+      $this->logger()->setStage('media_insert', ['media_remote' => false]);
       $attach_id = wp_insert_attachment($attachment, $full_path, $post_id, true);
 
       if (is_wp_error($attach_id)) {
@@ -3635,6 +3676,7 @@ class Import
       }
 
       if (strpos($mime_type, 'image/') === 0) {
+          $this->logger()->setStage('media_image_metadata', ['attachment_id' => (int) $attach_id]);
           require_once(ABSPATH . 'wp-admin/includes/image.php');
           $attach_data = wp_generate_attachment_metadata($attach_id, $full_path);
           if (!empty($attach_data) && !is_wp_error($attach_data)) {
@@ -3642,11 +3684,13 @@ class Import
           }
       }
 
+      $this->logger()->setStage('media_metadata', ['attachment_id' => (int) $attach_id]);
       update_post_meta($attach_id, '_origin', $origin);
       delete_post_meta($attach_id, '_is_remote');
       update_post_meta($attach_id, '_casawp_import', 1);
       update_post_meta($attach_id, '_wp_attachment_image_alt', $alt);
 
+      $this->logger()->setStage('media_terms');
       wp_set_post_terms($attach_id, array((int) $term->term_id), 'casawp_attachment_type', false);
 
       return (int) $attach_id;
@@ -3654,6 +3698,9 @@ class Import
 
   public function setOfferAttachments($offer_medias, $wp_post, $property_id, $casawp_id, $property, $has_media_node = true)
   {
+      $this->logger()->setStage('media_plan', [
+          'attachment_id' => null, 'media_origin' => null, 'media_index' => null, 'media_count' => 0, 'media_remote' => null,
+      ]);
       $allowed_types = ImportMedia::TYPES;
       $the_casawp_attachments = array();
       $order = 0;
@@ -3709,9 +3756,11 @@ class Import
               return;
           }
 
+          $this->logger()->setStage('media_lookup');
           $existing_imported = $this->getCasawpImportedAttachments($wp_post->ID);
 
           foreach ($existing_imported as $origin => $attachment) {
+              $this->logger()->setStage('media_delete', ['attachment_id' => (int) $attachment->ID, 'media_origin' => $origin]);
               $this->logImport('removing casawp attachment because source list is empty: ' . $attachment->ID . ' origin: ' . $origin, ['event' => 'media.removed'], 'debug');
               $this->transcript[$casawp_id]['attachments']['removed'][] = $attachment->ID;
               wp_delete_attachment($attachment->ID, true);
@@ -3725,6 +3774,7 @@ class Import
           return;
       }
 
+      $this->logger()->setStage('media_lookup', ['media_count' => count($the_casawp_attachments)]);
       $existing_by_origin = $this->getCasawpImportedAttachments($wp_post->ID);
       $to_remove = $existing_by_origin;
 
@@ -3739,6 +3789,11 @@ class Import
               continue;
           }
           $seen_desired_origins[$origin] = true;
+
+          $this->logger()->setStage('media_item', [
+              'media_origin' => $origin, 'media_index' => (int) $the_mediaitem['order'],
+              'attachment_id' => null, 'media_remote' => null,
+          ]);
 
           $term = $this->getAttachmentTypeTermBySlug((string) $the_mediaitem['type']);
           if (!$term || is_wp_error($term)) {
@@ -3758,6 +3813,9 @@ class Import
 
           if ($existing_attachment) {
               $attachment_id = (int) $existing_attachment->ID;
+              $this->logger()->setStage('media_existing', [
+                  'attachment_id' => $attachment_id, 'media_remote' => $should_be_remote,
+              ]);
               $current_is_remote = (bool) get_post_meta($attachment_id, '_is_remote', true);
 
               // If this was previously remote but now should be local, recreate it locally.
@@ -3771,6 +3829,7 @@ class Import
                           'to'   => $replacement_id,
                       );
 
+                      $this->logger()->setStage('media_delete', ['attachment_id' => $attachment_id]);
                       wp_delete_attachment($attachment_id, true);
 
                       $attachment_id = $replacement_id;
@@ -3795,8 +3854,11 @@ class Import
                   $changed = true;
               }
 
-              if ((string) $existing_attachment->post_title !== (string) $the_mediaitem['title']) {
-                  $update_post['post_title'] = sanitize_text_field($the_mediaitem['title']);
+              // Compare the value WordPress will receive, so stripped markup/encoded
+              // URL characters do not trigger the same attachment update every time.
+              $new_title = sanitize_text_field($the_mediaitem['title']);
+              if (!$this->equivalentImportedTitle((string) $existing_attachment->post_title, $new_title)) {
+                  $update_post['post_title'] = $new_title;
                   $changed = true;
               }
 
@@ -3812,6 +3874,7 @@ class Import
               }
 
               if (count($update_post) > 1) {
+                  $this->logger()->setStage('media_update', ['attachment_id' => $attachment_id]);
                   $updated = wp_update_post($update_post, true);
                   if (is_wp_error($updated) || !$updated) {
                       throw new \RuntimeException('Could not update imported attachment ' . $attachment_id .
@@ -3819,6 +3882,7 @@ class Import
                   }
               }
 
+              $this->logger()->setStage('media_metadata', ['attachment_id' => $attachment_id]);
               update_post_meta($attachment_id, '_origin', $origin);
               update_post_meta($attachment_id, '_casawp_import', 1);
 
@@ -3835,6 +3899,7 @@ class Import
                   $changed = true;
               }
 
+              $this->logger()->setStage('media_terms');
               $current_terms = wp_get_post_terms($attachment_id, 'casawp_attachment_type', array('fields' => 'ids'));
               $current_terms = array_map('intval', is_array($current_terms) ? $current_terms : array());
 
@@ -3890,11 +3955,13 @@ class Import
 
       foreach ($to_remove as $origin => $attachment) {
           $attachment_id = (int) $attachment->ID;
+          $this->logger()->setStage('media_delete', ['attachment_id' => $attachment_id, 'media_origin' => $origin]);
           $this->logImport('removing obsolete casawp attachment ' . $attachment_id . ' origin: ' . $origin, ['event' => 'media.removed'], 'debug');
           $this->transcript[$casawp_id]['attachments']['removed'][] = $attachment_id;
           wp_delete_attachment($attachment_id, true);
       }
 
+      $this->logger()->setStage('media_featured_image', ['attachment_id' => $featured_attachment_id, 'media_origin' => null]);
       if (!empty($featured_attachment_id)) {
           $current_thumbnail_id = (int) get_post_thumbnail_id($wp_post->ID);
           if ($current_thumbnail_id !== $featured_attachment_id) {
@@ -3916,6 +3983,7 @@ class Import
   /** Restore feed ownership without deleting files an editor added to the media library. */
   private function resetManualPropertyMedia($post_id, $casawp_id, $has_media_node): void
   {
+      $this->logger()->setStage('media_manual_reset', ['attachment_id' => null, 'media_origin' => null, 'media_index' => null]);
       // A missing source list is not an instruction to discard manual media changes.
       if (!$has_media_node || !get_post_meta($post_id, '_casawp_manual_media_modified', true)) {
           return;
@@ -3954,6 +4022,7 @@ class Import
 
   private function detachManualAttachment(int $attachment_id, $casawp_id): void
   {
+      $this->logger()->setStage('media_manual_detach', ['attachment_id' => $attachment_id]);
       $updated = wp_update_post(array('ID' => $attachment_id, 'post_parent' => 0), true);
       if (is_wp_error($updated) || !$updated || (int) wp_get_post_parent_id($attachment_id) !== 0) {
           throw new \RuntimeException('Could not detach manually added attachment ' . $attachment_id .
