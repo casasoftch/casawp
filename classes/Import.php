@@ -11,7 +11,7 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
       $tbl = $wpdb->postmeta;
 
       // Media changes must remain retryable if the later attachment sync fails.
-      $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort', '_casawp_manual_media_modified' ];
+      $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort', '_casawp_manual_media_modified', 'casawp_media_alt_hash' ];
 
       // Add SEO meta keys that must never be touched by CASAWP imports
       $seo_like = [
@@ -275,6 +275,7 @@ class Import
       'projectunit_id',
       'projectunit_sort',
       'casawp_media_sync_version',
+      'casawp_media_alt_hash',
       '_casawp_manual_media_modified',
     ];
 
@@ -315,6 +316,50 @@ class Import
   private function needsMediaSyncMigration(int $post_id): bool
   {
       return (int) get_post_meta($post_id, 'casawp_media_sync_version', true) < self::MEDIA_SYNC_SCHEMA_VERSION;
+  }
+
+  private function markImageAlternativeSyncComplete(int $post_id, ?string $hash, string $casawp_id): void
+  {
+      if ($hash !== null && empty($this->transcript[$casawp_id]['attachments']['failed_to_create'])) {
+          update_post_meta($post_id, 'casawp_media_alt_hash', $hash);
+      }
+  }
+
+  /** Backfill changed image text without invoking property save hooks. */
+  private function syncOfferImageAlternatives(int $post_id, array $medias, string $casawp_id, string $hash): void
+  {
+      $existing = $this->getCasawpImportedAttachments($post_id);
+      $complete = true;
+      foreach ($medias as $media) {
+          if (($media['type'] ?? 'image') !== 'image') { continue; }
+          $source = !empty($media['media']['original_file']) ? $media['media']['original_file'] : ($media['url'] ?? '');
+          if ($source === '') { continue; }
+          $origin = $this->normalizeCasawpOrigin($source);
+          if (!isset($existing[$origin])) { $complete = false; continue; }
+          $attachment = $existing[$origin];
+          $id = (int) $attachment->ID;
+          $changes = [];
+          foreach (ImportMedia::imageText($media) as $field => $incoming) {
+              $current = (string) $attachment->$field;
+              $next = ImportMedia::imageTextForImport($id, $field, $current, $incoming);
+              if ($field === 'post_title' && $this->equivalentImportedTitle($current, $next)) { continue; }
+              if ($current !== $next) { $changes[$field] = $next; }
+          }
+          if ($changes) {
+              $result = wp_update_post(wp_slash(array_merge(['ID' => $id], $changes)), true);
+              if (is_wp_error($result) || !$result) {
+                  throw new \RuntimeException('Could not update imported image text for attachment ' . $id . '.');
+              }
+          }
+          ImportMedia::recordImportedImageText($id, $media);
+          $alt_changed = ImportMedia::syncAlternativeText($id, $media);
+          if ($changes || $alt_changed) {
+              $this->logImport('updated image text for casawp attachment ' . $id,
+                  ['event' => 'media.updated', 'attachment_id' => $id], 'debug');
+              $this->transcript[$casawp_id]['attachments']['updated'][] = $id;
+          }
+      }
+      if ($complete) { $this->markImageAlternativeSyncComplete($post_id, $hash, $casawp_id); }
   }
 
   private function maybeMarkMediaSyncMigrationComplete(int $post_id, string $casawp_id): void
@@ -2856,6 +2901,14 @@ class Import
     $needs_media_sync_migration = $this->needsMediaSyncMigration($wp_post->ID);
     $has_manual_media_changes = (bool) get_post_meta($wp_post->ID, '_casawp_manual_media_modified', true);
     $needs_media_sync = $needs_media_sync_migration || $has_manual_media_changes;
+    $media_alt_items = array_values(array_filter($offer['offer_medias'] ?? [], static function ($media) {
+        return ($media['type'] ?? 'image') === 'image'
+            && (!empty($media['media']['original_file']) || !empty($media['url']));
+    }));
+    if (get_option('casawp_limit_reference_images') && ($property['availability'] ?? '') === 'reference') {
+        $media_alt_items = array_slice($media_alt_items, 0, 1);
+    }
+    $media_alt_hash = ImportMedia::alternativeTextHash($media_alt_items);
 
     
 
@@ -2927,6 +2980,10 @@ class Import
     }
 
     if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync ) {
+        if ($media_alt_hash !== null && get_post_meta($wp_post->ID, 'casawp_media_alt_hash', true) !== $media_alt_hash) {
+            $this->logger()->setStage('media_alternative_text');
+            $this->syncOfferImageAlternatives($wp_post->ID, $media_alt_items, $casawp_id, $media_alt_hash);
+        }
         $this->logImport( "Skip {$casawp_id} - unchanged (hash)", ['event' => 'offer.unchanged'], 'debug' );
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
@@ -2952,6 +3009,7 @@ class Import
             !empty($offer['has_media_node'])
         );
         $this->maybeMarkMediaSyncMigrationComplete($wp_post->ID, $casawp_id);
+        $this->markImageAlternativeSyncComplete($wp_post->ID, $media_alt_hash, $casawp_id);
         update_post_meta( $wp_post->ID, 'is_active', true );
         update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
         return;
@@ -3067,6 +3125,7 @@ class Import
         !empty($offer['has_media_node'])
     );
     $this->maybeMarkMediaSyncMigrationComplete($wp_post->ID, $casawp_id);
+    $this->markImageAlternativeSyncComplete($wp_post->ID, $media_alt_hash, $casawp_id);
     // mark this post as “seen in the current run”
     update_post_meta( $wp_post->ID, 'last_processed_run', $this->current_run_id );
 
@@ -3587,7 +3646,6 @@ class Import
           : wp_basename(parse_url($origin, PHP_URL_PATH) ?: $origin);
 
       $caption = isset($the_mediaitem['caption']) ? (string) $the_mediaitem['caption'] : '';
-      $alt     = isset($the_mediaitem['alt']) ? (string) $the_mediaitem['alt'] : '';
 
       // CDN attachments retain WordPress records without downloading local copies.
       if ($this->shouldUseRemoteCasawpAttachment($the_mediaitem)) {
@@ -3618,7 +3676,8 @@ class Import
           update_post_meta($attach_id, '_origin', $origin);
           update_post_meta($attach_id, '_is_remote', 1);
           update_post_meta($attach_id, '_casawp_import', 1);
-          update_post_meta($attach_id, '_wp_attachment_image_alt', $alt);
+          ImportMedia::syncAlternativeText((int) $attach_id, $the_mediaitem);
+          ImportMedia::recordImportedImageText((int) $attach_id, $the_mediaitem);
 
           if (!empty($the_mediaitem['width'])) {
               update_post_meta($attach_id, '_remote_width', (int) $the_mediaitem['width']);
@@ -3688,7 +3747,8 @@ class Import
       update_post_meta($attach_id, '_origin', $origin);
       delete_post_meta($attach_id, '_is_remote');
       update_post_meta($attach_id, '_casawp_import', 1);
-      update_post_meta($attach_id, '_wp_attachment_image_alt', $alt);
+      ImportMedia::syncAlternativeText((int) $attach_id, $the_mediaitem);
+      ImportMedia::recordImportedImageText((int) $attach_id, $the_mediaitem);
 
       $this->logger()->setStage('media_terms');
       wp_set_post_terms($attach_id, array((int) $term->term_id), 'casawp_attachment_type', false);
@@ -3857,14 +3917,20 @@ class Import
               // Compare the value WordPress will receive, so stripped markup/encoded
               // URL characters do not trigger the same attachment update every time.
               $new_title = sanitize_text_field($the_mediaitem['title']);
+              if ($the_mediaitem['type'] === 'image') {
+                  $new_title = ImportMedia::imageTextForImport($attachment_id, 'post_title', (string) $existing_attachment->post_title, $new_title);
+              }
               if (!$this->equivalentImportedTitle((string) $existing_attachment->post_title, $new_title)) {
-                  $update_post['post_title'] = $new_title;
+                  $update_post['post_title'] = wp_slash($new_title);
                   $changed = true;
               }
 
               $new_excerpt = isset($the_mediaitem['caption']) ? (string) $the_mediaitem['caption'] : '';
+              if ($the_mediaitem['type'] === 'image') {
+                  $new_excerpt = ImportMedia::imageTextForImport($attachment_id, 'post_excerpt', (string) $existing_attachment->post_excerpt, $new_excerpt);
+              }
               if ((string) $existing_attachment->post_excerpt !== $new_excerpt) {
-                  $update_post['post_excerpt'] = $new_excerpt;
+                  $update_post['post_excerpt'] = wp_slash($new_excerpt);
                   $changed = true;
               }
 
@@ -3892,12 +3958,10 @@ class Import
                   delete_post_meta($attachment_id, '_is_remote');
               }
 
-              $current_alt = (string) get_post_meta($attachment_id, '_wp_attachment_image_alt', true);
-              $new_alt = isset($the_mediaitem['alt']) ? (string) $the_mediaitem['alt'] : '';
-              if ($current_alt !== $new_alt) {
-                  update_post_meta($attachment_id, '_wp_attachment_image_alt', $new_alt);
+              if (ImportMedia::syncAlternativeText($attachment_id, $the_mediaitem)) {
                   $changed = true;
               }
+              ImportMedia::recordImportedImageText($attachment_id, $the_mediaitem);
 
               $this->logger()->setStage('media_terms');
               $current_terms = wp_get_post_terms($attachment_id, 'casawp_attachment_type', array('fields' => 'ids'));

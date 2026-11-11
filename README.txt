@@ -104,6 +104,8 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
+* Enhancement: Preserve manually edited image titles and captions during imports, while keeping import-managed values synchronized with CRM changes
+* Enhancement: Use image captions as alternative text when the feed supplies no nonempty alt value; preserve manually edited fallback text and backfill unchanged properties without triggering property save hooks
 * Diagnostics: Trace individual save_post callbacks during debug imports; reduce log volume with compact checkpoints, shared request context and batch-level unchanged counts
 
 * New: Extend the existing debug log hook with persisted stage, save-hook and HTTP checkpoints, action/request identities, timings, query counts and memory limits; retain compact normal logs and redact sensitive data
