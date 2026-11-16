@@ -187,6 +187,7 @@ function casawp_begin_import_run(string $phase = 'fetching'): int {
 	update_option('casawp_import_progress_run_id', $run_id, false);
 	update_option('casawp_import_progress_state', ['run_id' => $run_id, 'phase' => $phase], false);
 	update_option('casawp_current_run_id', $run_id, false);
+	\casawp\DebugLogWarning::check($run_id);
 	\casawp\WpmlMediaWarning::check($run_id);
 	return $run_id;
 }

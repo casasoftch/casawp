@@ -1159,6 +1159,7 @@ class Import
 
   public function handle_properties_import_batch($batch_number, $run_id = 0)
   {
+    if (ImportQueue::handoffPropertyBatch()) { return; }
     // The optional action argument distinguishes resumed work from an older worker's notification.
     $property_offset = func_num_args() > 2 ? (int) func_get_arg(2) : null;
     return $this->logger()->run('properties_batch', array_merge(['batch_number' => (int) $batch_number], $run_id ? ['run_id' => (int) $run_id] : []), function () use ($batch_number, $run_id, $property_offset) {

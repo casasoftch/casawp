@@ -28,6 +28,8 @@ add_filter('casawp_import_log_level', static function () { return 'debug'; });
 
 Logs are saved in the site's uploads directory under casawp/logs/YYYYMM.log. Shared request details are recorded once, routine unchanged-offer entries are omitted, and successful stage finishes are recorded only from 100 ms. Callback starts/finishes and full warnings/errors are retained. Remove or deactivate the filter to return to compact batch summaries.
 
+At the start of every import while this debug filter is active, CASAWP emails the WordPress administrator address (admin_email), warning that debug logs can grow very large and explaining how to deactivate the filter. Failed notifications are logged without stopping the import. Normal logging sends no debug notification.
+
 == Installation ==
 1. Upload "casawp" to the "/wp-content/plugins/" directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
@@ -103,6 +105,9 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 == Changelog ==
 
 = Unreleased =
+
+* New: Email the WordPress administrator at every import startup while debug logging is active, with a log-size warning and deactivation instructions; retain imports when notification delivery fails
+* Compatibility: Hand cron-picked property batches using WPML's frontend save handler to the async runner, retaining batch/cursor identity and linked scheduler jobs; bound repeated handoffs and retain native failure reporting
 
 * Enhancement: Preserve manually edited image titles and captions during imports, while keeping import-managed values synchronized with CRM changes
 * Enhancement: Use image captions as alternative text when the feed supplies no nonempty alt value; preserve manually edited fallback text and backfill unchanged properties without triggering property save hooks

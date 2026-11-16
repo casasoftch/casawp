@@ -5042,3 +5042,13 @@ msgstr "CASAWP: la traduzione dei media WPML è attiva su %s"
 #, php-format
 msgid "WPML is active and Media (attachment) is configured as translatable on this website:\n%s\n\nOpen WPML > Settings > Post Types Translation and set Media (attachment) to \"Not translatable\".\n\nCASAWP already manages property media for each language. Translatable media can create duplicate attachments and increase import time.\n\nThe import will continue. This warning will not be repeated until an import detects that the setting has been corrected and it is later enabled again."
 msgstr "WPML è attivo e i media (attachment) sono impostati come traducibili su questo sito:\n%s\n\nApri WPML > Impostazioni > Traduzione dei tipi di contenuto e imposta Media (attachment) su \"Non traducibile\".\n\nCASAWP gestisce già i media degli immobili per ogni lingua. I media traducibili possono creare allegati duplicati e aumentare la durata dell’importazione.\n\nL’importazione prosegue. Questo avviso verrà inviato di nuovo solo dopo che un’importazione avrà rilevato la correzione dell’impostazione e la traduzione dei media sarà stata successivamente riattivata."
+
+#: classes/DebugLogWarning.php
+#, php-format
+msgid "CASAWP: Debug logging is enabled on %s"
+msgstr "CASAWP: registrazione di debug attiva su %s"
+
+#: classes/DebugLogWarning.php
+#, php-format
+msgid "CASAWP debug logging is active for the import started on this website:\n%s\n\nDetailed debug logs can grow very large and consume disk space. Deactivate debug logging when it is no longer needed.\n\nRemove or deactivate the PHP snippet or filter that sets casawp_import_log_level to \"debug\" (for example, in Code Snippets, the theme's functions.php or a site plugin).\n\nThis notification is sent at the start of every import while debug logging is active. The import will continue."
+msgstr "La registrazione di debug di CASAWP è attiva per l’importazione avviata su questo sito:\n%s\n\nI log di debug dettagliati possono diventare molto grandi e occupare spazio su disco. Disattiva la registrazione di debug quando non è più necessaria.\n\nRimuovi o disattiva lo snippet PHP o il filtro che imposta casawp_import_log_level su \"debug\" (ad esempio in Code Snippets, nel file functions.php del tema o in un plugin del sito).\n\nQuesta notifica viene inviata all’inizio di ogni importazione finché la registrazione di debug è attiva. L’importazione continuerà."

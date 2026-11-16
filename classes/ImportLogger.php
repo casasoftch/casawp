@@ -495,6 +495,7 @@ class ImportLogger
                 'http_sequence', 'http_url', 'http_method', 'http_timeout', 'http_duration_seconds',
                 'http_status', 'http_error_code', 'http_error', 'duration_seconds', 'error_count', 'counts',
                 'property_offset', 'batch_end_offset', 'batch_time_budget_seconds', 'cleanup_phase'];
+            $keys = array_merge($keys, ['handoff_attempt', 'next_action_id']);
             if (in_array($event, ['properties_batch.started', 'properties_batch.finished'], true)) {
                 $keys = array_merge($keys, ['memory_mb', 'peak_memory_mb', 'db_queries', 'request_elapsed_seconds']);
             }
