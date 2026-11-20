@@ -321,6 +321,7 @@ class Import
   private function markImageAlternativeSyncComplete(int $post_id, ?string $hash, string $casawp_id): void
   {
       if ($hash !== null && empty($this->transcript[$casawp_id]['attachments']['failed_to_create'])) {
+          $this->logger()->setStage('media_text_checkpoint');
           update_post_meta($post_id, 'casawp_media_alt_hash', $hash);
       }
   }
@@ -371,6 +372,7 @@ class Import
           return;
       }
 
+      $this->logger()->setStage('media_sync_checkpoint');
       update_post_meta($post_id, 'casawp_media_sync_version', self::MEDIA_SYNC_SCHEMA_VERSION);
   }
 

@@ -22,7 +22,7 @@ Synchronize your properties directly to CASAWP, and let them be automatically ca
 
 == Import Debug Hook ==
 
-For advanced import diagnostics, including compact stage checkpoints, individual save_post callback tracing, timings, query counts and HTTP results, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
+For advanced import diagnostics, including compact stage checkpoints, individual save_post/wp_insert_post/wp_after_insert_post callback tracing, timings, query counts and HTTP results, add this filter to your theme's functions.php or as a PHP snippet in the Code Snippets plugin. In Code Snippets, select "Run everywhere" and activate the snippet:
 
 add_filter('casawp_import_log_level', static function () { return 'debug'; });
 
@@ -105,6 +105,10 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 == Changelog ==
 
 = Unreleased =
+
+* New: Schedule a fresh gateway import 15 minutes after a reported property or cleanup batch failure; supersede recovery on a newer import or cancellation and respect the site's import lock
+* Fix: Handle reCAPTCHA responses without a score without PHP warnings; retain v2 verification and reject missing or invalid v3 scores
+* Diagnostics: Trace callbacks in all three post-save hooks in debug mode, observe wp_die and premature nonfatal shutdowns, and record multisite blog context and media checkpoint stages
 
 * New: Email the WordPress administrator at every import startup while debug logging is active, with a log-size warning and deactivation instructions; retain imports when notification delivery fails
 * Compatibility: Hand cron-picked property batches using WPML's frontend save handler to the async runner, retaining batch/cursor identity and linked scheduler jobs; bound repeated handoffs and retain native failure reporting

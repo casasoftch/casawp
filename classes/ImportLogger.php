@@ -29,6 +29,7 @@ class ImportLogger
     private array $callback_stack = [];
     private static array $wrapped_callbacks = [];
     private ?string $request_context_signature = null;
+    private const CALLBACK_HOOKS = ['save_post', 'wp_insert_post', 'wp_after_insert_post'];
 
     public static function registerHooks(): void
     {
@@ -37,6 +38,11 @@ class ImportLogger
         add_action('action_scheduler_failed_execution', [self::class, 'actionFinished'], PHP_INT_MAX);
         add_filter('pre_http_request', [self::class, 'httpStarted'], PHP_INT_MAX, 3);
         add_action('http_api_debug', [self::class, 'httpFinished'], 10, 5);
+        add_action('switch_blog', [self::class, 'blogSwitched'], PHP_INT_MIN, 3);
+        foreach (['wp_die_handler', 'wp_die_ajax_handler', 'wp_die_json_handler', 'wp_die_jsonp_handler',
+            'wp_die_xmlrpc_handler', 'wp_die_xml_handler'] as $hook) {
+            add_filter($hook, [self::class, 'wpDieHandler'], PHP_INT_MAX);
+        }
         foreach (['save_post_casawp_property', 'save_post', 'wp_insert_post', 'wp_after_insert_post',
             'add_attachment', 'edit_attachment', 'wpml_set_element_language_details'] as $hook) {
             add_action($hook, [self::class, 'hookStarted'], PHP_INT_MIN, 1);
@@ -54,6 +60,16 @@ class ImportLogger
         if ((self::$action_context['action_id'] ?? null) === (int) $action_id) {
             self::$action_context = [];
         }
+    }
+
+    public static function blogSwitched($new_blog_id, $previous_blog_id, $context = 'switch'): void
+    {
+        $logger = self::$active_logger;
+        if (!$logger || !$logger->debugEnabled()) { return; }
+        $logger->write('WordPress blog context switched during an import operation.', [
+            'event' => 'import.blog_switched', 'from_blog_id' => (int) $previous_blog_id,
+            'to_blog_id' => (int) $new_blog_id, 'switch_context' => (string) $context,
+        ], 'debug');
     }
 
     private function debugEnabled(): bool
@@ -113,7 +129,7 @@ class ImportLogger
             'hook_object_id' => is_numeric($object_id) ? (int) $object_id
                 : (is_array($object_id) ? (int) ($object_id['element_id'] ?? 0) : null),
         ], 'debug');
-        if ($hook === 'save_post') { self::wrapSaveCallbacks(); }
+        if (in_array($hook, self::CALLBACK_HOOKS, true)) { self::wrapCallbacks($hook); }
         // Plugins can register at PHP_INT_MAX too. Put our end marker after them.
         remove_action($hook, [self::class, 'hookFinished'], PHP_INT_MAX);
         add_action($hook, [self::class, 'hookFinished'], PHP_INT_MAX, 0);
@@ -132,20 +148,20 @@ class ImportLogger
     }
 
     /** Keep WP_Hook's IDs, priorities and accepted_args intact for remove/has_action. */
-    private static function wrapSaveCallbacks(): void
+    private static function wrapCallbacks(string $hook): void
     {
         global $wp_filter;
-        foreach (($wp_filter['save_post']->callbacks ?? []) as $priority => $items) {
+        foreach (($wp_filter[$hook]->callbacks ?? []) as $priority => $items) {
             foreach ($items as $id => $item) {
                 $callback = $item['function'];
                 if (is_array($callback) && $callback[0] === self::class) { continue; }
-                if ((self::$wrapped_callbacks[$priority][$id]['wrapper'] ?? null) === $callback) { continue; }
+                if ((self::$wrapped_callbacks[$hook][$priority][$id]['wrapper'] ?? null) === $callback) { continue; }
                 $name = self::callbackName($callback);
-                $wrapper = static function (...$args) use ($callback, $name, $priority) {
+                $wrapper = static function (...$args) use ($callback, $name, $priority, $hook) {
                     $logger = self::$active_logger;
                     if (!$logger || !$logger->debugEnabled()) { return call_user_func_array($callback, $args); }
                     $entry = ['callback' => $name, 'callback_priority' => (int) $priority,
-                        'callback_sequence' => ++$logger->callback_sequence, 'hook' => 'save_post'];
+                        'callback_sequence' => ++$logger->callback_sequence, 'hook' => $hook];
                     $depth = count($logger->callback_stack);
                     $logger->callback_stack[] = $entry;
                     $started = microtime(true);
@@ -165,23 +181,25 @@ class ImportLogger
                     } finally {
                         $logger->callback_stack = array_slice($logger->callback_stack, 0, $depth);
                         // Pick up callbacks added/replaced by the callback that just ran.
-                        self::wrapSaveCallbacks();
+                        self::wrapCallbacks($hook);
                     }
                 };
-                self::$wrapped_callbacks[$priority][$id] = ['original' => $callback, 'wrapper' => $wrapper];
-                $wp_filter['save_post']->callbacks[$priority][$id]['function'] = $wrapper;
+                self::$wrapped_callbacks[$hook][$priority][$id] = ['original' => $callback, 'wrapper' => $wrapper];
+                $wp_filter[$hook]->callbacks[$priority][$id]['function'] = $wrapper;
             }
         }
     }
 
-    private static function restoreSaveCallbacks(): void
+    private static function restoreCallbacks(): void
     {
         global $wp_filter;
-        foreach (self::$wrapped_callbacks as $priority => $items) {
-            foreach ($items as $id => $entry) {
-                // A callback may remove or replace itself. Preserve that change.
-                if (($wp_filter['save_post']->callbacks[$priority][$id]['function'] ?? null) === $entry['wrapper']) {
-                    $wp_filter['save_post']->callbacks[$priority][$id]['function'] = $entry['original'];
+        foreach (self::$wrapped_callbacks as $hook => $priorities) {
+            foreach ($priorities as $priority => $items) {
+                foreach ($items as $id => $entry) {
+                    // A callback may remove or replace itself. Preserve that change.
+                    if (($wp_filter[$hook]->callbacks[$priority][$id]['function'] ?? null) === $entry['wrapper']) {
+                        $wp_filter[$hook]->callbacks[$priority][$id]['function'] = $entry['original'];
+                    }
                 }
             }
         }
@@ -213,8 +231,8 @@ class ImportLogger
         foreach (($wp_filter[$hook]->callbacks ?? []) as $priority => $registered) {
             foreach ($registered as $id => $item) {
                 $callback = $item['function'];
-                if ($hook === 'save_post' && (self::$wrapped_callbacks[$priority][$id]['wrapper'] ?? null) === $callback) {
-                    $callback = self::$wrapped_callbacks[$priority][$id]['original'];
+                if ((self::$wrapped_callbacks[$hook][$priority][$id]['wrapper'] ?? null) === $callback) {
+                    $callback = self::$wrapped_callbacks[$hook][$priority][$id]['original'];
                 }
                 if (is_array($callback) && $callback[0] === self::class) { continue; }
                 $callbacks[] = ['priority' => (int) $priority, 'callback' => self::callbackName($callback)];
@@ -355,7 +373,7 @@ class ImportLogger
             array_pop($this->operation_stages);
             $this->context = $previous;
             self::$active_logger = $previous_logger;
-            if ($previous_logger === null) { self::restoreSaveCallbacks(); }
+            if ($previous_logger === null) { self::restoreCallbacks(); }
             if ($this->active_operations) { $this->startDebugStage(); }
         }
     }
@@ -377,21 +395,51 @@ class ImportLogger
         error_log('CASAWP import: ' . $entry);
     }
 
+    /** Observe wp_die without replacing its handler or recording message/arguments. */
+    public static function wpDieHandler($handler)
+    {
+        $logger = self::$active_logger;
+        if ($logger && $logger->debugEnabled()) {
+            $trace = [];
+            foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15) as $frame) {
+                $trace[] = array_intersect_key($frame, array_flip(['file', 'line', 'class', 'type', 'function']));
+            }
+            $logger->write('WordPress wp_die invoked during an import operation.', [
+                'event' => 'import.wp_die', 'trace' => $trace,
+            ], 'warning');
+        }
+        return $handler;
+    }
+
     public function logFatalError(): void
     {
         $this->memory_reserve = '';
         $error = error_get_last();
-        if (!$this->active_operations || !$error || !in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR], true)) {
+        $fatal = $error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR], true);
+        if (!$this->active_operations || (!$fatal && !$this->debugEnabled())) {
+            return;
+        }
+        $connection = $this->debugEnabled() ? [
+            'connection_status' => connection_status(), 'connection_aborted' => (bool) connection_aborted(),
+            'ignore_user_abort' => (bool) ignore_user_abort(),
+        ] : [];
+        if (!$fatal) {
+            // exit()/wp_die can bypass finally without producing a PHP fatal error.
+            // This is evidence only: leave status/queue handling unchanged.
+            $entry = $this->write('Import request shut down before the active operation returned; no fatal PHP error was recorded.', array_merge($connection, [
+                'event' => 'import.unexpected_shutdown', 'operation_stages' => $this->operation_stages,
+            ]), 'error');
+            error_log('CASAWP import: ' . $entry);
             return;
         }
         // Persist the failure before status/queue updates can allocate more memory or fail.
-        $entry = $this->write('Import terminated by a fatal PHP error.', [
+        $entry = $this->write('Import terminated by a fatal PHP error.', array_merge($connection, [
             'event' => 'import.fatal',
             'error' => $error['message'],
             'file' => $error['file'],
             'line' => $error['line'],
             'php_error_type' => $error['type'],
-        ], 'error');
+        ]), 'error');
         error_log('CASAWP import: ' . $entry);
         // PHP can terminate a synchronous gateway request without an Action Scheduler failure event.
         if ($this->failure_run_id && array_intersect($this->operation_stages, ['gateway_import', 'single_request_import', 'properties_batch', 'final_cleanup'])
@@ -452,6 +500,7 @@ class ImportLogger
             global $wpdb;
             $metadata = array_merge(self::$action_context, $metadata, [
                 'pid' => function_exists('getmypid') ? getmypid() : null,
+                'blog_id' => function_exists('get_current_blog_id') ? get_current_blog_id() : null,
                 'request_elapsed_seconds' => round(microtime(true) - $this->request_started, 6),
                 'db_queries' => $this->queryCount(),
                 'php_memory_limit' => ini_get('memory_limit'),
@@ -494,7 +543,8 @@ class ImportLogger
                 'callback_sequence', 'callback_duration_seconds', 'callback_query_count',
                 'http_sequence', 'http_url', 'http_method', 'http_timeout', 'http_duration_seconds',
                 'http_status', 'http_error_code', 'http_error', 'duration_seconds', 'error_count', 'counts',
-                'property_offset', 'batch_end_offset', 'batch_time_budget_seconds', 'cleanup_phase'];
+                'property_offset', 'batch_end_offset', 'batch_time_budget_seconds', 'cleanup_phase',
+                'blog_id', 'from_blog_id', 'to_blog_id', 'switch_context', 'last_db_error'];
             $keys = array_merge($keys, ['handoff_attempt', 'next_action_id']);
             if (in_array($event, ['properties_batch.started', 'properties_batch.finished'], true)) {
                 $keys = array_merge($keys, ['memory_mb', 'peak_memory_mb', 'db_queries', 'request_elapsed_seconds']);

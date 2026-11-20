@@ -120,6 +120,7 @@ $import->register_hooks();
 \casawp\ImportQueue::registerHooks();
 \casawp\ImportLogger::registerHooks();
 \casawp\GatewayPokeCooldown::registerHooks();
+\casawp\ImportRecovery::registerHooks();
 
 
 /**
@@ -175,6 +176,7 @@ function casawp_current_import_run_id(): int {
 
 /** The caller holds the import lock; publish startup before any gateway request. */
 function casawp_begin_import_run(string $phase = 'fetching'): int {
+	\casawp\ImportRecovery::cancel();
 	$run_id = max(time(), (int) get_option('casawp_import_progress_run_id', 0) + 1,
 		(int) get_option('casawp_cleanup_done_for_run', 0) + 1, casawp_current_import_run_id() + 1);
 	\casawp\ImportProgress::dismissCompletionNotice();
@@ -433,6 +435,7 @@ function casawp_handle_failed_action($action_id, $failure = null, $runner_contex
 		if ($hook === 'casawp_finalize_import_cleanup_batch' && ($cleanup['run_id'] ?? 0) === $run_id
 			&& $failed_batch > 0 && (int) ($cleanup['batch_number'] ?? 0) > $failed_batch) { return; }
 		if (!casawp_fail_import_run($run_id)) { return; }
+		\casawp\ImportRecovery::schedule($run_id);
 		$logger = new casawp\ImportLogger(static function () use ($run_id) { return $run_id; });
 		$failure_context = [
 			'event' => 'scheduler.failed',
@@ -518,6 +521,7 @@ function casawp_initialize_cleanup_cron() {
 register_deactivation_hook(__FILE__, 'casawp_unschedule_cleanup_cron');
 
 function casawp_unschedule_cleanup_cron() {
+	\casawp\ImportRecovery::cancel();
 	\casawp\GatewayPokeCooldown::cancel();
 	wp_clear_scheduled_hook('casawp_manual_cleanup_watchdog');
 	// Unschedule Cleanup Cron Event
@@ -580,6 +584,7 @@ function casawp_cancel_import() {
 		]);
 		foreach ($gateway_actions as $action_id) { $store->cancel_action($action_id); }
 		\casawp\GatewayPokeCooldown::cancel();
+		\casawp\ImportRecovery::cancel();
 		casawp_clear_pending();
 		update_option('casawp_import_canceled', true);
 		casawp_release_lock();

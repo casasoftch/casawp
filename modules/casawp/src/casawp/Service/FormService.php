@@ -481,9 +481,17 @@ class FormService{
 		$response = json_decode(curl_exec($ch));
 		curl_close($ch);
 
-		$this->addToLogFormStuff('V3?: ' . $is_recaptcha_v3 . ' Success: ' . $response->success . ' Score: ' . $response->score . ' Score defined: ' . get_option('casawp_recaptcha_v3_score'));
+		$success = !empty($response->success);
+		// v2 and unsuccessful verification responses can omit the v3 score.
+		$score = isset($response->score) && is_numeric($response->score) ? (float) $response->score : null;
+		if ($score !== null && (!is_finite($score) || $score < 0 || $score > 1)) {
+			$score = null;
+		}
+		$score_threshold = get_option('casawp_recaptcha_v3_score', '0.4');
 
-		if (empty($response->success) || ($is_recaptcha_v3 && $response->score <= get_option('casawp_recaptcha_v3_score', '0.4'))) {
+		$this->addToLogFormStuff('V3?: ' . $is_recaptcha_v3 . ' Success: ' . $success . ' Score: ' . ($score === null ? 'n/a' : $score) . ' Score defined: ' . $score_threshold);
+
+		if (!$success || ($is_recaptcha_v3 && ($score === null || $score <= $score_threshold))) {
 			// Fail
 			//throw new \Exception('Gah! CAPTCHA verification failed.', 1);
 			return 'fail';
