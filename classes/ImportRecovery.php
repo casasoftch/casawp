@@ -43,7 +43,7 @@ class ImportRecovery
         return $run_id > 0
             && (int) get_option('casawp_import_progress_run_id', 0) === $run_id
             && get_option('casawp_import_failed', false)
-            && !get_option('casawp_import_canceled', false)
+            && !\casawp_is_import_canceled()
             && !casawp_current_import_run_id();
     }
 

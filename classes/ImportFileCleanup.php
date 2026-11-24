@@ -281,7 +281,7 @@ class ImportFileCleanup
         }
         return $run_id > 0 && (int) get_option('casawp_current_run_id', 0) === $run_id
             && (bool) get_option('casawp_use_casagateway_cdn', false) === $this->cdn
-            && !get_option('casawp_import_canceled') && !get_option('casawp_import_failed')
+            && !\casawp_is_import_canceled() && !get_option('casawp_import_failed')
             && (int) get_option('casawp_file_cleanup_failed_run', 0) !== $run_id;
     }
 

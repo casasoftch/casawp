@@ -386,7 +386,7 @@ class ManualCleanup
     {
         if (!casawp_has_pending()) { return false; }
         $state = get_option('casawp_manual_cleanup', []);
-        if (get_option('casawp_import_canceled') && !get_option('casawp_current_run_id') && !casawp_is_import_running()
+        if (\casawp_is_import_canceled() && !get_option('casawp_current_run_id') && !casawp_is_import_running()
             && !in_array($state['status'] ?? '', ['queued', 'running'], true)
             && function_exists('as_has_scheduled_action')
             && !as_has_scheduled_action('casawp_process_gateway_poke', null, casawp_gateway_poke_group())) {

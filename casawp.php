@@ -174,6 +174,17 @@ function casawp_current_import_run_id(): int {
 	return (int) get_option('casawp_current_run_id', 0);
 }
 
+/** Confirm cancellation against fresh options before stopping a worker. */
+function casawp_is_import_canceled(): bool {
+	if (!get_option('casawp_import_canceled', false)) { return false; }
+	// Long-running workers may retain an autoloaded flag from a canceled older run.
+	// Deleting only the individual option cache does not refresh alloptions.
+	foreach (['alloptions', 'casawp_import_canceled', 'notoptions'] as $key) {
+		wp_cache_delete($key, 'options');
+	}
+	return (bool) get_option('casawp_import_canceled', false);
+}
+
 /** The caller holds the import lock; publish startup before any gateway request. */
 function casawp_begin_import_run(string $phase = 'fetching'): int {
 	\casawp\ImportRecovery::cancel();

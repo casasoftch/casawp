@@ -54,7 +54,7 @@ class ImportProgress
         $cleanup_started = $run && (int) ($cleanup['run_id'] ?? 0) === $run;
         $finished = $last_run && (int) get_option('casawp_cleanup_done_for_run', 0) === $last_run;
         $failed = (bool) get_option('casawp_import_failed');
-        $canceled = (bool) get_option('casawp_import_canceled');
+        $canceled = (bool) \casawp_is_import_canceled();
         $status = 'idle';
         $message = '';
         $progress = 0;

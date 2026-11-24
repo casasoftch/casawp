@@ -602,7 +602,7 @@ class Import
         return false;
     }
 
-    if ( get_option( 'casawp_import_canceled' ) ) {
+    if ( \casawp_is_import_canceled() ) {
       $this->addToLog( 'Import was canceled - cleanup skips deletions.' );
       casawp_release_lock();
       delete_option( 'casawp_current_run_id' );
@@ -805,7 +805,7 @@ class Import
 
     $this->current_run_id = $run_id;
 
-    if ( get_option( 'casawp_import_canceled' ) ) {
+    if ( \casawp_is_import_canceled() ) {
       $this->addToLog( 'Import was canceled - cleanup batch skips deletions.' );
       casawp_release_lock();
       delete_option( 'casawp_current_run_id' );
@@ -841,7 +841,7 @@ class Import
     $limit            = $this->cleanup_batch_size();
 
     foreach ( $this->get_posts_to_remove_for_run( $run_id, $limit ) as $post_id ) {
-      if ($run_id !== casawp_current_import_run_id() || get_option('casawp_import_canceled') || get_option('casawp_import_failed')) { return 0; }
+      if ($run_id !== casawp_current_import_run_id() || \casawp_is_import_canceled() || get_option('casawp_import_failed')) { return 0; }
       $result = $this->delete_property_with_attachments( (int) $post_id );
 
       if ( $result['properties'] ) {
@@ -1192,7 +1192,7 @@ class Import
     if ($run_id && (int) $run_id !== $active_run) { return; }
     if (!$active_run) {
       $manual = get_option('casawp_manual_cleanup', []);
-      if ((int) $batch_number !== 1 || get_option('casawp_import_failed') || get_option('casawp_import_canceled')
+      if ((int) $batch_number !== 1 || get_option('casawp_import_failed') || \casawp_is_import_canceled()
           || in_array($manual['status'] ?? '', ['queued', 'running'], true)) { return; }
       if (!get_option('casawp_import_lock') && !casawp_acquire_lock()) { return; }
       $active_run = casawp_begin_import_run('properties');
@@ -1207,7 +1207,7 @@ class Import
       return;
     }
 
-    if (get_option('casawp_import_canceled', false)) {
+    if (\casawp_is_import_canceled()) {
       $this->logImport('Import has been canceled. Skipping batch number: ' . $batch_number, ['event' => 'batch.skipped', 'reason' => 'canceled'], 'warning');
       return;
     }
@@ -1659,7 +1659,7 @@ class Import
     if (!$run_id || $run_id !== (int) get_option('casawp_current_run_id', 0)) {
       return;
     }
-    if (get_option('casawp_import_failed') || get_option('casawp_import_canceled')) {
+    if (get_option('casawp_import_failed') || \casawp_is_import_canceled()) {
       return;
     }
     $this->current_run_id = $run_id;
@@ -1687,7 +1687,7 @@ class Import
     $deleted_post_ids = [];
 
     foreach ( $this->get_outdated_property_posts( $xml_property_ids, $this->cleanup_batch_size() ) as $post_id ) {
-      if ($run_id !== casawp_current_import_run_id() || get_option('casawp_import_canceled') || get_option('casawp_import_failed')) { return; }
+      if ($run_id !== casawp_current_import_run_id() || \casawp_is_import_canceled() || get_option('casawp_import_failed')) { return; }
       $result = $this->delete_property_with_attachments( (int) $post_id );
 
       if ( $result['properties'] ) {
