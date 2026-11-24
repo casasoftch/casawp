@@ -15,6 +15,7 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
       // WPML owns these link-processing markers; real property updates must retain them.
       $protected[] = '_wpml_links_collected';
       $protected[] = '_wpml_links_signature';
+      $protected[] = '_casawp_import_content_state';
 
       // Add SEO meta keys that must never be touched by CASAWP imports
       $seo_like = [
@@ -274,6 +275,7 @@ class Import
       '_wpml_word_count',
       '_wpml_links_collected',
       '_wpml_links_signature',
+      '_casawp_import_content_state',
       '_yoast_indexnow_last_ping',
       '_last_translation_edit_mode',
       'casawp_id',
@@ -1376,7 +1378,14 @@ class Import
         $this->batch_work = null;
       }
 
-      if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
+      $active_run_after_offers = casawp_current_import_run_id();
+      if ($this->current_run_id !== $active_run_after_offers) {
+        $this->logImport('Import batch stopped before checkpoint because the active run changed.', [
+          'event' => 'batch.ownership_changed', 'active_run_id' => $active_run_after_offers,
+          'properties_processed' => $processed,
+        ], 'warning');
+        return;
+      }
 
       $this->logger()->setStage('batch_checkpoint');
       $batch_completed = $this->completeImportPlanBatch($plan, (int) $batch_number, $processed);
@@ -1433,11 +1442,12 @@ class Import
 
         /* If another batch with that number isn’t
            already queued in this run, schedule it.   */
-        if ( ! as_next_scheduled_action(
+        $next_action = as_next_scheduled_action(
                  'casawp_batch_import',
                  [ 'batch_number' => $next_batch_number, 'run_id' => $this->current_run_id ],
                  $this->group()
-             ) ) {
+             );
+        if ( ! $next_action ) {
 
             $action_id = as_schedule_single_action(
                 time() + $delay,
@@ -1446,6 +1456,17 @@ class Import
                 $this->group()
             );
             $this->logScheduledAction($action_id, 'casawp_batch_import', (int) $next_batch_number, $this->current_run_id, (int) $delay);
+            $this->logImport(sprintf('Import batch %d queued next batch %d as action %d.',
+              $batch_number, $next_batch_number, $action_id), [
+                'event' => 'batch.continuation', 'next_batch_number' => $next_batch_number,
+                'next_action_id' => (int) $action_id,
+              ]);
+        } else {
+            $this->logImport(sprintf('Import batch %d did not enqueue batch %d because the scheduler reports it already pending or running.',
+              $batch_number, $next_batch_number), [
+                'event' => 'batch.continuation_exists', 'next_batch_number' => $next_batch_number,
+                'next_scheduled_action' => $next_action,
+              ]);
         }
       }
     } catch (\Throwable $e) {
@@ -3024,11 +3045,15 @@ class Import
         $new_main_data['post_title'] = $old_main_data['post_title'];
     }
     $comparison_main_data = $new_main_data;
+    $content_state = get_post_meta($wp_post->ID, '_casawp_import_content_state', true);
+    $known_saved_content = is_array($content_state)
+      && ($content_state['source'] ?? '') === hash('sha256', $new_main_data['post_content'])
+      && ($content_state['stored'] ?? '') === hash('sha256', $old_main_data['post_content']);
     // Compare the persisted representation when WordPress filters HTML on save.
     // Keep the original payload for real saves, including when other fields change.
     if ($new_main_data['post_content'] !== $old_main_data['post_content']
-        && has_filter('content_save_pre', 'wp_filter_post_kses') !== false
-        && wp_unslash(wp_filter_post_kses($new_main_data['post_content'])) === $old_main_data['post_content']) {
+        && ($known_saved_content || (has_filter('content_save_pre', 'wp_filter_post_kses') !== false
+          && wp_unslash(wp_filter_post_kses($new_main_data['post_content'])) === $old_main_data['post_content']))) {
         $comparison_main_data['post_content'] = $old_main_data['post_content'];
     }
     $main_unchanged = ( $comparison_main_data === $old_main_data );
@@ -3058,6 +3083,16 @@ class Import
                 'error_code' => $post_result->get_error_code(),
                 'error' => $post_result->get_error_message(),
             ], 'error');
+        } elseif ($post_result && array_key_exists('post_content', $post_data)) {
+            // Remember only successful content saves, never a rank-only update.
+            // Different request filters may legitimately produce different stored HTML.
+            $saved_content = get_post_field('post_content', $wp_post->ID, 'raw');
+            if (is_string($saved_content)) {
+                update_post_meta($wp_post->ID, '_casawp_import_content_state', [
+                  'source' => hash('sha256', $new_main_data['post_content']),
+                  'stored' => hash('sha256', $saved_content),
+                ]);
+            }
         }
     }
 
