@@ -700,6 +700,8 @@ class Import
   }
 
   private function delete_property_with_attachments( int $post_id ): array {
+    $property_id = (string) get_post_meta($post_id, 'exportproperty_id', true);
+    if ($property_id === '') { $property_id = 'post:' . $post_id; }
     $this->logger()->setStage('property_delete', ['post_id' => $post_id, 'attachment_id' => null]);
     $attachments = get_posts( [
       'post_type'      => 'attachment',
@@ -729,6 +731,7 @@ class Import
 
     $this->logger()->setStage('property_delete', ['attachment_id' => null]);
     if ( wp_delete_post( $post_id, true ) ) {
+      ImportPropertySummary::record($this->current_run_id, $property_id, (string) $post_id, 'deleted');
       return [
         'properties'         => 1,
         'attachments'        => $deleted_attachments,
@@ -970,9 +973,15 @@ class Import
     }
 
     if ($run_id !== casawp_current_import_run_id()) { return; }
+    $counts = ImportPropertySummary::counts($run_id);
     delete_option( 'casawp_current_run_id' );
     casawp_release_lock();
     $this->addToLog( 'Import lock cleared.' );
+    $this->logger()->separator('Import summary:', 'import.summary.separator');
+    $this->logImport(sprintf('New properties (%d), changed properties (%d), unchanged properties (%d), deleted properties (%d).',
+      $counts['new'], $counts['changed'], $counts['unchanged'], $counts['deleted']), [
+        'event' => 'import.summary', 'property_counts' => $counts,
+      ]);
     $this->logger()->cleanupCompleted($cleanup_summary['stats'], $cleanup_summary['freed_bytes']);
 
     if ( casawp_has_pending() ) {
@@ -2218,8 +2227,10 @@ class Import
                   global $post;
                   $wp_post = $post;
                   $this->transcript[$casawp_id]['action'] = 'update';
+                  $this->transcript[$casawp_id]['outcome'] = 'changed';
                 } else {
                   $this->transcript[$casawp_id]['action'] = 'new';
+                  $this->transcript[$casawp_id]['outcome'] = 'new';
 
                   $the_post = [
                     'post_title'   => $offerData['name'],
@@ -2276,6 +2287,8 @@ class Import
                   'attachment_id' => null, 'media_origin' => null, 'media_index' => null, 'media_count' => null, 'media_remote' => null,
                 ]);
                 $this->updateInsertWPMLconnection($wp_post, $offerData['lang'], $property['exportproperty_id']);
+                ImportPropertySummary::record($this->current_run_id, (string) $property['exportproperty_id'], $casawp_id,
+                  $this->transcript[$casawp_id]['outcome']);
               });
             }, 'debug');
           } catch (\Throwable $e) {
@@ -2983,9 +2996,14 @@ class Import
     }
 
     if ( $hashFromDb === $newHash && $main_unchanged && ! $needs_media_sync ) {
+        $updated_images_before = count($this->transcript[$casawp_id]['attachments']['updated'] ?? []);
         if ($media_alt_hash !== null && get_post_meta($wp_post->ID, 'casawp_media_alt_hash', true) !== $media_alt_hash) {
             $this->logger()->setStage('media_alternative_text');
             $this->syncOfferImageAlternatives($wp_post->ID, $media_alt_items, $casawp_id, $media_alt_hash);
+        }
+        if (($this->transcript[$casawp_id]['outcome'] ?? '') !== 'new'
+            && count($this->transcript[$casawp_id]['attachments']['updated'] ?? []) === $updated_images_before) {
+            $this->transcript[$casawp_id]['outcome'] = 'unchanged';
         }
         $this->logImport( "Skip {$casawp_id} - unchanged (hash)", ['event' => 'offer.unchanged'], 'debug' );
         update_post_meta( $wp_post->ID, 'is_active', true );

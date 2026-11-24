@@ -569,7 +569,16 @@ class ImportLogger
                 $metadata['request_id'] = $this->request_id;
             }
         }
-        $record['_meta'] = $metadata;
+        // Headings and human-readable completion summaries need no metadata.
+        $compact_events = [
+            'import.separator.start', 'import.separator.end',
+            'cleanup.separator.start', 'cleanup.separator',
+            'import.summary.separator', 'import.summary',
+            'cleanup.summary', 'manual_cleanup.completed',
+        ];
+        if ($level !== 'info' || !in_array($event, $compact_events, true)) {
+            $record['_meta'] = $metadata;
+        }
         $entry = json_encode($record, JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_SLASHES);
 
         $dir = CASASYNC_CUR_UPLOAD_BASEDIR . '/casawp/logs';
