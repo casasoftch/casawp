@@ -327,8 +327,27 @@ class Import
           . ' -> ' . ($new ? get_debug_type($new_meta[$key]) : 'missing') . ')';
       }
     }
+    $content_detail = '';
+    if (in_array('post_content', $main_fields, true)
+        && isset($old_main['post_content'], $new_main['post_content'])
+        && is_string($old_main['post_content']) && is_string($new_main['post_content'])) {
+      $stored = $old_main['post_content'];
+      $incoming = $new_main['post_content'];
+      $unslashed = wp_unslash($incoming);
+      $checks = [
+        'unslashing' => $stored === $unslashed,
+        'HTML filtering' => $stored === wp_kses_post($incoming),
+        'unslashing and HTML filtering' => $stored === wp_kses_post($unslashed),
+        'trimming' => trim($stored) === trim($incoming),
+        'line endings' => str_replace(["\r\n", "\r"], "\n", $stored) === str_replace(["\r\n", "\r"], "\n", $incoming),
+        'HTML entities' => html_entity_decode($stored, ENT_QUOTES | ENT_HTML5, 'UTF-8') === html_entity_decode($incoming, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+      ];
+      $matches = array_keys(array_filter($checks));
+      $content_detail = sprintf(' Description comparison: stored %d bytes, incoming %d bytes; matches after [%s].',
+        strlen($stored), strlen($incoming), $matches ? implode(', ', $matches) : 'none of the checked transformations');
+    }
     $this->logImport(sprintf('Property change comparison sample for %s: post fields [%s]; metadata fields [%s]; media synchronization required: %s.',
-      $casawp_id, implode(', ', $main_fields), implode(', ', $meta_fields), $needs_media_sync ? 'yes' : 'no'), [
+      $casawp_id, implode(', ', $main_fields), implode(', ', $meta_fields), $needs_media_sync ? 'yes' : 'no') . $content_detail, [
         'event' => 'offer.comparison', 'casawp_id' => $casawp_id,
         'changed_post_fields' => $main_fields, 'changed_meta_fields' => $meta_fields,
         'needs_media_sync' => $needs_media_sync,
@@ -3004,11 +3023,19 @@ class Import
         // Preserve the stored spelling even when another main field requires a save.
         $new_main_data['post_title'] = $old_main_data['post_title'];
     }
-    $main_unchanged = ( $new_main_data === $old_main_data );
+    $comparison_main_data = $new_main_data;
+    // Compare the persisted representation when WordPress filters HTML on save.
+    // Keep the original payload for real saves, including when other fields change.
+    if ($new_main_data['post_content'] !== $old_main_data['post_content']
+        && has_filter('content_save_pre', 'wp_filter_post_kses') !== false
+        && wp_unslash(wp_filter_post_kses($new_main_data['post_content'])) === $old_main_data['post_content']) {
+        $comparison_main_data['post_content'] = $old_main_data['post_content'];
+    }
+    $main_unchanged = ( $comparison_main_data === $old_main_data );
 
     if (($this->transcript[$casawp_id]['action'] ?? '') !== 'new'
         && (!$main_unchanged || $hashFromDb !== $newHash || $needs_media_sync)) {
-        $this->logOfferComparison($casawp_id, $old_main_data, $new_main_data, $old_meta_data, $new_meta_data, $needs_media_sync);
+        $this->logOfferComparison($casawp_id, $old_main_data, $comparison_main_data, $old_meta_data, $new_meta_data, $needs_media_sync);
     }
 
     // Decide before saving: unchanged offers need only their current-run markers.
