@@ -106,7 +106,7 @@ Heating has a readable, read-only overview. Calculated values and import bookkee
 
 = Unreleased =
 
-* New: Schedule a fresh gateway import 15 minutes after a reported property or cleanup batch failure; supersede recovery on a newer import or cancellation and respect the site's import lock
+* New: Schedule a fresh gateway import 10 minutes after a reported property or cleanup batch failure; supersede recovery on a newer import or cancellation and respect the site's import lock
 * Fix: Handle reCAPTCHA responses without a score without PHP warnings; retain v2 verification and reject missing or invalid v3 scores
 * Diagnostics: Trace callbacks in all three post-save hooks in debug mode, observe wp_die and premature nonfatal shutdowns, and record multisite blog context and media checkpoint stages
 

@@ -15,7 +15,7 @@ class ImportRecovery
 
     public static function schedule(int $run_id): void
     {
-        self::enqueue($run_id, 15 * MINUTE_IN_SECONDS, true);
+        self::enqueue($run_id, 10 * MINUTE_IN_SECONDS, true);
     }
 
     private static function enqueue(int $run_id, int $delay, bool $unique): void

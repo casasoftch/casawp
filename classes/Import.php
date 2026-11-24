@@ -12,6 +12,9 @@ if ( ! class_exists( 'CASAWP_Bulk_Meta' ) ) {
 
       // Media changes must remain retryable if the later attachment sync fails.
       $protected = [ 'casawp_id', 'projectunit_id', 'projectunit_sort', '_casawp_manual_media_modified', 'casawp_media_alt_hash' ];
+      // WPML owns these link-processing markers; real property updates must retain them.
+      $protected[] = '_wpml_links_collected';
+      $protected[] = '_wpml_links_signature';
 
       // Add SEO meta keys that must never be touched by CASAWP imports
       $seo_like = [
@@ -269,6 +272,8 @@ class Import
       'is_active',
       '_thumbnail_id',
       '_wpml_word_count',
+      '_wpml_links_collected',
+      '_wpml_links_signature',
       '_yoast_indexnow_last_ping',
       '_last_translation_edit_mode',
       'casawp_id',
@@ -300,6 +305,35 @@ class Import
 
     $this->deepKsort($meta);
     return md5(serialize($meta));
+  }
+
+  /** One diagnostic sample per run, containing field names/types but never values. */
+  private function logOfferComparison(string $casawp_id, array $old_main, array $new_main, array $old_meta, array $new_meta, bool $needs_media_sync): void
+  {
+    if (!$this->current_run_id || (int) get_option('casawp_import_comparison_logged_run', 0) === $this->current_run_id) { return; }
+    if ($this->current_run_id !== casawp_current_import_run_id()) { return; }
+
+    $main_fields = [];
+    foreach ($new_main as $key => $value) {
+      if (!array_key_exists($key, $old_main) || $old_main[$key] !== $value) { $main_fields[] = $key; }
+    }
+    $meta_fields = [];
+    foreach (array_unique(array_merge(array_keys($old_meta), array_keys($new_meta))) as $key) {
+      $old = array_key_exists($key, $old_meta) ? [$key => $old_meta[$key]] : [];
+      $new = array_key_exists($key, $new_meta) ? [$key => $new_meta[$key]] : [];
+      // Use the same exclusions and nested ordering as the unchanged check.
+      if ($this->fingerprint($old) !== $this->fingerprint($new)) {
+        $meta_fields[] = $key . ' (' . ($old ? get_debug_type($old_meta[$key]) : 'missing')
+          . ' -> ' . ($new ? get_debug_type($new_meta[$key]) : 'missing') . ')';
+      }
+    }
+    $this->logImport(sprintf('Property change comparison sample for %s: post fields [%s]; metadata fields [%s]; media synchronization required: %s.',
+      $casawp_id, implode(', ', $main_fields), implode(', ', $meta_fields), $needs_media_sync ? 'yes' : 'no'), [
+        'event' => 'offer.comparison', 'casawp_id' => $casawp_id,
+        'changed_post_fields' => $main_fields, 'changed_meta_fields' => $meta_fields,
+        'needs_media_sync' => $needs_media_sync,
+      ]);
+    update_option('casawp_import_comparison_logged_run', $this->current_run_id, false);
   }
 
 
@@ -2971,6 +3005,11 @@ class Import
         $new_main_data['post_title'] = $old_main_data['post_title'];
     }
     $main_unchanged = ( $new_main_data === $old_main_data );
+
+    if (($this->transcript[$casawp_id]['action'] ?? '') !== 'new'
+        && (!$main_unchanged || $hashFromDb !== $newHash || $needs_media_sync)) {
+        $this->logOfferComparison($casawp_id, $old_main_data, $new_main_data, $old_meta_data, $new_meta_data, $needs_media_sync);
+    }
 
     // Decide before saving: unchanged offers need only their current-run markers.
     // Real metadata/media changes still receive the native save hooks and modified date.
